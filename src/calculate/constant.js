@@ -11,8 +11,8 @@ var CalendarName = {
     Zhou: '   \n● **周** ',
     Huangdi: '   \n● **黃帝** ',
     Lu: '   \n● **魯** ',
-    XiaA: '   \n● **冬夏** ', // 冬至元夏曆
-    XiaB: '   \n● **雨夏** ', // 雨水元夏曆
+    XiaA: '   \n● **冬夏** ', 
+    XiaB: '   \n● **雨夏** ', 
     Zhuanxu: '   \n● **顓頊** ',
     Santong: '   \n● **三統** ',
     Qian: '   \n● **乾鑿度** ',
