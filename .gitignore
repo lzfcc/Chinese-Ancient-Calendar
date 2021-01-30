@@ -24,4 +24,4 @@ yarn-error.log*
 
 .eslintcache
 
-src/calculate/output.md
+output.md

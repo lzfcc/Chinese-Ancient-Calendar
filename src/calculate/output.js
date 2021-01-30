@@ -18,19 +18,21 @@ function PrintTxt(CalPre, year) {
         TermDecimalPrint,
     } = calculate(CalPre, year)
     return YearInfo + `
-**月** ${MonthPrint.join(' ')}    
-**朔** ${FirstSCPrint.join(' ')} 
+**月** ${MonthPrint.join(' ')}
+**朔** ${FirstSCPrint.join(' ')}
 **分** ${FirstDecimalPrint.join(' ')}
-**望** ${SyzygySCPrint.join(' ')}    
-**分** ${SyzygyDecimalPrint.join(' ')}    
-**中** ${TermSCPrint.join(' ')}     
+**望** ${SyzygySCPrint.join(' ')}
+**分** ${SyzygyDecimalPrint.join(' ')}
+**中** ${TermSCPrint.join(' ')}
 **分** ${TermDecimalPrint.join(' ')}
 `
 }
 
+const FilePath = './output.md'
+
 function main(start, end) {
-    if (fs.existsSync('output.md')) {
-        fs.unlinkSync('output.md');
+    if (fs.existsSync(FilePath)) {
+        fs.unlinkSync(FilePath);
     }
     for (let year = start; year <= end; year++) {
         const YearSC = SClist[((year - 3) % 60 + 60) % 60]
@@ -40,7 +42,7 @@ function main(start, end) {
         } else {
             AnnoDomini = ('   \n**公元前 ' + Math.abs(year - 1) + ' 年** ' + YearSC + ' ————————————————————————— \n')
         }
-        fs.appendFileSync('output.md', AnnoDomini);
+        fs.appendFileSync(FilePath, AnnoDomini);
         [
             // 'Yin',
             // 'Zhou',
@@ -55,7 +57,7 @@ function main(start, end) {
             'Shoushi',
             // 'ShouAcr'
         ].forEach(function (CalPre) {
-            fs.appendFileSync('output.md', PrintTxt(CalPre, year))
+            fs.appendFileSync(FilePath, PrintTxt(CalPre, year))
         })
     }
 }
