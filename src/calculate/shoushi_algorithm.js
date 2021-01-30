@@ -43,10 +43,10 @@ function CalShoushi(ShouPre, year) {
     const LeapStd = parseFloat((13 * lunar - solar).toPrecision(12)) // 閏準 18.6528
 
     /**
-     *
+     * 算定朔
      * @param {number} PrevThisNext -1 last year 1 current year 0 next year
      */
-    const PlusFunctionMinusT = (PrevThisNext) => {
+    const PlusFunctionMinusT = function (PrevThisNext) {
         const AccumZhong = (OriginYear + PrevThisNext) * solar // 中積
         const result = {}
         result.First = FirstSyzygy(1, AccumZhong)
@@ -58,10 +58,10 @@ function CalShoushi(ShouPre, year) {
 
     /**
      * 计算朔望
-     * @param {number} syzygy 0 shuo 1 wang
+     * @param {number} ifFirst 
      * @param {number} AccumZhong
      */
-    const FirstSyzygy = (syzygy, AccumZhong) => {
+    const FirstSyzygy = (ifFirst, AccumZhong) => {
         const AccumTong = AccumZhong + WsolsticeConst // 通積：該年冬至積日
         const AccumLeap = AccumZhong + LeapConst // 閏積
         const LeapSurAvg = parseFloat(((AccumLeap % lunar + lunar) % lunar).toPrecision(12)) // 閏餘、冬至月齡
@@ -83,8 +83,8 @@ function CalShoushi(ShouPre, year) {
         const HalfAnoma = AnomaLunar / 2 // 轉中
         let LeapSurAcr = 0
         for (let i = 1; i <= 13; i++) {
-            AvgRaw[i] = AccumTong - LeapSurAvg + (i - (syzygy ? 1 : 0.5) + FirstMonNum) * lunar // 經朔望
-            const WsolsticeAccum = ((i - (syzygy ? 1 : 0.5) + FirstMonNum) * lunar - LeapSurAvg + solar) % solar // 各月朔入冬至的積日
+            AvgRaw[i] = AccumTong - LeapSurAvg + (i - (ifFirst ? 1 : 0.5) + FirstMonNum) * lunar // 經朔望
+            const WsolsticeAccum = ((i - (ifFirst ? 1 : 0.5) + FirstMonNum) * lunar - LeapSurAvg + solar) % solar // 各月朔入冬至的積日
             if (WsolsticeAccum <= 88.909225) {
                 const ExConT = WsolsticeAccum
                 ExConS[i] = (ExDingDif * ExConT - ExPingDif * (ExConT ** 2) - ExLiDif * (ExConT ** 3)) / 10000 // 盈縮差
@@ -99,7 +99,7 @@ function CalShoushi(ShouPre, year) {
                 ExConS[i] = -(ExDingDif * ExConT - ExPingDif * (ExConT ** 2) - ExLiDif * (ExConT ** 3)) / 10000
             }
 
-            AnomaAccum[i] = ((AnomaMonConst + AccumZhong - LeapSurAvg + (i - (syzygy ? 1 : 0.5) + FirstMonNum) * lunar) % AnomaLunar + AnomaLunar) % AnomaLunar // 入轉日分
+            AnomaAccum[i] = ((AnomaMonConst + AccumZhong - LeapSurAvg + (i - (ifFirst ? 1 : 0.5) + FirstMonNum) * lunar) % AnomaLunar + AnomaLunar) % AnomaLunar // 入轉日分
             let sign = 1
             let FaSlowT = 0
             if (AnomaAccum[i] <= 6.888) {
@@ -179,7 +179,8 @@ function CalShoushi(ShouPre, year) {
 
     const PlusMinusNext = PlusFunctionMinusT(1)
     const LeapSurAcrNext = parseFloat(((LeapSurAvgNext - PlusMinusNext.First.PlusMinusT[1] + lunar) % lunar).toPrecision(12))
-
+    const ifLeapAcrNext = LeapSurAcrNext >= LeapStd ? 1 : 0
+    
     let LeapNumTerm = LeapNumAcrThis
     if ((!ifLeapAcrThis && LeapSurAcrThis > LeapStd - MonLeap) && (!ifLeapAvgThis && LeapSurAvgThis > LeapStd - MonLeap) && (!ifLeapAcrNext && LeapSurAcrNext < MonLeap) && (ifLeapAvgNext && LeapSurAvgNext > lunar - MonLeap)) {
         ifLeapAcrThis = 1
@@ -187,7 +188,8 @@ function CalShoushi(ShouPre, year) {
     } else if ((ifLeapAcrPrev && LeapSurAcrPrev < LeapStd + MonLeap) && (!ifLeapAvgPrev && LeapSurAvgPrev > LeapStd - MonLeap) && (ifLeapAcrThis && LeapSurAcrThis > lunar - MonLeap) && (ifLeapAvgThis && LeapSurAvgThis > lunar - MonLeap)) {
         ifLeapAcrThis = 0
         LeapNumTerm = 0
-    } // // 分別解決1327—1328、1327—1328的極端情況
+    } // // 分別解決1327—1328的極端情況
+    
     const ifLeapAdvanceStartThis = !ifLeapAcrThis && ifLeapAvgThis // 這兩行解決經閏餘和定閏餘在閏準臨界值上下時，置閏前後相差一年的特殊與極特殊情況
     const ifLeapAdvanceEndThis = ifLeapAcrThis || ifLeapAvgThis
     const TermAvgRaw = []

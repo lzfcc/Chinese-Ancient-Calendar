@@ -54,11 +54,11 @@ function main(start, end) {
             // 'Santong',
             // 'Qian',
             // 'EastHan',
-            'Shoushi',
-            // 'ShouAcr'
+            // 'Shoushi',
+            'ShouAcr',
         ].forEach(function (CalPre) {
             fs.appendFileSync(FilePath, PrintTxt(CalPre, year))
         })
     }
 }
-main(1365, 1367) // 注意，-1000年爲公元前1001年，因爲沒有公元0年
+main(1300, 1400) // 注意，-1000年爲公元前1001年，因爲沒有公元0年
