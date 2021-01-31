@@ -65,6 +65,7 @@ export default class extends React.Component {
             MonthPrint,
             SyzygyDecimalPrint,
             SyzygySCPrint,
+            TermNamePrint,
             TermDecimalPrint,
             TermSCPrint
           } = data;
@@ -72,23 +73,13 @@ export default class extends React.Component {
             <div>
               <p>{data.YearInfo}</p>
               <table border="2">
-                <tr>
-                  {(FirstDecimalPrint || []).map((x) => (
-                    <td>{x}</td>
-                  ))}
-                </tr>
-                <tr>
-                  {(FirstSCPrint || []).map((x) => (
-                    <td>{x}</td>
-                  ))}
-                </tr>
-                <tr>
+              <tr>
                   {(MonthPrint || []).map((x) => (
                     <td>{x}</td>
                   ))}
                 </tr>
                 <tr>
-                  {(SyzygyDecimalPrint || []).map((x) => (
+                  {(FirstSCPrint || []).map((x) => (
                     <td>{x}</td>
                   ))}
                 </tr>
@@ -103,7 +94,12 @@ export default class extends React.Component {
                   ))}
                 </tr>
                 <tr>
-                  {(TermDecimalPrint || []).map((x) => (
+                  {(SyzygyDecimalPrint || []).map((x) => (
+                    <td>{x}</td>
+                  ))}
+                </tr>
+                <tr>
+                  {(TermNamePrint || []).map((x) => (
                     <td>{x}</td>
                   ))}
                 </tr>
@@ -112,6 +108,12 @@ export default class extends React.Component {
                     <td>{x}</td>
                   ))}
                 </tr>
+                <tr>
+                  {(TermDecimalPrint || []).map((x) => (
+                    <td>{x}</td>
+                  ))}
+                </tr>
+               
               </table>
             </div>
           );
