@@ -1,6 +1,7 @@
 import React from "react";
 import './App.css'
-import { calculate } from "../src/Shangshu-calendar";
+import  calculate  from "../src/Shangshu-calendar";
+import {CalNameList} from "../src/Shangshu-calendar/constant" 
 
 export default class extends React.Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export default class extends React.Component {
     };
   }
 
-  handleRetrieve(e) {
+  handleRetrieve(e) { 
     const yearStart = Number(this.state.yearStart);
     const yearEnd = Number(this.state.yearEnd);
     let result = [];
@@ -32,7 +33,8 @@ export default class extends React.Component {
         alert("输入年份不合法！" + this.state.calendar);
         return;
       }
-      result.push(calculate(this.state.calendar, yearStart));
+      
+      result.push(calculate(this.state.calendar, yearStart)) 
     } else {
       if (
         this.state.yearStart.length === 0 ||
@@ -58,129 +60,24 @@ export default class extends React.Component {
   renderTable() {
     return (
       <div>
+        
         {(this.state.output || []).map((data) => {
-          const {
-            MonthPrint,
-            NewmAvgSCPrint,
-            NewmAvgDecimalPrint,
-            NewmSCPrint,
-            NewmDecimal3Print,
-            NewmDecimal2Print,
-            NewmDecimal1Print,
-            NewmMmddPrint,
-            SyzygySCPrint,
-            SyzygyDecimalPrint,
-            TermNamePrint,
-            TermAcrSCPrint,
-            TermAcrDecimalPrint,
-            TermSCPrint,
-            TermDecimalPrint,
-            SClist
-          } = data;
-          // const YearSC = SClist[((y - 3) % 60 + 60) % 60]
-          return (
-            <div>
-                {/* <p>if (y > 0) {
-            AnnoDomini = ('   \n公元 ' + y + ' 年 ' + YearSC + ' —————————————————————————   \n')
-        } else {
-            AnnoDomini = ('   \n公元前 ' + (1 - y) + ' 年 ' + YearSC + ' ————————————————————————— \n')
-        }</p> */}
-            <p>{data.YearInfo}</p>
-            <table>
-            <tr>
-                <th>月</th>
-                {(MonthPrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            <tr class="tr dividerB">
-            <th>定朔</th>
-            {(NewmSCPrint || []).map((x) => (
-            <td>{x}</td>
-            ))}
-            </tr>
-            {/* <tr>
-            <th>日期</th> 
-            {(NewmMmddPrint|| []).map((x) => (
-            <td>{x}</td>
-            ))}
-            </tr> */}
-            <tr>
-                    <th>三次</th>
-                    {(NewmDecimal3Print || []).map((x) => (
-                        <td>{x}</td>
-                    ))}
-                </tr>
-                <tr>
-                    <th>二次</th>
-                    {(NewmDecimal2Print || []).map((x) => (
-                        <td>{x}</td>
-                    ))}
-                </tr>
-                <tr>
-                    <th>一次</th>
-                    {(NewmDecimal1Print || []).map((x) => (
-                        <td>{x}</td>
-                    ))}
-                </tr>
-                <tr class="tr dividerA">
-                <th>平朔</th>
-                {(NewmAvgSCPrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            <tr>
-            <th>分</th>
-            {(NewmAvgDecimalPrint || []).map((x) => (
-                <td>{x}</td>
-            ))}
-            </tr>
-            <tr class="tr dividerB">
-                <th>望</th>
-                {(SyzygySCPrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            <tr>
-                <th>分</th>
-                {(SyzygyDecimalPrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            <tr class="tr dividerB">
-                <th>中氣</th>
-                {(TermNamePrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            <tr>
-            <th>定氣</th>
-            {(TermAcrSCPrint|| []).map((x) => (
-            <td>{x}</td>
-            ))}
-            </tr>
-            <tr>
-            <th>分</th>
-            {( TermAcrDecimalPrint|| []).map((x) => (
-            <td>{x}</td>
-            ))}
-            </tr>
-            <tr class="tr dividerA">
-                <th>平氣</th>
-                {(TermSCPrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            <tr>
-                <th>分</th>
-                {(TermDecimalPrint || []).map((x) => (
-                    <td>{x}</td>
-                ))}
-            </tr>
-            </table>
-            </div>
-          );
+         return <table>
+         {
+         Object.entries(data).map(([key,value]) => {
+          return (            
+           <tr>
+            <th>{key}</th>
+           {typeof value=='string' ?<td>{value}</td>:(
+             value.map((x)=><td>{x}</td>)
+           ) }
+           </tr>
+            )
+           })  
+         }
+           </table>
         })}
+        
       </div>
     );
   }
@@ -238,14 +135,10 @@ export default class extends React.Component {
             this.setState({ calendar: e.currentTarget.value });
           }}
         >
-          <option value="Yin">殷</option>
-          <option value="Santong">三统</option>
-          <option value="XiaA">冬夏</option>
-          <option value="Shoushi">授时</option>
-          <option value="Huangji">皇極</option>
-          <option value="Wuyin">戊寅</option>
-          <option value="Shenlong">神龍(擬)</option>
-          <option value="Linde">麟德</option>
+          
+           {Object.entries(CalNameList).map(([key,value])=>{
+            return <option value={key}>{value}</option>
+           })}        
         </select>
       </div>
     );
