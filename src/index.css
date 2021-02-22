@@ -1,13 +1,74 @@
+:root {
+  --bg: #fffae8;
+  --bggray: #f2f2f2;
+  --shallowgray: #b6b5b5;
+  --gray: #787878;
+  --black: #2b2b2b;
+  --yellow: #ffda56;
+  --bgpink: #feefe6;
+  --red: #f27144;
+  --blue: #2fa0ff;
+  --bgblue: #e1f3ff;
+  --serif: "Adobe Garamond Pro", Garamond, "Adobe Caslon Pro", Caslon, "Minion Pro", Minion, "Adobe Gurmukhi", "Palatino Linotype", "Adobe Garamond Pro", Garamond, "Adobe Caslon Pro", Caslon, "Minion Pro", Minion, "Adobe Gurmukhi", "Palatino Linotype", "Noto Serif CJK KR", "Source Han Serif K", "Noto Serif CJK SC", "Hiragino Mincho ProN", "Hiragino Mincho", "Yu Mincho", "Hana Mincho", "Ms Mincho";
+  --codeserif: "Source Code Pro", Menlo, Inconsolata, "Courier New", "Anonymous Pro", monospace, "Noto Serif CJK KR", "Source Han Serif K", "Noto Serif CJK SC", "Hiragino Mincho ProN", "Hiragino Mincho", "Yu Mincho", "Hana Mincho", "Ms Mincho";
+  --sans: Verdana, Trebuchet, muli, avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, arial, "Noto Sans CJK Kr", "Noto Sans CJK SC", PingFang, "PingFang SC", Sans-serif;
+  --codesans: "Source Code Pro", Menlo, Inconsolata, "Courier New", "Anonymous Pro", monospace, "Noto Sans CJK Kr", NotoSansCJKKr, "Noto Sans CJK SC", NotoSansCJKSC, PingFang, PingFangSC, Sans-serif;
+}
+
 body {
+  font-family: var(--sans);
+  color: var(--black);
+  font-size: 1em;
+  line-height: 1.9em;
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: scroll;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  text-align: justify;
+  text-justify: inter-ideograph;
+  background: var(--bg);
+  margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+  margin: 1.3em auto
+}
+
+table {
+  line-height: 1.5em;
+  text-align: center;
+  margin: 0em auto;
+  max-width: 140%;
+  z-index: 2;
+  border-bottom: 3.5px solid var(--gray);
+  border-top: 3.5px solid var(--gray);
+  border-collapse: collapse;
+  font-size: .9em;
+}
+table th { 
+  padding: 0 .35em 
+}
+
+table td {
+  padding: 0 .35em 
+}
+tr.dividerA{
+border-top: 1px solid var(--gray);
+}
+tr.dividerB{
+  border-top: 2.5px solid var(--gray);
+  }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: var(--codesans);
 }
