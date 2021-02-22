@@ -3,7 +3,7 @@ import './App.css'
 import calculate from "../src/Shangshu-calendar";
 import { CalNameList } from "../src/Shangshu-calendar/constant"
 
-const tableHeaderNameMap = {
+const tableRowNameMap = {
   MonthPrint: '月',
   NewmSCPrint: '定朔',
   NewmMmddPrint: '日期',
@@ -93,12 +93,10 @@ export default class extends React.Component {
   }
 
   renderTableContent (calData) {
-    delete calData.YearInfo
     return Object.entries(calData).map(([key, value]) => {
       let row = null
       if (Array.isArray(value) && value.length > 0) {
-        row = [<td>{tableHeaderNameMap[key]}</td>]
-        row = row.concat(value.map((x) => (<td>{x}</td>)))
+        row = [<td>{tableRowNameMap[key]}</td>].concat(value.map((x) => (<td>{x}</td>)))
       }
       return (<tr>
         {row}
