@@ -1,7 +1,28 @@
 import React from "react";
 import './App.css'
-import  calculate  from "../src/Shangshu-calendar";
-import {CalNameList} from "../src/Shangshu-calendar/constant" 
+import calculate from "../src/Shangshu-calendar";
+import { CalNameList } from "../src/Shangshu-calendar/constant"
+
+const tableRowNameMap = {
+  MonthPrint: '月',
+  NewmSCPrint: '定朔',
+  NewmMmddPrint: '日期',
+  NewmDecimal3Print: '三次',
+  NewmDecimal2Print: '二次',
+  NewmDecimal1Print: '一次',
+  NewmAvgSCPrint: '平朔',
+  NewmAvgDecimalPrint: '分',
+  NewmAvgSCPrint: '平朔',
+  NewmMmddPrint: '日期',
+  NewmAvgDecimalPrint: '分',
+  SyzygySCPrint: '望',
+  SyzygyDecimalPrint: '分',
+  TermNamePrint: '中氣',
+  TermAcrSCPrint: '定氣',
+  TermAcrDecimalPrint: '分',
+  TermSCPrint: '平氣',
+  TermDecimalPrint: '分',
+}
 
 export default class extends React.Component {
   constructor(props) {
@@ -9,7 +30,8 @@ export default class extends React.Component {
 
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
-    this.renderTable = this.renderTable.bind(this);
+    this.renderTableList = this.renderTableList.bind(this);
+    this.renderTableContent = this.renderTableContent.bind(this);
     this.renderMode = this.renderMode.bind(this);
     this.renderInput = this.renderInput.bind(this);
     this.renderCalendar = this.renderCalendar.bind(this);
@@ -23,7 +45,7 @@ export default class extends React.Component {
     };
   }
 
-  handleRetrieve(e) { 
+  handleRetrieve(e) {
     const yearStart = Number(this.state.yearStart);
     const yearEnd = Number(this.state.yearEnd);
     let result = [];
@@ -33,8 +55,8 @@ export default class extends React.Component {
         alert("输入年份不合法！" + this.state.calendar);
         return;
       }
-      
-      result.push(calculate(this.state.calendar, yearStart)) 
+
+      result.push(calculate(this.state.calendar, yearStart))
     } else {
       if (
         this.state.yearStart.length === 0 ||
@@ -57,33 +79,33 @@ export default class extends React.Component {
     this.setState({ output: result });
   }
 
-  renderTable() {
+  renderTableList() {
     return (
       <div>
-        
-        {(this.state.output || []).map((data) => {
-         return <table>
-         {
-         Object.entries(data).map(([key,value]) => {
-          return (            
-           <tr>
-            <th>{key}</th>
-           {typeof value=='string' ?<td>{value}</td>:(
-             value.map((x)=><td>{x}</td>)
-           ) }
-           </tr>
-            )
-           })  
-         }
-           </table>
+        {(this.state.output || []).map((calData) => {
+         return (<table>
+            <tr><th colSpan={13}>{calData.YearInfo}</th></tr>
+            {this.renderTableContent(calData)}
+          </table>)
         })}
-        
       </div>
     );
   }
 
+  renderTableContent (calData) {
+    return Object.entries(calData).map(([key, value]) => {
+      let row = null
+      if (Array.isArray(value) && value.length > 0) {
+        row = [<td>{tableRowNameMap[key]}</td>].concat(value.map((x) => (<td>{x}</td>)))
+      }
+      return (<tr>
+        {row}
+      </tr>)
+    })
+  }
+
   renderMode() {
-    return ( 
+    return (
       <div
         onChange={(e) => {
           this.setState({ mode: e.target.value });
@@ -135,10 +157,9 @@ export default class extends React.Component {
             this.setState({ calendar: e.currentTarget.value });
           }}
         >
-          
            {Object.entries(CalNameList).map(([key,value])=>{
             return <option value={key}>{value}</option>
-           })}        
+           })}
         </select>
       </div>
     );
@@ -151,7 +172,7 @@ export default class extends React.Component {
         {this.renderCalendar()}
         {this.renderInput()}
         <button onClick={this.handleRetrieve}>click!</button>
-        {this.renderTable()}
+        {this.renderTableList()}
       </div>
     );
   }
