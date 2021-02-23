@@ -44,11 +44,20 @@ body {
 p {
   margin: 1.3em auto
 }
-
+h1{
+  margin-bottom: -.4em;
+ text-align: center; 
+ font-family: var(--serif);
+}
+h2{
+  font-size: 1.3em;
+  text-align: center; 
+  font-family: var(--serif);
+ }
 table {
   line-height: 1.5em;
   text-align: center;
-  margin: 0em auto;
+  margin: 0em auto 2em;
   max-width: 140%;
   z-index: 2;
   border-bottom: 3.5px solid var(--gray);
@@ -56,19 +65,57 @@ table {
   border-collapse: collapse;
   font-size: .9em;
 }
-table th { 
-  padding: 0 .35em 
+
+table th {
+  padding: 0 .35em;
+  border-right: 1px solid var(--gray);  
+  text-align: right;
 }
 
 table td {
-  padding: 0 .35em 
+  padding: 0 .35em
 }
-tr.dividerA{
-border-top: 1px solid var(--gray);
+
+tr.MonthPrint {
+  border-bottom: 1px solid var(--gray);
 }
-tr.dividerB{
+
+tr.NewmDecimal1Print {
+  border-bottom: 1px solid var(--gray);
+}
+
+tr.NewmAvgDecimalPrint{
+  border-bottom: 1px solid var(--gray);
+}
+tr.SyzygyDecimalPrint{
+  border-bottom: 1px solid var(--gray);
+}
+
+
+tr.dividerB {
   border-top: 2.5px solid var(--gray);
-  }
+}
+
+.single-cal p {
+  margin: 2em auto 0em;
+}
+.calendar-select select{
+  font-size: .9em;
+  font-family: var(--sans);
+}
+year-range {
+  font-size: 1em;
+  
+}
+.year-select.note {
+  color: var(--gray);
+}
+
+.year-select input{
+  font-size: .9em;
+  font-family: var(--sans);
+  width: 3em;
+}
 code {
   font-family: var(--codesans);
 }
