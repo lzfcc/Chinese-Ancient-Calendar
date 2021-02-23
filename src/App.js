@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css'
 import calculate from '../src/Shangshu-calendar';
 import { CalNameList } from '../src/Shangshu-calendar/constant'
-import SCList from '../src/Shangshu-calendar/constant'
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -15,7 +14,7 @@ const TableRowNameMap = {
   NewmDecimal1Print: '一次',
   SyzygySCPrint: '望',
   SyzygyDecimalPrint: '分',
-  TermNamePrint: '中氣',
+  TermNamePrint: '氣名',
   TermAcrSCPrint: '定氣',
   TermAcrDecimalPrint: '分',
   TermSCPrint: '平氣',
