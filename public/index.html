@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-HK">
 
 <head>
   <meta charset="utf-8" />
@@ -7,33 +7,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
   <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
   <title>中國古曆編製器</title>
 </head>
 
 <body>
-  <div class='content'>
+  <section class='content'>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <h1>中國古曆編製器</h1>
     <h2>Chinese Ancient Calendar Generator</h2>
     <div id="root"></div>
-
     <hr>
-    <article class="DocSearch-content vertical-false">
+    <article>
       <h2 id="本工具簡介">本工具簡介</h2>
       <ol>
         <li>目前的古代朔閏査詢網站都是根據工具書、文獻材料手動調整的<n>參考中研院 <a
@@ -90,8 +80,8 @@
       </ol>
 
     </article>
-  </div>
-  <div class="comment-wrap">
+  </section>
+  <section class="comment-wrap">
     <div class="comment">
       <div id="hyvor-talk-view"></div>
       <script type="text/javascript">
@@ -103,9 +93,9 @@
       </script>
       <script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
     </div>
-  </div>
+  </section>
   <footer>
-    <p><a href='https://kqh.me' target="_blank">柯棋瀚</a>©️ 2021-02-23 > 2021（內測）</p>
+    <p><a href='https://kqh.me' target="_blank">柯棋瀚</a>©️ 2021-02-23 > 2021（內測請勿外傳）</p>
     <p>email&iMessage: me [at] kqh [dot] me</p>
     <p class='version'>前端v0.91 程序v0.9</p>
     <p>相關鏈接：<a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
@@ -124,7 +114,5 @@
 
   </footer>
 </body>
-
-
 
 </html>

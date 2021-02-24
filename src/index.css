@@ -18,7 +18,7 @@
 body {
   font-family: var(--sans);
   color: var(--black);
-  font-size: 1em;
+  font-size: 1.2em;
   line-height: 1.9em;
   padding: 0;
   margin: 0;
@@ -114,7 +114,7 @@ p {
 h1 {
   font-size: 2.6em;
   letter-spacing: .2em;
-  margin-bottom: -.2em;
+  margin: 2em auto -.2em;
   text-align: center;
   font-family: var(--serif);
 }
@@ -126,6 +126,7 @@ h2 {
 }
 
 table {
+  font-size: .8em;
   line-height: 1.6em;
   text-align: center;
   margin: 0em auto 2em;
@@ -134,17 +135,17 @@ table {
   border-bottom: 3.5px solid var(--gray);
   border-top: 3.5px solid var(--gray);
   border-collapse: collapse;
-  font-size: .9em;
 }
 
 table th {
-  padding: 0 .35em;
+  padding: 0 .5em;
   border-right: 1px solid var(--gray);
   text-align: right;
 }
 
 table td {
-  padding: 0 .35em
+  padding: 0;
+  width: 50px
 }
 
 tr.MonthPrint {
@@ -256,7 +257,7 @@ code {
 .comment-wrap {
   background-color: var(--section2);
   margin: 0 auto;
-  width: 100vw;
+  max-width: 850px;
 }
 
 .comment {
@@ -270,7 +271,7 @@ code {
 }
 
 hr {
-  margin: 2em auto;
+  margin: 5em auto 3em;
   max-width: 6.7em;
   height: .3em;
   border-radius: 1rem;
@@ -280,11 +281,15 @@ hr {
 
 footer {
   margin: 5em auto 2em;
-  padding: .5em 0 2em;
+  padding: 2em 0;
   width: 100%;
   text-align: center;
   background: var(--bggray);
   text-align: center;
-  font-size: .95em;
+  font-size: .85em;
   line-height: 1.6;
+}
+
+footer p {
+  margin: .3em auto
 }
