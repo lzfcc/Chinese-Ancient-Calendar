@@ -77,7 +77,8 @@
         <li>判斷大小月的方法：看天干是否相同。如一、二、三月的朔分別是辛亥、辛巳、庚戌，辛亥、辛巳天干一樣，說明一月有 30 日，爲大月；辛巳、庚戌天干不同，說明二月有 29 日，爲小月。</li>
         <li>
           「平朔」卽未考慮日月速度變化而得出的朔日，「平氣」卽未考慮日速度變化而得出的中氣日，「定朔」卽加上日月速度改正而得出的朔日，「定氣」卽加上日速度改正而得出的中氣日。干支下的數字為小分，均為十進制小數，如「8184」卽0.8184，換算成24小時制爲：0.8184
-          × 24 = 19.6416，0.6416 × 60 = 38.496，0.496 × 60 ≒ 30，卽19點38分30秒。小分到取小數點後四位，卽精度爲 8.64 s。各曆均有不同的辰法，需要您手動進行轉換。未來我可能會加入辰法自動轉換。</li>
+          × 24 = 19.6416，0.6416 × 60 = 38.496，0.496 × 60 ≒ 30，卽19點38分30秒。小分到取小數點後四位，卽精度爲 8.64
+          s。各曆均有不同的辰法，需要您手動進行轉換。未來我可能會加入辰法自動轉換。</li>
         <li>「二次」表示用二次差內插法計算出的小分，「一次」表示用線性內插法計算出的小分，「三次」表示用三次差公式計算出的小分。若某曆有二次差定朔計算，則望干支及小餘爲二次差定望，其餘曆法同理。</li>
         <li>雖然漢末<v>乾象曆</v>便出現了定朔推步，但直到唐初<v>麟德曆</v>纔正式開始用定朔編排曆書，此前都是平朔注曆，定朔僅用於交食推步。雖然隋劉焯<v>皇極曆</v>
           便發明了二次差計算定朔，但編排曆書時僅採用簡單的線性內插進行計算，二次差僅用於交食推步。雖然<v>皇極曆</v>開始便可以計算定氣，但直到淸<v>時憲曆</v>
@@ -106,24 +107,21 @@
   <footer>
     <p><a href='https://kqh.me' target="_blank">柯棋瀚</a>©️ 2021-02-23 > 2021（內測）</p>
     <p>email&iMessage: me [at] kqh [dot] me</p>
-    <p class='version'>前端v0.9 程序v0.9< 更新日誌/p>
-        <p></p>
-        <p>相關鏈接：<a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
-            target='_blank'>廖育棟的網站</a>（年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等）。廖育棟的<a
-            href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a>。<a
-            href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>（世界各國曆法）。中研院 <a
-            href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></p>
+    <p class='version'>前端v0.91 程序v0.9</p>
+    <p>相關鏈接：<a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
+        target='_blank'>廖育棟的網站</a>（年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等）。廖育棟的<a
+        href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a>。<a
+        href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>（世界各國曆法）。中研院 <a
+        href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></p>
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108451819-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'UA-108451819-1');
+    </script>
 
-
-
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108451819-1"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', 'UA-108451819-1');
-        </script>
   </footer>
 </body>
 
