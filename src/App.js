@@ -27,12 +27,6 @@ export default class extends React.Component {
 
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
-    this.renderTableList = this.renderTableList.bind(this);
-    this.RenderTableContent = this.RenderTableContent.bind(this);
-    this.renderMode = this.renderMode.bind(this);
-    this.renderInput = this.renderInput.bind(this);
-    this.renderCalendar = this.renderCalendar.bind(this);
-
     this.state = {
       calendar: 'Yin',
       mode: '0',
@@ -73,15 +67,45 @@ export default class extends React.Component {
         result.push(calculate(this.state.calendar, y));
       }
     }
-    this.setState({ output: result });
-   
+
+    const getFileName = () => {
+      let calString = `${this.state.calendar}_${this.state.YearStart}`
+      if (this.state.yearEnd) {
+        calString += `_${this.state.yearEnd}`
+      }
+      calString += '_'
+      const date = new Date();
+      let dateString = date.getFullYear().toString();
+      [date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()].forEach((num) => {
+        dateString = dateString + num.toString().padStart(2, '0')
+      })
+      return calString + dateString
+    }
+
+    // todo: result 格式化 md
+    const blob = new Blob([JSON.stringify(result)]);
+    const sizeLimit = 1 << 18; // 256 kB
+    if ((this.downloadRef && this.downloadRef.checked) || blob.size > sizeLimit) {
+        var fileName = `calendar_${getFileName()}.md`;
+        var a = document.createElement('a');
+        a.download = fileName;
+        a.href = URL.createObjectURL(blob);
+        a.click();
+        URL.revokeObjectURL(a.href);
+        a = null;
+    }
+    if (blob.size > sizeLimit) {
+      alert('生成内容过多，为避免浏览器展示性能问题，已自动下载文件到本地');
+    } else {
+      this.setState({ output: result });
+    }
   }
 
   renderTableList() {
     return (
       <div>
         {(this.state.output || []).map((CalData) => {
-         return (<div class='single-cal'>           
+         return (<div class='single-cal'>
            <p>{CalData.YearInfo}</p>
            <table>
             <tr> {this.RenderTableContent(CalData)}</tr>
@@ -102,7 +126,7 @@ export default class extends React.Component {
      })
   }
 
-  
+
   renderMode() {
     return (
       <div
@@ -164,13 +188,25 @@ export default class extends React.Component {
     );
   }
 
+  renderDownload () {
+    return (
+      <div>
+        <input type='checkbox' name='download-file' ref={(ref) => {
+          this.downloadRef = ref
+        }}/>
+        <label>保存为文件</label>
+      </div>
+    )
+  }
+
   render() {
     return (
       <div class='App'>
         {this.renderMode()}
         {this.renderCalendar()}
         {this.renderInput()}
-        <button onClick={this.handleRetrieve}>click!</button>
+        <button onClick={this.handleRetrieve}>计算!</button>
+        {this.renderDownload()}
         {this.renderTableList()}
       </div>
     );
