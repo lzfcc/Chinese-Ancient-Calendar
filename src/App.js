@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css'
 import calculate from '../src/Shangshu-calendar';
 import { CalNameList } from '../src/Shangshu-calendar/constant'
+import MenuSelect from './MenuSelect';
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -21,14 +22,14 @@ const TableRowNameMap = {
   TermDecimalPrint: '分',
 }
 
-export default class extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
     this.state = {
-      calendar: 'Yin',
+      calendars: ['Yin'],
       mode: '0',
       YearStart: '',
       yearEnd: '',
@@ -41,13 +42,11 @@ export default class extends React.Component {
     const yearEnd = Number(this.state.yearEnd);
     let result = [];
     if (this.state.mode === '0') {
-      console.log(this.state.YearStart, YearStart);
       if (this.state.YearStart.length === 0 || Number.isNaN(YearStart)) {
-        alert('输入年份不合法！' + this.state.calendar);
+        alert('输入年份不合法！');
         return;
       }
-
-      result.push(calculate(this.state.calendar, YearStart))
+      result = this.state.calendars.map(cal => calculate(cal, YearStart))
     } else {
       if (
         this.state.YearStart.length === 0 ||
@@ -64,12 +63,14 @@ export default class extends React.Component {
       }
       // alert(this.state.year);
       for (let y = YearStart; y <= yearEnd; ++y) {
-        result.push(calculate(this.state.calendar, y));
+        for (const cal of this.state.calendars) {
+          result.push(calculate(cal, y));
+        }
       }
     }
 
     const getFileName = () => {
-      let calString = `${this.state.calendar}_${this.state.YearStart}`
+      let calString = `${this.state.calendars}_${this.state.YearStart}`
       if (this.state.yearEnd) {
         calString += `_${this.state.yearEnd}`
       }
@@ -126,7 +127,6 @@ export default class extends React.Component {
      })
   }
 
-
   renderMode() {
     return (
       <div
@@ -174,16 +174,12 @@ export default class extends React.Component {
   renderCalendar() {
     return (
       <div class='calendar-select'>
-        <select
-          value={this.state.calendar}
-          onChange={(e) => {
-            this.setState({ calendar: e.currentTarget.value });
+        <MenuSelect
+          calMap={CalNameList}
+          onSelect={(selected) => {
+            this.setState({ calendars: selected })
           }}
-        >
-           {Object.entries(CalNameList).map(([key,value])=>{
-            return <option value={key}>{value}</option>
-           })}
-        </select>
+        />
       </div>
     );
   }
