@@ -34,52 +34,55 @@ export default class App extends React.Component {
       calendars: ['Yin'],
       mode: '0',
       YearStart: '',
-      yearEnd: '',
+      YearEnd: '',
       output: ''
     };
   }
 
   handleRetrieve(e) {
     const YearStart = Number(this.state.YearStart);
-    const yearEnd = Number(this.state.yearEnd);
+    let YearEnd = Number(this.state.YearEnd);
     let result = [];
-    if (this.state.mode === '0') {
-      if (this.state.YearStart.length === 0 || Number.isNaN(YearStart)) {
-        alert('输入年份不合法！');
-        return;
-      }
-      result = this.state.calendars.map(cal => calculate(cal, YearStart))
-    } else {
+    // if (this.state.mode === '0') {
+    //   if (this.state.YearStart.length === 0 || Number.isNaN(YearStart)) {
+    //     alert('年份不合法！');
+    //     return;
+    //   }
+    //   result = this.state.calendars.map(cal => calculate(cal, YearStart))
+    // } else {
       if (
         this.state.YearStart.length === 0 ||
         Number.isNaN(YearStart) ||
-        this.state.yearEnd.length === 0 ||
-        Number.isNaN(yearEnd)
+        // this.state.YearEnd.length === 0 ||
+        Number.isNaN(YearEnd)
       ) {
-        alert('输入年份不合法！');
+        alert('年份不合法！');
         return;
       }
-      if (YearStart > yearEnd) {
-        alert('起始年份不可以大于终止年份！');
+      if(this.state.YearEnd.length === 0){
+        YearEnd = YearStart 
+      }
+      if (YearStart > YearEnd) {
+        alert('起始年不可大於終止年！');
         return;
       }
       // alert(this.state.year);
-      for (let y = YearStart; y <= yearEnd; ++y) {
+      for (let y = YearStart; y <= YearEnd; ++y) {
         for (const cal of this.state.calendars) {
           result.push(calculate(cal, y));
         }
       }
-    }
+    // }
 
     const getFileName = () => {
       let calString = `${this.state.calendars}_${this.state.YearStart}`
-      if (this.state.yearEnd) {
-        calString += `_${this.state.yearEnd}`
+      if (this.state.YearEnd) {
+        calString += `_${this.state.YearEnd}`
       }
       calString += '_'
       const date = new Date();
       let dateString = date.getFullYear().toString();
-      [date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()].forEach((num) => {
+      [date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()].forEach((num) => {
         dateString = dateString + num.toString().padStart(2, '0')
       })
       return calString + dateString
@@ -87,7 +90,7 @@ export default class App extends React.Component {
 
     // todo: result 格式化 md
     const blob = new Blob([JSON.stringify(result)]);
-    const sizeLimit = 1 << 18; // 256 kB
+    const sizeLimit = 1 << 19; // 512 kB
     if ((this.downloadRef && this.downloadRef.checked) || blob.size > sizeLimit) {
         var fileName = `calendar_${getFileName()}.md`;
         var a = document.createElement('a');
@@ -98,7 +101,7 @@ export default class App extends React.Component {
         a = null;
     }
     if (blob.size > sizeLimit) {
-      alert('生成内容过多，为避免浏览器展示性能问题，已自动下载文件到本地');
+      alert('內容大於512KB，爲避免瀏覽器展示性能問題，已自動下載文件');
     } else {
       this.setState({ output: result });
     }
@@ -128,47 +131,43 @@ export default class App extends React.Component {
       return null
      })
   }
-
-  renderMode() {
-    return (
-      <div
-        onChange={(e) => {
-          this.setState({ mode: e.target.value });
-        }}
-      >
-        <span>
-          <input type='radio' name='retrieve-mode' value='0' defaultChecked />
-          <label for='0'>特定年</label>
-        </span>
-        <span>
-          <input type='radio' name='retrieve-mode' value='1' />
-          <label for='1'>年區閒</label>
-        </span>
-      </div>
-    );
-  }
-
+  // renderMode() {
+  //   return (
+  //     <div
+  //       onChange={(e) => {
+  //         this.setState({ mode: e.target.value });
+  //       }}
+  //     >
+  //       <span>
+  //         <input type='radio' name='retrieve-mode' value='0'/>
+  //         <label for='0'>特定年</label>
+  //       </span>
+  //       <span>
+  //         <input type='radio' name='retrieve-mode' value='1' defaultChecked  />
+  //         <label for='1'>年區閒</label>
+  //       </span>
+  //     </div>
+  //   );
+  // }
   renderInput() {
     return (
       <span class='year-select'>
-        <span class='note'>（1=公元1年，0=公元前1年，-1=公元前2年）</span>
         <input
           onChange={(e) => {
             this.setState({ YearStart: e.currentTarget.value });
           }}
         />
-        <span>年</span>
-        {this.state.mode === '1' ? (
+        {/* {this.state.mode === '1' ? ( */}
           <span class='year-end'>
             <span>—</span>
             <input
               onChange={(e) => {
-                this.setState({ yearEnd: e.currentTarget.value });
+                this.setState({ YearEnd: e.currentTarget.value });
               }}
             />
             <span>年</span>
           </span>
-        ) : null}
+        {/* ) : null} */}
       </span>
     );
   }
@@ -188,22 +187,22 @@ export default class App extends React.Component {
 
   renderDownload () {
     return (
-      <div>
+      <span class='save-file'>
         <input type='checkbox' name='download-file' ref={(ref) => {
           this.downloadRef = ref
         }}/>
-        <label>保存为文件</label>
-      </div>
+        <label>保存爲.md文件</label>
+      </span>
     )
   }
 
   render() {
     return (
       <div class='App'>
-        {this.renderMode()}
+        {/* {this.renderMode()} */}
         {this.renderCalendar()}
         {this.renderInput()}
-        <button onClick={this.handleRetrieve}>计算!</button>
+        <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
         {this.renderDownload()}
         {this.renderTableList()}
       </div>
