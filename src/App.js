@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css'
 import calculate from '../src/Shangshu-calendar';
 import { CalNameList } from '../src/Shangshu-calendar/constant'
+import MenuSelect from './MenuSelect';
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -23,20 +24,14 @@ const TableRowNameMap = {
   TermMansionPrint: '赤度',
 }
 
-export default class extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
-    this.renderTableList = this.renderTableList.bind(this);
-    this.RenderTableContent = this.RenderTableContent.bind(this);
-    this.renderMode = this.renderMode.bind(this);
-    this.renderInput = this.renderInput.bind(this);
-    this.renderCalendar = this.renderCalendar.bind(this);
-
     this.state = {
-      calendar: 'Yin',
+      calendars: ['Yin'],
       mode: '0',
       YearStart: '',
       yearEnd: '',
@@ -49,13 +44,11 @@ export default class extends React.Component {
     const yearEnd = Number(this.state.yearEnd);
     let result = [];
     if (this.state.mode === '0') {
-      console.log(this.state.YearStart, YearStart);
       if (this.state.YearStart.length === 0 || Number.isNaN(YearStart)) {
-        alert('输入年份不合法！' + this.state.calendar);
+        alert('输入年份不合法！');
         return;
       }
-
-      result.push(calculate(this.state.calendar, YearStart))
+      result = this.state.calendars.map(cal => calculate(cal, YearStart))
     } else {
       if (
         this.state.YearStart.length === 0 ||
@@ -72,18 +65,50 @@ export default class extends React.Component {
       }
       // alert(this.state.year);
       for (let y = YearStart; y <= yearEnd; ++y) {
-        result.push(calculate(this.state.calendar, y));
+        for (const cal of this.state.calendars) {
+          result.push(calculate(cal, y));
+        }
       }
     }
-    this.setState({ output: result });
-   
+
+    const getFileName = () => {
+      let calString = `${this.state.calendars}_${this.state.YearStart}`
+      if (this.state.yearEnd) {
+        calString += `_${this.state.yearEnd}`
+      }
+      calString += '_'
+      const date = new Date();
+      let dateString = date.getFullYear().toString();
+      [date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()].forEach((num) => {
+        dateString = dateString + num.toString().padStart(2, '0')
+      })
+      return calString + dateString
+    }
+
+    // todo: result 格式化 md
+    const blob = new Blob([JSON.stringify(result)]);
+    const sizeLimit = 1 << 18; // 256 kB
+    if ((this.downloadRef && this.downloadRef.checked) || blob.size > sizeLimit) {
+        var fileName = `calendar_${getFileName()}.md`;
+        var a = document.createElement('a');
+        a.download = fileName;
+        a.href = URL.createObjectURL(blob);
+        a.click();
+        URL.revokeObjectURL(a.href);
+        a = null;
+    }
+    if (blob.size > sizeLimit) {
+      alert('生成内容过多，为避免浏览器展示性能问题，已自动下载文件到本地');
+    } else {
+      this.setState({ output: result });
+    }
   }
 
   renderTableList() {
     return (
       <div>
         {(this.state.output || []).map((CalData) => {
-         return (<div class='single-cal'>           
+         return (<div class='single-cal'>
            <p>{CalData.YearInfo}</p>
            <table>
             <tr> {this.RenderTableContent(CalData)}</tr>
@@ -104,7 +129,6 @@ export default class extends React.Component {
      })
   }
 
-  
   renderMode() {
     return (
       <div
@@ -152,18 +176,25 @@ export default class extends React.Component {
   renderCalendar() {
     return (
       <div class='calendar-select'>
-        <select
-          value={this.state.calendar}
-          onChange={(e) => {
-            this.setState({ calendar: e.currentTarget.value });
+        <MenuSelect
+          calMap={CalNameList}
+          onSelect={(selected) => {
+            this.setState({ calendars: selected })
           }}
-        >
-           {Object.entries(CalNameList).map(([key,value])=>{
-            return <option value={key}>{value}</option>
-           })}
-        </select>
+        />
       </div>
     );
+  }
+
+  renderDownload () {
+    return (
+      <div>
+        <input type='checkbox' name='download-file' ref={(ref) => {
+          this.downloadRef = ref
+        }}/>
+        <label>保存为文件</label>
+      </div>
+    )
   }
 
   render() {
@@ -172,7 +203,8 @@ export default class extends React.Component {
         {this.renderMode()}
         {this.renderCalendar()}
         {this.renderInput()}
-        <button onClick={this.handleRetrieve}>click!</button>
+        <button onClick={this.handleRetrieve}>计算!</button>
+        {this.renderDownload()}
         {this.renderTableList()}
       </div>
     );
