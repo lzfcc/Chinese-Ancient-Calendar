@@ -126,6 +126,7 @@ h2 {
 }
 
 table {
+  font-family: var(--codesans);
   font-size: .8em;
   line-height: 1.6em;
   text-align: center;
@@ -135,6 +136,7 @@ table {
   border-bottom: 3.5px solid var(--gray);
   border-top: 3.5px solid var(--gray);
   border-collapse: collapse;
+  word-break: break-all;
 }
 
 table th {
@@ -153,31 +155,16 @@ tr.MonthPrint {
   font-weight: bold;
 }
 
-tr.MonthPrint td {
-  font-family: var(--codesans);
-}
 
-tr.NewmSCPrint {
+tr.NewmScPrint {
   font-weight: bold;
 }
 
-tr.NewmDecimal3Print td {
-  font-family: var(--codesans);
-}
-
-tr.NewmDecimal2Print td {
-  font-family: var(--codesans);
-}
-
-tr.NewmDecimal1Print td {
-  font-family: var(--codesans);
-}
-
-tr.NewmAvgSCPrint {
+tr.NewmAvgScPrint {
   font-weight: bold;
 }
 
-tr.TermSCPrint {
+tr.TermScPrint {
   font-weight: bold;
 }
 
@@ -190,7 +177,7 @@ tr.NewmMmddPrint {
   font-weight: light;
 }
 
-tr.NewmDecimal1Print {
+tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
 }
 
@@ -198,32 +185,16 @@ tr.NewmDecimal3Print {
   border-bottom: 1px solid var(--gray);
 }
 
-tr.NewmDecimal1Print td {
-  font-family: var(--codesans);
-}
-
 tr.NewmAvgDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
-}
-
-tr.NewmAvgDecimalPrint td {
-  font-family: var(--codesans);
 }
 
 tr.SyzygyDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
 }
 
-tr.SyzygyDecimalPrint td {
-  font-family: var(--codesans);
-}
-
-tr.TermAcrDecimalPrint {
+tr.TermDecimalPrint {
   border-bottom: 1px solid var(--gray);
-}
-
-tr.TermAcrDecimalPrint td {
-  font-family: var(--codesans);
 }
 
 .single-cal p {

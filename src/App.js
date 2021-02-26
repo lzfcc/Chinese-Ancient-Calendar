@@ -5,20 +5,22 @@ import { CalNameList } from '../src/Shangshu-calendar/constant'
 
 const TableRowNameMap = {
   MonthPrint: '月序',
-  NewmAvgSCPrint: '平朔',
+  NewmAvgScPrint: '平朔',
   NewmAvgDecimalPrint: '分',
-  NewmSCPrint: '定朔',
+  NewmScPrint: '定朔',
   NewmMmddPrint: '公曆',
   NewmDecimal3Print: '三次',
   NewmDecimal2Print: '二次',
   NewmDecimal1Print: '一次',
-  SyzygySCPrint: '望',
+  NewmMansionPrint: '赤度',
+  SyzygyScPrint: '望',
   SyzygyDecimalPrint: '分',
   TermNamePrint: '氣名',
-  TermAcrSCPrint: '定氣',
+  TermAcrScPrint: '定氣',
   TermAcrDecimalPrint: '分',
-  TermSCPrint: '平氣',
+  TermScPrint: '平氣',
   TermDecimalPrint: '分',
+  TermMansionPrint: '赤度',
 }
 
 export default class extends React.Component {
