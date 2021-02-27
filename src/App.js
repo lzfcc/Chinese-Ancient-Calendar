@@ -44,6 +44,7 @@ export default class App extends React.Component {
 
   componentDidMount () {
     this.worker.addEventListener('message', ({ data }) => {
+      clearTimeout(this.t);
       if (data instanceof Blob) { // 输出文件结果
         this.setState({ output: [], loading: false });
         var fileName = `calendar_${this._getFileName()}.md`;
@@ -116,30 +117,28 @@ export default class App extends React.Component {
       return;
     }
 
-    const generateFile = () => {
+    const callWorkder = (eventName) => {
       this.setState({ loading: true });
       this.worker.postMessage({
-        eventName: 'print',
-        ...this.state
+        eventName,
+        ...this.state,
+        YearStart,
+        YearEnd
       })
     }
 
     if (this.downloadRef && this.downloadRef.checked) {
-      generateFile();
+      callWorkder('print');
       return;
     }
 
     if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
       alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
-      generateFile();
+      callWorkder('print');
       return;
     }
 
-    this.setState({ loading: true });
-    this.worker.postMessage({
-      eventName: 'display',
-      ...this.state
-    });
+    callWorkder('display')
   }
 
   renderTableList() {
