@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css'
-import { Calculate, CalNameList, Print } from '../src/Shangshu-calendar'
+import { CalNameList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
 
 const TableRowNameMap = {
@@ -35,8 +35,47 @@ export default class App extends React.Component {
       YearEnd: '',
       YearMode: '0',
       AutoMode: 0,
-      output: ''
+      output: '',
+      loading: false
     };
+
+    this.worker = new Worker('main.js')
+  }
+
+  componentDidMount () {
+    this.worker.addEventListener('message', ({ data }) => {
+      if (data instanceof Blob) { // 输出文件结果
+        this.setState({ output: [], loading: false });
+        var fileName = `calendar_${this._getFileName()}.md`;
+        var a = document.createElement('a');
+        a.download = fileName;
+        a.href = URL.createObjectURL(data);
+        a.click();
+        URL.revokeObjectURL(a.href);
+        a = null;
+      } else {
+        this.setState({ output: data });
+      }
+      this.setState({ loading: false });
+    })
+  }
+
+  componentWillUnmount () {
+    this.worker.terminate()
+  }
+
+  _getFileName () {
+    let calString = `${this.state.calendars}_${this.state.YearStart}`
+    if (this.state.YearEnd) {
+      calString += `_${this.state.YearEnd}`
+    }
+    calString += '_'
+    const date = new Date();
+    let dateString = date.getFullYear().toString();
+    [date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()].forEach((num) => {
+      dateString = dateString + num.toString().padStart(2, '0')
+    })
+    return calString + dateString
   }
 
   handleRetrieve(e) {
@@ -77,56 +116,30 @@ export default class App extends React.Component {
       return;
     }
 
-    if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
-      alert('生成内容过多，为避免浏览器展示性能问题，已自动下载文件到本地');
-      // TODO: loading
-      this.generateFile()
-      this.setState({ output: [] });
-      return
+    const generateFile = () => {
+      this.setState({ loading: true });
+      this.worker.postMessage({
+        eventName: 'print',
+        ...this.state
+      })
     }
 
     if (this.downloadRef && this.downloadRef.checked) {
-      // TODO: loading
-      this.generateFile()
-      this.setState({ output: [] });
-      return
+      generateFile();
+      return;
     }
 
-    const printData = [];
-    this.state.calendars.forEach((CalName) => {
-        Calculate(CalName, YearStart, YearEnd).forEach((result, index) => {
-          if (!printData[index]) {
-              printData[index] = [];
-          }
-          printData[index].push(result);
-        });
+    if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
+      alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
+      generateFile();
+      return;
+    }
+
+    this.setState({ loading: true });
+    this.worker.postMessage({
+      eventName: 'display',
+      ...this.state
     });
-
-    this.setState({ output: printData });
-  }
-
-  generateFile () {
-    const getFileName = () => {
-      let calString = `${this.state.calendars}_${this.state.YearStart}`
-      if (this.state.YearEnd) {
-        calString += `_${this.state.YearEnd}`
-      }
-      calString += '_'
-      const date = new Date();
-      let dateString = date.getFullYear().toString();
-      [date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()].forEach((num) => {
-        dateString = dateString + num.toString().padStart(2, '0')
-      })
-      return calString + dateString
-    }
-    const blob = new Blob([Print(this.state.YearStart, this.state.YearEnd, this.state.autoMode, this.state.calendars)]);
-    var fileName = `calendar_${getFileName()}.md`;
-    var a = document.createElement('a');
-    a.download = fileName;
-    a.href = URL.createObjectURL(blob);
-    a.click();
-    URL.revokeObjectURL(a.href);
-    a = null;
   }
 
   renderTableList() {
@@ -138,7 +151,9 @@ export default class App extends React.Component {
               <div class='single-cal'>
                 <p>{CalInfo.YearInfo}</p>
                 <table>
-                  <tr>{this.RenderTableContent(CalInfo)}</tr>
+                  <tr>
+                    {this.RenderTableContent(CalInfo)}
+                  </tr>
                   </table>
               </div>)
           });
@@ -149,16 +164,17 @@ export default class App extends React.Component {
     );
   }
 
-  RenderTableContent (CalData) {
-    return Object.entries(CalData).map(([key, value]) => {
+  RenderTableContent (CalInfo) {
+    return Object.entries(CalInfo).map(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
         return <tr className={key}>{
-         [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td>{x}</td>)))
-         }</tr>
+          [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td>{x}</td>)))
+        }</tr>
       }
       return null
-     })
+    })
   }
+
   // renderMode() {
   //   return (
   //     <div
@@ -227,15 +243,24 @@ export default class App extends React.Component {
     )
   }
 
+  renderLoading() {
+    return this.state.loading ? (
+      <div className="loading-view">
+        <p className="loading-text">计算中，请稍候...</p>
+      </div>
+    ) : null;
+  }
+
   render() {
     return (
-      <div class='App'>
-        {/* {this.renderMode()} */}
-        {this.renderCalendar()}
-        {this.renderInput()}
-        <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
-        {this.renderDownload()}
-        {this.renderTableList()}
+      <div className='App'>
+          {this.renderLoading()}
+          {/* {this.renderMode()} */}
+          {this.renderCalendar()}
+          {this.renderInput()}
+          <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
+          {this.renderDownload()}
+          {this.renderTableList()}
       </div>
     );
   }
