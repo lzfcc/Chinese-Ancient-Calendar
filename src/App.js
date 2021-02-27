@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css'
-import calculate from '../src/Shangshu-calendar';
-import { CalNameList } from '../src/Shangshu-calendar/constant'
+import { Calculate, CalNameList, Print } from '../src/Shangshu-calendar'
 import MenuSelect from './MenuSelect';
 
 const TableRowNameMap = {
@@ -31,49 +30,82 @@ export default class App extends React.Component {
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
     this.state = {
-      calendars: ['Yin'],
-      mode: '0',
+      calendars: [],
       YearStart: '',
       YearEnd: '',
+      YearMode: '0',
+      AutoMode: 0,
       output: ''
     };
   }
 
   handleRetrieve(e) {
-    const YearStart = Number(this.state.YearStart);
-    let YearEnd = Number(this.state.YearEnd);
-    let result = [];
-    // if (this.state.mode === '0') {
-    //   if (this.state.YearStart.length === 0 || Number.isNaN(YearStart)) {
-    //     alert('年份不合法！');
-    //     return;
-    //   }
-    //   result = this.state.calendars.map(cal => calculate(cal, YearStart))
-    // } else {
-      if (
-        this.state.YearStart.length === 0 ||
-        Number.isNaN(YearStart) ||
-        // this.state.YearEnd.length === 0 ||
-        Number.isNaN(YearEnd)
-      ) {
-        alert('年份不合法！');
+    if (this.state.calendars.length === 0) {
+      alert('请选择何种历法！');
+      return;
+    }
+    if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
+      alert('请输入起始年或終止年！');
+      return;
+    }
+    let YearStart = parseInt(this.state.YearStart);
+    let YearEnd = parseInt(this.state.YearEnd);
+    if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
+      alert('输入年格式不合法！');
+      return;
+    }
+    if (Number.isNaN(YearStart)) {
+      if (this.state.YearStart.length === 0) {
+        YearStart = YearEnd;
+        this.setState({ YearStart })
+      } else {
+        alert('起始年不合法！');
         return;
       }
-      if(this.state.YearEnd.length === 0){
-        YearEnd = YearStart 
-      }
-      if (YearStart > YearEnd) {
-        alert('起始年不可大於終止年！');
+    }
+    if (Number.isNaN(YearEnd)) {
+      if (this.state.YearEnd.length === 0) {
+        YearEnd = YearStart;
+        this.setState({ YearEnd })
+      } else {
+        alert('終止年不合法！');
         return;
       }
-      // alert(this.state.year);
-      for (let y = YearStart; y <= YearEnd; ++y) {
-        for (const cal of this.state.calendars) {
-          result.push(calculate(cal, y));
-        }
-      }
-    // }
+    }
+    if (YearStart > YearEnd) {
+      alert('起始年不可大於終止年！');
+      return;
+    }
 
+    if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
+      alert('生成内容过多，为避免浏览器展示性能问题，已自动下载文件到本地');
+      // TODO: loading
+      this.generateFile()
+      this.setState({ output: [] });
+      return
+    }
+
+    if (this.downloadRef && this.downloadRef.checked) {
+      // TODO: loading
+      this.generateFile()
+      this.setState({ output: [] });
+      return
+    }
+
+    const printData = [];
+    this.state.calendars.forEach((CalName) => {
+        Calculate(CalName, YearStart, YearEnd).forEach((result, index) => {
+          if (!printData[index]) {
+              printData[index] = [];
+          }
+          printData[index].push(result);
+        });
+    });
+
+    this.setState({ output: printData });
+  }
+
+  generateFile () {
     const getFileName = () => {
       let calString = `${this.state.calendars}_${this.state.YearStart}`
       if (this.state.YearEnd) {
@@ -87,35 +119,31 @@ export default class App extends React.Component {
       })
       return calString + dateString
     }
-
-    // todo: result 格式化 md
-    const blob = new Blob([JSON.stringify(result)]);
-    const sizeLimit = 1 << 19; // 512 kB
-    if ((this.downloadRef && this.downloadRef.checked) || blob.size > sizeLimit) {
-        var fileName = `calendar_${getFileName()}.md`;
-        var a = document.createElement('a');
-        a.download = fileName;
-        a.href = URL.createObjectURL(blob);
-        a.click();
-        URL.revokeObjectURL(a.href);
-        a = null;
-    }
-    if (blob.size > sizeLimit) {
-      alert('內容大於512KB，爲避免瀏覽器展示性能問題，已自動下載文件');
-    } else {
-      this.setState({ output: result });
-    }
+    const blob = new Blob([Print(this.state.YearStart, this.state.YearEnd, this.state.autoMode, this.state.calendars)]);
+    var fileName = `calendar_${getFileName()}.md`;
+    var a = document.createElement('a');
+    a.download = fileName;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    URL.revokeObjectURL(a.href);
+    a = null;
   }
 
   renderTableList() {
     return (
       <div>
         {(this.state.output || []).map((CalData) => {
-         return (<div class='single-cal'>
-           <p>{CalData.YearInfo}</p>
-           <table>
-            <tr> {this.RenderTableContent(CalData)}</tr>
-          </table></div>)
+          const yearGroup = CalData.map((CalInfo) => {
+            return (
+              <div class='single-cal'>
+                <p>{CalInfo.YearInfo}</p>
+                <table>
+                  <tr>{this.RenderTableContent(CalInfo)}</tr>
+                  </table>
+              </div>)
+          });
+          yearGroup.push(<div/>); // todo 分隔符
+          return yearGroup;
         })}
       </div>
     );
@@ -149,10 +177,12 @@ export default class App extends React.Component {
   //     </div>
   //   );
   // }
+
   renderInput() {
     return (
       <span class='year-select'>
         <input
+          value={this.state.YearStart}
           onChange={(e) => {
             this.setState({ YearStart: e.currentTarget.value });
           }}
@@ -161,6 +191,7 @@ export default class App extends React.Component {
           <span class='year-end'>
             <span>—</span>
             <input
+              value={this.state.YearEnd}
               onChange={(e) => {
                 this.setState({ YearEnd: e.currentTarget.value });
               }}
