@@ -3,16 +3,16 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <link rel="icon" href=".%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" href=".%PUBLIC_URL%/apple-touch-icon.png" />
   <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="manifest" href=".%PUBLIC_URL%/manifest.json" />
   <title>中國古曆編製器</title>
 </head>
 
@@ -32,10 +32,10 @@
           <ol>
             <li>提供每年的積年、閏餘、每日的確切時刻</li>
             <li>定朔時刻日月所在赤道度、定氣時刻日所在赤道度<n>20210226v2.02</n></li>
-            <li>未來有機會我會增加各曆的交食、五星推步</li>
+            <li>未來有機會我會增加各曆的交食<n>現已有太初、後漢四分月食計算</n>、五星推步、日書</li>
           </ol>
         </li>
-        <li>計算程序採用 JavaScript 編寫，前端框架採用 React，通過瀏覽器進行計算。計算時長約古六曆每曆 5000 年 17 秒，唐宋曆法每曆 5000 年 30 秒。曆法可多選。1=公元1年，0=公元前1年，-1=公元前2年。若僅需計算一年，在第一個框輸入卽可。若生成內容大於512KB，將自動下載 .md 文件，以避免瀏覽器展示性能問題。</li>
+        <li>計算程序採用 JavaScript 編寫，前端框架採用 React，通過瀏覽器進行計算。計算時長每曆 2000 年約古六曆 9 秒，唐宋曆法 16 秒。曆法可多選。1=公元1年，0=公元前1年，-1=公元前2年。若僅需計算一年，在任意一個框輸入卽可。1 曆 1 年爲 1 單位，若大於 200 個單位，將自動下載 .md 文件，以避免瀏覽器展示性能問題。</li>
         <li>本工具完全開源，如您需要査詢、核査各曆的詳細參數與算法，請前往 源碼倉庫<n>內測階段暫不開放</n>。如您不嫌麻煩，可以下載源碼，在本地運行程序。如您不想每次都在線查詢，可下載
           離線打包文件，直接通過瀏覽器打開卽可。</li>
         <li>
@@ -94,9 +94,9 @@
     </div>
   </section>
   <footer>
-    <p><a href='https://kqh.me' target="_blank">柯棋瀚</a>©️ 2021-02-23 > 2021（內測請勿外傳）</p>
+    <p><a href='https://kqh.me' target="_blank">柯棋瀚</a>©️ 2021-02-23 > 2021（內測期間請勿外傳）</p>
     <p>email&iMessage: me [at] kqh [dot] me</p>
-    <p class='version'>前端v0.91 程序v2.02</p>
+    <p class='version'>程序v2.03 前端v0.93 更新日誌見 前端倉庫<n>內測期間暫不開放</n></p>
     <p>相關鏈接：<a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
         target='_blank'>廖育棟的網站</a>（年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等）。廖育棟的<a
         href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a>。<a
