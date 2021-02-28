@@ -38,11 +38,15 @@ export default class App extends React.Component {
       output: '',
       loading: false
     };
-
-    this.worker = new Worker('main.js')
   }
 
   componentDidMount () {
+    const script = document.createElement("script");
+    script.src = "http://localhost:8080/main.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    this.worker = new Worker('main.js');
     this.worker.addEventListener('message', ({ data }) => {
       clearTimeout(this.t);
       if (data instanceof Blob) { // 输出文件结果
@@ -147,7 +151,7 @@ export default class App extends React.Component {
         {(this.state.output || []).map((CalData) => {
           const yearGroup = CalData.map((CalInfo) => {
             return (
-              <div class='single-cal'>
+              <div className='single-cal'>
                 <p>{CalInfo.YearInfo}</p>
                 <table>
                   <tr>
@@ -195,7 +199,7 @@ export default class App extends React.Component {
 
   renderInput() {
     return (
-      <span class='year-select'>
+      <span className='year-select'>
         <input
           value={this.state.YearStart}
           onChange={(e) => {
@@ -203,7 +207,7 @@ export default class App extends React.Component {
           }}
         />
         {/* {this.state.mode === '1' ? ( */}
-          <span class='year-end'>
+          <span className='year-end'>
             <span>—</span>
             <input
               value={this.state.YearEnd}
@@ -220,7 +224,7 @@ export default class App extends React.Component {
 
   renderCalendar() {
     return (
-      <div class='calendar-select'>
+      <div className='calendar-select'>
         <MenuSelect
           calMap={CalNameList}
           onSelect={(selected) => {
@@ -233,7 +237,7 @@ export default class App extends React.Component {
 
   renderDownload () {
     return (
-      <span class='save-file'>
+      <span className='save-file'>
         <input type='checkbox' name='download-file' ref={(ref) => {
           this.downloadRef = ref
         }}/>
