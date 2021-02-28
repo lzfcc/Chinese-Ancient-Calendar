@@ -156,7 +156,6 @@ tr.MonthPrint {
   font-weight: bold;
 }
 
-
 tr.NewmScPrint {
   font-weight: bold;
 }
@@ -167,6 +166,14 @@ tr.NewmAvgScPrint {
 
 tr.TermScPrint {
   font-weight: bold;
+}
+
+tr.TermMansionPrint{
+  color: var(--gray);
+}
+
+tr.NewmMansionPrint{
+  color: var(--gray);
 }
 
 tr.TermNamePrint {
@@ -186,16 +193,16 @@ tr.NewmDecimal3Print {
   border-bottom: 1px solid var(--gray);
 }
 
+tr.TermAcrScPrint {
+  border-top: 1px solid var(--gray);
+}
+
 tr.NewmAvgDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
 }
 
 tr.SyzygyDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
-}
-
-tr.TermDecimalPrint {
-  border-bottom: 1px solid var(--gray);
 }
 
 .single-cal p {
@@ -228,10 +235,11 @@ code {
 
 button {
   background: none;
-  padding: .1em .4em;
-  border-radius: .5em;
+  padding: .1em .2em;
+  border-radius: .2em;
+  font-weight: bold;
   color: var(--red);
-  border: 2px solid var(--red);
+  border: .4em solid var(--red);
   -webkit-transition: .3s;
   transition: .3s;
 }
