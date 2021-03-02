@@ -189,10 +189,6 @@ tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
 }
 
-tr.NewmDecimal3Print {
-  border-bottom: 1px solid var(--gray);
-}
-
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }
