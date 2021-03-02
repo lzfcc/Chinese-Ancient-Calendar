@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css'
 import { CalNameList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
+import DynamicList, { createCache } from 'react-window-dynamic-list';
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -23,6 +24,7 @@ const TableRowNameMap = {
   TermMansionPrint: '赤度',
 }
 
+const heightCache = createCache();
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -139,7 +141,7 @@ export default class App extends React.Component {
     callWorkder('display')
   }
 
-  renderTableList() {
+  BACKUP_renderTableList() {
     return (
       <div>
         {(this.state.output || []).map((CalData) => {
@@ -158,6 +160,36 @@ export default class App extends React.Component {
           return yearGroup;
         })}
       </div>
+    );
+  }
+
+  renderTableList() {
+    // 二维数组拍扁成一维，每个表格平均高度 350
+    // TODO: cache 是否需要 clear？需要 data 中包含 id 属性
+    const list = (this.state.output || []).flat();
+    if (list.length === 0) {
+      return null
+    }
+    return (
+      <DynamicList
+        height={window.innerHeight}
+        width={window.innerWidth}
+        cache={heightCache}
+        data={list}
+        overscanCount={5}
+      >
+        {({ index, style }) => {
+          const CalInfo = list[index];
+          return (
+            <div className="single-cal" style={style}>
+              <p>{CalInfo.YearInfo}</p>
+              <table>
+                <tr>{this.RenderTableContent(CalInfo)}</tr>
+              </table>
+            </div>
+          );
+        }}
+      </DynamicList>
     );
   }
 
