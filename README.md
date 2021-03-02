@@ -36,16 +36,15 @@ vertical: false
 
 在本仓库建立之初，基于组件化、工程化的考量，将核心模块（计算逻辑）拆分到了单独的仓库（ancient-calendar）中，通过子模块进行依赖，从而前端展示（View）和计算逻辑（Model）可以独立开发，前端直接引用子模块的函数进行运算。
 
-但是由于运算逻辑都在前端，在进行大量运算时会卡住 UI，体验较差。为了改进这一问题，我们决定改用 Web Worker（前端的多线程）。但是开发过程中我们发现，必须将`Worker()`构造函数的参数文件放在 public 目录下（不会被 webpack 打包），这使得我们不能直接引用子模块了，必须将子模块打包成一个文件。操作步骤如下：
+但是由于运算逻辑都在前端，在进行大量运算时会卡住 UI，体验较差。为了改进这一问题，我们决定改用 Web Worker（前端的多线程）。但是开发过程中我们发现，必须将`Worker()`构造函数的参数文件独立放在 public 目录下（不能参与 webpack 打包），这使得我们不能直接引用子模块了，必须将子模块打包成一个文件。操作步骤如下：
 
 1. 全局安装 webpack，webpack-CLI
 ```shell
 $ npm install -g webpack webpack-cli
 ```
-2. 运行 webpack
+2. 在 npm run build 后运行 webpack
 ```shell
+$ npm run build
 $ webpack ./src/Shangshu-calendar/frontend-worker.js -o ./public
 ```
-生成一个 main.js。此过程也许可以通过配置 webpack.config.js 来自动完成，暂时还不会。
-
-TODO: bug qianxiang
+这样会在 build 目录下生成一个 main.js。此过程也许可以通过配置 webpack.config.js 来自动完成，暂时还不会。

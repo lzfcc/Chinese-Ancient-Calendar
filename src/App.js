@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css'
 import { CalNameList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
+import DynamicList, { createCache } from 'react-window-dynamic-list';
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -23,6 +24,7 @@ const TableRowNameMap = {
   TermMansionPrint: '赤度',
 }
 
+const heightCache = createCache();
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -38,15 +40,13 @@ export default class App extends React.Component {
       output: '',
       loading: false
     };
-
-    this.worker = new Worker('main.js')
   }
 
   componentDidMount () {
+    this.worker = new Worker('main.js');
     this.worker.addEventListener('message', ({ data }) => {
-      clearTimeout(this.t);
-      if (data instanceof Blob) { // 输出文件结果
-        this.setState({ output: [], loading: false });
+      if (data instanceof Blob) { // 约定：存为文件时 web worker 发送 Blob 对象
+        this.setState({ output: [] });
         var fileName = `calendar_${this._getFileName()}.md`;
         var a = document.createElement('a');
         a.download = fileName;
@@ -54,7 +54,7 @@ export default class App extends React.Component {
         a.click();
         URL.revokeObjectURL(a.href);
         a = null;
-      } else {
+      } else { // 约定：页面展示时 web worker 发送 Object 对象
         this.setState({ output: data });
       }
       this.setState({ loading: false });
@@ -141,13 +141,13 @@ export default class App extends React.Component {
     callWorkder('display')
   }
 
-  renderTableList() {
+  BACKUP_renderTableList() {
     return (
       <div>
         {(this.state.output || []).map((CalData) => {
           const yearGroup = CalData.map((CalInfo) => {
             return (
-              <div class='single-cal'>
+              <div className='single-cal'>
                 <p>{CalInfo.YearInfo}</p>
                 <table>
                   <tr>
@@ -160,6 +160,36 @@ export default class App extends React.Component {
           return yearGroup;
         })}
       </div>
+    );
+  }
+
+  renderTableList() {
+    // 二维数组拍扁成一维，每个表格平均高度 350
+    // TODO: cache 是否需要 clear？需要 data 中包含 id 属性
+    const list = (this.state.output || []).flat();
+    if (list.length === 0) {
+      return null
+    }
+    return (
+      <DynamicList
+        height={window.innerHeight}
+        width={window.innerWidth}
+        cache={heightCache}
+        data={list}
+        overscanCount={5}
+      >
+        {({ index, style }) => {
+          const CalInfo = list[index];
+          return (
+            <div className="single-cal" style={style}>
+              <p>{CalInfo.YearInfo}</p>
+              <table>
+                <tr>{this.RenderTableContent(CalInfo)}</tr>
+              </table>
+            </div>
+          );
+        }}
+      </DynamicList>
     );
   }
 
@@ -195,7 +225,7 @@ export default class App extends React.Component {
 
   renderInput() {
     return (
-      <span class='year-select'>
+      <span className='year-select'>
         <input
           value={this.state.YearStart}
           onChange={(e) => {
@@ -203,7 +233,7 @@ export default class App extends React.Component {
           }}
         />
         {/* {this.state.mode === '1' ? ( */}
-          <span class='year-end'>
+          <span className='year-end'>
             <span>—</span>
             <input
               value={this.state.YearEnd}
@@ -220,7 +250,7 @@ export default class App extends React.Component {
 
   renderCalendar() {
     return (
-      <div class='calendar-select'>
+      <div className='calendar-select'>
         <MenuSelect
           calMap={CalNameList}
           onSelect={(selected) => {
@@ -233,7 +263,7 @@ export default class App extends React.Component {
 
   renderDownload () {
     return (
-      <span class='save-file'>
+      <span className='save-file'>
         <input type='checkbox' name='download-file' ref={(ref) => {
           this.downloadRef = ref
         }}/>
