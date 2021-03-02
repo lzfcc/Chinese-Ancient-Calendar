@@ -41,16 +41,10 @@ export default class App extends React.Component {
   }
 
   componentDidMount () {
-    const script = document.createElement("script");
-    script.src = "http://localhost:8080/main.js";
-    script.async = true;
-    document.body.appendChild(script);
-
     this.worker = new Worker('main.js');
     this.worker.addEventListener('message', ({ data }) => {
-      clearTimeout(this.t);
-      if (data instanceof Blob) { // 输出文件结果
-        this.setState({ output: [], loading: false });
+      if (data instanceof Blob) { // 约定：存为文件时 web worker 发送 Blob 对象
+        this.setState({ output: [] });
         var fileName = `calendar_${this._getFileName()}.md`;
         var a = document.createElement('a');
         a.download = fileName;
@@ -58,7 +52,7 @@ export default class App extends React.Component {
         a.click();
         URL.revokeObjectURL(a.href);
         a = null;
-      } else {
+      } else { // 约定：页面展示时 web worker 发送 Object 对象
         this.setState({ output: data });
       }
       this.setState({ loading: false });
