@@ -81,17 +81,17 @@ export default class App extends React.Component {
 
   handleRetrieve(e) {
     if (this.state.calendars.length === 0) {
-      alert('请选择何种历法！');
+      alert('請選擇曆法！');
       return;
     }
     if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
-      alert('请输入起始年或終止年！');
+      alert('請輸入起始年或終止年！');
       return;
     }
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
-      alert('输入年格式不合法！');
+      alert('格式不合法！');
       return;
     }
     if (Number.isNaN(YearStart)) {
@@ -171,8 +171,9 @@ export default class App extends React.Component {
       return null
     }
     return (
+      <section className='main-render'>
       <DynamicList
-        height={window.innerHeight}
+        height={(window.innerHeight)*0.97}
         width={window.innerWidth}
         cache={heightCache}
         data={list}
@@ -190,6 +191,7 @@ export default class App extends React.Component {
           );
         }}
       </DynamicList>
+      </section>
     );
   }
 
@@ -272,18 +274,18 @@ export default class App extends React.Component {
     )
   }
 
-  renderLoading() {
-    return this.state.loading ? (
-      <div className="loading-view">
-        <p className="loading-text">计算中，请稍候...</p>
-      </div>
-    ) : null;
-  }
+  // renderLoading() {
+  //   return this.state.loading ? (
+  //     <div className="loading-view">
+  //       <p className="loading-text">计算中，请稍候...</p>
+  //     </div>
+  //   ) : null;
+  // }
 
   render() {
     return (
       <div className='App'>
-          {this.renderLoading()}
+          {/* {this.renderLoading()} */}
           {/* {this.renderMode()} */}
           {this.renderCalendar()}
           {this.renderInput()}

@@ -106,6 +106,32 @@ u {
 p {
   margin: 1.3em auto
 }
+.section-select-container{
+  margin: 3em auto 1em;
+}
+
+.section-select{
+  border-bottom: .25em solid var(--shallowgray);
+  padding: 0 .25em .2em;
+  margin:0 2em;
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+.section-select.active{
+  border-bottom: .25em solid var(--yellow);
+  font-weight: bold;
+}
+
+.section-select:hover{
+  border-bottom: .25em solid var(--yellow);
+}
+
+.main-render {
+  /* border: .5em solid var(--yellow); */
+  box-shadow: 0 0 20px 0 var(--gray);
+  margin: 3em auto 0;
+}
 
 .version {
   text-align: center;
@@ -182,9 +208,18 @@ tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
 }
 
-tr.NewmDecimal3Print {
-  border-bottom: 1px solid var(--gray);
+tr.TermMansionPrint {
+  color: var(--gray);
 }
+
+tr.NewmMansionPrint {
+  color: var(--gray);
+}
+
+tr.TermAcrScPrint {
+  border-top: 1px solid var(--gray);
+}
+
 
 tr.NewmAvgDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
@@ -194,9 +229,6 @@ tr.SyzygyDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
 }
 
-tr.TermDecimalPrint {
-  border-bottom: 1px solid var(--gray);
-}
 
 .single-cal p {
   margin: 2em auto 0em;
@@ -227,11 +259,12 @@ code {
 }
 
 button {
-  background: none;
-  padding: .1em .4em;
+  background: var(--yellow);
+  padding: .4em .5em;
   border-radius: .5em;
+  font-weight: bold;
   color: var(--red);
-  border: 2px solid var(--red);
+  border: 1px solid var(--shallowgray);
   -webkit-transition: .3s;
   transition: .3s;
 }
