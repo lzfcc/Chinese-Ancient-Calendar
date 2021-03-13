@@ -26,9 +26,9 @@ const TableRowNameMap = {
 
 const heightCache = createCache();
 export default class App extends React.Component {
-  constructor(props) {
+  constructor(props) {  
     super(props);
-
+    this.tabTitles=['朔望氣閏食','日書','五星']
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
     this.state = {
@@ -38,9 +38,11 @@ export default class App extends React.Component {
       YearMode: '0',
       AutoMode: 0,
       output: '',
-      loading: false
+      loading: false,
+      activeTab: 0,
     };
   }
+  
 
   componentDidMount () {
     this.worker = new Worker('main.js');
@@ -116,8 +118,7 @@ export default class App extends React.Component {
       alert('起始年不可大於終止年！');
       return;
     }
-
-    const callWorkder = (eventName) => {
+    const callWorker = (eventName) => {
       this.setState({ loading: true });
       this.worker.postMessage({
         eventName,
@@ -126,20 +127,42 @@ export default class App extends React.Component {
         YearEnd
       })
     }
-
-    if (this.downloadRef && this.downloadRef.checked) {
-      callWorkder('print');
-      return;
+    if (this.state.activeTab===0) {  
+      if (this.downloadRef && this.downloadRef.checked) {
+        callWorker('print');
+        return;
+      }
+  
+      if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
+        alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
+        callWorker('print');
+        return;
+      }
+  
+      callWorker('display')
+    } else if(this.state.activeTab===1){
+      callWorker('Day')
+    } else if(this.state.activeTab===2){
+      // 敬請期待
     }
-
-    if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
-      alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
-      callWorkder('print');
-      return;
-    }
-
-    callWorkder('display')
   }
+
+  renderTabs(){
+    return(<div className="section-select-container">
+    {this.tabTitles.map((title,index)=>(<span className={"section-select" + (this.state.activeTab===index?' active':'')} onClick={(e)=>{
+      if(this.state.activeTab===index){
+        return
+      }
+      this.setState({
+        activeTab:index,
+        // AutoMode: 0,
+        output: '',
+        loading: false,
+      }) 
+    } } >{title}</span>))}
+  </div>)
+  }
+  
 
   BACKUP_renderTableList() {
     return (
@@ -285,6 +308,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className='App'>
+       {this.renderTabs()}
           {/* {this.renderLoading()} */}
           {/* {this.renderMode()} */}
           {this.renderCalendar()}
