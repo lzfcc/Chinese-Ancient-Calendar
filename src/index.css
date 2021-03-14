@@ -5,6 +5,7 @@
   --gray: #787878;
   --black: #2b2b2b;
   --yellow: #ffda56;
+  --darkyellow: #f2cd00;
   --bgpink: #feefe6;
   --red: #f27144;
   --blue: #2fa0ff;
@@ -218,11 +219,11 @@ tr.TermScPrint {
   font-weight: bold;
 }
 
-tr.TermMansionPrint{
+tr.TermMansionPrint {
   color: var(--gray);
 }
 
-tr.NewmMansionPrint{
+tr.NewmMansionPrint {
   color: var(--gray);
 }
 
@@ -243,6 +244,7 @@ tr.NewmMansionPrint {
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }
+
 /* tr.TermMansionPrint {
   color: var(--gray);
 } */
@@ -305,6 +307,52 @@ button {
 
 button:hover {
   background: var(--red);
+  color: var(--bg);
+}
+
+button.button1 {
+  padding: .4em .5em;
+  color: var(--red);
+  background: var(--yellow);
+  border: none;
+  border-radius: .4em;
+}
+
+button.button1:hover {
+  color: var(--bg);
+  background: var(--red)
+}
+
+button.button2 {
+  padding: .4em .5em;
+  color: var(--bg);
+  background: var(--red);
+  border: none;
+  border-radius: .4em;
+}
+
+button.button2:hover {
+  color: var(--red);
+  background: var(--yellow)
+}
+
+button.button4-1 {
+  color: var(--darkyellow);
+  border: .4em solid var(--darkyellow);
+}
+
+button.button4-1:hover {
+  background: var(--darkyellow);
+  color: var(--bg);
+}
+
+button.button4-2 {
+  color: var(--blue);
+  border: .4em solid var(--blue);
+}
+
+button.button4-2:hover {
+  background: var(--blue);
   color: var(--bg);
 }
 

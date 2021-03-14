@@ -10,8 +10,8 @@ export default class Converter extends React.Component {
       b: '',
       bigNumer: 26,
       bigDenom: 49,
-      aRaw: 0,
-      bRaw: 0,
+      aRaw: '',
+      bRaw: '',
       title: '弱率',
       output1: null,
       output2: null
@@ -140,11 +140,11 @@ export default class Converter extends React.Component {
       <div>
         <h2>調日法</h2>
         {this.renderConverterInput1()}
-        <button onClick={this.handleConvert1}>李銳來也∞</button>
+        <button onClick={this.handleConvert1} className='button4-1'>李銳來也∞</button>
         {this.renderResult1()}
         <h2>大衍求一術</h2>
         {this.renderConverterInput2()}
-        <button onClick={this.handleConvert2}>秦九韶再世⌘</button>
+        <button onClick={this.handleConvert2} className='button4-2'>秦九韶再世⌘</button>
         {this.renderResult2()}
       </div>
     )

@@ -147,7 +147,7 @@ export default class App extends React.Component {
       }
   
       if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
-        alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
+        alert('內容過多，爲避免瀏覽器展示性能問題，將自動下載.md文件到本地');
         callWorker('print');
         return;
       }
@@ -167,7 +167,7 @@ export default class App extends React.Component {
         return
       }
       if (index === 2) {
-        alert('預計將於2023年完成，敬請期待～')
+        alert('預計2023年推出，敬請期待～')
         return
       }
       this.setState({
@@ -330,12 +330,22 @@ export default class App extends React.Component {
   // }
 
   renderTabContent () {
-    if (this.state.activeTab < 3) {
+    if (this.state.activeTab ===0) {
       return (
         <>
           {this.renderCalendar()}
           {this.renderInput()}
-          <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
+          <button onClick={this.handleRetrieve} className='button1'>天霝〻地霝〻</button>
+          {this.renderDownload()}
+          {this.renderTableList()}
+        </>
+      )
+    } else if (this.state.activeTab ===1) {
+      return (
+        <>
+          {this.renderCalendar()}
+          {this.renderInput()}
+          <button onClick={this.handleRetrieve} className='button2'>㤂〻如勑令</button>
           {this.renderDownload()}
           {this.renderTableList()}
         </>
