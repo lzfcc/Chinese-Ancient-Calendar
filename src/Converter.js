@@ -1,6 +1,7 @@
 import React from 'react'
 import { DecomposePrimeFactor } from '../src/Shangshu-calendar/convert_decompose-prime-factor'
 import { CongruenceModulo } from '../src/Shangshu-calendar/convert_congruence-modulo'
+import { Jd2Date } from '../src/Shangshu-calendar/convert_jd2date'
 
 export default class Converter extends React.Component {
   constructor (props) {
@@ -13,14 +14,17 @@ export default class Converter extends React.Component {
       aRaw: '',
       bRaw: '',
       title: '弱率',
-      output1: null,
-      output2: null
+      jd: '',
+      outputDecompse: null,
+      outputModulo: null,
+      outputJd:null,    
     }
-    this.handleConvert1 = this.handleConvert1.bind(this)
-    this.handleConvert2 = this.handleConvert2.bind(this)
+    this.handleConvertDecompose = this.handleConvertDecompose.bind(this)
+    this.handleConvertModulo = this.handleConvertModulo.bind(this)
+    this.handleConvertJd = this.handleConvertJd.bind(this)
   }
 
-  renderConverterInput1 () {
+  renderConverterInputDecompose () {
     return (
       <span className='year-select'>
         <span>朔餘</span>
@@ -55,7 +59,7 @@ export default class Converter extends React.Component {
     );
   }
 
-  renderConverterInput2 () {
+  renderConverterInputModulo () {
     return (
       <span className='year-select'>
         <span>鍵入㒳箇互質整數</span>
@@ -75,33 +79,59 @@ export default class Converter extends React.Component {
     );
   }
 
-  handleConvert1 () {
+  renderConverterInputJd () {
+    return (
+      <span className='year-select'>
+        <span>儒略日</span>
+        <input
+          value={this.state.jd}
+          onChange={(e) => {
+            this.setState({ jd: e.currentTarget.value });
+          }}
+        />
+      </span>
+    );
+  }
+
+
+
+  handleConvertDecompose () {
     try {
       const { SmallPrint, Result } = DecomposePrimeFactor(this.state.a, this.state.b, this.state.bigNumer, this.state.bigDenom)
-      this.setState({ output1: Result })
-      this.setState({ output1a: SmallPrint })
+      this.setState({ outputDecompse: Result })
+      this.setState({ outputDecompse1: SmallPrint })
     } catch (e) {
       alert(e.message)
     }
   }
 
-  handleConvert2 () {
+  handleConvertModulo () {
     try {
       const { Print } = CongruenceModulo(this.state.aRaw, this.state.bRaw)
-      console.log(Print)
-      this.setState({ output2: Print })
+      this.setState({ outputModulo: Print })
     } catch (e) {
         alert(e.message)
     }
   }
 
-  renderResult1 () {
-    if (!this.state.output1) {
+  handleConvertJd () {
+    try {
+      const { Print } = Jd2Date(this.state.jd)
+      this.setState({ outputJd: Print })
+    } catch (e) {
+        alert(e.message)
+    }
+  }
+
+
+
+  renderResultDecompose () {
+    if (!this.state.outputDecompse) {
       return null
     }
     return (
-      <div className='renderConverterInput1'>
-        <p>{ this.state.output1a }</p>
+      <div className='renderConverterInputDecompose'>
+        <p>{ this.state.outputDecompse1 }</p>
       <table>
         <tr>
           <th></th>
@@ -109,10 +139,10 @@ export default class Converter extends React.Component {
           <th>日法</th>
           <th>約餘</th>
         </tr>
-      {(this.state.output1 || []).map((row) => {
+      {(this.state.outputDecompse || []).map((row) => {
         return (
           <tr>
-            <td className='ConverterInput1Name'>{row.title}</td>
+            <td className='ConverterInputDecomposeName'>{row.title}</td>
             {row.data.map((d) => {
               return (<td>{d}</td>)
             })}
@@ -124,28 +154,45 @@ export default class Converter extends React.Component {
     )
   }
 
-  renderResult2 () {
-    if (!this.state.output2) {
+  renderResultModulo () {
+    if (!this.state.outputModulo) {
       return null
     }
     return (
       <div>
-        <p>{this.state.output2}</p>
+        <p>{this.state.outputModulo}</p>
       </div>
     )
   }
+
+  renderResultJd () {
+    if (!this.state.outputJd) {
+      return null
+    }
+    return (
+      <div>
+        <p>{this.state.outputJd}</p>
+      </div>
+    )
+  }
+
+
 
   render () {
     return (
       <div>
         <h2>調日法</h2>
-        {this.renderConverterInput1()}
-        <button onClick={this.handleConvert1} className='button4-1'>李銳來也∞</button>
-        {this.renderResult1()}
+        {this.renderConverterInputDecompose()}
+        <button onClick={this.handleConvertDecompose} className='button4-1'>李銳來也∞</button>
+        {this.renderResultDecompose()}
         <h2>大衍求一術</h2>
-        {this.renderConverterInput2()}
-        <button onClick={this.handleConvert2} className='button4-2'>秦九韶再世⌘</button>
-        {this.renderResult2()}
+        {this.renderConverterInputModulo()}
+        <button onClick={this.handleConvertModulo} className='button4-2'>秦九韶再世⌘</button>
+        {this.renderResultModulo()}
+        <h2>儒略日轉換</h2>
+        {this.renderConverterInputJd()}
+        <button onClick={this.handleConvertJd} className='button4-6'>Bingo!</button>
+        {this.renderResultJd()}
       </div>
     )
   }

@@ -180,24 +180,24 @@ table td {
   width: 50px
 }
 
-.renderConverterInput1 table {
+.renderConverterInputDecompose table {
   font-size: .9em;
   margin-top: -1.2em;
 }
 
-.renderConverterInput1 table td {
+.renderConverterInputDecompose table td {
   width: auto;
   padding: .4em 1em .2em;
 }
 
-.renderConverterInput1 table th {
+.renderConverterInputDecompose table th {
   text-align: center;
   padding: .3em 1em;
   border: none;
   border-bottom: 1px solid var(--gray);
 }
 
-.renderConverterInput1 table .ConverterInput1Name {
+.renderConverterInputDecompose table .ConverterInputDecomposeName {
   font-weight: bold;
   text-align: right;
 }
@@ -355,6 +355,17 @@ button.button4-2:hover {
   background: var(--blue);
   color: var(--bg);
 }
+
+button.button4-6 {
+  color: var(--red);
+  border: .4em solid var(--red);
+}
+
+button.button4-6:hover {
+  background: var(--red);
+  color: var(--bg);
+}
+
 
 input {
   background: none;
