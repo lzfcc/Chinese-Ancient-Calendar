@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css'
-import { CalNameList } from './Shangshu-calendar/constant'
+import { CalNameList, CalNameDayList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
 import DynamicList, { createCache } from 'react-window-dynamic-list';
 
@@ -23,6 +23,19 @@ const TableRowNameMap = {
   TermDecimalPrint: '分',
   TermMansionPrint: '赤度',
 }
+const TableDayRowNameMap={
+  Sc: '干支',
+  SunRise: '日出',
+  SunEquatorLati:'日去極',
+  Dial:'晷長',
+  MidstarPrint:'昏中星',
+  EquartorPrint:'日赤',
+  EclipticPrint:'日黃',
+  MoonEquartorPrint:'月赤',
+  MoonEquatorLati:'黃白距',
+  HouName:'候土卦',
+}
+// 我需要你提供一个 TableRowNameMap 对于日都
 
 const heightCache = createCache();
 export default class App extends React.Component {
@@ -274,10 +287,17 @@ export default class App extends React.Component {
   }
 
   renderCalendar() {
+    let cals = {}
+    if (this.state.activeTab === 0) {
+      cals = CalNameList
+    }
+    if (this.state.activeTab === 1) {
+      cals = CalNameDayList
+    }
     return (
       <div className='calendar-select'>
         <MenuSelect
-          calMap={CalNameList}
+          calMap={cals}
           onSelect={(selected) => {
             this.setState({ calendars: selected })
           }}
