@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css'
-import { CalNameList } from './Shangshu-calendar/constant'
+import { CalNameList, CalNameDayList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
+import DynamicList, { createCache } from 'react-window-dynamic-list';
+import Converter from './Converter';
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -22,11 +24,24 @@ const TableRowNameMap = {
   TermDecimalPrint: '分',
   TermMansionPrint: '赤度',
 }
+const TableDayRowNameMap = {
+  Sc: '干支',
+  SunRise: '日出',
+  SunEquatorLati:'日去極',
+  Dial:'晷長',
+  MidstarPrint:'昏中星',
+  EquartorPrint:'日赤',
+  EclipticPrint:'日黃',
+  MoonEquartorPrint:'月赤',
+  MoonEquatorLati:'黃白距',
+  HouName:'候土卦',
+}
 
+const heightCache = createCache();
 export default class App extends React.Component {
-  constructor(props) {
+  constructor(props) {  
     super(props);
-
+    this.tabTitles=['朔望氣閏食','日書','五星','轉換']
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
     this.state = {
@@ -36,21 +51,17 @@ export default class App extends React.Component {
       YearMode: '0',
       AutoMode: 0,
       output: '',
-      loading: false
+      loading: false,
+      activeTab: 0,
     };
   }
+  
 
   componentDidMount () {
-    const script = document.createElement("script");
-    script.src = "http://localhost:8080/main.js";
-    script.async = true;
-    document.body.appendChild(script);
-
     this.worker = new Worker('main.js');
     this.worker.addEventListener('message', ({ data }) => {
-      clearTimeout(this.t);
-      if (data instanceof Blob) { // 输出文件结果
-        this.setState({ output: [], loading: false });
+      if (data instanceof Blob) { // 约定：存为文件时 web worker 发送 Blob 对象
+        this.setState({ output: [] });
         var fileName = `calendar_${this._getFileName()}.md`;
         var a = document.createElement('a');
         a.download = fileName;
@@ -58,7 +69,7 @@ export default class App extends React.Component {
         a.click();
         URL.revokeObjectURL(a.href);
         a = null;
-      } else {
+      } else { // 约定：页面展示时 web worker 发送 Object 对象
         this.setState({ output: data });
       }
       this.setState({ loading: false });
@@ -85,17 +96,17 @@ export default class App extends React.Component {
 
   handleRetrieve(e) {
     if (this.state.calendars.length === 0) {
-      alert('请选择何种历法！');
+      alert('請選擇曆法！');
       return;
     }
     if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
-      alert('请输入起始年或終止年！');
+      alert('請輸入起始年或終止年！');
       return;
     }
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
-      alert('输入年格式不合法！');
+      alert('格式不合法！');
       return;
     }
     if (Number.isNaN(YearStart)) {
@@ -120,8 +131,7 @@ export default class App extends React.Component {
       alert('起始年不可大於終止年！');
       return;
     }
-
-    const callWorkder = (eventName) => {
+    const callWorker = (eventName) => {
       this.setState({ loading: true });
       this.worker.postMessage({
         eventName,
@@ -130,22 +140,48 @@ export default class App extends React.Component {
         YearEnd
       })
     }
-
-    if (this.downloadRef && this.downloadRef.checked) {
-      callWorkder('print');
-      return;
+    if (this.state.activeTab===0) {  
+      if (this.downloadRef && this.downloadRef.checked) {
+        callWorker('print');
+        return;
+      }
+  
+      if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
+        alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
+        callWorker('print');
+        return;
+      }
+  
+      callWorker('display')
+    } else if(this.state.activeTab===1){
+      callWorker('Day')
+    } else if(this.state.activeTab===2){
+      // 敬請期待
     }
-
-    if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
-      alert('展示内容过多，为避免浏览器性能问题，将自动下载文件到本地');
-      callWorkder('print');
-      return;
-    }
-
-    callWorkder('display')
   }
 
-  renderTableList() {
+  renderTabs(){
+    return(<div className="section-select-container">
+    {this.tabTitles.map((title,index)=>(<span className={"section-select" + (this.state.activeTab===index?' active':'')} onClick={(e)=>{
+      if(this.state.activeTab===index){
+        return
+      }
+      if (index === 2) {
+        alert('預計將於2023年完成，敬請期待～')
+        return
+      }
+      this.setState({
+        activeTab:index,
+        // AutoMode: 0,
+        output: '',
+        loading: false,
+      }) 
+    } } >{title}</span>))}
+  </div>)
+  }
+  
+
+  BACKUP_renderTableList() {
     return (
       <div>
         {(this.state.output || []).map((CalData) => {
@@ -164,6 +200,38 @@ export default class App extends React.Component {
           return yearGroup;
         })}
       </div>
+    );
+  }
+
+  renderTableList() {
+    // 二维数组拍扁成一维，每个表格平均高度 350
+    // TODO: cache 是否需要 clear？需要 data 中包含 id 属性
+    const list = (this.state.output || []).flat();
+    if (list.length === 0) {
+      return null
+    }
+    return (
+      <section className='main-render'>
+      <DynamicList
+        height={(window.innerHeight)*0.97}
+        width={window.innerWidth}
+        cache={heightCache}
+        data={list}
+        overscanCount={5}
+      >
+        {({ index, style }) => {
+          const CalInfo = list[index];
+          return (
+            <div className="single-cal" style={style}>
+              <p>{CalInfo.YearInfo}</p>
+              <table>
+                <tr>{this.RenderTableContent(CalInfo)}</tr>
+              </table>
+            </div>
+          );
+        }}
+      </DynamicList>
+      </section>
     );
   }
 
@@ -223,10 +291,17 @@ export default class App extends React.Component {
   }
 
   renderCalendar() {
+    let cals = {}
+    if (this.state.activeTab === 0) {
+      cals = CalNameList
+    }
+    if (this.state.activeTab === 1) {
+      cals = CalNameDayList
+    }
     return (
       <div className='calendar-select'>
         <MenuSelect
-          calMap={CalNameList}
+          calMap={cals}
           onSelect={(selected) => {
             this.setState({ calendars: selected })
           }}
@@ -246,24 +321,38 @@ export default class App extends React.Component {
     )
   }
 
-  renderLoading() {
-    return this.state.loading ? (
-      <div className="loading-view">
-        <p className="loading-text">计算中，请稍候...</p>
-      </div>
-    ) : null;
-  }
+  // renderLoading() {
+  //   return this.state.loading ? (
+  //     <div className="loading-view">
+  //       <p className="loading-text">计算中，请稍候...</p>
+  //     </div>
+  //   ) : null;
+  // }
 
-  render() {
-    return (
-      <div className='App'>
-          {this.renderLoading()}
-          {/* {this.renderMode()} */}
+  renderTabContent () {
+    if (this.state.activeTab < 3) {
+      return (
+        <>
           {this.renderCalendar()}
           {this.renderInput()}
           <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
           {this.renderDownload()}
           {this.renderTableList()}
+        </>
+      )
+    }
+    return (
+      <Converter/>
+    )
+  }
+
+  render() {
+    return (
+      <div className='App'>
+       {this.renderTabs()}
+          {/* {this.renderLoading()} */}
+          {/* {this.renderMode()} */}
+        {this.renderTabContent()}
       </div>
     );
   }

@@ -107,6 +107,33 @@ p {
   margin: 1.3em auto
 }
 
+.section-select-container {
+  margin: 3em auto 1em;
+}
+
+.section-select {
+  border-bottom: .25em solid var(--shallowgray);
+  padding: 0 .25em .2em;
+  margin: 0 2em;
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+.section-select.active {
+  border-bottom: .25em solid var(--yellow);
+  font-weight: bold;
+}
+
+.section-select:hover {
+  border-bottom: .25em solid var(--yellow);
+}
+
+.main-render {
+  /* border: .5em solid var(--yellow); */
+  box-shadow: 0 0 20px 0 var(--gray);
+  margin: 3em auto 0;
+}
+
 .version {
   text-align: center;
   color: var(--gray);
@@ -121,6 +148,7 @@ h1 {
 }
 
 h2 {
+  margin-top: 3em;
   font-size: 1.5em;
   text-align: center;
   font-family: var(--serif);
@@ -149,6 +177,28 @@ table th {
 table td {
   padding: 0;
   width: 50px
+}
+
+.renderConverterInput1 table {
+  font-size: .9em;
+  margin-top: -1.2em;
+}
+
+.renderConverterInput1 table td {
+  width: auto;
+  padding: .4em 1em .2em;
+}
+
+.renderConverterInput1 table th {
+  text-align: center;
+  padding: .3em 1em;
+  border: none;
+  border-bottom: 1px solid var(--gray);
+}
+
+.renderConverterInput1 table .ConverterInput1Name {
+  font-weight: bold;
+  text-align: right;
 }
 
 tr.MonthPrint {
@@ -189,9 +239,22 @@ tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
 }
 
+
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }
+/* tr.TermMansionPrint {
+  color: var(--gray);
+} */
+
+tr.NewmMansionPrint {
+  color: var(--gray);
+}
+
+tr.TermAcrScPrint {
+  border-top: 1px solid var(--gray);
+}
+
 
 tr.NewmAvgDecimalPrint {
   border-bottom: 2.5px solid var(--gray);
@@ -222,7 +285,7 @@ year-range {
 .year-select input {
   font-size: .9em;
   font-family: var(--sans);
-  width: 3em;
+  width: 3.3em;
 }
 
 code {
