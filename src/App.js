@@ -3,6 +3,7 @@ import './App.css'
 import { CalNameList, CalNameDayList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
 import DynamicList, { createCache } from 'react-window-dynamic-list';
+import Converter from './Converter';
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -23,7 +24,7 @@ const TableRowNameMap = {
   TermDecimalPrint: '分',
   TermMansionPrint: '赤度',
 }
-const TableDayRowNameMap={
+const TableDayRowNameMap = {
   Sc: '干支',
   SunRise: '日出',
   SunEquatorLati:'日去極',
@@ -35,13 +36,12 @@ const TableDayRowNameMap={
   MoonEquatorLati:'黃白距',
   HouName:'候土卦',
 }
-// 我需要你提供一个 TableRowNameMap 对于日都
 
 const heightCache = createCache();
 export default class App extends React.Component {
   constructor(props) {  
     super(props);
-    this.tabTitles=['朔望氣閏食','日書','五星']
+    this.tabTitles=['朔望氣閏食','日書','五星','轉換']
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
     this.state = {
@@ -164,6 +164,10 @@ export default class App extends React.Component {
     return(<div className="section-select-container">
     {this.tabTitles.map((title,index)=>(<span className={"section-select" + (this.state.activeTab===index?' active':'')} onClick={(e)=>{
       if(this.state.activeTab===index){
+        return
+      }
+      if (index === 2) {
+        alert('預計將於2023年完成，敬請期待～')
         return
       }
       this.setState({
@@ -325,17 +329,30 @@ export default class App extends React.Component {
   //   ) : null;
   // }
 
+  renderTabContent () {
+    if (this.state.activeTab < 3) {
+      return (
+        <>
+          {this.renderCalendar()}
+          {this.renderInput()}
+          <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
+          {this.renderDownload()}
+          {this.renderTableList()}
+        </>
+      )
+    }
+    return (
+      <Converter/>
+    )
+  }
+
   render() {
     return (
       <div className='App'>
        {this.renderTabs()}
           {/* {this.renderLoading()} */}
           {/* {this.renderMode()} */}
-          {this.renderCalendar()}
-          {this.renderInput()}
-          <button onClick={this.handleRetrieve}>天霝〻地霝〻</button>
-          {this.renderDownload()}
-          {this.renderTableList()}
+        {this.renderTabContent()}
       </div>
     );
   }
