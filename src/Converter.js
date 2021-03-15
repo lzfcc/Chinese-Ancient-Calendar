@@ -1,7 +1,7 @@
 import React from 'react'
 import { DecomposePrimeFactor } from '../src/Shangshu-calendar/convert_decompose-prime-factor'
 import { CongruenceModulo } from '../src/Shangshu-calendar/convert_congruence-modulo'
-import { Jd2Date } from '../src/Shangshu-calendar/convert_jd2date'
+import { Jd2Date1, Date2Jd } from '../src/Shangshu-calendar/convert_jd2date'
 
 export default class Converter extends React.Component {
   constructor (props) {
@@ -15,13 +15,18 @@ export default class Converter extends React.Component {
       bRaw: '',
       title: '弱率',
       jd: '',
+      yy: '',
+      mm: '',
+      dd: '',
       outputDecompse: null,
       outputModulo: null,
-      outputJd:null,    
+      outputJd: null,    
+      outputDate: null,    
     }
     this.handleConvertDecompose = this.handleConvertDecompose.bind(this)
     this.handleConvertModulo = this.handleConvertModulo.bind(this)
     this.handleConvertJd = this.handleConvertJd.bind(this)
+    this.handleConvertDate = this.handleConvertDate.bind(this)
   }
 
   renderConverterInputDecompose () {
@@ -62,7 +67,7 @@ export default class Converter extends React.Component {
   renderConverterInputModulo () {
     return (
       <span className='year-select'>
-        <span>鍵入㒳箇互質整數</span>
+        <span>鍵入兩箇互質整數</span>
         <input
           value={this.state.aRaw}
           onChange={(e) => {
@@ -83,12 +88,40 @@ export default class Converter extends React.Component {
     return (
       <span className='year-select'>
         <span>儒略日</span>
-        <input
+        <input className='InputJd'
           value={this.state.jd}
           onChange={(e) => {
             this.setState({ jd: e.currentTarget.value });
           }}
         />
+      </span>
+    );
+  }
+
+  renderConverterInputDate () {
+    return (
+      <span className='year-select'>
+        <input className='InputDate'
+          value={this.state.yy}
+          onChange={(e) => {
+            this.setState({ yy: e.currentTarget.value });
+          }}
+        />
+        <span>年</span>
+        <input className='InputDate'
+          value={this.state.mm}
+          onChange={(e) => {
+            this.setState({ mm: e.currentTarget.value });
+          }}
+        />
+        <span>月</span>
+        <input className='InputDate'
+          value={this.state.dd}
+          onChange={(e) => {
+            this.setState({ dd: e.currentTarget.value });
+          }}
+        />
+        <span>日</span>
       </span>
     );
   }
@@ -116,13 +149,21 @@ export default class Converter extends React.Component {
 
   handleConvertJd () {
     try {
-      const { Print } = Jd2Date(this.state.jd)
-      this.setState({ outputJd: Print })
+      const { Result } = Jd2Date1(this.state.jd)
+      this.setState({ outputJd: Result })
     } catch (e) {
         alert(e.message)
     }
   }
 
+  handleConvertDate () {
+    try {
+      const { Result } = Date2Jd(this.state.yy, this.state.mm, this.state.dd)
+      this.setState({ outputDate: Result })
+    } catch (e) {
+        alert(e.message)
+    }
+  }
 
 
   renderResultDecompose () {
@@ -170,30 +211,50 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div>
+      <div>        
         <p>{this.state.outputJd}</p>
       </div>
     )
   }
 
+  renderResultDate () {
+    if (!this.state.outputDate) {
+      return null
+    }
+    return (
+      <div>        
+        <p>{this.state.outputDate}</p>
+      </div>
+    )
+  }
 
 
   render () {
     return (
-      <div>
+      <section>
+        <div className='convert-div'>
         <h2>調日法</h2>
         {this.renderConverterInputDecompose()}
         <button onClick={this.handleConvertDecompose} className='button4-1'>李銳來也∞</button>
         {this.renderResultDecompose()}
+        </div>
+        <div className='convert-div'>
         <h2>大衍求一術</h2>
         {this.renderConverterInputModulo()}
         <button onClick={this.handleConvertModulo} className='button4-2'>秦九韶再世⌘</button>
         {this.renderResultModulo()}
-        <h2>儒略日轉換</h2>
+        </div>
+        <div className='convert-div'>
+        <h2>儒略日、日期轉換</h2>
         {this.renderConverterInputJd()}
-        <button onClick={this.handleConvertJd} className='button4-6'>Bingo!</button>
+        <button onClick={this.handleConvertJd} className='button4-6'>JD2date</button>
         {this.renderResultJd()}
-      </div>
+        <p></p>
+        {this.renderConverterInputDate()}
+        <button onClick={this.handleConvertDate} className='button4-6'>Date2Jd</button>
+        {this.renderResultDate()}
+        </div>
+      </section>
     )
   }
 }

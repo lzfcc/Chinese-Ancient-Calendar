@@ -2,10 +2,11 @@
   --bg: #fffae8;
   --bggray: #f2f2f2;
   --shallowgray: #b6b5b5;
+  --shallowgray1: #d2d1d1;
   --gray: #787878;
   --black: #2b2b2b;
   --yellow: #ffda56;
-  --darkyellow: #f2cd00;
+  --darkyellow: #ffcc00;
   --bgpink: #feefe6;
   --red: #f27144;
   --blue: #2fa0ff;
@@ -113,20 +114,21 @@ p {
 }
 
 .section-select {
-  border-bottom: .25em solid var(--shallowgray);
-  padding: 0 .25em .2em;
+  border: .2em solid var(--yellow);
+  padding: .3em .5em;
+  border-radius: .4em;
   margin: 0 2em;
   -webkit-transition: .3s;
   transition: .3s;
 }
 
 .section-select.active {
-  border-bottom: .25em solid var(--yellow);
+  background: var(--yellow);
   font-weight: bold;
 }
 
 .section-select:hover {
-  border-bottom: .25em solid var(--yellow);
+  background: var(--yellow);
 }
 
 .main-render {
@@ -180,14 +182,20 @@ table td {
   width: 50px
 }
 
+.renderConverterInputDecompose p {
+  font-size: .9em;
+  line-height: 1.6;
+}
+
 .renderConverterInputDecompose table {
   font-size: .9em;
-  margin-top: -1.2em;
+  margin-top: -.8em;
 }
 
 .renderConverterInputDecompose table td {
   width: auto;
   padding: .4em 1em .2em;
+  text-align: left;
 }
 
 .renderConverterInputDecompose table th {
@@ -290,17 +298,21 @@ year-range {
   width: 3.3em;
 }
 
+.year-select input.InputJd {
+  width: 10em;
+}
+
 code {
   font-family: var(--codesans);
 }
 
 button {
   background: none;
-  padding: .1em .2em;
+  padding: .15em .25em;
   border-radius: .2em;
   font-weight: bold;
   color: var(--red);
-  border: .4em solid var(--red);
+  border: .3em solid var(--red);
   -webkit-transition: .3s;
   transition: .3s;
 }
@@ -379,6 +391,10 @@ input {
 
 .save-file {
   margin-left: 2em;
+}
+
+.convert-div{
+  margin: 7em auto;
 }
 
 .comment-wrap {
