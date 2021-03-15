@@ -189,7 +189,7 @@ table td {
 
 .renderConverterInputDecompose table {
   font-size: .9em;
-  margin-top: -.8em;
+  margin: -.8em auto;
 }
 
 .renderConverterInputDecompose table td {
@@ -302,6 +302,10 @@ year-range {
   width: 10em;
 }
 
+.year-select.Decompose input{
+  width: 6em;
+}
+
 code {
   font-family: var(--codesans);
 }
@@ -368,6 +372,16 @@ button.button4-2:hover {
   color: var(--bg);
 }
 
+button.button4-3 {
+  color: var(--shallowgray);
+  border: .4em solid var(--shallowgray);
+}
+
+button.button4-3:hover {
+  background: var(--shallowgray);
+  color: var(--bg);
+}
+
 button.button4-6 {
   color: var(--red);
   border: .4em solid var(--red);
@@ -395,6 +409,7 @@ input {
 
 .convert-div{
   margin: 7em auto;
+  max-width: 1100px;
 }
 
 .comment-wrap {
