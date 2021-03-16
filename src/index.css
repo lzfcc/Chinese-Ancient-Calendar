@@ -117,7 +117,7 @@ p {
   border: .2em solid var(--yellow);
   padding: .3em .5em;
   border-radius: .4em;
-  margin: 0 2em;
+  margin: 0 1.3em;
   -webkit-transition: .3s;
   transition: .3s;
 }
