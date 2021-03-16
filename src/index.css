@@ -117,7 +117,7 @@ p {
   border: .2em solid var(--yellow);
   padding: .3em .5em;
   border-radius: .4em;
-  margin: 0 1.3em;
+  margin: 0 1.2em;
   -webkit-transition: .3s;
   transition: .3s;
 }
@@ -151,7 +151,7 @@ h1 {
 }
 
 h2 {
-  margin-top: 3em;
+  margin-top: 2.5em;
   font-size: 1.5em;
   text-align: center;
   font-family: var(--serif);
@@ -260,9 +260,11 @@ tr.TermAcrScPrint {
 tr.NewmMansionPrint {
   color: var(--gray);
 }
+
 tr.TermMidstarPrint {
   color: var(--gray);
 }
+
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }
@@ -300,12 +302,19 @@ year-range {
   width: 3.3em;
 }
 
-.year-select input.InputJd {
-  width: 10em;
+.year-select.width4 input{
+  width: 12em;
 }
 
-.year-select.Decompose input{
-  width: 6em;
+.year-select input.width4 {
+  width: 12em;
+}
+.year-select.width3 input {
+  width: 7em;
+}
+
+.year-select input.width1 {
+  width: 1.5em;
 }
 
 code {
@@ -314,11 +323,11 @@ code {
 
 button {
   background: none;
-  padding: .15em .25em;
-  border-radius: .2em;
+  padding: .15em .3em;
+  border-radius: .4em;
   font-weight: bold;
   color: var(--red);
-  border: .3em solid var(--red);
+  border: .2em solid var(--red);
   -webkit-transition: .3s;
   transition: .3s;
 }
@@ -356,7 +365,7 @@ button.button2:hover {
 
 button.button4-1 {
   color: var(--darkyellow);
-  border: .4em solid var(--darkyellow);
+  border: .25em solid var(--darkyellow);
 }
 
 button.button4-1:hover {
@@ -366,7 +375,7 @@ button.button4-1:hover {
 
 button.button4-2 {
   color: var(--blue);
-  border: .4em solid var(--blue);
+  border: .25em solid var(--blue);
 }
 
 button.button4-2:hover {
@@ -376,7 +385,7 @@ button.button4-2:hover {
 
 button.button4-3 {
   color: var(--shallowgray);
-  border: .4em solid var(--shallowgray);
+  border: .25em solid var(--shallowgray);
 }
 
 button.button4-3:hover {
@@ -386,7 +395,7 @@ button.button4-3:hover {
 
 button.button4-6 {
   color: var(--red);
-  border: .4em solid var(--red);
+  border: .25em solid var(--red);
 }
 
 button.button4-6:hover {
@@ -409,7 +418,7 @@ input {
   margin-left: 2em;
 }
 
-.convert-div{
+.convert-div {
   margin: 7em auto;
   max-width: 1100px;
 }
