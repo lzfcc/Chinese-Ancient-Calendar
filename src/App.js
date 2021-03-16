@@ -23,6 +23,7 @@ const TableRowNameMap = {
   TermScPrint: '平氣',
   TermDecimalPrint: '分',
   TermMansionPrint: '赤度',
+  TermMidstarPrint: '昏中'
 }
 const TableDayRowNameMap = {
   Sc: '干支',
@@ -223,6 +224,7 @@ export default class App extends React.Component {
           const CalInfo = list[index];
           return (
             <div className="single-cal" style={style}>
+              <h3>{CalInfo.AnnoDomini}</h3>
               <p>{CalInfo.YearInfo}</p>
               <table>
                 <tr>{this.RenderTableContent(CalInfo)}</tr>
@@ -237,8 +239,8 @@ export default class App extends React.Component {
 
   RenderTableContent (CalInfo) {
     return Object.entries(CalInfo).map(([key, value]) => {
-      if (Array.isArray(value) && value.length > 0) {
-        return <tr className={key}>{
+      if (Array.isArray(value) && value.length > 0 && ((this.state.activeTab ===0 && TableRowNameMap[key]) || (this.state.activeTab ===1 && TableDayRowNameMap[key]))) { 
+        return <tr className={key}>{          
           [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td>{x}</td>)))
         }</tr>
       }

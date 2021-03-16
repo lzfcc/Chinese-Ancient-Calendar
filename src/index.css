@@ -260,7 +260,9 @@ tr.TermAcrScPrint {
 tr.NewmMansionPrint {
   color: var(--gray);
 }
-
+tr.TermMidstarPrint {
+  color: var(--gray);
+}
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }

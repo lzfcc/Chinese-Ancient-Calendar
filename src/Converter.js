@@ -303,7 +303,7 @@ export default class Converter extends React.Component {
         {this.renderConverterInputContinuedFrac()}
         <button onClick={this.handleConvertContinuedFrac} className='button4-3'>衝衝衝 !</button>
         {this.renderResultContinuedFrac()}
-        <p>{(this.state.outputContinuedFrac3 || []).length > 0 ? this.convertLatex(this.state.outputContinuedFrac3) : null}</p>
+        {/* <p>{(this.state.outputContinuedFrac3 || []).length > 0 ? this.convertLatex(this.state.outputContinuedFrac3) : null}</p> */}
         </div>
         <div className='convert-div'>
         <h2>調日法</h2>
