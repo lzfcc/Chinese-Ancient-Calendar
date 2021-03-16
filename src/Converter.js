@@ -2,7 +2,7 @@ import React from 'react'
 import { DecomposePrimeFactor } from '../src/Shangshu-calendar/convert_decompose-prime-factor'
 import { CongruenceModulo, ContinuedFrac } from '../src/Shangshu-calendar/convert_congruence-modulo'
 import { Jd2Date1, Date2Jd } from '../src/Shangshu-calendar/convert_jd2date'
-
+import MathJax from './Mathjax'
 export default class Converter extends React.Component {
   constructor (props) {
     super(props)
@@ -20,9 +20,9 @@ export default class Converter extends React.Component {
       dd: '',
       outputModulo: null,
       outputDecompse: null,
-      outputContinuedFrac: null,      
-      outputJd: null,    
-      outputDate: null,    
+      outputContinuedFrac: null,
+      outputJd: null,
+      outputDate: null,
     }
     this.handleConvertModulo = this.handleConvertModulo.bind(this)
     this.handleConvertDecompose = this.handleConvertDecompose.bind(this)
@@ -175,10 +175,10 @@ export default class Converter extends React.Component {
       } else {
         str = `${x} + {1 \\over {${str}}}`
       }
-    })     
+    })
     return `\\[${str}\\]`
   }
-  
+
   handleConvertDecompose () {
     try {
       const { SmallPrint, Result, Foot } = DecomposePrimeFactor(this.state.a, this.state.b, this.state.bigNumer, this.state.bigDenom)
@@ -188,7 +188,7 @@ export default class Converter extends React.Component {
     }
   }
 
-  
+
   handleConvertJd () {
     try {
       const { Result } = Jd2Date1(this.state.jd)
@@ -267,7 +267,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div>        
+      <div>
         <p>{this.state.outputJd}</p>
       </div>
     )
@@ -278,7 +278,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div>        
+      <div>
         <p>{this.state.outputDate}</p>
       </div>
     )
@@ -303,7 +303,9 @@ export default class Converter extends React.Component {
         {this.renderConverterInputContinuedFrac()}
         <button onClick={this.handleConvertContinuedFrac} className='button4-3'>衝衝衝 !</button>
         {this.renderResultContinuedFrac()}
-        {/* <p>{(this.state.outputContinuedFrac3 || []).length > 0 ? this.convertLatex(this.state.outputContinuedFrac3) : null}</p> */}
+        {(this.state.outputContinuedFrac3 || []).length > 0 ?
+            <MathJax rawLatex={this.convertLatex(this.state.outputContinuedFrac3)}/> : null
+        }
         </div>
         <div className='convert-div'>
         <h2>調日法</h2>
