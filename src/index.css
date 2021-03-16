@@ -2,9 +2,11 @@
   --bg: #fffae8;
   --bggray: #f2f2f2;
   --shallowgray: #b6b5b5;
+  --shallowgray1: #d2d1d1;
   --gray: #787878;
   --black: #2b2b2b;
   --yellow: #ffda56;
+  --darkyellow: #ffcc00;
   --bgpink: #feefe6;
   --red: #f27144;
   --blue: #2fa0ff;
@@ -112,20 +114,21 @@ p {
 }
 
 .section-select {
-  border-bottom: .25em solid var(--shallowgray);
-  padding: 0 .25em .2em;
-  margin: 0 2em;
+  border: .2em solid var(--yellow);
+  padding: .3em .5em;
+  border-radius: .4em;
+  margin: 0 1.3em;
   -webkit-transition: .3s;
   transition: .3s;
 }
 
 .section-select.active {
-  border-bottom: .25em solid var(--yellow);
+  background: var(--yellow);
   font-weight: bold;
 }
 
 .section-select:hover {
-  border-bottom: .25em solid var(--yellow);
+  background: var(--yellow);
 }
 
 .main-render {
@@ -179,24 +182,30 @@ table td {
   width: 50px
 }
 
-.renderConverterInput1 table {
+.renderConverterInputDecompose p {
   font-size: .9em;
-  margin-top: -1.2em;
+  line-height: 1.6;
 }
 
-.renderConverterInput1 table td {
+.renderConverterInputDecompose table {
+  font-size: .9em;
+  margin: -.8em auto;
+}
+
+.renderConverterInputDecompose table td {
   width: auto;
   padding: .4em 1em .2em;
+  text-align: left;
 }
 
-.renderConverterInput1 table th {
+.renderConverterInputDecompose table th {
   text-align: center;
   padding: .3em 1em;
   border: none;
   border-bottom: 1px solid var(--gray);
 }
 
-.renderConverterInput1 table .ConverterInput1Name {
+.renderConverterInputDecompose table .ConverterInputDecomposeName {
   font-weight: bold;
   text-align: right;
 }
@@ -239,14 +248,21 @@ tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
 }
 
-tr.TermMansionPrint {
-  color: var(--gray);
+
+tr.TermAcrScPrint {
+  border-top: 1px solid var(--gray);
 }
+
+/* tr.TermMansionPrint {
+  color: var(--gray);
+} */
 
 tr.NewmMansionPrint {
   color: var(--gray);
 }
-
+tr.TermMidstarPrint {
+  color: var(--gray);
+}
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }
@@ -284,17 +300,25 @@ year-range {
   width: 3.3em;
 }
 
+.year-select input.InputJd {
+  width: 10em;
+}
+
+.year-select.Decompose input{
+  width: 6em;
+}
+
 code {
   font-family: var(--codesans);
 }
 
 button {
-  background: var(--yellow);
-  padding: .4em .5em;
-  border-radius: .5em;
+  background: none;
+  padding: .15em .25em;
+  border-radius: .2em;
   font-weight: bold;
   color: var(--red);
-  border: 1px solid var(--shallowgray);
+  border: .3em solid var(--red);
   -webkit-transition: .3s;
   transition: .3s;
 }
@@ -303,6 +327,73 @@ button:hover {
   background: var(--red);
   color: var(--bg);
 }
+
+button.button1 {
+  padding: .4em .5em;
+  color: var(--red);
+  background: var(--yellow);
+  border: none;
+  border-radius: .4em;
+}
+
+button.button1:hover {
+  color: var(--bg);
+  background: var(--red)
+}
+
+button.button2 {
+  padding: .4em .5em;
+  color: var(--bg);
+  background: var(--red);
+  border: none;
+  border-radius: .4em;
+}
+
+button.button2:hover {
+  color: var(--red);
+  background: var(--yellow)
+}
+
+button.button4-1 {
+  color: var(--darkyellow);
+  border: .4em solid var(--darkyellow);
+}
+
+button.button4-1:hover {
+  background: var(--darkyellow);
+  color: var(--bg);
+}
+
+button.button4-2 {
+  color: var(--blue);
+  border: .4em solid var(--blue);
+}
+
+button.button4-2:hover {
+  background: var(--blue);
+  color: var(--bg);
+}
+
+button.button4-3 {
+  color: var(--shallowgray);
+  border: .4em solid var(--shallowgray);
+}
+
+button.button4-3:hover {
+  background: var(--shallowgray);
+  color: var(--bg);
+}
+
+button.button4-6 {
+  color: var(--red);
+  border: .4em solid var(--red);
+}
+
+button.button4-6:hover {
+  background: var(--red);
+  color: var(--bg);
+}
+
 
 input {
   background: none;
@@ -316,6 +407,11 @@ input {
 
 .save-file {
   margin-left: 2em;
+}
+
+.convert-div{
+  margin: 7em auto;
+  max-width: 1100px;
 }
 
 .comment-wrap {
