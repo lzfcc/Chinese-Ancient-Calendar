@@ -3,6 +3,7 @@ import './App.css'
 import { CalNameList, CalNameDayList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect';
 import DynamicList, { createCache } from 'react-window-dynamic-list';
+import Modulo from './Modulo';
 import Converter from './Converter';
 
 const TableRowNameMap = {
@@ -28,37 +29,37 @@ const TableRowNameMap = {
 const TableDayRowNameMap = {
   Sc: '干支',
   SunRise: '日出',
-  SunEquatorLati:'日去極',
-  Dial:'晷長',
-  MidstarPrint:'昏中星',
-  EquartorPrint:'日赤',
-  EclipticPrint:'日黃',
-  MoonEquartorPrint:'月赤',
-  MoonEquatorLati:'黃白距',
-  HouName:'候土卦',
+  SunEquatorLati: '日去極',
+  Dial: '晷長',
+  MidstarPrint: '昏中星',
+  EquartorPrint: '日赤',
+  EclipticPrint: '日黃',
+  MoonEquartorPrint: '月赤',
+  MoonEquatorLati: '黃白距',
+  HouName: '候土卦',
 }
 
 const heightCache = createCache();
 export default class App extends React.Component {
-  constructor(props) {  
+  constructor(props) {
     super(props);
-    this.tabTitles=['朔望氣閏食','日書','五星','轉換']
+    this.tabTitles = ['朔望氣閏食', '日書', '五星', '大衍', '轉換']
     this.handleRetrieve = this.handleRetrieve.bind(this);
 
     this.state = {
       calendars: [],
       YearStart: '',
       YearEnd: '',
-      YearMode: '0',
+      // YearMode: '0',
       AutoMode: 0,
       output: '',
       loading: false,
       activeTab: 0,
     };
   }
-  
 
-  componentDidMount () {
+
+  componentDidMount() {
     this.worker = new Worker('main.js');
     this.worker.addEventListener('message', ({ data }) => {
       if (data instanceof Blob) { // 约定：存为文件时 web worker 发送 Blob 对象
@@ -77,11 +78,11 @@ export default class App extends React.Component {
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.worker.terminate()
   }
 
-  _getFileName () {
+  _getFileName() {
     let calString = `${this.state.calendars}_${this.state.YearStart}`
     if (this.state.YearEnd) {
       calString += `_${this.state.YearEnd}`
@@ -141,46 +142,46 @@ export default class App extends React.Component {
         YearEnd
       })
     }
-    if (this.state.activeTab===0) {  
+    if (this.state.activeTab === 0) {
       if (this.downloadRef && this.downloadRef.checked) {
         callWorker('print');
         return;
       }
-  
+
       if (this.state.calendars.length * (YearEnd - YearStart) > 400) {
         alert('內容過多，爲避免瀏覽器展示性能問題，將自動下載.md文件到本地');
         callWorker('print');
         return;
       }
-  
+
       callWorker('display')
-    } else if(this.state.activeTab===1){
+    } else if (this.state.activeTab === 1) {
       callWorker('Day')
-    } else if(this.state.activeTab===2){
+    } else if (this.state.activeTab === 2) {
       // 敬請期待
     }
   }
 
-  renderTabs(){
-    return(<div className="section-select-container">
-    {this.tabTitles.map((title,index)=>(<span className={"section-select" + (this.state.activeTab===index?' active':'')} onClick={(e)=>{
-      if(this.state.activeTab===index){
-        return
-      }
-      if (index === 2) {
-        alert('預計2023年推出，敬請期待～')
-        return
-      }
-      this.setState({
-        activeTab:index,
-        // AutoMode: 0,
-        output: '',
-        loading: false,
-      }) 
-    } } >{title}</span>))}
-  </div>)
+  renderTabs() {
+    return (<span className="section-select-container">
+      {this.tabTitles.map((title, index) => (<span className={"section-select" + (this.state.activeTab === index ? ' active' : '')} onClick={(e) => {
+        if (this.state.activeTab === index) {
+          return
+        }
+        if (index === 2) {
+          alert('預計2023年推出，敬請期待～')
+          return
+        }
+        this.setState({
+          activeTab: index,
+          // AutoMode: 0,
+          output: '',
+          loading: false,
+        })
+      }} >{title}</span>))}
+    </span>)
   }
-  
+
 
   BACKUP_renderTableList() {
     return (
@@ -194,10 +195,10 @@ export default class App extends React.Component {
                   <tr>
                     {this.RenderTableContent(CalInfo)}
                   </tr>
-                  </table>
+                </table>
               </div>)
           });
-          yearGroup.push(<div/>); // todo 分隔符
+          yearGroup.push(<div />); // todo 分隔符
           return yearGroup;
         })}
       </div>
@@ -213,34 +214,34 @@ export default class App extends React.Component {
     }
     return (
       <section className='main-render'>
-      <DynamicList
-        height={(window.innerHeight)*0.97}
-        width={window.innerWidth}
-        cache={heightCache}
-        data={list}
-        overscanCount={5}
-      >
-        {({ index, style }) => {
-          const CalInfo = list[index];
-          return (
-            <div className="single-cal" style={style}>
-              <h3>{CalInfo.AnnoDomini}</h3>
-              <p>{CalInfo.YearInfo}</p>
-              <table>
-                <tr>{this.RenderTableContent(CalInfo)}</tr>
-              </table>
-            </div>
-          );
-        }}
-      </DynamicList>
+        <DynamicList
+          height={(window.innerHeight) * 0.97}
+          width={window.innerWidth}
+          cache={heightCache}
+          data={list}
+          overscanCount={5}
+        >
+          {({ index, style }) => {
+            const CalInfo = list[index];
+            return (
+              <div className="single-cal" style={style}>
+                <h3>{CalInfo.AnnoDomini}</h3>
+                <p>{CalInfo.YearInfo}</p>
+                <table>
+                  <tr>{this.RenderTableContent(CalInfo)}</tr>
+                </table>
+              </div>
+            );
+          }}
+        </DynamicList>
       </section>
     );
   }
 
-  RenderTableContent (CalInfo) {
+  RenderTableContent(CalInfo) {
     return Object.entries(CalInfo).map(([key, value]) => {
-      if (Array.isArray(value) && value.length > 0 && ((this.state.activeTab ===0 && TableRowNameMap[key]) || (this.state.activeTab ===1 && TableDayRowNameMap[key]))) { 
-        return <tr className={key}>{          
+      if (Array.isArray(value) && value.length > 0 && ((this.state.activeTab === 0 && TableRowNameMap[key]) || (this.state.activeTab === 1 && TableDayRowNameMap[key]))) {
+        return <tr className={key}>{
           [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td>{x}</td>)))
         }</tr>
       }
@@ -277,16 +278,16 @@ export default class App extends React.Component {
           }}
         />
         {/* {this.state.mode === '1' ? ( */}
-          <span className='year-end'>
-            <span>—</span>
-            <input
-              value={this.state.YearEnd}
-              onChange={(e) => {
-                this.setState({ YearEnd: e.currentTarget.value });
-              }}
-            />
-            <span>年</span>
-          </span>
+        <span className='year-end'>
+          <span>—</span>
+          <input
+            value={this.state.YearEnd}
+            onChange={(e) => {
+              this.setState({ YearEnd: e.currentTarget.value });
+            }}
+          />
+          <span>年</span>
+        </span>
         {/* ) : null} */}
       </span>
     );
@@ -312,12 +313,12 @@ export default class App extends React.Component {
     );
   }
 
-  renderDownload () {
+  renderDownload() {
     return (
       <span className='save-file'>
         <input type='checkbox' name='download-file' ref={(ref) => {
           this.downloadRef = ref
-        }}/>
+        }} />
         <label>保存爲.md文件</label>
       </span>
     )
@@ -331,8 +332,8 @@ export default class App extends React.Component {
   //   ) : null;
   // }
 
-  renderTabContent () {
-    if (this.state.activeTab ===0) {
+  renderTabContent() {
+    if (this.state.activeTab === 0) {
       return (
         <>
           {this.renderCalendar()}
@@ -342,7 +343,7 @@ export default class App extends React.Component {
           {this.renderTableList()}
         </>
       )
-    } else if (this.state.activeTab ===1) {
+    } else if (this.state.activeTab === 1) {
       return (
         <>
           {this.renderCalendar()}
@@ -352,18 +353,23 @@ export default class App extends React.Component {
           {this.renderTableList()}
         </>
       )
-    }
-    return (
-      <Converter/>
-    )
+    } else if (this.state.activeTab === 3) {
+      return (
+        <Modulo />
+        )
+    } else if (this.state.activeTab === 4) {
+      return (
+        <Converter />      
+        )
+      }
   }
 
   render() {
     return (
       <div className='App'>
-       {this.renderTabs()}
-          {/* {this.renderLoading()} */}
-          {/* {this.renderMode()} */}
+        {this.renderTabs()}
+        {/* {this.renderLoading()} */}
+        {/* {this.renderMode()} */}
         {this.renderTabContent()}
       </div>
     );
