@@ -369,6 +369,10 @@ year-range {
   width: 12em;
 }
 
+.year-select.width5 input {
+  width: 47em;
+}
+
 .year-select.width3 input {
   width: 7em;
 }

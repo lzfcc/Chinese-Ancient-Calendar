@@ -1,7 +1,7 @@
 import React from 'react'
 import { CongruenceModulo, ContinuedFrac, ContinuedFrac1 } from '../src/Shangshu-calendar/convert_congruence-modulo'
 import { DecomposePrimeFactor } from '../src/Shangshu-calendar/convert_decompose-prime-factor'
-import { Sunzi, OriginModulo } from '../src/Shangshu-calendar/convert_origin'
+import { Sunzi, IndetermEqua, OriginModulo } from '../src/Shangshu-calendar/convert_origin'
 import MathJax from './Mathjax'
 
 export default class Modulo extends React.Component {
@@ -10,7 +10,9 @@ export default class Modulo extends React.Component {
     this.state = {
       a: '',
       b: '',
-      list: [],
+      aa: '',
+      bb: '',
+      zz: '',
       bigNumer: 26,
       bigDenom: 49,
       aRaw: '',
@@ -22,6 +24,7 @@ export default class Modulo extends React.Component {
       OriginConst: 193440,
       FirstConst: 163771,
       outputModulo: null,
+      outputIndetermEqua: null,
       outputSunzi: null,
       outputDecompse: null,
       outputContinuedFrac: null,
@@ -29,6 +32,7 @@ export default class Modulo extends React.Component {
       outputOrigin: null,
     }
     this.handleConvertModulo = this.handleConvertModulo.bind(this)
+    this.handleConvertIndetermEqua = this.handleConvertIndetermEqua.bind(this)
     this.handleConvertSunzi = this.handleConvertSunzi.bind(this)
     this.handleConvertDecompose = this.handleConvertDecompose.bind(this)
     this.handleConvertContinuedFrac = this.handleConvertContinuedFrac.bind(this)
@@ -57,75 +61,114 @@ export default class Modulo extends React.Component {
     );
   }
 
-  renderModuloInputSunzi() {
+  renderModuloInputIndetermEqua() {
     return (
       <span className='year-select width3'>
-        <table>
-          <tr>
-            <th>x</th>
-            <td>
-              <span>≡ </span>
-              <input
-                value={this.state.b1}
-                onChange={(e) => {
-                  this.setState({ b1: e.currentTarget.value });
-                }}
-              />
-              <span> (mod </span>
-              <input
-                value={this.state.m1}
-                onChange={(e) => {
-                  this.setState({ m1: e.currentTarget.value });
-                }}
-              />
-              <span>)</span>
-            </td>
-          </tr>
-          <tr>
-            <th></th>
-            <td>
-              <span>≡ </span>
-              <input
-                value={this.state.b2}
-                onChange={(e) => {
-                  this.setState({ b2: e.currentTarget.value });
-                }}
-              />
-              <span> (mod </span>
-              <input
-                value={this.state.m2}
-                onChange={(e) => {
-                  this.setState({ m2: e.currentTarget.value });
-                }}
-              />
-              <span>)</span>
-            </td>
-          </tr>
-          <tr>
-            <th></th>
-            <td>
-              <span>≡ </span>
-              <input
-                value={this.state.b3}
-                onChange={(e) => {
-                  this.setState({ b3: e.currentTarget.value });
-                }}
-              />
-              <span> (mod </span>
-              <input
-                value={this.state.m3}
-                onChange={(e) => {
-                  this.setState({ m3: e.currentTarget.value });
-                }}
-              />
-              <span>)</span>
-            </td>
-          </tr>
-        </table>
+        <input
+          value={this.state.aa}
+          onChange={(e) => {
+            this.setState({ aa: e.currentTarget.value });
+          }}
+        />
+        <span>x + </span>
+        <input
+          value={this.state.bb}
+          onChange={(e) => {
+            this.setState({ bb: e.currentTarget.value });
+          }}
+        />
+        <span>y = </span>
+        <input
+          value={this.state.zz}
+          onChange={(e) => {
+            this.setState({ zz: e.currentTarget.value });
+          }}
+        />
       </span>
     );
   }
 
+  // renderModuloInputSunzi() {
+  //   return (
+  //     <span className='year-select width3'>
+  //       <table>
+  //         <tr>
+  //           <th>x</th>
+  //           <td>
+  //             <span>≡ </span>
+  //             <input
+  //               value={this.state.b1}
+  //               onChange={(e) => {
+  //                 this.setState({ b1: e.currentTarget.value });
+  //               }}
+  //             />
+  //             <span> (mod </span>
+  //             <input
+  //               value={this.state.m1}
+  //               onChange={(e) => {
+  //                 this.setState({ m1: e.currentTarget.value });
+  //               }}
+  //             />
+  //             <span>)</span>
+  //           </td>
+  //         </tr>
+  //         <tr>
+  //           <th></th>
+  //           <td>
+  //             <span>≡ </span>
+  //             <input
+  //               value={this.state.b2}
+  //               onChange={(e) => {
+  //                 this.setState({ b2: e.currentTarget.value });
+  //               }}
+  //             />
+  //             <span> (mod </span>
+  //             <input
+  //               value={this.state.m2}
+  //               onChange={(e) => {
+  //                 this.setState({ m2: e.currentTarget.value });
+  //               }}
+  //             />
+  //             <span>)</span>
+  //           </td>
+  //         </tr>
+  //         <tr>
+  //           <th></th>
+  //           <td>
+  //             <span>≡ </span>
+  //             <input
+  //               value={this.state.b3}
+  //               onChange={(e) => {
+  //                 this.setState({ b3: e.currentTarget.value });
+  //               }}
+  //             />
+  //             <span> (mod </span>
+  //             <input
+  //               value={this.state.m3}
+  //               onChange={(e) => {
+  //                 this.setState({ m3: e.currentTarget.value });
+  //               }}
+  //             />
+  //             <span>)</span>
+  //           </td>
+  //         </tr>
+  //       </table>
+  //     </span>
+  //   );
+  // }
+  renderModuloInputSunzi() {
+    return (
+      <span className='year-select width5'>
+        <p>求解多組 x ≡ 餘數 (mod 模數) 【依次輸入各組餘數、模數；可用任意非數字隔開；模數需兩兩互質；組數不限】</p>
+        <input
+          value={this.state.sunziIn}
+          onChange={(e) => {
+          this.setState({ sunziIn: e.currentTarget.value });
+          }}
+        />
+      </span>
+    );
+  }
   renderModuloInputContinuedFrac() {
     return (
       <span className='year-select width3'>
@@ -255,15 +298,31 @@ export default class Modulo extends React.Component {
     }
   }
 
-  handleConvertSunzi() {
+  handleConvertIndetermEqua() {
     try {
-      const { Print } = Sunzi(this.state.b1, this.state.m1, this.state.b2, this.state.m2, this.state.b3, this.state.m3)
-      this.setState({ outputSunzi: Print })
+      const { xPrint, yPrint } = IndetermEqua(this.state.aa, this.state.bb, this.state.zz)
+      this.setState({ outputIndetermEqua1: xPrint, outputIndetermEqua2: yPrint })
     } catch (e) {
       alert(e.message)
     }
   }
 
+  // handleConvertSunzi() {
+  //   try {
+  //     const { Print } = Sunzi(this.state.b1, this.state.m1, this.state.b2, this.state.m2, this.state.b3, this.state.m3)
+  //     this.setState({ outputSunzi: Print })
+  //   } catch (e) {
+  //     alert(e.message)
+  //   }
+  // }
+  handleConvertSunzi() {
+    try {
+      const { Print } = Sunzi(this.state.sunziIn)
+      this.setState({ outputSunzi: Print })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
   handleConvertContinuedFrac() {
     try {
       const { gcdPrint, z, zPrint, Result } = ContinuedFrac(this.state.fracA, this.state.fracB)
@@ -319,6 +378,19 @@ export default class Modulo extends React.Component {
     return (
       <div>
         <p>{this.state.outputModulo}</p>
+      </div>
+    )
+  }
+
+  renderResultIndetermEqua() {
+    if (!this.state.outputIndetermEqua1) {
+      return null
+    }
+    return (
+      <div>
+        <p></p>
+        <div>{this.state.outputIndetermEqua1}</div>
+        <div>{this.state.outputIndetermEqua2}</div>
       </div>
     )
   }
@@ -407,6 +479,12 @@ export default class Modulo extends React.Component {
           {this.renderModuloInputModulo()}
           <button onClick={this.handleConvertModulo} className='button4-2'>秦九韶再世⌘</button>
           {this.renderResultModulo()}
+        </div>
+        <div className='convert-div'>
+          <h2>二元一次不定方程</h2>
+          {this.renderModuloInputIndetermEqua()}
+          <button onClick={this.handleConvertIndetermEqua} className='button4-7'>●○●○</button>
+          {this.renderResultIndetermEqua()}
         </div>
         <div className='convert-div'>
           <h2>孫子定理</h2>
