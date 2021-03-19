@@ -114,7 +114,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputJd}</p>
       </div>
     )
@@ -125,7 +125,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputDate}</p>
       </div>
     )
@@ -133,7 +133,7 @@ export default class Converter extends React.Component {
 
   render() {
     return (
-      <section>
+      <section className='convert-div'>
         <div className='convert-div'>
           <h2>儒略日 ⇌ 日期</h2>
           {this.renderConverterInputJd()}

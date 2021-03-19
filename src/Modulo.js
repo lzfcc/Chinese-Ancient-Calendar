@@ -1,30 +1,36 @@
 import React from 'react'
 import { CongruenceModulo, ContinuedFrac, ContinuedFrac1 } from '../src/Shangshu-calendar/convert_congruence-modulo'
 import { DecomposePrimeFactor } from '../src/Shangshu-calendar/convert_decompose-prime-factor'
-import { Sunzi, IndetermEqua, OriginModulo } from '../src/Shangshu-calendar/convert_origin'
+import { Sunzi, IndetermEqua,IndetermEqua1, OriginModulo } from '../src/Shangshu-calendar/convert_origin'
 import MathJax from './Mathjax'
 
 export default class Modulo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: '',
-      b: '',
-      aa: '',
-      bb: '',
-      zz: '',
+      a: 399,
+      b: 752,
+      aa1: 49,
+      bb1: 17,
+      zz1: 752,
+      aa2: '',
+      bb2: '',
+      zz2: '',
+      fracA: 399,
+      fracB: 752,
       bigNumer: 26,
       bigDenom: 49,
-      aRaw: '',
-      bRaw: '',
+      aRaw: 49,
+      bRaw: 26,
       title: '弱率',
+      sunziIn: '2,3;5,7;251,8;4237,11;963,13', 
       Denom: 16900,
       SolarFrac: 4108,
-      LunarFrac: 8967,
       OriginConst: 193440,
       FirstConst: 163771,
       outputModulo: null,
       outputIndetermEqua: null,
+      outputIndetermEqua1: null,
       outputSunzi: null,
       outputDecompse: null,
       outputContinuedFrac: null,
@@ -33,6 +39,7 @@ export default class Modulo extends React.Component {
     }
     this.handleConvertModulo = this.handleConvertModulo.bind(this)
     this.handleConvertIndetermEqua = this.handleConvertIndetermEqua.bind(this)
+    this.handleConvertIndetermEqua1 = this.handleConvertIndetermEqua1.bind(this)
     this.handleConvertSunzi = this.handleConvertSunzi.bind(this)
     this.handleConvertDecompose = this.handleConvertDecompose.bind(this)
     this.handleConvertContinuedFrac = this.handleConvertContinuedFrac.bind(this)
@@ -44,17 +51,47 @@ export default class Modulo extends React.Component {
   renderModuloInputModulo() {
     return (
       <span className='year-select width3'>
-        <span>鍵入兩箇互質整數</span>
+        <p className='note'>萬法之法。孫子定理、不定方程、調日法、演紀都需要求一術。本頁面所有輸入均需爲整數（連分數的小數逼近除外）</p>
         <input
           value={this.state.aRaw}
           onChange={(e) => {
             this.setState({ aRaw: e.currentTarget.value });
           }}
         />
+        <span> × z ≡ 1 (mod </span>
         <input
           value={this.state.bRaw}
           onChange={(e) => {
             this.setState({ bRaw: e.currentTarget.value });
+          }}
+        />
+        <span>)</span>
+      </span>
+    );
+  }
+
+  renderModuloInputIndetermEqua1() {
+    return (
+      <span className='year-select width3'>
+        <p className='note'>ax - by = z 等價於 ax ≡ z (mod y)</p>
+        <input
+          value={this.state.aa2}
+          onChange={(e) => {
+            this.setState({ aa2: e.currentTarget.value });
+          }}
+        />
+        <span>x + </span>
+        <input
+          value={this.state.bb2}
+          onChange={(e) => {
+            this.setState({ bb2: e.currentTarget.value });
+          }}
+        />
+        <span>y = </span>
+        <input
+          value={this.state.zz2}
+          onChange={(e) => {
+            this.setState({ zz2: e.currentTarget.value });
           }}
         />
       </span>
@@ -64,102 +101,35 @@ export default class Modulo extends React.Component {
   renderModuloInputIndetermEqua() {
     return (
       <span className='year-select width3'>
+        <span>彊母 </span>
         <input
-          value={this.state.aa}
+          value={this.state.aa1}
           onChange={(e) => {
-            this.setState({ aa: e.currentTarget.value });
+            this.setState({ aa1: e.currentTarget.value });
+          }}
+        />        
+        <span>弱母 </span>
+        <input
+          value={this.state.bb1}
+          onChange={(e) => {
+            this.setState({ bb1: e.currentTarget.value });
           }}
         />
-        <span>x + </span>
+        <span>日法</span>
         <input
-          value={this.state.bb}
+          value={this.state.zz1}
           onChange={(e) => {
-            this.setState({ bb: e.currentTarget.value });
+            this.setState({ zz1: e.currentTarget.value });
           }}
-        />
-        <span>y = </span>
-        <input
-          value={this.state.zz}
-          onChange={(e) => {
-            this.setState({ zz: e.currentTarget.value });
-          }}
-        />
+        />        
       </span>
     );
   }
 
-  // renderModuloInputSunzi() {
-  //   return (
-  //     <span className='year-select width3'>
-  //       <table>
-  //         <tr>
-  //           <th>x</th>
-  //           <td>
-  //             <span>≡ </span>
-  //             <input
-  //               value={this.state.b1}
-  //               onChange={(e) => {
-  //                 this.setState({ b1: e.currentTarget.value });
-  //               }}
-  //             />
-  //             <span> (mod </span>
-  //             <input
-  //               value={this.state.m1}
-  //               onChange={(e) => {
-  //                 this.setState({ m1: e.currentTarget.value });
-  //               }}
-  //             />
-  //             <span>)</span>
-  //           </td>
-  //         </tr>
-  //         <tr>
-  //           <th></th>
-  //           <td>
-  //             <span>≡ </span>
-  //             <input
-  //               value={this.state.b2}
-  //               onChange={(e) => {
-  //                 this.setState({ b2: e.currentTarget.value });
-  //               }}
-  //             />
-  //             <span> (mod </span>
-  //             <input
-  //               value={this.state.m2}
-  //               onChange={(e) => {
-  //                 this.setState({ m2: e.currentTarget.value });
-  //               }}
-  //             />
-  //             <span>)</span>
-  //           </td>
-  //         </tr>
-  //         <tr>
-  //           <th></th>
-  //           <td>
-  //             <span>≡ </span>
-  //             <input
-  //               value={this.state.b3}
-  //               onChange={(e) => {
-  //                 this.setState({ b3: e.currentTarget.value });
-  //               }}
-  //             />
-  //             <span> (mod </span>
-  //             <input
-  //               value={this.state.m3}
-  //               onChange={(e) => {
-  //                 this.setState({ m3: e.currentTarget.value });
-  //               }}
-  //             />
-  //             <span>)</span>
-  //           </td>
-  //         </tr>
-  //       </table>
-  //     </span>
-  //   );
-  // }
   renderModuloInputSunzi() {
     return (
       <span className='year-select width5'>
-        <p>求解多組 x ≡ 餘數 (mod 模數) 【依次輸入各組餘數、模數；可用任意非數字隔開；模數需兩兩互質；組數不限】</p>
+        <p className='note'>求解多組 x ≡ 餘數 (mod 模數) 。依次輸入各組餘數、模數；可用任意非數字隔開；模數需兩兩互質；組數不限</p>
         <input
           value={this.state.sunziIn}
           onChange={(e) => {
@@ -215,6 +185,7 @@ export default class Modulo extends React.Component {
   renderModuloInputDecompose() {
     return (
       <span className='year-select width3'>
+        <p className='note'>李銳「有日法求彊弱」法不需要鍵入朔餘，可與秦九韶法配合使用；「累彊弱之數」法可與分數的連分數逼近配合使用</p>
         <span>朔餘</span>
         <input
           value={this.state.a}
@@ -250,6 +221,7 @@ export default class Modulo extends React.Component {
   renderModuloInputOrigin() {
     return (
       <span className='year-select width2'>
+        <p className='note'>歲策 = 365 + 斗分/日法，朔策 = 29 + 朔餘/日法。實測冬至 = 干支 + 氣餘/日法，冬至分子 = 干支 * 日法 + 氣餘。天正朔分子= 干支 * 日法 + 朔餘。冬至分子需爲 60 的整數倍</p>
         <span>日法</span>
         <input
           value={this.state.Denom}
@@ -262,13 +234,6 @@ export default class Modulo extends React.Component {
           value={this.state.SolarFrac}
           onChange={(e) => {
             this.setState({ SolarFrac: e.currentTarget.value });
-          }}
-        />
-        <span> 朔餘</span>
-        <input
-          value={this.state.LunarFrac}
-          onChange={(e) => {
-            this.setState({ LunarFrac: e.currentTarget.value });
           }}
         />
         <span> 冬至分子</span>
@@ -298,10 +263,18 @@ export default class Modulo extends React.Component {
     }
   }
 
+  handleConvertIndetermEqua1() {
+    try {
+      const { xPrint, yPrint } = IndetermEqua1(this.state.aa2, this.state.bb2, this.state.zz2)
+      this.setState({ outputIndetermEqua11: xPrint, outputIndetermEqua12: yPrint })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
   handleConvertIndetermEqua() {
     try {
-      const { xPrint, yPrint } = IndetermEqua(this.state.aa, this.state.bb, this.state.zz)
-      this.setState({ outputIndetermEqua1: xPrint, outputIndetermEqua2: yPrint })
+      const { xPrint, yPrint, Decompose } = IndetermEqua(this.state.aa1, this.state.bb1, this.state.zz1)
+      this.setState({ outputIndetermEqua1: xPrint, outputIndetermEqua2: yPrint,outputIndetermEqua3: Decompose })
     } catch (e) {
       alert(e.message)
     }
@@ -364,7 +337,7 @@ export default class Modulo extends React.Component {
 
   handleConvertOrigin() {
     try {
-      const { OriginPrint } = OriginModulo(this.state.Denom, this.state.SolarFrac, this.state.LunarFrac, this.state.OriginConst, this.state.FirstConst)
+      const { OriginPrint } = OriginModulo(this.state.Denom, this.state.SolarFrac, this.state.OriginConst, this.state.FirstConst)
       this.setState({ outputOrigin: OriginPrint })
     } catch (e) {
       alert(e.message)
@@ -376,21 +349,32 @@ export default class Modulo extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputModulo}</p>
       </div>
     )
   }
-
+  renderResultIndetermEqua1() {
+    if (!this.state.outputIndetermEqua11) {
+      return null
+    }
+    return (
+      <div className='ans'>
+        <p>{this.state.outputIndetermEqua11}</p>
+        <p>{this.state.outputIndetermEqua12}</p>
+      </div>
+    )
+  }
   renderResultIndetermEqua() {
     if (!this.state.outputIndetermEqua1) {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p></p>
         <div>{this.state.outputIndetermEqua1}</div>
         <div>{this.state.outputIndetermEqua2}</div>
+        <p>{this.state.outputIndetermEqua3}</p>
       </div>
     )
   }
@@ -400,7 +384,7 @@ export default class Modulo extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputSunzi}</p>
       </div>
     )
@@ -411,7 +395,7 @@ export default class Modulo extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputContinuedFrac}　　{this.state.outputContinuedFrac1}</p>
         <p>{this.state.outputContinuedFrac2}</p>
       </div>
@@ -423,7 +407,7 @@ export default class Modulo extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputContinuedFrac11}</p>
         <p>{this.state.outputContinuedFrac12}</p>
       </div>
@@ -435,7 +419,7 @@ export default class Modulo extends React.Component {
       return null
     }
     return (
-      <div className='renderModuloInputDecompose'>
+      <div className='ans renderModuloInputDecompose'>
         <p>{this.state.outputDecompse1}</p>
         <table>
           <tr>
@@ -465,7 +449,7 @@ export default class Modulo extends React.Component {
       return null
     }
     return (
-      <div>
+      <div className='ans'>
         <p>{this.state.outputOrigin}</p>
       </div>
     )
@@ -473,28 +457,39 @@ export default class Modulo extends React.Component {
 
   render() {
     return (
-      <section>
-        <div className='convert-div'>
+      <section className='convert-div'>
+        <div>
           <h2>大衍求一術</h2>
           {this.renderModuloInputModulo()}
           <button onClick={this.handleConvertModulo} className='button4-2'>秦九韶再世⌘</button>
           {this.renderResultModulo()}
         </div>
-        <div className='convert-div'>
-          <h2>二元一次不定方程</h2>
-          {this.renderModuloInputIndetermEqua()}
-          <button onClick={this.handleConvertIndetermEqua} className='button4-7'>●○●○</button>
-          {this.renderResultIndetermEqua()}
-        </div>
-        <div className='convert-div'>
+        <div>
           <h2>孫子定理</h2>
           {this.renderModuloInputSunzi()}
           <button onClick={this.handleConvertSunzi} className='button4-7'>老子⋯</button>
           {this.renderResultSunzi()}
         </div>
-        <div className='convert-div'>
+        <div>
+          <h2>二元一次不定方程</h2>
+          {this.renderModuloInputIndetermEqua1()}
+          <button onClick={this.handleConvertIndetermEqua1} className='button4-8'>●○●○</button>
+          {this.renderResultIndetermEqua1()}
+        </div>
+        <div>
+          <h2>調日法</h2>
+          <h3>擬秦九韶法</h3>
+          {this.renderModuloInputIndetermEqua()}
+          <button onClick={this.handleConvertIndetermEqua} className='button4-8'>●○●○</button>
+          {this.renderResultIndetermEqua()}
+          <h3>淸人三種</h3>
+          {this.renderModuloInputDecompose()}
+          <button onClick={this.handleConvertDecompose} className='button4-1'>李銳是我∞</button>
+          {this.renderResultDecompose()}
+        </div>
+        <div>
           <h2>連分數逼近</h2>
-          <h4>附最大公因數、最小公倍數</h4>
+          <h4>附 最大公因數、最小公倍數</h4>
           {this.renderModuloInputContinuedFrac()}
           <button onClick={this.handleConvertContinuedFrac} className='button4-3'>快快快 !</button>
           {(this.state.outputContinuedFrac3 || []).length > 0 ?
@@ -509,14 +504,8 @@ export default class Modulo extends React.Component {
           }
           {this.renderResultContinuedFrac1()}
         </div>
-        <div className='convert-div'>
-          <h2>調日法</h2>
-          {this.renderModuloInputDecompose()}
-          <button onClick={this.handleConvertDecompose} className='button4-1'>李銳是我∞</button>
-          {this.renderResultDecompose()}
-        </div>
-        <div className='convert-div'>
-          <h2>宋曆演紀</h2>
+        <div>
+          <h2>唐宋演紀</h2>
           {this.renderModuloInputOrigin()}
           <button onClick={this.handleConvertOrigin} className='button4-5'>上元積年</button>
           {this.renderResultOrigin()}

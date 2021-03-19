@@ -1,14 +1,16 @@
 :root {
   --bg: #fffae8;
-  --bggray: #f2f2f2;
+  --bggray: #f4f4f4;
   --shallowgray: #b6b5b5;
   --shallowgray1: #d2d1d1;
   --gray: #787878;
   --black: #2b2b2b;
   --yellow: #ffda56;
   --darkyellow: #ffcc00;
+  --bgyellow: #fff1c0;
   --bgpink: #feefe6;
   --red: #f27144;
+  --darkred: #b62d2d;
   --blue: #2fa0ff;
   --bgblue: #e1f3ff;
   --purple: #c11bff;
@@ -116,7 +118,8 @@ p {
   background-image: url("https://pic.imgdb.cn/item/60519ee6524f85ce298dbe26.jpg");
   background-size: cover;
   height: 800px;
-  margin-bottom: 20px;
+  /* margin-bottom: .6em; */
+  margin-bottom: -2em;
   text-shadow: 5px 5px 20px var(--yellow), 5px 5px 20px var(--yellow);
 }
 
@@ -129,7 +132,9 @@ p {
 }
 
 .section-select-container {
-  margin: 3em auto 5em;
+  margin: 0em auto 5em;
+  padding: .3em 0;
+  border-bottom: .2em solid var(--bggray);
 }
 
 /* 這是背景色tab */
@@ -153,15 +158,16 @@ p {
 
 .section-select {
   color: var(--gray);
-  padding: .3em .5em;
-  margin: 0 .3em;
+  letter-spacing: .1em;
+  padding: .3em .7em;
+  margin: 0 0;
   -webkit-transition: .3s;
   transition: .3s;
 }
 
 .section-select.active {
   border-bottom: .2em solid var(--darkyellow);
-  color: var(--darkyellow);
+  color: var(--black);
   font-weight: bold;
 }
 
@@ -193,6 +199,13 @@ h2 {
   font-size: 1.5em;
   text-align: center;
   font-family: var(--serif);
+}
+
+.ans {
+  margin: 1em auto;
+  padding: 1px 1em;
+  background: var(--bggray);
+  border-radius: 1em;
 }
 
 table {
@@ -227,12 +240,12 @@ table td {
   margin-bottom: .8em;
 }
 
-.year-select table th{
+.year-select table th {
   width: auto;
   border: none;
 }
 
-.year-select table td{
+.year-select table td {
   width: auto;
   padding: .5em 0;
 }
@@ -260,7 +273,7 @@ table td {
   border-bottom: 1px solid var(--gray);
 }
 
-.renderModuloInputDecompose table .ConverterInputDecomposeName {
+.renderModuloInputDecompose table .ModuloInputDecomposeName {
   font-weight: bold;
   text-align: right;
 }
@@ -344,6 +357,13 @@ tr.SyzygyDecimalPrint {
 .calendar-select select {
   font-size: .9em;
   font-family: var(--sans);
+}
+
+.note {
+  font-size: .9em;
+  color: var(--gray);
+  margin: 0 auto .5em;
+  line-height: 1.6;
 }
 
 year-range {
@@ -492,6 +512,17 @@ button.button4-7:hover {
   background: none;
 }
 
+button.button4-8 {
+  color: var(--bg);
+  background: var(--darkred);
+  border: none;
+}
+
+button.button4-8:hover {
+  color: var(--darkred);
+  background: none;
+}
+
 input {
   background: none;
   margin: 0 .3em;
@@ -508,7 +539,11 @@ input {
 
 .convert-div {
   margin: 5em auto;
-  max-width: 1100px;
+  max-width: 1000px;
+}
+
+.convert-div h2 {
+  margin-top: 3em;
 }
 
 .convert-div h4 {
