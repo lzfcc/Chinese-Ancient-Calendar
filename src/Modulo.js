@@ -1,7 +1,7 @@
 import React from 'react'
 import { CongruenceModulo, ContinuedFrac, ContinuedFrac1 } from '../src/Shangshu-calendar/convert_congruence-modulo'
 import { DecomposePrimeFactor } from '../src/Shangshu-calendar/convert_decompose-prime-factor'
-import { Sunzi, IndetermEqua,IndetermEqua1, OriginModulo } from '../src/Shangshu-calendar/convert_origin'
+import { Sunzi, IndetermEqua, IndetermEqua1, FracCycle, OriginModulo } from '../src/Shangshu-calendar/convert_origin'
 import MathJax from './Mathjax'
 
 export default class Modulo extends React.Component {
@@ -23,7 +23,8 @@ export default class Modulo extends React.Component {
       aRaw: 49,
       bRaw: 26,
       title: '弱率',
-      sunziIn: '2,3;5,7;251,8;4237,11;963,13', 
+      sunziIn: '60,130;30,120;20,110;30,100;30,60;30,50;5,25;10,20', 
+      FracCycleIn: '215130,589;43026,1457;60,1',
       Denom: 16900,
       SolarFrac: 4108,
       OriginConst: 193440,
@@ -41,6 +42,7 @@ export default class Modulo extends React.Component {
     this.handleConvertIndetermEqua = this.handleConvertIndetermEqua.bind(this)
     this.handleConvertIndetermEqua1 = this.handleConvertIndetermEqua1.bind(this)
     this.handleConvertSunzi = this.handleConvertSunzi.bind(this)
+    this.handleConvertFracCycle = this.handleConvertFracCycle.bind(this)
     this.handleConvertDecompose = this.handleConvertDecompose.bind(this)
     this.handleConvertContinuedFrac = this.handleConvertContinuedFrac.bind(this)
     this.handleConvertContinuedFrac1 = this.handleConvertContinuedFrac1.bind(this)
@@ -51,14 +53,15 @@ export default class Modulo extends React.Component {
   renderModuloInputModulo() {
     return (
       <span className='year-select width3'>
-        <p className='note'>萬法之法。孫子定理、不定方程、調日法、演紀都需要求一術。本頁面所有輸入均需爲整數（連分數的小數逼近除外）</p>
+        <p className='note'>萬法之法，孫子定理、不定方程、調日法、演紀都需要求一術。衍數、定母需互質。本頁面所有輸入均需爲整數（連分數的小數逼近除外）</p>
+        <span>泛用<n>用數</n> = 衍數</span>
         <input
           value={this.state.aRaw}
           onChange={(e) => {
             this.setState({ aRaw: e.currentTarget.value });
           }}
         />
-        <span> × z ≡ 1 (mod </span>
+        <span> × 乘率 ≡ 1 (mod 定母</span>
         <input
           value={this.state.bRaw}
           onChange={(e) => {
@@ -73,7 +76,7 @@ export default class Modulo extends React.Component {
   renderModuloInputIndetermEqua1() {
     return (
       <span className='year-select width3'>
-        <p className='note'>ax - by = z 等價於 ax ≡ z (mod y)</p>
+        <p className='note'>ax - by = c 等價於 ax ≡ c (mod b)，有解的充要條件：(a,b)|c，卽 c 能被 a、b的最大公因數整除</p>
         <input
           value={this.state.aa2}
           onChange={(e) => {
@@ -94,28 +97,28 @@ export default class Modulo extends React.Component {
             this.setState({ zz2: e.currentTarget.value });
           }}
         />
-      </span>
+      </span>      
     );
   }
 
   renderModuloInputIndetermEqua() {
     return (
       <span className='year-select width3'>
-        <span>彊母 </span>
+        <span>彊母</span>
         <input
           value={this.state.aa1}
           onChange={(e) => {
             this.setState({ aa1: e.currentTarget.value });
           }}
         />        
-        <span>弱母 </span>
+        <span> 弱母</span>
         <input
           value={this.state.bb1}
           onChange={(e) => {
             this.setState({ bb1: e.currentTarget.value });
           }}
         />
-        <span>日法</span>
+        <span> 日法</span>
         <input
           value={this.state.zz1}
           onChange={(e) => {
@@ -129,7 +132,9 @@ export default class Modulo extends React.Component {
   renderModuloInputSunzi() {
     return (
       <span className='year-select width5'>
-        <p className='note'>求解多組 x ≡ 餘數 (mod 模數) 。依次輸入各組餘數、模數；可用任意非數字隔開；模數需兩兩互質；組數不限</p>
+        <p className='note'>求解多組 x ≡ r<sub>i</sub> (mod m<sub>i</sub>) 。依次輸入各組餘數 r、元數 m；在孫子定理中，模數需兩兩互質，而秦九韶將不互質的元數變爲互質的定母，進而可以使用孫子定理求解；可用任意非數字隔開；組數不限</p> 
+        {/* 孫子定理有解的充要條件：(m<sub>1</sub>,m<sub>2</sub> | |r<sub>1</sub>-r<sub>2</sub>|) */}
+        {/* 1、定母i|元數i，2、定母互質，3、M=定母相乘=元數的最小公倍數 */}
         <input
           value={this.state.sunziIn}
           onChange={(e) => {
@@ -170,36 +175,14 @@ export default class Modulo extends React.Component {
             this.setState({ Decimal: e.currentTarget.value });
           }}
         />
-        {/* <span> 漸進次數</span>
-        <input
-          value={this.state.Times}
-          onChange={(e) => {
-            this.setState({ Times: e.currentTarget.value });
-          }}
-        /> */}
       </span>
     );
   }
-
 
   renderModuloInputDecompose() {
     return (
       <span className='year-select width3'>
         <p className='note'>李銳「有日法求彊弱」法不需要鍵入朔餘，可與秦九韶法配合使用；「累彊弱之數」法可與分數的連分數逼近配合使用</p>
-        <span>朔餘</span>
-        <input
-          value={this.state.a}
-          onChange={(e) => {
-            this.setState({ a: e.currentTarget.value });
-          }}
-        />
-        <span> 日法</span>
-        <input
-          value={this.state.b}
-          onChange={(e) => {
-            this.setState({ b: e.currentTarget.value });
-          }}
-        />
         <span> 彊子</span>
         <input
           value={this.state.bigNumer}
@@ -212,6 +195,34 @@ export default class Modulo extends React.Component {
           value={this.state.bigDenom}
           onChange={(e) => {
             this.setState({ bigDenom: e.currentTarget.value });
+          }}
+        />
+        <span> 日法</span>
+        <input
+          value={this.state.b}
+          onChange={(e) => {
+            this.setState({ b: e.currentTarget.value });
+          }}
+        />
+        <span>朔餘</span>
+        <input
+          value={this.state.a}
+          onChange={(e) => {
+            this.setState({ a: e.currentTarget.value });
+          }}
+        />  
+      </span>
+    );
+  }
+
+  renderModuloInputFracCycle() {
+    return (
+      <span className='year-select width5'>
+        <p className='note'>求多組分數的共同週期，依次輸入各組分子、分母<n>整數分母用 1 表示</n>。求曆法的元法，依次鍵入歲實、歲實分母、朔實、日法、甲子數、1。<n>四分曆所得卽元法，不用再除以章法。</n>可用任意非數字隔開；組數不限</p>
+        <input
+          value={this.state.FracCycleIn}
+          onChange={(e) => {
+            this.setState({ FracCycleIn: e.currentTarget.value });
           }}
         />
       </span>
@@ -280,22 +291,24 @@ export default class Modulo extends React.Component {
     }
   }
 
-  // handleConvertSunzi() {
-  //   try {
-  //     const { Print } = Sunzi(this.state.b1, this.state.m1, this.state.b2, this.state.m2, this.state.b3, this.state.m3)
-  //     this.setState({ outputSunzi: Print })
-  //   } catch (e) {
-  //     alert(e.message)
-  //   }
-  // }
   handleConvertSunzi() {
     try {
-      const { Print } = Sunzi(this.state.sunziIn)
-      this.setState({ outputSunzi: Print })
+      const { Print, DingPrint } = Sunzi(this.state.sunziIn)
+      this.setState({ outputSunzi: Print, outputSunzi1: DingPrint })
     } catch (e) {
       alert(e.message)
     }
   }
+
+  handleConvertFracCycle() {
+    try {
+      const { S2Print, YuanRangePrint } = FracCycle(this.state.FracCycleIn)
+      this.setState({ outputFracCycle1: S2Print, outputFracCycle2: YuanRangePrint })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
+
   handleConvertContinuedFrac() {
     try {
       const { gcdPrint, z, zPrint, Result } = ContinuedFrac(this.state.fracA, this.state.fracB)
@@ -360,8 +373,10 @@ export default class Modulo extends React.Component {
     }
     return (
       <div className='ans'>
-        <p>{this.state.outputIndetermEqua11}</p>
-        <p>{this.state.outputIndetermEqua12}</p>
+        <p></p>
+        <div>{this.state.outputIndetermEqua11}</div>
+        <div>{this.state.outputIndetermEqua12}</div>
+        <p></p>
       </div>
     )
   }
@@ -386,6 +401,18 @@ export default class Modulo extends React.Component {
     return (
       <div className='ans'>
         <p>{this.state.outputSunzi}</p>
+        <p>{this.state.outputSunzi1}</p>
+      </div>
+    )
+  }
+
+  renderResultFracCycle() {
+    if (!this.state.outputFracCycle1) {
+      return null
+    }
+    return (
+      <div className='ans'>
+        <p>{this.state.outputFracCycle1}。{this.state.outputFracCycle2}</p>
       </div>
     )
   }
@@ -465,13 +492,7 @@ export default class Modulo extends React.Component {
           {this.renderResultModulo()}
         </div>
         <div>
-          <h2>孫子定理</h2>
-          {this.renderModuloInputSunzi()}
-          <button onClick={this.handleConvertSunzi} className='button4-7'>老子⋯</button>
-          {this.renderResultSunzi()}
-        </div>
-        <div>
-          <h2>二元一次不定方程</h2>
+          <h2>一次同餘式　二元一次不定方程</h2>
           {this.renderModuloInputIndetermEqua1()}
           <button onClick={this.handleConvertIndetermEqua1} className='button4-8'>●○●○</button>
           {this.renderResultIndetermEqua1()}
@@ -489,7 +510,7 @@ export default class Modulo extends React.Component {
         </div>
         <div>
           <h2>連分數逼近</h2>
-          <h4>附 最大公因數、最小公倍數</h4>
+          <h4>附 最大公因數　最小公倍數</h4>
           {this.renderModuloInputContinuedFrac()}
           <button onClick={this.handleConvertContinuedFrac} className='button4-3'>快快快 !</button>
           {(this.state.outputContinuedFrac3 || []).length > 0 ?
@@ -503,6 +524,19 @@ export default class Modulo extends React.Component {
             <MathJax rawLatex={this.convertLatex(this.state.outputContinuedFrac13)} /> : null
           }
           {this.renderResultContinuedFrac1()}
+        </div>
+        <div>
+        <h2>大衍總數術</h2>
+          <h4>一次同餘式組　秦九韶推廣之孫子定理</h4>
+          {this.renderModuloInputSunzi()}
+          <button onClick={this.handleConvertSunzi} className='button4-7'>老子⋯</button>
+          {this.renderResultSunzi()}
+        </div>
+        <div>
+          <h2>分數共同週期　元法</h2>
+          {this.renderModuloInputFracCycle()}
+          <button onClick={this.handleConvertFracCycle} className='button4-5'>古曆會積</button>
+          {this.renderResultFracCycle()}
         </div>
         <div>
           <h2>唐宋演紀</h2>
