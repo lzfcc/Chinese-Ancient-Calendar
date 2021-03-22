@@ -1,10 +1,11 @@
-import React from 'react';
+import React from 'react'
 import './App.css'
 import { CalNameList, CalNameDayList } from './Shangshu-calendar/constant'
-import MenuSelect from './MenuSelect';
-import DynamicList, { createCache } from 'react-window-dynamic-list';
-import Modulo from './Modulo';
-import Converter from './Converter';
+import MenuSelect from './MenuSelect'
+import DynamicList, { createCache } from 'react-window-dynamic-list'
+import Modulo from './Modulo'
+import Equation from './Equation'
+import Converter from './Converter'
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -43,9 +44,8 @@ const heightCache = createCache();
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['朔望氣閏食', '日書', '五星', '大衍', '轉換']
+    this.tabTitles = ['朔望氣閏食', '日書', '五星', '同餘', '方程', '轉換']
     this.handleRetrieve = this.handleRetrieve.bind(this);
-
     this.state = {
       calendars: [],
       YearStart: '',
@@ -215,8 +215,8 @@ export default class App extends React.Component {
     return (
       <section className='main-render'>
         <DynamicList
-          height={(window.innerHeight) * 0.97}
-          width={window.innerWidth}
+          height={window.innerHeight}
+          width={(window.innerWidth)*0.93}
           cache={heightCache}
           data={list}
           overscanCount={5}
@@ -358,6 +358,10 @@ export default class App extends React.Component {
         <Modulo />
         )
     } else if (this.state.activeTab === 4) {
+      return (
+        <Equation />
+        )
+    } else if (this.state.activeTab === 5) {
       return (
         <Converter />      
         )

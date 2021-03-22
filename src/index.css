@@ -115,7 +115,9 @@ p {
 }
 
 .cover {
-  background-image: url("https://pic.imgdb.cn/item/60519ee6524f85ce298dbe26.jpg");
+  /* background-image: url("https://pic.imgdb.cn/item/60519ee6524f85ce298dbe26.jpg"); 黃赤道 */
+  /* background-image: url("https://pic.imgdb.cn/item/60554600524f85ce2988ce4a.jpg");時憲書 */
+  background-image: url("https://pic.imgdb.cn/item/60554b2b524f85ce298b0236.jpg");
   background-size: cover;
   height: 800px;
   /* margin-bottom: .6em; */
@@ -137,27 +139,9 @@ p {
   border-bottom: .2em solid var(--bggray);
 }
 
-/* 這是背景色tab */
-/* .section-select {
-  border: .2em solid var(--yellow);
-  padding: .3em .5em;
-  border-radius: .4em;
-  margin: 0 1.2em;
-  -webkit-transition: .3s;
-  transition: .3s;
-}
-
-.section-select.active {
-  background: var(--yellow);
-  font-weight: bold;
-}
-
-.section-select:hover {
-  background: var(--yellow);
-} */
-
 .section-select {
-  color: var(--gray);
+  color: var(--bg);
+  text-shadow: 0.1em 0.1em 0.2em var(--black);
   letter-spacing: .1em;
   padding: .3em .7em;
   margin: 0 0;
@@ -167,7 +151,7 @@ p {
 
 .section-select.active {
   border-bottom: .2em solid var(--darkyellow);
-  color: var(--black);
+  color: var(--darkyellow);
   font-weight: bold;
 }
 
@@ -176,9 +160,10 @@ p {
 }
 
 .main-render {
-  /* border: .5em solid var(--yellow); */
+  border-radius: 1.5em;
   box-shadow: 0 0 20px 0 var(--gray);
   margin: 3em auto 0;
+  width: 93vw;
 }
 
 .version {
@@ -202,7 +187,8 @@ h2 {
 }
 
 .ans {
-  margin: 1em auto;
+  box-shadow: 0 0 14px 0 var(--shallowgray1);
+  margin: 1.8em auto 1em;
   padding: 1px 1em;
   background: var(--bggray);
   border-radius: 1em;
@@ -250,30 +236,30 @@ table td {
   padding: .5em 0;
 }
 
-.renderModuloInputDecompose p {
+.InputDecompose p {
   font-size: .9em;
   line-height: 1.6;
 }
 
-.renderModuloInputDecompose table {
+.InputDecompose table {
   font-size: .9em;
   margin: -.8em auto;
 }
 
-.renderModuloInputDecompose table td {
+.InputDecompose table td {
   width: auto;
   padding: .4em 1em .2em;
   text-align: left;
 }
 
-.renderModuloInputDecompose table th {
+.InputDecompose table th {
   text-align: center;
   padding: .3em 1em;
   border: none;
   border-bottom: 1px solid var(--gray);
 }
 
-.renderModuloInputDecompose table .ModuloInputDecomposeName {
+.InputDecompose table .ModuloInputDecomposeName {
   font-weight: bold;
   text-align: right;
 }
@@ -408,10 +394,14 @@ year-range {
 
 code {
   font-family: var(--codesans);
+  background: var(--bgblue);
+  border-radius: .2em;
+  padding: .2em .3em;
+  margin: 0 0.2em;
 }
 
 button {
-  padding: .3em .5em;
+  padding: .3em .6em;
   border-radius: .4em;
   font-weight: bold;
   color: var(--red);
@@ -537,20 +527,31 @@ input {
   margin-left: 2em;
 }
 
-.convert-div {
+.modulo {
   margin: 5em auto;
   max-width: 1000px;
 }
 
-.convert-div h2 {
-  margin-top: 3em;
+.modulo h2 {
+  font-size: 1.8em;
+  color: var(--darkyellow);
+  letter-spacing: .2em;
+  margin: 4em auto 2em;
+  border-bottom: .15em double var(--yellow);
+  /* text-shadow: 1px 1px 4px var(--shallowgray); */
 }
 
-.convert-div h4 {
-  margin-top: -1.5em;
+.modulo h3 {
+  font-family: var(--serif);
+  margin: 3em auto .7em;
+  font-size: 1.5em;
+}
+
+.modulo h4 {
+  font-family: var(--serif);
+  margin-top: -1.2em;
   color: var(--gray);
 }
-
 
 .comment-wrap {
   background-color: var(--section2);

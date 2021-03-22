@@ -16,11 +16,11 @@ export default class Converter extends React.Component {
       outputJd: null,
       outputDate: null,
     }
-    this.handleConvertJd = this.handleConvertJd.bind(this)
-    this.handleConvertDate = this.handleConvertDate.bind(this)
+    this.handleJd = this.handleJd.bind(this)
+    this.handleDate = this.handleDate.bind(this)
   }
 
-  renderConverterInputJd() {
+  InputJd() {
     return (
       <span className='year-select'>
         <span>儒略日</span>
@@ -34,7 +34,7 @@ export default class Converter extends React.Component {
     );
   }
 
-  renderConverterInputDate() {
+  InputDate() {
     return (
       <span className='year-select'>
         <input className='width2'
@@ -90,7 +90,7 @@ export default class Converter extends React.Component {
     );
   }
 
-  handleConvertJd() {
+  handleJd() {
     try {
       const { Result } = Jd2Date1(this.state.jd)
       this.setState({ outputJd: Result })
@@ -99,7 +99,7 @@ export default class Converter extends React.Component {
     }
   }
 
-  handleConvertDate() {
+  handleDate() {
     try {
       const { Result } = Date2Jd(this.state.yy, this.state.mm, this.state.dd, this.state.h, this.state.m, this.state.s, this.state.ms)
       this.setState({ outputDate: Result })
@@ -109,7 +109,7 @@ export default class Converter extends React.Component {
   }
 
 
-  renderResultJd() {
+  ResultJd() {
     if (!this.state.outputJd) {
       return null
     }
@@ -120,7 +120,7 @@ export default class Converter extends React.Component {
     )
   }
 
-  renderResultDate() {
+  ResultDate() {
     if (!this.state.outputDate) {
       return null
     }
@@ -133,16 +133,16 @@ export default class Converter extends React.Component {
 
   render() {
     return (
-      <section className='convert-div'>
-        <div className='convert-div'>
+      <section className='modulo'>
+        <div className='modulo'>
           <h2>儒略日 ⇌ 日期</h2>
-          {this.renderConverterInputJd()}
-          <button onClick={this.handleConvertJd} className='button4-6'>JD2date</button>
-          {this.renderResultJd()}
+          {this.InputJd()}
+          <button onClick={this.handleJd} className='button4-6'>JD2date</button>
+          {this.ResultJd()}
           <p></p>
-          {this.renderConverterInputDate()}
-          <button onClick={this.handleConvertDate} className='button4-6'>date2JD</button>
-          {this.renderResultDate()}
+          {this.InputDate()}
+          <button onClick={this.handleDate} className='button4-6'>date2JD</button>
+          {this.ResultDate()}
         </div>
       </section>
     )
