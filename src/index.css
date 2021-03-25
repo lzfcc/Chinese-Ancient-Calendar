@@ -376,7 +376,7 @@ year-range {
 }
 
 .year-select.width5 input {
-  width: 47em;
+  width: 45em;
 }
 
 .year-select.width3 input {
@@ -391,6 +391,9 @@ year-range {
   width: 7em;
 }
 
+.year-select input.width5 {
+  width: 45em;
+}
 
 code {
   font-family: var(--codesans);
@@ -593,9 +596,15 @@ footer p {
   margin: .3em auto
 }
 
-
-
-
+.decimal64 {
+  margin: 0 .75em;
+  padding: .2em .3em;
+  border-radius: .5em;
+  border: 2px solid var(--darkyellow);
+  color: var(--darkyellow);
+  font-family: va(--codesans);
+  font-size: .8em;
+}
 
 /*!
   Chosen, a Select Box Enhancer for jQuery and Prototype
