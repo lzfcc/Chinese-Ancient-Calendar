@@ -1,7 +1,7 @@
 import React from 'react'
 import { HighEqua1 } from '../src/Shangshu-calendar/equa_high'
 import { SqrtA, SqrtC } from '../src/Shangshu-calendar/equa_sqrt'
-import { Sn1, Sn2, Sn5, Interpolate1 } from '../src/Shangshu-calendar/equa_sn'
+import { Sn1, Sn2, Sn5, Interpolate1, Interpolate2 } from '../src/Shangshu-calendar/equa_sn'
 import { Round, Heron } from '../src/Shangshu-calendar/equa_geometry'
 export default class Converter extends React.Component {
   constructor(props) {
@@ -28,7 +28,10 @@ export default class Converter extends React.Component {
       Sn2P: 2,
       Interpolate1N: 2.12345678,
       Interpolate1P: 5,
-      Interpolate1Raw: '289943,308531,331577,361921,403563,461843'
+      Interpolate1Raw: '289943,308531,331577,361921,403563,461843',
+      Interpolate2N: 1.12345678,
+      Interpolate2Raw: '18588,4458,2840,1160,180',
+      Interpolate20: 289943,
     }
     this.handleSqrt1 = this.handleSqrt1.bind(this)
     this.handleSqrt3 = this.handleSqrt3.bind(this)
@@ -37,6 +40,7 @@ export default class Converter extends React.Component {
     this.handleSn2 = this.handleSn2.bind(this)
     this.handleSn5 = this.handleSn5.bind(this)
     this.handleInterpolate1 = this.handleInterpolate1.bind(this)
+    this.handleInterpolate2 = this.handleInterpolate2.bind(this)
     this.handleRound = this.handleRound.bind(this)
     this.handleHeron = this.handleHeron.bind(this)
   }
@@ -265,6 +269,38 @@ export default class Converter extends React.Component {
       </span>
     );
   }
+
+  InputInterpolate2() {
+    return (
+      <span className='year-select'>
+        <p></p>
+        <p className='note'>已知差分<n>由低次到高次排列</n>，求 y(n)。次數爲差分的個數。第一個數的 n 是 0，上面的是 1。<span className='decimal64'>.64</span></p>
+        <span>n</span>
+        <input className='width4'
+          value={this.state.Interpolate2N}
+          onChange={(e) => {
+            this.setState({ Interpolate2N: e.currentTarget.value });
+          }}
+        />
+        <span> f<sub>0</sub></span>
+        <input className='width4'
+          value={this.state.Interpolate20}
+          onChange={(e) => {
+            this.setState({ Interpolate20: e.currentTarget.value });
+          }}
+        />
+        <p></p>
+        <span> Δ</span>
+        <input className='width5'
+          value={this.state.Interpolate2Raw}
+          onChange={(e) => {
+            this.setState({ Interpolate2Raw: e.currentTarget.value });
+          }}
+        />
+      </span>
+    );
+  }
+
   InputRound() {
     return (
       <span className='year-select'>
@@ -372,6 +408,14 @@ export default class Converter extends React.Component {
       alert(e.message)
     }
   }
+  handleInterpolate2() {
+    try {
+      const { yPrint } = Interpolate2(this.state.Interpolate2N, this.state.Interpolate20, this.state.Interpolate2Raw)
+      this.setState({ outputInterpolate2: yPrint })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
   handleRound() {
     try {
       const { Print } = Round(this.state.RoundR, this.state.RoundB)
@@ -463,6 +507,16 @@ export default class Converter extends React.Component {
       </div>
     )
   }
+  ResultInterpolate2() {
+    if (!this.state.outputInterpolate2) {
+      return null
+    }
+    return (
+      <div className='ans' style={{whiteSpace: 'pre-wrap'}}>
+        <p>{this.state.outputInterpolate2}</p>
+      </div>
+    )
+  }
   ResultRound() {
     if (!this.state.outputRound) {
       return null
@@ -524,6 +578,9 @@ export default class Converter extends React.Component {
           {this.InputInterpolate1()}
           <button onClick={this.handleInterpolate1} className='button4-5'>朱世傑</button>
           {this.ResultInterpolate1()}
+          {this.InputInterpolate2()}
+          <button onClick={this.handleInterpolate2} className='button4-5'>朱世傑</button>
+          {this.ResultInterpolate2()}
           <h2>幾何之什</h2>
           <h3>會圓術</h3>
           {this.InputRound()}

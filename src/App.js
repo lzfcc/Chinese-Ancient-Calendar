@@ -5,6 +5,7 @@ import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
 import Modulo from './Modulo'
 import Equation from './Equation'
+import Astronomy from './Astronomy'
 import Converter from './Converter'
 
 const TableRowNameMap = {
@@ -44,7 +45,7 @@ const heightCache = createCache();
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['朔望氣閏食', '日書', '五星', '同餘', '方程', '轉換']
+    this.tabTitles = ['朔望氣閏食', '曆書', '五星', '同餘', '方程', '天文', '時間']
     this.handleRetrieve = this.handleRetrieve.bind(this);
     this.state = {
       calendars: [],
@@ -169,7 +170,7 @@ export default class App extends React.Component {
           return
         }
         if (index === 2) {
-          alert('預計2023年推出，敬請期待～')
+          alert('[五星] 預計2023年推出，敬請期待～')
           return
         }
         this.setState({
@@ -362,6 +363,10 @@ export default class App extends React.Component {
         <Equation />
         )
     } else if (this.state.activeTab === 5) {
+      return (
+        <Astronomy />
+        )
+    } else if (this.state.activeTab === 6) {
       return (
         <Converter />      
         )

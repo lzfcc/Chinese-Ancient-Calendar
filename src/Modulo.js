@@ -609,7 +609,7 @@ export default class Modulo extends React.Component {
           {(this.state.outputDecompse || []).map((row) => {
             return (
               <tr>
-                <td className='ModuloInputDecomposeName'>{row.title}</td>
+                <td className='RowTitle'>{row.title}</td>
                 {row.data.map((d) => {
                   return (<td>{d}</td>)
                 })}

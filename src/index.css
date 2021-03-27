@@ -116,8 +116,9 @@ p {
 
 .cover {
   /* background-image: url("https://pic.imgdb.cn/item/60519ee6524f85ce298dbe26.jpg"); 黃赤道 */
-  /* background-image: url("https://pic.imgdb.cn/item/60554600524f85ce2988ce4a.jpg");時憲書 */
-  background-image: url("https://pic.imgdb.cn/item/60554b2b524f85ce298b0236.jpg");
+  /* 時憲書 */
+  background-image: url("https://pic.imgdb.cn/item/60554600524f85ce2988ce4a.jpg");
+  /* background-image: url("https://pic.imgdb.cn/item/60554b2b524f85ce298b0236.jpg"); */
   background-size: cover;
   height: 800px;
   /* margin-bottom: .6em; */
@@ -140,8 +141,8 @@ p {
 }
 
 .section-select {
-  color: var(--bg);
-  text-shadow: 0.1em 0.1em 0.2em var(--black);
+  color: var(--black);
+  text-shadow: 0.3em 0.3em 0.4em var(--bg);
   letter-spacing: .1em;
   padding: .3em .7em;
   margin: 0 0;
@@ -150,13 +151,13 @@ p {
 }
 
 .section-select.active {
-  border-bottom: .2em solid var(--darkyellow);
-  color: var(--darkyellow);
+  border-bottom: .2em solid var(--red);
+  color: var(--red);
   font-weight: bold;
 }
 
 .section-select:hover {
-  color: var(--darkyellow);
+  color: var(--red);
 }
 
 .main-render {
@@ -248,18 +249,22 @@ table td {
 
 .InputDecompose table td {
   width: auto;
-  padding: .4em 1em .2em;
+  padding: .2em 1em;
   text-align: left;
+}
+
+.InputDecompose.InputDecompose1 table td {
+  text-align: right;
 }
 
 .InputDecompose table th {
   text-align: center;
-  padding: .3em 1em;
+  padding: .15em 1em;
   border: none;
   border-bottom: 1px solid var(--gray);
 }
 
-.InputDecompose table .ModuloInputDecomposeName {
+.InputDecompose table .RowTitle {
   font-weight: bold;
   text-align: right;
 }
