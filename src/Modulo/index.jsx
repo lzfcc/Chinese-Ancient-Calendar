@@ -1,0 +1,38 @@
+import React from "react"
+import Dayanqiuyi from "./Qiuyi"
+import Gcdlcm from "./GcdLcm"
+import Fraclcm from "./FracLcm"
+import IndetermEqua1 from "./IndetermEqua1"
+import IndetermEqua from "./IndetermEqua"
+import Sunzi from "./IndetermEqua1"
+import ContinuedFrac from "./ContinuedFrac"
+import ContinuedFrac1 from "./ContinuedFrac1"
+import Denom from "./Denom"
+import Zhang from "./Zhang"
+import Origin from "./Origin"
+import Origin2 from "./Origin2"
+export default class Converter extends React.Component {
+  render() {
+    return (
+      <section className="modulo">
+        <h2>大衍之什</h2>
+        <Dayanqiuyi />
+        <IndetermEqua1 />
+        <Sunzi />
+        <h2>調日法之什</h2>
+        <IndetermEqua />
+        <Denom />
+        <ContinuedFrac />
+        <p></p>
+        <ContinuedFrac1 />
+        <h2>章蔀之什</h2>
+        <Gcdlcm />
+        <Fraclcm />
+        <Zhang />
+        <h2>上元演紀之什</h2>
+        <Origin2 />
+        <Origin />
+      </section>
+    );
+  }
+}

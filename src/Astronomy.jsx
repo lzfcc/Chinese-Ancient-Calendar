@@ -12,7 +12,7 @@ export default class Converter extends React.Component {
       Angle2: 2565,
       Lati2: 2565,
       Ecliptic3: 1000,
-      Lati2: 1000,
+      Lati3: 1000,
     }
     this.handleEcliptic = this.handleEcliptic.bind(this)
     this.handleLati = this.handleLati.bind(this)
