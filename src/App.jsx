@@ -213,20 +213,21 @@ export default class App extends React.Component {
     if (list.length === 0) {
       return null
     }
+    let calCount = this.state.calendars.length
     return (
       <section className='main-render'>
         <DynamicList
           height={window.innerHeight}
-          width={(window.innerWidth)*0.93}
+          width={(window.innerWidth) * 0.93}
           cache={heightCache}
           data={list}
           overscanCount={5}
         >
           {({ index, style }) => {
-            const CalInfo = list[index];
+            const CalInfo = list[index]
             return (
               <div className="single-cal" style={style}>
-                <h3>{CalInfo.AnnoDomini}</h3>
+                {index % calCount === 0 ? <h3>{CalInfo.AnnoDomini}</h3> : null}
                 <p>{CalInfo.YearInfo}</p>
                 <table>
                   <tr>{this.RenderTableContent(CalInfo)}</tr>
@@ -357,20 +358,20 @@ export default class App extends React.Component {
     } else if (this.state.activeTab === 3) {
       return (
         <Modulo />
-        )
+      )
     } else if (this.state.activeTab === 4) {
       return (
         <Equation />
-        )
+      )
     } else if (this.state.activeTab === 5) {
       return (
         <Astronomy />
-        )
+      )
     } else if (this.state.activeTab === 6) {
       return (
-        <Converter />      
-        )
-      }
+        <Converter />
+      )
+    }
   }
 
   render() {
