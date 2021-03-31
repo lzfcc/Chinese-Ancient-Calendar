@@ -128,7 +128,7 @@ export default class Equa extends React.Component {
   render() {
     return (
       <div>
-        <h3>牛頓迭代法</h3>
+        <h3>二分迭代法</h3>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>解</button>
         {this.result()}

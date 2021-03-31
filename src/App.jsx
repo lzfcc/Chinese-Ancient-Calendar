@@ -30,8 +30,8 @@ const TableRowNameMap = {
 }
 const TableDayRowNameMap = {
   Sc: '干支',
-  SunRise: '日出',
-  SunEquatorLati: '日去極',
+  Sunrise: '日出',
+  SunLati: '日去極',
   Dial: '晷長',
   MidstarPrint: '昏中星',
   EquartorPrint: '日赤',
