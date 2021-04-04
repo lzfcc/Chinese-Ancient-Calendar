@@ -7,6 +7,7 @@ import Modulo from './Modulo'
 import Equation from './Equation'
 import Astronomy from './Astronomy'
 import Converter from './Converter'
+import Day from './Day'
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -27,18 +28,6 @@ const TableRowNameMap = {
   TermDecimalPrint: '分',
   TermMansionPrint: '赤度',
   TermMidstarPrint: '昏中'
-}
-const TableDayRowNameMap = {
-  Sc: '干支',
-  Sunrise: '日出',
-  SunLati: '日去極',
-  Dial: '晷長',
-  MidstarPrint: '昏中星',
-  EquartorPrint: '日赤',
-  EclipticPrint: '日黃',
-  MoonEquartorPrint: '月赤',
-  MoonEquatorLati: '黃白距',
-  HouName: '候土卦',
 }
 
 const heightCache = createCache();
@@ -208,7 +197,6 @@ export default class App extends React.Component {
 
   renderTableList() {
     // 二维数组拍扁成一维，每个表格平均高度 350
-    // TODO: cache 是否需要 clear？需要 data 中包含 id 属性
     const list = (this.state.output || []).flat();
     if (list.length === 0) {
       return null
@@ -242,7 +230,7 @@ export default class App extends React.Component {
 
   RenderTableContent(CalInfo) {
     return Object.entries(CalInfo).map(([key, value]) => {
-      if (Array.isArray(value) && value.length > 0 && ((this.state.activeTab === 0 && TableRowNameMap[key]) || (this.state.activeTab === 1 && TableDayRowNameMap[key]))) {
+      if (Array.isArray(value) && value.length > 0 && TableRowNameMap[key]) {
         return <tr className={key}>{
           [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td>{x}</td>)))
         }</tr>
@@ -347,13 +335,7 @@ export default class App extends React.Component {
       )
     } else if (this.state.activeTab === 1) {
       return (
-        <>
-          {this.renderCalendar()}
-          {this.renderInput()}
-          <button onClick={this.handleRetrieve} className='button2'>㤂〻如勑令</button>
-          {this.renderDownload()}
-          {this.renderTableList()}
-        </>
+        <Day />
       )
     } else if (this.state.activeTab === 3) {
       return (

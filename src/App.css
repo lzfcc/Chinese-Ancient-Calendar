@@ -41,3 +41,10 @@
     transform: rotate(360deg);
   }
 }
+
+.day-table-cell {
+  left: 0;
+  top: 0;
+  position: fixed;
+  z-index:999;
+}
