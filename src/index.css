@@ -612,6 +612,74 @@ footer p {
   font-size: .8em;
 }
 
+/* 日書 */
+
+.day-table table {
+  border: none
+}
+
+.day-table td {
+  width: auto;
+  height: auto;
+  padding: .4em .6em;
+  vertical-align: top;
+  border: 1px solid var(--gray);
+}
+
+.day-table td p {
+  margin: .1em 0;
+}
+
+.Sc {
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 1.1em;
+}
+
+.EquartorPrint {
+  color: var(--red);
+}
+
+.EclipticPrint {
+  color: var(--darkyellow);
+}
+
+.SunLati {
+  color: var(--cyan);
+}
+
+.Sunrise {
+  color: var(--cyan);
+}
+
+.Dial {
+  color: var(--cyan);
+}
+
+.MidstarPrint {
+  color: var(--cyan);
+}
+
+.MoonEquartorPrint {
+  color: var(--blue);
+}
+
+.MoonEquatorLati {
+  color: var(--blue);
+}
+
+.HouName {
+  color: var(--gray);
+}
+
+.FiveName {
+  color: var(--gray);
+}
+
+.HexagramName{
+  color: var(--gray);
+}
+
 /*!
   Chosen, a Select Box Enhancer for jQuery and Prototype
   by Patrick Filler for Harvest, http://getharvest.com
@@ -1018,5 +1086,6 @@ only screen and (min-resolution: 1.5dppx) {
   margin-left: -100px;
   margin-top: 65px;
 }
+
 
 /* @end */

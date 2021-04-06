@@ -1,4 +1,5 @@
 import React from 'react'
+import AcrV from './AcrV'
 import Equator2Ecliptic from './Equator2Ecliptic'
 import Longi2Lati from './Longi2Lati'
 import MoonLongi from './MoonLongi'
@@ -103,6 +104,7 @@ export default class Astronomy extends React.Component {
     return (
       <section className='modulo'>
         <h2>躔離之什</h2>
+        <AcrV />
         <h2>日軌之什</h2>
         <Equator2Ecliptic />
         <Longi2Lati />

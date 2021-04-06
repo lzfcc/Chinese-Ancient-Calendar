@@ -75,7 +75,6 @@ export default class Converter extends React.Component {
             <th>誤差</th>
           </tr>
           {(this.state.output || []).map((row) => {
-            console.log(row)
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>

@@ -58,7 +58,7 @@ export default class Day extends React.Component {
         {list.map((MonthInfo, index) => {
           return (
             <div className="single-cal" style={{}}>
-              <p>{index}yue</p>
+              <p>{index + 1} 月</p>
               <div>
                 {this.RenderDayTableContent(index + 1, MonthInfo)}
               </div>
@@ -79,46 +79,48 @@ export default class Day extends React.Component {
       }
       rows[r].push(
         (
-          <td 
-          onMouseEnter={(event) => {
-            this.setState({ showMonth: month, showDate: k })
-          }} 
-          onMouseOut={() => {
-            this.setState({ showMonth: 0, showDate: 0 })
-          }}
-          key={month + '-' + k}
-          style={{border: '1px solid green', padding: 0}}
+          <td
+            // onMouseEnter={(event) => {
+            //   this.setState({ showMonth: month, showDate: k })
+            // }}
+            // onMouseOut={() => {
+            //   this.setState({ showMonth: 0, showDate: 0 })
+            // }}
+            key={month + '-' + k}
+            className="day-table-cell"
           >
-            <p>{k}</p>
+            {/* <p>{k}</p> */}
             {this.renderDayDetail(MonthInfo, month, k)}
           </td>
         )
       )
     }
     return (
+      <div className='day-table'>
       <table>
         {rows.map((row) => (
           <tr>{row}</tr>
         ))}
       </table>
+      </div>
     )
   }
 
-  renderDayDetail (MonthInfo, month, day) {
-    if (this.state.showMonth !== month || this.state.showDate !== day) {
-      return null
-    }
+  renderDayDetail(MonthInfo, month, day) {
+    // if (this.state.showMonth !== month || this.state.showDate !== day) {
+    //   return null
+    // }
     return (
-      <div className="day-table-cell"
-      style={{ width: 300, height: 300, backgroundColor: 'white' }}>
-      {
-        Object.entries(MonthInfo[day]).map(([key, value]) => {
-          return (
-            <p>{TableDayRowNameMap[key]}: {value}</p>
-          )
-        })
-      }
-    </div>
+      <div>
+        {
+          Object.entries(MonthInfo[day]).map(([key, value]) => {
+            return (
+              /* {TableDayRowNameMap[key]}:  */
+              <p className={key}>{value}</p>
+            )
+          })
+        }
+      </div>
     )
   }
 
@@ -180,7 +182,8 @@ export default class Day extends React.Component {
             this.setState({ YearStart: e.currentTarget.value });
           }}
         />
-        <span className='year-end'>
+        <span>年</span>
+        {/* <span className='year-end'>
           <span>—</span>
           <input
             value={this.state.YearEnd}
@@ -188,8 +191,8 @@ export default class Day extends React.Component {
               this.setState({ YearEnd: e.currentTarget.value });
             }}
           />
-          <span>年</span>
-        </span>
+          
+        </span> */}
       </span>
     );
   }

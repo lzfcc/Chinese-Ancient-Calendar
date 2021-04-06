@@ -1,6 +1,6 @@
 import React from 'react'
-import { Clock } from './Shangshu-calendar/convert_decimal2clock'
-import { Jd2Date1, Date2Jd } from '../src/Shangshu-calendar/convert_jd2date'
+import { Clock } from './Shangshu-calendar/time_decimal2clock'
+import { Jd2Date1, Date2Jd } from '../src/Shangshu-calendar/time_jd2date'
 
 export default class Converter extends React.Component {
   constructor(props) {
