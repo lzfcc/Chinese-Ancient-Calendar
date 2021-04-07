@@ -7,15 +7,17 @@
   --black: #2b2b2b;
   --yellow: #ffda56;
   --darkyellow: #ffcc00;
-  --bgyellow: #fff1c0;
+  --letteryellow: #c68c00;
   --bgpink: #feefe6;
   --red: #f27144;
   --darkred: #b62d2d;
+  --letterblue: #0088e8;
   --blue: #2fa0ff;
   --bgblue: #e1f3ff;
   --purple: #c11bff;
   --cyan: #00e1d9;
   --green: #20c828;
+  --lettergreen: #009a0b;
   --serif: "Adobe Garamond Pro", Garamond, "Adobe Caslon Pro", Caslon, "Minion Pro", Minion, "Adobe Gurmukhi", "Palatino Linotype", "Adobe Garamond Pro", Garamond, "Adobe Caslon Pro", Caslon, "Minion Pro", Minion, "Adobe Gurmukhi", "Palatino Linotype", "Noto Serif CJK KR", "Source Han Serif K", "Noto Serif CJK SC", "Hiragino Mincho ProN", "Hiragino Mincho", "Yu Mincho", "Hana Mincho", "Ms Mincho";
   --codeserif: "Source Code Pro", Menlo, Inconsolata, "Courier New", "Anonymous Pro", monospace, "Noto Serif CJK KR", "Source Han Serif K", "Noto Serif CJK SC", "Hiragino Mincho ProN", "Hiragino Mincho", "Yu Mincho", "Hana Mincho", "Ms Mincho";
   --sans: Verdana, Trebuchet, muli, avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, arial, "Noto Sans CJK Kr", "Noto Sans CJK SC", PingFang, "PingFang SC", Sans-serif;
@@ -633,47 +635,50 @@ footer p {
 }
 
 .EquartorPrint {
-  color: var(--red);
+  color: var(--darkred);
 }
 
 .EclipticPrint {
-  color: var(--darkyellow);
+  color: var(--letteryellow);
 }
 
 .Lati {
-  color: var(--cyan);
+  color: var(--lettergreen);
 }
 
 .Sunrise {
-  color: var(--cyan);
+  color: var(--lettergreen);
 }
 
 .Dial {
-  color: var(--cyan);
+  color: var(--lettergreen);
 }
 
 .MidstarPrint {
-  color: var(--cyan);
+  color: var(--lettergreen);
 }
 
 .MoonEquartorPrint {
-  color: var(--blue);
+  color: var(--letterblue);
 }
 
-.MoonEquatorLati {
-  color: var(--blue);
+.MoonEclipticLati {
+  color: var(--letterblue);
 }
 
 .HouName {
   color: var(--gray);
+  font-size: .8em;
 }
 
 .FiveName {
   color: var(--gray);
+  font-size: .8em;
 }
 
 .HexagramName {
   color: var(--gray);
+  font-size: .8em;
 }
 
 /*!
