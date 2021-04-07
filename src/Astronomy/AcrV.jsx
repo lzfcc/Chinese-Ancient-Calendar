@@ -1,5 +1,5 @@
 import React from 'react'
-import { AcrV } from '../Shangshu-calendar/bind_astronomy'
+import { BindAcrV } from '../Shangshu-calendar/bind_astronomy'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = AcrV(this.state.a, this.state.b)
+      const Print = BindAcrV(this.state.a, this.state.b)
       this.setState({ output: Print})
     } catch (e) {
       alert(e.message)

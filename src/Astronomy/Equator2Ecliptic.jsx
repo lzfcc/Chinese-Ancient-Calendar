@@ -1,5 +1,5 @@
 import React from 'react'
-import { Equator2Ecliptic } from '../Shangshu-calendar/bind_astronomy'
+import { BindEquator2Ecliptic } from '../Shangshu-calendar/bind_astronomy'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -41,7 +41,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Range, Print } = Equator2Ecliptic(this.state.Ecliptic1, this.state.Ecliptic2, this.state.Ecliptic3)
+      const { Range, Print } = BindEquator2Ecliptic(this.state.Ecliptic1, this.state.Ecliptic2, this.state.Ecliptic3)
       this.setState({ outputEcliptic: Print, outputEcliptic1: Range })
     } catch (e) {
       alert(e.message)

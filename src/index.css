@@ -217,8 +217,8 @@ table th {
 }
 
 table td {
-  padding: 0;
-  width: 50px
+  padding: 1px 0;
+  width: 67px
 }
 
 .year-select table {
@@ -287,14 +287,6 @@ tr.TermScPrint {
   font-weight: bold;
 }
 
-tr.TermMansionPrint {
-  color: var(--gray);
-}
-
-tr.NewmMansionPrint {
-  color: var(--gray);
-}
-
 tr.TermNamePrint {
   color: var(--shallowgray);
 }
@@ -304,10 +296,17 @@ tr.NewmMmddPrint {
   font-weight: light;
 }
 
+
 tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
+  color: var(--gray);
+  font-size: .8em;
 }
 
+tr.TermMansionPrint {
+  color: var(--gray);
+  font-size: .8em;
+}
 
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
@@ -317,12 +316,9 @@ tr.TermAcrScPrint {
   color: var(--gray);
 } */
 
-tr.NewmMansionPrint {
-  color: var(--gray);
-}
-
 tr.TermMidstarPrint {
   color: var(--gray);
+  font-size: .8em;
 }
 
 tr.TermAcrScPrint {
@@ -644,7 +640,7 @@ footer p {
   color: var(--darkyellow);
 }
 
-.SunLati {
+.Lati {
   color: var(--cyan);
 }
 
@@ -676,7 +672,7 @@ footer p {
   color: var(--gray);
 }
 
-.HexagramName{
+.HexagramName {
   color: var(--gray);
 }
 

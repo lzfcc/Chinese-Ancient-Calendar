@@ -6,7 +6,7 @@ import MenuSelect from './MenuSelect'
 const TableDayRowNameMap = {
   Sc: '干支',
   Sunrise: '日出',
-  SunLati: '日去極',
+  Lati: '日去極',
   Dial: '晷長',
   MidstarPrint: '昏中星',
   EquartorPrint: '日赤',

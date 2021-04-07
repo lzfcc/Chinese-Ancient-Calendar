@@ -1,5 +1,5 @@
 import React from 'react'
-import { MoonLongiLati } from '../Shangshu-calendar/bind_astronomy'
+import { BindMoonLongiLati } from '../Shangshu-calendar/bind_astronomy'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = MoonLongiLati(this.state.a, this.state.b)
+      const Print = BindMoonLongiLati(this.state.a, this.state.b)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
