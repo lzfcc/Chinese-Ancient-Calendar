@@ -3,19 +3,19 @@ import './App.css'
 import { CalNameDayList } from './Shangshu-calendar/constant'
 import MenuSelect from './MenuSelect'
 
-const TableDayRowNameMap = {
-  Sc: '干支',
-  Sunrise: '日出',
-  Lati: '日去極',
-  Dial: '晷長',
-  MidstarPrint: '昏中星',
-  EquartorPrint: '日赤',
-  EclipticPrint: '日黃',
-  MoonEquartorPrint: '月赤',
-  MoonEquatorLati: '黃白距',
-  HouName: '候土卦',
-  FiveName: '五行'
-}
+// const TableDayRowNameMap = {
+//   Sc: '干支',
+//   Sunrise: '日出',
+//   Lati: '日去極',
+//   Dial: '晷長',
+//   MidstarPrint: '昏中星',
+//   EquartorPrint: '日赤',
+//   EclipticPrint: '日黃',
+//   MoonEquartorPrint: '月赤',
+//   MoonEquatorLati: '黃白距',
+//   HouName: '候土卦',
+//   FiveName: '五行'
+// }
 
 export default class Day extends React.Component {
   constructor(props) {
