@@ -215,7 +215,7 @@ export default class App extends React.Component {
             const CalInfo = list[index]
             return (
               <div className="single-cal" style={style}>
-                {index % calCount === 0 ? <h3>{CalInfo.AnnoDomini}</h3> : null}
+                {index % calCount === 0 ? <h3>{CalInfo.Era}</h3> : null}
                 <p>{CalInfo.YearInfo}</p>
                 <table>
                   <tr>{this.RenderTableContent(CalInfo)}</tr>

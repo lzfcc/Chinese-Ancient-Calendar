@@ -44,7 +44,9 @@ export default class Day extends React.Component {
     if (!this.state.output) {
       return null
     }
-    const AnnoDomini = this.state.output.AnnoDomini
+    const MonName = this.state.output.MonName
+    const MonInfo = this.state.output.MonInfo
+    const MonColor = this.state.output.MonColor
     const list = this.state.output.DayData.slice(1)
     if (list.length === 0) {
       return null
@@ -53,12 +55,40 @@ export default class Day extends React.Component {
       item.id = index
     })
     return (
-      <section className='main-render'>
-        <h3>{AnnoDomini}</h3>
+      <section className='day-render'>
+        <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}萬年具注曆</h2>
+        <p>{this.state.output.DayAccum}</p>
+        <span className='YearColor'>
+          <table>
+            {(this.state.output.YearColor || []).map((row) => {
+              return (
+                <tr>
+                  {row.map((d) => {
+                    return <td>{d}</td>;
+                  })}
+                </tr>
+              );
+            })}
+          </table>
+        </span>
         {list.map((MonthInfo, index) => {
           return (
-            <div className="single-cal" style={{}}>
-              <p>{index + 1} 月</p>
+            <div className="single-cal">
+              <h3>{MonName[index + 1]}</h3>
+              <p>{MonInfo[index + 1]}</p>
+              <span className='YearColor'>
+                <table>
+                  {(MonColor[index + 1] || []).map((row) => {
+                    return (
+                      <tr>
+                        {row.map((d) => {
+                          return <td>{d}</td>;
+                        })}
+                      </tr>
+                    );
+                  })}
+                </table>
+              </span>
               <div>
                 {this.RenderDayTableContent(index + 1, MonthInfo)}
               </div>
@@ -97,11 +127,11 @@ export default class Day extends React.Component {
     }
     return (
       <div className='day-table'>
-      <table>
-        {rows.map((row) => (
-          <tr>{row}</tr>
-        ))}
-      </table>
+        <table>
+          {rows.map((row) => (
+            <tr>{row}</tr>
+          ))}
+        </table>
       </div>
     )
   }
@@ -217,6 +247,7 @@ export default class Day extends React.Component {
         {this.renderCalendar()}
         {this.renderInput()}
         <button onClick={this.handleRetrieve} className='button2'>㤂〻如勑令</button>
+        <p>黑色：日序、干支。<span className='EquartorPrint'>紅色：太陽赤道宿度</span>；<span className='EclipticPrint'>黃色：太陽黃道宿度</span>；<span className='Lati'>綠色：太陽赤緯，日出刻度，正午晷長，昏中星</span>；<span className='MoonEquartorPrint'>藍色：月黃緯，月赤道宿度</span>；<span className=''>灰色：七十二候，卦用事，土王用事</span></p>
         {this.renderDayTableList()}
       </>
     )

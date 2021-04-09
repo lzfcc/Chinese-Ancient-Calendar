@@ -612,26 +612,67 @@ footer p {
 
 /* 日書 */
 
+.day-render {
+  overflow: visible;
+}
+
+.day-render h2 {
+  margin: 3em auto 0;
+  letter-spacing: .1em;
+  font-size: 2em;
+  line-height: 1.4;
+  color: var(--red);
+}
+
+.day-render h3 {
+  font-size: 1.5em;
+  color: var(--red);
+  margin: 3em auto .5em;
+  font-family: var(--serif);
+}
+
+.day-render p {
+  margin: .5em auto;
+  font-family: var(--serif);
+}
+
 .day-table table {
-  border: none
+  border: .3em solid var(--red);
 }
 
 .day-table td {
-  width: auto;
+  width: 6.5em;
   height: auto;
   padding: .4em .6em;
   vertical-align: top;
-  border: 1px solid var(--gray);
+  border: 1px solid var(--red);
 }
 
 .day-table td p {
   margin: .1em 0;
+  font-family: var(--codesans);
+}
+
+.YearColor table {
+  border-collapse: separate;
+  padding: .5em;
+  border: none;
+  background: var(--bggray);
+  border-radius: .5em;
+  box-shadow: 0 0 7px 0 var(--shallowgray);
+  font-family: var(--serif);
+}
+
+.YearColor table td {
+  border: none;
+  line-height: 2;
+  padding: 0 .3em;
+  width: auto;
 }
 
 .Sc {
+  font-size: 1.05em;
   font-weight: bold;
-  letter-spacing: 2px;
-  font-size: 1.1em;
 }
 
 .EquartorPrint {
@@ -667,16 +708,14 @@ footer p {
 }
 
 .HouName {
-  color: var(--gray);
-  font-size: .8em;
-}
-
-.FiveName {
-  color: var(--gray);
   font-size: .8em;
 }
 
 .HexagramName {
+  font-size: .8em;
+}
+
+.ManGod {
   color: var(--gray);
   font-size: .8em;
 }
