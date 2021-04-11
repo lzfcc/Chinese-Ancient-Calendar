@@ -10,7 +10,7 @@
   --letteryellow: #c68c00;
   --bgpink: #feefe6;
   --red: #f27144;
-  --darkred: #b62d2d;
+  --letterred: #b62d2d;
   --letterblue: #0088e8;
   --blue: #2fa0ff;
   --bgblue: #e1f3ff;
@@ -511,12 +511,12 @@ button.button4-7:hover {
 
 button.button4-8 {
   color: var(--bg);
-  background: var(--darkred);
+  background: var(--letterred);
   border: none;
 }
 
 button.button4-8:hover {
-  color: var(--darkred);
+  color: var(--letterred);
   background: none;
 }
 
@@ -634,6 +634,13 @@ footer p {
 .day-render p {
   margin: .5em auto;
   font-family: var(--serif);
+  max-width: 1000px;
+  line-height: 1.7;
+}
+
+.DayAccum {
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .day-table table {
@@ -641,7 +648,7 @@ footer p {
 }
 
 .day-table td {
-  width: 6.5em;
+  min-width: 6.5em;
   height: auto;
   padding: .4em .6em;
   vertical-align: top;
@@ -676,7 +683,7 @@ footer p {
 }
 
 .EquartorPrint {
-  color: var(--darkred);
+  color: var(--letterred);
 }
 
 .EclipticPrint {
@@ -717,6 +724,11 @@ footer p {
 
 .ManGod {
   color: var(--gray);
+  font-size: .8em;
+}
+
+.Luck {
+  color: var(--letterred);
   font-size: .8em;
 }
 

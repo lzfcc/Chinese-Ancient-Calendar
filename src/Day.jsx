@@ -56,8 +56,9 @@ export default class Day extends React.Component {
     })
     return (
       <section className='day-render'>
-        <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}萬年具注曆</h2>
-        <p>{this.state.output.DayAccum}</p>
+        <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}天文具注曆</h2>
+        <p className='DayAccum'>{this.state.output.DayAccum}</p>
+        <p>{this.state.output.YearGod}</p>
         <span className='YearColor'>
           <table>
             {(this.state.output.YearColor || []).map((row) => {
@@ -110,16 +111,9 @@ export default class Day extends React.Component {
       rows[r].push(
         (
           <td
-            // onMouseEnter={(event) => {
-            //   this.setState({ showMonth: month, showDate: k })
-            // }}
-            // onMouseOut={() => {
-            //   this.setState({ showMonth: 0, showDate: 0 })
-            // }}
             key={month + '-' + k}
             className="day-table-cell"
           >
-            {/* <p>{k}</p> */}
             {this.renderDayDetail(MonthInfo, month, k)}
           </td>
         )
