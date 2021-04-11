@@ -22,7 +22,7 @@ export default class Converter extends React.Component {
     this.handleDate = this.handleDate.bind(this)
   }
 
-  
+
   InputClock() {
     return (
       <span className='year-select'>
@@ -109,7 +109,7 @@ export default class Converter extends React.Component {
 
   handleClock() {
     try {
-      const { Print } = Clock(this.state.clock)
+      const Print = Clock(this.state.clock)
       this.setState({ outputClock: Print })
     } catch (e) {
       alert(e.message)
@@ -133,13 +133,13 @@ export default class Converter extends React.Component {
     }
   }
 
-  
+
   ResultClock() {
     if (!this.state.outputClock) {
       return null
     }
     return (
-      <div className='ans' style={{whiteSpace: 'pre-wrap'}}>
+      <div className='ans' style={{ whiteSpace: 'pre-wrap' }}>
         <p>{this.state.outputClock}</p>
       </div>
     )

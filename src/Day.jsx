@@ -138,10 +138,12 @@ export default class Day extends React.Component {
       <div>
         {
           Object.entries(MonthInfo[day]).map(([key, value]) => {
-            return (
-              /* {TableDayRowNameMap[key]}:  */
-              <p className={key}>{value}</p>
-            )
+            if ({ key } == 'MonColor') { } else {
+              return (
+                /* {TableDayRowNameMap[key]}:  */
+                <p className={key}>{value}</p>
+              )
+            }
           })
         }
       </div>
