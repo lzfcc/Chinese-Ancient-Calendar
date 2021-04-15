@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import { CalNameList, CalNameDayList } from './Shangshu-calendar/constant'
+import { CalNameList, CalNameDayList } from './Shangshu-calendar/para_constant'
 import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
 import Modulo from './Modulo'
@@ -34,7 +34,7 @@ const heightCache = createCache();
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['朔望氣閏食', '曆書', '五星', '同餘', '方程', '天文', '時間']
+    this.tabTitles = ['朔閏表', '曆書', '五星', '同餘', '方程', '天文', '時間']
     this.handleRetrieve = this.handleRetrieve.bind(this);
     this.state = {
       calendars: [],

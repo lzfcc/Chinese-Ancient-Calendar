@@ -1,6 +1,7 @@
 import React from 'react'
 import { Clock } from './Shangshu-calendar/time_decimal2clock'
-import { Jd2Date1, Date2Jd } from '../src/Shangshu-calendar/time_jd2date'
+import { Jd2Date1, Date2Jd } from './Shangshu-calendar/time_jd2date'
+import { EraConvert, YearScConvert } from './Shangshu-calendar/time_era'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -20,6 +21,8 @@ export default class Converter extends React.Component {
     this.handleClock = this.handleClock.bind(this)
     this.handleJd = this.handleJd.bind(this)
     this.handleDate = this.handleDate.bind(this)
+    this.handleYear = this.handleYear.bind(this)
+    this.handleSc = this.handleSc.bind(this)
   }
 
 
@@ -107,6 +110,35 @@ export default class Converter extends React.Component {
     );
   }
 
+
+  InputYear() {
+    return (
+      <span className='year-select'>
+        <span>公元年</span>
+        <input className='width2'
+          value={this.state.year}
+          onChange={(e) => {
+            this.setState({ year: e.currentTarget.value });
+          }}
+        />
+      </span>
+    );
+  }
+
+  InputSc() {
+    return (
+      <span className='year-select'>
+        <span>年干支</span>
+        <input className='width2'
+          value={this.state.Sc}
+          onChange={(e) => {
+            this.setState({ Sc: e.currentTarget.value });
+          }}
+        />
+      </span>
+    );
+  }
+
   handleClock() {
     try {
       const Print = Clock(this.state.clock)
@@ -133,6 +165,23 @@ export default class Converter extends React.Component {
     }
   }
 
+  handleYear() {
+    try {
+      const Print = EraConvert(this.state.year)
+      this.setState({ outputYear: Print })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
+
+  handleSc() {
+    try {
+      const Print = YearScConvert(this.state.Sc)
+      this.setState({ outputSc: Print })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
 
   ResultClock() {
     if (!this.state.outputClock) {
@@ -165,6 +214,26 @@ export default class Converter extends React.Component {
       </div>
     )
   }
+  ResultYear() {
+    if (!this.state.outputYear) {
+      return null
+    }
+    return (
+      <div className='ans'>
+        <p>{this.state.outputYear}</p>
+      </div>
+    )
+  }
+  ResultSc() {
+    if (!this.state.outputSc) {
+      return null
+    }
+    return (
+      <div className='ans' style={{ whiteSpace: "pre-wrap" }}>
+        <p>{this.state.outputSc}</p>
+      </div>
+    )
+  }
 
   render() {
     return (
@@ -181,6 +250,14 @@ export default class Converter extends React.Component {
         {this.InputDate()}
         <button onClick={this.handleDate} className='button4-8'>date2JD</button>
         {this.ResultDate()}
+        <h3>公元年 ⇌ 年干支</h3>
+        {this.InputYear()}
+        <button onClick={this.handleYear} className='button4-6'>year2SC</button>
+        {this.ResultYear()}
+        <p></p>
+        {this.InputSc()}
+        <button onClick={this.handleSc} className='button4-6'>SC2year</button>
+        {this.ResultSc()}
       </section>
     )
   }

@@ -77,7 +77,7 @@ export default class Converter extends React.Component {
         <h3>月極黃經 ⇒ 極白經、赤經、極黃緯</h3>
         <p className='note'>需要輸入此刻入降交點<n>正交</n>交點月的日數、距離冬至的日數。正交至半交：白大於黃，半交至正交：黃大於白。一交點月約 27.2122 日</p>
         {this.input()}
-        <button onClick={this.handle} className='button4-2'>月行九道</button>
+        <button onClick={this.handle} className='button4-8'>月行九道</button>
         {this.result()}
       </div>
     )
