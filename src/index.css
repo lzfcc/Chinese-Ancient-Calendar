@@ -747,11 +747,12 @@ footer p {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  font-size: 1em;
+  font-size: .8em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  min-width: 5em;
 }
 
 .chosen-container * {
@@ -1082,6 +1083,11 @@ footer p {
   padding: 4px 5px 4px 20px;
   background: url("./chosen-sprite@2x.png") no-repeat -30px -20px;
   direction: rtl;
+  min-width: 5em;
+}
+
+.chosen-search-input {
+  min-width: 5em;
 }
 
 .chosen-rtl.chosen-container-single .chosen-single div b {
@@ -1090,6 +1096,15 @@ footer p {
 
 .chosen-rtl.chosen-container-single.chosen-with-drop .chosen-single div b {
   background-position: -12px 2px;
+}
+
+.chosen-select-no-results {
+  padding: 1em;
+  border: 1px solid var(--gray);
+  height: 95vh;
+  position: fixed;
+  top: 1em;
+  left: 1em;
 }
 
 /* @end */

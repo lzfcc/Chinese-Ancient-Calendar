@@ -244,7 +244,7 @@ export default class Converter extends React.Component {
         {this.ResultClock()}
         <h3>儒略日 ⇌ 日期</h3>
         {this.InputJd()}
-        <button onClick={this.handleJd} className='button4-8'>JD2date</button>
+        <button onClick={this.handleJd} className='button4-8'>JD2date</button><span className="decimal64">.64</span>
         {this.ResultJd()}
         <p></p>
         {this.InputDate()}

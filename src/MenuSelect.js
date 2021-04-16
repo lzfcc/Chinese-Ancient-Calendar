@@ -58,6 +58,7 @@ export default class MenuSelect extends React.Component {
               }}
               className="chosen-search-input default"
               type="text"
+              placeholder='請選擇曆法'
               autoComplete="off"
               // placeholder="What's in your mind?"
               onKeyDown={(event) => {
