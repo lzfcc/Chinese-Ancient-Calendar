@@ -663,10 +663,7 @@ footer p {
 .YearColor table {
   border-collapse: separate;
   padding: .5em;
-  border: none;
-  background: var(--bggray);
-  border-radius: .5em;
-  box-shadow: 0 0 7px 0 var(--shallowgray);
+  border: 1px solid var(--shallowgray);
   font-family: var(--serif);
 }
 

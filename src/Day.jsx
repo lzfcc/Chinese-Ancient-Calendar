@@ -56,7 +56,7 @@ export default class Day extends React.Component {
     })
     return (
       <section className='day-render'>
-        <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}天文具注曆</h2>
+        <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}萬年天文具注曆</h2>
         <p className='DayAccum'>{this.state.output.DayAccum}</p>
         <p>{this.state.output.YearGod}</p>
         <span className='YearColor'>

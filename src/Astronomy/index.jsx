@@ -4,6 +4,8 @@ import BindEquator2Ecliptic from './Equator2Ecliptic'
 import BindLongi2Lati from './Longi2Lati'
 import MoonLongi from './MoonLongi'
 import Const from './Const'
+import Deciaml2Angle from './Deciaml2Angle'
+
 // import  BindEquator2Ecliptic from './'
 // import  BindEquator2Ecliptic from './' 
 
@@ -111,8 +113,9 @@ export default class Astronomy extends React.Component {
         <BindLongi2Lati />
         <h2>月軌之什</h2>
         <MoonLongi />
-        <h2>其他</h2>
-        <Const />
+        <h2>現代天文計算</h2>
+        <Deciaml2Angle />
+        <Const />        
         {/* <h3>天頂距 ⇌ 晷長</h3>
         <p className='note'>晷長單位爲尺，表高 8 尺。有效晷長範圍：0—50 尺，有效天頂距範圍：0—85 度。天頂距<n>戴日之北度</n> = 黃道去極度 - (象限 - 緯度)，象限 = 恆星年/4，<u>陽城</u>緯度<n>北極出地高度</n> 34.475<span className='decimal64'>.64</span></p>
         {this.InputDial()}
