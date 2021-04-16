@@ -1101,6 +1101,7 @@ footer p {
 .chosen-select-no-results {
   padding: 1em;
   border: 1px solid var(--gray);
+  border-radius: 1.2em;
   height: 95vh;
   position: fixed;
   top: 1em;

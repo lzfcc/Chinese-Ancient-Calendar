@@ -48,7 +48,7 @@ export default class a extends React.Component {
   render() {
     return (
       <div>
-        <h3>最大公因數  最小公倍數</h3>
+        <h3>最大公因數　最小公倍數</h3>
         {this.input()}
         <button onClick={this.handle} className="button4-6">
           try

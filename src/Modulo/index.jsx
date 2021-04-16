@@ -11,6 +11,10 @@ import Denom from "./Denom"
 import Zhang from "./Zhang"
 import Origin from "./Origin"
 import Origin2 from "./Origin2"
+import ExhauDenom from './ExhauDenom'
+import ExhauOrigin from './ExhauOrigin'
+import ExhauConst from './ExhauConst'
+
 export default class Converter extends React.Component {
   render() {
     return (
@@ -32,6 +36,10 @@ export default class Converter extends React.Component {
         <h2>上元演紀之什</h2>
         <Origin2 />
         <Origin />
+        <h2>從零開始造唐宋曆</h2>
+        <ExhauDenom />
+        <ExhauOrigin />
+        <ExhauConst />
       </section>
     );
   }
