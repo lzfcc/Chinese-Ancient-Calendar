@@ -1103,6 +1103,7 @@ footer p {
   border: 1px solid var(--gray);
   border-radius: 1.2em;
   height: 95vh;
+  z-index: 999;
   position: fixed;
   top: 1em;
   left: 1em;

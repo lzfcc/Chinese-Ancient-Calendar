@@ -87,7 +87,7 @@ export default class Exhau extends React.Component {
       return null;
     }
     return (
-      <div className="ans">
+      <div className="ans" style={{ whiteSpace: "pre-wrap" }}>
         <p>{this.state.output}</p>
       </div>
     );
