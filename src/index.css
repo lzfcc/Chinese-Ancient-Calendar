@@ -648,7 +648,7 @@ footer p {
 }
 
 .day-table td {
-  min-width: 6.5em;
+  min-width: 7.6em;
   height: auto;
   padding: .4em .6em;
   vertical-align: top;
@@ -675,8 +675,13 @@ footer p {
 }
 
 .Sc {
-  font-size: 1.05em;
+  font-size: 1.1em;
   font-weight: bold;
+}
+
+.Jd {
+  font-size: .8em;
+  color: var(--gray)
 }
 
 .EquartorPrint {
