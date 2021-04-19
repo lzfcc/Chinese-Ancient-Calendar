@@ -130,7 +130,7 @@ export default class Day extends React.Component {
     )
   }
 
-  renderDayDetail(MonthInfo, month, day) {
+  renderDayDetail(MonthInfo, day) {
     // if (this.state.showMonth !== month || this.state.showDate !== day) {
     //   return null
     // }
@@ -160,31 +160,9 @@ export default class Day extends React.Component {
       return;
     }
     let YearStart = parseInt(this.state.YearStart);
-    let YearEnd = parseInt(this.state.YearEnd);
+    let YearEnd = YearStart
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
       alert('格式不合法！');
-      return;
-    }
-    if (Number.isNaN(YearStart)) {
-      if (this.state.YearStart.length === 0) {
-        YearStart = YearEnd;
-        this.setState({ YearStart })
-      } else {
-        alert('起始年不合法！');
-        return;
-      }
-    }
-    if (Number.isNaN(YearEnd)) {
-      if (this.state.YearEnd.length === 0) {
-        YearEnd = YearStart;
-        this.setState({ YearEnd })
-      } else {
-        alert('終止年不合法！');
-        return;
-      }
-    }
-    if (YearStart > YearEnd) {
-      alert('起始年不可大於終止年！');
       return;
     }
     const callWorker = (eventName) => {
