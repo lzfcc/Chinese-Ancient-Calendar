@@ -35,7 +35,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const Print = Interpolate3(this.state.n, this.state.initial)
+      const { Print } = Interpolate3(this.state.n, this.state.initial)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -56,9 +56,10 @@ export default class Equa extends React.Component {
   render() {
     return (
       <div>
-        <h3>不等間距內插</h3>
+        <h3>拉格朗日內插</h3>
+        <h4>不等間距高次內插</h4>
         {this.input()}
-        <button onClick={this.handle} className='button4-6'>拉格朗日</button>
+        <button onClick={this.handle} className='button4-6'>Lagrange</button>
         {this.result()}
       </div>
     );
