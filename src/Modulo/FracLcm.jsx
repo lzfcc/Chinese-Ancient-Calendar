@@ -1,5 +1,5 @@
 import React from "react"
-import { FracLcm1 } from "../Shangshu-calendar/modulo_gcdlcm"
+import { FracLcm1 } from "../core/modulo_gcdlcm"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

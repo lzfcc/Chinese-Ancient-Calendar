@@ -1,5 +1,5 @@
 import React from "react"
-import { Sunzi } from "../Shangshu-calendar/modulo_origin"
+import { Sunzi } from "../core/modulo_origin"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

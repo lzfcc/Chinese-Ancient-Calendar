@@ -1,5 +1,5 @@
 import React from "react"
-import { CongruenceModulo } from "../Shangshu-calendar/modulo_qiuyi"
+import { CongruenceModulo } from "../core/modulo_qiuyi"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

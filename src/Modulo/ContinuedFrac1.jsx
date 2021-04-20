@@ -1,5 +1,5 @@
 import React from "react";
-import { ContinuedFrac1 } from '../Shangshu-calendar/modulo_continued-frac1'
+import { ContinuedFrac1 } from '../core/modulo_continued-frac1'
 import MathJax from "../Mathjax";
 import { convertLatex } from "../utils";
 export default class a extends React.Component {

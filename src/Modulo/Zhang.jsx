@@ -1,5 +1,5 @@
 import React from "react"
-import { ZhangModulo } from "../Shangshu-calendar/modulo_origin"
+import { ZhangModulo } from "../core/modulo_origin"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

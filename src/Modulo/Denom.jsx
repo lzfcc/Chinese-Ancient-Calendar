@@ -1,5 +1,5 @@
 import React from "react"
-import { DecomposePrimeFactor } from "../Shangshu-calendar/modulo_denom"
+import { DecomposePrimeFactor } from "../core/modulo_denom"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

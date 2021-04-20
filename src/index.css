@@ -650,13 +650,14 @@ footer p {
 .day-table td {
   min-width: 7.6em;
   height: auto;
-  padding: .4em .6em;
+  padding: .4em .25em;
   vertical-align: top;
   border: 1px solid var(--red);
 }
 
 .day-table td p {
   margin: .1em 0;
+  line-height: 1.65;
   font-family: var(--codesans);
 }
 
@@ -676,6 +677,7 @@ footer p {
 
 .Sc {
   font-size: 1.1em;
+  letter-spacing: 1px;
   font-weight: bold;
 }
 
@@ -1135,7 +1137,7 @@ only screen and (min-resolution: 1.5dppx) {
 
 /** loading view **/
 
-.loading-view {
+/* .loading-view {
   display: block;
   position: absolute;
   top: 0;
@@ -1147,16 +1149,16 @@ only screen and (min-resolution: 1.5dppx) {
   background-image: url("./book.gif");
   background-repeat: no-repeat;
   background-position: center;
-}
+} */
 
-.loading-text {
+/* .loading-text {
   color: white;
   position: absolute;
   left: 50%;
   top: 50%;
   margin-left: -100px;
   margin-top: 65px;
-}
+} */
 
 
 /* @end */

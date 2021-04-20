@@ -1,3 +1,0 @@
-[submodule "src/calendar"]
-	path = src/Shangshu-calendar
-	url = git@github.com:kujihhoe/ancient-calendar.git

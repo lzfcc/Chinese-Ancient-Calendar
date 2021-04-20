@@ -1,5 +1,5 @@
 import React from "react"
-import { IndetermEqua1 } from "../Shangshu-calendar/modulo_origin"
+import { IndetermEqua1 } from "../core/modulo_origin"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

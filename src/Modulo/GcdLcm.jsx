@@ -1,5 +1,5 @@
 import React from "react"
-import { GcdLcmGroup } from "../Shangshu-calendar/modulo_gcdlcm"
+import { GcdLcmGroup } from "../core/modulo_gcdlcm"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

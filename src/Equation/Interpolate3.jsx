@@ -1,5 +1,5 @@
 import React from "react";
-import { Interpolate3 } from "../Shangshu-calendar/equa_sn";
+import { Interpolate3 } from "../core/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);

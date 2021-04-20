@@ -1,5 +1,5 @@
 import React from "react";
-import { Sn5 } from "../Shangshu-calendar/equa_sn";
+import { Sn5 } from "../core/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);

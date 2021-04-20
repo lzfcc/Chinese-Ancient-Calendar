@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import { CalNameDayList } from './Shangshu-calendar/para_constant'
+import { CalNameDayList } from './core/para_constant'
 import MenuSelect from './MenuSelect'
 
 // const TableDayRowNameMap = {

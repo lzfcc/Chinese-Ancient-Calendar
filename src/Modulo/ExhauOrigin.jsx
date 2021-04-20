@@ -1,5 +1,5 @@
 import React from "react"
-import { ExhauOrigin } from "../Shangshu-calendar/modulo_exhaustion"
+import { ExhauOrigin } from "../core/modulo_exhaustion"
 export default class Exhau extends React.Component {
   constructor(props) {
     super(props)

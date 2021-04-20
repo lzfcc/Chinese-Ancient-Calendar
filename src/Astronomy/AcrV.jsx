@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindAcrV } from '../Shangshu-calendar/bind_astronomy'
+import { BindAcrV } from '../core/bind_astronomy'
 
 export default class Converter extends React.Component {
   constructor(props) {
