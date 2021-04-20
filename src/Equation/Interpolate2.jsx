@@ -1,5 +1,5 @@
 import React from "react";
-import { Interpolate2 } from "../core/equa_sn";
+import { Interpolate2 } from "../Cal/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);

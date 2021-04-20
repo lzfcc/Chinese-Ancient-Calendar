@@ -1,5 +1,5 @@
 import React from "react";
-import { SqrtA } from "../core/equa_sqrt";
+import { SqrtA } from "../Cal/equa_sqrt";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);

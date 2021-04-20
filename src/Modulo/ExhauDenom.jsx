@@ -1,5 +1,5 @@
 import React from "react"
-import { ExhauDenom } from "../core/modulo_exhaustion"
+import { ExhauDenom } from "../Cal/modulo_exhaustion"
 export default class Exhau extends React.Component {
   constructor(props) {
     super(props)

@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import { CalNameList, CalNameDayList } from './core/para_constant'
+import { CalNameList, CalNameDayList } from './Cal/para_constant'
 import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
 import Modulo from './Modulo'

@@ -1,5 +1,5 @@
 import React from "react";
-import { Heron } from "../core/equa_geometry";
+import { Heron } from "../Cal/equa_geometry";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);

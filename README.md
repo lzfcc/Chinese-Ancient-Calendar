@@ -143,6 +143,6 @@ $ npm install -g webpack webpack-cli
 2. 在 npm run build 后运行 webpack
 ```shell
 $ npm run build
-$ webpack ./src/core/frontend-worker.js -o ./public
+$ webpack ./src/Cal/frontend-worker.js -o ./public
 ```
 在 build 目录下生成 main.js。此过程也许可以通过配置 webpack.config.js 来自动完成。

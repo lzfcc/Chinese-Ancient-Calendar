@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConstWest } from '../core/astronomy_west'
+import { ConstWest } from '../Cal/astronomy_west'
 
 export default class Converter extends React.Component {
   constructor(props) {

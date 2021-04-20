@@ -1,5 +1,5 @@
 import React from "react"
-import { DecomposePrimeFactor } from "../core/modulo_denom"
+import { DecomposePrimeFactor } from "../Cal/modulo_denom"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

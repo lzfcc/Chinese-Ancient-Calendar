@@ -1,7 +1,7 @@
 import React from 'react'
-import { Clock } from './core/time_decimal2clock'
-import { Jd2Date1, Date2Jd } from './core/time_jd2date'
-import { EraConvert, YearScConvert } from './core/time_era'
+import { Clock } from './Cal/time_decimal2clock'
+import { Jd2Date1, Date2Jd } from './Cal/time_jd2date'
+import { EraConvert, YearScConvert } from './Cal/time_era'
 
 export default class Converter extends React.Component {
   constructor(props) {

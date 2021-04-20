@@ -1,5 +1,5 @@
 import React from "react"
-import { OriginModulo2 } from "../core/modulo_origin"
+import { OriginModulo2 } from "../Cal/modulo_origin"
 export default class a extends React.Component {
   constructor(props) {
     super(props)

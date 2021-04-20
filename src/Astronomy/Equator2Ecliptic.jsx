@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindEquator2Ecliptic } from '../core/bind_astronomy'
+import { BindEquator2Ecliptic } from '../Cal/bind_astronomy'
 
 export default class Converter extends React.Component {
   constructor(props) {

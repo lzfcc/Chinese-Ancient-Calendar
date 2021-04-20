@@ -1,5 +1,5 @@
 import React from "react";
-import { Round } from "../core/equa_geometry";
+import { Round } from "../Cal/equa_geometry";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
