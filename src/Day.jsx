@@ -72,7 +72,7 @@ export default class Day extends React.Component {
             })}
           </table>
         </span>
-        {list.map((MonthInfo, index) => {
+        {list.map((info, index) => {
           return (
             <div className="single-cal">
               <h3>{MonName[index + 1]}</h3>
@@ -91,7 +91,7 @@ export default class Day extends React.Component {
                 </table>
               </span>
               <div>
-                {this.RenderDayTableContent(index + 1, MonthInfo)}
+                {this.RenderDayTableContent(index + 1, info)}
               </div>
             </div>
           );
@@ -100,10 +100,10 @@ export default class Day extends React.Component {
     );
   }
 
-  RenderDayTableContent(month, MonthInfo) {
+  RenderDayTableContent(month, info) {
     const COL = 10
     const rows = []
-    for (let k = 1; k < MonthInfo.length; k++) {
+    for (let k = 1; k < info.length; k++) {
       const r = Math.floor((k - 1) / COL)
       if (!rows[r]) {
         rows[r] = []
@@ -114,7 +114,7 @@ export default class Day extends React.Component {
             key={month + '-' + k}
             className="day-table-cell"
           >
-            {this.renderDayDetail(MonthInfo, month, k)}
+            {this.renderDayDetail(info, k)}
           </td>
         )
       )
@@ -130,14 +130,14 @@ export default class Day extends React.Component {
     )
   }
 
-  renderDayDetail(MonthInfo, day) {
+  renderDayDetail(info, day) {
     // if (this.state.showMonth !== month || this.state.showDate !== day) {
     //   return null
     // }
     return (
       <div>
         {
-          Object.entries(MonthInfo[day]).map(([key, value]) => {
+          Object.entries(info[day]).map(([key, value]) => {
             if ({ key } == 'MonColor') { } else {
               return (
                 /* {TableDayRowNameMap[key]}:  */
