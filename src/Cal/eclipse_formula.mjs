@@ -1,9 +1,10 @@
+import { BindTcorr } from './astronomy_acrv.mjs'
 import {
     Bind
 } from './bind.mjs'
 
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
-export const EclipseFormula = (NodeAccum, NewmDecimal, OriginDifRaw, isNewm, CalName) => { // OriginDif是定朔
+export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, isNewm, CalName) => { // OriginDif是定朔
     const {
         Type,
         ChoosePara
@@ -18,7 +19,6 @@ export const EclipseFormula = (NodeAccum, NewmDecimal, OriginDifRaw, isNewm, Cal
     } = ChoosePara[CalName]
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
-    const NodeAccumHalf = NodeAccum % HalfNode // 用來判斷交前交後
     const MoonAvgVDeg = parseFloat((Sidereal / Lunar + 1).toPrecision(14))
     const HalfSolar = Solar / 2
     const QuarSolar = Solar / 4
@@ -26,8 +26,10 @@ export const EclipseFormula = (NodeAccum, NewmDecimal, OriginDifRaw, isNewm, Cal
     const OriginDif = OriginDifRaw % Solar
     const K = (50 - Sunrise) / 100 // 日出沒辰刻距午正刻數/100
     const NewmNoonDif = Math.abs(NewmDecimal - 0.5)
-
-    let NodeDif = NodeAccumHalf + Tcorr // 去交定分 NodeDif
+    const NodeAccumCorr=BindTcorr(AnomaAccum, OriginDifRaw, CalName)
+    NodeAccum += NodeAccumCorr // 入交定日
+    const NodeAccumHalf = NodeAccum % HalfNode // 用來判斷交前交後
+    let NodeDif = NodeAccumHalf // 去交定分 NodeDif
     if (NodeAccumHalf > QuarNode) {
         NodeDif = HalfNode - NodeAccumHalf
     }

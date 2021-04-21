@@ -55,8 +55,8 @@ body {
 }
 
 article {
-  margin: auto;
-  max-width: 850px;
+  margin: 4em auto 0;
+  width: 850px;
   text-align: justify;
   text-justify: inter-ideograph;
 }
@@ -165,7 +165,9 @@ p {
 
 .main-render {
   border-radius: 1.5em;
-  box-shadow: 0 0 20px 0 var(--gray);
+  /* box-shadow: 0 0 20px 0 var(--gray); */
+  background: var(--bggray);
+  border: 1px solid var(--shallowgray);
   margin: 3em auto 0;
   width: 93vw;
 }
@@ -191,7 +193,8 @@ h2 {
 }
 
 .ans {
-  box-shadow: 0 0 14px 0 var(--shallowgray1);
+  /* box-shadow: 0 0 14px 0 var(--shallowgray1); */
+  border: 1px solid var(--shallowgray);
   margin: 1.8em auto 1em;
   padding: 1px 1em;
   background: var(--bggray);
@@ -290,14 +293,8 @@ tr.TermScPrint {
 }
 
 tr.TermNamePrint {
-  color: var(--shallowgray);
+  color: var(--gray);
 }
-
-tr.NewmMmddPrint {
-  color: var(--shallowgray);
-  font-weight: light;
-}
-
 
 tr.NewmMansionPrint {
   border-bottom: 1px solid var(--gray);
@@ -345,7 +342,7 @@ tr.SyzygyDecimalPrint {
 }
 
 .calendar-select select {
-  font-size: .9em;
+  font-size: .8em;
   font-family: var(--sans);
 }
 
@@ -405,9 +402,12 @@ code {
   border-radius: .2em;
   padding: .2em .3em;
   margin: 0 0.2em;
+  font-size: .9em;
 }
 
 button {
+  margin: auto 0 auto .8em;
+  font-size: 1em;
   padding: .3em .6em;
   border-radius: .4em;
   font-weight: bold;
@@ -561,12 +561,13 @@ input {
 }
 
 .comment-wrap {
-  background-color: var(--section2);
-  margin: 0 auto;
-  max-width: 850px;
+  background-color: var(--bgblue);
+  margin: 5em auto 0;
+  width: 100vw;
 }
 
 .comment {
+  width: 850px;
   padding-top: 4em;
   padding-bottom: 4em;
   margin: 0 auto;
@@ -576,6 +577,27 @@ input {
   font-family: var(--sans)
 }
 
+footer {
+  margin: 0 auto 2em;
+  padding: 2em 0;
+  width: 100%;
+  text-align: center;
+  background: var(--black);
+  text-align: center;
+  font-size: .85em;
+  line-height: 1.6;
+}
+
+footer p {
+  margin: .3em auto;
+  color: var(--bg)
+}
+
+footer a:hover {
+  color: var(--black);
+  background: var(--bg);
+}
+
 hr {
   margin: 5em auto 3em;
   max-width: 6.7em;
@@ -583,21 +605,6 @@ hr {
   border-radius: 1rem;
   border: none;
   background: var(--black)
-}
-
-footer {
-  margin: 5em auto 2em;
-  padding: 2em 0;
-  width: 100%;
-  text-align: center;
-  background: var(--bggray);
-  text-align: center;
-  font-size: .85em;
-  line-height: 1.6;
-}
-
-footer p {
-  margin: .3em auto
 }
 
 .decimal64 {
@@ -682,7 +689,7 @@ footer p {
 }
 
 .Jd {
-  font-size: .8em;
+  font-size: .85em;
   color: var(--gray)
 }
 
@@ -719,21 +726,21 @@ footer p {
 }
 
 .HouName {
-  font-size: .8em;
+  font-size: .9em;
 }
 
 .HexagramName {
-  font-size: .8em;
+  font-size: .9em;
 }
 
 .ManGod {
   color: var(--gray);
-  font-size: .8em;
+  font-size: .9em;
 }
 
 .Luck {
   color: var(--letterred);
-  font-size: .8em;
+  font-size: .9em;
 }
 
 /*!
@@ -754,7 +761,7 @@ footer p {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  font-size: .8em;
+  font-size: .9em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

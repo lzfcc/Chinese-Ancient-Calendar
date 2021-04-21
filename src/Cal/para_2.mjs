@@ -535,7 +535,7 @@ export default {
         Lunar: 29 + 5619 / 10590, // 
         LunarNumer: 312729, // 朔實
         Denom: 10590, // 樞法
-        Anoma: 27 + 5873.0594 / 10590, // 
+        Anoma: 27 + 5873.0594 / 10590, 
         AnomaNumer: 291803.0594, // 轉週分
         Node: 27 + 2247.4277 / 10590,
         EcliLimitA: 12.8,
@@ -548,7 +548,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         WeekCorr: -3, // 4
         MansionCorr: 4,
-        OriginMonNum: 0, // 
+        OriginMonNum: 0, 
         ZhengNum: 2,
         MansionRaw: [11, 7], // 命以赤道虛宿七度外起算
         MansionFractPosition: 11,

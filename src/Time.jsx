@@ -43,6 +43,7 @@ export default class Converter extends React.Component {
   InputJd() {
     return (
       <span className='year-select'>
+        <p className="note">核心計算程序移植自 <a href='https://ytliu0.github.io/ChineseCalendar/Julian.js' target='_blank'>廖育棟</a> 教授，表示感謝！增加了毫秒計算，雖然沒什麼用。</p>
         <span>儒略日</span>
         <input className='width4'
           value={this.state.jd}

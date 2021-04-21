@@ -11,6 +11,7 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width4">
+        <p className="note">給定一個分數，求其連分數、各漸進連分數。非常適合與調日法參照</p>
         <span>分子</span>
         <input
           value={this.state.fracA}

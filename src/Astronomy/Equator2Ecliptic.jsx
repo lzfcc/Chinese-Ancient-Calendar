@@ -83,7 +83,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>赤經 ⇌ 極黃經</h3>
-        <p className='note'>週天需用該曆法的恆星年長度，可前往源碼倉庫査詢；若不需要絕對精確，可用近似値：四分： .25，魏晉、北系 .2463，南系 .26，唐系 .2565，宋系.257，授時系 .2575。度數從冬至起算，二至到二分：赤大於黃；二分到二至：黃大於赤。崇玄、崇天、明天、觀天、紀元使用各自的週天度，不受輸入的週天度影響。</p>
+        <p className='note'>度數從冬至起算，二至到二分：赤大於黃；二分到二至：黃大於赤</p>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>ecliptic&equator</button>
         {this.result()}

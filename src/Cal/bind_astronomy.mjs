@@ -134,10 +134,10 @@ export const BindAcrV = (AnomaAccum, OriginDifRaw, year) => {
     OriginDifRaw = Number(OriginDifRaw)
     AnomaAccum = Number(AnomaAccum)
     if (OriginDifRaw > 365.2425 || OriginDifRaw < 0) {
-        throw (new Error('請輸入一回歸年內的日數'))
+        throw (new Error('請輸入一回歸年內的日數！'))
     }
     if (AnomaAccum > 27.5545 || AnomaAccum < 0) {
-        throw (new Error('請輸入一近點月內的日數'))
+        throw (new Error('請輸入一近點月內的日數！'))
     }
     const {
         SunDifAccum: WestSun,
@@ -463,14 +463,14 @@ export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日�
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
 
-// export const BindMoonEclipse = (NodeAccum, NewmDecimal, OriginDifRaw, CalName) => {
+// export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, CalName) => {
 //     Print = Print.concat(
 //         ['Xuanming', 'Chongtian', 'Guantian', 'Jiyuan', 'NewDaming', 'Shoushi'].map((title) => {
 //             const {
 //                 Tcorr,
 //                 Dcorr,
 //                 EcliDeg
-//             } = EclipseFormula(NodeAccum, NewmDecimal, OriginDifRaw, 1, CalName)
+//             } = EclipseFormula(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, CalName)
 //             return {
 //                 title: CalNameDayList[title],
 //                 data: [Tcorr.toFixed(5), Dcorr.toFixed(5), EcliDeg.toFixed(5)]
@@ -480,7 +480,7 @@ export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日�
 //         ['Chongxuan'].map((title) => {
 //             const {
 //                 Tcorr
-//             } = EclipseFormula(NodeAccum, NewmDecimal, OriginDifRaw, 1, CalName)
+//             } = EclipseFormula(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, CalName)
 //             return {
 //                 title: CalNameDayList[title],
 //                 data: [Tcorr.toFixed(5), '-', '-']
@@ -491,7 +491,7 @@ export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日�
 //             const {
 //                 Dcorr,
 //                 EcliDeg
-//             } = EclipseFormula(NodeAccum, NewmDecimal, OriginDifRaw, 1, CalName)
+//             } = EclipseFormula(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, CalName)
 //             return {
 //                 title: CalNameDayList[title],
 //                 data: ['-', Dcorr.toFixed(5), EcliDeg.toFixed(5)]

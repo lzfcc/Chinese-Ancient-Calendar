@@ -478,14 +478,10 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         MoonDifAccum = moon.MoonDifAccum2
         Tcorr2 = (SunDifAccum - MoonDifAccum) / MoonAvgVDeg
         Tcorr1 = (SunDifAccum - moon.MoonDifAccum1) / MoonAvgVDeg
-    } else if (CalName === 'Mingtian') {
+    } else if (['Futian', 'Mingtian'].includes(CalName)) {
         SunDifAccum = SunFormula1(OriginDifRaw, CalName)
         MoonDifAccum = MoonFormula1(AnomaAccum, CalName)
         Tcorr2 = (SunDifAccum - MoonDifAccum) / Denom
-    } else if (CalName === 'Futian') {
-        SunDifAccum = SunFormula1(OriginDifRaw, CalName)
-        MoonDifAccum = MoonFormula1(AnomaAccum, CalName)
-        Tcorr2 = (SunDifAccum - MoonDifAccum) / (MoonAvgVDeg - SunAvgVDeg)
     } else if (Type < 11) {
         sun = SunTable2(OriginDifRaw, CalName)
         moon = MoonTable2(AnomaAccum, CalName)
@@ -493,18 +489,21 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         SunDifAccum = sun.SunDifAccum2
         Tcorr2 = (SunDifAccum - MoonDifAccum) / MoonAvgVDeg
         Tcorr1 = (sun.SunDifAccum1 - moon.MoonDifAccum1) / MoonAvgVDeg
-        NodeAccumCorr = (SunDifAccum - 0.0785 * MoonDifAccum) / MoonAvgVDeg // 皇極 465/5923，麟徳61/777，大衍343/4369，都是0.0785
     } else if (Type === 11) {
         SunDifAccum = SunFormula2(OriginDifRaw, CalName)
         moon = MoonFormula2(AnomaAccum, CalName)
         MoonDifAccum = moon.FaslowS
         Tcorr3 = (SunDifAccum + MoonDifAccum) * XianConst / moon.FaslowV
+        NodeAccumCorr = Tcorr3
     } else if (Type === 20) {
         sun = SunWest(OriginDifRaw, year)
         moon = MoonWest(AnomaAccum, year)
         SunDifAccum = sun.SunDifAccum
         MoonDifAccum = moon.MoonDifAccum
         Tcorr3 = (SunDifAccum - MoonDifAccum) / (moon.MoonAcrV - sun.SunAcrV)
+    }
+    if (Type >= 6 && Type <= 10) { // 其他曆法都是這樣，不懂授時為何就是定朔加減差
+        NodeAccumCorr = (SunDifAccum - (343 / 4369) * MoonDifAccum) / MoonAvgVDeg // 皇極 465/5923，麟徳61/777，大衍343/4369，崇天141/1796，都是0.0785
     }
     return {
         SunDifAccum,
@@ -550,7 +549,7 @@ export const BindSunTcorr = (OriginDifRaw, CalName) => {
         }
         return AcrTermTcorr
     }
-    const TermAcrRawList = []
+    const TermAcrRawList = [] // 定氣距冬至日數
     for (let i = 1; i < 24; i++) {
         TermAcrRawList[i] = HalfTermLeng * (i - 1) - BindAcrTermTcorr(HalfTermLeng * (i - 1), CalName)
     }

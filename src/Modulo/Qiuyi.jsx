@@ -14,8 +14,7 @@ export default class a extends React.Component {
     return (
       <span className="year-select width4">
         <p className="note">
-          萬法之法，孫子定理、不定方程、調日法、演紀都需要求一術。衍數、定母需互質
-          <span className="decimal64">.64</span>
+          萬法之法，孫子定理、不定方程、調日法、演紀都需要求一術。輸入兩個互質整數<n>衍數、定母</n>，求方程 <code>a * x ≡ 1 (mod b)</code> 的解 x<span className="decimal64">.64</span>
         </p>
         <span>
           泛用<n>用數</n> = 衍數
