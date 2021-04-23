@@ -23,11 +23,19 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
         Solar,
         Denom,
         NodeDenom,
-        EcliLimitA1,
-        EcliLimitA2,
-        EcliLimitB1,
-        EcliLimitB2
     } = ChoosePara[CalName]
+    let {
+        SunLimit1,
+        SunLimit2,
+        MoonLimit1,
+        MoonEcliDenom
+    } = ChoosePara[CalName]
+    if (SunLimit1) {
+        SunLimit1 /= Denom
+        SunLimit2 /= Denom
+        MoonLimit1 /= Denom
+        MoonEcliDenom /= Denom
+    }
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
     const QuarNode = Node / 4
@@ -41,13 +49,13 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
     const SummerDif = Math.abs(OriginDif - HalfSolar)
     const TermNum = Math.round(Math.ceil(OriginDifRaw / HalfTermLeng) % 24.1)
     const TermNewmDif = OriginDifRaw - (TermNum1 - 1) * HalfTermLeng
-    let Limit1 = HalfSynodicNodeDif // 單位是時間而非度數！
+    let SunLimit1 = HalfSynodicNodeDif // 單位是時間而非度數！
 
     let NodeAccumCorr = 0 // 入交日修正
     let LimitCorr = 0 // 大衍食限修正
     let Tcorr = 0 // 食甚時刻修正
     let Dcorr = 0 // 食分修正
-    let Deg = 0 // 食分
+    let Magni = 0 // 食分
     let status = 0 // 1全，2偏，3光影相接
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         if ((NodeAccum < HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif) || (NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode + HalfSynodicNodeDif)) {
@@ -60,9 +68,9 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                     status = 3
                 }
                 if ((NodeAccum < HalfSynodicNodeDif) || (NodeAccum < HalfNode + HalfSynodicNodeDif && NodeAccum >= HalfNode)) {
-                    Deg = ((NodeAccum % HalfNode) * MoonAvgVDeg)
+                    Magni = ((NodeAccum % HalfNode) * MoonAvgVDeg)
                 } else if (NodeAccum > Node - HalfSynodicNodeDif || (NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode)) {
-                    Deg = (((Node - NodeAccum) % HalfNode) * MoonAvgVDeg)
+                    Magni = (((Node - NodeAccum) % HalfNode) * MoonAvgVDeg)
                 }
             }
         }
@@ -106,7 +114,7 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
             }
         } else if (Type >= 6) { // 劉金沂《麟徳曆交食計算法》。
             // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785
-            // 交後交在後，富豪同定朔改正，交前，與定朔相反。
+            // 交後交在後，符號同定朔改正，交前，與定朔相反。
             let sign = 1
             if (NodeAccumHalf > QuarNode) { // 交前、先交
                 sign = -1
@@ -124,82 +132,82 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
             if (['Daye', 'Wuyin'].includes(CalName)) { // 《劉洪濤》頁458。最後有個條件是五行伏見，目前沒辦法加上去，還有個條件不懂什麼意思。戊寅見舊唐志一
                 if (NodeAccum >= HalfNode) {
                     if (NoonDif <= 0.125 && (i === 5 || i === 6)) {
-                        Limit1 = 13 / 12
+                        SunLimit1 = 13 / 12
                     } else if (OriginDif >= HalfTermLeng * 4 && OriginDif <= HalfTermLeng * 8 && NewmDecimal > 7 / 12) { // 春分前後。大業驚蟄和雨水順序跟現在對調。加時在未以西，只能假設是以午對稱。
-                        Limit1 = 13 / 12
+                        SunLimit1 = 13 / 12
                     } else if (OriginDif >= HalfTermLeng * 16 && OriginDif <= HalfTermLeng * 20 && NewmDecimal < 5 / 12) {
-                        Limit1 = 13 / 12
+                        SunLimit1 = 13 / 12
                     }
                 } else {
-                    Limit1 = 1 / 12 // 去交一時。大約1.114度
+                    SunLimit1 = 1 / 12 // 去交一時。大約1.114度
                     if (Math.abs(HalfTermLeng * 12 - OriginDif) <= 1 || Math.abs(HalfTermLeng * 6 - OriginDif) <= 1 || Math.abs(HalfTermLeng * 18 - OriginDif) <= 1) {
-                        Limit1 = 0.5
+                        SunLimit1 = 0.5
                     } else if (i >= 4 && i <= 6 && NoonDif <= 1.5 / 12) {
-                        Limit1 = 1 / 6 // 去交二時
+                        SunLimit1 = 1 / 6 // 去交二時
                     } else if (Math.abs(HalfTermLeng * 6 - OriginDif) <= 3 || Math.abs(HalfTermLeng * 18 - OriginDif) <= 3) {
-                        Limit1 = 1 / 6
+                        SunLimit1 = 1 / 6
                     } else if (NodeAccumHalf > QuarNode) { // 先交
-                        Limit1 = 1 / 6
+                        SunLimit1 = 1 / 6
                     } else if (NodeAccumHalf < QuarNode && AnomaAccum > Anoma * 0.25 && AnomaAccum <= Anoma * 0.75) { // 這兩條我處理成「後交値縮，二時內亦食」
-                        Limit1 = 1 / 6
+                        SunLimit1 = 1 / 6
                     } else if (NodeAccumHalf > QuarNode && AnomaAccum < Anoma * 0.25 && AnomaAccum >= Anoma * 0.75) {
-                        Limit1 = 1 / 6
+                        SunLimit1 = 1 / 6
                     }
                 }
             } else if (CalName === 'Huangji') {
                 if (NodeAccum >= HalfNode) { // 在陰曆應食不食《中國古代曆法》頁531:黃道南食限小於黃道北，因為月在黃道北，視去交小於計算去交
                     if (Math.abs(HalfTermLeng * 12 - OriginDif) <= 10 && NoonDif < 0.125 && NoonDif >= 1 / 12) {
-                        Limit1 = 12.25 / 12
+                        SunLimit1 = 12.25 / 12
                     } else if (Math.abs(HalfTermLeng * 12 - OriginDif) <= 20 && NoonDif < 0.125 && NoonDif >= 1 / 12) {
-                        Limit1 = 12.5 / 12
+                        SunLimit1 = 12.5 / 12
                     } else if (Math.abs(HalfTermLeng * 12 - OriginDif) <= 20 && NoonDif < 1 / 6 && NoonDif >= 0.125) {
-                        Limit1 = 13 / 12
+                        SunLimit1 = 13 / 12
                     } else if (Math.abs(HalfTermLeng * 12 - OriginDif) <= Lunar && NoonDif < 0.125 && NoonDif >= 1 / 12) {
-                        Limit1 = 12.75 / 12
+                        SunLimit1 = 12.75 / 12
                     } else if ((i === 6 || (Leap === 4 && i === Leap)) && NoonDif < 0.125 && NoonDif >= 1 / 12) {
-                        Limit1 = 13 / 12
+                        SunLimit1 = 13 / 12
                     } else if ((i === 6 || (Leap === 4 && i === Leap)) && NoonDif >= 0.125 && NoonDif < 1 / 6) {
-                        Limit1 = 13.5 / 12
+                        SunLimit1 = 13.5 / 12
                     } else if (OriginDif >= HalfTermLeng * 8 && OriginDif <= HalfTermLeng * 16 && NoonDif < 0.125 && NoonDif >= 1 / 12) {
-                        Limit1 = 13.5 / 12
+                        SunLimit1 = 13.5 / 12
                     } else if (OriginDif >= HalfTermLeng * 7 && OriginDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24) {
-                        Limit1 = 13.5 / 12
+                        SunLimit1 = 13.5 / 12
                     } else if (OriginDif >= HalfTermLeng * 6 && OriginDif <= HalfTermLeng * 18 && NoonDif < 1 / 24) {
-                        Limit1 = 13.5 / 12
+                        SunLimit1 = 13.5 / 12
                     }
                 } else {
                     if (Math.abs(HalfTermLeng * 12 - OriginDif) <= Lunar && NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
-                        Limit1 = 1 / 6
+                        SunLimit1 = 1 / 6
                     } else if (Math.abs(HalfTermLeng * 12 - OriginDif) <= Lunar && NoonDif >= 1 / 12 && NoonDif < 0.125) {
-                        Limit1 = 1.5 / 12
+                        SunLimit1 = 1.5 / 12
                     } else if (Math.abs(HalfTermLeng * 12 - OriginDif) <= 46 && NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
-                        Limit1 = 1.5 / 12
+                        SunLimit1 = 1.5 / 12
                     } else if (Math.abs(HalfTermLeng * 12 - OriginDif) <= 46 && NoonDif >= 1 / 12 && NoonDif < 0.125) {
-                        Limit1 = 1 / 12
+                        SunLimit1 = 1 / 12
                     } else if (OriginDif >= HalfTermLeng * 8 && OriginDif <= HalfTermLeng * 16 && NoonDif < 1.25 / 12 && NoonDif >= 1 / 12) {
-                        Limit1 = 0.5 / 12
+                        SunLimit1 = 0.5 / 12
                     } else if (OriginDif >= HalfTermLeng * 7 && OriginDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24) {
-                        Limit1 = 0.5 / 12
+                        SunLimit1 = 0.5 / 12
                     } else if (OriginDif >= HalfTermLeng * 6 && OriginDif <= HalfTermLeng * 18 && NoonDif < 1 / 24) {
-                        Limit1 = 0.5 / 12
+                        SunLimit1 = 0.5 / 12
                     }
                 }
             } else if (CalName === 'Linde') {
                 if (NodeAccum >= HalfNode && OriginDif >= Solar / 4 && OriginDif <= Solar * 0.75) { // 秋分至春分殘缺
                     if (NoonDif > 0.18 - 0.137 * SummerDif / (Solar / 4)) {
-                        Limit1 = 1373 / Denom + (137 / Denom) * SummerDif / (Solar / 4)
+                        SunLimit1 = 1373 / Denom + (137 / Denom) * SummerDif / (Solar / 4)
                     }
                 } else if (NodeAccum < HalfNode) { // 不應食而食有三組情況，滿足一組即可
                     if (OriginDif >= Solar / 4 && OriginDif <= Solar * 0.75) {
                         if (NoonDif <= 0.07) {
-                            Limit1 = 248 / Denom - (182.6 / Denom) * SummerDif / (Solar / 4)
+                            SunLimit1 = 248 / Denom - (182.6 / Denom) * SummerDif / (Solar / 4)
                         } else if (NoonDif < 0.1744 - 0.1014 * SummerDif / (Solar / 4)) {
-                            Limit1 = 60 / Denom
+                            SunLimit1 = 60 / Denom
                         } else if (NoonDif < 0.1044 - 0.1014 * SummerDif / (Solar / 4)) {
-                            Limit1 = 60 / Denom + (1644 / Denom) * SummerDif / (Solar / 4)
+                            SunLimit1 = 60 / Denom + (1644 / Denom) * SummerDif / (Solar / 4)
                         }
                     } else if (NoonDif <= 0.12) {
-                        Limit1 = 60 / Denom
+                        SunLimit1 = 60 / Denom
                     }
                 }
             } else if (CalName === 'Dayan') {
@@ -213,20 +221,20 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                 }
                 // 接下來調用拉格朗日內插
                 const Initial = TermAcrRawList[AcrTermOrder] + ',' + SunDcorrList[AcrTermOrder] + ';' + TermAcrRawList[AcrTermOrder + 1] + ',' + SunDcorrList[AcrTermOrder + 1] + ';' + TermAcrRawList[AcrTermOrder + 2] + ',' + SunDcorrList[AcrTermOrder + 2]
-                LimitCorr = Interpolate3(OriginDif, Initial).f
+                LimitCorr = Interpolate3(OriginDif, Initial).f // 當日差積
                 if (OriginDif > HalfSolar) {
                     LimitCorr = -LimitCorr
                 }
                 LimitCorrDif = (1275 + LimitCorr) / Denom //  食定差=冬至食差+LimitCorr
                 if (NodeAccum > HalfNode) {
-                    Limit1 = EcliLimitA1
+                    SunLimit1 = SunLimit2
                     if (NodeDif < LimitCorrDif) {
-                        Limit1 = EcliLimitB1
+                        SunLimit1 = SunLimit1
                     }
                 } else {
-                    Limit1 = EcliLimitB1
+                    SunLimit1 = SunLimit1
                 }
-                Limit1 += LimitCorr // 食定限=食限+LimitCorr
+                SunLimit1 += LimitCorr // 食定限=食限+LimitCorr
             }
         }
 
@@ -362,29 +370,29 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                         sign4 = 1
                     }
                 }
-                Deg = 15 - (Bushi + sign4 / 12) * MoonAvgVDeg
+                Magni = 15 - (Bushi + sign4 / 12) * MoonAvgVDeg
             } else {
                 if (CalName === 'Daye') {
                     if ((i >= 1 && i <= 3 && NodeAccumHalf < QuarNode) || (i >= 7 && i <= 9 && NodeAccumHalf > QuarNode) || (i >= 10 && NodeAccumHalf < QuarNode)) {
-                        Deg = 15 - (NodeDif - 1 / 12) * MoonAvgVDeg
+                        Magni = 15 - (NodeDif - 1 / 12) * MoonAvgVDeg
                     } else {
-                        Deg = 15 - NodeDif * MoonAvgVDeg // 這種情況與正光全同。
+                        Magni = 15 - NodeDif * MoonAvgVDeg // 這種情況與正光全同。
                     }
                 } else {
                     if ((i >= 1 && i <= 3 && NodeAccumHalf > QuarNode) || (i >= 7 && i <= 9 && NodeAccumHalf < QuarNode)) {
-                        Deg = 15 - (NodeDif - 1 / 24) * MoonAvgVDeg
+                        Magni = 15 - (NodeDif - 1 / 24) * MoonAvgVDeg
                     } else if ((i >= 1 && i <= 3 && NodeAccumHalf < QuarNode) || (i >= 7 && i <= 9 && NodeAccumHalf > QuarNode) || i >= 10) {
-                        Deg = 15 - (NodeDif - 1 / 6) * MoonAvgVDeg
+                        Magni = 15 - (NodeDif - 1 / 6) * MoonAvgVDeg
                     } else {
-                        Deg = 15 - NodeDif * MoonAvgVDeg // 這種情況與正光全同。
+                        Magni = 15 - NodeDif * MoonAvgVDeg // 這種情況與正光全同。
                     }
                 }
-                if (Deg > 15) {
-                    Deg = 15
+                if (Magni > 15) {
+                    Magni = 15
                     status = 1 // 食旣
                 }
             }
-            Dcorr = Deg - (NodeDif * MoonAvgVDeg)
+            Dcorr = Magni - (NodeDif * MoonAvgVDeg)
         } else if (CalName === 'Huangji') {
             if (isNewm) {
                 let M = 0
@@ -472,11 +480,11 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                     }
                 }
                 Dcorr = -M / 96
-                Deg = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr
+                Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr
             } else {
                 const MoonDcorrList = [0, 48, 43, 38, 33, 28, 23, 18, 15, 12, 19, 6, 3, 0, 13, 14, 15, 16, 17, 18, 21, 24, 27, 30, 33, 48]
                 Dcorr = -(MoonDcorrList[TermNum] + (MoonDcorrList[TermNum + 1] - MoonDcorrList[TermNum]) * TermNewmDif / HalfTermLeng) / 96
-                Deg = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr // 這一步有待確定，我直接複製日食的
+                Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr // 這一步有待確定，我直接複製日食的
             }
         } else if (CalName === 'Linde') { // 下麟徳求食分。NodeDif去交前後定分。558、552的不同，《中國古代曆法》頁82說要統一爲552，不過如果用定氣思路來看，興許不用改。
             if (isNewm) {
@@ -504,8 +512,8 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                 if (NodeAccumHalf > QuarNode) { // 交前
                     sign2 = 1
                 }
-                Deg = 15 - 15 * NodeDif / (HalfSynodicNodeDif + sign2 * NodeDifDif)
-                Dcorr = Deg - (15 - 15 * NodeDif / HalfSynodicNodeDif)
+                Magni = 15 - 15 * NodeDif / (HalfSynodicNodeDif + sign2 * NodeDifDif)
+                Dcorr = Magni - (15 - 15 * NodeDif / HalfSynodicNodeDif)
             } else {
                 if (i >= 1 && i <= 3) {
                     if (NodeAccumHalf > QuarNode) { // 交前
@@ -526,53 +534,88 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                 }
                 if (NodeDif < 0) {
                     status = 1 // 不足減者，食旣
-                    Deg = 15
+                    Magni = 15
                 } else {
-                    Deg = (HalfSynodicNodeDif - NodeDif + NodeDifDif) / (104 / Denom) // 準確的是103.554111
+                    Magni = (HalfSynodicNodeDif - NodeDif + NodeDifDif) / (104 / Denom) // 準確的是103.554111
                 }
-                Dcorr = Deg - (HalfSynodicNodeDif - NodeDif) / (104 / Denom)
+                Dcorr = Magni - (HalfSynodicNodeDif - NodeDif) / (104 / Denom)
             }
         } else if (['Dayan', 'Zhide'].includes(CalName)) { // 大衍之後，月食食分的節氣改正取消
-            // let tmp = OriginDif % HalfSolar
-            // if (OriginDif > HalfSolar) {
-            //     tmp = HalfSolar - tmp
-            // }
             if (isNewm) {
-                // 注意，去交分一定要加上盈縮修正！
                 let RelNodeDif = NodeDif + LimitCorrDif // 視去交=去交定分+食定差
                 if (NodeAccum > HalfNode) {
                     RelNodeDif = NodeDif - LimitCorrDif
                 }
                 if (NodeAccum > HalfNode) {
-                    Deg = 15 - (RelNodeDif - 104 / Denom) / (143 / Denom)
+                    Magni = 15 - (RelNodeDif - 104 / Denom) / (143 / Denom)
                     if (RelNodeDif < 104 / Denom) {
-                        Deg = 15 // 全食
+                        Magni = 15 // 全食
                         status = 1
                     }
                     if (NodeDif < LimitCorrDif) {
-                        Deg = (Limit1 + NodeDif) / (90 / Denom)
+                        Magni = (SunLimit1 + NodeDif) / (90 / Denom)
                         if (LimitCorrDif - NodeDif <= 60 / Denom) {
-                            Deg = 15 // 全食
+                            Magni = 15 // 全食
                             status = 1
                         }
                     }
                 } else {
-                    Deg = (Limit1 - NodeDif) / (90 / Denom)
+                    Magni = (SunLimit1 - NodeDif) / (90 / Denom)
                 }
             } else {
                 if (NodeDif <= 779 / Denom) {
-                    Deg = 15 //   月全食
+                    Magni = 15 //   月全食
                     status = 1
                 } else {
-                    Deg = (HalfSynodicNodeDif - NodeDif) / (183 / Denom)
+                    Magni = (HalfSynodicNodeDif - NodeDif) / (183 / Denom)
                 }
+            }
+        } else if (['Wuji', 'Zhengyuan'].includes(CalName)) {
+            if (CalName === 'Wuji') {
+                if (NodeAccum > Node / 2) {
+                    if (OriginDif > Solar * 0.75 || OriginDif < Solar / 4) { // 本來應該是5，夏至不盡，我直接改成連續了
+                        Dcorr = 457
+                    } else if (OriginDif >= Solar / 4 && OriginDif < Solar / 2) {
+                        Dcorr = 457 - 5.00486 * (OriginDif - Solar / 4)
+                    } else {
+                        Dcorr = 5.00486 * (OriginDif - Solar / 2)
+                    }
+                } else {
+                    if (OriginDif > Solar / 4 && OriginDif < Solar * 0.75) {
+                        Dcorr = 457
+                    } else if (OriginDif >= Solar * 0.75) {
+                        Dcorr = 457 - 5.00486 * (OriginDif - Solar * 0.75)
+                    } else {
+                        Dcorr = 5.00486 * OriginDif
+                    }
+                }
+                Dcorr /= Denom
+            } else {
+                if (NodeAccum > Node / 2) {
+                    if (OriginDif > Solar * 0.75 || OriginDif < Solar / 4) {
+                        Dcorr = 373
+                    } else if (OriginDif >= Solar / 4 && OriginDif < Solar / 2) { // 本來應該是4，夏至不盡，我直接改成連續了
+                        Dcorr = 373 - 4.084934 * (OriginDif - Solar / 4)
+                    } else {
+                        Dcorr = 4.084934 * (OriginDif - Solar / 2)
+                    }
+                } else {
+                    if (OriginDif > Solar / 4 && OriginDif < Solar * 0.75) {
+                        Dcorr = 373
+                    } else if (OriginDif >= Solar * 0.75) {
+                        Dcorr = 373 - 4.084934 * (OriginDif - Solar * 0.75)
+                    } else {
+                        Dcorr = 4.084934 * OriginDif
+                    }
+                }
+                Dcorr /= Denom
             }
         }
     }
     return {
         status,
         Tcorr,
-        Deg
+        Magni
     }
 }
 
@@ -610,7 +653,7 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
 
 // if (CalName === 'Jingchu') {
 //     EcliAccum = (FirstEcliAccum + (ZhengOriginDif + i - 1) * LunarNumer) % EcliNumer + (isNewm ? 0 : LunarNumer / 2) // 注意這是乘了日法的。景初原本是平朔，不考慮月行遲疾，但照理說應該要加上
-//     if ((EcliAccum >= Limit1) || (EcliAccum <= LunarNumer / 2)) { // 是否需要自己設一個閾值修正LunarNumer / 8
+//     if ((EcliAccum >= SunLimit1) || (EcliAccum <= LunarNumer / 2)) { // 是否需要自己設一個閾值修正LunarNumer / 8
 //         status = 1
 //         Sc += '◐'
 //     }
@@ -621,10 +664,10 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
 //         YinyangAccum -= EcliNumer
 //         Yinyang = -JiYinyang
 //     }
-//     Deg = EcliAccum / Denom
-//     if (status && (Deg < 10 || Deg > EcliNumer / Denom - 10)) {
+//     Magni = EcliAccum / Denom
+//     if (status && (Magni < 10 || Magni > EcliNumer / Denom - 10)) {
 //         EcliStatus = '必偏食'
-//     } else if (status && (Deg < 15 || Deg > EcliNumer / Denom - 15)) {
+//     } else if (status && (Magni < 15 || Magni > EcliNumer / Denom - 15)) {
 //         EcliStatus = '虧食微少'
 //     } else if (status) {
 //         EcliStatus = '交而不食'

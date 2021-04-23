@@ -7,7 +7,7 @@ export default class Intro extends React.Component {
         <article>
           <h2 id="-">簡介</h2>
           <ol>
-            <li>本工具的使用對象是古代天文曆法研究者。對於一般文史研究者，推薦使用頁腳的友情鏈接<n>當然，「時間」板塊的三個工具還是挺有用的</n>。</li>
+            <li>本工具的使用對象是古代天文曆法研究者。對於一般文史研究者，推薦使用下面的友情鏈接<n>當然，「時間」板塊的三個工具還是挺有用的</n>。</li>
             <li>目前的古代朔閏査詢網站都是根據工具書、文獻材料手動調整的<n>參考中研院 <a href="https://sinocal.sinica.edu.tw/lusodoc.html" target='_blank'>兩千年中西曆轉換說明書</a>，廖育棟 <a href="https://ytliu0.github.io/ChineseCalendar/computation_chinese.html" target='_blank'>本網站的農曆編算</a></n>。本工具可提供古代實行未實行的 60 餘部曆法<n>包括我復原的 8 部魏晉南北朝曆法、2 部隋曆、3 部唐曆、5 部宋曆、1 部金曆</n>的計算，完全遵照各曆算法進行全自動計算，無手動干預。主要有三大功能區：<ol>
               <li>【朔閏表】每年的積年、冬至大小餘、閏餘；冬至時刻的入轉日、入交泛日、入週天度。各月定朔<n>線性內插、二次三次內插</n>、平朔，定朔時刻日月所在赤道度，定望，平氣、定氣、定氣日昏中星。日月食食甚時刻、食分。</li>
               <li>【曆書】包含天文曆、具注曆兩部份。<ol>
@@ -122,6 +122,17 @@ export default class Intro extends React.Component {
             </ul>
             </li>
           </ul>
+          <h2>網站推薦</h2>
+          <ul>
+            <li><a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
+              target='_blank'>廖育棟的網站</a>（年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等）</li>
+            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a></li>
+            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>（世界各國曆法）</li>
+            <li>中研院 <a href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></li>
+            <li><a href="https://eclipse.gsfc.nasa.gov/" target='_blank'>NASA Eclipse</a></li>
+            <li><a href="http://www.moshier.net/#Cephes" target='_blank'>Astronomy and numerical software source codes</a>
+            </li>
+          </ul>
           <h2>更新日誌</h2>
           <h4 id="2021-01-03">2021-01-03</h4>
           <p>立項。</p>
@@ -148,6 +159,7 @@ export default class Intro extends React.Component {
             <li>完善交食</li>
             <li>完善昏中星</li>
             <li>訂正躔離改正</li>
+            <li>自動長曆功能</li>
             <li>其他小 bug</li>
           </ul>
         </article>

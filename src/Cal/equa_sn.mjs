@@ -1,14 +1,19 @@
 import {
     big,
 } from './para_constant.mjs'
+
+// const a = input => {
+//     input.toNumber()
+// }
+// console.log(a('1/2'))
 // 傅宗、李伦祖《隙积术和会圆术——沈括梦溪笔谈评注一则》，《西北師範大學學報》1974(4)
 export const Sn1 = (a, b, n) => { // 上有寬a個、長b個，下有寬c個、長d個，n層，每層長寬各多1個。芻童就是長方稜臺
     const c = big(a).add(n).sub(1)
     const d = big(b).add(n).sub(1)
     const Temp1 = big(a).mul(big(big(2).mul(b)).add(d))
-    const Temp2 = big(c).mul(big(big(2).mul(d)).add(b))
-    const Temp3 = big(c).sub(a).mul(n).div(6)
-    const S = big(big(Temp1).add(Temp2)).mul(n).div(6).add(Temp3)
+    const Temp2 = c.mul(big(big(2).mul(d)).add(b))
+    const Temp3 = c.sub(a).mul(n).div(6)
+    const S = big(Temp1.add(Temp2)).mul(n).div(6).add(Temp3)
     const Print = 'sum = ' + S
     return {
         Print
@@ -18,7 +23,7 @@ export const Sn1 = (a, b, n) => { // 上有寬a個、長b個，下有寬c個、�
 // https://www.zhihu.com/question/265476515/answer/355445437
 // 杨辉在《详解九章算法》《商功》篇阐述了方垛，刍甍垛，刍童垛，和三角垛
 // 方垛 1+4+9+...+n^2=1/3 n (n+1) (n+1/2)=1/6 n (n+1) (2n+1) 自然數平方級數求和
-export const Sn2SUB = (n, p) => {
+const Sn2Sub = (n, p) => {
     n = parseInt(n)
     p = parseInt(p)
     let b = 1
@@ -39,10 +44,10 @@ export const Sn2 = (n, p) => {
     S = big(S).mul(big(big(n).mul(2)).add(p).sub(1)).div(big.add(p, 1))
     S = S.toFixed(10).toString().split('.')
     S = S[0]
-    const tmp1 = Sn2SUB(1, p)
-    const tmp2 = Sn2SUB(2, p)
-    const tmp3 = Sn2SUB(3, p)
-    const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + ' + ' + '+...+ n^' + p + ' = ' + S
+    const tmp1 = Sn2Sub(1, p)
+    const tmp2 = Sn2Sub(2, p)
+    const tmp3 = Sn2Sub(3, p)
+    const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + '+...+ n^' + p + ' = ' + S
     return {
         Print
     }

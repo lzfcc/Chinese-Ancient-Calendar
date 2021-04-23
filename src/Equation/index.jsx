@@ -15,7 +15,6 @@ export default class Equation extends React.Component {
   render() {
     return (
       <section className='modulo'>
-        <div className='modulo'>
           <h2>開方之什</h2>
           <Sqrt1 />
           <Sqrt3 />
@@ -34,7 +33,6 @@ export default class Equation extends React.Component {
           <h3>弧矢割圓術</h3>
           <p className='note'><v>授時曆</v>黃赤轉換，見「轉換」標籤。</p>
           <Heron />
-        </div>
       </section>
     )
   }

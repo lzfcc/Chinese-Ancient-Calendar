@@ -21,7 +21,7 @@ export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, Ma
         Mansion = MansionDegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     }
     // 上面的三個Sidereal之前是Solar
-    return Accum.map((a) => {
+    return Accum.map(a => {
         let MansionOrder = 0
         let MansionResult = 0
         let MansionAccum = 0

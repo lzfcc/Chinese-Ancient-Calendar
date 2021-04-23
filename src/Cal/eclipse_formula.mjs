@@ -1,4 +1,6 @@
-import { BindTcorr } from './astronomy_acrv.mjs'
+import {
+    BindTcorr
+} from './astronomy_acrv.mjs'
 import {
     Bind
 } from './bind.mjs'
@@ -17,21 +19,36 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
         Denom,
         XianConst,
     } = ChoosePara[CalName]
+    let {
+        SunLimit1,
+        SunLimit2,
+        MoonLimit1,
+        MoonEcliDenom
+    } = ChoosePara[CalName]
+    SunLimit1 /= Denom
+    SunLimit2 /= Denom
+    MoonLimit1 /= Denom
+    MoonEcliDenom /= Denom
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
-    const MoonAvgVDeg = parseFloat((Sidereal / Lunar + 1).toPrecision(14))
+    const QuarNode = Node / 4
+    const MoonAvgVDeg = Sidereal / Lunar + 1
     const HalfSolar = Solar / 2
     const QuarSolar = Solar / 4
     const HalfTermLeng = Solar / 24
     const OriginDif = OriginDifRaw % Solar
     const K = (50 - Sunrise) / 100 // 日出沒辰刻距午正刻數/100
     const NewmNoonDif = Math.abs(NewmDecimal - 0.5)
-    const NodeAccumCorr=BindTcorr(AnomaAccum, OriginDifRaw, CalName)
-    NodeAccum += NodeAccumCorr // 入交定日
-    const NodeAccumHalf = NodeAccum % HalfNode // 用來判斷交前交後
-    let NodeDif = NodeAccumHalf // 去交定分 NodeDif
-    if (NodeAccumHalf > QuarNode) {
-        NodeDif = HalfNode - NodeAccumHalf
+    let NodeAccumHalf = NodeAccum % HalfNode // 用來判斷交前交後
+    let sign = 1
+    if (NodeAccumHalf > QuarNode) { // 交前、先交
+        sign = -1
+    }
+    const NodeAccumCorr = sign * BindTcorr(AnomaAccum, OriginDifRaw, CalName).NodeAccumCorr
+    NodeAccum += NodeAccumCorr // 入交定日     
+    let NodeDif = NodeAccum % HalfNode // 去交定分（與下面去交眞定分相區別）
+    if (NodeDif > QuarNode) {
+        NodeDif = HalfNode - NodeDif
     }
     ////////// 以下時差改正
     let Tcorr = 0
@@ -96,232 +113,207 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
     let Dcorr = 0
     const OriginDifHalf = OriginDif % HalfSolar
     // 下爲食分改正
-    if (['Wuji', 'Zhengyuan'].includes(CalName)) {
-        if (CalName === 'Wuji') {
-            if (NodeAccum > Node / 2) {
-                if (OriginDif > Solar * 0.75 || OriginDif < Solar / 4) { // 本來應該是5，夏至不盡，我直接改成連續了
-                    Dcorr = 457
-                } else if (OriginDif >= Solar / 4 && OriginDif < Solar / 2) {
-                    Dcorr = 457 - 5.00486 * (OriginDif - Solar / 4)
-                } else {
-                    Dcorr = 5.00486 * (OriginDif - Solar / 2)
-                }
-            } else {
-                if (OriginDif > Solar / 4 && OriginDif < Solar * 0.75) {
-                    Dcorr = 457
-                } else if (OriginDif >= Solar * 0.75) {
-                    Dcorr = 457 - 5.00486 * (OriginDif - Solar * 0.75)
-                } else {
-                    Dcorr = 5.00486 * OriginDif
-                }
-            }
-            Dcorr /= 1340
-        } else {
-            if (NodeAccum > Node / 2) {
-                if (OriginDif > Solar * 0.75 || OriginDif < Solar / 4) {
-                    Dcorr = 373
-                } else if (OriginDif >= Solar / 4 && OriginDif < Solar / 2) { // 本來應該是4，夏至不盡，我直接改成連續了
-                    Dcorr = 373 - 4.084934 * (OriginDif - Solar / 4)
-                } else {
-                    Dcorr = 4.084934 * (OriginDif - Solar / 2)
-                }
-            } else {
-                if (OriginDif > Solar / 4 && OriginDif < Solar * 0.75) {
-                    Dcorr = 373
-                } else if (OriginDif >= Solar * 0.75) {
-                    Dcorr = 373 - 4.084934 * (OriginDif - Solar * 0.75)
-                } else {
-                    Dcorr = 4.084934 * OriginDif
-                }
-            }
-            Dcorr /= 1095
+    // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作為正負判斷依據，完全不對
+    let sign1 = 1
+    if (OriginDif >= QuarSolar && OriginDif < Solar * 0.75) {
+        if (NodeAccum < HalfNode) {
+            sign1 = -1
         }
-    } else { // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作為正負判斷依據，完全不對
-        let sign1 = 1
-        if (OriginDif >= QuarSolar && OriginDif < Solar * 0.75) {
-            if (NodeAccum < HalfNode) {
-                sign1 = -1
-            }
-        } else {
+    } else {
+        if (NodeAccum > HalfNode) {
+            sign1 = -1
+        }
+    }
+    let sign2 = 1
+    if (OriginDif < QuarSolar || OriginDif > Solar * 0.75) {
+        if (NoonDif < 0) {
             if (NodeAccum > HalfNode) {
-                sign1 = -1
-            }
-        }
-        let sign2 = 1
-        if (OriginDif < QuarSolar || OriginDif > Solar * 0.75) {
-            if (NoonDif < 0) {
-                if (NodeAccum > HalfNode) {
-                    sign2 = -1
-                }
-            } else {
-                if (NodeAccum < HalfNode) {
-                    sign2 = -1
-                }
-            }
-        } else {
-            if (NoonDif < 0) {
-                if (NodeAccum < HalfNode) {
-                    sign2 = -1
-                }
-            } else {
-                if (NodeAccum > HalfNode) {
-                    sign2 = -1
-                }
-            }
-        }
-        let sign3 = 1
-        if (NoonDif > 0) {
-            if (NodeAccum > HalfNode) {
-                sign3 = -1
+                sign2 = -1
             }
         } else {
             if (NodeAccum < HalfNode) {
-                sign3 = -1
+                sign2 = -1
             }
         }
-        let OriginDifHalfRev = OriginDifHalf
-        if (OriginDifHalfRev > QuarSolar) {
-            OriginDifHalfRev = HalfSolar - OriginDifHalfRev
-        }
-        if (CalName === 'Xuanming') {
-            DcorrTerm = (2350 - 25.73618 * OriginDifHalfRev) * (1 - Math.abs(NoonDif) / K)
-            if (OriginDifHalf < HalfTermLeng * 3) {
-                DcorrClock = 2.1 * Math.floor(OriginDifHalfRev) // 連續的話我改成2.06985
-            } else if (OriginDifHalf < HalfTermLeng * 9) {
-                DcorrClock = 94.5
-            } else {
-                DcorrClock = 94.5 - 2.1 * (Math.floor(OriginDifHalfRev) - HalfTermLeng * 9)
+    } else {
+        if (NoonDif < 0) {
+            if (NodeAccum < HalfNode) {
+                sign2 = -1
             }
-            DcorrClock *= Math.abs(NoonDif)
-            if (OriginDif < HalfTermLeng * 3) {
-                DcorrOther = 51 - OriginDif * 17 / HalfTermLeng
-            } else if (OriginDif > HalfTermLeng * 21) {
-                DcorrOther = (OriginDif - HalfTermLeng * 21) * 17 / HalfTermLeng
-            }
-        } else if (CalName === 'Yingtian') {
-            DcorrTerm = (364 - 4 * Math.floor(OriginDifHalfRev)) * (1 - Math.abs(NoonDif) / K) // 盈初縮末（應該是冬至前後）內減外加，縮初盈末內加外減
-            if (OriginDifHalf > 45 && OriginDifHalf < 137) {
-                DcorrClock = 15.08 * Math.abs(NoonDif) // NoonDif單位不同，宣明是刻數，這是日分。
-            } else {
-                if (OriginDifHalf < 45) {
-                    OriginDifHalf = 45 - OriginDifHalf
-                } else {
-                    OriginDifHalf -= 137
-                }
-                DcorrClock = (15.08 - 0.335 * Math.floor(OriginDifHalf)) * Math.abs(NoonDif)
-            }
-        } else if (CalName === 'Qianyuan') {
-            DcorrTerm = (819 - 9 * Math.floor(OriginDifHalfRev)) * (1 - Math.abs(NoonDif) / K) // 乾元是「二分後日加入氣日」，我先暫時統一處理成二至後。《中國古代曆法》頁96說二至前是二至後的10倍，想不通。
-            if (OriginDifHalf > 45 && OriginDifHalf < 137) {
-                DcorrClock = 33.3 * Math.abs(NoonDif) // NoonDif單位日分
-            } else {
-                if (OriginDifHalf < 45) {
-                    OriginDifHalf = 45 - OriginDifHalf
-                } else {
-                    OriginDifHalf -= 137
-                }
-                DcorrClock = (33.3 - 0.74 * Math.floor(OriginDifHalf)) * Math.abs(NoonDif)
-            }
-        } else if (CalName === 'Yitian') { // 儀天的範圍是定氣，所以要以二至對稱。但是兩個算式又有什麼區別呢，我還是統一爲以前的。
-            // let tmp1 = Math.abs(OriginDif - Solar)
-            // if (OriginDif > QuarSolar && OriginDif < Solar * 0.75) {
-            //     tmp1 = Math.abs(OriginDif - HalfSolar)
-            // }
-            // DcorrTerm = (2826 - 30.15 * tmp1) * (1 - Math.abs(NoonDif) / K)
-            DcorrTerm = (2826 - 30.9491267 * OriginDifHalfRev) * (1 - Math.abs(NoonDif) / K) // NoonDif單位刻數
-            if (OriginDif < HalfTermLeng * 3) {
-                DcorrClock = 2.525 * Math.floor(OriginDifHalf) * Denom / 442384
-            } else if (OriginDif < HalfTermLeng * 9) {
-                DcorrClock = 113.625
-            } else if (OriginDif < HalfTermLeng * 13) {
-                DcorrClock = (113.625 - 2.525 * (Math.floor(OriginDifHalf) - HalfTermLeng * 9)) * Denom / 279858
-            } else if (OriginDif < HalfTermLeng * 16) {
-                DcorrClock = 2.525 * Math.floor(OriginDifHalf) * Denom / 279858
-            } else if (OriginDif < HalfTermLeng * 21) {
-                DcorrClock = 113.625
-            } else {
-                DcorrClock = (113.625 - 2.525 * (Math.floor(OriginDifHalf) - HalfTermLeng * 21)) * Denom / 442384
-            }
-            DcorrClock *= Math.abs(NoonDif)
-            if (OriginDif < HalfTermLeng * 3) {
-                DcorrOther = 61.32 - OriginDifHalf * 20.44 / HalfTermLeng
-            } else if (OriginDif > HalfTermLeng * 21) {
-                DcorrOther = (OriginDif - HalfTermLeng * 21) * 20.44 / HalfTermLeng
-            }
-        } else if (CalName === 'Mingtian') {
-            let OriginDifHalf2 = OriginDif
-            if (OriginDif < HalfSolar) {
-                if (OriginDif > Solar / 6) {
-                    OriginDifHalf2 = HalfSolar - OriginDifHalf2
-                }
-            } else if (OriginDif > HalfSolar) {
-                if (OriginDif > Solar / 3) {
-                    OriginDifHalf2 = HalfSolar - OriginDifHalf2
-                }
-            }
-            DcorrTerm = 508 - (106 / 3093) * (243.5 - OriginDifHalf2) * OriginDifHalf2
-            DcorrTerm *= Math.abs(NoonDif) / 9750
-            DcorrClock = (106 / 3093) * (243.5 - OriginDifHalf2) * OriginDifHalf2
-            DcorrClock *= Math.abs(NoonDif) / 9750
-        } else if (CalName === 'Guantian') {
-            let OriginDifHalf3 = OriginDif
-            if (OriginDif < HalfSolar) {
-                if (OriginDif > 88.91) {
-                    OriginDifHalf3 = HalfSolar - OriginDifHalf3
-                }
-            } else if (OriginDif > HalfSolar) {
-                if (OriginDif > HalfSolar + 93.71) {
-                    OriginDifHalf3 = HalfSolar - OriginDifHalf3
-                }
-            }
-            if (OriginDif < 88.91 || OriginDif > HalfSolar + 93.71) {
-                DcorrTerm = (4010 - (100 / 197) * OriginDifHalf3 ** 2) * (1 - Math.abs(NoonDif) / K)
-            } else {
-                DcorrTerm = (4010 - (100 / 219) * OriginDifHalf3 ** 2) * (1 - Math.abs(NoonDif) / K)
-            }
-            DcorrClock = (100 / 209) * (HalfSolar - OriginDifHalf3) * OriginDifHalf3
-            DcorrClock *= Math.abs(NoonDif) / 3700.5 // 單位 午前後分
-        } else if (CalName === 'Chongtian') {
-            DcorrTerm = (3533 - (100 / 236) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K) // NoonDif「距午定分」
-            DcorrClock = (100 / 236) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
-            DcorrClock *= Math.abs(NoonDif) * 4 / Denom
-        } else if (Type === 9) { // 紀元南宋
-            DcorrTerm = (2430 - (100 / 343) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
-            DcorrClock = (100 / 343) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
-            DcorrClock *= (2 / 3645) * Math.abs(NoonDif)
-        } else if (Type === 10) { // 以上三個等價
-            DcorrTerm = (1744 - (100 / 478) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
-            DcorrClock = (100 / 478) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
-            DcorrClock *= Math.abs(NoonDif) / 1307.5
-        } else if (Type === 11) {
-            DcorrTerm = (4.46 - OriginDifHalfRev ** 2 / 1870) * (1 - Math.abs(NoonDif) / K)
-            DcorrClock = (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev / 1870
-            DcorrClock *= Math.abs(NoonDif) / 2500
-        }
-        Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther) / Denom
-        AcrNodeDif = NodeDif + Dcorr // 宣明去交真定分
-        if (AcrNodeDif < 0) {
+        } else {
             if (NodeAccum > HalfNode) {
+                sign2 = -1
+            }
+        }
+    }
+    let sign3 = 1
+    if (NoonDif > 0) {
+        if (NodeAccum > HalfNode) {
+            sign3 = -1
+        }
+    } else {
+        if (NodeAccum < HalfNode) {
+            sign3 = -1
+        }
+    }
+    let OriginDifHalfRev = OriginDifHalf
+    if (OriginDifHalfRev > QuarSolar) {
+        OriginDifHalfRev = HalfSolar - OriginDifHalfRev
+    }
+    if (CalName === 'Xuanming') {
+        DcorrTerm = (2350 - 25.73618 * OriginDifHalfRev) * (1 - Math.abs(NoonDif) / K)
+        if (OriginDifHalf < HalfTermLeng * 3) {
+            DcorrClock = 2.1 * Math.floor(OriginDifHalfRev) // 連續的話我改成2.06985
+        } else if (OriginDifHalf < HalfTermLeng * 9) {
+            DcorrClock = 94.5
+        } else {
+            DcorrClock = 94.5 - 2.1 * (Math.floor(OriginDifHalfRev) - HalfTermLeng * 9)
+        }
+        DcorrClock *= Math.abs(NoonDif)
+        if (OriginDif < HalfTermLeng * 3) {
+            DcorrOther = 51 - OriginDif * 17 / HalfTermLeng
+        } else if (OriginDif > HalfTermLeng * 21) {
+            DcorrOther = (OriginDif - HalfTermLeng * 21) * 17 / HalfTermLeng
+        }
+    } else if (CalName === 'Yingtian') {
+        DcorrTerm = (364 - 4 * Math.floor(OriginDifHalfRev)) * (1 - Math.abs(NoonDif) / K) // 盈初縮末（應該是冬至前後）內減外加，縮初盈末內加外減
+        if (OriginDifHalf > 45 && OriginDifHalf < 137) {
+            DcorrClock = 15.08 * Math.abs(NoonDif) // NoonDif單位不同，宣明是刻數，這是日分。
+        } else {
+            if (OriginDifHalf < 45) {
+                OriginDifHalf = 45 - OriginDifHalf
+            } else {
+                OriginDifHalf -= 137
+            }
+            DcorrClock = (15.08 - 0.335 * Math.floor(OriginDifHalf)) * Math.abs(NoonDif)
+        }
+    } else if (CalName === 'Qianyuan') {
+        DcorrTerm = (819 - 9 * Math.floor(OriginDifHalfRev)) * (1 - Math.abs(NoonDif) / K) // 乾元是「二分後日加入氣日」，我先暫時統一處理成二至後。《中國古代曆法》頁96說二至前是二至後的10倍，想不通。
+        if (OriginDifHalf > 45 && OriginDifHalf < 137) {
+            DcorrClock = 33.3 * Math.abs(NoonDif) // NoonDif單位日分
+        } else {
+            if (OriginDifHalf < 45) {
+                OriginDifHalf = 45 - OriginDifHalf
+            } else {
+                OriginDifHalf -= 137
+            }
+            DcorrClock = (33.3 - 0.74 * Math.floor(OriginDifHalf)) * Math.abs(NoonDif)
+        }
+    } else if (CalName === 'Yitian') { // 儀天的範圍是定氣，所以要以二至對稱。但是兩個算式又有什麼區別呢，我還是統一爲以前的。
+        // let tmp1 = Math.abs(OriginDif - Solar)
+        // if (OriginDif > QuarSolar && OriginDif < Solar * 0.75) {
+        //     tmp1 = Math.abs(OriginDif - HalfSolar)
+        // }
+        // DcorrTerm = (2826 - 30.15 * tmp1) * (1 - Math.abs(NoonDif) / K)
+        DcorrTerm = (2826 - 30.9491267 * OriginDifHalfRev) * (1 - Math.abs(NoonDif) / K) // NoonDif單位刻數
+        if (OriginDif < HalfTermLeng * 3) {
+            DcorrClock = 2.525 * Math.floor(OriginDifHalf) * Denom / 442384
+        } else if (OriginDif < HalfTermLeng * 9) {
+            DcorrClock = 113.625
+        } else if (OriginDif < HalfTermLeng * 13) {
+            DcorrClock = (113.625 - 2.525 * (Math.floor(OriginDifHalf) - HalfTermLeng * 9)) * Denom / 279858
+        } else if (OriginDif < HalfTermLeng * 16) {
+            DcorrClock = 2.525 * Math.floor(OriginDifHalf) * Denom / 279858
+        } else if (OriginDif < HalfTermLeng * 21) {
+            DcorrClock = 113.625
+        } else {
+            DcorrClock = (113.625 - 2.525 * (Math.floor(OriginDifHalf) - HalfTermLeng * 21)) * Denom / 442384
+        }
+        DcorrClock *= Math.abs(NoonDif)
+        if (OriginDif < HalfTermLeng * 3) {
+            DcorrOther = 61.32 - OriginDifHalf * 20.44 / HalfTermLeng
+        } else if (OriginDif > HalfTermLeng * 21) {
+            DcorrOther = (OriginDif - HalfTermLeng * 21) * 20.44 / HalfTermLeng
+        }
+    } else if (CalName === 'Mingtian') {
+        let OriginDifHalf2 = OriginDif
+        if (OriginDif < HalfSolar) {
+            if (OriginDif > Solar / 6) {
+                OriginDifHalf2 = HalfSolar - OriginDifHalf2
+            }
+        } else if (OriginDif > HalfSolar) {
+            if (OriginDif > Solar / 3) {
+                OriginDifHalf2 = HalfSolar - OriginDifHalf2
+            }
+        }
+        DcorrTerm = 508 - (106 / 3093) * (243.5 - OriginDifHalf2) * OriginDifHalf2
+        DcorrTerm *= Math.abs(NoonDif) / 9750
+        DcorrClock = (106 / 3093) * (243.5 - OriginDifHalf2) * OriginDifHalf2
+        DcorrClock *= Math.abs(NoonDif) / 9750
+    } else if (CalName === 'Guantian') {
+        let OriginDifHalf3 = OriginDif
+        if (OriginDif < HalfSolar) {
+            if (OriginDif > 88.91) {
+                OriginDifHalf3 = HalfSolar - OriginDifHalf3
+            }
+        } else if (OriginDif > HalfSolar) {
+            if (OriginDif > HalfSolar + 93.71) {
+                OriginDifHalf3 = HalfSolar - OriginDifHalf3
+            }
+        }
+        if (OriginDif < 88.91 || OriginDif > HalfSolar + 93.71) {
+            DcorrTerm = (4010 - (100 / 197) * OriginDifHalf3 ** 2) * (1 - Math.abs(NoonDif) / K)
+        } else {
+            DcorrTerm = (4010 - (100 / 219) * OriginDifHalf3 ** 2) * (1 - Math.abs(NoonDif) / K)
+        }
+        DcorrClock = (100 / 209) * (HalfSolar - OriginDifHalf3) * OriginDifHalf3
+        DcorrClock *= Math.abs(NoonDif) / 3700.5 // 單位 午前後分
+    } else if (CalName === 'Chongtian') {
+        DcorrTerm = (3533 - (100 / 236) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K) // NoonDif「距午定分」
+        DcorrClock = (100 / 236) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
+        DcorrClock *= Math.abs(NoonDif) * 4 / Denom
+    } else if (Type === 9) { // 紀元南宋
+        DcorrTerm = (2430 - (100 / 343) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
+        DcorrClock = (100 / 343) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
+        DcorrClock *= (2 / 3645) * Math.abs(NoonDif)
+    } else if (Type === 10) { // 以上三個等價
+        DcorrTerm = (1744 - (100 / 478) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
+        DcorrClock = (100 / 478) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
+        DcorrClock *= Math.abs(NoonDif) / 1307.5
+    } else if (Type === 11) {
+        DcorrTerm = (4.46 - OriginDifHalfRev ** 2 / 1870) * (1 - Math.abs(NoonDif) / K)
+        DcorrClock = (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev / 1870
+        DcorrClock *= Math.abs(NoonDif) / 2500
+    }
+    Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther) / Denom
+    NodeAccum += Dcorr // 入食限
+    if (isNewm) {
+        if (NodeAccum < HalfNode) {
+            status = 0
+        } else {
+            let portion = 10
+            if (CalName === 'Xuanming') {
+                portion = 20 / 3 // 宣明日食定法爲限的1/15，崇天爲1/10
+            }
+            NodeAccum -= HalfNode
+            let AcrNodeDif = NodeAccum // 去交定分 NodeDif。// 宣明、崇天去交真定分，那其他曆法估計也差不多
+            if (AcrNodeDif > QuarNode) {
+                AcrNodeDif = HalfNode - AcrNodeDif
+            }
+            if (AcrNodeDif < SunLimit1) { // 去交真定分小於陽曆食限，爲陽曆食
+                Magni = portion * AcrNodeDif / SunLimit1
+            } else if (AcrNodeDif < SunLimit1 + SunLimit2) {
+                if (CalName === 'Xuanming') {
+                    Magni = 15 - portion * (AcrNodeDif - SunLimit1) / SunLimit2
+                } else {
+                    Magni = portion * (SunLimit1 + SunLimit2 - AcrNodeDif) / SunLimit2
+                }
+            } else if (AcrNodeDif < HalfSynodicNodeDif) { // 僅入食限，不一定有食。光影相接，或不見食
+                status = 3
+            } else {
                 status = 0
             }
         }
-        if (status) {
-            if (CalName === 'Xuanming') {
-                if (isNewm) {
-                    if (AcrNodeDif < 2640 / Denom) { // 去交真定分小於陽曆食限，爲陽曆食
-                        Deg = AcrNodeDif / 176 // 陽曆定法176
-                    } else {
-                        Deg = 15 - (AcrNodeDif - 2640 / Denom) / (404 / Denom)
-                    }
-                } else {
-                    if (NodeDif < 2147 / Denom) {
-                        status = 1 // 月全食
-                        Deg = 15
-                    } else {
-                        status = 2
-                        Deg = (HalfSynodicNodeDif - NodeDif) / 506
-                    }
-                }
+    } else {
+        if (CalName === 'Xuanming') {
+            if (NodeDif < MoonLimit1) {
+                status = 1 // 月全食
+                Magni = 15
+            } else if (NodeDif < HalfSynodicNodeDif) {
+                status = 2
+                Magni = (HalfSynodicNodeDif - NodeDif) / MoonEcliDenom
+            } else {
+                status = 0
             }
         }
     }

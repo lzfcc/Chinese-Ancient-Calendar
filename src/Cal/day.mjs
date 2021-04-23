@@ -141,13 +141,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             const ThreeYuanYear = YuanYear - YuanOrder * 60
             Yuan = YuanList[YuanOrder] + '元' + nzh.encodeS(ThreeYuanYear + 1) + '年'
         }
-        const MaleGong = Math.round(((7 - YuanYear) % 9 + 9) % 9.1) // 男女九宮算法用《象吉通書》，見《黑水城出土元代曆日研究》
-        const FemaleGong = Math.round(((5 + YuanYear) % 9 + 9) % 9.1)
         const YearGod = YearGodConvert(YearStem, YearBranch, YearScOrder, YuanYear)
         const YearColor = YearColorConvert(YuanYear)
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建
         const HalfTermLeng = Solar / 24
-        const OriginJdAccum = 2086292 + Math.floor(365.243 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作為儒略日標準
+        const OriginJdAccum = 2086292 + Math.floor(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作為儒略日標準
         const OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
         const MonName = []
         const MonInfo = []
@@ -378,7 +376,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 EclipticPrint[i] = Ecliptic.map(item => item.MansionResult)
             }
         }
-        DayAccum = '凡' + nzh.encodeS(DayAccum) + '日 ○ ' + (Yuan ? Yuan + ' ○ ' : '') + '男' + nzh.encodeS(MaleGong) + '宮女' + nzh.encodeS(FemaleGong) + '宮'
+        DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + (Yuan ? Yuan : '')
         return {
             Era,
             DayAccum,

@@ -106,7 +106,7 @@ export const Jd2Date1 = Jd => {
     dd = dd.round().toNumber()
     if (dd === 0) {
         mm--
-        dd = 31        
+        dd = 31
     }
     const Result = '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期 ' + Week + ' ｜ ' + Sc
     const Mmdd = mm + '.' + dd
@@ -146,8 +146,5 @@ export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
     // const Date = Frac.add(365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -0.5) // Frac默認0，所以要減去半日
     const Frac = h / 24 + m / 1440 + s / 86400 + ms / 86400000
     const Date = 365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -0.5 + Frac
-    const Result = 'Julian date ' + Date
-    return {
-        Result
-    }
+    return 'Julian date ' + Date
 }

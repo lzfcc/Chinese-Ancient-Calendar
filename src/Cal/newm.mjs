@@ -269,7 +269,7 @@ export default (CalName, year) => { // Newm
         const TermAvgRaw = []
         const TermAcrRaw = []
         const AnomaAccum = []
-        const EcliDeg = []
+        const Magni = []
         const Yinyang = []
         const status = []
         const OrderMod = []
@@ -308,8 +308,6 @@ export default (CalName, year) => { // Newm
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr1) // 線性內插所得
-            OrderMod[i] = Math.floor(AcrMod[i])
-            Sc[i] = ScList[OrderMod[i] + 1]
             if (Type <= 4) {
                 Decimal1[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(5).slice(2, 7)
             } else if (Type < 11) {
@@ -366,7 +364,7 @@ export default (CalName, year) => { // Newm
 
             // let EcliTcorr = 0
             // if (Ecli) {
-            //     EcliDeg[i] = Ecli.EcliDeg
+            //     Magni[i] = Ecli.Magni
             //     status[i] = Ecli.status
             //     Yinyang[i] = Ecli.Yinyang
             // }
@@ -404,7 +402,7 @@ export default (CalName, year) => { // Newm
             // Jd,
             // Mmdd,
             Yinyang,
-            // EcliDeg,
+            // Magni,
             // status,
         }
     }
@@ -420,8 +418,8 @@ export default (CalName, year) => { // Newm
     const NewmOrderRaw = Newm.AvgOrderRaw
     const NewmAcrOrderRaw = Newm.AcrOrderRaw
     const NewmOrderMod = Newm.OrderMod
-    const NewmEcliDeg = Newm.EcliDeg
-    const SyzygyEcliDeg = Syzygy.EcliDeg
+    const NewmMagni = Newm.Magni
+    const SyzygyMagni = Syzygy.Magni
     let NewmSc = Newm.Sc
     const NewmDecimal1 = Newm.Decimal1
     const NewmDecimal2 = Newm.Decimal2
@@ -536,7 +534,7 @@ export default (CalName, year) => { // Newm
         AccumPrint,
         // NewmEcliDirc,
         // SyzygyEcliDirc,
-        // NewmEcliDeg,
-        // SyzygyEcliDeg
+        // NewmMagni,
+        // SyzygyMagni
     }
 }
