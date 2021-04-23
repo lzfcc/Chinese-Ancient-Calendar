@@ -4,9 +4,11 @@ import {
 import {
     Bind
 } from './bind.mjs'
-
+// 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
-export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, isNewm, CalName) => { // OriginDif是定朔
+// 紀元定朔入轉=經朔入轉+日月改正
+export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, isNewm, CalName, NewmTcorr2) => { // 入交定日，紀元定朔入轉，定朔分，定朔距冬至，平朔日月改正
+    // const NodeAccumCorr = sign * TcorrFunc.NodeAccumCorr把這個移到newm
     const {
         Type,
         ChoosePara
@@ -15,6 +17,7 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
         Solar,
         Lunar,
         Node,
+        Anoma,
         Sidereal,
         Denom,
         XianConst,
@@ -44,13 +47,18 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
     if (NodeAccumHalf > QuarNode) { // 交前、先交
         sign = -1
     }
-    const NodeAccumCorr = sign * BindTcorr(AnomaAccum, OriginDifRaw, CalName).NodeAccumCorr
-    NodeAccum += NodeAccumCorr // 入交定日     
     let NodeDif = NodeAccum % HalfNode // 去交定分（與下面去交眞定分相區別）
     if (NodeDif > QuarNode) {
         NodeDif = HalfNode - NodeDif
     }
+    let Tcorr0 = 0
+    if (Type === 9) { //紀元食甚泛餘。藤豔輝《紀元曆日食算法及精度分析》。最後書上說加上經朔，藤豔輝說加上定朔
+        const MoonAcrAvgDifList = BindTcorr(AnomaAccum, OriginDif, CalName).MoonAcrAvgDifList
+        const MoonAcrAvgDif = -MoonAcrAvgDifList[Math.ceil(AnomaAccum)] // 朏（疾）減朒（遲）加。這裏符號不確定，感覺是這樣
+        Tcorr0 = NewmTcorr2 * MoonAcrAvgDif / MoonAvgVDeg
+    }
     ////////// 以下時差改正
+    NewmDecimal += Tcorr0
     let Tcorr = 0
     if (isNewm) {
         if (CalName === 'Xuanming') { // 夏至最大，冬至最小，夜半最大，午正最小。但實際上是夏至最小，冬至最大
@@ -104,14 +112,18 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
             }
         }
     }
-
+    const OriginDifTrue = OriginDif + Tcorr0 + Tcorr //食甚時刻
+    if (Type === 9) { // 紀元食甚日行積度
+        OriginDifTrue += BindAcrTermTcorr(OriginDifTrue, CalName).AcrTermTcorr // 感覺應該是先後數先加後減         
+    }
     let NoonDif = NewmDecimal + Tcorr - 0.5 // 食甚距午正刻數。注意，宣明NoonDif是食甚時刻，之前皇極等等大概應該是定朔
     // 宣明曆創日食四差：【時差Tcorr】食甚時刻改正【氣差DcorrTerm刻差DcorrClock加差DcorrOther】食分改正 
     let DcorrTerm = 0
     let DcorrClock = 0
     let DcorrOther = 0 // 儀天加差全同宣明
     let Dcorr = 0
-    const OriginDifHalf = OriginDif % HalfSolar
+    const OriginDifHalf = OriginDif % HalfSolar // 定朔
+    const OriginDifTrueHalf = OriginDifTrue % HalfSolar // 食甚
     // 下爲食分改正
     // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作為正負判斷依據，完全不對
     let sign1 = 1
@@ -159,6 +171,10 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
     let OriginDifHalfRev = OriginDifHalf
     if (OriginDifHalfRev > QuarSolar) {
         OriginDifHalfRev = HalfSolar - OriginDifHalfRev
+    }
+    let OriginDifTrueHalfRev = OriginDifTrueHalf
+    if (OriginDifTrueHalfRev > QuarSolar) {
+        OriginDifTrueHalfRev = HalfSolar - OriginDifTrueHalfRev
     }
     if (CalName === 'Xuanming') {
         DcorrTerm = (2350 - 25.73618 * OriginDifHalfRev) * (1 - Math.abs(NoonDif) / K)
@@ -263,8 +279,8 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
         DcorrClock = (100 / 236) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
         DcorrClock *= Math.abs(NoonDif) * 4 / Denom
     } else if (Type === 9) { // 紀元南宋
-        DcorrTerm = (2430 - (100 / 343) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
-        DcorrClock = (100 / 343) * (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev
+        DcorrTerm = (2430 - (100 / 343) * OriginDifTrueHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
+        DcorrClock = (100 / 343) * (HalfSolar - OriginDifTrueHalfRev) * OriginDifTrueHalfRev
         DcorrClock *= (2 / 3645) * Math.abs(NoonDif)
     } else if (Type === 10) { // 以上三個等價
         DcorrTerm = (1744 - (100 / 478) * OriginDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)

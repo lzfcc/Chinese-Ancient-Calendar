@@ -320,7 +320,8 @@ export const MoonTable2 = (AnomaAccum, CalName) => {
     const MoonDifAccum1 = MoonDifAccum[AnomaAccumDay1] + MoonAcrAvgDif1 * AnomaAccumFract
     return {
         MoonDifAccum2,
-        MoonDifAccum1
+        MoonDifAccum1,
+        MoonAcrAvgDif
     }
 }
 // console.log(MoonTable2(2.41, 'Chunxi'))
@@ -454,7 +455,7 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
     let Tcorr1 = 0 // 線性內插
     let Tcorr3 = 0
     let NodeAccumCorr = 0
-    const SunAvgVDeg = 1
+    let MoonAcrAvgDifList = []
     if (Type <= 4) {
         const SunAvgV = ZhangRange
         moon = MoonTable1(AnomaAccum, CalName)
@@ -489,6 +490,7 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         SunDifAccum = sun.SunDifAccum2
         Tcorr2 = (SunDifAccum - MoonDifAccum) / MoonAvgVDeg
         Tcorr1 = (sun.SunDifAccum1 - moon.MoonDifAccum1) / MoonAvgVDeg
+        MoonAcrAvgDifList = moon.MoonAcrAvgDif
     } else if (Type === 11) {
         SunDifAccum = SunFormula2(OriginDifRaw, CalName)
         moon = MoonFormula2(AnomaAccum, CalName)
@@ -511,7 +513,8 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         Tcorr2,
         Tcorr1,
         Tcorr3,
-        NodeAccumCorr
+        NodeAccumCorr,
+        MoonAcrAvgDifList
     }
 }
 // console.log(BindTcorr(1, 61, 'Linde'))

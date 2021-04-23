@@ -12,62 +12,42 @@ import P2 from './para_2.mjs'
  */
 export const Bind = CalName => {
     let Type = 0
-    let ChooseNewm = null
-    let ChoosePara = {}
+    let ChooseNewm = N2
+    let ChoosePara = P1
     if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'EastHan'].includes(CalName)) {
         ChooseNewm = N1
-        ChoosePara = P1
         Type = 1 // 四分
     } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P1
         Type = 2 // 魏晉
     } else if (['Xuanshi', 'Zhengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P1
         Type = 3 // 北朝
     } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'Wuyin'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P1
         Type = 4 // 南朝
-    } else if (['Jiuzhi', 'Shenlong', 'Futian'].includes(CalName)) {
-        ChooseNewm = N2
+    } else {
         ChoosePara = P2
-        Type = 5 // 天竺
-    } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 6 // 隋初唐
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 7 // 唐五代
-    } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 8 // 北宋
-    } else if (['Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Bentian'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
-    } else if (['Yangji', 'NewDaming', 'Yiwei', 'Gengwu'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 10 // 遼金元
-    } else if (['Shoushi', 'Datong'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 11 // 授時
-    }
-    // else if (['Huihui'].includes(CalName)) {
-    //     ChooseNewm = N3
-    //     ChoosePara = P2
-    //     Type = 12 // 回回
-    // }
-    else if (['West'].includes(CalName)) {
-        ChooseNewm = N2
-        ChoosePara = P2
-        Type = 20
+        if (['Jiuzhi', 'Shenlong', 'Futian'].includes(CalName)) {
+            Type = 5 // 天竺
+        } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde'].includes(CalName)) {
+            Type = 6 // 隋初唐
+        } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
+            Type = 7 // 唐五代
+        } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
+            Type = 8 // 北宋
+        } else if (['Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Bentian'].includes(CalName)) {
+            Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
+        } else if (['Yangji', 'NewDaming', 'Yiwei', 'Gengwu'].includes(CalName)) {
+            Type = 10 // 遼金元
+        } else if (['Shoushi', 'Datong'].includes(CalName)) {
+            Type = 11 // 授時
+        }
+        // else if (['Huihui'].includes(CalName)) {
+        //     ChooseNewm = N3
+        //     ChoosePara = P2
+        //     Type = 12 // 回回
+        // }
+        else if (['West'].includes(CalName)) {
+            Type = 20
+        }
     }
     return {
         ChooseNewm,
