@@ -2,7 +2,7 @@ import {
     ScList,
     TermList,
 } from './para_constant.mjs'
-import ChoosePara from './para_1.mjs'
+import AutoPara from './para_1.mjs'
 
 export default function CalQuar(CalName, year) {
     const {
@@ -21,11 +21,11 @@ export default function CalQuar(CalName, year) {
         isTermLeap,
         Ecli,
         EcliRange,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let {
         JiRange,
         BuRange,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     if (CalName === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange

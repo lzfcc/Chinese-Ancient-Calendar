@@ -1,17 +1,19 @@
 import {
-    BindTcorr
+    AutoTcorr
 } from './astronomy_acrv.mjs'
+import {
+    Longi2LatiFormula
+} from './astronomy_formula.mjs'
 import {
     Bind
 } from './bind.mjs'
 // 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
 // 紀元定朔入轉=經朔入轉+日月改正
-export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, isNewm, CalName, NewmTcorr2) => { // 入交定日，紀元定朔入轉，定朔分，定朔距冬至，平朔日月改正
-    // const NodeAccumCorr = sign * TcorrFunc.NodeAccumCorr把這個移到newm
+export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, isNewm, CalName) => { // 入交泛日，經朔入轉，定朔分，定朔距冬至——改成經朔距冬至
     const {
         Type,
-        ChoosePara
+        AutoPara
     } = Bind(CalName)
     const {
         Solar,
@@ -21,13 +23,13 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
         Sidereal,
         Denom,
         XianConst,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let {
         SunLimit1,
         SunLimit2,
         MoonLimit1,
         MoonEcliDenom
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     SunLimit1 /= Denom
     SunLimit2 /= Denom
     MoonLimit1 /= Denom
@@ -40,11 +42,16 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
     const QuarSolar = Solar / 4
     const HalfTermLeng = Solar / 24
     const OriginDif = OriginDifRaw % Solar
+    const Sunrise = Longi2LatiFormula(OriginDifRaw, CalName).Sunrise
     const K = (50 - Sunrise) / 100 // 日出沒辰刻距午正刻數/100
     const NewmNoonDif = Math.abs(NewmDecimal - 0.5)
+    const TcorrFunc = AutoTcorr(AnomaAccum, OriginDif, CalName)
+    if (Type !== 9) {
+        NodeAccum += TcorrFunc.NodeAccumCorr
+    }
     let NodeAccumHalf = NodeAccum % HalfNode // 用來判斷交前交後
     let sign = 1
-    if (NodeAccumHalf > QuarNode) { // 交前、先交
+    if (NodeAccumHalf > QuarNode) { // 交前、先交。按照《紀元曆日食算法及精度分析》頁147提到交前
         sign = -1
     }
     let NodeDif = NodeAccum % HalfNode // 去交定分（與下面去交眞定分相區別）
@@ -52,10 +59,11 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
         NodeDif = HalfNode - NodeDif
     }
     let Tcorr0 = 0
-    if (Type === 9) { //紀元食甚泛餘。藤豔輝《紀元曆日食算法及精度分析》。最後書上說加上經朔，藤豔輝說加上定朔
-        const MoonAcrAvgDifList = BindTcorr(AnomaAccum, OriginDif, CalName).MoonAcrAvgDifList
-        const MoonAcrAvgDif = -MoonAcrAvgDifList[Math.ceil(AnomaAccum)] // 朏（疾）減朒（遲）加。這裏符號不確定，感覺是這樣
-        Tcorr0 = NewmTcorr2 * MoonAcrAvgDif / MoonAvgVDeg
+    let MoonAcrAvgDif = 0
+    if (Type === 9) { //紀元食甚泛餘，卽定朔到眞食甚的改正。藤豔輝《紀元曆日食算法及精度分析》。最後書上說加上經朔，藤豔輝說加上定朔
+        const MoonAcrAvgDifList = TcorrFunc.MoonAcrAvgDifList
+        MoonAcrAvgDif = -MoonAcrAvgDifList[Math.ceil(AnomaAccum + TcorrFunc.Tcorr2)] / MoonAvgVDeg // 朏（疾）減朒（遲）加。這裏符號不確定，感覺是這樣
+        Tcorr0 = (TcorrFunc.Tcorr2)// * MoonAcrAvgDif // TcorrFunc.Tcorr2是經朔日月改正
     }
     ////////// 以下時差改正
     NewmDecimal += Tcorr0
@@ -112,9 +120,9 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
             }
         }
     }
-    const OriginDifTrue = OriginDif + Tcorr0 + Tcorr //食甚時刻
+    let OriginDifTrue = OriginDif + Tcorr0 + Tcorr // 食甚時刻
     if (Type === 9) { // 紀元食甚日行積度
-        OriginDifTrue += BindAcrTermTcorr(OriginDifTrue, CalName).AcrTermTcorr // 感覺應該是先後數先加後減         
+        OriginDifTrue += AutoTcorr(AnomaAccum, OriginDifTrue, CalName).SunDifAccum // 感覺應該是先後數先加後減         
     }
     let NoonDif = NewmDecimal + Tcorr - 0.5 // 食甚距午正刻數。注意，宣明NoonDif是食甚時刻，之前皇極等等大概應該是定朔
     // 宣明曆創日食四差：【時差Tcorr】食甚時刻改正【氣差DcorrTerm刻差DcorrClock加差DcorrOther】食分改正 
@@ -291,33 +299,56 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
         DcorrClock = (HalfSolar - OriginDifHalfRev) * OriginDifHalfRev / 1870
         DcorrClock *= Math.abs(NoonDif) / 2500
     }
-    Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther) / Denom
-    NodeAccum += Dcorr // 入食限
-    if (isNewm) {
-        if (NodeAccum < HalfNode) {
-            status = 0
+    let k0 = 0
+    if (Type === 9) {
+        if (NodeAccum > QuarNode && NodeAccum < Node * 0.75) { // 交初加三千一百，交中減三千
+            k0 = -3000
         } else {
-            let portion = 10
-            if (CalName === 'Xuanming') {
-                portion = 20 / 3 // 宣明日食定法爲限的1/15，崇天爲1/10
+            k0 = 3100
+        }
+    }
+    Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther + k0) / Denom
+    NodeAccum += Dcorr // 入食限
+    NodeAccum -= HalfNode
+    let AcrNodeDif = NodeAccum // 去交定分 NodeDif。// 宣明、崇天去交真定分，那其他曆法估計也差不多
+    if (AcrNodeDif > QuarNode) {
+        AcrNodeDif = HalfNode - AcrNodeDif
+    }
+    let status = 0
+    let Magni = 0
+    let Last = 0
+    if (isNewm) {
+        let portion = 10
+        if (CalName === 'Xuanming') {
+            portion = 20 / 3 // 宣明日食定法爲限的1/15，崇天爲1/10
+        }
+        if (Type === 9) {
+            if (NodeAccum < HalfNode && AcrNodeDif < SunLimit1) {
+                status = 1
+                Magni = portion * (1 - AcrNodeDif / SunLimit1)
+                Last = 5.83 * (20 * Magni - Magni ** 2) * (1 - MoonAcrAvgDif)
+            } else if (NodeAccum > HalfNode && AcrNodeDif < SunLimit2) {
+                status = 1
+                Magni = portion * (1 - AcrNodeDif / SunLimit2)
             }
-            NodeAccum -= HalfNode
-            let AcrNodeDif = NodeAccum // 去交定分 NodeDif。// 宣明、崇天去交真定分，那其他曆法估計也差不多
-            if (AcrNodeDif > QuarNode) {
-                AcrNodeDif = HalfNode - AcrNodeDif
-            }
-            if (AcrNodeDif < SunLimit1) { // 去交真定分小於陽曆食限，爲陽曆食
-                Magni = portion * AcrNodeDif / SunLimit1
-            } else if (AcrNodeDif < SunLimit1 + SunLimit2) {
-                if (CalName === 'Xuanming') {
-                    Magni = 15 - portion * (AcrNodeDif - SunLimit1) / SunLimit2
-                } else {
-                    Magni = portion * (SunLimit1 + SunLimit2 - AcrNodeDif) / SunLimit2
-                }
-            } else if (AcrNodeDif < HalfSynodicNodeDif) { // 僅入食限，不一定有食。光影相接，或不見食
-                status = 3
-            } else {
+
+        } else {
+            if (NodeAccum < HalfNode) {
                 status = 0
+            } else {
+                if (AcrNodeDif < SunLimit1) { // 去交真定分小於陽曆食限，爲陽曆食
+                    Magni = portion * AcrNodeDif / SunLimit1
+                } else if (AcrNodeDif < SunLimit1 + SunLimit2) {
+                    if (CalName === 'Xuanming') {
+                        Magni = 15 - portion * (AcrNodeDif - SunLimit1) / SunLimit2
+                    } else {
+                        Magni = portion * (SunLimit1 + SunLimit2 - AcrNodeDif) / SunLimit2
+                    }
+                } else if (AcrNodeDif < HalfSynodicNodeDif) { // 僅入食限，不一定有食。光影相接，或不見食
+                    status = 3
+                } else {
+                    status = 0
+                }
             }
         }
     } else {
@@ -350,6 +381,10 @@ export const EclipseFormula = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw,
     return {
         Dcorr,
         Tcorr,
+        Magni,
         status
     }
 }
+console.log(EclipseFormula(14.1834249657, 11.1268587106, 0.45531, 31.9780521262, 1, 'Jiyuan').Magni)
+
+// 入轉日11要當成10，也就是月離表不對

@@ -47,13 +47,13 @@ import {
 
 export const Equator2EclipticTable = (LongiRaw, CalName) => {
     const {
-        ChoosePara,
+        AutoPara,
         Type
     } = Bind(CalName)
     let {
         Sidereal,
         Solar
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     if (!Sidereal) {
         Sidereal = Solar
     }
@@ -145,14 +145,14 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
 
 export const Longi2LatiTable1 = (OriginDifRaw, CalName) => {
     const {
-        ChoosePara,
+        AutoPara,
     } = Bind(CalName)
     const {
         Solar,
         NightList,
         DialList,
         SunLatiList,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let DawnRange = 0
     if (CalName !== 'Daye') {
         DawnRange = 2.5
@@ -180,7 +180,7 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
     OriginDecimal = Number(OriginDecimal)
     const {
         Type,
-        ChoosePara,
+        AutoPara,
     } = Bind(CalName)
     const {
         Solar,
@@ -192,7 +192,7 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
         // TermRangeA,
         // TermRangeS,
         SunAcrAvgDifList
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let DawnRange = 2.5
     if (['Linde', 'NewDaming', 'Gengwu'].includes(CalName)) {
         DawnRange = 0
@@ -407,12 +407,12 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
 
 export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤白轉換//////
     const {
-        ChoosePara
+        AutoPara
     } = Bind(CalName)
     const {
         Node,
         Solar
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     const Xiang = 90.94335
     const LongiRaw = 13.36876 * Day // 以月平行度乘之
     let Longi = LongiRaw % (Xiang)
@@ -514,17 +514,17 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
 export const MoonLatiTable = (DayRaw, CalName) => {
     const {
         Type,
-        ChoosePara,
+        AutoPara,
     } = Bind(CalName)
     const {
         Lunar,
         Ecli,
         MoonLatiDifList,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let {
         Node,
         MoonLatiAccumList
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     if (!Node) {
         Node = Lunar * Ecli / (0.5 + Ecli)
     }

@@ -2,8 +2,8 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    BindTcorr,
-    BindSunTcorr
+    AutoTcorr,
+    AutoSunTcorr
 } from './astronomy_acrv.mjs'
 import {
     Interpolate3
@@ -12,7 +12,7 @@ import {
 // 春夏秋冬各三月，那麼閏月怎麼辦呢，所以輸入的時候應該用day的noleapmon，閏月還是上一個月
 export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i, Leap, isNewm, CalName) => { // 入交日，入轉日，經朔分，距冬至日數，月份，閏月序數，朔望，名字。用月份判斷很奇怪，但是沒有證據說是用節氣判斷，皇極有兩條「閏四月內」，那肯定就是月份
     const {
-        ChoosePara,
+        AutoPara,
         Type
     } = Bind(CalName)
     const {
@@ -23,13 +23,13 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
         Solar,
         Denom,
         NodeDenom,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let {
         SunLimit1,
         SunLimit2,
         MoonLimit1,
         MoonEcliDenom
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     if (SunLimit1) {
         SunLimit1 /= Denom
         SunLimit2 /= Denom
@@ -119,7 +119,7 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
             if (NodeAccumHalf > QuarNode) { // 交前、先交
                 sign = -1
             }
-            NodeAccumCorr = sign * BindTcorr(AnomaAccum, OriginDif, CalName).NodeAccumCorr
+            NodeAccumCorr = sign * AutoTcorr(AnomaAccum, OriginDif, CalName).NodeAccumCorr
         }
         NodeAccum += NodeAccumCorr
         NodeAccumHalf = NodeAccum % HalfNode
@@ -212,7 +212,7 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                 }
             } else if (CalName === 'Dayan') {
                 const SunDcorrList = [0, 0, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385, 450, 385, 325, 270, 220, 175, 135, 100, 70, 45, 25, 10, 0, 10]
-                const TermAcrRawList = BindSunTcorr(OriginDif, 'Dayan').TermAcrRaw
+                const TermAcrRawList = AutoSunTcorr(OriginDif, 'Dayan').TermAcrRaw
                 for (let j = 1; j <= 24; j++) {
                     if (TermAcrRawList[j] >= OriginDif - 1 && TermAcrRawList[j] < OriginDif) {
                         AcrTermOrder = Math.round(j % 24.1)

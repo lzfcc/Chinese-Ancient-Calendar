@@ -1,5 +1,5 @@
 import {
-    BindTcorr
+    AutoTcorr
 } from './astronomy_acrv.mjs'
 import {
     big
@@ -159,7 +159,7 @@ export const Longi2LatiFormula = (DayRaw, CalName) => { // 《中國古代曆法
     } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
         Solar = 365.2436
     }
-    const SunTcorr = BindTcorr(0, DayRaw, CalName).SunDifAccum
+    const SunTcorr = AutoTcorr(0, DayRaw, CalName).SunDifAccum
     let LongiRaw = DayRaw
     if (CalName !== 'Yitian') {
         LongiRaw += SunTcorr

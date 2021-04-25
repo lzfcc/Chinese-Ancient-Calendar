@@ -25,7 +25,7 @@ import {
     // MoonWest
 } from './astronomy_west.mjs'
 import {
-    BindTcorr
+    AutoTcorr
 } from './astronomy_acrv.mjs'
 import {
     CalNameDayList
@@ -130,76 +130,85 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
 }
 // console.log(BindEquator2Ecliptic(360, 365.2575, 0).Range)
 
-export const BindAcrV = (AnomaAccum, OriginDifRaw, year) => {
+export const BindTcorr = (AnomaAccum, OriginDifRaw, year) => {
     OriginDifRaw = Number(OriginDifRaw)
     AnomaAccum = Number(AnomaAccum)
     if (OriginDifRaw > 365.2425 || OriginDifRaw < 0) {
         throw (new Error('請輸入一回歸年內的日數！'))
     }
-    if (AnomaAccum > 27.5545 || AnomaAccum < 0) {
-        throw (new Error('請輸入一近點月內的日數！'))
-    }
     const {
         SunDifAccum: WestSun,
         MoonDifAccum: WestMoon,
-        Tcorr3: WestTcorr
-    } = BindTcorr(AnomaAccum, OriginDifRaw, 'West', year)
+        Tcorr2: WestTcorr
+    } = AutoTcorr(AnomaAccum, OriginDifRaw, 'West', year)
     let Print = [{
         title: '傅立葉',
         data: [WestSun.toFixed(6), 0, WestMoon.toFixed(6), 0, '-', WestTcorr.toFixed(6), 0]
     }]
     Print = Print.concat(
-        ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Zhengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin'].map((title) => {
+        ['Qianxiang', 'Jingchu', 'Zhengguang', 'Xinghe', 'Tianbao', 'Yuanjia', 'Daming'].map((title) => {
             const {
                 MoonDifAccum,
                 Tcorr1
-            } = BindTcorr(AnomaAccum, OriginDifRaw, title)
+            } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
             return {
                 title: CalNameDayList[title],
                 data: ['-', '-', MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), '-', (Tcorr1 - WestTcorr).toFixed(4)]
             }
         }))
     Print = Print.concat(
-        ['Huangji', 'Linde', 'Wuji', 'Zhengyuan', 'NewDaming', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Gengwu'].map((title) => {
+        ['Daye', 'Wuyin'].map((title) => {
+            let {
+                SunDifAccum,
+                MoonDifAccum,
+                Tcorr1
+            } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
+            SunDifAccum *= 12.3688 //大業12 .3686921478 戊寅 12.368953262。這個乘率並不確定，大業有可能是10，戊寅有可能是13006/1183            
+            return {
+                title: CalNameDayList[title],
+                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), '-', (Tcorr1 - WestTcorr).toFixed(4)]
+            }
+        }))
+    Print = Print.concat(
+        ['Huangji', 'Linde', 'Wuji', 'Zhengyuan', 'NewDaming', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Gengwu', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map((title) => {
+            let Plus = 0
+            if (['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(title)) {
+                Plus = 13.77727
+            }
             const {
                 SunDifAccum,
                 MoonDifAccum,
                 Tcorr2,
                 Tcorr1
-            } = BindTcorr(AnomaAccum, OriginDifRaw, title)
+            } = AutoTcorr(AnomaAccum + Plus, OriginDifRaw, title)
             return {
                 title: CalNameDayList[title],
                 data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), Tcorr2.toFixed(6), (Tcorr2 - WestTcorr).toFixed(4)]
             }
         }))
     Print = Print.concat(
-        ['Dayan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map((title) => {
-            const {
-                SunDifAccum,
-                MoonDifAccum,
-                Tcorr2,
-                Tcorr1
-            } = BindTcorr((AnomaAccum + 13.77727) % 27.55454, OriginDifRaw, title)
-            return {
-                title: CalNameDayList[title],
-                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), Tcorr2.toFixed(6), (Tcorr2 - WestTcorr).toFixed(4)]
+        ['Futian', 'Mingtian', 'Shoushi'].map((title) => {
+            let MoonAvgVDeg = 1
+            if (title === 'Mingtian') {
+                MoonAvgVDeg = 13.36875
             }
-        }))
-    Print = Print.concat(
-        ['Shoushi'].map((title) => {
             const {
                 SunDifAccum,
                 MoonDifAccum,
-                Tcorr3
-            } = BindTcorr(AnomaAccum, OriginDifRaw, title)
+                Tcorr2
+            } = AutoTcorr(AnomaAccum * MoonAvgVDeg, OriginDifRaw, title)
+            let sign = 1
+            if (title === 'Shoushi') {
+                sign = -1
+            }
             return {
-                title: CalNameDayList[title],
-                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), (-MoonDifAccum).toFixed(6), (-MoonDifAccum - WestMoon).toFixed(4), '-', Tcorr3.toFixed(6), (Tcorr3 - WestTcorr).toFixed(4)]
+                title: title === 'Futian' ? '符天' : CalNameDayList[title],
+                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), (sign * MoonDifAccum).toFixed(6), (sign * MoonDifAccum - WestMoon).toFixed(4), '-', Tcorr2.toFixed(6), (Tcorr2 - WestTcorr).toFixed(4)]
             }
         }))
     return Print
 }
-// console.log(BindAcrV(1, 61, 1000))
+// console.log(BindTcorr(1, 61, 1000))
 
 export const AutoLongi2Lati = (LongiRaw, OriginDecimal, CalName) => {
     const {

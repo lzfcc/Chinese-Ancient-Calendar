@@ -1,5 +1,5 @@
 import React from 'react'
-import BindAcrV from './AcrV'
+import BindTcorr from './AcrV'
 import BindEquator2Ecliptic from './Equator2Ecliptic'
 import BindLongi2Lati from './Longi2Lati'
 import MoonLongi from './MoonLongi'
@@ -107,7 +107,7 @@ export default class Astronomy extends React.Component {
     return (
       <section className='modulo'>
         <h2>躔離之什</h2>
-        <BindAcrV />
+        <BindTcorr />
         <h2>日軌之什</h2>
         <BindEquator2Ecliptic />
         <BindLongi2Lati />

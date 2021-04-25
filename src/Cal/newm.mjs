@@ -6,8 +6,8 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    BindSunTcorr,
-    BindTcorr
+    AutoSunTcorr,
+    AutoTcorr
 } from './astronomy_acrv.mjs'
 // import {
 //     EclipseTable
@@ -21,7 +21,7 @@ import {
 export default (CalName, year) => { // Newm
     const {
         Type,
-        ChoosePara,
+        AutoPara,
     } = Bind(CalName)
     const {
         Sidereal,
@@ -49,7 +49,7 @@ export default (CalName, year) => { // Newm
         LeapConst,
         AnomaConst,
         NodeConst,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let {
         YinyangOrigin,
         Node,
@@ -58,7 +58,7 @@ export default (CalName, year) => { // Newm
         Lunar,
         LunarRaw,
         OriginDaySc,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     if (!OriginDaySc) {
         OriginDaySc = 0
     }
@@ -259,7 +259,7 @@ export default (CalName, year) => { // Newm
             isAdvance = 1
         }
     }
-    const ChooseNewmSyzygy = (isNewm) => {
+    const AutoNewmSyzygy = (isNewm) => {
         const AvgRaw = []
         const AvgOrderRaw = []
         const AvgMod = []
@@ -295,7 +295,7 @@ export default (CalName, year) => { // Newm
                 AnomaAccum[i] = big.div(OriginAccum, Lunar).add(i - 1 + ZhengOriginDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
                 // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengOriginDif) * 2142887000 % AnomaNumer) / 81120000
             }
-            const TcorrBindFunc = BindTcorr(AnomaAccum[i], OriginDifRaw, CalName)
+            const TcorrBindFunc = AutoTcorr(AnomaAccum[i], OriginDifRaw, CalName)
             let Tcorr1 = 0
             if (Type <= 4) {
                 Tcorr[i] = TcorrBindFunc.Tcorr1
@@ -336,7 +336,7 @@ export default (CalName, year) => { // Newm
             const TermNum3 = Math.round((2 * (i + ZhengNum) - 1) % 24.1)
             const TermNumDay = (TermNum3 - 1) * HalfTermLeng
             if (Type >= 5) {
-                const TermAcrRawList = BindSunTcorr(TermNumDay, CalName).TermAcrRawList
+                const TermAcrRawList = AutoSunTcorr(TermNumDay, CalName).TermAcrRawList
                 TermAcrRaw[i] = TermAcrRawList[i]
             }
             /////合朔漏刻//////
@@ -406,8 +406,8 @@ export default (CalName, year) => { // Newm
             // status,
         }
     }
-    const Newm = ChooseNewmSyzygy(1)
-    const Syzygy = ChooseNewmSyzygy(0)
+    const Newm = AutoNewmSyzygy(1)
+    const Syzygy = AutoNewmSyzygy(0)
     const TermAvgRaw = Newm.TermAvgRaw
     const TermAcrRaw = Newm.TermAcrRaw
     const NewmTcorr = Newm.Tcorr

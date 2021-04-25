@@ -3,7 +3,7 @@ import {
     ScList,
     ThreeList,
     CalNameList,
-    ChooseMansion
+    AutoMansion
 } from './para_constant.mjs'
 import Deg2Mansion from './astronomy_deg2mansion.mjs'
 import {
@@ -20,8 +20,8 @@ import {
 export default (CalName, YearStart, YearEnd) => { // CalNewm
     const {
         Type,
-        ChooseNewm,
-        ChoosePara
+        AutoNewm,
+        AutoPara
     } = Bind(CalName)
     let isExcl = 0
     if (Type >= 4) {
@@ -43,10 +43,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         MansionRaw,
         MansionFractPosition,
         NightList,
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     let {
         OriginDaySc
-    } = ChoosePara[CalName]
+    } = AutoPara[CalName]
     if (!OriginDaySc) {
         OriginDaySc = 0
     }
@@ -55,7 +55,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const [mainPrev, mainThis, mainNext] = YearMemo
         const {
             EquatorDegList,
-        } = ChooseMansion(CalName, year)
+        } = AutoMansion(CalName, year)
         const ZhengOriginDif = ZhengNum - OriginMonNum
         const WsolsticeMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
         let LeapNumTermThis = mainThis.LeapNumTerm
@@ -470,14 +470,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             SunDifAccum1: mainThis.SunDifAccum1
         }
     }
-    YearMemo[0] = ChooseNewm(CalName, YearStart - 1) // 去年
-    YearMemo[1] = ChooseNewm(CalName, YearStart) // 今年
+    YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年
+    YearMemo[1] = AutoNewm(CalName, YearStart) // 今年
     const result = []
     if (YearEnd === undefined) {
         YearEnd = YearStart
     }
     for (let year = YearStart; year <= YearEnd; year++) {
-        YearMemo[2] = ChooseNewm(CalName, year + 1) // 明年
+        YearMemo[2] = AutoNewm(CalName, year + 1) // 明年
         result.push(calculate2(year))
         // YearMemo 数组滚动，避免重复运算
         YearMemo[0] = YearMemo[1]

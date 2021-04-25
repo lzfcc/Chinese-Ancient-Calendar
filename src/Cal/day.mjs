@@ -16,7 +16,7 @@ import {
     HexagramAccumListB,
     FiveAccumListB,
     FiveList2,
-    ChooseMansion,
+    AutoMansion,
     JianchuList,
     HuangheiList,
     YuanList,
@@ -54,7 +54,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
     const Day = (CalName, year) => {
         const {
             Type,
-            ChoosePara,
+            AutoPara,
         } = Bind(CalName)
         const {
             Sidereal,
@@ -67,13 +67,13 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             NightList,
             WeekCorr,
             MansionCorr
-        } = ChoosePara[CalName]
+        } = AutoPara[CalName]
         let {
             Solar,
             Lunar,
             Node,
             YinyangOrigin,
-        } = ChoosePara[CalName]
+        } = AutoPara[CalName]
         const {
             Month,
             LeapNumTermThis,
@@ -87,7 +87,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const {
             EquatorDegList,
             EclipticDegList
-        } = ChooseMansion(CalName, year)
+        } = AutoMansion(CalName, year)
         if (Type >= 6) {
             NewmOrderRaw = NewmAcrOrderRaw
         }

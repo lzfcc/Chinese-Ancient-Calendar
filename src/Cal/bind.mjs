@@ -12,10 +12,10 @@ import P2 from './para_2.mjs'
  */
 export const Bind = CalName => {
     let Type = 0
-    let ChooseNewm = N2
-    let ChoosePara = P1
+    let AutoNewm = N2
+    let AutoPara = P1
     if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'EastHan'].includes(CalName)) {
-        ChooseNewm = N1
+        AutoNewm = N1
         Type = 1 // 四分
     } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
         Type = 2 // 魏晉
@@ -24,7 +24,7 @@ export const Bind = CalName => {
     } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'Wuyin'].includes(CalName)) {
         Type = 4 // 南朝
     } else {
-        ChoosePara = P2
+        AutoPara = P2
         if (['Jiuzhi', 'Shenlong', 'Futian'].includes(CalName)) {
             Type = 5 // 天竺
         } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde'].includes(CalName)) {
@@ -41,8 +41,8 @@ export const Bind = CalName => {
             Type = 11 // 授時
         }
         // else if (['Huihui'].includes(CalName)) {
-        //     ChooseNewm = N3
-        //     ChoosePara = P2
+        //     AutoNewm = N3
+        //     AutoPara = P2
         //     Type = 12 // 回回
         // }
         else if (['West'].includes(CalName)) {
@@ -50,8 +50,8 @@ export const Bind = CalName => {
         }
     }
     return {
-        ChooseNewm,
-        ChoosePara,
+        AutoNewm,
+        AutoPara,
         Type
     }
 }
@@ -255,7 +255,7 @@ const CalRange = {
     ],
 }
 
-export const AutoChoose = year => {
+export const AutoCal = year => {
     const Cals = []
     for (const [Cal, ranges] of Object.entries(CalRange)) {
         for (const [start, end] of ranges) {
