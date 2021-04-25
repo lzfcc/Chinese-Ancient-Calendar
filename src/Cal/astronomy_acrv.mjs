@@ -287,16 +287,19 @@ const MoonTable1 = (AnomaAccum, CalName) => {
     const MoonAvgV = parseFloat((MoonAvgVDeg * ZhangRange).toPrecision(14))
     let MoonAcrAvgDif = [] // 損益率
     let MoonAcrDayDif = [] // 列差
-    for (let i = 0; i <= 27; i++) {
+    for (let i = 1; i <= 28; i++) {
         MoonAcrAvgDif[i] = MoonAcrV[i] - MoonAvgV
     }
+    MoonAcrAvgDif[0] = 0
     let MoonDifAccum = MoonAcrAvgDif.slice() // 盈縮積
-    for (let i = 1; i <= 27; i++) {
+    for (let i = 2; i <= 29; i++) {
         MoonDifAccum[i] += MoonDifAccum[i - 1]
+        MoonDifAccum[i] = parseFloat((MoonDifAccum[i]).toPrecision(12))
     }
     MoonDifAccum = MoonDifAccum.slice(-1).concat(MoonDifAccum.slice(0, -1))
     MoonDifAccum[0] = 0
-    for (let i = 0; i <= 27; i++) {
+    MoonDifAccum[1] = 0
+    for (let i = 1; i <= 28; i++) {
         MoonAcrDayDif[i] = MoonAcrV[i + 1] - MoonAcrV[i]
     }
     const AnomaAccumFract = AnomaAccum - Math.floor(AnomaAccum)
@@ -308,6 +311,7 @@ const MoonTable1 = (AnomaAccum, CalName) => {
         MoonAcrV
     }
 }
+// console.log(MoonTable1(27, 'Jingchu'))
 
 const MoonTable2 = (AnomaAccum, CalName) => {
     const {
@@ -340,22 +344,24 @@ const MoonTable2 = (AnomaAccum, CalName) => {
         }
     }
     const MoonAcrVDeg = []
-    for (let i = 0; i <= 28; i++) {
+    for (let i = 1; i <= 29; i++) {
         MoonAcrVDeg[i] = MoonAcrV[i] / MoonDegDenom
     }
-    for (let i = 0; i <= 27; i++) {
+    for (let i = 1; i <= 28; i++) {
         MoonAcrAvgDif[i] = MoonAcrVDeg[i] - MoonAvgVDeg
     }
+    MoonAcrAvgDif[0] = 0
     let MoonDifAccum = MoonAcrAvgDif.slice() // 盈縮積
-    for (let i = 1; i <= 27; i++) {
+    for (let i = 2; i <= 29; i++) {
         MoonDifAccum[i] += MoonDifAccum[i - 1]
     }
     MoonDifAccum = MoonDifAccum.slice(-1).concat(MoonDifAccum.slice(0, -1))
     MoonDifAccum[0] = 0
+    MoonDifAccum[1] = 0
 
     const AnomaAccumDay1 = Math.floor(AnomaAccum)
     const AnomaAccumFract = AnomaAccum - Math.floor(AnomaAccum)
-    let AnomaAccumDay2 = Math.round((AnomaAccumDay1 + 1) % 28.1)
+    let AnomaAccumDay2 = Math.round((AnomaAccumDay1 + 1) % 27.9)
     const MoonAcrAvgDif1 = MoonAcrAvgDif[AnomaAccumDay1]
     const MoonAcrAvgDif2 = MoonAcrAvgDif[AnomaAccumDay2]
     const MoonDifAccumA = 0.5 * AnomaAccumFract * (MoonAcrAvgDif1 + MoonAcrAvgDif2) + AnomaAccumFract * (MoonAcrAvgDif1 - MoonAcrAvgDif2) - 0.5 * (AnomaAccumFract ** 2) * (MoonAcrAvgDif1 - MoonAcrAvgDif2)
@@ -371,7 +377,7 @@ const MoonTable2 = (AnomaAccum, CalName) => {
         MoonAcrAvgDif
     }
 }
-// console.log(MoonTable2(2.41, 'Chunxi'))
+// console.log(MoonTable2(27, 'Jiyuan'))
 
 const MoonFormula1 = (AnomaAccum, CalName) => {
     const {

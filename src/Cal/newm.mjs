@@ -288,7 +288,7 @@ export default (CalName, year) => { // Newm
             AvgMod[i] = (AvgRaw[i] % 60 + 60) % 60
             AvgOrderRaw[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(Math.floor(AvgMod[i]) + 1 + OriginDaySc) % 60]
-            AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(5).slice(2, 7)
+            AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
             const OriginDifRaw = ((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
             AnomaAccum[i] = parseFloat(((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toPrecision(14))
             if (CalName === 'Mingtian') {
@@ -309,15 +309,15 @@ export default (CalName, year) => { // Newm
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr1) // 線性內插所得
             if (Type <= 4) {
-                Decimal1[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(5).slice(2, 7)
+                Decimal1[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(4).slice(2, 6)
             } else if (Type < 11) {
-                Decimal2[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(5).slice(2, 7) // 二次內插
+                Decimal2[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(4).slice(2, 6) // 二次內插
                 if (!['Futian', 'Mingtian'].includes(CalName)) {
                     const AcrRaw1 = AvgRaw[i] + Tcorr1 // 線性內插
-                    Decimal1[i] = (AcrRaw1 - Math.floor(AcrRaw1)).toFixed(5).slice(2, 7)
+                    Decimal1[i] = (AcrRaw1 - Math.floor(AcrRaw1)).toFixed(4).slice(2, 6)
                 }
             } else if (Type === 11) {
-                Decimal3[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(5).slice(2, 7)
+                Decimal3[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(4).slice(2, 6)
             }
             /////進朔/////
             let NewmPlus = 0
@@ -376,11 +376,11 @@ export default (CalName, year) => { // Newm
             //     Sc[i] += '○'
             // }
             // if (Type <= 4) {
-            //     Decimal1[i] = (Decimal1[i] + EcliTcorr).toFixed(5).slice(2, 7)
+            //     Decimal1[i] = (Decimal1[i] + EcliTcorr).toFixed(4).slice(2, 6)
             // } else if (Type < 11) {
-            //     Decimal2[i] = (Decimal2[i] + EcliTcorr).toFixed(5).slice(2, 7)
+            //     Decimal2[i] = (Decimal2[i] + EcliTcorr).toFixed(4).slice(2, 6)
             // } else if (Type === 11) {
-            //     Decimal3[i] = (Decimal3[i] + EcliTcorr).toFixed(5).slice(2, 7)
+            //     Decimal3[i] = (Decimal3[i] + EcliTcorr).toFixed(4).slice(2, 6)
             // }
         }
         // const Mmdd = Jd2Date(Jd)

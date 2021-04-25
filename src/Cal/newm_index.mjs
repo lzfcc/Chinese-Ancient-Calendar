@@ -145,12 +145,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 TermOrderMod[i] = Math.floor(TermAvgMod[i])
                 TermName[i] = TermList[(i + ZhengOriginDif + OriginMonNum + 12) % 12]
                 TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
-                TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(5)).slice(2, 7)
+                TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
                 if (TermAcrRaw) {
                     TermAcrMod = ((TermAcrRaw[i]) % 60 + 60) % 60
                     TermAcrOrderMod = Math.floor(TermAcrMod)
                     TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
-                    TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(5)).slice(2, 7)
+                    TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                 }
             }
             if (isLeapTT) {
@@ -172,12 +172,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     TermOrderMod[i] = Math.floor(TermAvgMod[i])
                     TermName[i] = TermList[(i + ZhengOriginDif + OriginMonNum + 11) % 12]
                     TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
-                    TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(5)).slice(2, 7)
+                    TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
                     if (TermAcrRaw) {
                         TermAcrMod = (TermAcrRaw[i - 1] % 60 + 60) % 60
                         TermAcrOrderMod = Math.floor(TermAcrMod)
                         TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
-                        TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(5)).slice(2, 7)
+                        TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                     }
                 }
             }
