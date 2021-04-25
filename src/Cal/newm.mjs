@@ -303,18 +303,17 @@ export default (CalName, year) => { // Newm
                 Tcorr[i] = TcorrBindFunc.Tcorr2
                 Tcorr1 = TcorrBindFunc.Tcorr1
             } else if (Type === 11) {
-                Tcorr[i] = TcorrBindFunc.Tcorr3
+                Tcorr[i] = TcorrBindFunc.Tcorr2
             }
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
-            AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr1) // 線性內插所得
+            AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr[i])
             if (Type <= 4) {
                 Decimal1[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(4).slice(2, 6)
             } else if (Type < 11) {
                 Decimal2[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(4).slice(2, 6) // 二次內插
                 if (!['Futian', 'Mingtian'].includes(CalName)) {
-                    const AcrRaw1 = AvgRaw[i] + Tcorr1 // 線性內插
-                    Decimal1[i] = (AcrRaw1 - Math.floor(AcrRaw1)).toFixed(4).slice(2, 6)
+                    Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
                 }
             } else if (Type === 11) {
                 Decimal3[i] = (AcrRaw[i] - AcrOrderRaw[i]).toFixed(4).slice(2, 6)
@@ -333,11 +332,11 @@ export default (CalName, year) => { // Newm
             // Jd[i] = Math.round(JdOrigin + AcrRaw[i]) + NewmPlus
             // 定氣
             TermAvgRaw[i] = OriginAccum + (i + ZhengOriginDif - 1) * TermLeng
-            const TermNum3 = Math.round((2 * (i + ZhengNum) - 1) % 24.1)
+            const TermNum3 = 2 * (i + ZhengOriginDif) - 1
             const TermNumDay = (TermNum3 - 1) * HalfTermLeng
             if (Type >= 5) {
-                const TermAcrRawList = AutoSunTcorr(TermNumDay, CalName).TermAcrRawList
-                TermAcrRaw[i] = TermAcrRawList[i]
+                const TermAcrRawList = AutoSunTcorr(TermNumDay, CalName, Solar)
+                TermAcrRaw[i] = OriginAccum + TermAcrRawList[TermNum3]
             }
             /////合朔漏刻//////
             let NodeCorr = 0

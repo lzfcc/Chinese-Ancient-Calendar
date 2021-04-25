@@ -212,7 +212,7 @@ export const EclipseTable = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i
                 }
             } else if (CalName === 'Dayan') {
                 const SunDcorrList = [0, 0, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385, 450, 385, 325, 270, 220, 175, 135, 100, 70, 45, 25, 10, 0, 10]
-                const TermAcrRawList = AutoSunTcorr(OriginDif, 'Dayan').TermAcrRaw
+                const TermAcrRawList = AutoSunTcorr(OriginDif, 'Dayan')
                 for (let j = 1; j <= 24; j++) {
                     if (TermAcrRawList[j] >= OriginDif - 1 && TermAcrRawList[j] < OriginDif) {
                         AcrTermOrder = Math.round(j % 24.1)

@@ -138,13 +138,17 @@ export default class Day extends React.Component {
   handleRetrieve(e) {
     if (this.state.calendars.length === 0) {
       alert('請選擇曆法！');
-      return;
+      return
     }
     if (this.state.YearStart.length === 0) {
       alert('請輸入年份！');
-      return;
+      return
     }
-    let YearStart = parseInt(this.state.YearStart);
+    let YearStart = parseInt(this.state.YearStart)
+    if (YearStart < -4710 || YearStart > 3000) {
+      alert('年份範圍 -1500 至 2500');
+      return
+    }
     let YearEnd = YearStart
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
       alert('格式不合法！');

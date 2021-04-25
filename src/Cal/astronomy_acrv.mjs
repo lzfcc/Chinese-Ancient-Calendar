@@ -128,8 +128,8 @@ const SunTable3 = (OriginDifRaw, CalName) => {
         TermAcrRawList[i] = HalfTermLeng * (i - 1) - SunDifAccumList[i]
     }
     TermAcrRawList[0] = 0
-    TermAcrRawList[25] = TermAcrRawList[1]
-    TermAcrRawList[26] = TermAcrRawList[2]
+    TermAcrRawList[25] = Solar
+    TermAcrRawList[26] = Solar + TermAcrRawList[2]
     let TermNum = 1
     for (let j = 1; j <= 24; j++) { // 氣候 
         if (OriginDifRaw >= TermAcrRawList[j] && OriginDifRaw < TermAcrRawList[j + 1]) {
@@ -142,6 +142,7 @@ const SunTable3 = (OriginDifRaw, CalName) => {
     const TermRange1 = TermAcrRawList[TermNum + 1] - TermAcrRawList[TermNum] // 本氣長度
     const SunDifAccum1 = SunDifAccumList[TermNum] + SunAcrAvgDifListList[TermNum] * (OriginDifRaw - TermAcrRawList[TermNum]) / TermRange1
     return {
+        TermAcrRawList,
         SunDifAccumList,
         SunDifAccum1,
         SunDifAccum2
@@ -287,19 +288,17 @@ const MoonTable1 = (AnomaAccum, CalName) => {
     const MoonAvgV = parseFloat((MoonAvgVDeg * ZhangRange).toPrecision(14))
     let MoonAcrAvgDif = [] // 損益率
     let MoonAcrDayDif = [] // 列差
-    for (let i = 1; i <= 28; i++) {
+    for (let i = 0; i <= 27; i++) {
         MoonAcrAvgDif[i] = MoonAcrV[i] - MoonAvgV
     }
-    MoonAcrAvgDif[0] = 0
     let MoonDifAccum = MoonAcrAvgDif.slice() // 盈縮積
-    for (let i = 2; i <= 29; i++) {
+    for (let i = 1; i <= 28; i++) {
         MoonDifAccum[i] += MoonDifAccum[i - 1]
         MoonDifAccum[i] = parseFloat((MoonDifAccum[i]).toPrecision(12))
     }
     MoonDifAccum = MoonDifAccum.slice(-1).concat(MoonDifAccum.slice(0, -1))
     MoonDifAccum[0] = 0
-    MoonDifAccum[1] = 0
-    for (let i = 1; i <= 28; i++) {
+    for (let i = 0; i <= 27; i++) {
         MoonAcrDayDif[i] = MoonAcrV[i + 1] - MoonAcrV[i]
     }
     const AnomaAccumFract = AnomaAccum - Math.floor(AnomaAccum)
@@ -344,20 +343,18 @@ const MoonTable2 = (AnomaAccum, CalName) => {
         }
     }
     const MoonAcrVDeg = []
-    for (let i = 1; i <= 29; i++) {
+    for (let i = 0; i <= 28; i++) {
         MoonAcrVDeg[i] = MoonAcrV[i] / MoonDegDenom
     }
-    for (let i = 1; i <= 28; i++) {
+    for (let i = 0; i <= 27; i++) {
         MoonAcrAvgDif[i] = MoonAcrVDeg[i] - MoonAvgVDeg
     }
-    MoonAcrAvgDif[0] = 0
     let MoonDifAccum = MoonAcrAvgDif.slice() // 盈縮積
-    for (let i = 2; i <= 29; i++) {
+    for (let i = 1; i <= 28; i++) {
         MoonDifAccum[i] += MoonDifAccum[i - 1]
     }
     MoonDifAccum = MoonDifAccum.slice(-1).concat(MoonDifAccum.slice(0, -1))
     MoonDifAccum[0] = 0
-    MoonDifAccum[1] = 0
 
     const AnomaAccumDay1 = Math.floor(AnomaAccum)
     const AnomaAccumFract = AnomaAccum - Math.floor(AnomaAccum)
@@ -577,7 +574,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
 }
 // console.log(AutoTcorr(1, 16, 'Dayan').SunDifAccum)
 
-export const AutoSunTcorr = (OriginDifRaw, CalName) => {
+export const AutoSunTcorr = (OriginDifRaw, CalName, SolarIn) => {
     const {
         AutoPara,
         Type
@@ -588,11 +585,12 @@ export const AutoSunTcorr = (OriginDifRaw, CalName) => {
     let {
         Solar
     } = AutoPara[CalName]
-    if (CalName === 'Tongtian') {
-        Solar = 365.243
+    if (!Solar) {
+        Solar = SolarIn
     }
     const HalfTermLeng = Solar / 24
-    const BindAcrTermTcorr = (OriginDifRaw, CalName) => {
+    let TermAcrRawList = [] // 定氣距冬至日數
+    const AutoAcrTermTcorr = (OriginDifRaw, CalName) => {
         const TermNum = Math.round(OriginDifRaw / HalfTermLeng) + 1
         let AcrTermTcorr = 0
         if (['Futian', 'Yitian', 'Fengyuan', 'Guantian', 'Zhantian', 'Mingtian'].includes(CalName)) { // 《中國古代曆法》頁108。儀天僅用公式算太陽
@@ -613,16 +611,14 @@ export const AutoSunTcorr = (OriginDifRaw, CalName) => {
         }
         return AcrTermTcorr
     }
-    const TermAcrRawList = [] // 定氣距冬至日數
-    for (let i = 1; i < 24; i++) {
-        TermAcrRawList[i] = HalfTermLeng * (i - 1) - BindAcrTermTcorr(HalfTermLeng * (i - 1), CalName)
+    if (Type === 7) {
+        TermAcrRawList = SunTable3(OriginDifRaw, CalName).TermAcrRawList
+    } else {
+        for (let i = 1; i <= 27; i++) {
+            TermAcrRawList[i] = HalfTermLeng * (i - 1) - AutoAcrTermTcorr(HalfTermLeng * Math.round((i - 1) % 24.1), CalName)
+        }
+        TermAcrRawList[0] = 0
     }
-    TermAcrRawList[0] = 0
-    TermAcrRawList[25] = TermAcrRawList[1]
-    TermAcrRawList[26] = TermAcrRawList[2]
-    return {
-        AcrTermTcorr: BindAcrTermTcorr(OriginDifRaw, CalName),
-        TermAcrRawList
-    }
+    return TermAcrRawList
 }
-// console.log(AutoSunTcorr(91.31,'Dayan'))
+// console.log(AutoSunTcorr(91.31, 'Linde'))
