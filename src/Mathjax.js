@@ -2,7 +2,7 @@
 import React from 'react';
 
 const typeset = (selector) => {
-  // If MathJax script hasn't been loaded yet, then do nothing.
+// If MathJax script hasn't been loaded yet, then do nothing.
   if (!window.MathJax) {
     return null;
   }

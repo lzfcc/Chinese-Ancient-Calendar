@@ -58,6 +58,7 @@ export default class MenuSelect extends React.Component {
               }}
               className="chosen-search-input default"
               type="text"
+              placeholder='請選擇曆法'
               autoComplete="off"
               // placeholder="What's in your mind?"
               onKeyDown={(event) => {
@@ -77,7 +78,7 @@ export default class MenuSelect extends React.Component {
             data-placeholder="Type 'C' to view"
             multiple
             className="chosen-select-no-results"
-            tabindex="-1"
+            tabIndex="-1"
             onChange={(event) => {
               const value = event.target.value;
               const selected = this.state.selected;
