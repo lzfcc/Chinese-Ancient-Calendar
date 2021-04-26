@@ -38,7 +38,7 @@ const PrintNewm = result => {
             Print += '**二次** ' + NewmDecimal2Print.join(' ') + '\n'
         }
         if (NewmDecimal1Print.length > 0) {
-            Print += '**一次** ' + NewmDecimal1Print.join(' ') + '\n'
+            Print += '**線性** ' + NewmDecimal1Print.join(' ') + '\n'
         }
         Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + '\n'
     } else {

@@ -297,7 +297,7 @@ tr.TermNamePrint {
 }
 
 tr.NewmMansionPrint {
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 2px solid var(--gray);
   color: var(--gray);
   font-size: .8em;
 }
@@ -324,13 +324,16 @@ tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
 }
 
-
 tr.NewmAvgDecimalPrint {
-  border-bottom: 2.5px solid var(--gray);
+  border-bottom: 1px solid var(--gray);
+}
+
+tr.SyzygyScPrint {
+  border-top: 2px solid var(--gray);
 }
 
 tr.SyzygyDecimalPrint {
-  border-bottom: 2.5px solid var(--gray);
+  border-bottom: 2px solid var(--gray);
 }
 
 .single-cal p {

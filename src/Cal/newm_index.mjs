@@ -7,6 +7,9 @@ import {
 } from './para_constant.mjs'
 import Deg2Mansion from './astronomy_deg2mansion.mjs'
 import {
+    AutoEclipse
+} from './astronomy_eclipse.mjs'
+import {
     Bind
 } from './bind.mjs'
 
@@ -43,6 +46,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         MansionRaw,
         MansionFractPosition,
         NightList,
+        Node,
     } = AutoPara[CalName]
     let {
         OriginDaySc
@@ -184,7 +188,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         }
         LeapNumTermThis -= NewmSyzygyStart
         // 月序
-
         const Month = []
         if (Type === 1) {
             if (isTermLeap) {
@@ -359,6 +362,77 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermScPrint = TermSlice(TermSc)
             TermDecimalPrint = TermSlice(TermDecimal)
         }
+        ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
+        const NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
+        const NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
+        const NewmDecimalPrint = NewmSyzygySlice(mainThis.NewmDecimal)
+        const NewmOriginDifRawPrint = NewmSyzygySlice(mainThis.NewmOriginDifRaw)
+        const SyzygyNodeAccumPrint = NewmSyzygySlice(mainThis.SyzygyNodeAccum)
+        const SyzygyAnomaAccumPrint = NewmSyzygySlice(mainThis.SyzygyAnomaAccum)
+        const SyzygyOriginDifRawPrint = NewmSyzygySlice(mainThis.SyzygyOriginDifRaw)
+        let NewmEcli = []
+        let SyzygyEcli = []
+        for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+            // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
+            // if (Type === 11) {
+            //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
+            // }
+            let NoleapMon = i + 1
+            if (LeapNumTermThis > 0) {
+                if (i === LeapNumTermThis) {
+                    NoleapMon = i
+                } else if (i >= LeapNumTermThis + 1) {
+                    NoleapMon = i
+                }
+            }
+            let NewmEcliFunc = {}
+            let SyzygyEcliFunc = {}
+            if (Node) {
+                NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 1, CalName)
+                const Newmstatus = NewmEcliFunc.status
+                let NewmMagni = 0
+                let NewmStartDecimal = 0
+                let NewmTotalDecimal = 0
+                if (NewmEcliFunc.StartDecimal) {
+                    NewmStartDecimal = NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
+                    NewmTotalDecimal = NewmEcliFunc.Decimal.toFixed(4).slice(2, 6)
+                }
+                if (Newmstatus) {
+                    NewmMagni = NewmEcliFunc.Magni.toFixed(2)
+                    NewmEcli[i] = '【日食】'
+                    NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal + '甚' + NewmTotalDecimal : '')
+                    if (Newmstatus === 1) {
+                        NewmScPrint[i] += '●'
+                    } else if (Newmstatus === 2) {
+                        NewmScPrint[i] += '◐'
+                    } else if (Newmstatus === 3) {
+                        NewmScPrint[i] += '◍'
+                    }
+                }
+                SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 0, CalName)
+                const Syzygystatus = SyzygyEcliFunc.status
+                let SyzygyMagni = 0
+                let SyzygyStartDecimal = 0
+                let SyzygyTotalDecimal = 0
+                if (SyzygyEcliFunc.StartDecimal) {
+                    SyzygyStartDecimal = SyzygyEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
+                    SyzygyTotalDecimal = SyzygyEcliFunc.Decimal.toFixed(4).slice(2, 6)
+                }
+                if (Syzygystatus) {
+                    SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
+                    SyzygyEcli[i] = '【月食】'
+                    SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDecimal ? '虧' + SyzygyStartDecimal + '甚' + SyzygyTotalDecimal : '')
+                    if (Syzygystatus === 1) {
+                        SyzygyScPrint[i] += '●'
+                    } else if (Syzygystatus === 2) {
+                        SyzygyScPrint[i] += '◐'
+                    } else if (Syzygystatus === 3) {
+                        SyzygyScPrint[i] += '◍'
+                    }
+                }
+            }
+            SyzygyDecimalPrint[i] = SyzygyDecimalPrint[i].toFixed(4).slice(2, 6)
+        }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year
         if (year > 0) {
@@ -366,7 +440,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         } else {
             Era = '公元前 ' + (1 - year) + ' 年 ' + YearSc
         }
-        let YearInfo = `《${CalNameList[CalName]}》 上元積年${year-OriginAd} `
+        let YearInfo = `《${CalNameList[CalName]}》 上元積年${year - OriginAd} `
         if (Type === 1) {
             let LeapSur = 0
             if (!isTermLeap) {
@@ -387,14 +461,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             }
             YearInfo += `  閏餘${(LeapSur.toFixed(4))}`
             if (mainThis.LeapNumOriginLeapSur) {
-                YearInfo += `閏${mainThis.LeapNumOriginLeapSur-NewmSyzygyStart}`
+                YearInfo += `閏${mainThis.LeapNumOriginLeapSur - NewmSyzygyStart}`
             }
         } else {
             if (JiScOrder) {
                 YearInfo += `${ScList[JiScOrder]}紀${mainThis.JiYear}`
             }
             if (ZhengGreatSur || ZhengSmallSur) {
-                YearInfo += `  大餘${ZhengGreatSur}小餘${ZhengSmallSur}`
+                YearInfo += ` 大餘${ZhengGreatSur}小餘${ZhengSmallSur}`
             }
             if (Type <= 10) {
                 if (OriginMonNum === 2) {
@@ -407,7 +481,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             if (Type === 2) {
                 YearInfo += `  平${mainThis.LeapSurAvgThis}定${(mainThis.LeapSurAcrThis).toFixed(2)}準${mainThis.LeapLimit}`
             } else if (Type === 3) {
-                YearInfo += `  平${Math.round((mainThis.LeapSurAvgThis)*ZhangRange)}定${((mainThis.LeapSurAcrThis)*ZhangRange).toFixed(2)}準${Math.round((mainThis.LeapLimit)*ZhangRange)}`
+                YearInfo += `  平${Math.round((mainThis.LeapSurAvgThis) * ZhangRange)}定${((mainThis.LeapSurAcrThis) * ZhangRange).toFixed(2)}準${Math.round((mainThis.LeapLimit) * ZhangRange)}`
             } else if (Type <= 7) {
                 YearInfo += `  平${parseFloat((mainThis.LeapSurAvgThis).toPrecision(8))}定${(mainThis.LeapSurAcrThis).toFixed(2)}準${(mainThis.LeapLimit)}`
             } else {
@@ -419,26 +493,28 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         }
         let NewmEcliPrint = []
         let SyzygyEcliPrint = []
-        if ((mainThis.NewmEcli || []).length > 0) {
-            NewmEcliPrint = NewmSyzygySlice(mainThis.NewmEcli)
-            NewmEcliPrint = NewmEcliPrint.join('')
+        if ((NewmEcli || []).length > 0) {
+            NewmEcliPrint = NewmEcli.join('')
             YearInfo += `\n` + NewmEcliPrint
         }
-        if ((mainThis.SyzygyEcli || []).length > 0) {
-            SyzygyEcliPrint = NewmSyzygySlice(mainThis.SyzygyEcli)
-            SyzygyEcliPrint = SyzygyEcliPrint.join('')
-            YearInfo += SyzygyEcliPrint
+        if ((SyzygyEcli || []).length > 0) {
+            SyzygyEcliPrint = SyzygyEcli.join('')
+            if ((NewmEcli || []).length > 0) {
+                YearInfo += SyzygyEcliPrint
+            } else {
+                YearInfo += `\n` + SyzygyEcliPrint
+            }
         }
         return {
             YearInfo,
             MonthPrint,
+            NewmAvgScPrint,
+            NewmAvgDecimalPrint,
             NewmScPrint,
             NewmDecimal3Print,
             NewmDecimal2Print,
             NewmDecimal1Print,
             NewmMansionPrint,
-            NewmAvgScPrint,
-            NewmAvgDecimalPrint,
             SyzygyScPrint,
             SyzygyDecimalPrint,
             TermNamePrint,
