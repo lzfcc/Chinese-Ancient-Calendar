@@ -51,7 +51,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         OriginDaySc = 0
     }
     const YearMemo = []
-    const calculate2 = (year) => {
+    const calculate = year => {
         const [mainPrev, mainThis, mainNext] = YearMemo
         const {
             EquatorDegList,
@@ -86,14 +86,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let specialStart = 0
         let specialNewmSyzygyEnd = 0
         if (Type === 1) {
-            if ((isTermLeap && mainNext.TermSc[1] === '□') || (!isTermLeap && mainNext.TermSc[WsolsticeMonNum] === '□')) {
+            if ((isTermLeap && mainNext.TermSc[1] === '') || (!isTermLeap && mainNext.TermSc[WsolsticeMonNum] === '')) {
                 specialNewmSyzygyEnd = 1
                 TermEnd = 1
                 LeapNumTermThis = 12
                 if (WsolsticeMonNum === 1) {
                     TermEnd = 0
                 }
-            } else if ((isTermLeap && mainThis.TermSc[1] === '□') || (!isTermLeap && mainThis.TermSc[WsolsticeMonNum] === '□')) {
+            } else if ((isTermLeap && mainThis.TermSc[1] === '') || (!isTermLeap && mainThis.TermSc[WsolsticeMonNum] === '')) {
                 specialStart = 1
                 LeapNumTermThis -= 1
             } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
@@ -160,13 +160,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 while (LeapNumTermThis <= 11 && (TermAvgRaw[LeapNumTermThis + 1] < NewmOrderRaw[LeapNumTermThis + 2]) && (TermAvgRaw[LeapNumTermThis + 1] >= NewmOrderRaw[LeapNumTermThis + 2] - 2.5)) {
                     LeapNumTermThis += 1
                 }
-                TermName[LeapNumTermThis + 1] = '□'
+                TermName[LeapNumTermThis + 1] = '无'
                 if (TermAcrRaw) {
-                    TermAcrSc[LeapNumTermThis + 1] = '□'
-                    TermAcrDecimal[LeapNumTermThis + 1] = '□'
+                    TermAcrSc[LeapNumTermThis + 1] = ''
+                    TermAcrDecimal[LeapNumTermThis + 1] = ''
                 }
-                TermSc[LeapNumTermThis + 1] = '□'
-                TermDecimal[LeapNumTermThis + 1] = '□'
+                TermSc[LeapNumTermThis + 1] = ''
+                TermDecimal[LeapNumTermThis + 1] = ''
                 for (let i = LeapNumTermThis + 2; i <= 13; i++) {
                     TermAvgMod[i] = ((TermAvgRaw[i - 1]) % 60 + 60) % 60
                     TermOrderMod[i] = Math.floor(TermAvgMod[i])
@@ -293,11 +293,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         if (Type === 1 && (LeapNumTermThis && (mainThis.isLeapAvgThis || specialNewmSyzygyEnd))) { // 這裏只適用於無中置閏的漢曆
             TermMansionA = TermMansion.slice(0, LeapNumTermThis + 1)
             TermMansionB = TermMansion.slice(LeapNumTermThis + 2)
-            TermMansion = TermMansionA.concat('□').concat(TermMansionB)
+            TermMansion = TermMansionA.concat('').concat(TermMansionB)
         } else if (Type >= 2 && isLeapTT) {
             TermMansionA = TermMansion.slice(0, LeapNumTermThis + 1)
             TermMansionB = TermMansion.slice(LeapNumTermThis + 1)
-            TermMansion = TermMansionA.concat('□').concat(TermMansionB)
+            TermMansion = TermMansionA.concat('').concat(TermMansionB)
         }
         ////////////下爲調整輸出////////////
         const MonthPrint = Month.slice(1)
@@ -344,9 +344,9 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermScPrint = TermSlice(mainThis.TermSc)
             TermDecimalPrint = TermSlice(mainThis.TermDecimal)
             if (LeapNumTermThis === 12 && specialNewmSyzygyEnd && !TermEnd) {
-                TermNamePrint.push('□')
-                TermScPrint.push('□')
-                TermDecimalPrint.push('□')
+                TermNamePrint.push('无')
+                TermScPrint.push('')
+                TermDecimalPrint.push('')
             }
         } else if (Type >= 2 && Type <= 4) {
             TermNamePrint = TermSlice(TermName)
@@ -359,21 +359,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermScPrint = TermSlice(TermSc)
             TermDecimalPrint = TermSlice(TermDecimal)
         }
-        const NewmEcliDeg = mainThis.NewmEcliDeg ? NewmSyzygySlice(mainThis.NewmEcliDeg) : 0
-        const NewmEcliDirc = mainThis.NewmEcliDirc ? NewmSyzygySlice(mainThis.NewmEcliDirc) : 0
-        let NewmEcliStatusPrint = []
-        const SyzygyEcliDeg = mainThis.SyzygyEcliDeg ? NewmSyzygySlice(mainThis.SyzygyEcliDeg) : 0
-        const SyzygyEcliDirc = mainThis.SyzygyEcliDirc ? NewmSyzygySlice(mainThis.SyzygyEcliDirc) : 0
-        let SyzygyEcliStatusPrint = []
-        for (let i = 0; i <= 14; i++) {
-            if (NewmEcliDeg[i]) {
-                NewmEcliStatusPrint.push(NewmEcliDeg[i] + '，' + NewmEcliDirc[i])
-            }
-            if (SyzygyEcliDeg[i]) {
-                SyzygyEcliStatusPrint.push(SyzygyEcliDeg[i] + '，' + SyzygyEcliDirc[i])
-            }
-        }
-
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year
         if (year > 0) {
@@ -432,17 +417,22 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         if (AccumPrint) {
             YearInfo += ' ' + AccumPrint
         }
-        // if (NewmEcliStatusPrint.length > 0) {
-        //     YearInfo += '【日食】' + NewmEcliStatusPrint.join('；')
-        // }
-        // if (SyzygyEcliStatusPrint.length > 0) {
-        //     YearInfo += '【月食】' + SyzygyEcliStatusPrint.join('；')
-        // }
+        let NewmEcliPrint = []
+        let SyzygyEcliPrint = []
+        if ((mainThis.NewmEcli || []).length > 0) {
+            NewmEcliPrint = NewmSyzygySlice(mainThis.NewmEcli)
+            NewmEcliPrint = NewmEcliPrint.join('')
+            YearInfo += `\n` + NewmEcliPrint
+        }
+        if ((mainThis.SyzygyEcli || []).length > 0) {
+            SyzygyEcliPrint = NewmSyzygySlice(mainThis.SyzygyEcli)
+            SyzygyEcliPrint = SyzygyEcliPrint.join('')
+            YearInfo += SyzygyEcliPrint
+        }
         return {
             YearInfo,
             MonthPrint,
             NewmScPrint,
-            // NewmMmddPrint,
             NewmDecimal3Print,
             NewmDecimal2Print,
             NewmDecimal1Print,
@@ -478,9 +468,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
     }
     for (let year = YearStart; year <= YearEnd; year++) {
         YearMemo[2] = AutoNewm(CalName, year + 1) // 明年
-        result.push(calculate2(year))
-        // YearMemo 数组滚动，避免重复运算
-        YearMemo[0] = YearMemo[1]
+        result.push(calculate(year))
+        YearMemo[0] = YearMemo[1] // YearMemo 数组滚动，避免重复运算
         YearMemo[1] = YearMemo[2]
     }
     return result

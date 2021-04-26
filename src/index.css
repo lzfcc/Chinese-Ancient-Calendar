@@ -334,7 +334,16 @@ tr.SyzygyDecimalPrint {
 }
 
 .single-cal p {
-  margin: 2em auto 0em;
+  margin: 1em auto .3em;
+  font-size: .9em;
+  font-family: var(--codesans);
+  line-height: 1.7;
+}
+
+.single-cal h3 {
+  font-family: var(--serif);
+  font-size: 1.4em;
+  margin: 1.5em auto 0;
 }
 
 .calendar-select {

@@ -31,7 +31,7 @@ export default class Equation extends React.Component {
           <h2>幾何之什</h2>
           <Round />
           <h3>弧矢割圓術</h3>
-          <p className='note'><v>授時曆</v>黃赤轉換，見「轉換」標籤。</p>
+          <p className='note'><v>授時曆</v>黃赤轉換、白赤轉換，見「天文」標籤</p>
           <Heron />
       </section>
     )

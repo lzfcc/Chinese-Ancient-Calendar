@@ -122,14 +122,14 @@ export default function CalQuar(CalName, year) {
         NewmOrderRaw[i] = Math.floor(NewmAvgRaw[i])
         NewmOrderMod[i] = Math.floor(NewmAvgMod[i])
         NewmAvgSc[i] = ScList[NewmOrderMod[i]]
-        NewmAvgDecimal[i] = ((NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(5)).slice(2, 7)
+        NewmAvgDecimal[i] = ((NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(4)).slice(2, 6)
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (Math.floor((Math.round(parseFloat((JdWsolstice + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
 
         SyzygyAvgRaw[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr ? OriginCorr : 0)).toPrecision(12)) + BuScorder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
         SyzygyOrderMod[i] = Math.floor(SyzygyAvgMod[i])
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]
-        SyzygyDecimal[i] = ((SyzygyAvgMod[i] - SyzygyOrderMod[i]).toFixed(5)).slice(2, 7)
+        SyzygyDecimal[i] = ((SyzygyAvgMod[i] - SyzygyOrderMod[i]).toFixed(4)).slice(2, 6)
     }
     // 月食
     let EcliAccum = 0
@@ -159,7 +159,7 @@ export default function CalQuar(CalName, year) {
             TermOrderMod[i] = Math.floor(TermAvgMod[i])
             TermName[i] = TermList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(5)).slice(2, 7)
+            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
         }
     } else {
         for (let i = 1; i <= 12; i++) {
@@ -169,7 +169,7 @@ export default function CalQuar(CalName, year) {
             TermOrderMod[i] = Math.floor(TermAvgMod[i])
             TermName[i] = TermList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(5)).slice(2, 7)
+            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
         }
         while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmOrderRaw[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmOrderRaw[LeapNumTerm + 1] + 2)) {
             LeapNumTerm -= 1
@@ -177,10 +177,10 @@ export default function CalQuar(CalName, year) {
         while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmOrderRaw[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmOrderRaw[LeapNumTerm + 2] - 2)) {
             LeapNumTerm += 1
         }
-        TermName[LeapNumTerm + 1] = '□'
-        TermSc[LeapNumTerm + 1] = '□'
-        TermDecimal[LeapNumTerm + 1] = '□'
-        // TermJd[LeapNumTerm + 1] = '□'
+        TermName[LeapNumTerm + 1] = '无'
+        TermSc[LeapNumTerm + 1] = ''
+        TermDecimal[LeapNumTerm + 1] = ''
+        // TermJd[LeapNumTerm + 1] = ''
         for (let i = LeapNumTerm + 2; i <= 13; i++) {
             TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 2) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
@@ -188,7 +188,7 @@ export default function CalQuar(CalName, year) {
             TermOrderMod[i] = Math.floor(TermAvgMod[i])
             TermName[i] = TermList[(i - 1 + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(5)).slice(2, 7)
+            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
         }
     }
     // 最後是積月、月數

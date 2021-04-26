@@ -6,7 +6,7 @@ import {
     OverlapCalendars
 } from './bind.mjs'
 
-export const PrintNewm = result => {
+const PrintNewm = result => {
     const {
         YearInfo,
         MonthPrint,
@@ -58,7 +58,7 @@ export const PrintNewm = result => {
     return Print + '\n'
 }
 
-export const PrintDay = result => {
+const PrintDay = result => {
     const {
         Era,
         YearGod,

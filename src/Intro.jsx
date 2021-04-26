@@ -48,7 +48,7 @@ export default class Intro extends React.Component {
             <li>全局安装 webpack，webpack-CLI<pre><code class="lang-shell">$ npm install -g webpack webpack-<span class="hljs-keyword">cli</span>
             </code></pre>
             </li>
-            <li>打包  main.js<pre><code class="lang-shell">$ webpack .<span class="hljs-regexp">/src/</span>Cal<span class="hljs-regexp">/frontend-worker.js -o ./</span><span class="hljs-keyword">public</span>
+            <li>打包  main.js<pre><code class="lang-shell">$ webpack .<span class="hljs-regexp">/src/</span>Cal<span class="hljs-regexp">/output_frontend-worker.mjs -o ./</span><span class="hljs-keyword">public</span>
             </code></pre>
             </li>
             <li></li>
@@ -95,7 +95,8 @@ export default class Intro extends React.Component {
             </li>
             <li><code>astronomy_</code> 天文模块<ul>
               <li><code>astronomy_acrv</code> 日月速度改正</li>
-              <li><code>astronomy_deg2mansion</code> 黄赤道积度转换为入宿度</li>
+              <li><code>astronomy_eclipse</code> 日月交食</li>
+              <li><code>astronomy_deg2mansion</code> 黄赤道积度转换为入宿度</li>              
               <li><code>astronomy_formula</code> 使用公式进行计算的历法，<code>astronomy_table</code> 使用表格进行计算的历法，<code>astronomy_west</code> 使用现代方法进行计算。包含黄赤转换、经纬转换、月亮坐标转换</li>
             </ul>
             </li>
@@ -105,20 +106,15 @@ export default class Intro extends React.Component {
               <li><code>time_jd2date</code> 儒略日、日期转换</li>
             </ul>
             </li>
-            <li><code>eclipse_</code> 交食<ul>
-              <li><code>eclipse_formula</code> 使用公式进行交食计算的历法</li>
-              <li><code>eclipse_table</code> 使用表格进行交食计算的历法</li>
-            </ul>
-            </li>
             <li><code>bind_</code> 自动选择<ul>
               <li><code>bind</code> 根据历法自动选择朔闰计算</li>
               <li><code>bind_astronomy</code> 根据历法自动选择天文计算</li>
             </ul>
             </li>
-            <li>输出<ul>
+            <li>output_<ul>
               <li><code>output</code> 输出准备</li>
-              <li><code>print</code> 本地打印入口。<code>const printData = outputFile(2, 1255, 1255, 0</code> 第一个数字为模式，<code>1</code> 为朔闰表，<code>2</code> 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持</li>
-              <li><code>frontend-worker</code> Web Worker，朔闰表、历书两个模块的前端调用入口</li>
+              <li><code>output_print</code> 本地打印入口。<code>const printData = outputFile(2, 1255, 1255, 0</code> 第一个数字为模式，<code>1</code> 为朔闰表，<code>2</code> 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持</li>
+              <li><code>output_frontend-worker</code> Web Worker，朔闰表、历书两个模块的前端调用入口</li>
             </ul>
             </li>
           </ul>
@@ -155,7 +151,7 @@ export default class Intro extends React.Component {
           <h4 id="04-21">04-21</h4>
           <p>公測上線。版本：核心 <code>0.90</code> 前端 <code>1.00</code></p>
           <h4 id="04-25">4-25 核心 <code>0.91</code> 前端 <code>1.01</code></h4>
-          <p>【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
+          <p>【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題；修改定氣問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
           <h4 id="todo-list-">todo list:</h4>
           <ul>
             <li>完善交食</li>

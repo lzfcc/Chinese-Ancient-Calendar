@@ -153,6 +153,12 @@ export const Clock = Daydecimal => {
 }
 // console.log(Clock('5')) // 128  9584  9999
 export const Clock1 = (h, m, s) => {
+    h = parseInt(h)
+    m = parseInt(m)
+    s = Number(s)
+    if (h > 23 || m > 59 || s >= 60) {
+        throw (new Error('invalid value!'))
+    }
     let Daydecimal = big(h).div(24).add(big(m).div(1440)).add(big(s).div(86400)).toNumber()
     Daydecimal *= 100
     Daydecimal += 0.000000000001
@@ -164,7 +170,7 @@ export const Clock1 = (h, m, s) => {
     const C120 = Clock120(Daydecimal)
     const Song = ClockSong(Daydecimal)
     const Qing = ClockQing(Daydecimal)
-    return '【刻】' + Daydecimal.toFixed(4) + `\n` + '【120刻】' + C120 + `\n` + '【108刻】' + C108 + `\n` + '【96刻】' + C96 + `\n` + '【漢魏晉】' + Jingchu + `\n` + '【戊寅】' + Wuyin + `\n` + '【隋唐】' + Tang + `\n` + '【宋至明】' + Song + `\n` + '【清】' + Qing
+    return '【刻】' + Daydecimal.toFixed(6) + `\n` + '【120刻】' + C120 + `\n` + '【108刻】' + C108 + `\n` + '【96刻】' + C96 + `\n` + '【漢魏晉】' + Jingchu + `\n` + '【戊寅】' + Wuyin + `\n` + '【隋唐】' + Tang + `\n` + '【宋至明】' + Song + `\n` + '【清】' + Qing
 }
 
 // 随着二十四时制在唐代退出天象纪录后，每辰的“十二小分”制也被百刻制取代了。“刻”是计量单位，必须与某一时刻点并用，才能表示钟点。十二辰的起点、正中点都是固定的，用圭表和日晷可以校核“午正”，与百刻制结合，可从每辰的起点或正中点开始顺序纪录流逝的刻数。

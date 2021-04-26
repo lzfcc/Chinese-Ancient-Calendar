@@ -502,6 +502,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
     let sun = {}
     let moon = {}
     let SunDifAccum = 0
+    let SunTcorr = 0
     let MoonDifAccum = 0
     let Tcorr2 = 0 // 二次或三次內插
     let Tcorr1 = 0 // 線性內插
@@ -544,6 +545,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         moon = MoonTable2(AnomaAccum, CalName)
         MoonDifAccum = moon.MoonDifAccum2
         SunDifAccum = sun.SunDifAccum2
+        SunTcorr = SunDifAccum / MoonAvgVDeg
         Tcorr2 = (SunDifAccum - MoonDifAccum) / MoonAvgVDeg
         Tcorr1 = (sun.SunDifAccum1 - moon.MoonDifAccum1) / MoonAvgVDeg
         MoonAcrAvgDifList = moon.MoonAcrAvgDif
@@ -565,6 +567,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
     }
     return {
         SunDifAccum,
+        SunTcorr,
         MoonDifAccum,
         Tcorr2,
         Tcorr1,

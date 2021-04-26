@@ -117,16 +117,13 @@ export const Jd2Date1 = Jd => {
 }
 
 export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
-    yy = Number(yy)
-    mm = Number(mm)
-    dd = Number(dd)
-    // h = new Decimal(h)
-    // m = new Decimal(m)
-    // s = new Decimal(s)
-    h = Number(h)
-    m = Number(m)
-    s = Number(s)
-    ms = Number(ms)
+    yy = parseInt(yy)
+    mm = parseInt(mm)
+    dd = parseInt(dd)
+    h = parseInt(h)
+    m = parseInt(m)
+    s = parseInt(s)
+    ms = parseInt(ms)
     if (mm > 12 || dd > 31 || h > 23 || s > 59 || ms > 999) {
         throw (new Error('invalid value!'))
     } else if (mm <= 0 || dd <= 0 || h < 0 || s < 0 || ms < 0) {

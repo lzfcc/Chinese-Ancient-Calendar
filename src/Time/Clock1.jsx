@@ -28,7 +28,7 @@ export default class a extends React.Component {
           }}
         />
         <span>m </span>
-        <input className='width1'
+        <input className='width2'
           value={this.state.c}
           onChange={(e) => {
             this.setState({ c: e.currentTarget.value });
