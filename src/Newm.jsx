@@ -13,7 +13,7 @@ const TableRowNameMap = {
   NewmMmddPrint: '公曆',
   NewmDecimal3Print: '三次',
   NewmDecimal2Print: '二次',
-  NewmDecimal1Print: '一次',
+  NewmDecimal1Print: '線性',
   NewmMansionPrint: '赤度',
   SyzygyScPrint: '望',
   SyzygyDecimalPrint: '分',

@@ -10,9 +10,6 @@ import {
     AutoTcorr
 } from './astronomy_acrv.mjs'
 import {
-    AutoEclipse
-} from './astronomy_eclipse.mjs'
-import {
     ConstWest
 } from './astronomy_west.mjs'
 
@@ -264,8 +261,7 @@ export default (CalName, year) => {
         const TermAvgRaw = []
         const TermAcrRaw = []
         const AnomaAccum = []
-        let EcliPrint = []
-        // const Yinyang = []        
+        const NodeAccum = []
         const OrderMod = []
         const AcrOrderRaw = []
         const Tcorr = []
@@ -276,19 +272,21 @@ export default (CalName, year) => {
         const Decimal1 = [] // 線性內插
         const Decimal2 = [] // 二次內插
         const Decimal3 = [] // 三次內插
+        const Decimal = []
+        const OriginDifRaw = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = FirstAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar
             AvgMod[i] = (AvgRaw[i] % 60 + 60) % 60
             AvgOrderRaw[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(Math.floor(AvgMod[i]) + 1 + OriginDaySc) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
-            const OriginDifRaw = ((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
+            OriginDifRaw[i] = ((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
             AnomaAccum[i] = parseFloat(((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toPrecision(14))
             if (CalName === 'Mingtian') {
                 AnomaAccum[i] = big.div(OriginAccum, Lunar).add(i - 1 + ZhengOriginDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
                 // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengOriginDif) * 2142887000 % AnomaNumer) / 81120000
             }
-            const TcorrBindFunc = AutoTcorr(AnomaAccum[i], OriginDifRaw, CalName)
+            const TcorrBindFunc = AutoTcorr(AnomaAccum[i], OriginDifRaw[i], CalName)
             let Tcorr1 = 0
             if (Type <= 4) {
                 Tcorr[i] = TcorrBindFunc.Tcorr1
@@ -301,19 +299,19 @@ export default (CalName, year) => {
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr[i])
-            let Decimal = 0
+
             if (Type <= 4) {
-                Decimal = AcrRaw[i] - AcrOrderRaw[i]
-                Decimal1[i] = Decimal.toFixed(4).slice(2, 6)
+                Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
+                Decimal1[i] = Decimal[i].toFixed(4).slice(2, 6)
             } else if (Type < 11) {
-                Decimal = AcrRaw[i] - AcrOrderRaw[i]
-                Decimal2[i] = Decimal.toFixed(4).slice(2, 6)
+                Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
+                Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
                 if (!['Futian', 'Mingtian'].includes(CalName)) {
                     Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
                 }
             } else if (Type === 11) {
-                Decimal = AcrRaw[i] - AcrOrderRaw[i]
-                Decimal3[i] = Decimal.toFixed(4).slice(2, 6)
+                Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
+                Decimal3[i] = Decimal[i].toFixed(4).slice(2, 6)
             }
             /////進朔/////
             let NewmPlus = 0
@@ -336,47 +334,14 @@ export default (CalName, year) => {
             }
             /////合朔漏刻//////
             if (Type === 4) {
-                const TermNum1 = Math.round(Math.ceil(OriginDifRaw / HalfTermLeng) % 24.1) // 朔望所在氣名
-                const TermNewmDif = OriginDifRaw - (TermNum1 - 1) * HalfTermLeng // 注意要減1。朔望入氣日數
+                const TermNum1 = Math.round(Math.ceil(OriginDifRaw[i] / HalfTermLeng) % 24.1) // 朔望所在氣名
+                const TermNewmDif = OriginDifRaw[i] - (TermNum1 - 1) * HalfTermLeng // 注意要減1。朔望入氣日數
                 const Dawn = (NightList[TermNum1] + TermNewmDif * (NightList[TermNum1 + 1] - NightList[TermNum1])) / 100 // 日出时刻=夜半漏+2.5刻                
                 if (isNewm && AcrRaw[i] - AcrOrderRaw[i] < Dawn) { // 按元嘉，合朔月食在黎明前是前一天
                     Sc[i] = ScList[OrderMod[i]] + '-'
                 }
             }
-            //////交食//////
-            const NodeAccum = parseFloat(((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toPrecision(14))
-            // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
-            // if (Type === 11) {
-            //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
-            // }
-            let EcliFunc = {}
-            if (Node) {
-                EcliFunc = AutoEclipse(NodeAccum, AnomaAccum[i], Decimal, OriginDifRaw, i, LeapNumAvgThis, isNewm, CalName)
-                const status = EcliFunc.status
-                let Magni = 0
-                let StartDecimal = 0
-                let TotalDecimal = 0
-                if (EcliFunc.StartDecimal) {
-                    StartDecimal = EcliFunc.StartDecimal.toFixed(4).slice(2, 6)
-                    TotalDecimal = EcliFunc.NewmDecimal.toFixed(4).slice(2, 6)
-                }
-                if (status) {
-                    Magni = EcliFunc.Magni.toFixed(2)
-                    if (isNewm) {
-                        EcliPrint[i] = '【日食】'
-                    } else {
-                        EcliPrint[i] = '【月食】'
-                    }
-                    EcliPrint[i] += '分' + Magni + (StartDecimal ? '虧' + StartDecimal + '甚' + TotalDecimal : '')
-                    if (status === 1) {
-                        Sc[i] += '●'
-                    } else if (status === 2) {
-                        Sc[i] += '◐'
-                    } else if (status === 3) {
-                        Sc[i] += '◍'
-                    }
-                }
-            }
+            NodeAccum[i] = parseFloat(((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toPrecision(14))
         }
         return {
             TermAvgRaw,
@@ -393,7 +358,11 @@ export default (CalName, year) => {
             Decimal1,
             Decimal2,
             Decimal3,
-            EcliPrint
+            /// 交食用到
+            NodeAccum,
+            AnomaAccum,
+            Decimal,
+            OriginDifRaw,
         }
     }
     const Newm = AutoNewmSyzygy(1)
@@ -408,8 +377,6 @@ export default (CalName, year) => {
     const NewmOrderRaw = Newm.AvgOrderRaw
     const NewmAcrOrderRaw = Newm.AcrOrderRaw
     const NewmOrderMod = Newm.OrderMod
-    const NewmEcli = Newm.EcliPrint
-    const SyzygyEcli = Syzygy.EcliPrint
     let NewmSc = Newm.Sc
     const NewmDecimal1 = Newm.Decimal1
     const NewmDecimal2 = Newm.Decimal2
@@ -513,7 +480,14 @@ export default (CalName, year) => {
         TermStart,
         TermEnd,
         AccumPrint,
-        NewmEcli,
-        SyzygyEcli
+        //////// 交食用
+        NewmNodeAccum: Newm.NodeAccum,
+        NewmAnomaAccum: Newm.AnomaAccum,
+        NewmDecimal: Newm.Decimal,
+        NewmOriginDifRaw: Newm.OriginDifRaw,
+        SyzygyNodeAccum: Syzygy.NodeAccum,
+        SyzygyAnomaAccum: Syzygy.AnomaAccum,
+        SyzygyDecimal: Syzygy.Decimal,
+        SyzygyOriginDifRaw: Syzygy.OriginDifRaw,
     }
 }

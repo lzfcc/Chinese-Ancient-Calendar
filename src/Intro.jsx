@@ -75,6 +75,13 @@ export default class Intro extends React.Component {
               <li><code>day_luck</code> 历书中岁神、日神的计算</li>
             </ul>
             </li>
+            <li><code>astronomy_</code> 天文模块<ul>
+              <li><code>astronomy_acrv</code> 日月速度改正</li>
+              <li><code>astronomy_eclipse</code> 日月交食</li>
+              <li><code>astronomy_deg2mansion</code> 黄赤道积度转换为入宿度</li>
+              <li><code>astronomy_formula</code> 使用公式进行计算的历法，<code>astronomy_table</code> 使用表格进行计算的历法，<code>astronomy_west</code> 使用现代方法进行计算。包含黄赤转换、经纬转换、月亮坐标转换</li>
+            </ul>
+            </li>
             <li><code>modulo_</code> 同馀模块<ul>
               <li><code>modulo_continued-frac</code> 分数连分数</li>
               <li><code>modulo_continued-frac1</code> 小数连分数</li>
@@ -91,13 +98,6 @@ export default class Intro extends React.Component {
               <li><code>equa_math</code> 数字格式转换</li>
               <li><code>equa_sn</code> 垛积</li>
               <li><code>equa_sqrt</code> 开方</li>
-            </ul>
-            </li>
-            <li><code>astronomy_</code> 天文模块<ul>
-              <li><code>astronomy_acrv</code> 日月速度改正</li>
-              <li><code>astronomy_eclipse</code> 日月交食</li>
-              <li><code>astronomy_deg2mansion</code> 黄赤道积度转换为入宿度</li>              
-              <li><code>astronomy_formula</code> 使用公式进行计算的历法，<code>astronomy_table</code> 使用表格进行计算的历法，<code>astronomy_west</code> 使用现代方法进行计算。包含黄赤转换、经纬转换、月亮坐标转换</li>
             </ul>
             </li>
             <li><code>time_</code> 时间模块<ul>
@@ -119,12 +119,26 @@ export default class Intro extends React.Component {
             </li>
           </ul>
           <h2>網站推薦</h2>
+          <h3>年表</h3>
           <ul>
             <li><a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
-              target='_blank'>廖育棟的網站</a>（年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等）</li>
-            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a></li>
-            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>（世界各國曆法）</li>
+              target='_blank'>廖育棟的網站</a>年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等</li>
             <li>中研院 <a href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></li>
+            <li><a href='https://www.lishichelun.com/calendar/switch' target='_blank'>歷史車輪中西曆轉換器</a></li>
+          </ul>
+          <h3>實行曆法</h3>
+          <ul>
+            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a></li>
+            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>世界各國曆法</li>
+          </ul>
+          <h3>現代天文學中曆</h3>
+          <ul>
+            <li><a href='http://www.tianqihoubao.com/calendar/calendar.htm' target='_blank'>日梭萬年曆</a>似乎是中科院背景</li>
+            <li><a href='http://www.nongli.net/sxwnl/' target='_blank'>壽星天文曆</a>許劍偉、鄭彥山</li>
+            <li><a href='https://vert.neocities.org/cld/' target='_blank'>萬年天文夏曆</a>哂蟹齋</li>
+          </ul>
+          <h3>現代天文學朔閏、交食</h3>
+          <ul>
             <li><a href="https://eclipse.gsfc.nasa.gov/" target='_blank'>NASA Eclipse</a></li>
             <li><a href="http://www.moshier.net/#Cephes" target='_blank'>Astronomy and numerical software source codes</a>
             </li>
@@ -151,7 +165,7 @@ export default class Intro extends React.Component {
           <h4 id="04-21">04-21</h4>
           <p>公測上線。版本：核心 <code>0.90</code> 前端 <code>1.00</code></p>
           <h4 id="04-25">4-25 核心 <code>0.91</code> 前端 <code>1.01</code></h4>
-          <p>【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題；修改定氣問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
+          <p>4 月 24 日本站編入 Google 索引【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題；修改定氣問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
           <h4 id="todo-list-">todo list:</h4>
           <ul>
             <li>完善交食</li>
