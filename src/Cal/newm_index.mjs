@@ -405,7 +405,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 YearInfo += `${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
             if (Type === 2) {
-                YearInfo += `  平${(mainThis.LeapSurAvgThis).toFixed(4)}定${(mainThis.LeapSurAcrThis).toFixed(4)}準${mainThis.LeapLimit.toFixed(4)}`
+                YearInfo += `  平${mainThis.LeapSurAvgThis}定${(mainThis.LeapSurAcrThis).toFixed(2)}準${mainThis.LeapLimit}`
             } else if (Type === 3) {
                 YearInfo += `  平${Math.round((mainThis.LeapSurAvgThis)*ZhangRange)}定${((mainThis.LeapSurAcrThis)*ZhangRange).toFixed(2)}準${Math.round((mainThis.LeapLimit)*ZhangRange)}`
             } else if (Type <= 7) {
