@@ -32,7 +32,7 @@ import {
 } from './para_constant.mjs'
 import {
     AutoEclipse
-} from './astronomy_eclipse'
+} from './astronomy_eclipse.mjs'
 
 export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
     const {
