@@ -243,34 +243,34 @@ table td {
   padding: .5em 0;
 }
 
-.InputDecompose p {
+.table2 p {
   font-size: .9em;
   line-height: 1.6;
 }
 
-.InputDecompose table {
+.table2 table {
   font-size: .9em;
   margin: -.8em auto;
 }
 
-.InputDecompose table td {
+.table2 table td {
   width: auto;
   padding: .2em .75em;
   text-align: left;
 }
 
-.InputDecompose.InputDecompose1 table td {
+.table2.right table td {
   text-align: right;
 }
 
-.InputDecompose table th {
+.table2 table th {
   text-align: center;
   padding: .15em 1em;
   border: none;
   border-bottom: 1px solid var(--gray);
 }
 
-.InputDecompose table .RowTitle {
+.table2 table .RowTitle {
   font-weight: bold;
   text-align: right;
 }
@@ -548,7 +548,7 @@ input {
 
 .modulo {
   margin: 5em auto;
-  max-width: 1000px;
+  max-width: 1020px;
 }
 
 .modulo h2 {
@@ -556,7 +556,7 @@ input {
   color: var(--darkyellow);
   letter-spacing: .2em;
   margin: 4em auto 2em;
-  border-bottom: .15em double var(--yellow);
+  border-bottom: .1em solid var(--yellow); 
   /* text-shadow: 1px 1px 4px var(--shallowgray); */
 }
 

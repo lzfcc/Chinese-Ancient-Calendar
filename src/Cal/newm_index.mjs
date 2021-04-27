@@ -395,12 +395,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 let NewmTotalDecimal = 0
                 if (NewmEcliFunc.StartDecimal) {
                     NewmStartDecimal = NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
+                }
+                if (NewmEcliFunc.Decimal) {
                     NewmTotalDecimal = NewmEcliFunc.Decimal.toFixed(4).slice(2, 6)
                 }
                 if (Newmstatus) {
                     NewmMagni = NewmEcliFunc.Magni.toFixed(2)
                     NewmEcli[i] = '【日食】'
-                    NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal + '甚' + NewmTotalDecimal : '')
+                    NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal : '') + (NewmTotalDecimal ? '甚' + NewmTotalDecimal : '')
                     if (Newmstatus === 1) {
                         NewmScPrint[i] += '●'
                     } else if (Newmstatus === 2) {

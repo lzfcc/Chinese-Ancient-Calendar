@@ -53,7 +53,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans InputDecompose InputDecompose1'>
+      <div className='ans table2 right'>
         <p>{this.state.outputEcliptic1}</p>
         <table>
           <tr>

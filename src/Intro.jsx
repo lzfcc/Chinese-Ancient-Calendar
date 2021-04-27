@@ -29,6 +29,32 @@ export default class Intro extends React.Component {
             <li>編程理念：以研究需求爲中心；設計理念：以用戶體驗爲中心，傻瓜式操作。關於朔閏表表格的設計：採用加粗—正常——淺灰三層結構，用戶一眼就看到了定朔、平朔、平氣的干支，第二眼看到的是小分，最後看到的是不甚重要的昬中星。定朔平朔之間、定氣平氣之閒用細線，朔望氣之間用粗線。數字都用的等寬字體。每欄中間不設線，間隔恰到好處，不會太寬，讓視線跳躍得很累，也不會太緊，不易分辨。</li>
             <li>本工具完全開源，如您需要査詢、核査各曆的詳細參數與算法，請前往源碼倉庫。如您不嫌麻煩，可以下載源碼，在本地運行程序。更多技術特徵見開發者說明。【隱私聲明】本站使用了 Google Analytics 進行流量分析；評論系統採用 Hyvor Talk；服務器託管在 Netlify 平臺。運算均在本地瀏覽器進行。</li>
           </ol>
+
+          <h2>網站推薦</h2>
+          <h3>年表</h3>
+          <ul>
+            <li><a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
+              target='_blank'>廖育棟的網站</a>年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等</li>
+            <li>中研院 <a href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></li>
+            <li><a href='https://www.lishichelun.com/calendar/switch' target='_blank'>歷史車輪中西曆轉換器</a></li>
+          </ul>
+          <h3>實行曆法</h3>
+          <ul>
+            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a></li>
+            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>世界各國曆法</li>
+          </ul>
+          <h3>現代天文學中曆</h3>
+          <ul>
+            <li><a href='http://www.tianqihoubao.com/calendar/calendar.htm' target='_blank'>日梭萬年曆</a>似乎是中科院背景</li>
+            <li><a href='http://www.nongli.net/sxwnl/' target='_blank'>壽星天文曆</a>許劍偉、鄭彥山</li>
+            <li><a href='https://vert.neocities.org/cld/' target='_blank'>萬年天文夏曆</a>哂蟹齋</li>
+          </ul>
+          <h3>現代天文學朔閏、交食</h3>
+          <ul>
+            <li><a href="https://eclipse.gsfc.nasa.gov/" target='_blank'>NASA Eclipse</a></li>
+            <li><a href="http://www.moshier.net/#Cephes" target='_blank'>Astronomy and numerical software source codes</a>
+            </li>
+          </ul>
         </article>
         <article>
           <h2 id="-">开发者说明</h2>
@@ -118,31 +144,7 @@ export default class Intro extends React.Component {
             </ul>
             </li>
           </ul>
-          <h2>網站推薦</h2>
-          <h3>年表</h3>
-          <ul>
-            <li><a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
-              target='_blank'>廖育棟的網站</a>年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等</li>
-            <li>中研院 <a href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></li>
-            <li><a href='https://www.lishichelun.com/calendar/switch' target='_blank'>歷史車輪中西曆轉換器</a></li>
-          </ul>
-          <h3>實行曆法</h3>
-          <ul>
-            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a></li>
-            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>世界各國曆法</li>
-          </ul>
-          <h3>現代天文學中曆</h3>
-          <ul>
-            <li><a href='http://www.tianqihoubao.com/calendar/calendar.htm' target='_blank'>日梭萬年曆</a>似乎是中科院背景</li>
-            <li><a href='http://www.nongli.net/sxwnl/' target='_blank'>壽星天文曆</a>許劍偉、鄭彥山</li>
-            <li><a href='https://vert.neocities.org/cld/' target='_blank'>萬年天文夏曆</a>哂蟹齋</li>
-          </ul>
-          <h3>現代天文學朔閏、交食</h3>
-          <ul>
-            <li><a href="https://eclipse.gsfc.nasa.gov/" target='_blank'>NASA Eclipse</a></li>
-            <li><a href="http://www.moshier.net/#Cephes" target='_blank'>Astronomy and numerical software source codes</a>
-            </li>
-          </ul>
+
           <h2>更新日誌</h2>
           <h4 id="2021-01-03">2021-01-03</h4>
           <p>立項。</p>
@@ -162,9 +164,9 @@ export default class Intro extends React.Component {
           <p>增加日書、轉換tab</p>
           <p>增加魏晉日書，轉換工具。</p>
           <h4 id="-">……</h4>
-          <h4 id="04-21">04-21</h4>
-          <p>公測上線。版本：核心 <code>0.90</code> 前端 <code>1.00</code></p>
-          <h4 id="04-25">4-25 核心 <code>0.91</code> 前端 <code>1.01</code></h4>
+          <h4 id="04-21">4-21 公測上線</h4>
+          <p>版本：核心 <code>0.90</code> 前端 <code>1.00</code></p>
+          <h4 id="04-25">4-25 <code>0.91 1.01</code></h4>
           <p>4 月 24 日本站編入 Google 索引【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題；修改定氣問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
           <h4 id="todo-list-">todo list:</h4>
           <ul>
