@@ -1,8 +1,8 @@
 {
-  "name": "shangshu-calendar",
+  "name": "cal",
   "version": "1.0.0",
   "description": "",
-  "main": "print.mjs",
+  "main": "output_print.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

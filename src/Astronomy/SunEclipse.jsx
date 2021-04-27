@@ -1,30 +1,44 @@
 import React from 'react'
-import { BindMoonLongiLati } from '../Cal/bind_astronomy'
+import { BindSunEclipse } from '../Cal/bind_astronomy'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 1.25351,
-      b: 45.15
+      a: 0.1
     }
     this.handle = this.handle.bind(this)
   }
+
   input() {
     return (
-      <span className='year-select'>
-        <span>入交日</span>
-        <input className='width3'
+      <span className='year-select width3'>
+        <span>入交泛日</span>
+        <input
           value={this.state.a}
           onChange={(e) => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
-        <span> 距冬至日數</span>
-        <input className='width3'
+        <span> 經朔入轉</span>
+        <input
           value={this.state.b}
           onChange={(e) => {
             this.setState({ b: e.currentTarget.value });
+          }}
+        />
+        <span> 定朔分0.</span>
+        <input
+          value={this.state.c}
+          onChange={(e) => {
+            this.setState({ c: e.currentTarget.value });
+          }}
+        />
+        <span> 經朔距冬至</span>
+        <input
+          value={this.state.d}
+          onChange={(e) => {
+            this.setState({ d: e.currentTarget.value });
           }}
         />
       </span>
@@ -33,7 +47,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = BindMoonLongiLati(this.state.a, this.state.b)
+      const Print = BindSunEclipse(this.state.a, this.state.b, this.state.c, this.state.d)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -50,10 +64,9 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>極白經</th>
-            <th>赤經</th>
-            <th>去極度</th>
-            <th>黃緯</th>
+            <th>食分</th>
+            <th>食甚時刻</th>
+            <th>食延刻數</th>
           </tr>
           {(this.state.output || []).map((row) => {
             return (
@@ -74,10 +87,10 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>月極黃經 ⇒ 極白經、赤經、極黃緯</h3>
-        <p className='note'>需要輸入此刻入降交點<n>正交</n>交點月的日數、距離冬至的日數。正交至半交：白大於黃，半交至正交：黃大於白。一交點月約 27.2122 日</p>
+        <h3>日食</h3>
+        <p className='note'>大業戊寅皇極麟徳要根據月份來判斷，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確</p>
         {this.input()}
-        <button onClick={this.handle} className='button4-8'>月行九道</button>
+        <button onClick={this.handle} className='button4-3'>會</button>
         {this.result()}
       </div>
     )

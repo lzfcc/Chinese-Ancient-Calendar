@@ -30,12 +30,9 @@ import {
 import {
     CalNameDayList
 } from './para_constant.mjs'
-// import {
-//     EclipseFormula
-// } from './eclipse_formula'
-// import {
-//     EclipseTable
-// } from './eclipse_table'
+import {
+    AutoEclipse
+} from './astronomy_eclipse'
 
 export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
     const {
@@ -472,38 +469,103 @@ export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日�
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
 
-// export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, CalName) => {
-//     Print = Print.concat(
-//         ['Xuanming', 'Chongtian', 'Guantian', 'Jiyuan', 'NewDaming', 'Shoushi'].map((title) => {
-//             const {
-//                 Tcorr,
-//                 Dcorr,
-//                 EcliDeg
-//             } = EclipseFormula(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, CalName)
-//             return {
-//                 title: CalNameDayList[title],
-//                 data: [Tcorr.toFixed(5), Dcorr.toFixed(5), EcliDeg.toFixed(5)]
-//             }
-//         }))
-//     Print = Print.concat(
-//         ['Chongxuan'].map((title) => {
-//             const {
-//                 Tcorr
-//             } = EclipseFormula(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, CalName)
-//             return {
-//                 title: CalNameDayList[title],
-//                 data: [Tcorr.toFixed(5), '-', '-']
-//             }
-//         }))
-//     Print = Print.concat(
-//         ['Wuji', 'Zhengyuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Mingtian'].map((title) => {
-//             const {
-//                 Dcorr,
-//                 EcliDeg
-//             } = EclipseFormula(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, CalName)
-//             return {
-//                 title: CalNameDayList[title],
-//                 data: ['-', Dcorr.toFixed(5), EcliDeg.toFixed(5)]
-//             }
-//         }))
-// }
+export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
+    NodeAccum = +NodeAccum
+    AnomaAccum = +AnomaAccum
+    NewmDecimal = Number('0.' + NewmDecimal)
+    OriginDifRaw = +OriginDifRaw
+    const Solar = 365.24478
+    const HalfTermLeng = Solar / 24
+    if (NodeAccum > 27.212215) {
+        throw (new Error('請輸入一交點月27.212215內的日數'))
+    }
+    if (AnomaAccum > 27.5545) {
+        throw (new Error('請輸入一近點月27.5545內的日數'))
+    }
+    if (OriginDifRaw > 365.2425) {
+        throw (new Error('請輸入一年365.2425內的日數'))
+    }
+    // 隋系是要根據月份來判斷的，這裏為了簡化輸入，我改為用節氣判斷季節，這不準確
+    let i = 0
+    for (let j = 0; j <= 11; j++) {
+        if (OriginDifRaw >= j * HalfTermLeng && OriginDifRaw < (j + 1) * HalfTermLeng) {
+            i = (j - 2 + 12) % 12
+        }
+        break
+    }
+    let Print = []
+    Print = Print.concat(
+        ['Zhengguang'].map((title) => {
+            const {
+                Magni
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 1, title) // 之所以i+1因為上面計算月份從0開始索引
+            return {
+                title: CalNameDayList[title],
+                data: [Magni.toFixed(4), '定朔', '-']
+            }
+        }))
+    Print = Print.concat(
+        ['Daye', 'Wuyin', 'Linde', 'Jiyuan'].map((title) => {
+            const {
+                Magni,
+                Decimal,
+                Last
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 1, title)
+            return {
+                title: CalNameDayList[title],
+                data: [Magni.toFixed(4), (Decimal * 100).toFixed(4), Last.toFixed(4)]
+            }
+        }))
+    return Print
+}
+
+export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
+    NodeAccum = +NodeAccum
+    AnomaAccum = +AnomaAccum
+    NewmDecimal = Number('0.' + NewmDecimal)
+    OriginDifRaw = +OriginDifRaw
+    const Solar = 365.24478
+    const HalfTermLeng = Solar / 24
+    if (NodeAccum > 27.212215) {
+        throw (new Error('請輸入一交點月27.212215內的日數'))
+    }
+    if (AnomaAccum > 27.5545) {
+        throw (new Error('請輸入一近點月27.5545內的日數'))
+    }
+    if (OriginDifRaw > 365.2425) {
+        throw (new Error('請輸入一年365.2425內的日數'))
+    }
+    // 隋系是要根據月份來判斷的，這裏為了簡化輸入，我改為用節氣判斷季節，這不準確
+    let i = 0
+    for (let j = 0; j <= 11; j++) {
+        if (OriginDifRaw >= j * HalfTermLeng && OriginDifRaw < (j + 1) * HalfTermLeng) {
+            i = (j - 2 + 12) % 12
+        }
+        break
+    }
+    let Print = []
+    Print = Print.concat(
+        ['Zhengguang'].map((title) => {
+            const {
+                Magni
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 0, title) // 之所以i+1因為上面計算月份從0開始索引
+            return {
+                title: CalNameDayList[title],
+                data: [Magni.toFixed(4), '定望', '-']
+            }
+        }))
+    Print = Print.concat(
+        ['Daye', 'Wuyin', 'Linde', 'Jiyuan'].map((title) => {
+            const {
+                Magni,
+                Decimal,
+                Last
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 0, title)
+            const DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定望' : (Decimal * 100).toFixed(4)
+            return {
+                title: CalNameDayList[title],
+                data: [Magni.toFixed(4), DecimalPrint, Last.toFixed(4)]
+            }
+        }))
+    return Print
+}

@@ -64,7 +64,7 @@ export default class a extends React.Component {
       return null;
     }
     return (
-      <div className="ans InputDecompose" style={{ whiteSpace: "pre-wrap" }}>
+      <div className="ans table2" style={{ whiteSpace: "pre-wrap" }}>
         <p>{this.state.output2}</p>
         <table>
           <tr>

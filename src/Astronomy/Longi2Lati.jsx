@@ -61,7 +61,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans InputDecompose InputDecompose1' style={{ whiteSpace: "pre-wrap" }}>
+      <div className='ans table2 right' style={{ whiteSpace: "pre-wrap" }}>
         <p></p>
         <table>
           <tr>
