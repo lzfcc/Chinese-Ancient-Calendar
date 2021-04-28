@@ -410,3 +410,17 @@ export const Cycle2Node = (Cycle, Lunar) => {
     return Node
 }
 // console.log(Cycle2Node('404/465', '659/1242'))
+
+// const test1 = (year, Solar, Lunar) => {
+//     const accum = frc(Solar).mul(year).mod(Lunar)
+//     return accum.toFraction(true)
+// }
+// console.log(test1(91341235, '365 1776/7290', '29 3868/7290')) // 15 5686/177147=15.03209763643
+
+// const test2 = (year, Solar, Lunar) => {
+//     const accum = Solar * year % Lunar
+//     return accum
+// }
+// console.log(test2(91341235, 365.24362139917695474, 29.5305898491083676))  // 紀元15.03210011886921
+// console.log(1776 / 7290)
+// 也就是說，積年九千萬年，能保持小數點後4位精度，只能說剛好勉強夠用
