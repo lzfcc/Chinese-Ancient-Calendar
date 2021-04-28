@@ -5,7 +5,7 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 0.1
+      a: 14
     }
     this.handle = this.handle.bind(this)
   }
@@ -65,8 +65,8 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th>食分</th>
-            <th>食甚時刻</th>
             <th>食延刻數</th>
+            <th>食甚時刻</th>            
           </tr>
           {(this.state.output || []).map((row) => {
             return (
@@ -88,7 +88,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>日食</h3>
-        <p className='note'>大業戊寅皇極麟徳要根據月份來判斷，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確</p>
+        <p className='note'>大業戊寅皇極麟徳要根據月份來判斷，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確。入交日在正交、半交附近發生交食，交點月的一半約爲 13.60611</p>
         {this.input()}
         <button onClick={this.handle} className='button4-7'>會</button>
         {this.result()}

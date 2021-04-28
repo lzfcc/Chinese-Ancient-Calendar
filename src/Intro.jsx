@@ -66,7 +66,7 @@ export default class Intro extends React.Component {
             <li>采用 Web Worker 将 UI 线程与计算线程分离</li>
             <li>采用懒加载，大幅压缩渲染时间</li>
             <li>采用 WebPack 打包</li>
-            <li>采用 <a href="https://mikemcl.github.io/decimal.js/">Decimal.js</a> 进行大数字运算，采用 <a href="https://blog.whyoop.com/nzh/docs">nzh</a> 进行阿拉伯数字、汉字转换</li>
+            <li>采用 <a href="https://mikemcl.github.io/decimal.js/" target='_blank'>Decimal.js</a> 进行小数点后 64 位大数字运算，采用 <a href='https://www.npmjs.com/package/fraction.js' target='_blank'>fraction.js</a> 进行分数运算，采用 <a href="https://blog.whyoop.com/nzh/docs" target='_blank'>nzh</a> 进行阿拉伯数字、汉字转换</li>
           </ul>
           <p><del>本仓库基于组件化、工程化的考量，将核心模块<n>计算逻辑</n>拆分到了单独的仓库<n>ancient-calendar</n>中，通过子模块进行依赖，从而前端展示<n>View</n>和计算逻辑<n>Model</n>可以独立开发，前端直接引用子模块的函数进行运算。</del></p>
           <p>由于运算都在前端进行，在进行大量运算时会卡住 UI，体验较差。为了改进这一问题，我们决定改用 Web Worker<n>前端的多线程</n>。这样就必须将 <code>Worker()</code> 构造函数的参数文件独立放在 public 目录下<n>不能参与 webpack 打包</n>，因而不能直接引用子模块，必须将子模块打包成一个文件：</p>

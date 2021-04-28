@@ -501,23 +501,25 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw)
             } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 1, title) // 之所以i+1因為上面計算月份從0開始索引
             return {
                 title: CalNameDayList[title],
-                data: [Magni.toFixed(4), '定朔', '-']
+                data: [Magni.toFixed(4), '-', '定朔']
             }
         }))
     Print = Print.concat(
-        ['Daye', 'Wuyin', 'Linde', 'Jiyuan'].map((title) => {
+        ['Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map((title) => {
             const {
                 Magni,
                 Decimal,
                 Last
             } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 1, title)
+            const DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定朔' : (Decimal * 100).toFixed(4)
             return {
                 title: CalNameDayList[title],
-                data: [Magni.toFixed(4), (Decimal * 100).toFixed(4), Last.toFixed(4)]
+                data: [Magni.toFixed(4), Last.toFixed(4), DecimalPrint]
             }
         }))
     return Print
 }
+// console.log(BindSunEclipse (0.1, 14, 1355, 14))
 
 export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
     NodeAccum = +NodeAccum
@@ -551,11 +553,11 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw
             } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 0, title) // 之所以i+1因為上面計算月份從0開始索引
             return {
                 title: CalNameDayList[title],
-                data: [Magni.toFixed(4), '定望', '-']
+                data: [Magni.toFixed(4), '-', '定望']
             }
         }))
     Print = Print.concat(
-        ['Daye', 'Wuyin', 'Linde', 'Jiyuan'].map((title) => {
+        ['Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map((title) => {
             const {
                 Magni,
                 Decimal,
@@ -564,7 +566,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw
             const DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定望' : (Decimal * 100).toFixed(4)
             return {
                 title: CalNameDayList[title],
-                data: [Magni.toFixed(4), DecimalPrint, Last.toFixed(4)]
+                data: [Magni.toFixed(4), Last.toFixed(4), DecimalPrint]
             }
         }))
     return Print
