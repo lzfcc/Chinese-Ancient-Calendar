@@ -1,4 +1,5 @@
 import big from 'decimal.js'
+import frc from 'fraction.js'
 import nzh from 'nzh/hk.js'
 big.config({
     precision: 64,
@@ -8,6 +9,7 @@ big.config({
 })
 export {
     big,
+    frc,
     nzh
 }
 // nzh = new nzh({

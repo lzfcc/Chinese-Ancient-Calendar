@@ -145,9 +145,10 @@ BigFloat.prototype.Deciaml2ContinuedFrac = function () {
 
 export const ContinuedFrac1 = x => {
     x = new BigFloat(x.toString())
-    const ans = x.Deciaml2ContinuedFrac().ans
-    const ansPrint = x + ' = [' + x.Deciaml2ContinuedFrac().ans + ']'
-    const step = '漸進分數： ' + x.Deciaml2ContinuedFrac().step // .toString()
+    const Func = x.Deciaml2ContinuedFrac()
+    const ans = Func.ans
+    const ansPrint = x + ' = [' + ans + ']'
+    const step = '漸進分數： ' + Func.step // .toString()
     return {
         ansPrint,
         ans,

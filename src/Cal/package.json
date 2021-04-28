@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "decimal": "0.0.2",
+    "fraction.js": "^4.0.13",
+    "mathjs": "^9.3.2",
     "nzh": "^1.0.4"
   }
 }

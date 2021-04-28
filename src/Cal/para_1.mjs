@@ -401,7 +401,7 @@ export default {
 
     /////////////////魏晉/////////////////////
     // if (!Node) {
-    //     Node = Lunar * Ecli / (0.5 + Ecli) // 獨創發明！
+    //     Node = Lunar * Ecli / (0.5 + Ecli) // 獨創發明！以皇極驗之，完全符合
     // }
     Qianxiang: {
         Solar: 365 + 145 / 589, // 歲實 

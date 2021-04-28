@@ -1,6 +1,10 @@
 import {
     big,
+    frc
 } from './para_constant.mjs'
+import {
+    Frac2FalseFrac
+} from './equa_math.mjs'
 const pi = big.acos(-1)
 const d2r = degree => big(degree).mul(pi).div(180)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -311,7 +315,7 @@ export const MoonLatiWest = (Day, NodeAvgV, Sidereal, year) => {
 // console.log(MoonLatiWest(6, 0, 360, 1000))
 
 // 下面這個加上了日躔。藤豔輝《宋代朔閏與交食研究》頁90,106
-export const EcliWest = (Decimal, OriginDif, AnomaAccum, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
+export const EcliWest = (NodeAccum, AnomaAccum, Decimal, OriginDif, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
     const ConstWestFunc = ConstWest(year)
     const Solar = ConstWestFunc.Solar
     f = d2r(f)
@@ -373,3 +377,36 @@ export const EcliWest = (Decimal, OriginDif, AnomaAccum, f, year) => { // 一日
 // }
 // https://newgoodlooking.pixnet.net/blog/post/113829993
 // console.log(Tide(120))
+
+export const Node2Cycle = (Node, Lunar) => {
+    const NodeDenom = Frac2FalseFrac(Node).Denom
+    let Cycle = 0
+    if (NodeDenom === 1) {
+        Node = big('27.' + Node)
+        Lunar = big('29.' + Lunar)
+        Cycle = big(0.5).mul(Node.div(Lunar)).mul(Lunar.div(Lunar.sub(Node))).toFixed(32)
+    } else {
+        Node = frc('27 ' + Node)
+        Lunar = frc('29 ' + Lunar)
+        Cycle = frc(1 / 2).mul(Node.div(Lunar)).mul(Lunar.div(Lunar.sub(Node))).toFraction(true)
+    }
+    return Cycle
+}
+// console.log(Node2Cycle('2122221759', '5305958132'))
+// console.log(Node2Cycle('780592/3678183', '659/1242'))
+
+export const Cycle2Node = (Cycle, Lunar) => {
+    const CycleDenom = Frac2FalseFrac(Cycle).Denom
+    let Node = 0
+    if (CycleDenom === 1) {
+        Cycle = big('5.' + Cycle)
+        Lunar = big('29.' + Lunar)
+        Node = Lunar.mul(Cycle.div(big.add(0.5, Cycle))).toFixed(32)
+    } else {
+        Cycle = frc('5 ' + Cycle)
+        Lunar = frc('29 ' + Lunar)
+        Node = Lunar.mul(Cycle.div(frc('1/2').add(Cycle))).toFraction(true)
+    }
+    return Node
+}
+// console.log(Cycle2Node('404/465', '659/1242'))
