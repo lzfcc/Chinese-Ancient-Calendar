@@ -90,7 +90,7 @@ export default class Converter extends React.Component {
         <h3>日食</h3>
         <p className='note'>大業戊寅皇極麟徳要根據月份來判斷，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確</p>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>會</button>
+        <button onClick={this.handle} className='button4-7'>會</button>
         {this.result()}
       </div>
     )

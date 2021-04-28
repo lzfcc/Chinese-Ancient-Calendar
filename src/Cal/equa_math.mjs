@@ -13,6 +13,7 @@ export const isSame = (arr1, arr2) => { // 判斷元數定母是否相等。http
 }
 
 export const Frac2FalseFrac = FracRaw => {
+    FracRaw = FracRaw.toString()
     const Frac = FracRaw.split(/\D/) // 以下把輸入的分數字符串轉成假分數
     let Numer = 0
     let Denom = 0
@@ -31,6 +32,7 @@ export const Frac2FalseFrac = FracRaw => {
         Denom
     }
 }
+// console.log(Frac2FalseFrac('888'))
 
 export const Decimal2Int = function () { // 輸入字符串
     const Raw = arguments[0].split(/;|,|，|。|；|｜| /)

@@ -7,7 +7,8 @@ import Const from './Const'
 import Deciaml2Angle from './Deciaml2Angle'
 import SunEclipse from './SunEclipse'
 import MoonEclipse from './MoonEclipse'
-
+import Node2Cycle from './Node'
+import Cycle2Node from './EcliCycle'
 // import  BindEquator2Ecliptic from './'
 // import  BindEquator2Ecliptic from './' 
 
@@ -117,6 +118,8 @@ export default class Astronomy extends React.Component {
         <h2>交食之什</h2>
         <SunEclipse />
         <MoonEclipse />
+        <Cycle2Node />
+        <Node2Cycle />
         <h2>現代天文計算</h2>
         <Deciaml2Angle />
         <Const />

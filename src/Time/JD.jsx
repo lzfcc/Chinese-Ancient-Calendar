@@ -45,6 +45,7 @@ export default class a extends React.Component {
     return (
       <div>
         <h3>儒略日 ⇌ 日期</h3>
+        <p className="note">日干支序 = mod(儒略日-11, 60) + 1</p>
         {this.input()}
         <button onClick={this.handle} className="button4-8">
           JD2date

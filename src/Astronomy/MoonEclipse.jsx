@@ -89,7 +89,7 @@ export default class Converter extends React.Component {
       <div>
         <h3>月食</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>交</button>
+        <button onClick={this.handle} className='button4-7'>交</button>
         {this.result()}
       </div>
     )
