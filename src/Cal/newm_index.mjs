@@ -382,79 +382,81 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermDecimalPrint = TermSlice(TermDecimal)
         }
         ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
-        const NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
-        const NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
-        const NewmDecimalPrint = NewmSyzygySlice(mainThis.NewmDecimal)
-        const NewmOriginDifRawPrint = NewmSyzygySlice(mainThis.NewmOriginDifRaw)
-        const SyzygyNodeAccumPrint = NewmSyzygySlice(mainThis.SyzygyNodeAccum)
-        const SyzygyAnomaAccumPrint = NewmSyzygySlice(mainThis.SyzygyAnomaAccum)
-        const SyzygyOriginDifRawPrint = NewmSyzygySlice(mainThis.SyzygyOriginDifRaw)
         let NewmEcli = []
         let SyzygyEcli = []
-        for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
-            // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
-            // if (Type === 11) {
-            //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
-            // }
-            let NoleapMon = i + 1
-            if (LeapNumTermThis > 0) {
-                if (i === LeapNumTermThis) {
-                    NoleapMon = i
-                } else if (i >= LeapNumTermThis + 1) {
-                    NoleapMon = i
-                }
-            }
-            let NewmEcliFunc = {}
-            let SyzygyEcliFunc = {}
-            if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 28.86) {
-                NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 1, CalName)
-                const Newmstatus = NewmEcliFunc.status
-                let NewmMagni = 0
-                let NewmStartDecimal = 0
-                let NewmTotalDecimal = 0
-                if (NewmEcliFunc.StartDecimal) {
-                    NewmStartDecimal = NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
-                }
-                if (NewmEcliFunc.Decimal) {
-                    NewmTotalDecimal = NewmEcliFunc.Decimal.toFixed(4).slice(2, 6)
-                }
-                if (Newmstatus) {
-                    NewmMagni = NewmEcliFunc.Magni.toFixed(2)
-                    NewmEcli[i] = `<span class='eclipse'>日${NoleapMon}</span>`
-                    NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal : '') + (NewmTotalDecimal ? '甚' + NewmTotalDecimal : '')
-                    if (Newmstatus === 1) {
-                        NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                    } else if (Newmstatus === 2) {
-                        NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                    } else if (Newmstatus === 3) {
-                        NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>` // ◍
+        if (Type > 1) {
+            const NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
+            const NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
+            const NewmDecimalPrint = NewmSyzygySlice(mainThis.NewmDecimal)
+            const NewmOriginDifRawPrint = NewmSyzygySlice(mainThis.NewmOriginDifRaw)
+            const SyzygyNodeAccumPrint = NewmSyzygySlice(mainThis.SyzygyNodeAccum)
+            const SyzygyAnomaAccumPrint = NewmSyzygySlice(mainThis.SyzygyAnomaAccum)
+            const SyzygyOriginDifRawPrint = NewmSyzygySlice(mainThis.SyzygyOriginDifRaw)
+            for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+                // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
+                // if (Type === 11) {
+                //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
+                // }
+                let NoleapMon = i + 1
+                if (LeapNumTermThis > 0) {
+                    if (i === LeapNumTermThis) {
+                        NoleapMon = i
+                    } else if (i >= LeapNumTermThis + 1) {
+                        NoleapMon = i
                     }
                 }
-            }
-            if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 28.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 0, CalName)
-                const Syzygystatus = SyzygyEcliFunc.status
-                let SyzygyMagni = 0
-                let SyzygyStartDecimal = 0
-                let SyzygyTotalDecimal = 0
-                if (SyzygyEcliFunc.StartDecimal) {
-                    SyzygyStartDecimal = SyzygyEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
-                    SyzygyTotalDecimal = SyzygyEcliFunc.Decimal.toFixed(4).slice(2, 6)
-                }
-                if (Syzygystatus) {
-                    SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
-                    SyzygyEcli[i] = `<span class='eclipse'>月${NoleapMon}</span>`
-                    SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDecimal ? '虧' + SyzygyStartDecimal + '甚' + SyzygyTotalDecimal : '')
-                    if (Syzygystatus === 1) {
-                        SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                    } else if (Syzygystatus === 2) {
-                        SyzygyScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                    } else if (Syzygystatus === 3) {
-                        SyzygyScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
+                let NewmEcliFunc = {}
+                let SyzygyEcliFunc = {}
+                if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 28.86) {
+                    NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 1, CalName)
+                    const Newmstatus = NewmEcliFunc.status
+                    let NewmMagni = 0
+                    let NewmStartDecimal = 0
+                    let NewmTotalDecimal = 0
+                    if (NewmEcliFunc.StartDecimal) {
+                        NewmStartDecimal = NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
+                    }
+                    if (NewmEcliFunc.Decimal) {
+                        NewmTotalDecimal = NewmEcliFunc.Decimal.toFixed(4).slice(2, 6)
+                    }
+                    if (Newmstatus) {
+                        NewmMagni = NewmEcliFunc.Magni.toFixed(2)
+                        NewmEcli[i] = `<span class='eclipse'>日${NoleapMon}</span>`
+                        NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal : '') + (NewmTotalDecimal ? '甚' + NewmTotalDecimal : '')
+                        if (Newmstatus === 1) {
+                            NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
+                        } else if (Newmstatus === 2) {
+                            NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
+                        } else if (Newmstatus === 3) {
+                            NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>` // ◍
+                        }
                     }
                 }
+                if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 28.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
+                    SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 0, CalName)
+                    const Syzygystatus = SyzygyEcliFunc.status
+                    let SyzygyMagni = 0
+                    let SyzygyStartDecimal = 0
+                    let SyzygyTotalDecimal = 0
+                    if (SyzygyEcliFunc.StartDecimal) {
+                        SyzygyStartDecimal = SyzygyEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
+                        SyzygyTotalDecimal = SyzygyEcliFunc.Decimal.toFixed(4).slice(2, 6)
+                    }
+                    if (Syzygystatus) {
+                        SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
+                        SyzygyEcli[i] = `<span class='eclipse'>月${NoleapMon}</span>`
+                        SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDecimal ? '虧' + SyzygyStartDecimal + '甚' + SyzygyTotalDecimal : '')
+                        if (Syzygystatus === 1) {
+                            SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
+                        } else if (Syzygystatus === 2) {
+                            SyzygyScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
+                        } else if (Syzygystatus === 3) {
+                            SyzygyScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
+                        }
+                    }
+                }
+                SyzygyDecimalPrint[i] = SyzygyDecimalPrint[i].toFixed(4).slice(2, 6)
             }
-            SyzygyDecimalPrint[i] = SyzygyDecimalPrint[i].toFixed(4).slice(2, 6)
         }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year
