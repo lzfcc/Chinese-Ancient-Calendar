@@ -3,12 +3,13 @@ import React from 'react'
 import { CalNameList } from './Cal/para_constant'
 import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
-// import { CheckboxGroup } from 'rsuite';
+import { TagPicker } from 'rsuite';
+import data3 from './data3.mjs'
 
 const TableRowNameMap = {
   MonthPrint: '月序',
   NewmAvgScPrint: '平朔',
-  NewmAvgDecimalPrint: '',
+  NewmAvgDecimalPrint: ' ',
   NewmScPrint: '定朔',
   NewmMmddPrint: '公曆',
   NewmDecimal3Print: '三次',
@@ -16,16 +17,16 @@ const TableRowNameMap = {
   NewmDecimal1Print: '線性',
   NewmMansionPrint: '赤度',
   SyzygyScPrint: '望',
-  SyzygyDecimalPrint: '',
+  SyzygyDecimalPrint: ' ',
   TermNamePrint: '氣名',
   TermAcrScPrint: '定氣',
-  TermAcrDecimalPrint: '',
+  TermAcrDecimalPrint: ' ',
   TermScPrint: '平氣',
-  TermDecimalPrint: '',
+  TermDecimalPrint: ' ',
   TermMidstarPrint: '昏中星'
 }
-
 const heightCache = createCache();
+
 export default class Newm extends React.Component {
   constructor(props) {
     super(props);
@@ -95,7 +96,12 @@ export default class Newm extends React.Component {
   //     </div>
   //   );
   // }
-
+  instance() {
+    return (
+      <div>
+        <TagPicker data={data3} groupBy="role" style={{ width: 300 }} />
+      </div>);
+  }
   renderCalendar() {
     const cals = CalNameList
     return (
@@ -237,7 +243,7 @@ export default class Newm extends React.Component {
             return (
               <div className="single-cal" style={style}>
                 {index % calCount === 0 ? <h3>{CalInfo.Era}</h3> : null}
-                <p style={{ whiteSpace: 'pre-wrap' }}>{CalInfo.YearInfo}</p>
+                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{__html:CalInfo.YearInfo}} ></p>
                 <table>
                   <tr>{this.RenderTableContent(CalInfo)}</tr>
                 </table>

@@ -341,7 +341,9 @@ export default (CalName, year) => {
                     Sc[i] = ScList[OrderMod[i]] + '-'
                 }
             }
-            NodeAccum[i] = parseFloat(((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toPrecision(14))
+            if (Node) {
+                NodeAccum[i] = parseFloat(((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toPrecision(14))
+            }
         }
         return {
             TermAvgRaw,

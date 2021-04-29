@@ -41,7 +41,7 @@ export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, Ma
                 }
             }
             MansionName = MansionNameList[MansionOrder]
-            MansionDeg = (MansionAccum - MansionDegAccumList[MansionOrder]).toFixed(4)
+            MansionDeg = (MansionAccum - MansionDegAccumList[MansionOrder]).toFixed(3)
             MansionResult = MansionName + MansionDeg
             /////////昏中星/////////
             if (NightList) {
@@ -53,7 +53,7 @@ export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, Ma
                     }
                 }
                 MidstarName = MansionNameList[MidstarOrder]
-                MidstarDeg = (MidstarRaw - MansionDegAccumList[MidstarOrder]).toFixed(4)
+                MidstarDeg = (MidstarRaw - MansionDegAccumList[MidstarOrder]).toFixed(3)
                 MidstarResult = MidstarName + MidstarDeg
             }
         }

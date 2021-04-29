@@ -387,7 +387,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             }
             let NewmEcliFunc = {}
             let SyzygyEcliFunc = {}
-            if (Node) {
+            if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 28.86) {
                 NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 1, CalName)
                 const Newmstatus = NewmEcliFunc.status
                 let NewmMagni = 0
@@ -401,16 +401,18 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
                 if (Newmstatus) {
                     NewmMagni = NewmEcliFunc.Magni.toFixed(2)
-                    NewmEcli[i] = '【日食】'
+                    NewmEcli[i] = `<span class='eclipse'>日${NoleapMon}</span>`
                     NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal : '') + (NewmTotalDecimal ? '甚' + NewmTotalDecimal : '')
                     if (Newmstatus === 1) {
-                        NewmScPrint[i] += '●'
+                        NewmScPrint[i] += `●` // `<span class='eclipse-symbol'>●</span>`
                     } else if (Newmstatus === 2) {
-                        NewmScPrint[i] += '◐'
+                        NewmScPrint[i] += `◐` // `<span class='eclipse-symbol'>◐</span>`
                     } else if (Newmstatus === 3) {
-                        NewmScPrint[i] += '◍'
+                        NewmScPrint[i] += `◔` // `<span class='eclipse-symbol'>◔</span>` // ◍
                     }
                 }
+            }
+            if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 28.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
                 SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 0, CalName)
                 const Syzygystatus = SyzygyEcliFunc.status
                 let SyzygyMagni = 0
@@ -422,14 +424,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
                 if (Syzygystatus) {
                     SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
-                    SyzygyEcli[i] = '【月食】'
+                    SyzygyEcli[i] = `<span class='eclipse'>月${NoleapMon}</span>`
                     SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDecimal ? '虧' + SyzygyStartDecimal + '甚' + SyzygyTotalDecimal : '')
                     if (Syzygystatus === 1) {
-                        SyzygyScPrint[i] += '●'
+                        SyzygyScPrint[i] += `●` // `<span class='eclipse-symbol'>●</span>`
                     } else if (Syzygystatus === 2) {
-                        SyzygyScPrint[i] += '◐'
+                        SyzygyScPrint[i] += `◐` // `<span class='eclipse-symbol'>◐</span>`
                     } else if (Syzygystatus === 3) {
-                        SyzygyScPrint[i] += '◍'
+                        SyzygyScPrint[i] += `◔` // `<span class='eclipse-symbol'>◔</span>`
                     }
                 }
             }
@@ -442,7 +444,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         } else {
             Era = '公元前 ' + (1 - year) + ' 年 ' + YearSc
         }
-        let YearInfo = `《${CalNameList[CalName]}》 上元積年${year - OriginAd} `
+        let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元積年${year - OriginAd} `
         if (Type === 1) {
             let LeapSur = 0
             if (!isTermLeap) {
@@ -500,7 +502,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             YearInfo += `\n` + NewmEcliPrint
         }
         if ((SyzygyEcli || []).length > 0) {
-            SyzygyEcliPrint = SyzygyEcli.join('')
+            SyzygyEcliPrint = `<span class='eclipse-wrap'>` + SyzygyEcli.join('') + `</span>`
             if ((NewmEcli || []).length > 0) {
                 YearInfo += SyzygyEcliPrint
             } else {

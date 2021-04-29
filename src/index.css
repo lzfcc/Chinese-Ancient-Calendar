@@ -205,12 +205,52 @@ h2 {
   margin: .25em auto;
 }
 
+.single-cal p {
+  margin: 1em auto .3em;
+  font-size: 1em;
+  font-family: var(--codesans);
+  line-height: 1.7;
+}
+
+.single-cal h3 {
+  font-family: var(--serif);
+  font-size: 1.5em;
+  margin: 1.5em auto 0;
+  color: var(--red);
+}
+
+.cal-name {
+  color: var(--red);
+  margin-right: .1em;
+  font-weight: bold;
+  font-size: 1.2em;
+  font-family: var(--serif);
+}
+
+.eclipse-wrap {
+  margin: auto 2em;
+}
+
+.eclipse {
+  border: 1px solid var(--gray);
+  color: var(--gray);
+  border-radius: .4em;
+  margin: auto .4em;
+  padding: .2em .25em;
+  font-size: .85em;
+}
+
+.eclipse-symbol {
+  color: var(--red);
+  font-size: 1em;
+}
+
 table {
   font-family: var(--codesans);
-  font-size: .8em;
+  font-size: .9em;
   line-height: 1.6em;
   text-align: center;
-  margin: 0em auto 2em;
+  margin: .6em auto 2em;
   max-width: 140%;
   z-index: 2;
   border-bottom: 3.5px solid var(--gray);
@@ -338,19 +378,6 @@ tr.SyzygyScPrint {
 
 tr.SyzygyDecimalPrint {
   border-bottom: 2px solid var(--gray);
-}
-
-.single-cal p {
-  margin: 1em auto .3em;
-  font-size: .9em;
-  font-family: var(--codesans);
-  line-height: 1.7;
-}
-
-.single-cal h3 {
-  font-family: var(--serif);
-  font-size: 1.4em;
-  margin: 1.5em auto 0;
 }
 
 .calendar-select {
