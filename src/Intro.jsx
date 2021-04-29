@@ -8,7 +8,7 @@ export default class Intro extends React.Component {
           <h2 id="-">簡介</h2>
           <ol>
             <li>本工具的使用對象是古代天文曆法研究者。對於一般文史研究者，推薦使用下面的友情鏈接<n>當然，「時間」板塊的三個工具還是挺有用的</n>。</li>
-            <li>目前的古代朔閏査詢網站都是根據工具書、文獻材料手動調整的<n>參考中研院 <a href="https://sinocal.sinica.edu.tw/lusodoc.html" target='_blank'>兩千年中西曆轉換說明書</a>，廖育棟 <a href="https://ytliu0.github.io/ChineseCalendar/computation_chinese.html" target='_blank'>本網站的農曆編算</a></n>。本工具可提供古代實行未實行的 60 餘部曆法<n>包括我復原的 8 部魏晉南北朝曆法、2 部隋曆、3 部唐曆、5 部宋曆、1 部金曆</n>的計算，完全遵照各曆算法進行全自動計算，無手動干預。主要有三大功能區：<ol>
+            <li>目前的古代朔閏査詢網站都是根據工具書、文獻材料手動調整的<n>參考中研院 <a href="https://sinocal.sinica.edu.tw/lusodoc.html" target="_blank" rel="noreferrer">兩千年中西曆轉換說明書</a>，廖育棟 <a href="https://ytliu0.github.io/ChineseCalendar/computation_chinese.html" target="_blank" rel="noreferrer">本網站的農曆編算</a></n>。本工具可提供古代實行未實行的 60 餘部曆法<n>包括我復原的 8 部魏晉南北朝曆法、2 部隋曆、3 部唐曆、5 部宋曆、1 部金曆</n>的計算，完全遵照各曆算法進行全自動計算，無手動干預。主要有三大功能區：<ol>
               <li>【朔閏表】每年的積年、冬至大小餘、閏餘；冬至時刻的入轉日、入交泛日、入週天度。各月定朔<n>線性內插、二次三次內插</n>、平朔，定朔時刻日月所在赤道度，定望，平氣、定氣、定氣日昏中星。日月食食甚時刻、食分。</li>
               <li>【曆書】包含天文曆、具注曆兩部份。<ol>
                 <li>天文曆：每日太陽赤經、極黃經宿度，日赤緯、日出時刻、正午晷長，月赤經、月赤緯。預計 2023 年將推出五星計算。</li>
@@ -25,7 +25,7 @@ export default class Intro extends React.Component {
             </ol>
             </li>
             <li>如您發現任何問題，可通過評論框或郵件向我反饋。本程序目前未經過文獻檢驗，且急就草創，錯漏叢生，<b>尙不能用於正式學術研究</b>。目前完全可靠的是古四分曆，可完全替代朱桂昌<v>顓頊日曆表</v>、<v>太初日曆表</v>、<v>後漢四分日曆表</v>三部大轉頭。若您在研究過程中發現程序結果與文獻不符，望不吝提供線索。這個工具是根據研究需要而開發的，如果您有任何功能需求，敬請與我聯繫，我會在力所能及的範圍內儘量實現。</li>
-            <li>各時期曆法的行用情況見 <a href="https://kqh.me/tutorial/calendar4/" target='_blank'>赫赫金鑰｜中國古代曆法史</a>。</li>
+            <li>各時期曆法的行用情況見 <a href="https://kqh.me/tutorial/calendar4/" target="_blank" rel="noreferrer">赫赫金鑰｜中國古代曆法史</a>。</li>
             <li>編程理念：以研究需求爲中心；設計理念：以用戶體驗爲中心，傻瓜式操作。關於朔閏表表格的設計：採用加粗—正常——淺灰三層結構，用戶一眼就看到了定朔、平朔、平氣的干支，第二眼看到的是小分，最後看到的是不甚重要的昬中星。定朔平朔之間、定氣平氣之閒用細線，朔望氣之間用粗線。數字都用的等寬字體。每欄中間不設線，間隔恰到好處，不會太寬，讓視線跳躍得很累，也不會太緊，不易分辨。</li>
             <li>本工具完全開源，如您需要査詢、核査各曆的詳細參數與算法，請前往源碼倉庫。如您不嫌麻煩，可以下載源碼，在本地運行程序。更多技術特徵見開發者說明。【隱私聲明】本站使用了 Google Analytics 進行流量分析；評論系統採用 Hyvor Talk；服務器託管在 Netlify 平臺。運算均在本地瀏覽器進行。</li>
           </ol>
@@ -34,25 +34,25 @@ export default class Intro extends React.Component {
           <h3>年表</h3>
           <ul>
             <li><a href='https://ytliu0.github.io/ChineseCalendar/index_chinese.html'
-              target='_blank'>廖育棟的網站</a>年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等</li>
+              target="_blank" rel="noreferrer">廖育棟的網站</a>年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等</li>
             <li>中研院 <a href='https://sinocal.sinica.edu.tw/'>兩千年中西曆轉換</a></li>
-            <li><a href='https://www.lishichelun.com/calendar/switch' target='_blank'>歷史車輪中西曆轉換器</a></li>
+            <li><a href='https://www.lishichelun.com/calendar/switch' target="_blank" rel="noreferrer">歷史車輪中西曆轉換器</a></li>
           </ul>
           <h3>實行曆法</h3>
           <ul>
-            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target='_blank'>時憲曆計算</a></li>
-            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target='_blank'>紀年轉換工具</a>世界各國曆法</li>
+            <li><a href='https://ytliu.epizy.com/Shixian/index_chinese.html?i=1' target="_blank" rel="noreferrer">時憲曆計算</a></li>
+            <li><a href='https://kanasimi.github.io/CeJS/_test%20suite/era.htm' target="_blank" rel="noreferrer">紀年轉換工具</a>世界各國曆法</li>
           </ul>
           <h3>現代天文學中曆</h3>
           <ul>
-            <li><a href='http://www.tianqihoubao.com/calendar/calendar.htm' target='_blank'>日梭萬年曆</a>似乎是中科院背景</li>
-            <li><a href='http://www.nongli.net/sxwnl/' target='_blank'>壽星天文曆</a>許劍偉、鄭彥山</li>
-            <li><a href='https://vert.neocities.org/cld/' target='_blank'>萬年天文夏曆</a>哂蟹齋</li>
+            <li><a href='http://www.tianqihoubao.com/calendar/calendar.htm' target="_blank" rel="noreferrer">日梭萬年曆</a>似乎是中科院背景</li>
+            <li><a href='http://www.nongli.net/sxwnl/' target="_blank" rel="noreferrer">壽星天文曆</a>許劍偉、鄭彥山</li>
+            <li><a href='https://vert.neocities.org/cld/' target="_blank" rel="noreferrer">萬年天文夏曆</a>哂蟹齋</li>
           </ul>
           <h3>現代天文學朔閏、交食</h3>
           <ul>
-            <li><a href="https://eclipse.gsfc.nasa.gov/" target='_blank'>NASA Eclipse</a></li>
-            <li><a href="http://www.moshier.net/#Cephes" target='_blank'>Astronomy and numerical software source codes</a>
+            <li><a href="https://eclipse.gsfc.nasa.gov/" target="_blank" rel="noreferrer">NASA Eclipse</a></li>
+            <li><a href="http://www.moshier.net/#Cephes" target="_blank" rel="noreferrer">Astronomy and numerical software source codes</a>
             </li>
           </ul>
         </article>
@@ -66,7 +66,7 @@ export default class Intro extends React.Component {
             <li>采用 Web Worker 将 UI 线程与计算线程分离</li>
             <li>采用懒加载，大幅压缩渲染时间</li>
             <li>采用 WebPack 打包</li>
-            <li>采用 <a href="https://mikemcl.github.io/decimal.js/" target='_blank'>Decimal.js</a> 进行小数点后 64 位大数字运算，采用 <a href='https://www.npmjs.com/package/fraction.js' target='_blank'>fraction.js</a> 进行分数运算，采用 <a href="https://blog.whyoop.com/nzh/docs" target='_blank'>nzh</a> 进行阿拉伯数字、汉字转换</li>
+            <li>采用 <a href="https://mikemcl.github.io/decimal.js/" target="_blank" rel="noreferrer">Decimal.js</a> 进行小数点后 64 位大数字运算，采用 <a href='https://www.npmjs.com/package/fraction.js' target="_blank" rel="noreferrer">fraction.js</a> 进行分数运算，采用 <a href="https://blog.whyoop.com/nzh/docs" target="_blank" rel="noreferrer">nzh</a> 进行阿拉伯数字、汉字转换</li>
           </ul>
           <p><del>本仓库基于组件化、工程化的考量，将核心模块<n>计算逻辑</n>拆分到了单独的仓库<n>ancient-calendar</n>中，通过子模块进行依赖，从而前端展示<n>View</n>和计算逻辑<n>Model</n>可以独立开发，前端直接引用子模块的函数进行运算。</del></p>
           <p>由于运算都在前端进行，在进行大量运算时会卡住 UI，体验较差。为了改进这一问题，我们决定改用 Web Worker<n>前端的多线程</n>。这样就必须将 <code>Worker()</code> 构造函数的参数文件独立放在 public 目录下<n>不能参与 webpack 打包</n>，因而不能直接引用子模块，必须将子模块打包成一个文件：</p>

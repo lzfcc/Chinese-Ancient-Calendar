@@ -322,7 +322,7 @@ export default (CalName, year) => {
             AcrOrderRaw[i] += NewmPlus
             Sc[i] = ScList[(OrderMod[i] + 1 + OriginDaySc) % 60] // 算外
             if (isNewm && NewmPlus) {
-                Sc[i] += '+'
+                Sc[i] += `<span class='NewmPlus'>+</span>`
             }
             // 定氣
             TermAvgRaw[i] = OriginAccum + (i + ZhengOriginDif - 1) * TermLeng
@@ -338,7 +338,7 @@ export default (CalName, year) => {
                 const TermNewmDif = OriginDifRaw[i] - (TermNum1 - 1) * HalfTermLeng // 注意要減1。朔望入氣日數
                 const Dawn = (NightList[TermNum1] + TermNewmDif * (NightList[TermNum1 + 1] - NightList[TermNum1])) / 100 // 日出时刻=夜半漏+2.5刻                
                 if (isNewm && AcrRaw[i] - AcrOrderRaw[i] < Dawn) { // 按元嘉，合朔月食在黎明前是前一天
-                    Sc[i] = ScList[OrderMod[i]] + '-'
+                    Sc[i] = ScList[OrderMod[i]] + `<span class='NewmPlus'>-</span>`
                 }
             }
             if (Node) {

@@ -50,7 +50,7 @@ export default class Day extends React.Component {
               return (
                 <tr>
                   {row.map((d) => {
-                    return <td>{d}</td>;
+                    return <td dangerouslySetInnerHTML={{ __html: d }}></td>
                   })}
                 </tr>
               );
@@ -68,7 +68,7 @@ export default class Day extends React.Component {
                     return (
                       <tr>
                         {row.map((d) => {
-                          return <td>{d}</td>;
+                          return <td dangerouslySetInnerHTML={{ __html: d }}></td>
                         })}
                       </tr>
                     );

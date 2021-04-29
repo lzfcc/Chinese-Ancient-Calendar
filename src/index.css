@@ -242,7 +242,12 @@ h2 {
 
 .eclipse-symbol {
   color: var(--red);
-  font-size: 1em;
+  font-size: 1.2em;
+}
+
+.NewmPlus {
+  color: var(--blue);
+  font-size: 1.2em;
 }
 
 table {
@@ -695,6 +700,7 @@ hr {
 
 .day-table table {
   border: .3em solid var(--red);
+  font-size: .9em;
 }
 
 .day-table td {
@@ -711,28 +717,14 @@ hr {
   font-family: var(--codesans);
 }
 
-.YearColor table {
-  border-collapse: separate;
-  padding: .5em;
-  border: 1px solid var(--shallowgray);
-  font-family: var(--serif);
-}
-
-.YearColor table td {
-  border: none;
-  line-height: 2;
-  padding: 0 .3em;
-  width: auto;
-}
-
-.Sc {
+.day-table td p.Sc {
   font-size: 1.2em;
   letter-spacing: 1px;
   font-weight: bold;
 }
 
-.Jd {
-  font-size: .85em;
+.day-table td p.Jd {
+  font-size: .95em;
   color: var(--gray)
 }
 
@@ -784,6 +776,62 @@ hr {
 .Luck {
   color: var(--letterred);
   font-size: .9em;
+}
+
+.YearColor table {
+  /* border-collapse: separate; */
+  /* border: 1px solid var(--shallowgray); */
+  border: none;
+  font-family: var(--serif);
+}
+
+.YearColor table td {
+  border: none;
+  border: 1px solid var(--gray);
+  padding: .7em 0;
+  width: auto;
+  font-weight: bold;
+}
+
+.color-white {
+  background: white;
+  padding: 1em .5em;
+}
+
+.color-black {
+  color: var(--bg);
+  background: var(--black);
+  padding: 1em .5em;
+}
+
+.color-cyan {
+  background: var(--cyan);
+  color: var(--bg);
+  padding: 1em .5em;
+}
+
+.color-green {
+  color: var(--bg);
+  background: var(--green);
+  padding: 1em .5em;
+}
+
+.color-yellow {
+  color: var(--bg);
+  background: var(--letteryellow);
+  padding: 1em .5em;
+}
+
+.color-red {
+  color: var(--bg);
+  background: var(--letterred);
+  padding: 1em .5em;
+}
+
+.color-purple {
+  color: var(--bg);
+  background: var(--purple);
+  padding: 1em .5em;
 }
 
 /*!

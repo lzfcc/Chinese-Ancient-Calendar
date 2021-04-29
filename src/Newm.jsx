@@ -243,7 +243,7 @@ export default class Newm extends React.Component {
             return (
               <div className="single-cal" style={style}>
                 {index % calCount === 0 ? <h3>{CalInfo.Era}</h3> : null}
-                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{__html:CalInfo.YearInfo}} ></p>
+                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: CalInfo.YearInfo }} ></p>
                 <table>
                   <tr>{this.RenderTableContent(CalInfo)}</tr>
                 </table>
@@ -281,7 +281,7 @@ export default class Newm extends React.Component {
     return Object.entries(CalInfo).map(([key, value]) => {
       if (Array.isArray(value) && value.length > 0 && TableRowNameMap[key]) {
         return <tr className={key}>{
-          [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td>{x}</td>)))
+          [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td dangerouslySetInnerHTML={{ __html: x }}></td>)))
         }</tr>
       }
       return null
@@ -310,7 +310,7 @@ export default class Newm extends React.Component {
             <li>「二次」表示用二次差內插法計算出的小分，「一次」表示用線性內插法計算出的小分，「三次」表示用三次差公式計算出的小分。若某曆有二次差定朔計算，則望干支及小餘爲二次差定望，其餘曆法同理。</li>
             <li>雖然漢末<v>乾象曆</v>便出現了定朔推步，但直到唐初<v>麟德曆</v>纔正式開始用定朔編排曆書，此前都是平朔注曆，定朔僅用於交食推步。雖然隋劉焯<v>皇極曆</v> 便發明了二次差計算定朔，但編排曆書時僅採用簡單的線性內插進行計算，二次差僅用於交食推步，本表進朔標準是高次內插所得小分。雖然<v>皇極曆</v>開始便可以計算定氣，但直到淸<v>時憲曆</v> 纔開始用定氣編排曆書，之前都是平氣注曆。本程序在平朔注曆時代用平朔編排閏月；在定朔推曆時代用二次差編排閏月、進朔，若遇一次差與二次差存在臨界差異，用戶大可進行手動調整，但這種極端情況應該不大可能出現。</li>
             <li><v>元嘉</v>規定若月食發生在黎明之前，則屬上日，我把此規定用於所有的魏晉系曆法。干支減去1的，在定朔干支一格加上「-」，小分不變。<v>麟德</v>至<v>授時</v>之前行進朔法，我目前暫時簡單將 0.75 作爲進朔標準，進朔的月在干支後加上「+」來表示，僅將干支加 1，小分不變。如「乙丑+」表示原本的干支是甲子，進朔爲乙丑，而小分與進朔前一致。如果遇到與文獻不一致的情況，用戶可根據小分自行調整進朔與置閏。</li>
-            <li>日食在朔，月食在望。<code>● ◐ ◍</code> 分別表示全食、偏食、光影相接虧蝕微少。隋代以前的交食計算非常原始，僅能根據交食週期判斷是否可能發生日月食。<v>乾象</v>僅能計算月食所在月，<v>景初</v>能根據去交度分判斷虧蝕程度，<v>正光</v>提出食分計算方法，<v>大明</v>沒有虧食的計算，<v>大業</v>以前的魏晉南北曆法均無全食限，均無法計算日食，僅能判斷是否交會。整齊起見，我將食分、虧蝕程度一槪補全。<v>大業</v>、<v>戊寅</v>沒有計算日食持續時間的方法，我姑且用月食來補。</li>
+            <li>日食在朔，月食在望。<code>● ◐ ◔</code> 分別表示全食、偏食、光影相接虧蝕微少。隋代以前的交食計算非常原始，僅能根據交食週期判斷是否可能發生日月食。<v>乾象</v>僅能計算月食所在月，<v>景初</v>能根據去交度分判斷虧蝕程度，<v>正光</v>提出食分計算方法，<v>大明</v>沒有虧食的計算，<v>大業</v>以前的魏晉南北曆法均無全食限，均無法計算日食，僅能判斷是否交會。整齊起見，我將食分、虧蝕程度一槪補全。<v>大業</v>、<v>戊寅</v>沒有計算日食持續時間的方法，我姑且用月食來補。</li>
           </ol>
         </article>
       </>

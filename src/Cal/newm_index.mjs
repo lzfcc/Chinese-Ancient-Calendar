@@ -423,11 +423,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     NewmEcli[i] = `<span class='eclipse'>日${NoleapMon}</span>`
                     NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal : '') + (NewmTotalDecimal ? '甚' + NewmTotalDecimal : '')
                     if (Newmstatus === 1) {
-                        NewmScPrint[i] += `●` // `<span class='eclipse-symbol'>●</span>`
+                        NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
                     } else if (Newmstatus === 2) {
-                        NewmScPrint[i] += `◐` // `<span class='eclipse-symbol'>◐</span>`
+                        NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
                     } else if (Newmstatus === 3) {
-                        NewmScPrint[i] += `◔` // `<span class='eclipse-symbol'>◔</span>` // ◍
+                        NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>` // ◍
                     }
                 }
             }
@@ -446,11 +446,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     SyzygyEcli[i] = `<span class='eclipse'>月${NoleapMon}</span>`
                     SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDecimal ? '虧' + SyzygyStartDecimal + '甚' + SyzygyTotalDecimal : '')
                     if (Syzygystatus === 1) {
-                        SyzygyScPrint[i] += `●` // `<span class='eclipse-symbol'>●</span>`
+                        SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
                     } else if (Syzygystatus === 2) {
-                        SyzygyScPrint[i] += `◐` // `<span class='eclipse-symbol'>◐</span>`
+                        SyzygyScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
                     } else if (Syzygystatus === 3) {
-                        SyzygyScPrint[i] += `◔` // `<span class='eclipse-symbol'>◔</span>`
+                        SyzygyScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
                     }
                 }
             }

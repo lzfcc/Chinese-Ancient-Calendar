@@ -1,5 +1,6 @@
 import {
     ColorList,
+    ClassColorList,
     ScList,
     FiveList1,
     FiveList2,
@@ -18,7 +19,7 @@ import {
 export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，干支
     const MaleGong = Math.round(((7 - YuanYear) % 9 + 9) % 9.1) // 男女九宮算法用《象吉通書》，見《黑水城出土元代曆日研究》
     const FemaleGong = Math.round(((5 + YuanYear) % 9 + 9) % 9.1)
-    const MaleFemale = '男' +NumList[MaleGong] + '宮女' + NumList[FemaleGong] + '宮'
+    const MaleFemale = '男' + NumList[MaleGong] + '宮女' + NumList[FemaleGong] + '宮'
     let SuixingOrder = 4
     if (b === 2) {
         SuixingOrder = 11
@@ -140,15 +141,15 @@ export const YearColorConvert = YuanYear => {
         const row3an = Math.round(((4 - YuanYear) % 9 + 9) % 9.1)
         const row3bn = Math.round(((6 - YuanYear) % 9 + 9) % 9.1)
         const row3cn = Math.round(((2 - YuanYear) % 9 + 9) % 9.1)
-        const row1a = ColorList[row1an] + NumList[row1an]
-        const row1b = ColorList[row1bn] + NumList[row1bn]
-        const row1c = ColorList[row1cn] + NumList[row1cn]
-        const row2a = ColorList[row2an] + NumList[row2an]
-        const row2b = ColorList[row2bn] + NumList[row2bn]
-        const row2c = ColorList[row2cn] + NumList[row2cn]
-        const row3a = ColorList[row3an] + NumList[row3an]
-        const row3b = ColorList[row3bn] + NumList[row3bn]
-        const row3c = ColorList[row3cn] + NumList[row3cn]
+        const row1a = `<span class='${ClassColorList[row1an]}'>` + ColorList[row1an] + NumList[row1an] + `</span>`
+        const row1b = `<span class='${ClassColorList[row1bn]}'>` + ColorList[row1bn] + NumList[row1bn] + `</span>`
+        const row1c = `<span class='${ClassColorList[row1cn]}'>` + ColorList[row1cn] + NumList[row1cn] + `</span>`
+        const row2a = `<span class='${ClassColorList[row2an]}'>` + ColorList[row2an] + NumList[row2an] + `</span>`
+        const row2b = `<span class='${ClassColorList[row2bn]}'>` + ColorList[row2bn] + NumList[row2bn] + `</span>`
+        const row2c = `<span class='${ClassColorList[row2cn]}'>` + ColorList[row2cn] + NumList[row2cn] + `</span>`
+        const row3a = `<span class='${ClassColorList[row3an]}'>` + ColorList[row3an] + NumList[row3an] + `</span>`
+        const row3b = `<span class='${ClassColorList[row3bn]}'>` + ColorList[row3bn] + NumList[row3bn] + `</span>`
+        const row3c = `<span class='${ClassColorList[row3cn]}'>` + ColorList[row3cn] + NumList[row3cn] + `</span>`
         YearColor.push([row1a, row1b, row1c])
         YearColor.push([row2a, row2b, row2c])
         YearColor.push([row3a, row3b, row3c])
@@ -170,15 +171,15 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
         const row3an = Math.round(((2 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
         const row3bn = Math.round(((4 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
         const row3cn = Math.round(((9 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row1a = ColorList[row1an] + NumList[row1an]
-        const row1b = ColorList[row1bn] + NumList[row1bn]
-        const row1c = ColorList[row1cn] + NumList[row1cn]
-        const row2a = ColorList[row2an] + NumList[row2an]
-        const row2b = ColorList[row2bn] + NumList[row2bn]
-        const row2c = ColorList[row2cn] + NumList[row2cn]
-        const row3a = ColorList[row3an] + NumList[row3an]
-        const row3b = ColorList[row3bn] + NumList[row3bn]
-        const row3c = ColorList[row3cn] + NumList[row3cn]
+        const row1a = `<span class='${ClassColorList[row1an]}'>` + ColorList[row1an] + NumList[row1an] + `</span>`
+        const row1b = `<span class='${ClassColorList[row1bn]}'>` + ColorList[row1bn] + NumList[row1bn] + `</span>`
+        const row1c = `<span class='${ClassColorList[row1cn]}'>` + ColorList[row1cn] + NumList[row1cn] + `</span>`
+        const row2a = `<span class='${ClassColorList[row2an]}'>` + ColorList[row2an] + NumList[row2an] + `</span>`
+        const row2b = `<span class='${ClassColorList[row2bn]}'>` + ColorList[row2bn] + NumList[row2bn] + `</span>`
+        const row2c = `<span class='${ClassColorList[row2cn]}'>` + ColorList[row2cn] + NumList[row2cn] + `</span>`
+        const row3a = `<span class='${ClassColorList[row3an]}'>` + ColorList[row3an] + NumList[row3an] + `</span>`
+        const row3b = `<span class='${ClassColorList[row3bn]}'>` + ColorList[row3bn] + NumList[row3bn] + `</span>`
+        const row3c = `<span class='${ClassColorList[row3cn]}'>` + ColorList[row3cn] + NumList[row3cn] + `</span>`
         MonColor.push([row1a, row1b, row1c])
         MonColor.push([row2a, row2b, row2c])
         MonColor.push([row3a, row3b, row3c])
