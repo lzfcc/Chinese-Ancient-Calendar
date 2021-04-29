@@ -77,12 +77,11 @@ export default class Intro extends React.Component {
             <li>打包  main.js<pre><code class="lang-shell">$ webpack .<span class="hljs-regexp">/src/</span>Cal<span class="hljs-regexp">/output_frontend-worker.mjs -o ./</span><span class="hljs-keyword">public</span>
             </code></pre>
             </li>
-            <li></li>
+            <li><pre><code class="lang-shell">$ npm <span class="hljs-keyword">run</span><span class="bash"> build</span>
+            </code></pre></li>
           </ol>
-          <pre><code class="lang-shell">$ npm <span class="hljs-keyword">run</span><span class="bash"> build</span>
-          </code></pre>
           <h3>2. </h3>
-          <p>核心计算程序在 <code>/src/Cal</code> 目录下，有 10 个板块，各文件功能说明：</p>
+          <p>核心计算程序在 <code>/src/Cal</code> 目录下，有 9 个板块，各文件功能说明：</p>
           <ul>
             <li><code>para_</code> 参数<ul>
               <li><code>para_constant</code> 常量参数</li>
@@ -137,7 +136,7 @@ export default class Intro extends React.Component {
               <li><code>bind_astronomy</code> 根据历法自动选择天文计算</li>
             </ul>
             </li>
-            <li>output_<ul>
+            <li><code>output_</code><ul>
               <li><code>output</code> 输出准备</li>
               <li><code>output_print</code> 本地打印入口。<code>const printData = outputFile(2, 1255, 1255, 0</code> 第一个数字为模式，<code>1</code> 为朔闰表，<code>2</code> 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持</li>
               <li><code>output_frontend-worker</code> Web Worker，朔闰表、历书两个模块的前端调用入口</li>
@@ -168,6 +167,8 @@ export default class Intro extends React.Component {
           <p>版本：核心 <code>0.90</code> 前端 <code>1.00</code></p>
           <h4 id="04-25">4-25 <code>0.91 1.01</code></h4>
           <p>4 月 24 日本站編入 Google 索引【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題；修改定氣問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
+          <h4 id="04-29">4-29 <code>0.92 1.01.1</code></h4>
+          <p>【核心】天文模塊增加交食、交食週期與交點月換算。增加魏晋南北系、大業、戊寅、麟徳、大衍交食。元嘉非常奇怪，原來的交會差，單算入交日的話跟其他曆都不一樣，但是最後結果是一樣的，迷惑。現在已有的食甚改正，有些方向都是相反的，奇怪。調整魏晉系閏餘單位，本來想把古六曆閏餘改成 19，發現顓頊不好改，放棄。增加 fraction.js。【前端】文件改名。升級依賴。辰刻轉換由文字換成表格。修改表格 css</p>
           <h4 id="todo-list-">todo list:</h4>
           <ul>
             <li>完善交食</li>

@@ -108,7 +108,7 @@ export const Jd2Date1 = Jd => {
         mm--
         dd = 31
     }
-    const Result = '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期 ' + WeekName + ' ｜ ' + Sc
+    const Result = '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期' + WeekName + ' ｜ ' + Sc
     const Mmdd = mm + '.' + dd
     return {
         Result,

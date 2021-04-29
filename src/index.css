@@ -195,10 +195,14 @@ h2 {
 .ans {
   /* box-shadow: 0 0 14px 0 var(--shallowgray1); */
   border: 1px solid var(--shallowgray);
-  margin: 1.8em auto 1em;
-  padding: 1px 1em;
+  margin: 1.5em auto;
+  padding: 2em 1em;
   background: var(--bggray);
   border-radius: 1em;
+}
+
+.ans p {
+  margin: .25em auto;
 }
 
 table {
@@ -250,7 +254,7 @@ table td {
 
 .table2 table {
   font-size: .9em;
-  margin: -.8em auto;
+  margin: .25em auto;
 }
 
 .table2 table td {
@@ -556,7 +560,7 @@ input {
   color: var(--darkyellow);
   letter-spacing: .2em;
   margin: 4em auto 2em;
-  border-bottom: .1em solid var(--yellow); 
+  border-bottom: .1em solid var(--yellow);
   /* text-shadow: 1px 1px 4px var(--shallowgray); */
 }
 

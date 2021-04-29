@@ -60,10 +60,8 @@ export default class a extends React.Component {
     }
     return (
       <div className="ans">
-        <p></p>
         <div>{this.state.output1}</div>
         <div>{this.state.output2}</div>
-        <p></p>
       </div>
     );
   }

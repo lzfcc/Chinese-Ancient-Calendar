@@ -37,7 +37,6 @@ export default class a extends React.Component {
     }
     return (
       <div className="ans table2">
-        <p></p>
         <table>
           {(this.state.output || []).map((row) => {
             return (
@@ -48,7 +47,6 @@ export default class a extends React.Component {
             );
           })}
         </table>
-        <p></p>
       </div>
     );
   }

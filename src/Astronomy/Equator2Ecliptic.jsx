@@ -74,7 +74,6 @@ export default class Converter extends React.Component {
             )
           })}
         </table>
-        <p></p>
       </div>
     )
   }

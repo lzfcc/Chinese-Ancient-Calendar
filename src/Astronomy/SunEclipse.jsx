@@ -60,7 +60,6 @@ export default class Converter extends React.Component {
     }
     return (
       <div className='ans table2 right'>
-        <p></p>
         <table>
           <tr>
             <th></th>
@@ -79,7 +78,6 @@ export default class Converter extends React.Component {
             )
           })}
         </table>
-        <p></p>
       </div>
     )
   }
