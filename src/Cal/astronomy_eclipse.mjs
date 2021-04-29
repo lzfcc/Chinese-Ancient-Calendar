@@ -157,7 +157,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Leap, is
     } else if (Type === 6) { // 劉金沂《麟徳曆交食計算法》。
         // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785
         // 交後交在後，符號同定朔改正，交前，與定朔相反。
-        const signNodeAccum = NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交
+        const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交
         NodeAccumCorr = signNodeAccum * AutoTcorr(AnomaAccum, OriginDif, CalName).NodeAccumCorr
     }
     NodeAccum += NodeAccumCorr // 定交分
@@ -646,7 +646,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
     let status = 0 // 1全，2偏
     let Last = 0
     let SunLimit = 0
-    const signNodeAccum = NodeAccumHalf > QuarNode ? -1 : 1
+    const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1 // 這個符號很迷惑，說陰曆跟定朔改正相反，陽曆相同，但頁538的算例都是相同的
     NodeAccumCorr = signNodeAccum * AutoTcorr(AnomaAccum, OriginDif, CalName).NodeAccumCorr
     NodeAccum += NodeAccumCorr
     NodeAccumHalf = NodeAccum % HalfNode
@@ -689,8 +689,8 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
             }
         }
     }
-    if (['Dayan', 'Zhide'].includes(CalName)) { // 大衍以陽城為準，有月食食甚時刻修正，和日食修正一樣                
-        Tcorr = NodeDif * 0.0785 / 20  // 同名相加異名相減
+    if (['Dayan', 'Zhide'].includes(CalName)) { // 大衍以陽城為準，有月食食甚時刻修正，和日食修正一樣。正元五紀沒有月食時差記載，同大衍                
+        Tcorr = NodeDif * 0.0785 / 20  // 同名（同在表）相加異名（同在裏）相減。但是頁540算例方向跟這裡不一樣
         if (OriginDif > QuarSolar && OriginDif < Solar * 0.75) { // 日在赤道北
             if (NodeAccum < HalfNode) {
                 Tcorr = -Tcorr
@@ -803,6 +803,9 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
     }
     Decimal += Tcorr
     const StartDecimal = Decimal - Last / 200
+    const ExMagniFunc = ExMagni(Magni)
+    Magni = ExMagniFunc.Magni
+    status = ExMagniFunc.status
     return {
         status,
         Last,
@@ -811,7 +814,8 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
         Decimal
     }
 }
-console.log(EclipseTable3(14.4, 24, 0.4, 15, 1, 'Dayan').Magni)
+// console.log(EclipseTable3(26.747352, 21.200901, 0.320611, 220.059, 1, 'Dayan').Magni) // 頁538示例
+// console.log(EclipseTable3(14.300434, 8.411596, 0.825769, 235.059, 0, 'Dayan').Decimal) 
 
 // 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
