@@ -46,7 +46,6 @@ export default class a extends React.Component {
   render() {
     return (
       <div>
-        <p className="note">年干支序 = ((公元年 - 3) % 60 + 60) % 60</p>
         {this.input()}
         <button onClick={this.handle} className="button4-6">
           SC2year

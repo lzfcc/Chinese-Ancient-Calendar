@@ -215,6 +215,7 @@ export const MonSindhuNameList = ' 翼角氐心箕女室婁昴觜鬼星' // 李�
 export const MonHexagramNameList = ' 泰壯夬乾姤遯否觀剝坤復臨'
 export const MonScaleNameList = ['', '太簇', '夾鐘', '姑洗', '中呂', '蕤賓', '林鐘', '夷則', '南呂', '無射', '應鐘', '黃鐘', '大呂']
 export const WeekList = ' 月火水木金土日' // 回回不用甲子，用七曜。
+export const WeekList1 = ' 一二三四五六日' 
 export const ColorList = ' 白黑碧綠黃白赤白紫' // 九宮
 export const HexagramList1 = ' 乾兌離震巽坎艮坤' // 震 正東;兌 正西;離 正南;坎 正北;坤 西南;艮 東北;巽 東南;乾 西北
 export const GongList = ['', '娵訾', '降婁', '大梁', '實沈', '鶉首', '鶉火', '鶉尾', '壽星', '大火', '析木', '星紀', '玄枵'] // 十二次

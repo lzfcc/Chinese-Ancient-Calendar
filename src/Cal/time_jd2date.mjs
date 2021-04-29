@@ -1,13 +1,12 @@
 import {
     big,
-    ScList
+    ScList,
+    WeekList1
 } from './para_constant.mjs'
-
 /**
  * 把儒略日轉換成儒略曆或格里高利曆 ported from https://ytliu0.github.io/ChineseCalendar/Julian.js by 廖育棟
  * @param {array} Jd 儒略日
  */
-
 // const Jd2Date = Jd => {
 //     if (!Array.isArray(Jd)) {
 //         Jd = [Jd]
@@ -79,6 +78,7 @@ export const Jd2Date1 = Jd => {
     const ScOrder = Math.round((Math.round(Jd) % 60 + 110) % 60.1)
     Jd = Jd.toNumber()
     const Week = Math.round((Math.round(Jd) % 7 + 8) % 7.1)
+    const WeekName = WeekList1[Week]
     const Sc = ScList[ScOrder] + '(' + ScOrder + ')'
 
     function generateTimeString(h, m, s, ms) {
@@ -108,7 +108,7 @@ export const Jd2Date1 = Jd => {
         mm--
         dd = 31
     }
-    const Result = '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期 ' + Week + ' ｜ ' + Sc
+    const Result = '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期 ' + WeekName + ' ｜ ' + Sc
     const Mmdd = mm + '.' + dd
     return {
         Result,

@@ -8,7 +8,7 @@ import DynamicList, { createCache } from 'react-window-dynamic-list'
 const TableRowNameMap = {
   MonthPrint: '月序',
   NewmAvgScPrint: '平朔',
-  NewmAvgDecimalPrint: '分',
+  NewmAvgDecimalPrint: '',
   NewmScPrint: '定朔',
   NewmMmddPrint: '公曆',
   NewmDecimal3Print: '三次',
@@ -16,14 +16,13 @@ const TableRowNameMap = {
   NewmDecimal1Print: '線性',
   NewmMansionPrint: '赤度',
   SyzygyScPrint: '望',
-  SyzygyDecimalPrint: '分',
+  SyzygyDecimalPrint: '',
   TermNamePrint: '氣名',
   TermAcrScPrint: '定氣',
-  TermAcrDecimalPrint: '分',
+  TermAcrDecimalPrint: '',
   TermScPrint: '平氣',
-  TermDecimalPrint: '分',
-  TermMansionPrint: '赤度',
-  TermMidstarPrint: '昏中'
+  TermDecimalPrint: '',
+  TermMidstarPrint: '昏中星'
 }
 
 const heightCache = createCache();

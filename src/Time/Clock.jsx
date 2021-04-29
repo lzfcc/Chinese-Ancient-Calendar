@@ -36,8 +36,19 @@ export default class a extends React.Component {
       return null;
     }
     return (
-      <div className="ans" style={{ whiteSpace: "pre-wrap" }}>
-        <p>{this.state.output}</p>
+      <div className="ans table2">
+        <p></p>
+        <table>
+          {(this.state.output || []).map((row) => {
+            return (
+              <tr>
+                <td className="RowTitle">{row.title}</td>
+                <td>{row.data}</td>
+              </tr>
+            );
+          })}
+        </table>
+        <p></p>
       </div>
     );
   }

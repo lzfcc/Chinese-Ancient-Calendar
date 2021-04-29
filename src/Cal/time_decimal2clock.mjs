@@ -107,7 +107,7 @@ const ClockSong = Daydecimal => { // 宋元明。（之前假設初刻是1/6，�
     const HalfName = HalfList[HalfOrder] // 初0正1
     let HalfRaw = KeRaw - ((ClockOrder - 1) * (100 / 12) + HalfOrder * (4 + 1 / 6))
     let QuarOrder = 0
-    if (HalfRaw < 1) {} else if (HalfRaw < 2) {
+    if (HalfRaw < 1) { } else if (HalfRaw < 2) {
         QuarOrder = 1
     } else if (HalfRaw < 3) {
         QuarOrder = 2
@@ -149,9 +149,47 @@ export const Clock = Daydecimal => {
     const C120 = Clock120(Daydecimal)
     const Song = ClockSong(Daydecimal)
     const Qing = ClockQing(Daydecimal)
-    return '【現代】' + West + `\n` + '【120刻】' + C120 + `\n` + '【108刻】' + C108 + `\n` + '【96刻】' + C96 + `\n` + '【漢魏晉】' + Jingchu + `\n` + '【戊寅】' + Wuyin + `\n` + '【隋唐】' + Tang + `\n` + '【宋至明】' + Song + `\n` + '【清】' + Qing
+    const Result = []
+    Result.push({
+        title: '現代',
+        data: West
+    })
+    Result.push({
+        title: '120刻',
+        data: C120
+    })
+    Result.push({
+        title: '108刻',
+        data: C108
+    })
+    Result.push({
+        title: '96刻',
+        data: C96
+    })
+    Result.push({
+        title: '漢魏晉',
+        data: Jingchu
+    })
+    Result.push({
+        title: '戊寅曆',
+        data: Wuyin
+    })
+    Result.push({
+        title: '隋唐',
+        data: Tang
+    })
+    Result.push({
+        title: '宋至明',
+        data: Song
+    })
+    Result.push({
+        title: '清',
+        data: Qing
+    })
+    return Result
 }
 // console.log(Clock('5')) // 128  9584  9999
+
 export const Clock1 = (h, m, s) => {
     h = parseInt(h)
     m = parseInt(m)
@@ -170,7 +208,44 @@ export const Clock1 = (h, m, s) => {
     const C120 = Clock120(Daydecimal)
     const Song = ClockSong(Daydecimal)
     const Qing = ClockQing(Daydecimal)
-    return '【刻】' + Daydecimal.toFixed(6) + `\n` + '【120刻】' + C120 + `\n` + '【108刻】' + C108 + `\n` + '【96刻】' + C96 + `\n` + '【漢魏晉】' + Jingchu + `\n` + '【戊寅】' + Wuyin + `\n` + '【隋唐】' + Tang + `\n` + '【宋至明】' + Song + `\n` + '【清】' + Qing
+    const Result = []
+    Result.push({
+        title: '刻',
+        data: Daydecimal.toFixed(4)
+    })
+    Result.push({
+        title: '120刻',
+        data: C120
+    })
+    Result.push({
+        title: '108刻',
+        data: C108
+    })
+    Result.push({
+        title: '96刻',
+        data: C96
+    })
+    Result.push({
+        title: '漢魏晉',
+        data: Jingchu
+    })
+    Result.push({
+        title: '戊寅曆',
+        data: Wuyin
+    })
+    Result.push({
+        title: '隋唐',
+        data: Tang
+    })
+    Result.push({
+        title: '宋至明',
+        data: Song
+    })
+    Result.push({
+        title: '清',
+        data: Qing
+    })
+    return Result
 }
 
 // 随着二十四时制在唐代退出天象纪录后，每辰的“十二小分”制也被百刻制取代了。“刻”是计量单位，必须与某一时刻点并用，才能表示钟点。十二辰的起点、正中点都是固定的，用圭表和日晷可以校核“午正”，与百刻制结合，可从每辰的起点或正中点开始顺序纪录流逝的刻数。

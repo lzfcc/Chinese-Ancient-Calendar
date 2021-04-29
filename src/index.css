@@ -27,7 +27,7 @@
 body {
   font-family: var(--sans);
   color: var(--black);
-  font-size: 1.2em;
+  font-size: 1.1em;
   line-height: 1.9em;
   padding: 0;
   margin: 0;
@@ -245,7 +245,7 @@ table td {
 
 .table2 p {
   font-size: .9em;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .table2 table {
@@ -255,7 +255,7 @@ table td {
 
 .table2 table td {
   width: auto;
-  padding: .2em .75em;
+  padding: .15em .75em;
   text-align: left;
 }
 
@@ -548,7 +548,7 @@ input {
 
 .modulo {
   margin: 5em auto;
-  max-width: 1020px;
+  max-width: 1000px;
 }
 
 .modulo h2 {
