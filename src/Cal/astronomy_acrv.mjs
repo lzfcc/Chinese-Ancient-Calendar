@@ -123,24 +123,29 @@ const SunTable3 = (OriginDifRaw, CalName) => {
     SunDifAccumList[0] = 0
     SunDifAccumList[13] = 0
     SunDifAccumList[25] = 0
+    SunDifAccumList[26] = SunDifAccumList[2]
+    SunDifAccumList[27] = SunDifAccumList[3]
     const TermAcrRawList = [] // 定氣距冬至日數
-    for (let i = 1; i < 24; i++) {
+    for (let i = 1; i <= 24; i++) {
         TermAcrRawList[i] = HalfTermLeng * (i - 1) - SunDifAccumList[i]
     }
     TermAcrRawList[0] = 0
     TermAcrRawList[25] = Solar
     TermAcrRawList[26] = Solar + TermAcrRawList[2]
+    TermAcrRawList[27] = Solar + TermAcrRawList[3]
+    TermAcrRawList[28] = Solar + TermAcrRawList[4]
+    const OriginDif = OriginDifRaw % Solar
     let TermNum = 1
     for (let j = 1; j <= 24; j++) { // 氣候 
-        if (OriginDifRaw >= TermAcrRawList[j] && OriginDifRaw < TermAcrRawList[j + 1]) {
+        if (OriginDif >= TermAcrRawList[j] && OriginDif < TermAcrRawList[j + 1]) {
             TermNum = j
             break
         }
     }
     const Initial = TermAcrRawList[TermNum] + ',' + SunDifAccumList[TermNum] + ';' + TermAcrRawList[TermNum + 1] + ',' + SunDifAccumList[TermNum + 1] + ';' + TermAcrRawList[TermNum + 2] + ',' + SunDifAccumList[TermNum + 2]
-    const SunDifAccum2 = Interpolate3(OriginDifRaw, Initial).f // 直接拉格朗日內插，懶得寫了
+    const SunDifAccum2 = Interpolate3(OriginDif, Initial).f // 直接拉格朗日內插，懶得寫了
     const TermRange1 = TermAcrRawList[TermNum + 1] - TermAcrRawList[TermNum] // 本氣長度
-    const SunDifAccum1 = SunDifAccumList[TermNum] + SunAcrAvgDifListList[TermNum] * (OriginDifRaw - TermAcrRawList[TermNum]) / TermRange1
+    const SunDifAccum1 = SunDifAccumList[TermNum] + SunAcrAvgDifListList[TermNum] * (OriginDif - TermAcrRawList[TermNum]) / TermRange1
     return {
         TermAcrRawList,
         SunDifAccumList,
@@ -158,6 +163,7 @@ const SunFormula1 = (OriginDifRaw, CalName) => {
         Solar,
         Denom
     } = AutoPara[CalName]
+    const OriginDif = OriginDifRaw % Solar
     let SunTcorr = 0
     let signA = 1
     let Xian = 0
@@ -165,20 +171,20 @@ const SunFormula1 = (OriginDifRaw, CalName) => {
     if (CalName === 'Yitian') {
         const XianA = 897699.5
         const XianB = 946785.5 // 陳美東《崇玄儀天崇天三曆晷長計算法》改正該値
-        if (OriginDifRaw <= XianA / Denom) {
+        if (OriginDif <= XianA / Denom) {
             Xian = XianA
-            ExconT = OriginDifRaw
-        } else if (OriginDifRaw <= Solar / 2) {
+            ExconT = OriginDif
+        } else if (OriginDif <= Solar / 2) {
             Xian = XianB
-            ExconT = Solar / 2 - OriginDifRaw
-        } else if (OriginDifRaw <= Solar / 2 + XianB / Denom) {
+            ExconT = Solar / 2 - OriginDif
+        } else if (OriginDif <= Solar / 2 + XianB / Denom) {
             signA = -1
             Xian = XianB
-            ExconT = OriginDifRaw - Solar / 2
+            ExconT = OriginDif - Solar / 2
         } else {
             signA = -1
             Xian = XianA
-            ExconT = Solar - OriginDifRaw
+            ExconT = Solar - OriginDif
         }
         const ExconAccum = 24543 // 盈縮積
         const E = ExconAccum * Denom * 2 / Xian // 初末限平率
@@ -190,46 +196,46 @@ const SunFormula1 = (OriginDifRaw, CalName) => {
         const XianB = 93 + 8552 / 12030
         const SunDenomA = 3294
         const SunDenomB = 3659
-        if (OriginDifRaw <= XianA) {
+        if (OriginDif <= XianA) {
             Xian = XianA
             SunDenom = SunDenomA
-            ExconT = OriginDifRaw
-        } else if (OriginDifRaw <= Solar / 2) {
+            ExconT = OriginDif
+        } else if (OriginDif <= Solar / 2) {
             Xian = XianB
             SunDenom = SunDenomB
-            ExconT = Solar / 2 - OriginDifRaw
-        } else if (OriginDifRaw <= Solar / 2 + XianB) {
+            ExconT = Solar / 2 - OriginDif
+        } else if (OriginDif <= Solar / 2 + XianB) {
             Xian = XianB
             SunDenom = SunDenomB
             signA = -1
-            ExconT = OriginDifRaw - Solar / 2
+            ExconT = OriginDif - Solar / 2
         } else {
             Xian = XianA
             SunDenom = SunDenomA
             signA = -1
-            ExconT = Solar - OriginDifRaw
+            ExconT = Solar - OriginDif
         }
         SunTcorr = signA * (ExconT / SunDenom) * (Xian * 2 - ExconT) // 盈縮差度分。極值2.37
     } else if (CalName === 'Mingtian') {
-        if (OriginDifRaw <= Solar / 4) {
-            ExconT = OriginDifRaw
-        } else if (OriginDifRaw <= Solar / 2) {
-            ExconT = Solar / 2 - OriginDifRaw
-        } else if (OriginDifRaw <= Solar * 0.75) {
+        if (OriginDif <= Solar / 4) {
+            ExconT = OriginDif
+        } else if (OriginDif <= Solar / 2) {
+            ExconT = Solar / 2 - OriginDif
+        } else if (OriginDif <= Solar * 0.75) {
             signA = -1
-            ExconT = OriginDifRaw - Solar / 2
+            ExconT = OriginDif - Solar / 2
         } else {
             signA = -1
-            ExconT = Solar - OriginDifRaw
+            ExconT = Solar - OriginDif
         }
         SunTcorr = signA * ExconT * (200 - ExconT) / 4135 // 盈縮差度分。極值2.37
         // SunTcorr = signA * ExconT * (200 - ExconT) * 400 / 567
     } else if (CalName === 'Futian') {
-        if (OriginDifRaw > Solar / 2) {
-            OriginDifRaw -= Solar / 2
+        if (OriginDif > Solar / 2) {
+            OriginDif -= Solar / 2
             signA = -1
         }
-        SunTcorr = signA * OriginDifRaw * (Solar / 2 - OriginDifRaw) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得為立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000為分母。
+        SunTcorr = signA * OriginDif * (Solar / 2 - OriginDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得為立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000為分母。
     }
     return SunTcorr
 }
@@ -248,18 +254,19 @@ const SunFormula2 = (OriginDifRaw, CalName) => {
     } = AutoPara[CalName]
     const Solar = 365.2425
     const HalfSolar = Solar / 2
+    const OriginDif = OriginDifRaw % Solar
     let ExconS = 0
-    if (OriginDifRaw <= 88.909225) {
-        const ExconT = OriginDifRaw
+    if (OriginDif <= 88.909225) {
+        const ExconT = OriginDif
         ExconS = (ExpanDing * ExconT - ExpanPing * (ExconT ** 2) - ExpanLi * (ExconT ** 3)) / 10000 // 盈縮差
-    } else if (OriginDifRaw <= HalfSolar) {
-        const ExconT = HalfSolar - OriginDifRaw
+    } else if (OriginDif <= HalfSolar) {
+        const ExconT = HalfSolar - OriginDif
         ExconS = (ContracDing * ExconT - ContracPing * (ExconT ** 2) - ContracLi * (ExconT ** 3)) / 10000
-    } else if (OriginDifRaw <= HalfSolar + 93.712025) {
-        const ExconT = OriginDifRaw - HalfSolar
+    } else if (OriginDif <= HalfSolar + 93.712025) {
+        const ExconT = OriginDif - HalfSolar
         ExconS = -(ContracDing * ExconT - ContracPing * (ExconT ** 2) - ContracLi * (ExconT ** 3)) / 10000
     } else {
-        const ExconT = Solar - OriginDifRaw
+        const ExconT = Solar - OriginDif
         ExconS = -(ExpanDing * ExconT - ExpanPing * (ExconT ** 2) - ExpanLi * (ExconT ** 3)) / 10000
     }
     return ExconS
@@ -577,7 +584,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
 }
 // console.log(AutoTcorr(1, 16, 'Dayan').SunDifAccum)
 
-export const AutoSunTcorr = (OriginDifRaw, CalName, SolarIn) => {
+export const AutoSunTcorr = (OriginDifRaw, CalName, Solar) => {
     const {
         AutoPara,
         Type
@@ -585,12 +592,6 @@ export const AutoSunTcorr = (OriginDifRaw, CalName, SolarIn) => {
     const {
         Denom
     } = AutoPara[CalName]
-    let {
-        Solar
-    } = AutoPara[CalName]
-    if (!Solar) {
-        Solar = SolarIn
-    }
     const HalfTermLeng = Solar / 24
     let TermAcrRawList = [] // 定氣距冬至日數
     const AutoAcrTermTcorr = (OriginDifRaw, CalName) => {
