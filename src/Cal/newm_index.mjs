@@ -3,7 +3,8 @@ import {
     ScList,
     ThreeList,
     CalNameList,
-    AutoMansion
+    AutoMansion,
+    NumList
 } from './para_constant.mjs'
 import Deg2Mansion from './astronomy_deg2mansion.mjs'
 import {
@@ -189,26 +190,33 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         LeapNumTermThis -= NewmSyzygyStart
         // 月序
         const Month = []
+        const MonthName = []
         if (Type === 1) {
             if (isTermLeap) {
                 if (LeapNumTermThis && (mainThis.isLeapAvgThis || specialNewmSyzygyEnd)) { // || (mainThis.isLeapAvgNext && mainThis.isAdvance)))
                     for (let i = 1; i <= 13; i++) {
                         if (i <= LeapNumTermThis) {
                             Month[i] = (i + ZhengOriginDif + 12) % 12
+                            MonthName[i] = NumList[Month[i]]
                         } else if (i === LeapNumTermThis + 1) {
                             Month[i] = '氣閏'
+                            MonthName[i] = Month[i]
                         } else {
                             Month[i] = (i + ZhengOriginDif + 11) % 12
+                            MonthName[i] = NumList[Month[i]]
                         }
                         if (Month[i] === 0) {
                             Month[i] = 12
+                            MonthName[i] = NumList[Month[i]]
                         }
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
                         Month[i] = (i + ZhengOriginDif + 12) % 12
+                        MonthName[i] = NumList[Month[i]]
                         if (Month[i] === 0) {
                             Month[i] = 12
+                            MonthName[i] = NumList[Month[i]]
                         }
                     }
                 }
@@ -217,18 +225,23 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     for (let i = 1; i <= 13; i++) {
                         if (i <= 12) {
                             Month[i] = (i + ZhengOriginDif + 12) % 12
+                            MonthName[i] = NumList[Month[i]]
                         } else {
                             Month[i] = '固閏'
+                            MonthName[i] = Month[i]
                         }
                         if (Month[i] === 0) {
                             Month[i] = 12
+                            MonthName[i] = NumList[Month[i]]
                         }
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
                         Month[i] = (i + ZhengOriginDif + 12) % 12
+                        MonthName[i] = NumList[Month[i]]
                         if (Month[i] === 0) {
                             Month[i] = 12
+                            MonthName[i] = NumList[Month[i]]
                         }
                     }
                 }
@@ -238,20 +251,26 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 for (let i = 1; i <= 13; i++) {
                     if (i <= LeapNumTermThis) {
                         Month[i] = (i + 12) % 12
+                        MonthName[i] = NumList[Month[i]]
                     } else if (i === LeapNumTermThis + 1) {
                         Month[i] = '閏' + LeapNumTermThis
+                        MonthName[i] = '閏' + NumList[LeapNumTermThis]
                     } else {
                         Month[i] = (i + 11) % 12
+                        MonthName[i] = NumList[Month[i]]
                     }
                     if (Month[i] === 0) {
                         Month[i] = 12
+                        MonthName[i] = NumList[Month[i]]
                     }
                 }
             } else {
                 for (let i = 1; i <= 12; i++) {
                     Month[i] = (i + 12) % 12
+                    MonthName[i] = NumList[Month[i]]
                     if (Month[i] === 0) {
                         Month[i] = 12
+                        MonthName[i] = NumList[Month[i]]
                     }
                 }
             }
@@ -303,7 +322,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermMansion = TermMansionA.concat('').concat(TermMansionB)
         }
         ////////////下爲調整輸出////////////
-        const MonthPrint = Month.slice(1)
+        const MonthPrint = MonthName.slice(1)
         const NewmSyzygySlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
         // const MmddSlice = array => array.slice( NewmSyzygyStart, 12 + NewmSyzygyEnd)
@@ -444,7 +463,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         } else {
             Era = '公元前 ' + (1 - year) + ' 年 ' + YearSc
         }
-        let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元積年${year - OriginAd} `
+        let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元${year - OriginAd} `
         if (Type === 1) {
             let LeapSur = 0
             if (!isTermLeap) {

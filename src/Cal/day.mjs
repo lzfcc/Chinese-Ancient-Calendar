@@ -21,6 +21,7 @@ import {
     HuangheiList,
     YuanList,
     HalfTermList,
+    NumList,
     nzh
 } from './para_constant.mjs'
 import {
@@ -185,7 +186,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             if (LeapNumTermThis > 0) {
                 if (i === LeapNumTermThis + 1) {
                     NoleapMon = i - 1
-                    MonName[i] = '閏' + nzh.encodeS(LeapNumTermThis) + '月'
+                    MonName[i] = '閏' + NumList[LeapNumTermThis] + '月'
                 } else if (i >= LeapNumTermThis + 2) {
                     NoleapMon = i - 1
                 }
@@ -228,7 +229,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 if (Type >= 6) {
                     const WeekOrder = Math.round(((NewmOrderRaw[i] + k - 1) % 7 + 5 + (WeekCorr ? WeekCorr : 0)) % 7.1)
                     const MansionOrder = Math.round((((NewmOrderRaw[i] + k - 1) % 28 + 23 + (MansionCorr ? MansionCorr : 0)) + 28) % 28.1)
-                    Week[i][k] = WeekList[WeekOrder] + nzh.encodeS(WeekOrder) + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
+                    Week[i][k] = WeekList[WeekOrder] + NumList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
                 }
                 let SunEquatorLongi = 0
                 let SunEclipticLongi = 0
@@ -350,7 +351,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 Luck[i][k] = (Wangwang ? Wangwang : '') + (Fubao ? Fubao : '') + (Lin ? Lin : '') + (LongShortStar ? LongShortStar : '')
                 ManGod[i][k] = ManGodList[k] + (Blood ? Blood : '') + (TouringGod ? TouringGod : '')
                 HexagramName[i][k] += FiveName
-                Sc[i][k] = nzh.encodeS(k) + '日' + Sc[i][k]
+                Sc[i][k] = NumList[k] + '日' + Sc[i][k]
             }
         }
         ////////////下調用宿度模塊////////////////

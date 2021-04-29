@@ -12,13 +12,13 @@ import {
     StemList,
     HexagramList1,
     FourauspiciousList,
-    nzh
+    NumList
 } from './para_constant.mjs'
 
 export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，干支
     const MaleGong = Math.round(((7 - YuanYear) % 9 + 9) % 9.1) // 男女九宮算法用《象吉通書》，見《黑水城出土元代曆日研究》
     const FemaleGong = Math.round(((5 + YuanYear) % 9 + 9) % 9.1)
-    const MaleFemale = '男' + nzh.encodeS(MaleGong) + '宮女' + nzh.encodeS(FemaleGong) + '宮'
+    const MaleFemale = '男' +NumList[MaleGong] + '宮女' + NumList[FemaleGong] + '宮'
     let SuixingOrder = 4
     if (b === 2) {
         SuixingOrder = 11
@@ -118,7 +118,7 @@ export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，
     const Sifu = Suide
     const KuiMon = (YuanYear % 6) + 2
     const GangMon = KuiMon + 6
-    const YearGod = '干' + YearStemFive + '支' + YearBranchFive + '，納音' + NayinList[Math.ceil(YearScOrder / 2)] + '。' + MaleFemale + '。魁' + nzh.encodeS(KuiMon) + '月罡' + nzh.encodeS(GangMon) + '月。太陰在' + Taiyin + '，歲德在' + Suide + '，歲刑在' + Suixing + '，歲破在' + Suipo + '；劫煞在' + Jiesha + '，災煞在' + Zaisha + '，歲煞在' + Suisha + '；將軍在' + Jiangjun + '；白虎在' + Baihu + '，黃幡在' + Huangfan + '，豹尾在' + Baowei + '；奏書在' + Zoushu + '，博士在' + Boshi + '，力士在' + Lishi + '，蠶室在' + Canshi + '；蠶官在' + Canguan + '，蠶命在' + Canming + '；官符在' + Guanfu + '，大煞在' + Dasha + '，喪門在' + Sangmen + '，病符在' + Bingfu + '，死符在' + Sifu + '；伏兵在' + Fubing
+    const YearGod = '干' + YearStemFive + '支' + YearBranchFive + '，納音' + NayinList[Math.ceil(YearScOrder / 2)] + '。' + MaleFemale + '。魁' + NumList[KuiMon] + '月罡' + NumList[GangMon] + '月。太陰在' + Taiyin + '，歲德在' + Suide + '，歲刑在' + Suixing + '，歲破在' + Suipo + '；劫煞在' + Jiesha + '，災煞在' + Zaisha + '，歲煞在' + Suisha + '；將軍在' + Jiangjun + '；白虎在' + Baihu + '，黃幡在' + Huangfan + '，豹尾在' + Baowei + '；奏書在' + Zoushu + '，博士在' + Boshi + '，力士在' + Lishi + '，蠶室在' + Canshi + '；蠶官在' + Canguan + '，蠶命在' + Canming + '；官符在' + Guanfu + '，大煞在' + Dasha + '，喪門在' + Sangmen + '，病符在' + Bingfu + '，死符在' + Sifu + '；伏兵在' + Fubing
     // 太歲、大將軍、太陰、歲刑、歲破、黃幡、豹尾
     return YearGod
 }
@@ -140,15 +140,15 @@ export const YearColorConvert = YuanYear => {
         const row3an = Math.round(((4 - YuanYear) % 9 + 9) % 9.1)
         const row3bn = Math.round(((6 - YuanYear) % 9 + 9) % 9.1)
         const row3cn = Math.round(((2 - YuanYear) % 9 + 9) % 9.1)
-        const row1a = ColorList[row1an] + nzh.encodeS(row1an)
-        const row1b = ColorList[row1bn] + nzh.encodeS(row1bn)
-        const row1c = ColorList[row1cn] + nzh.encodeS(row1cn)
-        const row2a = ColorList[row2an] + nzh.encodeS(row2an)
-        const row2b = ColorList[row2bn] + nzh.encodeS(row2bn)
-        const row2c = ColorList[row2cn] + nzh.encodeS(row2cn)
-        const row3a = ColorList[row3an] + nzh.encodeS(row3an)
-        const row3b = ColorList[row3bn] + nzh.encodeS(row3bn)
-        const row3c = ColorList[row3cn] + nzh.encodeS(row3cn)
+        const row1a = ColorList[row1an] + NumList[row1an]
+        const row1b = ColorList[row1bn] + NumList[row1bn]
+        const row1c = ColorList[row1cn] + NumList[row1cn]
+        const row2a = ColorList[row2an] + NumList[row2an]
+        const row2b = ColorList[row2bn] + NumList[row2bn]
+        const row2c = ColorList[row2cn] + NumList[row2cn]
+        const row3a = ColorList[row3an] + NumList[row3an]
+        const row3b = ColorList[row3bn] + NumList[row3bn]
+        const row3c = ColorList[row3cn] + NumList[row3cn]
         YearColor.push([row1a, row1b, row1c])
         YearColor.push([row2a, row2b, row2c])
         YearColor.push([row3a, row3b, row3c])
@@ -170,15 +170,15 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
         const row3an = Math.round(((2 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
         const row3bn = Math.round(((4 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
         const row3cn = Math.round(((9 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row1a = ColorList[row1an] + nzh.encodeS(row1an)
-        const row1b = ColorList[row1bn] + nzh.encodeS(row1bn)
-        const row1c = ColorList[row1cn] + nzh.encodeS(row1cn)
-        const row2a = ColorList[row2an] + nzh.encodeS(row2an)
-        const row2b = ColorList[row2bn] + nzh.encodeS(row2bn)
-        const row2c = ColorList[row2cn] + nzh.encodeS(row2cn)
-        const row3a = ColorList[row3an] + nzh.encodeS(row3an)
-        const row3b = ColorList[row3bn] + nzh.encodeS(row3bn)
-        const row3c = ColorList[row3cn] + nzh.encodeS(row3cn)
+        const row1a = ColorList[row1an] + NumList[row1an]
+        const row1b = ColorList[row1bn] + NumList[row1bn]
+        const row1c = ColorList[row1cn] + NumList[row1cn]
+        const row2a = ColorList[row2an] + NumList[row2an]
+        const row2b = ColorList[row2bn] + NumList[row2bn]
+        const row2c = ColorList[row2cn] + NumList[row2cn]
+        const row3a = ColorList[row3an] + NumList[row3an]
+        const row3b = ColorList[row3bn] + NumList[row3bn]
+        const row3c = ColorList[row3cn] + NumList[row3cn]
         MonColor.push([row1a, row1b, row1c])
         MonColor.push([row2a, row2b, row2c])
         MonColor.push([row3a, row3b, row3c])
@@ -186,7 +186,7 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
     if (i === 1) {
         MonName = '正月'
     } else {
-        MonName = nzh.encodeS(i) + '月'
+        MonName = NumList[i] + '月'
     }
     const MonSc = ScList[Math.round((ZhengMonScOrder + i - 1) % 60.1)]
     const MonSindhuName = MonSindhuNameList[i]
