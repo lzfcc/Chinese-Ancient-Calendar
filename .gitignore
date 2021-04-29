@@ -24,6 +24,4 @@ yarn-error.log*
 
 .eslintcache
 
-/output.md
-/output1.md
-/output2.md
+output1.md
