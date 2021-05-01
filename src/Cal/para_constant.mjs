@@ -17,7 +17,7 @@ export {
 //     ch_u: "个十百千萬億兆京",       // 数位单位字符，万以下十进制，万以上万进制，个位不能省略
 // });
 export const debounce = (fn, delay) => {
-    let timer = 100 // 返回一个函数，这个函数会在一个时间区间结束后的 delay 毫秒时执行 fn 函数
+    let timer = 1000 // 返回一个函数，这个函数会在一个时间区间结束后的 delay 毫秒时执行 fn 函数
     return (...args) => { // 每次这个返回的函数被调用，就清除定时器，以保证不执行 fn
         clearTimeout(timer) // 当返回的函数被最后一次调用后（也就是用户停止了某个连续的操作），再过 delay 毫秒就执行 fn
         timer = setTimeout(() => {
@@ -25,6 +25,7 @@ export const debounce = (fn, delay) => {
         }, delay)
     }
 }
+
 export const CalNameList = { // 按照時間順序排列
     Yin: '殷',
     XiaDong: '冬至元夏',
@@ -161,6 +162,682 @@ export const CalNameDayList = { // 可計算日書的曆法
     Shoushi: '授時',
     Datong: '大統',
 }
+
+export const CalNameSelectList = [
+    {
+        "value": "Yin",
+        "label": "殷",
+        "role": "四分系"
+    },
+    {
+        "value": "XiaDong",
+        "label": "冬至元夏",
+        "role": "四分系"
+    },
+    {
+        "value": "XiaYu",
+        "label": "雨水元夏",
+        "role": "四分系"
+    },
+    {
+        "value": "Lu",
+        "label": "魯",
+        "role": "四分系"
+    },
+    {
+        "value": "LuA",
+        "label": "魯(進餘539)",
+        "role": "四分系"
+    },
+    {
+        "value": "LuB",
+        "label": "魯(進餘469)",
+        "role": "四分系"
+    },
+    {
+        "value": "LuC",
+        "label": "魯(進餘403)",
+        "role": "四分系"
+    },
+    {
+        "value": "LuD",
+        "label": "魯(進餘348)",
+        "role": "四分系"
+    },
+    {
+        "value": "LuE",
+        "label": "魯(進餘280)",
+        "role": "四分系"
+    },
+    {
+        "value": "LuF",
+        "label": "魯(進餘213)",
+        "role": "四分系"
+    },
+    {
+        "value": "LuG",
+        "label": "魯(進餘147)",
+        "role": "四分系"
+    },
+    {
+        "value": "ZhuanxuA",
+        "label": "顓頊(建寅)",
+        "role": "四分系"
+    },
+    {
+        "value": "ZhuanxuB",
+        "label": "顓頊(十月首)",
+        "role": "四分系"
+    },
+    {
+        "value": "ZhuanxuC",
+        "label": "顓頊(進餘3/4)",
+        "role": "四分系"
+    },
+    {
+        "value": "ZhuanxuD",
+        "label": "顓頊(退餘210)",
+        "role": "四分系"
+    },
+    {
+        "value": "ZhuanxuE",
+        "label": "顓頊(變閏章)",
+        "role": "四分系"
+    },
+    {
+        "value": "ZhuanxuF",
+        "label": "顓頊(退餘25)",
+        "role": "四分系"
+    },
+    {
+        "value": "Zhou",
+        "label": "周",
+        "role": "四分系"
+    },
+    {
+        "value": "Huangdi",
+        "label": "黃帝",
+        "role": "四分系"
+    },
+    {
+        "value": "Shiji",
+        "label": "曆術甲子篇(擬)",
+        "role": "四分系"
+    },
+    {
+        "value": "Taichu",
+        "label": "太初(三統)",
+        "role": "四分系"
+    },
+    {
+        "value": "Qianzaodu",
+        "label": "乾鑿度",
+        "role": "四分系"
+    },
+    {
+        "value": "EastHan",
+        "label": "後漢四分",
+        "role": "四分系"
+    },
+    {
+        "value": "Qianxiang",
+        "label": "乾象",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Jingchu",
+        "label": "景初",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Liuzhi",
+        "label": "劉智(擬)",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Wangshuozhi",
+        "label": "王朔之(擬)",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Sanji",
+        "label": "三紀",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Xuanshi",
+        "label": "玄始(擬)",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Zhengguang",
+        "label": "正光",
+        "role": "北系"
+    },
+    {
+        "value": "Xinghe",
+        "label": "興和",
+        "role": "北系"
+    },
+    {
+        "value": "Tianbao",
+        "label": "天保",
+        "role": "北系"
+    },
+    {
+        "value": "Jiayin",
+        "label": "甲寅(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Tianhe",
+        "label": "天和(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Daxiang",
+        "label": "大象(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Kaihuang",
+        "label": "開皇(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Yuanjia",
+        "label": "元嘉",
+        "role": "南系"
+    },
+    {
+        "value": "Daming",
+        "label": "大明",
+        "role": "南系"
+    },
+    {
+        "value": "Liangwu",
+        "label": "明克讓(擬大同代)",
+        "role": "南系"
+    },
+    {
+        "value": "Daye",
+        "label": "大業",
+        "role": "南系"
+    },
+    {
+        "value": "Wuyin",
+        "label": "戊寅",
+        "role": "南系"
+    },
+    {
+        "value": "Zhangmengbin",
+        "label": "張孟賓(擬)",
+        "role": "隋系"
+    },
+    {
+        "value": "Liuxiaosun",
+        "label": "劉孝孫(擬)",
+        "role": "隋系"
+    },
+    {
+        "value": "Huangji",
+        "label": "皇極",
+        "role": "隋系"
+    },
+    {
+        "value": "Linde",
+        "label": "麟德",
+        "role": "隋系"
+    },
+    {
+        "value": "Shenlong",
+        "label": "神龍(擬)",
+        "role": "隋系"
+    },
+    {
+        "value": "Dayan",
+        "label": "大衍",
+        "role": "唐系"
+    },
+    {
+        "value": "Zhide",
+        "label": "至德(擬)",
+        "role": "唐系"
+    },
+    {
+        "value": "Wuji",
+        "label": "五紀",
+        "role": "唐系"
+    },
+    {
+        "value": "Zhengyuan",
+        "label": "正元",
+        "role": "唐系"
+    },
+    {
+        "value": "Xuanming",
+        "label": "宣明",
+        "role": "唐系"
+    },
+    {
+        "value": "Chongxuan",
+        "label": "崇玄",
+        "role": "北宋系"
+    },
+    {
+        "value": "Futian",
+        "label": "符天(擬)",
+        "role": "北宋系"
+    },
+    {
+        "value": "Qintian",
+        "label": "欽天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Yingtian",
+        "label": "應天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Qianyuan",
+        "label": "乾元",
+        "role": "北宋系"
+    },
+    {
+        "value": "Yitian",
+        "label": "儀天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Chongtian",
+        "label": "崇天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Mingtian",
+        "label": "明天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Fengyuan",
+        "label": "奉元(擬)",
+        "role": "北宋系"
+    },
+    {
+        "value": "Guantian",
+        "label": "觀天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Zhantian",
+        "label": "占天(擬)",
+        "role": "北宋系"
+    },
+    {
+        "value": "Jiyuan",
+        "label": "紀元",
+        "role": "南宋系"
+    },
+    {
+        "value": "Tongyuan",
+        "label": "統元",
+        "role": "南宋系"
+    },
+    {
+        "value": "Qiandao",
+        "label": "乾道",
+        "role": "南宋系"
+    },
+    {
+        "value": "Chunxi",
+        "label": "淳熙",
+        "role": "南宋系"
+    },
+    {
+        "value": "Huiyuan",
+        "label": "會元",
+        "role": "南宋系"
+    },
+    {
+        "value": "Tongtian",
+        "label": "統天",
+        "role": "南宋系"
+    },
+    {
+        "value": "Kaixi",
+        "label": "開禧",
+        "role": "南宋系"
+    },
+    {
+        "value": "Chunyou",
+        "label": "淳祐(擬)",
+        "role": "南宋系"
+    },
+    {
+        "value": "Huitian",
+        "label": "會天(擬)",
+        "role": "南宋系"
+    },
+    {
+        "value": "Chengtian",
+        "label": "成天",
+        "role": "南宋系"
+    },
+    {
+        "value": "Bentian",
+        "label": "本天(擬)",
+        "role": "南宋系"
+    },
+    {
+        "value": "Yangji",
+        "label": "楊級大明(擬)",
+        "role": "遼金系"
+    },
+    {
+        "value": "NewDaming",
+        "label": "重修大明",
+        "role": "遼金系"
+    },
+    {
+        "value": "Yiwei",
+        "label": "乙未",
+        "role": "遼金系"
+    },
+    {
+        "value": "Gengwu",
+        "label": "庚午",
+        "role": "遼金系"
+    },
+    {
+        "value": "Shoushi",
+        "label": "授時系",
+        "role": "授時系"
+    },
+    {
+        "value": "Datong",
+        "label": "大統",
+        "role": "授時系"
+    },
+    {
+        "value": "Huangzhong",
+        "label": "黃鐘",
+        "role": "其他"
+    },
+    {
+        "value": "Wannian",
+        "label": "聖壽萬年",
+        "role": "其他"
+    },
+    {
+        "value": "West",
+        "label": "現代近似",
+        "role": "其他"
+    }
+]
+
+export const CalNameDaySelectList = [
+    {
+        "value": "Taichu",
+        "label": "太初(三統)",
+        "role": "四分系"
+    },
+    {
+        "value": "EastHan",
+        "label": "後漢四分",
+        "role": "四分系"
+    },
+    {
+        "value": "Qianxiang",
+        "label": "乾象",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Jingchu",
+        "label": "景初",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Sanji",
+        "label": "三紀",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Xuanshi",
+        "label": "玄始(擬)",
+        "role": "魏晉系"
+    },
+    {
+        "value": "Zhengguang",
+        "label": "正光",
+        "role": "北系"
+    },
+    {
+        "value": "Xinghe",
+        "label": "興和",
+        "role": "北系"
+    },
+    {
+        "value": "Tianbao",
+        "label": "天保",
+        "role": "北系"
+    },
+    {
+        "value": "Jiayin",
+        "label": "甲寅(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Tianhe",
+        "label": "天和(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Daxiang",
+        "label": "大象(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Kaihuang",
+        "label": "開皇(擬)",
+        "role": "北系"
+    },
+    {
+        "value": "Yuanjia",
+        "label": "元嘉",
+        "role": "南系"
+    },
+    {
+        "value": "Daming",
+        "label": "大明",
+        "role": "南系"
+    },
+    {
+        "value": "Liangwu",
+        "label": "明克讓(擬大同代)",
+        "role": "南系"
+    },
+    {
+        "value": "Daye",
+        "label": "大業",
+        "role": "南系"
+    },
+    {
+        "value": "Wuyin",
+        "label": "戊寅",
+        "role": "南系"
+    },
+    {
+        "value": "Huangji",
+        "label": "皇極",
+        "role": "隋系"
+    },
+    {
+        "value": "Linde",
+        "label": "麟德",
+        "role": "隋系"
+    },
+    {
+        "value": "Dayan",
+        "label": "大衍",
+        "role": "唐系"
+    },
+    {
+        "value": "Zhide",
+        "label": "至德(擬)",
+        "role": "唐系"
+    },
+    {
+        "value": "Wuji",
+        "label": "五紀",
+        "role": "唐系"
+    },
+    {
+        "value": "Zhengyuan",
+        "label": "正元",
+        "role": "唐系"
+    },
+    {
+        "value": "Xuanming",
+        "label": "宣明",
+        "role": "唐系"
+    },
+    {
+        "value": "Chongxuan",
+        "label": "崇玄",
+        "role": "北宋系"
+    },
+    {
+        "value": "Futian",
+        "label": "符天(擬)",
+        "role": "北宋系"
+    },
+    {
+        "value": "Qintian",
+        "label": "欽天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Yingtian",
+        "label": "應天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Qianyuan",
+        "label": "乾元",
+        "role": "北宋系"
+    },
+    {
+        "value": "Yitian",
+        "label": "儀天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Chongtian",
+        "label": "崇天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Mingtian",
+        "label": "明天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Fengyuan",
+        "label": "奉元(擬)",
+        "role": "北宋系"
+    },
+    {
+        "value": "Guantian",
+        "label": "觀天",
+        "role": "北宋系"
+    },
+    {
+        "value": "Zhantian",
+        "label": "占天(擬)",
+        "role": "北宋系"
+    },
+    {
+        "value": "Jiyuan",
+        "label": "紀元",
+        "role": "南宋系"
+    },
+    {
+        "value": "Tongyuan",
+        "label": "統元",
+        "role": "南宋系"
+    },
+    {
+        "value": "Qiandao",
+        "label": "乾道",
+        "role": "南宋系"
+    },
+    {
+        "value": "Chunxi",
+        "label": "淳熙",
+        "role": "南宋系"
+    },
+    {
+        "value": "Huiyuan",
+        "label": "會元",
+        "role": "南宋系"
+    },
+    {
+        "value": "Tongtian",
+        "label": "統天",
+        "role": "南宋系"
+    },
+    {
+        "value": "Kaixi",
+        "label": "開禧",
+        "role": "南宋系"
+    },
+    {
+        "value": "Chunyou",
+        "label": "淳祐(擬)",
+        "role": "南宋系"
+    },
+    {
+        "value": "Huitian",
+        "label": "會天(擬)",
+        "role": "南宋系"
+    },
+    {
+        "value": "Chengtian",
+        "label": "成天",
+        "role": "南宋系"
+    },
+    {
+        "value": "Yangji",
+        "label": "楊級大明(擬)",
+        "role": "遼金系"
+    },
+    {
+        "value": "NewDaming",
+        "label": "重修大明",
+        "role": "遼金系"
+    },
+    {
+        "value": "Yiwei",
+        "label": "乙未",
+        "role": "遼金系"
+    },
+    {
+        "value": "Gengwu",
+        "label": "庚午",
+        "role": "遼金系"
+    },
+    {
+        "value": "Shoushi",
+        "label": "授時系",
+        "role": "授時系"
+    },
+    {
+        "value": "Datong",
+        "label": "大統",
+        "role": "授時系"
+    },
+]
 
 export const ScList = ['癸亥', '甲子', '乙丑', '丙寅', '丁卯', '戊辰', '己巳', '庚午', '辛未', '壬申', '癸酉', '甲戌', '乙亥', '丙子', '丁丑', '戊寅', '己卯', '庚辰', '辛巳', '壬午', '癸未', '甲申', '乙酉', '丙戌', '丁亥', '戊子', '己丑', '庚寅', '辛卯', '壬辰', '癸巳', '甲午', '乙未', '丙申', '丁酉', '戊戌', '己亥', '庚子', '辛丑', '壬寅', '癸卯', '甲辰', '乙巳', '丙午', '丁未', '戊申', '己酉', '庚戌', '辛亥', '壬子', '癸丑', '甲寅', '乙卯', '丙辰', '丁巳', '戊午', '己未', '庚申', '辛酉', '壬戌', '癸亥', '甲子']
 export const StemList = ' 甲乙丙丁戊己庚辛壬癸'

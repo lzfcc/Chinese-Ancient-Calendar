@@ -1,10 +1,12 @@
 import React from 'react'
-// import ReactDOM from 'react-dom';
-import { CalNameList } from './Cal/para_constant'
-import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
-import { TagPicker } from 'rsuite';
-import data3 from './data3.mjs'
+import { TagPicker } from 'rsuite'
+import 'rsuite/dist/styles/rsuite-default.css'
+// import 'rsuite/lib/styles/themes/default/index.less'
+// import 'rsuite/lib/TagPicker/styles/index.js'
+// import 'custom-theme.less'
+// import 'rsuite/lib/TagPicker/styles/themes/default.js';
+import { CalNameSelectList } from './Cal/para_constant.mjs'
 
 const TableRowNameMap = {
   MonthPrint: '月序',
@@ -96,21 +98,17 @@ export default class Newm extends React.Component {
   //     </div>
   //   );
   // }
-  instance() {
-    return (
-      <div>
-        <TagPicker data={data3} groupBy="role" style={{ width: 300 }} />
-      </div>);
-  }
+
   renderCalendar() {
-    const cals = CalNameList
     return (
       <div className='calendar-select'>
-        <MenuSelect
-          calMap={cals}
-          onSelect={(selected) => {
+        <TagPicker
+          onSelect={selected => {
             this.setState({ calendars: selected })
           }}
+          data={CalNameSelectList} groupBy="role" style={{ width: 200 }}
+          disabledItemValues={['West', 'Yiwei', 'Wannian', 'Huangzhong']}
+          maxHeight={600}
         />
       </div>
     );

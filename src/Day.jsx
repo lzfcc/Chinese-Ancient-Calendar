@@ -1,6 +1,8 @@
 import React from 'react'
 import { CalNameDayList } from './Cal/para_constant'
-import MenuSelect from './MenuSelect'
+import { TagPicker } from 'rsuite'
+// import 'rsuite/dist/styles/rsuite-default.css'
+import { CalNameDaySelectList } from './Cal/para_constant.mjs'
 
 export default class Day extends React.Component {
   constructor(props) {
@@ -184,11 +186,13 @@ export default class Day extends React.Component {
     let cals = CalNameDayList
     return (
       <div className='calendar-select'>
-        <MenuSelect
-          calMap={cals}
-          onSelect={(selected) => {
+        <TagPicker
+          onSelect={selected => {
             this.setState({ calendars: selected })
           }}
+          data={CalNameDaySelectList} groupBy="role" style={{ width: 200 }}
+          disabledItemValues={['Yiwei']}
+          maxHeight={600}
         />
       </div>
     );

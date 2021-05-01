@@ -1,12 +1,14 @@
 import React from "react"
 import { DecomposePrimeFactor } from "../Cal/modulo_denom"
+import { debounce } from '../Cal/para_constant'
+
 export default class a extends React.Component {
   constructor(props) {
     super(props)
     this.state = { a: 399, b: 752, bigNumer: 26, bigDenom: 49, title: "弱率" }
-    this.handle = this.handle.bind(this)
+    this.handle = debounce(this.handle.bind(this))
   }
-  
+
   input() {
     return (
       <span className="year-select width3">
@@ -46,6 +48,7 @@ export default class a extends React.Component {
   }
 
   handle() {
+    console.log(Date.now())
     try {
       const { SmallPrint, Result, Foot } = DecomposePrimeFactor(
         this.state.a,
