@@ -128,8 +128,8 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
 // console.log(BindEquator2Ecliptic(360, 365.2575, 0).Range)
 
 export const BindTcorr = (AnomaAccum, OriginDifRaw, year) => {
-    OriginDifRaw = Number(OriginDifRaw)
-    AnomaAccum = Number(AnomaAccum)
+    OriginDifRaw = +OriginDifRaw
+    AnomaAccum = +AnomaAccum
     if (OriginDifRaw > 365.2425 || OriginDifRaw < 0) {
         throw (new Error('請輸入一回歸年內的日數！'))
     }
@@ -168,16 +168,16 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, year) => {
         }))
     Print = Print.concat(
         ['Huangji', 'Linde', 'Wuji', 'Zhengyuan', 'NewDaming', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Gengwu', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map((title) => {
-            let Plus = 0
-            if (['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(title)) {
-                Plus = 13.77727
-            }
+            // let Plus = 0
+            // if (['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(title)) {
+            //     Plus = 13.77727
+            // }
             const {
                 SunDifAccum,
                 MoonDifAccum,
                 Tcorr2,
                 Tcorr1
-            } = AutoTcorr(AnomaAccum + Plus, OriginDifRaw, title)
+            } = AutoTcorr(AnomaAccum, OriginDifRaw, title) //  + Plus
             return {
                 title: CalNameDayList[title],
                 data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), Tcorr2.toFixed(6), (Tcorr2 - WestTcorr).toFixed(4)]
@@ -205,7 +205,7 @@ export const BindTcorr = (AnomaAccum, OriginDifRaw, year) => {
         }))
     return Print
 }
-// console.log(BindTcorr(1, 61, 1000))
+// console.log(BindTcorr(21.200901, 220.0911, 1000))
 
 export const AutoLongi2Lati = (LongiRaw, OriginDecimal, CalName) => {
     const {

@@ -63,10 +63,10 @@ export default class Intro extends React.Component {
             <li>计算程序采用 JavaScript 编写</li>
             <li>前端框架采用 React</li>
             <li>本地框架为 Node。在本地运行本程序，需要安装 Node 13.2 以上版本</li>
-            <li>采用 Web Worker 将 UI 线程与计算线程分离</li>
-            <li>采用懒加载，大幅压缩渲染时间</li>
+            <li>朔闰表、历书采用 Web Worker，实现 UI 线程与计算线程分离</li>
+            <li>朔闰表采用懒加载，大幅压缩渲染时间</li>
             <li>采用 WebPack 打包</li>
-            <li>采用 <a href="https://mikemcl.github.io/decimal.js/" target="_blank" rel="noreferrer">Decimal.js</a> 进行小数点后 64 位大数字运算，采用 <a href='https://www.npmjs.com/package/fraction.js' target="_blank" rel="noreferrer">fraction.js</a> 进行分数运算，采用 <a href="https://blog.whyoop.com/nzh/docs" target="_blank" rel="noreferrer">nzh</a> 进行阿拉伯数字、汉字转换</li>
+            <li>采用 <a href="https://mikemcl.github.io/decimal.js/" target="_blank" rel="noreferrer">Decimal.js</a><span className="decimal64">.64</span>进行小数点后 64 位大数字运算，采用 <a href='https://www.npmjs.com/package/fraction.js' target="_blank" rel="noreferrer">fraction.js</a><span className="decimal64">n/d</span>进行分数运算，采用 <a href="https://blog.whyoop.com/nzh/docs" target="_blank" rel="noreferrer">nzh</a> 进行阿拉伯数字、汉字转换</li>
           </ul>
           <p><del>本仓库基于组件化、工程化的考量，将核心模块<n>计算逻辑</n>拆分到了单独的仓库<n>ancient-calendar</n>中，通过子模块进行依赖，从而前端展示<n>View</n>和计算逻辑<n>Model</n>可以独立开发，前端直接引用子模块的函数进行运算。</del></p>
           <p>由于运算都在前端进行，在进行大量运算时会卡住 UI，体验较差。为了改进这一问题，我们决定改用 Web Worker<n>前端的多线程</n>。这样就必须将 <code>Worker()</code> 构造函数的参数文件独立放在 public 目录下<n>不能参与 webpack 打包</n>，因而不能直接引用子模块，必须将子模块打包成一个文件：</p>
@@ -131,12 +131,12 @@ export default class Intro extends React.Component {
               <li><code>time_jd2date</code> 儒略日、日期转换</li>
             </ul>
             </li>
-            <li><code>bind_</code> 自动选择<ul>
+            <li><code>bind_</code> 路由模块<ul>
               <li><code>bind</code> 根据历法自动选择朔闰计算</li>
               <li><code>bind_astronomy</code> 根据历法自动选择天文计算</li>
             </ul>
             </li>
-            <li><code>output_</code><ul>
+            <li><code>output_</code>其他<ul>
               <li><code>output</code> 输出准备</li>
               <li><code>output_print</code> 本地打印入口。<code>const printData = outputFile(2, 1255, 1255, 0</code> 第一个数字为模式，<code>1</code> 为朔闰表，<code>2</code> 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持</li>
               <li><code>output_frontend-worker</code> Web Worker，朔闰表、历书两个模块的前端调用入口</li>
@@ -158,7 +158,7 @@ export default class Intro extends React.Component {
           <p>今天突然發現望都不對，想了半天才發現，之前都是入曆日+1/2朔望月近點月之差，實際上應該是朔入曆+朔望月/2</p>
           <h4 id="3-2">3-2</h4>
           <p>採用懶加載策略，只加載當前屏幕的信息。現在可以秒加載了，看來絕大部分時間都消耗在渲染上。</p>
-          <p>魏晉時期的日月食基本完成，沒算大業日食的特殊情況，太複雜了。</p>
+          <p>魏晉時期的日月食基本完成。</p>
           <h4 id="3-15">3-15</h4>
           <p>增加日書、轉換tab</p>
           <p>增加魏晉日書，轉換工具。</p>
@@ -169,6 +169,8 @@ export default class Intro extends React.Component {
           <p>4 月 24 日本站編入 Google 索引【核心】增加時刻轉辰刻。日赤緯、日出公式曆法加上了日躔，至少紀元能跟論文合。授時明天還不對。訂正躔離：重新整理月離表的邊界；修改明天躔離；唐系日躔改用不等間距內插。宋志「紹興四年（1193）十二月（紀元）小餘七千六百八十，太史不進，故十一月小盡」。一個迷思：若索引從 1 開始，小餘 8285 左右，與大統相合，若索引從 0 開始，則是 7681，雖與引文相合，但與大統差了太多。我目前還是從 1 開始索引。修改定朔望小餘問題；修改定氣問題。【前端】調整文件結構：拆分時間板塊；拆分朔閏表板塊；加入曆書年份限制。</p>
           <h4 id="04-29">4-29 <code>0.92 1.01.1</code></h4>
           <p>【核心】天文模塊增加交食、交食週期與交點月換算。增加魏晋南北系、大業、戊寅、麟徳、大衍交食。元嘉非常奇怪，原來的交會差，單算入交日的話跟其他曆都不一樣，但是最後結果是一樣的，迷惑。現在已有的食甚改正，有些方向都是相反的，奇怪。調整魏晉系閏餘單位，本來想把古六曆閏餘改成 19，發現顓頊不好改，放棄。增加 fraction.js。【前端】文件改名。升級依賴。辰刻轉換由文字換成表格。修改表格 css</p>
+          <h4 id="04-29">4-29 晚 <code>0.92.1 1.01.2</code></h4>
+          <p>【核心】修復四分曆跑不來的小問題：未把調用交食排除。調用交食模塊之前先用去交日篩選，大大節省算力。30 以內的阿拉伯數字轉漢字換成列表，能快一點；朔閏表月序改成漢字【前端】實現了``內 html 標籤：曆書九宮色添加背景色；朔閏表表頭增加樣式，交食進朔符號添加顏色</p>
           <h4 id="todo-list-">todo list:</h4>
           <ul>
             <li>完善交食</li>

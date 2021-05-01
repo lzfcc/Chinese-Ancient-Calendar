@@ -66,11 +66,17 @@ export const Sn5Sub = (n, p) => {
     for (let i = 1; i <= p; i++) {
         c *= i
     }
-    b /= c
-    return b
+    return b / c
 }
 // 三角垛 1+3+6+10+...+n (n+1) /2 = 1/6 n (n+1) (n+2)
 // 李兆華、程貞一《朱世傑招差術探原》，《自然科學史研究》2000(1)
+const Sn5_quick = (n, p) => {
+    let S = 1
+    for (let i = 0; i <= p; i++) {
+        S *= (n + i) * (1 / (i + 1))
+    }
+    return S
+}
 export const Sn5 = (n, p) => {
     let S = 1
     for (let i = 0; i <= p; i++) {
@@ -90,6 +96,22 @@ export const Sn5 = (n, p) => {
 // console.log(Sn5(22.11112111111111, 3).Print)
 
 // 招差術，垛積（三角垛）求和公式。3^3+4^3+5^3...+(n+2)^3, 卽 f(n)=sum(n) (n+2)^3=27n+37 * 1/2! (n-1)n+ 24 1/3! (n-2)(n-1)n + 6 1/4! (n-3)(n-2)(n-1)n
+export const Interpolate1_quick = (n, Initial) => {
+    Initial = Initial.split(/;|,|，|。|；|｜| /)
+    const p = Initial.length - 1
+    let S = 0
+    let S4 = 0
+    let delta = []
+    for (let i = 0; i <= p; i++) {
+        delta[i] = Initial[i]
+        for (let l = 0; l < i; l++) {
+            delta[i] -= delta[l] * Sn5Sub(i - l + 1, l)
+        }
+        S4 += Sn5_quick(n - 1 - i, i) * delta[i]
+        S += Sn5_quick(n - i, i) * delta[i]
+    }
+    return S - S4
+}
 export const Interpolate1 = (n, Initial) => {
     n = big(n)
     const n1 = Math.floor(n)
@@ -111,7 +133,6 @@ export const Interpolate1 = (n, Initial) => {
         S = big(S).add(big(Sn5(big.sub(n, i), i).S).mul(delta[i]))
     }
     const y1 = big(S1).sub(S2)
-    S = S.toFixed(10)
     let y = big(S).sub(S4)
     y = Number(y)
     delta = delta.toString().split(',')
@@ -121,7 +142,7 @@ export const Interpolate1 = (n, Initial) => {
     delta = delta.reverse().slice(0, p)
     delta = delta.reverse()
     const delta1 = delta[0] // 一階
-    const Print = `Δ = ` + delta + `\nsum (` + n + `) = ` + S + (n1 === Number(n) ? `` : `\nsum (` + n1 + `) = ` + S1) + `\nf (` + n + `) = ` + y.toFixed(10) + (n1 === Number(n) ? `` : `\nf (` + n1 + `) = ` + y1)
+    const Print = `Δ = ` + delta + `\nsum (` + n + `) = ` + S.toFixed(10) + (n1 === Number(n) ? `` : `\nsum (` + n1 + `) = ` + S1) + `\nf (` + n + `) = ` + y.toFixed(10) + (n1 === Number(n) ? `` : `\nf (` + n1 + `) = ` + y1)
     return {
         Print,
         S,
@@ -130,12 +151,27 @@ export const Interpolate1 = (n, Initial) => {
         y
     }
 }
-// console.log(Interpolate1(1.99999, '27,64,125,216,343').Print)
+// console.log(Interpolate1(2.115, '27,64,125,216,343').y)
+// console.log(Interpolate1_quick(2.115, '27,64,125,216,343'))
 // console.log(Interpolate1(4.000001, 4, '27,64,125,216,343').Print)
 // console.log(Interpolate1(4.000001, 3, '25791，27341，28910，30499，32109').Print)
 // 算出來差分之後，求y。為了節省算力。delta由低次到高次。
+export const Interpolate2_quick = (n, f0, delta) => { // 跟下面的區別是沒用decimal.js
+    delta = delta.split(/;|,|，|。|；|｜| /)
+    const p = delta.length
+    const tmp = []
+    tmp[0] = n
+    let y = 0
+    for (let i = 1; i < p; i++) {
+        tmp[i] = (tmp[i - 1]) * (n - i) / (i + 1)
+    }
+    for (let i = 0; i < p; i++) {
+        y += delta[i] * tmp[i]
+    }
+    return y + f0
+}
 export const Interpolate2 = (n, f0, delta) => { // delta是string。第一個數n是0，上面的函數第一個是1
-    delta = ((delta).split(/;|,|，|。|；|｜| /))
+    delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length // 次數
     const tmp = []
     tmp[0] = n
@@ -158,6 +194,32 @@ export const Interpolate2 = (n, f0, delta) => { // delta是string。第一個數
 // 關鍵：tmp
 // y=Σ(n,1) yiLi
 // Li=Π(n,j=1,j≠i) (x-xj)/(xi-xj)
+export const Interpolate3_quick = (n, Initial) => { // 跟下面的區別是沒用decimal.js
+    Initial = Initial.split(/;|,|，|。|；|｜| /)
+    const x = []
+    const y = []
+    for (let i = 0; i < Initial.length / 2; i++) {
+        x[i] = Initial[2 * i]
+        y[i] = Initial[2 * i + 1]
+    }
+    const p = x.length - 1
+    const l = []
+    let tmp = 1
+    let f = 0
+    for (let i = 0; i <= p; i++) {
+        tmp = 1
+        for (let j = 0; j < i; j++) {
+            tmp *= (n - x[j]) / (x[i] - x[j])
+        }
+        for (let j = i + 1; j <= p; j++) {
+            tmp *= (n - x[j]) / (x[i] - x[j])
+        }
+        l[i] = tmp
+        f += y[i] * l[i]
+    }
+    return f
+}
+
 export const Interpolate3 = (n, Initial) => {
     Initial = Initial.split(/;|,|，|。|；|｜| /)
     const x = []
@@ -182,9 +244,7 @@ export const Interpolate3 = (n, Initial) => {
         f = big(f).add(big(y[i]).mul(l[i]))
     }
     const Print = 'y (' + n + ') = ' + f.toFixed(15)
-    return {
-        Print,
-        f: f.toNumber()
-    }
+    return Print
 }
 // console.log(Interpolate3('12.1', '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
+// console.log(Interpolate3_quick(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))

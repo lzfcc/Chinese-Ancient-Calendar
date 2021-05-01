@@ -2,8 +2,8 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    Interpolate1,
-    Interpolate2
+    Interpolate1_quick,
+    Interpolate2_quick
 } from './equa_sn.mjs'
 
 // /////乾象魏晉黃赤轉換//////
@@ -314,7 +314,7 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
     let Excon = 0
     if (Type === 10) {
         const Initial4 = SunDifAccumList[TermNum] + ',' + SunDifAccumList[TermNum + 1] + ',' + SunDifAccumList[TermNum + 2]
-        Excon = Interpolate1((1 + TermDif / HalfTermLeng), Initial4).y
+        Excon = Interpolate1_quick((1 + TermDif / HalfTermLeng), Initial4)
     }
     let n = 1 + (TermDif + TermAvgNoonDecimalDif[TermNum] - Excon) / HalfTermLeng
     if ((TermNum === 1 && TermDif === 0) || (TermNum === 13 && TermDif === 0)) { // 二至當天在轉折點
@@ -327,7 +327,7 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
         Initial3 = NightList[((TermNum - 2) + 24) % 24] + ',' + NightList[TermNum - 1] + ',' + NightList[TermNum] + ',' + NightList[TermNum + 1]
         n = 3 + (TermAvgNoonDecimalDif[TermNum] - Excon) / HalfTermLeng
     }
-    const Sunrise = DawnRange + Interpolate1(n, Initial3).y
+    const Sunrise = DawnRange + Interpolate1_quick(n, Initial3)
     if (Type === 6) { // 紀志剛《麟德曆晷影計算方法研究》，《自然科學史研究》1994(4)             
         // 麟德   
         // let AvgHalfTermLeng = 0
@@ -354,8 +354,8 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
         // const Corr = delta3 + delta4 // 定差
         // const TermAcrDial = DialList[TermNum] - (TermAvgDecimal[TermNumRaw] - 0.5) * Corr // 恆氣日中定影
         // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式
-        Dial = Interpolate1(n, Initial1).y
-        Lati1 = Interpolate1(n, Initial2).y
+        Dial = Interpolate1_quick(n, Initial1)
+        Lati1 = Interpolate1_quick(n, Initial2)
         Lati = Solar / 4 - Lati1 // 赤緯
     } else if (Type <= 8) { // 唐系、應天、乾元
         // let Initial1 = SunLatiList[TermNumAcrMod] + ',' + SunLatiList[TermNumAcrMod + 1] + ',' + SunLatiList[TermNumAcrMod + 2]
@@ -367,28 +367,28 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
         //     n = 3 + TermAcrNoonDecimalDif[TermNum] / AcrTermLeng
         // }
         // 本來寫了個去極度差分表，太麻煩，還不如直接用招差
-        Lati1 = Interpolate1(n, Initial2).y
+        Lati1 = Interpolate1_quick(n, Initial2)
         Lati = Sidereal / 4 - Lati1 // 赤緯
         const SunLati2 = Lati1 - (91.3 - f) // 天頂距
         // 下爲大衍晷影差分表
         if (SunLati2 <= 27) {
-            Dial = Interpolate2(SunLati2 - 1, 1379, '1380,2,1').y0
+            Dial = Interpolate2_quick(SunLati2 - 1, 1379, '1380,2,1')
         } else if (SunLati2 <= 42) {
-            Dial = Interpolate2(SunLati2 - 28, 42267, '1788,32,2').y0
+            Dial = Interpolate2_quick(SunLati2 - 28, 42267, '1788,32,2')
         } else if (SunLati2 <= 46) {
-            Dial = Interpolate2(SunLati2 - 43, 73361, '2490,74,6').y0
+            Dial = Interpolate2_quick(SunLati2 - 43, 73361, '2490,74,6')
         } else if (SunLati2 <= 50) {
-            Dial = Interpolate2(SunLati2 - 47, 83581, '3212,-118,272').y0
+            Dial = Interpolate2_quick(SunLati2 - 47, 83581, '3212,-118,272')
         } else if (SunLati2 <= 57) {
-            Dial = Interpolate2(SunLati2 - 51, 96539, '3562,165,7').y0
+            Dial = Interpolate2_quick(SunLati2 - 51, 96539, '3562,165,7')
         } else if (SunLati2 <= 61) {
-            Dial = Interpolate2(SunLati2 - 58, 125195, '4900,250,19').y0
+            Dial = Interpolate2_quick(SunLati2 - 58, 125195, '4900,250,19')
         } else if (SunLati2 <= 67) {
-            Dial = Interpolate2(SunLati2 - 60, 146371, '6155,481,33').y0
+            Dial = Interpolate2_quick(SunLati2 - 60, 146371, '6155,481,33')
         } else if (SunLati2 <= 72) {
-            Dial = Interpolate2(SunLati2 - 68, 191179, '9545,688,36').y0
+            Dial = Interpolate2_quick(SunLati2 - 68, 191179, '9545,688,36')
         } else {
-            Dial = Interpolate2(SunLati2 - 73, 246147, '13354,1098,440,620,180').y0
+            Dial = Interpolate2_quick(SunLati2 - 73, 246147, '13354,1098,440,620,180')
         }
         Dial /= 10000
         // 夜半漏計算直接用招差術了，不勝其煩。
@@ -565,7 +565,7 @@ export const MoonLatiTable = (DayRaw, CalName) => {
             Initial = MoonLatiAccumList[Day1 - 1] + ',' + MoonLatiAccumList[Day1] + ',' + MoonLatiAccumList[Day1 + 1]
             n = 2 + Day - Day1
         }
-        Lati = Yinyang * Interpolate1(n, Initial).y / portion
+        Lati = Yinyang * Interpolate1_quick(n, Initial) / portion
     } else if (Type === 7) { // 大衍的入交度數另有算式，我直接用月平行速來算
         const LongiRaw = Day * 13.36875
         const XianRaw = 1 + LongiRaw / (365.245 / 24)
@@ -583,7 +583,7 @@ export const MoonLatiTable = (DayRaw, CalName) => {
             Initial = MoonLatiAccumList[XianNum - 1] + ',' + MoonLatiAccumList[XianNum] + ',' + MoonLatiAccumList[XianNum + 1]
             n = 2 + XianRaw - XianNum
         }
-        Lati = Yinyang * Interpolate1(n, Initial).y / portion
+        Lati = Yinyang * Interpolate1_quick(n, Initial) / portion
     }
     const Lati1 = 91.311 - Lati
     return {

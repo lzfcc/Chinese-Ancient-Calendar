@@ -6,7 +6,7 @@ import {
     AutoSunTcorr
 } from './astronomy_acrv.mjs'
 import {
-    Interpolate3
+    Interpolate3_quick
 } from './equa_sn.mjs'
 import {
     Longi2LatiFormula
@@ -665,7 +665,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
             }
             // 接下來調用拉格朗日內插
             const Initial = TermAcrRawList[AcrTermOrder] + ',' + SunDcorrList[AcrTermOrder] + ';' + TermAcrRawList[AcrTermOrder + 1] + ',' + SunDcorrList[AcrTermOrder + 1] + ';' + TermAcrRawList[AcrTermOrder + 2] + ',' + SunDcorrList[AcrTermOrder + 2]
-            LimitCorr = Interpolate3(OriginDif, Initial).f // 當日差積
+            LimitCorr = Interpolate3_quick(OriginDif, Initial) // 當日差積
             if (OriginDif > HalfSolar) {
                 LimitCorr = -LimitCorr
             }

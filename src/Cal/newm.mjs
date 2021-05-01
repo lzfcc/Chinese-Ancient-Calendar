@@ -280,8 +280,8 @@ export default (CalName, year) => {
             AvgOrderRaw[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(Math.floor(AvgMod[i]) + 1 + OriginDaySc) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
-            OriginDifRaw[i] = ((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
-            AnomaAccum[i] = parseFloat(((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toPrecision(14))
+            OriginDifRaw[i] = +(((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar).toFixed(4)
+            AnomaAccum[i] = +((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(4) // 上元積年大，精度只有那麼多了，再多的話沒意義
             if (CalName === 'Mingtian') {
                 AnomaAccum[i] = big.div(OriginAccum, Lunar).add(i - 1 + ZhengOriginDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
                 // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengOriginDif) * 2142887000 % AnomaNumer) / 81120000
@@ -299,7 +299,6 @@ export default (CalName, year) => {
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr[i])
-
             if (Type <= 4) {
                 Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
                 Decimal1[i] = Decimal[i].toFixed(4).slice(2, 6)
@@ -342,7 +341,7 @@ export default (CalName, year) => {
                 }
             }
             if (Node) {
-                NodeAccum[i] = parseFloat(((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toPrecision(14))
+                NodeAccum[i] = +((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toFixed(4)
             }
         }
         return {

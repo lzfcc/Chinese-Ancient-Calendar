@@ -35,7 +35,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const { Print } = Interpolate3(this.state.n, this.state.initial)
+      const Print = Interpolate3(this.state.n, this.state.initial)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
