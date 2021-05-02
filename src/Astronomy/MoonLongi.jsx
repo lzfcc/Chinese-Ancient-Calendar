@@ -16,14 +16,14 @@ export default class Converter extends React.Component {
         <span>入交日</span>
         <input className='width3'
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
         <span> 距冬至日數</span>
         <input className='width3'
           value={this.state.b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
@@ -58,7 +58,7 @@ export default class Converter extends React.Component {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map((d) => {
+                {row.data.map(d =>  {
                   return (<td>{d}</td>)
                 })}
               </tr>

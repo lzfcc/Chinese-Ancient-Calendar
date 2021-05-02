@@ -17,14 +17,14 @@ export default class Equa extends React.Component {
         <span>n</span>
         <input className='width3'
           value={this.state.Sn5N}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sn5N: e.currentTarget.value });
           }}
         />
         <span> p</span>
         <input className='width3'
           value={this.state.Sn5P}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sn5P: e.currentTarget.value });
           }}
         />

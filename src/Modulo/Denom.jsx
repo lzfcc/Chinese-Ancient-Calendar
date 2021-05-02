@@ -16,28 +16,28 @@ export default class a extends React.Component {
         <span> 彊子</span>
         <input
           value={this.state.bigNumer}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ bigNumer: e.currentTarget.value });
           }}
         />
         <span> 彊母</span>
         <input
           value={this.state.bigDenom}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ bigDenom: e.currentTarget.value });
           }}
         />
         <span> 日法</span>
         <input
           value={this.state.b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
         <span>朔餘</span>
         <input
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
@@ -77,7 +77,7 @@ export default class a extends React.Component {
             return (
               <tr>
                 <td className="RowTitle">{row.title}</td>
-                {row.data.map((d) => {
+                {row.data.map(d =>  {
                   return <td>{d}</td>;
                 })}
               </tr>

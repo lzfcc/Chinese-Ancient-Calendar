@@ -14,21 +14,21 @@ export default class Equa extends React.Component {
         <span>a</span>
         <input className='width3'
           value={this.state.HeronA}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ HeronA: e.currentTarget.value });
           }}
         />
         <span> b</span>
         <input className='width3'
           value={this.state.HeronB}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ HeronB: e.currentTarget.value });
           }}
         />
         <span> c</span>
         <input className='width3'
           value={this.state.HeronC}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ HeronC: e.currentTarget.value });
           }}
         />

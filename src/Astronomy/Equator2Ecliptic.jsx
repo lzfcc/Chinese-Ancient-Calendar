@@ -5,8 +5,8 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      Ecliptic2: 365.2445,
-      Ecliptic3: 3400,
+      Ecliptic2: 365.244,
+      Ecliptic3: 1000,
     }
     this.handle = this.handle.bind(this)
   }
@@ -17,21 +17,21 @@ export default class Converter extends React.Component {
         <span>度數</span>
         <input className='width3'
           value={this.state.Ecliptic1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Ecliptic1: e.currentTarget.value });
           }}
         />
         <span> 週天</span>
         <input className='width3'
           value={this.state.Ecliptic2}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Ecliptic2: e.currentTarget.value });
           }}
         />
         <span> 公元年</span>
         <input className='width2'
           value={this.state.Ecliptic3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Ecliptic3: e.currentTarget.value });
           }}
         />
@@ -58,16 +58,16 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>赤轉黃</th>
+            <th>赤→黃</th>
             <th>誤差</th>
-            <th>黃轉赤</th>
+            <th>黃→赤</th>
             <th>誤差</th>
           </tr>
           {(this.state.outputEcliptic || []).map((row) => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map((d) => {
+                {row.data.map(d =>  {
                   return (<td>{d}</td>)
                 })}
               </tr>

@@ -14,21 +14,21 @@ export default class Equa extends React.Component {
         <span>頂層寬</span>
         <input className='width3'
           value={this.state.Sn1a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sn1a: e.currentTarget.value });
           }}
         />
         <span> 頂層長</span>
         <input className='width3'
           value={this.state.Sn1b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sn1b: e.currentTarget.value });
           }}
         />
         <span> 層數</span>
         <input className='width3'
           value={this.state.Sn1n}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sn1n: e.currentTarget.value });
           }}
         />

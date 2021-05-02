@@ -16,14 +16,14 @@ export default class Equa extends React.Component {
         <p className='note'>可選次數：2、3、5、7、9</p>
         <input className='width4'
           value={this.state.Sqrt3In}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sqrt3In: e.currentTarget.value });
           }}
         />
         <span> 次數</span>
         <input className='width1'
           value={this.state.Sqrt3Mode}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Sqrt3Mode: e.currentTarget.value });
           }}
         />

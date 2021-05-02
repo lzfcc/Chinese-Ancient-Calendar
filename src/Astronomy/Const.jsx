@@ -16,7 +16,7 @@ export default class Converter extends React.Component {
         <span>公元年</span>
         <input className='width2'
           value={this.state.c}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ c: e.currentTarget.value });
           }}
         />

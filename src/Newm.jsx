@@ -7,7 +7,7 @@ import { TagPicker } from 'rsuite';
 import data3 from './data3.mjs'
 
 const TableRowNameMap = {
-  MonthPrint: '月序',
+  MonthPrint: ' ',
   NewmAvgScPrint: '平朔',
   NewmAvgDecimalPrint: ' ',
   NewmScPrint: '定朔',
@@ -81,7 +81,7 @@ export default class Newm extends React.Component {
   // renderMode() {
   //   return (
   //     <div
-  //       onChange={(e) => {
+  //       onChange={e => {
   //         this.setState({ mode: e.target.value });
   //       }}
   //     >
@@ -121,7 +121,7 @@ export default class Newm extends React.Component {
       <span className='year-select'>
         <input
           value={this.state.YearStart}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ YearStart: e.currentTarget.value });
           }}
         />
@@ -130,7 +130,7 @@ export default class Newm extends React.Component {
           <span>—</span>
           <input
             value={this.state.YearEnd}
-            onChange={(e) => {
+            onChange={e => {
               this.setState({ YearEnd: e.currentTarget.value });
             }}
           />

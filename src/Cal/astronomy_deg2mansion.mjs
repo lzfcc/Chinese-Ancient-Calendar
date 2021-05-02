@@ -9,7 +9,7 @@ export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, Ma
     let Mansion = 0
     if (MansionRaw) {
         MansionDegList = DegListRaw.slice()
-        MansionDegList[MansionFractPosition] += Sidereal - Math.floor(Sidereal)
+        MansionDegList[MansionFractPosition] += Sidereal - ~~Sidereal
         MansionDegAccumList = MansionDegList.slice()
         for (let i = 1; i <= 28; i++) {
             MansionDegAccumList[i] += MansionDegAccumList[i - 1]

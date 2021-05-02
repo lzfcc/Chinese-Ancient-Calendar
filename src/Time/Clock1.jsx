@@ -16,21 +16,21 @@ export default class a extends React.Component {
       <span className="year-select">
         <input className='width1'
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
         <span>h </span>
         <input className='width1'
           value={this.state.b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
         <span>m </span>
         <input className='width2'
           value={this.state.c}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ c: e.currentTarget.value });
           }}
         />

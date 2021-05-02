@@ -408,7 +408,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 let NewmEcliFunc = {}
                 let SyzygyEcliFunc = {}
                 if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 28.86) {
-                    NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 1, CalName)
+                    NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
                     const Newmstatus = NewmEcliFunc.status
                     let NewmMagni = 0
                     let NewmStartDecimal = 0
@@ -433,7 +433,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                 }
                 if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 28.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                    SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], NoleapMon, LeapNumTermThis, 0, CalName)
+                    SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
                     const Syzygystatus = SyzygyEcliFunc.status
                     let SyzygyMagni = 0
                     let SyzygyStartDecimal = 0

@@ -14,7 +14,7 @@ export default class a extends React.Component {
         <span>日分 0.</span>
         <input
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />

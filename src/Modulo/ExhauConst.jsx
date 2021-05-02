@@ -21,21 +21,21 @@ export default class Exhau extends React.Component {
         <span>年 365+</span>
         <input
           value={this.state.SolarNumer}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ SolarNumer: e.currentTarget.value });
           }}
         />
         <span>/</span>
         <input
           value={this.state.Denom}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Denom: e.currentTarget.value });
           }}
         />
         <span> 積年</span>
         <input
           value={this.state.year}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ year: e.currentTarget.value });
           }}
         />
@@ -43,28 +43,28 @@ export default class Exhau extends React.Component {
         <span> 參照參數</span>
         <input
           value={this.state.xx}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ xx: e.currentTarget.value });
           }}
         />
         <span>±</span>
         <input
           value={this.state.range}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ range: e.currentTarget.value });
           }}
         />
         <span> 參數積日 ∈ (</span>
         <input
           value={this.state.lower}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ lower: e.currentTarget.value });
           }}
         />
         <span>,</span>
         <input
           value={this.state.upper}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ upper: e.currentTarget.value });
           }}
         />

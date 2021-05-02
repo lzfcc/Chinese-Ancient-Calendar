@@ -16,21 +16,21 @@ export default class a extends React.Component {
         </p>
         <input
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
         <span>x + </span>
         <input
           value={this.state.b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
         <span>y = </span>
         <input
           value={this.state.z}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ z: e.currentTarget.value });
           }}
         />

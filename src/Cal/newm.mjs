@@ -6,7 +6,6 @@ import {
     Bind
 } from './bind.mjs'
 import {
-    AutoSunTcorr,
     AutoTcorr
 } from './astronomy_acrv.mjs'
 import {
@@ -45,6 +44,7 @@ export default (CalName, year) => {
         LeapConst,
         AnomaConst,
         NodeConst,
+        AcrTermList
     } = AutoPara[CalName]
     let {
         Solar,
@@ -281,11 +281,7 @@ export default (CalName, year) => {
             AvgSc[i] = ScList[(Math.floor(AvgMod[i]) + 1 + OriginDaySc) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
             OriginDifRaw[i] = +(((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar).toFixed(4)
-            AnomaAccum[i] = +((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(4) // 上元積年大，精度只有那麼多了，再多的話沒意義
-            if (CalName === 'Mingtian') {
-                AnomaAccum[i] = big.div(OriginAccum, Lunar).add(i - 1 + ZhengOriginDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
-                // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengOriginDif) * 2142887000 % AnomaNumer) / 81120000
-            }
+            AnomaAccum[i] = +(((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(4)) // 上元積年大，精度只有那麼多了，再多的話沒意義            
             const TcorrBindFunc = AutoTcorr(AnomaAccum[i], OriginDifRaw[i], CalName)
             let Tcorr1 = 0
             if (Type <= 4) {
@@ -305,7 +301,7 @@ export default (CalName, year) => {
             } else if (Type < 11) {
                 Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
                 Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
-                if (!['Futian', 'Mingtian'].includes(CalName)) {
+                if (Tcorr1) {
                     Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
                 }
             } else if (Type === 11) {
@@ -314,27 +310,25 @@ export default (CalName, year) => {
             }
             /////進朔/////
             let NewmPlus = 0
-            if (Type >= 6 && Type <= 10 && (!['Zhangmengbin', 'Liuxiaosun', 'Huangji'].includes(CalName)) && (AcrRaw[i] - AcrOrderRaw[i] >= 0.75)) {
+            if (isNewm && Type >= 6 && Type <= 10 && (!['Zhangmengbin', 'Liuxiaosun', 'Huangji'].includes(CalName)) && (AcrRaw[i] - AcrOrderRaw[i] >= 0.75)) {
                 NewmPlus = 1
             }
             OrderMod[i] = Math.floor(AcrMod[i]) + NewmPlus
             AcrOrderRaw[i] += NewmPlus
             Sc[i] = ScList[(OrderMod[i] + 1 + OriginDaySc) % 60] // 算外
-            if (isNewm && NewmPlus) {
+            if (NewmPlus) {
                 Sc[i] += `<span class='NewmPlus'>+</span>`
             }
             // 定氣
             TermAvgRaw[i] = OriginAccum + (i + ZhengOriginDif - 1) * TermLeng
-            const TermNum3 = 2 * (i + ZhengOriginDif) - 1
-            const TermNumDay = (TermNum3 - 1) * HalfTermLeng
+            const TermNum3 = Math.round(2 * (i + ZhengOriginDif - 1))
             if (Type >= 5) {
-                const TermAcrRawList = AutoSunTcorr(TermNumDay, CalName, Solar)
-                TermAcrRaw[i] = OriginAccum + TermAcrRawList[TermNum3]
+                TermAcrRaw[i] = OriginAccum + AcrTermList[TermNum3 % 24] + (TermNum3 >= 24 ? Solar : 0)
             }
             /////合朔漏刻//////
             if (Type === 4) {
-                const TermNum1 = Math.round(Math.ceil(OriginDifRaw[i] / HalfTermLeng) % 24.1) // 朔望所在氣名
-                const TermNewmDif = OriginDifRaw[i] - (TermNum1 - 1) * HalfTermLeng // 注意要減1。朔望入氣日數
+                const TermNum1 = ~~(OriginDifRaw[i] / HalfTermLeng) // 朔望所在氣名
+                const TermNewmDif = OriginDifRaw[i] - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
                 const Dawn = (NightList[TermNum1] + TermNewmDif * (NightList[TermNum1 + 1] - NightList[TermNum1])) / 100 // 日出时刻=夜半漏+2.5刻                
                 if (isNewm && AcrRaw[i] - AcrOrderRaw[i] < Dawn) { // 按元嘉，合朔月食在黎明前是前一天
                     Sc[i] = ScList[OrderMod[i]] + `<span class='NewmPlus'>-</span>`

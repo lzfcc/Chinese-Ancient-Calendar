@@ -24,7 +24,7 @@ export default class a extends React.Component {
         {/* 1、定母i|元數i，2、定母互質，3、M=定母相乘=元數的最小公倍數 */}
         <input
           value={this.state.sunziIn}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ sunziIn: e.currentTarget.value });
           }}
         />

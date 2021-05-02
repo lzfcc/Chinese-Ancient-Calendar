@@ -13,21 +13,21 @@ export default class a extends React.Component {
         <span>彊母</span>
         <input
           value={this.state.aa1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ aa1: e.currentTarget.value });
           }}
         />
         <span> 弱母</span>
         <input
           value={this.state.bb1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ bb1: e.currentTarget.value });
           }}
         />
         <span> 日法</span>
         <input
           value={this.state.zz1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ zz1: e.currentTarget.value });
           }}
         />

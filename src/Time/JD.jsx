@@ -13,7 +13,7 @@ export default class a extends React.Component {
       <span className="year-select width4">
         <input
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />

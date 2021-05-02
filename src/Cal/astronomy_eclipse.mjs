@@ -3,10 +3,9 @@ import {
 } from './bind.mjs'
 import {
     AutoTcorr,
-    AutoSunTcorr
 } from './astronomy_acrv.mjs'
 import {
-    Interpolate3_quick
+    Interpolate3
 } from './equa_sn.mjs'
 import {
     Longi2LatiFormula
@@ -90,7 +89,7 @@ const EclipseTable1 = (NodeAccum, CalName) => {
 }
 
 // 春夏秋冬各三月，那麼閏月怎麼辦呢，所以輸入的時候應該用day的noleapmon，閏月還是上一個月
-const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Leap, isNewm, CalName) => {
+const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, CalName, i, Leap) => {
     const {
         AutoPara,
         Type
@@ -112,41 +111,40 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Leap, is
     const QuarSolar = Solar / 4
     const OriginDif = OriginDifRaw % Solar
     const HalfTermLeng = Solar / 24
-    const TermNum = Math.round(Math.ceil(OriginDif / HalfTermLeng) % 24.1) // 這樣重新索引應該沒問題
-    const TermNewmDif = OriginDif - (TermNum - 1) * HalfTermLeng
+    const TermNum = ~~(OriginDif / HalfTermLeng)
     let SunLimit1 = HalfSynodicNodeDif // 單位是時間而非度數！
     let NodeAccumHalf = NodeAccum % HalfNode
     let NodeAccumCorr = 0
     if (['Daye', 'Wuyin'].includes(CalName)) {
         if (CalName === 'Daye') {
-            if (TermNum < 6) {
+            if (TermNum <= 4) {
                 NodeAccumCorr = Math.abs(OriginDif - HalfTermLeng) * 1380 / NodeDenom
-            } else if (TermNum < 9) {
+            } else if (TermNum <= 8) {
                 NodeAccumCorr = 63600 / NodeDenom
-            } else if (TermNum < 13) {
+            } else if (TermNum <= 11) {
                 NodeAccumCorr = Math.abs(OriginDif - 11 * HalfTermLeng) * 1380 / NodeDenom
-            } else if (TermNum < 18) {
+            } else if (TermNum <= 16) {
                 NodeAccumCorr = -Math.abs(OriginDif - 13 * HalfTermLeng) * 900 / NodeDenom
-            } else if (TermNum < 22) {
+            } else if (TermNum <= 20) {
                 NodeAccumCorr = -55000 / NodeDenom
             } else {
                 NodeAccumCorr = -Math.abs(OriginDif - 23 * HalfTermLeng) * 1770 / NodeDenom
             }
         } else if (CalName === 'Wuyin') {
-            if (TermNum >= 2 && TermNum < 5) {
+            if (TermNum >= 2 && TermNum <= 3) {
                 NodeAccumCorr = Math.abs(OriginDif - HalfTermLeng) * 1650 / NodeDenom
-            } else if (TermNum < 9) {
+            } else if (TermNum <= 7) {
                 NodeAccumCorr = 76100 / NodeDenom
-            } else if (TermNum < 12) {
+            } else if (TermNum <= 10) {
                 NodeAccumCorr = 76100 / NodeDenom - Math.abs(OriginDif - 8 * HalfTermLeng) * 1650 / NodeDenom
-            } else if (TermNum < 14) { } else if (TermNum < 18) {
+            } else if (TermNum <= 12) { } else if (TermNum <= 16) {
                 NodeAccumCorr = -Math.abs(OriginDif - 13 * HalfTermLeng) * 1200 / NodeDenom
-            } else if (TermNum < 22) {
+            } else if (TermNum <= 20) {
                 NodeAccumCorr = -95825 / NodeDenom
             } else {
                 NodeAccumCorr = -63300 / NodeDenom + Math.abs(OriginDif - 21 * HalfTermLeng) * 2110 / NodeDenom
             }
-            if ((TermNum >= 2 && TermNum < 5) || (TermNum === 10)) { // 後兩種修正與五星有關，暫時沒法加
+            if ((TermNum >= 2 && TermNum <= 3) || (TermNum === 9)) { // 後兩種修正與五星有關，暫時沒法加
                 if (NodeAccum <= 1 / 6) {
                     NodeAccumCorr /= 2
                 } else {
@@ -500,7 +498,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Leap, is
             Dcorr = M / 96
             Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif - Dcorr
         } else {
-            // const MoonDcorrList = [0, 48, 43, 38, 33, 28, 23, 18, 15, 12, 9, 6, 3, 0, 13, 14, 15, 16, 17, 18, 21, 24, 27, 30, 33, 48]
+            // const MoonDcorrList = [48, 43, 38, 33, 28, 23, 18, 15, 12, 9, 6, 3, 0, 13, 14, 15, 16, 17, 18, 21, 24, 27, 30, 33, 48]
             // Dcorr = -(MoonDcorrList[TermNum] + (MoonDcorrList[TermNum + 1] - MoonDcorrList[TermNum]) * TermNewmDif / HalfTermLeng) / 96
             // Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr 
             // 「以減望差，乃如月食法」
@@ -614,6 +612,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
         Sidereal,
         Solar,
         Denom,
+        AcrTermList
     } = AutoPara[CalName]
     let {
         SunLimit1,
@@ -656,16 +655,15 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
         if (CalName === 'Dayan') {
             let AcrTermOrder = 0
             const SunDcorrList = [0, 0, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385, 450, 385, 325, 270, 220, 175, 135, 100, 70, 45, 25, 10, 0, 10]
-            const TermAcrRawList = AutoSunTcorr(OriginDif, 'Dayan')
             for (let j = 1; j <= 24; j++) {
-                if (OriginDif >= TermAcrRawList[j] && OriginDif < TermAcrRawList[j + 1]) {
+                if (OriginDif >= AcrTermList[j] && OriginDif < AcrTermList[j + 1]) {
                     AcrTermOrder = Math.round(j % 24.1)
                     break
                 }
             }
             // 接下來調用拉格朗日內插
-            const Initial = TermAcrRawList[AcrTermOrder] + ',' + SunDcorrList[AcrTermOrder] + ';' + TermAcrRawList[AcrTermOrder + 1] + ',' + SunDcorrList[AcrTermOrder + 1] + ';' + TermAcrRawList[AcrTermOrder + 2] + ',' + SunDcorrList[AcrTermOrder + 2]
-            LimitCorr = Interpolate3_quick(OriginDif, Initial) // 當日差積
+            const Initial = AcrTermList[AcrTermOrder] + ',' + SunDcorrList[AcrTermOrder] + ';' + AcrTermList[AcrTermOrder + 1] + ',' + SunDcorrList[AcrTermOrder + 1] + ';' + AcrTermList[AcrTermOrder + 2] + ',' + SunDcorrList[AcrTermOrder + 2]
+            LimitCorr = Interpolate3(OriginDif, Initial) // 當日差積
             if (OriginDif > HalfSolar) {
                 LimitCorr = -LimitCorr
             }
@@ -874,8 +872,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, OriginDifRaw, isNewm,
     let MoonAcrAvgDif = 0
     let AnomaAccum = AnomaAccumRaw + TcorrFunc.Tcorr2
     if (Type === 9) { //紀元食甚泛餘，卽定朔到眞食甚的改正。藤豔輝《紀元曆日食算法及精度分析》。最後書上說加上經朔，藤豔輝說加上定朔
-        const MoonAcrAvgDifList = TcorrFunc.MoonAcrAvgDifList
-        MoonAcrAvgDif = -MoonAcrAvgDifList[~~AnomaAccum] / MoonAvgVDeg // 朏（疾）減朒（遲）加。這裏符號不確定，感覺是這樣
+        MoonAcrAvgDif = TcorrFunc.MoonTcorr2 // 朏（疾）減朒（遲）加。這裏符號不確定，感覺是這樣
         Tcorr0 = (TcorrFunc.Tcorr2) * MoonAcrAvgDif // TcorrFunc.Tcorr2是經朔日月改正
     }
     OriginDif += TcorrFunc.Tcorr2 + Tcorr0 // 不知道紀元月食加不加Tcorr0
@@ -1219,7 +1216,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, OriginDifRaw, isNewm,
 // console.log(EclipseFormula(14.1834249657, 11.1268587106, 0.45531, 31.9780521262, 1, 'Jiyuan').StartDecimal)
 // 藤豔輝論文從1開始索引，我從0開始索引，結果相差不大，都在辰正。
 
-export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Leap, isNewm, CalName) => {
+export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, CalName, i, Leap) => {
     const {
         Type
     } = Bind(CalName)
@@ -1227,7 +1224,7 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Lea
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = EclipseTable1(NodeAccum, CalName)
     } else if (Type <= 6) {
-        Eclipse = EclipseTable2(NodeAccum, AnomaAccum, Decimal, OriginDifRaw, i, Leap, isNewm, CalName)
+        Eclipse = EclipseTable2(NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, CalName, i, Leap)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan'].includes(CalName)) {
         Eclipse = EclipseTable3(NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, CalName)
     } else if (Type <= 11) {

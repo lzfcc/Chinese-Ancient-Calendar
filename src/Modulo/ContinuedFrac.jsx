@@ -15,14 +15,14 @@ export default class a extends React.Component {
         <span>分子</span>
         <input
           value={this.state.fracA}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ fracA: e.currentTarget.value });
           }}
         />
         <span> 分母</span>
         <input
           value={this.state.fracB}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ fracB: e.currentTarget.value });
           }}
         />

@@ -29,14 +29,14 @@ export default class Astronomy extends React.Component {
   //       <span>天頂距<n>度</n></span>
   //       <input className='width3'
   //         value={this.state.Dial1}
-  //         onChange={(e) => {
+  //         onChange={e => {
   //           this.setState({ Dial1: e.currentTarget.value });
   //         }}
   //       />
   //       <span> 週天<n>度</n></span>
   //       <input className='width3'
   //         value={this.state.Dial2}
-  //         onChange={(e) => {
+  //         onChange={e => {
   //           this.setState({ Dial2: e.currentTarget.value });
   //         }}
   //       />
@@ -49,14 +49,14 @@ export default class Astronomy extends React.Component {
   //       <span>晷長<n>尺</n></span>
   //       <input className='width3'
   //         value={this.state.Angle1}
-  //         onChange={(e) => {
+  //         onChange={e => {
   //           this.setState({ Angle1: e.currentTarget.value });
   //         }}
   //       />
   //       <span> 週天<n>度</n></span>
   //       <input className='width3'
   //         value={this.state.Angle2}
-  //         onChange={(e) => {
+  //         onChange={e => {
   //           this.setState({ Angle2: e.currentTarget.value });
   //         }}
   //       />

@@ -19,7 +19,7 @@ export default class a extends React.Component {
         </p>
         <input
           value={this.state.FracLcmIn}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ FracLcmIn: e.currentTarget.value });
           }}
         />

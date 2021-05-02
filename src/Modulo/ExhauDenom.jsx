@@ -17,21 +17,21 @@ export default class Exhau extends React.Component {
         <span>日法 ∈ (</span>
         <input
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
         <span>,</span>
         <input
           value={this.state.b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
         <span>) 結尾</span>
         <input
           value={this.state.c}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ c: e.currentTarget.value });
           }}
         />

@@ -1,5 +1,5 @@
 import React from "react";
-import { Interpolate3 } from "../Cal/equa_sn";
+import { Interpolate3_big } from "../Cal/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +17,7 @@ export default class Equa extends React.Component {
         <span>n</span>
         <input className='width4'
           value={this.state.n}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ n: e.currentTarget.value });
           }}
         />
@@ -25,7 +25,7 @@ export default class Equa extends React.Component {
         <span> 數列</span>
         <input className='width5'
           value={this.state.initial}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ initial: e.currentTarget.value });
           }}
         />
@@ -35,7 +35,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const Print = Interpolate3(this.state.n, this.state.initial)
+      const Print = Interpolate3_big(this.state.n, this.state.initial)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

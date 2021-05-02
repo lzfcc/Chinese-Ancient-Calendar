@@ -20,49 +20,49 @@ export default class a extends React.Component {
       <span className="year-select width2">
         <input className='width2'
           value={this.state.yy}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ yy: e.currentTarget.value });
           }}
         />
         <span>年</span>
         <input className='width1'
           value={this.state.mm}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ mm: e.currentTarget.value });
           }}
         />
         <span>月</span>
         <input className='width1'
           value={this.state.dd}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ dd: e.currentTarget.value });
           }}
         />
         <span>日</span>
         <input className='width1'
           value={this.state.h}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ h: e.currentTarget.value });
           }}
         />
         <span>h</span>
         <input className='width1'
           value={this.state.m}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ m: e.currentTarget.value });
           }}
         />
         <span>m</span>
         <input className='width1'
           value={this.state.s}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ s: e.currentTarget.value });
           }}
         />
         <span>s</span>
         <input className='width2'
           value={this.state.ms}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ ms: e.currentTarget.value });
           }}
         />

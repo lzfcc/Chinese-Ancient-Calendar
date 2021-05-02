@@ -25,51 +25,139 @@ import {
     // MoonWest
 } from './astronomy_west.mjs'
 import {
-    AutoTcorr
+    AutoTcorr,
+    AutoDifAccum
 } from './astronomy_acrv.mjs'
 import {
-    CalNameDayList
+    CalNameList
 } from './para_constant.mjs'
 import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 
+export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
+    OriginDifRaw = +OriginDifRaw
+    AnomaAccumRaw = +AnomaAccumRaw
+    let AnomaAccum = AnomaAccumRaw
+    if (OriginDifRaw > 365.2425 || OriginDifRaw < 0) {
+        throw (new Error('請輸入一回歸年內的日數！'))
+    }
+    const {
+        SunTcorr2: WestSunTcorr,
+        MoonTcorr2: WestMoonTcorr
+    } = AutoTcorr(AnomaAccum, OriginDifRaw, 'West', year)
+    const {
+        SunDifAccum: WestSun,
+        MoonDifAccum: WestMoon,
+    } = AutoDifAccum(AnomaAccum, OriginDifRaw, 'West', year)
+    let Print = [{
+        title: 'Fourier',
+        data: [WestSun.toFixed(6), 0, WestMoon.toFixed(6), 0, WestSunTcorr.toFixed(6), 0, WestMoonTcorr.toFixed(6), 0]
+    }]
+    Print = Print.concat(
+        ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Zhengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Wuji', 'Zhengyuan', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'NewDaming', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian'].map(title => {
+            if (['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(title)) {
+                const {
+                    AutoPara,
+                } = Bind(title)
+                const {
+                    Anoma
+                } = AutoPara[title]
+                AnomaAccum += Anoma / 2
+            }
+            const {
+                SunDifAccum,
+                MoonDifAccum,
+            } = AutoDifAccum(AnomaAccum, OriginDifRaw, title)
+            const {
+                SunTcorr2,
+                MoonTcorr2,
+                SunTcorr1,
+                MoonTcorr1,
+            } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
+            const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(6) : '-'
+            const SunDifAccumInac = SunDifAccum ? (SunDifAccum - WestSun).toFixed(4) : '-'
+            const MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(6) : '-'
+            const MoonDifAccumInac = MoonDifAccum ? (MoonDifAccum - WestMoon).toFixed(4) : '-'
+            let SunTcorrPrint = '-'
+            let SunTcorrInac = '-'
+            if (SunTcorr2) {
+                SunTcorrPrint = SunTcorr2.toFixed(6)
+                SunTcorrInac = (SunTcorr2 - WestSunTcorr).toFixed(4)
+            } else if (SunTcorr1) {
+                SunTcorrPrint = SunTcorr1.toFixed(6)
+                SunTcorrInac = (SunTcorr1 - WestSunTcorr).toFixed(4)
+            }
+            let MoonTcorrPrint = '-'
+            let MoonTcorrInac = '-'
+            if (MoonTcorr2) {
+                MoonTcorrPrint = MoonTcorr2.toFixed(6)
+                MoonTcorrInac = (MoonTcorr2 - WestMoonTcorr).toFixed(4)
+            } else if (MoonTcorr1) {
+                MoonTcorrPrint = MoonTcorr1.toFixed(6)
+                MoonTcorrInac = (MoonTcorr1 - WestMoonTcorr).toFixed(4)
+            }
+            return {
+                title: CalNameList[title],
+                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac]
+            }
+        }))
+    // 符天授時必須單獨抽出來，否則AnomaAccum就會變得很大，不知道為何
+    Print = Print.concat(
+        ['Shoushi', 'Futian'].map(title => {
+            const {
+                SunDifAccum,
+                MoonDifAccum,
+            } = AutoDifAccum(AnomaAccumRaw, OriginDifRaw, title)
+            const {
+                SunTcorr2,
+                MoonTcorr2
+            } = AutoTcorr(AnomaAccumRaw, OriginDifRaw, title)
+            return {
+                title: CalNameList[title],
+                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), SunTcorr2.toFixed(6), (SunTcorr2 - WestSunTcorr).toFixed(4), MoonTcorr2.toFixed(6), (MoonTcorr2 - WestMoonTcorr).toFixed(4)]
+            }
+        }))
+    return Print
+}
+// console.log(BindTcorr(21.200901, 220.0911, 1000))
+
 export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
     const {
         Type,
     } = Bind(CalName)
-    let Result = 0
-    if (Type <= 7) {
-        Result = Equator2EclipticTable(LongiRaw, CalName)
-    } else if (Type <= 10) {
-        Result = Equator2EclipticFormula(LongiRaw, CalName).EclipticLongi
+    let EclipticLongi = 0
+    let EquatorLongi = 0
+    if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+        EclipticLongi = Equator2EclipticTable(LongiRaw, CalName)
+    } else if (Type === 8) {
+        EclipticLongi = Equator2EclipticFormula(LongiRaw, CalName).EclipticLongi
+    } else if (Type === 9 || Type === 10) {
+        const Func = Equator2EclipticFormula(LongiRaw, 'Jiyuan')
+        EclipticLongi = Func.EclipticLongi
+        EquatorLongi = Func.EquatorLongi
     } else if (Type === 11) {
-        Result = Hushigeyuan(LongiRaw, 365.2575).EquatorLongi
+        EquatorLongi = Hushigeyuan(LongiRaw, 365.2575).EquatorLongi
     }
-    return Result
+    return {
+        EquatorLongi,
+        EclipticLongi
+    }
 }
 
 export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
-    Sidereal = Number(Sidereal)
-    LongiRaw = Number(LongiRaw)
+    Sidereal = +Sidereal
+    LongiRaw = +LongiRaw
     if (LongiRaw >= Sidereal || LongiRaw < 0) {
         throw (new Error('請輸入一週天度內的度數'))
     }
     let Range = ''
-    if (LongiRaw === 0) {
-        Range += '冬至，赤度 = 黃度'
-    } else if (LongiRaw < Sidereal / 4) {
+    if (LongiRaw < Sidereal / 4) {
         Range += '冬至 → 春分，赤度 > 黃度'
-    } else if (LongiRaw === Sidereal / 4) {
-        Range += '春分，赤度 = 黃度'
     } else if (LongiRaw < Sidereal / 2) {
         Range += '春分 → 夏至，赤度 < 黃度'
-    } else if (LongiRaw === Sidereal / 2) {
-        Range += '夏至，赤度 = 黃度'
     } else if (LongiRaw < 3 * Sidereal / 4) {
         Range += '夏至 → 秋分，赤度 > 黃度'
-    } else if (LongiRaw === 3 * Sidereal / 4) {
-        Range += '秋分，赤度 = 黃度'
     } else {
         Range += '秋分 → 冬至，赤度 < 黃度'
     }
@@ -79,45 +167,28 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
     } = Equator2EclipticWest(LongiRaw, Sidereal, year)
     let Print = [{
         title: '球面三角',
-        data: [WestB.toFixed(6), 0, WestA.toFixed(6), 0]
+        data: [WestB.toFixed(4), 0, WestA.toFixed(4), 0] // 小數點後4位就是0.36”
     }]
     Print = Print.concat(
-        ['Qianxiang', 'Huangji', 'Dayan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].map((title) => {
-            const EclipticLongi = Equator2EclipticTable(LongiRaw, title)
-            return {
-                title: CalNameDayList[title],
-                data: [EclipticLongi.toFixed(6), (EclipticLongi - WestB).toFixed(4), '-', '-']
+        ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
+            let EclipticLongiPrint = '-'
+            let EclipticLongiInac = '-'
+            let EquatorLongiPrint = '-'
+            let EquatorLongiInac = '-'
+            const Func = AutoEquator2Ecliptic(LongiRaw, title)
+            const EclipticLongi = Func.EclipticLongi
+            const EquatorLongi = Func.EquatorLongi
+            if (EclipticLongi) {
+                EclipticLongiPrint = EclipticLongi.toFixed(4)
+                EclipticLongiInac = (EclipticLongi - WestB).toFixed(4)
             }
-        }))
-    Print = Print.concat(
-        ['Chongxuan', 'Chongtian', 'Mingtian', 'Guantian'].map((title) => {
-            const {
-                EclipticLongi
-            } = Equator2EclipticFormula(LongiRaw, title)
-            return {
-                title: CalNameDayList[title],
-                data: [EclipticLongi.toFixed(6), (EclipticLongi - WestB).toFixed(4), '-', '-']
+            if (EquatorLongi) {
+                EquatorLongiPrint = EquatorLongi.toFixed(4)
+                EquatorLongiInac = (EquatorLongi - WestA).toFixed(4)
             }
-        }))
-    Print = Print.concat(
-        ['Jiyuan'].map((title) => {
-            const {
-                EquatorLongi,
-                EclipticLongi
-            } = Equator2EclipticFormula(LongiRaw, title)
             return {
-                title: CalNameDayList[title],
-                data: [EclipticLongi.toFixed(6), (EclipticLongi - WestB).toFixed(4), EquatorLongi.toFixed(6), (EquatorLongi - WestA).toFixed(4)]
-            }
-        }))
-    Print = Print.concat(
-        ['Shoushi'].map((title) => {
-            const {
-                EquatorLongi
-            } = Hushigeyuan(LongiRaw, Sidereal)
-            return {
-                title: CalNameDayList[title],
-                data: ['-', '-', EquatorLongi.toFixed(6), (EquatorLongi - WestA).toFixed(4)]
+                title: CalNameList[title],
+                data: [EclipticLongiPrint, EclipticLongiInac, EquatorLongiPrint, EquatorLongiInac]
             }
         }))
     return {
@@ -127,104 +198,33 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
 }
 // console.log(BindEquator2Ecliptic(360, 365.2575, 0).Range)
 
-export const BindTcorr = (AnomaAccum, OriginDifRaw, year) => {
-    OriginDifRaw = +OriginDifRaw
-    AnomaAccum = +AnomaAccum
-    if (OriginDifRaw > 365.2425 || OriginDifRaw < 0) {
-        throw (new Error('請輸入一回歸年內的日數！'))
-    }
-    const {
-        SunDifAccum: WestSun,
-        MoonDifAccum: WestMoon,
-        Tcorr2: WestTcorr
-    } = AutoTcorr(AnomaAccum, OriginDifRaw, 'West', year)
-    let Print = [{
-        title: '傅立葉',
-        data: [WestSun.toFixed(6), 0, WestMoon.toFixed(6), 0, '-', WestTcorr.toFixed(6), 0]
-    }]
-    Print = Print.concat(
-        ['Qianxiang', 'Jingchu', 'Zhengguang', 'Xinghe', 'Tianbao', 'Yuanjia', 'Daming'].map((title) => {
-            const {
-                MoonDifAccum,
-                Tcorr1
-            } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
-            return {
-                title: CalNameDayList[title],
-                data: ['-', '-', MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), '-', (Tcorr1 - WestTcorr).toFixed(4)]
-            }
-        }))
-    Print = Print.concat(
-        ['Daye', 'Wuyin'].map((title) => {
-            let {
-                SunDifAccum,
-                MoonDifAccum,
-                Tcorr1
-            } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
-            SunDifAccum *= 12.3688 //大業12 .3686921478 戊寅 12.368953262。這個乘率並不確定，大業有可能是10，戊寅有可能是13006/1183            
-            return {
-                title: CalNameDayList[title],
-                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), '-', (Tcorr1 - WestTcorr).toFixed(4)]
-            }
-        }))
-    Print = Print.concat(
-        ['Huangji', 'Linde', 'Wuji', 'Zhengyuan', 'NewDaming', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Gengwu', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map((title) => {
-            // let Plus = 0
-            // if (['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(title)) {
-            //     Plus = 13.77727
-            // }
-            const {
-                SunDifAccum,
-                MoonDifAccum,
-                Tcorr2,
-                Tcorr1
-            } = AutoTcorr(AnomaAccum, OriginDifRaw, title) //  + Plus
-            return {
-                title: CalNameDayList[title],
-                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), Tcorr1.toFixed(6), Tcorr2.toFixed(6), (Tcorr2 - WestTcorr).toFixed(4)]
-            }
-        }))
-    Print = Print.concat(
-        ['Futian', 'Mingtian', 'Shoushi'].map((title) => {
-            let MoonAvgVDeg = 1
-            if (title === 'Mingtian') {
-                MoonAvgVDeg = 13.36875
-            }
-            const {
-                SunDifAccum,
-                MoonDifAccum,
-                Tcorr2
-            } = AutoTcorr(AnomaAccum * MoonAvgVDeg, OriginDifRaw, title)
-            let sign = 1
-            if (title === 'Shoushi') {
-                sign = -1
-            }
-            return {
-                title: title === 'Futian' ? '符天' : CalNameDayList[title],
-                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), (sign * MoonDifAccum).toFixed(6), (sign * MoonDifAccum - WestMoon).toFixed(4), '-', Tcorr2.toFixed(6), (Tcorr2 - WestTcorr).toFixed(4)]
-            }
-        }))
-    return Print
-}
-// console.log(BindTcorr(21.200901, 220.0911, 1000))
-
 export const AutoLongi2Lati = (LongiRaw, OriginDecimal, CalName) => {
     const {
         Type,
     } = Bind(CalName)
+    const NoonDif = OriginDecimal - 0.5
+    LongiRaw -= NoonDif
     let Longi2Lati = {}
     let Longi2LatiA = {}
     let Longi2LatiB = {}
     let special = 0
+    if (Type >= 8 && !['Yingtian', 'Qianyuan'].includes(CalName)) {
+        LongiRaw += AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
+    }
     if (Type <= 3) {
-        Longi2Lati = Longi2LatiTable1(LongiRaw, 'Qianxiang')
+        Longi2Lati = Longi2LatiTable1(LongiRaw, 'Easthan')
     } else if (Type === 4) {
         Longi2Lati = Longi2LatiTable1(LongiRaw, CalName)
     } else if (Type === 6) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, OriginDecimal, CalName)
+        Longi2Lati = Longi2LatiTable2(LongiRaw, CalName)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, OriginDecimal, 'Dayan')
-    } else if (['Xuanming', 'Yingtian', 'Qianyuan', 'Gengwu'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, OriginDecimal, CalName)
+        Longi2Lati = Longi2LatiTable2(LongiRaw, 'Dayan')
+    } else if (['Xuanming', 'Qintian'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable2(LongiRaw, 'Xuanming')
+    } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable2(LongiRaw, CalName)
+    } else if (['NewDaming', 'Gengwu'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable2(LongiRaw, 'NewDaming')
     } else if (Type === 8) {
         Longi2LatiA = Longi2LatiFormula(LongiRaw, CalName)
         Longi2LatiB = Longi2DialFormula(LongiRaw, CalName)
@@ -237,27 +237,35 @@ export const AutoLongi2Lati = (LongiRaw, OriginDecimal, CalName) => {
         Longi2Lati = Hushigeyuan(LongiRaw, 365.2575)
     }
     let Lati = 0
+    let Lati1 = 0
     let Sunrise = 0
     let Dial = 0
     if (special) {
         Lati = Longi2LatiA.Lati
+        Lati1 = Longi2LatiA.Lati1
         Sunrise = Longi2LatiA.Sunrise
         Dial = Longi2LatiB.Dial
     } else {
         Lati = Longi2Lati.Lati
+        Lati1 = Longi2Lati.Lati1
         Sunrise = Longi2Lati.Sunrise
-        Dial = Longi2Lati.Dial ? Longi2Lati.Dial : 0
+        Dial = Longi2Lati.Dial || 0
     }
     return {
         Lati,
+        Lati1,
         Sunrise,
         Dial
     }
 }
+// console.log (AutoLongi2Lati (53.6, 0, 'Chongxuan'))
 
-export const BindLongi2Lati = (LongiRaw, f, Sidereal, year) => {
-    Sidereal = Number(Sidereal)
-    LongiRaw = Number(LongiRaw)
+export const BindLongi2Lati = (LongiRaw, OriginDecimal, f, Sidereal, year) => {
+    Sidereal = +Sidereal
+    LongiRaw = +LongiRaw
+    OriginDecimal = +('0.' + OriginDecimal)
+    f = +f
+    year = +year
     if (LongiRaw >= Sidereal || LongiRaw < 0) {
         throw (new Error('請輸入一週天度內的度數'))
     }
@@ -276,72 +284,44 @@ export const BindLongi2Lati = (LongiRaw, f, Sidereal, year) => {
     } = Longi2DialWest(Longi, f, Sidereal, year)
     let Print = [{
         title: '球面三角',
-        data: [WestA.toFixed(6), WestB.toFixed(6), 0, `${WestC.toFixed(6)}\n${WestC1.toFixed(6)}`, 0, `${WestD.toFixed(6)}\n${WestD1.toFixed(6)}`, 0]
+        data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0] // 假設1尺=20cm，小數點後4位是20um
     }]
     Print = Print.concat(
-        ['Qianxiang', 'Yuanjia', 'Daming', 'Daye', 'Wuyin'].map((title) => {
+        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'NewDaming', 'Shoushi'].map(title => {
+            let Lati1Print = '-'
+            let LatiPrint = '-'
+            let LatiInac = '-'
+            let SunrisePrint = '-'
+            let SunriseInac = '-'
+            let DialPrint = '-'
+            let DialInac = '-'
             const {
                 Lati1,
                 Lati,
                 Sunrise,
                 Dial
-            } = Longi2LatiTable1(LongiRaw, title)
+            } = AutoLongi2Lati(LongiRaw, OriginDecimal, title)
+            if (Lati1) {
+                Lati1Print = Lati1.toFixed(4)
+                LatiPrint = Lati.toFixed(4)
+                LatiInac = (Lati - WestB).toFixed(4)
+            }
+            if (Sunrise) {
+                SunrisePrint = Sunrise.toFixed(4)
+                SunriseInac = (Sunrise - WestC).toFixed(4)
+            }
+            if (Dial) {
+                DialPrint = Dial.toFixed(4)
+                DialInac = (Dial - WestD).toFixed(4)
+            }
             return {
-                title: CalNameDayList[title],
-                data: [Lati1.toFixed(6), Lati.toFixed(6), (Lati - WestB).toFixed(4), Sunrise.toFixed(6), (Sunrise - WestC).toFixed(4), Dial.toFixed(6), (Dial - WestD).toFixed(4)]
+                title: CalNameList[title],
+                data: [Lati1Print, LatiPrint, LatiInac, SunrisePrint, SunriseInac, DialPrint, DialInac]
             }
         }))
-    Print = Print.concat(
-        ['Huangji', 'Linde', 'Dayan', 'Xuanming', 'Yingtian', 'Qianyuan', 'Gengwu'].map((title) => {
-            const {
-                Lati1,
-                Lati,
-                Sunrise,
-                Dial
-            } = Longi2LatiTable2(LongiRaw, 0.5, title)
-            return {
-                title: CalNameDayList[title],
-                data: [Lati1.toFixed(6), Lati.toFixed(6), (Lati - WestB).toFixed(4), Sunrise.toFixed(6), (Sunrise - WestC).toFixed(4), Dial.toFixed(6), (Dial - WestD).toFixed(4)]
-            }
-        })
-    )
-    // const {
-    //     Lati1: GengwuA,
-    //     Lati: GengwuB,
-    //     Sunrise: GengwuC
-    // } = Longi2LatiTable2(LongiRaw, 0.5, 'Gengwu')
-    // Print.push({
-    //     title: CalNameDayList.Gengwu,
-    //     data: [GengwuA.toFixed(6), GengwuB.toFixed(6), (GengwuB - WestB).toFixed(4), GengwuC.toFixed(6), (GengwuC - WestC).toFixed(4), '0', '0']
-    // })
-    Print = Print.concat(
-        ['Yitian', 'Chongxuan', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].map((title) => {
-            const {
-                Lati,
-                Lati1,
-                Sunrise
-            } = Longi2LatiFormula(LongiRaw, title)
-            const {
-                Dial
-            } = Longi2DialFormula(LongiRaw, title)
-            return {
-                title: CalNameDayList[title],
-                data: [Lati1.toFixed(6), Lati.toFixed(6), (Lati - WestB).toFixed(4), Sunrise.toFixed(6), (Sunrise - WestC).toFixed(4), Dial.toFixed(6), (Dial - WestD).toFixed(4)]
-            }
-        })
-    )
-    const {
-        Lati1: ShoushiA,
-        Lati: ShoushiB,
-        Sunrise: ShoushiC
-    } = Hushigeyuan(LongiRaw, Sidereal)
-    Print.push({
-        title: CalNameDayList.Shoushi,
-        data: [ShoushiA.toFixed(6), ShoushiB.toFixed(6), (ShoushiB - WestB).toFixed(4), ShoushiC.toFixed(6), (ShoushiC - WestC).toFixed(4), '0', '0']
-    })
     return Print
 }
-// console.log(BindLongi2Lati(88, 34.4, 365.2445, 1000))
+// console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLongiLati = (Day, OriginRawRaw, CalName) => {
     const {
@@ -377,94 +357,58 @@ export const AutoMoonLongiLati = (Day, OriginRawRaw, CalName) => {
     } else if (['Mingtian'].includes(CalName)) {
         MoonLongi = MoonLongiFormula(OriginRawRaw, Day, CalName)
         MoonLati = MoonLatiFormula(Day, 'Guantian')
-    } else if (['Shoushi'].includes(CalName)) {
+    } else if (Type === 11) {
         MoonLongi = MoonLongiFormula(OriginRawRaw, Day, CalName)
     }
-    const MoonEquatorLongi = MoonLongi.EquatorLongi ? MoonLongi.EquatorLongi : 0
-    const MoonEclipticLati = MoonLati.Lati ? MoonLati.Lati : 0
+    const MoonEquatorLongi = MoonLongi.EquatorLongi || 0
+    const MoonWhiteLongi = MoonLongi.WhiteLongi || 0
+    const MoonEclipticLati = MoonLati.Lati || 0
+    const MoonEclipticLati1 = MoonLati.Lati1 || 0
     return {
         MoonEquatorLongi,
-        MoonEclipticLati
+        MoonWhiteLongi,
+        MoonEclipticLati,
+        MoonEclipticLati1
     }
 }
-// console.log(AutoMoonLongiLati(2.41,366,'Dayan'))
+// console.log(AutoMoonLongiLati(2.41,366,'Shoushi'))
 
 export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日、距冬至日數
-    Day = Number(Day)
-    OriginRawRaw = Number(OriginRawRaw)
+    Day = +Day
+    OriginRawRaw = +OriginRawRaw
     if (Day >= 27.2122 || Day < 0) {
         throw (new Error('請輸入一交點月內的日數'))
     }
     if (OriginRawRaw >= 365.246 || OriginRawRaw < 0) {
         throw (new Error('請輸入一週天度內的度數'))
     }
-    const HuangjiLongi = MoonLongiTable(OriginRawRaw, Day, 'Huangji')
-    const DayanLongi = MoonLongiTable(OriginRawRaw, Day, 'Dayan')
-    const QintianLongi = MoonLongiTable(OriginRawRaw, Day, 'Qintian')
-    const YingtianLongi = MoonLongiTable(OriginRawRaw, Day, 'Yingtian')
-    const ChongtianLongi = MoonLongiFormula(OriginRawRaw, Day, 'Chongtian')
-    const MingtianLongi = MoonLongiFormula(OriginRawRaw, Day, 'Mingtian')
-    const GuantianLongi = MoonLongiFormula(OriginRawRaw, Day, 'Guantian')
-    const JiyuanLongi = MoonLongiFormula(OriginRawRaw, Day, 'Jiyuan')
-    const ShoushiLongi = MoonLongiFormula(OriginRawRaw, Day, 'Shoushi')
-    const QianxiangLati = MoonLatiTable(Day, 'Qianxiang')
-    const DamingLati = MoonLatiTable(Day, 'Daming')
-    const HuangjiLati = MoonLatiTable(Day, 'Huangji')
-    const DayanLati = MoonLatiTable(Day, 'Dayan')
-    const ChongxuanLati = MoonLatiFormula(Day, 'Chongxuan')
-    const QintianLati = MoonLatiFormula(Day, 'Qintian')
-    const ChongtianLati = MoonLatiFormula(Day, 'Chongtian')
-    const GuantianLati = MoonLatiFormula(Day, 'Guantian')
-    const JiyuanLati = MoonLatiFormula(Day, 'Jiyuan')
-    const Print = []
-    Print.push({
-        title: CalNameDayList.Qianxiang,
-        data: ['', '', QianxiangLati.Lati1.toFixed(6), QianxiangLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Daming,
-        data: ['', '', DamingLati.Lati1.toFixed(6), DamingLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Huangji,
-        data: [HuangjiLongi.WhiteLongi.toFixed(6), HuangjiLongi.EquatorLongi.toFixed(6), HuangjiLati.Lati1.toFixed(6), HuangjiLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Dayan,
-        data: [DayanLongi.WhiteLongi.toFixed(6), DayanLongi.EquatorLongi.toFixed(6), DayanLati.Lati1.toFixed(6), DayanLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Chongxuan,
-        data: ['', '', ChongxuanLati.Lati1.toFixed(6), ChongxuanLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Qintian,
-        data: [QintianLongi.WhiteLongi.toFixed(6), QintianLongi.EquatorLongi.toFixed(6), QintianLati.Lati1.toFixed(6), QintianLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Yingtian,
-        data: [YingtianLongi.WhiteLongi.toFixed(6), YingtianLongi.EquatorLongi.toFixed(6), '', '']
-    })
-    Print.push({
-        title: CalNameDayList.Chongtian,
-        data: [ChongtianLongi.WhiteLongi.toFixed(6), ChongtianLongi.EquatorLongi.toFixed(6), ChongtianLati.Lati1.toFixed(6), ChongtianLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Mingtian,
-        data: [MingtianLongi.WhiteLongi.toFixed(6), MingtianLongi.EquatorLongi.toFixed(6), '', '']
-    })
-    Print.push({
-        title: CalNameDayList.Guantian,
-        data: [GuantianLongi.WhiteLongi.toFixed(6), GuantianLongi.EquatorLongi.toFixed(6), GuantianLati.Lati1.toFixed(6), GuantianLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Jiyuan,
-        data: [JiyuanLongi.WhiteLongi.toFixed(6), JiyuanLongi.EquatorLongi.toFixed(6), JiyuanLati.Lati1.toFixed(6), JiyuanLati.Lati.toFixed(6)]
-    })
-    Print.push({
-        title: CalNameDayList.Shoushi,
-        data: [ShoushiLongi.WhiteLongi.toFixed(6), ShoushiLongi.EquatorLongi.toFixed(6), '', '']
-    })
+    let Print = []
+    Print = Print.concat(
+        ['Qianxiang', 'Daming', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
+            let WhiteLongiPrint = '-'
+            let EquatorLongiPrint = '-'
+            let Lati1Print = '-'
+            let LatiPrint = '-'
+            const {
+                MoonEquatorLongi,
+                MoonWhiteLongi,
+                MoonEclipticLati1,
+                MoonEclipticLati,
+            } = AutoMoonLongiLati(Day, OriginRawRaw, title)
+            if (MoonEquatorLongi) {
+                EquatorLongiPrint = MoonEquatorLongi.toFixed(4)
+                WhiteLongiPrint = MoonWhiteLongi.toFixed(4)
+            }
+            if (MoonEclipticLati) {
+                Lati1Print = MoonEclipticLati1.toFixed(4)
+                LatiPrint = MoonEclipticLati.toFixed(4)
+                // LatiInac = (Lati - WestB).toFixed(4)
+            }
+            return {
+                title: CalNameList[title],
+                data: [WhiteLongiPrint, EquatorLongiPrint, Lati1Print, LatiPrint]
+            }
+        }))
     return Print
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
@@ -472,7 +416,7 @@ export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日�
 export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
-    NewmDecimal = Number('0.' + NewmDecimal)
+    NewmDecimal = +('0.' + NewmDecimal)
     OriginDifRaw = +OriginDifRaw
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
@@ -495,36 +439,33 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw)
     }
     let Print = []
     Print = Print.concat(
-        ['Zhengguang'].map((title) => {
-            const {
-                Magni
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 1, title) // 之所以i+1因為上面計算月份從0開始索引
-            return {
-                title: CalNameDayList[title],
-                data: [Magni.toFixed(4), '-', '定朔']
-            }
-        }))
-    Print = Print.concat(
-        ['Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map((title) => {
+        ['Zhengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
             const {
                 Magni,
-                Decimal,
-                Last
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 1, title)
-            const DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定朔' : (Decimal * 100).toFixed(4)
+                Last,
+                Decimal
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, title, i + 1, 0)
+            let LastPrint = '-'
+            if (Last) {
+                LastPrint = Last.toFixed(4)
+            }
+            let DecimalPrint = '-'
+            if (Decimal) {
+                DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定朔' : (Decimal * 100).toFixed(4)
+            }
             return {
-                title: CalNameDayList[title],
-                data: [Magni.toFixed(4), Last.toFixed(4), DecimalPrint]
+                title: CalNameList[title],
+                data: [Magni.toFixed(4), LastPrint, DecimalPrint]
             }
         }))
     return Print
 }
-// console.log(BindSunEclipse (0.1, 14, 1355, 14))
+// console.log(BindSunEclipse(0.1, 14, 1355, 14))
 
 export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
-    NewmDecimal = Number('0.' + NewmDecimal)
+    NewmDecimal = +('0.' + NewmDecimal)
     OriginDifRaw = +OriginDifRaw
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
@@ -547,26 +488,23 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw
     }
     let Print = []
     Print = Print.concat(
-        ['Zhengguang'].map((title) => {
-            const {
-                Magni
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 0, title) // 之所以i+1因為上面計算月份從0開始索引
-            return {
-                title: CalNameDayList[title],
-                data: [Magni.toFixed(4), '-', '定望']
-            }
-        }))
-    Print = Print.concat(
-        ['Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map((title) => {
+        ['Zhengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
             const {
                 Magni,
-                Decimal,
-                Last
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, i + 1, 0, 0, title)
-            const DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定望' : (Decimal * 100).toFixed(4)
+                Last,
+                Decimal
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 0, title, i + 1, 0)
+            let LastPrint = '-'
+            if (Last) {
+                LastPrint = Last.toFixed(4)
+            }
+            let DecimalPrint = '-'
+            if (Decimal) {
+                DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定望' : (Decimal * 100).toFixed(4)
+            }
             return {
-                title: CalNameDayList[title],
-                data: [Magni.toFixed(4), Last.toFixed(4), DecimalPrint]
+                title: CalNameList[title],
+                data: [Magni.toFixed(4), LastPrint, DecimalPrint]
             }
         }))
     return Print

@@ -17,7 +17,7 @@ export default class a extends React.Component {
         </p>
         <input
           value={this.state.GcdLcmIn}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ GcdLcmIn: e.currentTarget.value });
           }}
         />

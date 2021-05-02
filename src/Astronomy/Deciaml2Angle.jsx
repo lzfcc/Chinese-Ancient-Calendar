@@ -25,49 +25,49 @@ export default class Converter extends React.Component {
         <span>冬至時刻</span>
         <input className='width1'
           value={this.state.h1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ h1: e.currentTarget.value });
           }}
         />
         <span>:</span>
         <input className='width1'
           value={this.state.m1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ m1: e.currentTarget.value });
           }}
         />
         <span>:</span>
         <input className='width1'
           value={this.state.s1}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ s1: e.currentTarget.value });
           }}
         />
         <span> 距冬至日</span>
         <input className='width2'
           value={this.state.Day}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Day: e.currentTarget.value });
           }}
         />
         <span> 時刻</span>
         <input className='width1'
           value={this.state.h}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ h: e.currentTarget.value });
           }}
         />
         <span>:</span>
         <input className='width1'
           value={this.state.m}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ m: e.currentTarget.value });
           }}
         />
         <span>:</span>
         <input className='width1'
           value={this.state.s}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ s: e.currentTarget.value });
           }}
         />
@@ -75,21 +75,21 @@ export default class Converter extends React.Component {
         <span>緯度</span>
         <input className='width3'
           value={this.state.f}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ f: e.currentTarget.value });
           }}
         />
         <span> 公元年</span>
         <input className='width2'
           value={this.state.year}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ year: e.currentTarget.value });
           }}
         />
         <span> 表高</span>
         <input className='width2'
           value={this.state.height}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ height: e.currentTarget.value });
           }}
         />

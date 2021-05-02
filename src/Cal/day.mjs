@@ -236,12 +236,12 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 if (Type < 11) {
                     SunEquatorLongi = OriginDifRaw % (Sidereal ? Sidereal : Solar) // 從正月開始。不知道需不需要加上日躔
                     SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
-                    SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName)
+                    SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName).EclipticLongi
                     SunEclipticLongiAccum[i][k] = SunEclipticLongi + OriginAccum
                 } else {
                     SunEclipticLongi = OriginDifRaw % Sidereal
                     SunEclipticLongiAccum[i][k] = SunEclipticLongi + OriginAccum
-                    SunEquatorLongi = AutoEquator2Ecliptic(SunEclipticLongi, CalName)
+                    SunEquatorLongi = AutoEquator2Ecliptic(SunEclipticLongi, CalName).EquatorLongi
                     SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
                 }
                 const Longi2Lati = AutoLongi2Lati(Type === 11 ? SunEclipticLongi : SunEquatorLongi, OriginDecimal, CalName)

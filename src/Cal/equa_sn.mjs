@@ -96,7 +96,7 @@ export const Sn5 = (n, p) => {
 // console.log(Sn5(22.11112111111111, 3).Print)
 
 // 招差術，垛積（三角垛）求和公式。3^3+4^3+5^3...+(n+2)^3, 卽 f(n)=sum(n) (n+2)^3=27n+37 * 1/2! (n-1)n+ 24 1/3! (n-2)(n-1)n + 6 1/4! (n-3)(n-2)(n-1)n
-export const Interpolate1_quick = (n, Initial) => {
+export const Interpolate1 = (n, Initial) => {
     Initial = Initial.split(/;|,|，|。|；|｜| /)
     const p = Initial.length - 1
     let S = 0
@@ -112,7 +112,7 @@ export const Interpolate1_quick = (n, Initial) => {
     }
     return S - S4
 }
-export const Interpolate1 = (n, Initial) => {
+export const Interpolate1_big = (n, Initial) => {
     n = big(n)
     const n1 = Math.floor(n)
     Initial = Initial.split(/;|,|，|。|；|｜| /)
@@ -151,12 +151,12 @@ export const Interpolate1 = (n, Initial) => {
         y
     }
 }
-// console.log(Interpolate1(2.115, '27,64,125,216,343').y)
-// console.log(Interpolate1_quick(2.115, '27,64,125,216,343'))
-// console.log(Interpolate1(4.000001, 4, '27,64,125,216,343').Print)
-// console.log(Interpolate1(4.000001, 3, '25791，27341，28910，30499，32109').Print)
+// console.log(Interpolate1_big(2.115, '27,64,125,216,343').y)
+// console.log(Interpolate1(2.115, '27,64,125,216,343'))
+// console.log(Interpolate1_big(4.000001, 4, '27,64,125,216,343').Print)
+// console.log(Interpolate1_big(4.000001, 3, '25791，27341，28910，30499，32109').Print)
 // 算出來差分之後，求y。為了節省算力。delta由低次到高次。
-export const Interpolate2_quick = (n, f0, delta) => { // 跟下面的區別是沒用decimal.js
+export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用decimal.js
     delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length
     const tmp = []
@@ -170,7 +170,7 @@ export const Interpolate2_quick = (n, f0, delta) => { // 跟下面的區別是�
     }
     return y + f0
 }
-export const Interpolate2 = (n, f0, delta) => { // delta是string。第一個數n是0，上面的函數第一個是1
+export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一個數n是0，上面的函數第一個是1
     delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length // 次數
     const tmp = []
@@ -194,7 +194,7 @@ export const Interpolate2 = (n, f0, delta) => { // delta是string。第一個數
 // 關鍵：tmp
 // y=Σ(n,1) yiLi
 // Li=Π(n,j=1,j≠i) (x-xj)/(xi-xj)
-export const Interpolate3_quick = (n, Initial) => { // 跟下面的區別是沒用decimal.js
+export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用decimal.js
     Initial = Initial.split(/;|,|，|。|；|｜| /)
     const x = []
     const y = []
@@ -220,7 +220,7 @@ export const Interpolate3_quick = (n, Initial) => { // 跟下面的區別是沒�
     return f
 }
 
-export const Interpolate3 = (n, Initial) => {
+export const Interpolate3_big = (n, Initial) => {
     Initial = Initial.split(/;|,|，|。|；|｜| /)
     const x = []
     const y = []
@@ -246,5 +246,5 @@ export const Interpolate3 = (n, Initial) => {
     const Print = 'y (' + n + ') = ' + f.toFixed(15)
     return Print
 }
-// console.log(Interpolate3('12.1', '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
-// console.log(Interpolate3_quick(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
+// console.log(Interpolate3_big('12.1', '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
+// console.log(Interpolate3(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))

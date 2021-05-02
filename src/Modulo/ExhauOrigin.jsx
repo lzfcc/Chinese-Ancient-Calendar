@@ -21,21 +21,21 @@ export default class Exhau extends React.Component {
         <span>年 365.</span>
         <input
           value={this.state.Solar}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Solar: e.currentTarget.value });
           }}
         />
         <span>　月 29+</span>
         <input
           value={this.state.LunarNumer}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ LunarNumer: e.currentTarget.value });
           }}
         />
         <span>/</span>
         <input
           value={this.state.Denom}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Denom: e.currentTarget.value });
           }}
         />
@@ -43,28 +43,28 @@ export default class Exhau extends React.Component {
         <span>　冬至 ∈ (</span>
         <input
           value={this.state.OriginLower}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ OriginLower: e.currentTarget.value });
           }}
         />
         <span>,</span>
         <input
           value={this.state.OriginUpper}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ OriginUpper: e.currentTarget.value });
           }}
         />
         <span>)　天正經朔 ∈ (</span>
         <input
           value={this.state.FirstLower}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ FirstLower: e.currentTarget.value });
           }}
         />
         <span>,</span>
         <input
           value={this.state.FirstUpper}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ FirstUpper: e.currentTarget.value });
           }}
         />

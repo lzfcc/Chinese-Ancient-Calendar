@@ -21,28 +21,28 @@ export default class a extends React.Component {
         <span>年 365+</span>
         <input
           value={this.state.SolarFrac2}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ SolarFrac2: e.currentTarget.value });
           }}
         />
         <span>/</span>
         <input
           value={this.state.SolarDenom2}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ SolarDenom2: e.currentTarget.value });
           }}
         />
         <span>　月 29+</span>
         <input
           value={this.state.LunarFrac2}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ LunarFrac2: e.currentTarget.value });
           }}
         />
         <span>/</span>
         <input
           value={this.state.Denom2}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Denom2: e.currentTarget.value });
           }}
         />

@@ -15,7 +15,7 @@ export default class a extends React.Component {
         <span>小數</span>
         <input
           value={this.state.Decimal}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Decimal: e.currentTarget.value });
           }}
         />

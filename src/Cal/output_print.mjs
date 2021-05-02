@@ -27,7 +27,7 @@ const printData = outputFile(1, 724, 725, 0, [ // mode, YearStart, YearEnd, auto
     // 'Shiji',
     // 'Taichu',
     // 'Qianzaodu',
-    // 'EastHan', // 上四分系
+    // 'Easthan', // 上四分系
     // 'Qianxiang',
     // 'Huangchu',
     // 'Jingchu',

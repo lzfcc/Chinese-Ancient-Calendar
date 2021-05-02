@@ -24,7 +24,7 @@ export default class App extends React.Component {
 
   renderTabs() {
     return (<span className="section-select-container">
-      {this.tabTitles.map((title, index) => (<span className={"section-select" + (this.state.activeTab === index ? ' active' : '')} onClick={(e) => {
+      {this.tabTitles.map((title, index) => (<span className={"section-select" + (this.state.activeTab === index ? ' active' : '')} onClick={e => {
         if (this.state.activeTab === index) {
           return
         }

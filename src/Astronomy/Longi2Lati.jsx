@@ -5,9 +5,10 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      Lati2: 365.2445,
-      Lati3: 3400,
-      Lati4: 34.475,
+      b: 5,
+      c: 365.244,
+      year: 1000,
+      d: 34.475,
     }
     this.handle = this.handle.bind(this)
   }
@@ -17,30 +18,37 @@ export default class Converter extends React.Component {
       <span className='year-select'>
         <span>距冬至日數</span>
         <input className='width3'
-          value={this.state.Lati1}
-          onChange={(e) => {
-            this.setState({ Lati1: e.currentTarget.value });
+          value={this.state.a}
+          onChange={e => {
+            this.setState({ a: e.currentTarget.value });
           }}
         />
-        <span> 週天</span>
-        <input className='width3'
-          value={this.state.Lati2}
-          onChange={(e) => {
-            this.setState({ Lati2: e.currentTarget.value });
+        <span>冬至小分0.</span>
+        <input className='width2'
+          value={this.state.b}
+          onChange={e => {
+            this.setState({ b: e.currentTarget.value });
           }}
         />
         <span> 緯度</span>
         <input className='width3'
-          value={this.state.Lati4}
-          onChange={(e) => {
-            this.setState({ Lati4: e.currentTarget.value });
+          value={this.state.d}
+          onChange={e => {
+            this.setState({ d: e.currentTarget.value });
+          }}
+        />
+        <span> 週天</span>
+        <input className='width3'
+          value={this.state.c}
+          onChange={e => {
+            this.setState({ c: e.currentTarget.value });
           }}
         />
         <span> 公元年</span>
         <input className='width2'
-          value={this.state.Lati3}
-          onChange={(e) => {
-            this.setState({ Lati3: e.currentTarget.value });
+          value={this.state.year}
+          onChange={e => {
+            this.setState({ year: e.currentTarget.value });
           }}
         />
       </span>
@@ -49,7 +57,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = BindLongi2Lati(this.state.Lati1, this.state.Lati4, this.state.Lati2, this.state.Lati3)
+      const Print = BindLongi2Lati(this.state.a, this.state.b, this.state.d, this.state.c, this.state.year)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -77,8 +85,8 @@ export default class Converter extends React.Component {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map((d) => {
-                  return (<td>{Number(d) === 0 ? '-' : d}</td>)
+                {row.data.map(d => {
+                  return (<td>{d}</td>)
                 })}
               </tr>
             )

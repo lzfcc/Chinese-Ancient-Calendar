@@ -14,7 +14,7 @@ export const Bind = CalName => {
     let Type = 0
     let AutoNewm = N2
     let AutoPara = P1
-    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'EastHan'].includes(CalName)) {
+    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan'].includes(CalName)) {
         AutoNewm = N1
         Type = 1 // 四分
     } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
@@ -25,13 +25,13 @@ export const Bind = CalName => {
         Type = 4 // 南朝
     } else {
         AutoPara = P2
-        if (['Jiuzhi', 'Shenlong', 'Futian'].includes(CalName)) {
+        if (['Jiuzhi'].includes(CalName)) {
             Type = 5 // 天竺
-        } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde'].includes(CalName)) {
+        } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde', 'Shenlong'].includes(CalName)) {
             Type = 6 // 隋初唐
         } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
             Type = 7 // 唐五代
-        } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
+        } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
             Type = 8 // 北宋
         } else if (['Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Bentian'].includes(CalName)) {
             Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
@@ -104,7 +104,7 @@ const CalRange = {
     Taichu: [
         [-104, 85]
     ],
-    EastHan: [
+    Easthan: [
         [85, 263]
     ],
     Qianxiang: [

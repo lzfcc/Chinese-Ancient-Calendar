@@ -1,5 +1,5 @@
 import React from "react";
-import { Interpolate2 } from "../Cal/equa_sn";
+import { Interpolate2_big } from "../Cal/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
@@ -19,14 +19,14 @@ export default class Equa extends React.Component {
         <span>n</span>
         <input className='width4'
           value={this.state.Interpolate2N}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Interpolate2N: e.currentTarget.value });
           }}
         />
         <span> f<sub>0</sub></span>
         <input className='width4'
           value={this.state.Interpolate20}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Interpolate20: e.currentTarget.value });
           }}
         />
@@ -34,7 +34,7 @@ export default class Equa extends React.Component {
         <span> Δ</span>
         <input className='width5'
           value={this.state.Interpolate2Raw}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Interpolate2Raw: e.currentTarget.value });
           }}
         />
@@ -44,7 +44,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const { yPrint } = Interpolate2(this.state.Interpolate2N, this.state.Interpolate20, this.state.Interpolate2Raw)
+      const { yPrint } = Interpolate2_big(this.state.Interpolate2N, this.state.Interpolate20, this.state.Interpolate2Raw)
       this.setState({ output: yPrint })
     } catch (e) {
       alert(e.message)

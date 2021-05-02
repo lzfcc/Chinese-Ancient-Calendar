@@ -2,8 +2,9 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    Interpolate1_quick,
-    Interpolate2_quick
+    Interpolate1,
+    Interpolate2,
+    Interpolate3
 } from './equa_sn.mjs'
 
 // /////乾象魏晉黃赤轉換//////
@@ -64,11 +65,11 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
     let EclipticLongi = 0
     let Range = []
     if (Type <= 4) {
-        Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - Math.floor(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
+        Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
     } else if (['Huangji', 'Linde'].includes(CalName)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
     } else if (['Dayan', 'Zhide', 'Zhengyuan', 'Wuji', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + Sidereal / 4 - Math.floor(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + Sidereal / 4 - ~~(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
@@ -158,11 +159,9 @@ export const Longi2LatiTable1 = (OriginDifRaw, CalName) => {
         DawnRange = 2.5
     }
     const HalfTermLeng = Solar / 24
-    let TermNum = Math.round(Math.ceil(OriginDifRaw / HalfTermLeng) % 24.1) // 每日所在氣名
-    if (TermNum === 0) {
-        TermNum = 1
-    }
-    const TermDif = OriginDifRaw % Solar - (TermNum - 1) * HalfTermLeng
+    const OriginDif = OriginDifRaw % Solar
+    const TermNum = ~~(OriginDif / HalfTermLeng) // 每日所在氣名
+    const TermDif = OriginDif - TermNum * HalfTermLeng
     const Sunrise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
     const Dial = (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
     const Lati1 = (SunLatiList[TermNum] + (TermDif / HalfTermLeng) * (SunLatiList[TermNum + 1] - SunLatiList[TermNum]))
@@ -175,167 +174,91 @@ export const Longi2LatiTable1 = (OriginDifRaw, CalName) => {
     }
 }
 
-export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
-    OriginDifRaw = Number(OriginDifRaw)
-    OriginDecimal = Number(OriginDecimal)
+export const Longi2LatiTable2 = (OriginDifRaw, CalName) => {
     const {
         Type,
         AutoPara,
     } = Bind(CalName)
     const {
         Solar,
-        Denom,
         Sidereal,
         NightList,
         DialList,
         SunLatiList,
-        // TermRangeA,
-        // TermRangeS,
-        SunAcrAvgDifList
+        AcrTermList,
+        TermRangeA,
+        TermRangeS
     } = AutoPara[CalName]
+    const OriginDif = OriginDifRaw % Solar
     let DawnRange = 2.5
-    if (['Linde', 'NewDaming', 'Gengwu'].includes(CalName)) {
+    if (['Linde', 'NewDaming'].includes(CalName)) {
         DawnRange = 0
     }
-    const f = 34.475
-    // 日躔表
-    let SunDifAccumList = []
-    let SunDenom = Denom
-    if (Type >= 8 && CalName !== 'Qianyuan') {
-        SunDenom = 10000
-    }
-    for (let i = 1; i <= 24; i++) {
-        SunAcrAvgDifList[i] /= SunDenom
-    }
-    SunDifAccumList = SunAcrAvgDifList.slice()
-    for (let i = 1; i <= 24; i++) {
-        SunDifAccumList[i] += SunDifAccumList[i - 1]
-        SunDifAccumList[i] = parseFloat((SunDifAccumList[i]).toPrecision(14))
-    }
-    SunDifAccumList = SunDifAccumList.slice(-1).concat(SunDifAccumList.slice(0, -1))
-    SunDifAccumList[0] = 0
-
-    // if (Type <= 7) {
-    //     let SunDifAccum = SunAcrAvgDifList.slice() // SunAcrAvgDifAccum皇極衰總，麟德消息總
-    //     for (let i = 1; i <= 24; i++) {
-    //         SunDifAccum[i] += SunDifAccum[i - 1]
-    //     }
-    //     SunDifAccum = SunDifAccum.slice(-1).concat(SunDifAccum.slice(0, -1))
-    //     SunDifAccum[0] = 0
-    //     SunDifAccumList = SunDifAccum.slice()
-    //     for (let i = 1; i <= 25; i++) {
-    //         SunDifAccumList[i] /= Denom
-    //     }
-    // } else if (Type >= 8) {
-    //     const SunAcrAvgDif1 = []
-    //     if (SunAcrAvgDifList) {
-    //         let SunDenom = 10000
-    //         if (CalName === 'Qianyuan') {
-    //             SunDenom = Denom
-    //         }
-    //         for (let i = 0; i <= 24; i++) {
-    //             SunAcrAvgDif1[i] = SunAcrAvgDifList[i] / SunDenom
-    //         }
-    //         SunDifAccumList = SunAcrAvgDif1.slice()
-    //         for (let i = 1; i <= 24; i++) {
-    //             SunDifAccumList[i] += SunDifAccumList[i - 1]
-    //             SunDifAccumList[i] = parseFloat((SunDifAccumList[i]).toPrecision(10))
-    //         }
-    //         SunDifAccumList = SunDifAccumList.slice(-1).concat(SunDifAccumList.slice(0, -1))
-    //         SunDifAccumList[0] = 0
-    //     }
-    // }
-    // const TermLeng = Solar / 12
+    const f = 34.475 // 大衍地理緯度
     const HalfTermLeng = Solar / 24
-    ////////////平氣////////////
-    const TermAvgNoonDecimalDif = []
-    for (let i = 1; i <= 30; i++) {
-        const HalfTermAvgRaw = OriginDecimal + (i - 1) * HalfTermLeng
-        const TermAvgDecimal = (HalfTermAvgRaw - Math.floor(HalfTermAvgRaw)) % 1 // 各平氣小數點
-        TermAvgNoonDecimalDif[i] = TermAvgDecimal - 0.5 // 平氣與正午的距離
-    }
-    //////定氣/////
-    const OriginAcrTermDif = []
-    const TermAcrNoonDecimalDif = [] // 中前後分。「冬至後，中前以差減，中後以差加⋯⋯冬至一日有減無加，夏至一日有加無減。」
-    for (let i = 1; i <= 30; i++) {
-        OriginAcrTermDif[i] = HalfTermLeng * (i - 1) - SunDifAccumList[Math.round(i % 24.1)]
-        const TermAcrDecimal = (OriginDecimal + OriginAcrTermDif[i] - Math.floor(OriginAcrTermDif[i])) % 1
-        TermAcrNoonDecimalDif[i] = TermAcrDecimal - 0.5 // 定氣與正午的距離
-        // if (i === 1 || i === 25) {
-        //     TermAcrNoonDecimalDif[i] = (TermAcrDecimal - 0.5)
-        //     if (TermAcrNoonDecimalDif[i] > 0) {
-        //         TermAcrNoonDecimalDif[i] = 0
-        //     }
-        // } else if (i < 13) {
-        //     TermAcrNoonDecimalDif[i] = (TermAcrDecimal - 0.5)
-        // } else if (i === 13) {
-        //     TermAcrNoonDecimalDif[i] = -(TermAcrDecimal - 0.5)
-        //     if (TermAcrNoonDecimalDif[i] < 0) {
-        //         TermAcrNoonDecimalDif[i] = 0
-        //     }
-        // } else if (i < 25) {
-        //     TermAcrNoonDecimalDif[i] = -(TermAcrDecimal - 0.5)
-        // } else {
-        //     TermAcrNoonDecimalDif[i] = (TermAcrDecimal - 0.5)
-        // }
-    }
-    let Lati1 = 0
-    let Lati = 0
-    // let delta1 = 0
-    // let delta2 = 0
     let Dial = 0
-    // let TermNumAcr = 0 // 正午入定氣
-    // for (let j = 1; j <= 29; j++) {
-    //     if (OriginDifRaw >= OriginAcrTermDif[j] && OriginDifRaw < OriginAcrTermDif[j + 1]) {
-    //         TermNumAcr = j
-    //         break
-    //     }
-    // }
-    // const AcrTermLeng = OriginAcrTermDif[TermNumAcr + 1] - OriginAcrTermDif[TermNumAcr]
-    // const AcrTermDif = OriginDifRaw - OriginAcrTermDif[TermNumAcr]
-    // const TermNumAcrMod = Math.round(TermNumAcr % 24.1)
-
-    // 改用招差術：
-    let TermNumRaw = Math.ceil(OriginDifRaw / HalfTermLeng)
-    if (TermNumRaw === 0) {
-        TermNumRaw = 1
-    }
-    const TermNum = Math.round(TermNumRaw % 24.1)
-    const TermDif = OriginDifRaw - (TermNumRaw - 1) * HalfTermLeng
-    let Initial1 = ''
-    if (DialList) {
-        Initial1 = DialList[TermNum] + ',' + DialList[TermNum + 1] + ',' + DialList[(TermNum + 2) % 24]
-    }
-    let Initial2 = ''
-    if (SunLatiList) {
-        Initial2 = SunLatiList[TermNum] + ',' + SunLatiList[TermNum + 1] + ',' + SunLatiList[(TermNum + 2) % 24]
-    }
-    let Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[(TermNum + 2) % 24]
-    let Excon = 0
-    if (Type === 10) {
-        const Initial4 = SunDifAccumList[TermNum] + ',' + SunDifAccumList[TermNum + 1] + ',' + SunDifAccumList[TermNum + 2]
-        Excon = Interpolate1_quick((1 + TermDif / HalfTermLeng), Initial4)
-    }
-    let n = 1 + (TermDif + TermAvgNoonDecimalDif[TermNum] - Excon) / HalfTermLeng
-    if ((TermNum === 1 && TermDif === 0) || (TermNum === 13 && TermDif === 0)) { // 二至當天在轉折點
-        if (DialList) {
-            Initial1 = DialList[((TermNum - 2) + 24) % 24] + ',' + DialList[TermNum - 1] + ',' + DialList[TermNum] + ',' + DialList[TermNum + 1]
+    let Lati = 0
+    let Lati1 = 0
+    let Sunrise = 0
+    if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(CalName)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
+        let TermNum = 0
+        for (let j = 0; j <= 23; j++) {
+            if (OriginDif >= AcrTermList[j] && OriginDif < AcrTermList[j + 1]) {
+                TermNum = j
+                break
+            }
         }
-        if (SunLatiList) {
-            Initial2 = SunLatiList[((TermNum - 2) + 24) % 24] + ',' + SunLatiList[TermNum - 1] + ',' + SunLatiList[TermNum] + ',' + SunLatiList[TermNum + 1]
+        //////定氣/////
+        const TermAcrNoonDecimalDif = [] // 中前後分。「冬至後，中前以差減，中後以差加⋯⋯冬至一日有減無加，夏至一日有加無減。」
+        for (let i = 0; i <= 23; i++) {
+            const TermAcrRaw = AcrTermList[i]
+            const TermAcrDecimal = TermAcrRaw - ~~TermAcrRaw
+            TermAcrNoonDecimalDif[i] = TermAcrDecimal - 0.5 // 定氣與正午的距離
         }
-        Initial3 = NightList[((TermNum - 2) + 24) % 24] + ',' + NightList[TermNum - 1] + ',' + NightList[TermNum] + ',' + NightList[TermNum + 1]
-        n = 3 + (TermAvgNoonDecimalDif[TermNum] - Excon) / HalfTermLeng
-    }
-    const Sunrise = DawnRange + Interpolate1_quick(n, Initial3)
-    if (Type === 6) { // 紀志剛《麟德曆晷影計算方法研究》，《自然科學史研究》1994(4)             
-        // 麟德   
-        // let AvgHalfTermLeng = 0
-        // if ((OriginDifRaw < 3 * TermLeng) || (OriginDifRaw >= 9 * TermLeng)) {
-        //     AvgHalfTermLeng = TermRangeA // 秋分後
-        // } else {
-        //     AvgHalfTermLeng = TermRangeS // 春分後
-        // }
+        const t1 = AcrTermList[TermNum] - TermAcrNoonDecimalDif[TermNum]
+        const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDecimalDif[TermNum]
+        const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDecimalDif[TermNum]
+        const Initial1 = t1 + ',' + NightList[TermNum] + ';' + t2 + ',' + NightList[TermNum + 1] + ';' + t3 + ',' + NightList[TermNum + 2]
+        const Initial2 = t1 + ',' + SunLatiList[TermNum] + ';' + t2 + ',' + SunLatiList[TermNum + 1] + ';' + t3 + ',' + SunLatiList[TermNum + 2]
+        Sunrise = DawnRange + Interpolate3(OriginDif, Initial1)
+        Lati1 = Interpolate3(OriginDif, Initial2)
+        Lati = 91.31 - Lati1
+    } else {
+        ////////////平氣////////////
+        const TermNum = ~~(OriginDif / HalfTermLeng)
+        const TermDif = OriginDif - TermNum * HalfTermLeng
+        let TermRange = 0
+        if (Type === 6) {// 麟德   
+            if ((OriginDifRaw < 6 * HalfTermLeng) || (OriginDifRaw >= 18 * HalfTermLeng)) {
+                TermRange = TermRangeA // 秋分後
+            } else {
+                TermRange = TermRangeS // 春分後
+            }
+        } else {
+            TermRange = HalfTermLeng
+        }
+        const TermAvgNoonDecimalDif = []
+        for (let i = 0; i <= 23; i++) {
+            const TermAvgRaw = i * HalfTermLeng
+            const TermAvgDecimal = TermAvgRaw - ~~TermAvgRaw // 各平氣小數點
+            TermAvgNoonDecimalDif[i] = TermAvgDecimal - 0.5 // 平氣與正午的距離
+        }
+        const nAvg = 1 + (TermDif + TermAvgNoonDecimalDif[TermNum]) / TermRange
+        const Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2]
+        Sunrise = DawnRange + Interpolate1(nAvg, Initial3)
+        if (Type === 6) {
+            const Initial1 = DialList[TermNum] + ',' + DialList[TermNum + 1] + ',' + DialList[TermNum + 2]
+            Dial = Interpolate1(nAvg, Initial1)
+        }
+        if (Type === 10) {
+            Lati = -(Sunrise - 25) / (10896 / 52300)
+            Lati1 = Sidereal / 4 - Lati
+        } else {
+            const Initial2 = SunLatiList[TermNum] + ',' + SunLatiList[TermNum + 1] + ',' + SunLatiList[TermNum + 2]
+            Lati1 = Interpolate1(nAvg, Initial2)
+            Lati = 91.31 - Lati1 // 赤緯
+        }
+        // 紀志剛《麟德曆晷影計算方法研究》，《自然科學史研究》1994(4)                         
         /////////預處理晷長///////////
         // let DialChangeList = [] // 陟降率
         // DialChangeList[0] = 0
@@ -343,67 +266,52 @@ export const Longi2LatiTable2 = (OriginDifRaw, OriginDecimal, CalName) => {
         //     DialChangeList[i] = parseFloat((DialList[i + 1] - DialList[i]).toPrecision(12))
         // }
         // DialChangeList[25] = DialChangeList[1]
-        // delta1 = ((DialChangeList[TermNum] + DialChangeList[TermNum + 1]) / 2) / AvgHalfTermLeng // 泛末率
-        // delta2 = (DialChangeList[TermNum] - DialChangeList[TermNum + 1]) / AvgHalfTermLeng // 總差
+        // delta1 = ((DialChangeList[TermNum] + DialChangeList[TermNum + 1]) / 2) / TermRange // 泛末率
+        // delta2 = (DialChangeList[TermNum] - DialChangeList[TermNum + 1]) / TermRange // 總差
         // if (TermNum % 12 === 0) { // 芒種、大雪
-        //     delta2 = ((DialChangeList[TermNum - 1] - DialChangeList[TermNum]) / AvgHalfTermLeng)
-        //     delta1 = ((DialChangeList[TermNum - 1] + DialChangeList[TermNum]) / 2) / AvgHalfTermLeng - delta2
+        //     delta2 = ((DialChangeList[TermNum - 1] - DialChangeList[TermNum]) / TermRange)
+        //     delta1 = ((DialChangeList[TermNum - 1] + DialChangeList[TermNum]) / 2) / TermRange - delta2
         // }
         // const delta3 = delta1 + delta2 // 泛初率
-        // const delta4 = (delta2 / AvgHalfTermLeng) / 2 // 限差。不/2是別差
+        // const delta4 = (delta2 / TermRange) / 2 // 限差。不/2是別差
         // const Corr = delta3 + delta4 // 定差
         // const TermAcrDial = DialList[TermNum] - (TermAvgDecimal[TermNumRaw] - 0.5) * Corr // 恆氣日中定影
-        // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式
-        Dial = Interpolate1_quick(n, Initial1)
-        Lati1 = Interpolate1_quick(n, Initial2)
-        Lati = Solar / 4 - Lati1 // 赤緯
-    } else if (Type <= 8) { // 唐系、應天、乾元
-        // let Initial1 = SunLatiList[TermNumAcrMod] + ',' + SunLatiList[TermNumAcrMod + 1] + ',' + SunLatiList[TermNumAcrMod + 2]
-        // let Initial3 = NightList[TermNumAcrMod] + ',' + NightList[TermNumAcrMod + 1] + ',' + NightList[(TermNumAcrMod + 2) % 24]
-        // let n = 1 + (AcrTermDif + TermAcrNoonDecimalDif[TermNum]) / AcrTermLeng
-        // if ((TermNum === 1 && TermDif === 0) || (TermNum === 13 && TermDif === 0)) {
-        //     Initial1 = SunLatiList[((TermNumAcrMod - 2) + 24) % 24] + ',' + SunLatiList[TermNumAcrMod - 1] + ',' + SunLatiList[TermNumAcrMod] + ',' + SunLatiList[TermNumAcrMod + 1]
-        //     Initial3 = NightList[((TermNumAcrMod - 2) + 24) % 24] + ',' + NightList[TermNumAcrMod - 1] + ',' + NightList[TermNumAcrMod] + ',' + NightList[TermNumAcrMod + 1]
-        //     n = 3 + TermAcrNoonDecimalDif[TermNum] / AcrTermLeng
-        // }
-        // 本來寫了個去極度差分表，太麻煩，還不如直接用招差
-        Lati1 = Interpolate1_quick(n, Initial2)
-        Lati = Sidereal / 4 - Lati1 // 赤緯
+        // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式              
+    }
+    // 唐系、應天、乾元。本來寫了個去極度差分表，太麻煩，還不如直接用招差
+    if (Type > 6) {
         const SunLati2 = Lati1 - (91.3 - f) // 天頂距
         // 下爲大衍晷影差分表
         if (SunLati2 <= 27) {
-            Dial = Interpolate2_quick(SunLati2 - 1, 1379, '1380,2,1')
+            Dial = Interpolate2(SunLati2 - 1, 1379, '1380,2,1')
         } else if (SunLati2 <= 42) {
-            Dial = Interpolate2_quick(SunLati2 - 28, 42267, '1788,32,2')
+            Dial = Interpolate2(SunLati2 - 28, 42267, '1788,32,2')
         } else if (SunLati2 <= 46) {
-            Dial = Interpolate2_quick(SunLati2 - 43, 73361, '2490,74,6')
+            Dial = Interpolate2(SunLati2 - 43, 73361, '2490,74,6')
         } else if (SunLati2 <= 50) {
-            Dial = Interpolate2_quick(SunLati2 - 47, 83581, '3212,-118,272')
+            Dial = Interpolate2(SunLati2 - 47, 83581, '3212,-118,272')
         } else if (SunLati2 <= 57) {
-            Dial = Interpolate2_quick(SunLati2 - 51, 96539, '3562,165,7')
+            Dial = Interpolate2(SunLati2 - 51, 96539, '3562,165,7')
         } else if (SunLati2 <= 61) {
-            Dial = Interpolate2_quick(SunLati2 - 58, 125195, '4900,250,19')
+            Dial = Interpolate2(SunLati2 - 58, 125195, '4900,250,19')
         } else if (SunLati2 <= 67) {
-            Dial = Interpolate2_quick(SunLati2 - 60, 146371, '6155,481,33')
+            Dial = Interpolate2(SunLati2 - 60, 146371, '6155,481,33')
         } else if (SunLati2 <= 72) {
-            Dial = Interpolate2_quick(SunLati2 - 68, 191179, '9545,688,36')
+            Dial = Interpolate2(SunLati2 - 68, 191179, '9545,688,36')
         } else {
-            Dial = Interpolate2_quick(SunLati2 - 73, 246147, '13354,1098,440,620,180')
+            Dial = Interpolate2(SunLati2 - 73, 246147, '13354,1098,440,620,180')
         }
         Dial /= 10000
-        // 夜半漏計算直接用招差術了，不勝其煩。
-    } else if (Type === 10) {
-        Lati = -(Sunrise - 25) / (10896 / 52300)
-        Lati1 = Sidereal / 4 - Lati
     }
+    // 夜半漏計算直接用招差術了，不勝其煩。
     return {
-        Lati: Number(Lati),
-        Lati1: Number(Lati1),
-        Dial: Number(Dial),
-        Sunrise: Number(Sunrise)
+        Lati,
+        Lati1,
+        Dial,
+        Sunrise
     }
 }
-// console.log(Longi2LatiTable2(180, 0.5, 'Gengwu').Lati) // 《麟徳曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
+// console.log(Longi2LatiTable2(180, 0.5, 'NewDaming').Lati) // 《麟徳曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤白轉換//////
     const {
@@ -420,7 +328,7 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
         Longi = Xiang - Longi
     }
     const OriginRaw = OriginRawRaw - Day % (Node / 2)
-    const Origin = OriginRaw % (Solar / 2)
+    const OriginDif = OriginRaw % (Solar / 2)
     let WhiteLongi = 0
     let Range = []
     if (['Huangji'].includes(CalName)) { // 麟徳沒有
@@ -484,13 +392,13 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
     }
     let EquatorWhiteDif = 0
     if (CalName === 'Dayan') {
-        EquatorWhiteDif = Math.floor(Origin / (Solar / 72)) / 18
+        EquatorWhiteDif = ~~(OriginDif / (Solar / 72)) / 18
     } else if (CalName === 'Qintian') {
-        const OriginXian = Math.abs(Origin - Solar / 4) / Xian // 限數
+        const OriginXian = Math.abs(OriginDif - Solar / 4) / Xian // 限數
         EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Xian / 2) * OriginXian / 1296 // 這個用公式來算黃白差，跟用表不一樣
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Xian / 8) * (1 - OriginXian / 324)
     } else if (CalName === 'Yingtian') {
-        const Hou = Math.floor(Origin / (Solar / 72)) / 18
+        const Hou = ~~(OriginDif / (Solar / 72)) / 18
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
     }
     let EquatorLongi = 0
@@ -565,7 +473,7 @@ export const MoonLatiTable = (DayRaw, CalName) => {
             Initial = MoonLatiAccumList[Day1 - 1] + ',' + MoonLatiAccumList[Day1] + ',' + MoonLatiAccumList[Day1 + 1]
             n = 2 + Day - Day1
         }
-        Lati = Yinyang * Interpolate1_quick(n, Initial) / portion
+        Lati = Yinyang * Interpolate1(n, Initial) / portion
     } else if (Type === 7) { // 大衍的入交度數另有算式，我直接用月平行速來算
         const LongiRaw = Day * 13.36875
         const XianRaw = 1 + LongiRaw / (365.245 / 24)
@@ -583,7 +491,7 @@ export const MoonLatiTable = (DayRaw, CalName) => {
             Initial = MoonLatiAccumList[XianNum - 1] + ',' + MoonLatiAccumList[XianNum] + ',' + MoonLatiAccumList[XianNum + 1]
             n = 2 + XianRaw - XianNum
         }
-        Lati = Yinyang * Interpolate1_quick(n, Initial) / portion
+        Lati = Yinyang * Interpolate1(n, Initial) / portion
     }
     const Lati1 = 91.311 - Lati
     return {

@@ -24,28 +24,28 @@ export default class a extends React.Component {
         <span>年 365+</span>
         <input
           value={this.state.SolarFrac3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ SolarFrac3: e.currentTarget.value });
           }}
         />
         <span>/</span>
         <input
           value={this.state.SolarDenom3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ SolarDenom3: e.currentTarget.value });
           }}
         />
         <span> 月 29+</span>
         <input
           value={this.state.LunarFrac3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ LunarFrac3: e.currentTarget.value });
           }}
         />
         <span>/</span>
         <input
           value={this.state.Denom3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Denom3: e.currentTarget.value });
           }}
         />
@@ -53,7 +53,7 @@ export default class a extends React.Component {
         <input
           className="width3"
           value={this.state.OriginConst3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ OriginConst3: e.currentTarget.value });
           }}
         />
@@ -61,7 +61,7 @@ export default class a extends React.Component {
         <input
           className="width3"
           value={this.state.FirstConst3}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ FirstConst3: e.currentTarget.value });
           }}
         />

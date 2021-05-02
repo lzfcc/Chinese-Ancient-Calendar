@@ -1,7 +1,4 @@
 import {
-    AutoTcorr
-} from './astronomy_acrv.mjs'
-import {
     big
 } from './para_constant.mjs'
 
@@ -9,11 +6,11 @@ export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的�
     let Solar = 0
     if (CalName === 'Chongxuan') {
         Solar = 365.2548
-    } else if (CalName === 'Chongtian') { // 崇天用了兩個値，我折衷統一
+    } else if (CalName === 'Chongtian') { // 崇天用了365.25 .27兩個値，我折衷統一
         Solar = 365.26
     } else if (CalName === 'Mingtian') {
         Solar = 365.24
-    } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
+    } else if (['Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(CalName)) {
         Solar = 365.2436
     }
     const QuarSolar = Solar / 4
@@ -32,13 +29,14 @@ export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的�
         LongiDif = Longi * (125 - Longi) / 1200
     } else if (CalName === 'Mingtian') {
         LongiDif = Longi * (111.37 - Longi) / 1000
-    } else if (CalName === 'Guantian') {
+    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
         LongiDif = Longi * (400 - 3 * Longi) / 4000
     } else if (CalName === 'Jiyuan') { // 紀元一直到南宋、大明、庚午
         LongiDif = Longi * (101 - Longi) / 1000
     }
     // 《古代曆法》頁123    沒明白。曲安京《中国古代的二次求根公式与反函数》，西北大学学报(自然科学版). 1997(01)。曆法中二次反函數僅有的例子是大衍行星行度、紀元。赤道度爲Solar/8，黃道度就是43.1287。兩篇公式不一樣，最後畫圖才想明白。
     let h = 0
+    let EclipticLongiDif = 0
     if (CalName === 'Jiyuan') {
         // if (LongiRaw < QuarSolar || (LongiRaw >= HalfSolar && LongiRaw < Solar * 0.75)) {
         h = Math.sqrt(202050.25 + 1000 * Longi) - 449.5
@@ -46,23 +44,27 @@ export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的�
         //  else {
         //     h = -Math.sqrt(303050.25 - 1000 * Longi1) + 550.5 // 這兩個公式是一樣的，只是對稱而已
         // }
+        EclipticLongiDif = Math.abs(Longi - h)
     }
-    const EclipticLongiDif = Math.abs(Longi - h)
     if ((LongiRaw >= 0 && LongiRaw < QuarSolar) || (LongiRaw >= HalfSolar && LongiRaw < Solar * 0.75)) {
         EclipticLongi = LongiRaw - LongiDif
-        EquatorLongi = LongiRaw + EclipticLongiDif
+        if (EclipticLongiDif) {
+            EquatorLongi = LongiRaw + EclipticLongiDif
+        }
     } else {
         EclipticLongi = LongiRaw + LongiDif
-        EquatorLongi = LongiRaw - EclipticLongiDif
+        if (EclipticLongiDif) {
+            EquatorLongi = LongiRaw + EclipticLongiDif
+        }
     }
     return {
-        EquatorLongi,
         EclipticLongi,
         LongiDif,
+        EquatorLongi,
         EclipticLongiDif
     }
 }
-// console.log(Equator2EclipticFormula(91, 'Jiyuan'))
+// console.log(Equator2EclipticFormula(91,0.4, 'Chongxuan'))
 
 // 弧矢割圓術黃赤轉換。跟《黃赤道率》立成表分毫不差，耶！！！
 export const Hushigeyuan = (LongiRaw, Sidereal) => {
@@ -146,7 +148,7 @@ export const Hushigeyuan2 = LongiRaw => {
 // console.log(Hushigeyuan2(0))
 // 魏晉的黃道去極，是根據節氣來的，日書就不調用了
 // 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致。又說：魏晉南北、皇極、戊寅、應天、乾元、儀天自變量用的平氣，麟徳之後用的定氣。
-export const Longi2LatiFormula = (DayRaw, CalName) => { // 《中國古代曆法》頁128。漏刻頁135
+export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆法》頁128。漏刻頁135
     let Solar = 0
     if (CalName === 'Chongxuan') {
         Solar = 365.2548
@@ -158,11 +160,6 @@ export const Longi2LatiFormula = (DayRaw, CalName) => { // 《中國古代曆法
         Solar = 365.24
     } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
         Solar = 365.2436
-    }
-    const SunTcorr = AutoTcorr(0, DayRaw, CalName).SunDifAccum
-    let LongiRaw = DayRaw
-    if (CalName !== 'Yitian') {
-        LongiRaw += SunTcorr
     }
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
@@ -181,7 +178,6 @@ export const Longi2LatiFormula = (DayRaw, CalName) => { // 《中國古代曆法
         } else {
             Lati = -23.8859 + g
         }
-
     } else if (CalName === 'Yitian') { // 儀天的自變量是距二至的日數，其他都是實行度。
         if (LongiRaw >= QuarSolar && LongiRaw < 3 * QuarSolar) { // 冬至後次象
             if (Longi1 > 93.7412) {
@@ -263,7 +259,6 @@ export const Longi2LatiFormula = (DayRaw, CalName) => { // 《中國古代曆法
 
 // 崇玄赤轉黃，用的「赤道日度」，赤轉赤緯，「昏後夜半日數」，晷長：「日中入二至加時以來日數」
 export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的Day沿用大衍：正午與二至時刻的距離加上日躔。陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因為整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。崇玄、崇天的節接銜接不理想。
-    DegRaw = Number(DegRaw)
     let Solar = 0
     if (CalName === 'Chongxuan') {
         Solar = 365.2445

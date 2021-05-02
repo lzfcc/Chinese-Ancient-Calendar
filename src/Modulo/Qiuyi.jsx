@@ -21,14 +21,14 @@ export default class a extends React.Component {
         </span>
         <input
           value={this.state.aRaw}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ aRaw: e.currentTarget.value });
           }}
         />
         <span> × 乘率 ≡ 1 (mod 定母</span>
         <input
           value={this.state.bRaw}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ bRaw: e.currentTarget.value });
           }}
         />

@@ -22,14 +22,14 @@ export default class a extends React.Component {
         <span> 斗分</span>
         <input
           value={this.state.SolarFrac}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ SolarFrac: e.currentTarget.value });
           }}
         />
         <span>日法</span>
         <input
           value={this.state.Denom}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ Denom: e.currentTarget.value });
           }}
         />
@@ -37,7 +37,7 @@ export default class a extends React.Component {
         <input
           className="width3"
           value={this.state.OriginConst}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ OriginConst: e.currentTarget.value });
           }}
         />
@@ -45,7 +45,7 @@ export default class a extends React.Component {
         <input
           className="width3"
           value={this.state.FirstConst}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ FirstConst: e.currentTarget.value });
           }}
         />

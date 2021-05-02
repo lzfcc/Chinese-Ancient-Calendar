@@ -14,14 +14,14 @@ export default class Equa extends React.Component {
         <span>半徑</span>
         <input className='width3'
           value={this.state.RoundR}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ RoundR: e.currentTarget.value });
           }}
         />
         <span> 矢</span>
         <input className='width3'
           value={this.state.RoundB}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ RoundB: e.currentTarget.value });
           }}
         />

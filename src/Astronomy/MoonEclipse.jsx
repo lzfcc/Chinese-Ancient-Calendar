@@ -16,28 +16,28 @@ export default class Converter extends React.Component {
         <span>入交泛日</span>
         <input
           value={this.state.a}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
         <span> 經朔入轉</span>
         <input
           value={this.state.b}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
         <span> 定望分0.</span>
         <input
           value={this.state.c}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ c: e.currentTarget.value });
           }}
         />
         <span> 經朔距冬至</span>
         <input
           value={this.state.d}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ d: e.currentTarget.value });
           }}
         />
@@ -71,7 +71,7 @@ export default class Converter extends React.Component {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map((d) => {
+                {row.data.map(d =>  {
                   return (<td>{d}</td>)
                 })}
               </tr>
