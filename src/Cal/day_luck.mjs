@@ -159,7 +159,6 @@ export const YearColorConvert = YuanYear => {
 
 export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
     let MonColor = []
-    let MonName = ''
     if (YuanYear > 0) {
         MonColor = []
         const row1an = Math.round(((7 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
@@ -184,11 +183,6 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
         MonColor.push([row2a, row2b, row2c])
         MonColor.push([row3a, row3b, row3c])
     }
-    if (i === 1) {
-        MonName = '正月'
-    } else {
-        MonName = NumList[i] + '月'
-    }
     const MonSc = ScList[Math.round((ZhengMonScOrder + i - 1) % 60.1)]
     const MonSindhuName = MonSindhuNameList[i]
     const MonScaleName = MonScaleNameList[i]
@@ -197,7 +191,6 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
     const Fourauspicious = FourauspiciousList[(i - 1) % 3]
     const MonInfo = '【月建】' + MonSc + '【宿音卦】' + MonSindhuName + MonScaleName + MonHexagramName + '【月神】' + MonGod + '【吉時】' + Fourauspicious
     return {
-        MonName,
         MonInfo,
         MonColor
     }

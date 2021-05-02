@@ -4,7 +4,7 @@ import {
     ThreeList,
     CalNameList,
     AutoMansion,
-    NumList
+    MonNumList
 } from './para_constant.mjs'
 import Deg2Mansion from './astronomy_deg2mansion.mjs'
 import {
@@ -47,7 +47,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         MansionRaw,
         MansionFractPosition,
         NightList,
-        Node,
     } = AutoPara[CalName]
     let {
         OriginDaySc
@@ -197,26 +196,26 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     for (let i = 1; i <= 13; i++) {
                         if (i <= LeapNumTermThis) {
                             Month[i] = (i + ZhengOriginDif + 12) % 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         } else if (i === LeapNumTermThis + 1) {
                             Month[i] = '氣閏'
                             MonthName[i] = Month[i]
                         } else {
                             Month[i] = (i + ZhengOriginDif + 11) % 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         }
                         if (Month[i] === 0) {
                             Month[i] = 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         }
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
                         Month[i] = (i + ZhengOriginDif + 12) % 12
-                        MonthName[i] = NumList[Month[i]]
+                        MonthName[i] = MonNumList[Month[i]]
                         if (Month[i] === 0) {
                             Month[i] = 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         }
                     }
                 }
@@ -225,23 +224,23 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     for (let i = 1; i <= 13; i++) {
                         if (i <= 12) {
                             Month[i] = (i + ZhengOriginDif + 12) % 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         } else {
                             Month[i] = '固閏'
                             MonthName[i] = Month[i]
                         }
                         if (Month[i] === 0) {
                             Month[i] = 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         }
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
                         Month[i] = (i + ZhengOriginDif + 12) % 12
-                        MonthName[i] = NumList[Month[i]]
+                        MonthName[i] = MonNumList[Month[i]]
                         if (Month[i] === 0) {
                             Month[i] = 12
-                            MonthName[i] = NumList[Month[i]]
+                            MonthName[i] = MonNumList[Month[i]]
                         }
                     }
                 }
@@ -251,26 +250,26 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 for (let i = 1; i <= 13; i++) {
                     if (i <= LeapNumTermThis) {
                         Month[i] = (i + 12) % 12
-                        MonthName[i] = NumList[Month[i]]
+                        MonthName[i] = MonNumList[Month[i]]
                     } else if (i === LeapNumTermThis + 1) {
                         Month[i] = '閏' + LeapNumTermThis
-                        MonthName[i] = '閏' + NumList[LeapNumTermThis]
+                        MonthName[i] = '閏' + MonNumList[LeapNumTermThis]
                     } else {
                         Month[i] = (i + 11) % 12
-                        MonthName[i] = NumList[Month[i]]
+                        MonthName[i] = MonNumList[Month[i]]
                     }
                     if (Month[i] === 0) {
                         Month[i] = 12
-                        MonthName[i] = NumList[Month[i]]
+                        MonthName[i] = MonNumList[Month[i]]
                     }
                 }
             } else {
                 for (let i = 1; i <= 12; i++) {
                     Month[i] = (i + 12) % 12
-                    MonthName[i] = NumList[Month[i]]
+                    MonthName[i] = MonNumList[Month[i]]
                     if (Month[i] === 0) {
                         Month[i] = 12
-                        MonthName[i] = NumList[Month[i]]
+                        MonthName[i] = MonNumList[Month[i]]
                     }
                 }
             }
@@ -518,11 +517,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         }
         let NewmEcliPrint = []
         let SyzygyEcliPrint = []
-        if ((NewmEcli || []).length > 0) {
+        if ((NewmEcli || []).length) {
             NewmEcliPrint = NewmEcli.join('')
             YearInfo += `\n` + NewmEcliPrint
         }
-        if ((SyzygyEcli || []).length > 0) {
+        if ((SyzygyEcli || []).length) {
             SyzygyEcliPrint = `<span class='eclipse-wrap'>` + SyzygyEcli.join('') + `</span>`
             if ((NewmEcli || []).length > 0) {
                 YearInfo += SyzygyEcliPrint

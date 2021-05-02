@@ -22,6 +22,7 @@ import {
     YuanList,
     HalfTermList,
     NumList,
+    MonNumList,
     nzh
 } from './para_constant.mjs'
 import {
@@ -181,21 +182,22 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         let HouOrder = 0
         let FiveOrder = 0
         let HexagramOrder = 0
-        for (let i = 1; i <= 12 + (LeapNumTermThis > 0 ? 1 : 0); i++) { // 有閏就13 
+        for (let i = 1; i <= 12 + (LeapNumTermThis > 0 ? 1 : 0); i++) { // 有閏就13             
             let NoleapMon = i
             if (LeapNumTermThis > 0) {
                 if (i === LeapNumTermThis + 1) {
                     NoleapMon = i - 1
-                    MonName[i] = '閏' + NumList[LeapNumTermThis] + '月'
                 } else if (i >= LeapNumTermThis + 2) {
                     NoleapMon = i - 1
                 }
             }
+            MonName[i] = MonNumList[NoleapMon] + '月'
+            if (i === LeapNumTermThis + 1) {
+                MonName[i] = '閏' + MonNumList[LeapNumTermThis] + '月'
+            }
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)
-            MonName[i] = MonColorFunc.MonName
             MonInfo[i] = MonColorFunc.MonInfo
             MonColor[i] = MonColorFunc.MonColor
-
             Sc[i] = []
             Jd[i] = []
             Nayin[i] = []

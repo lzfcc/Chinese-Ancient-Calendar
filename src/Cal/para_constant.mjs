@@ -217,6 +217,7 @@ export const MonScaleNameList = ['', '太簇', '夾鐘', '姑洗', '中呂', '�
 export const WeekList = ' 月火水木金土日' // 回回不用甲子，用七曜。
 export const WeekList1 = ' 一二三四五六日'
 export const NumList = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '廿', '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '卅']
+export const MonNumList = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
 export const ColorList = ' 白黑碧綠黃白赤白紫' // 九宮
 export const ClassColorList = ['', 'color-white', 'color-black', 'color-cyan', 'color-green', 'color-yellow', 'color-white', 'color-red', 'color-white', 'color-purple']
 export const HexagramList1 = ' 乾兌離震巽坎艮坤' // 震 正東;兌 正西;離 正南;坎 正北;坤 西南;艮 東北;巽 東南;乾 西北
