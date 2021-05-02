@@ -23,7 +23,7 @@ const TableRowNameMap = {
   TermAcrDecimalPrint: ' ',
   TermScPrint: '平氣',
   TermDecimalPrint: ' ',
-  TermMidstarPrint: '昏中星'
+  TermMidstarPrint: '昏中'
 }
 const heightCache = createCache();
 

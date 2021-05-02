@@ -64,6 +64,7 @@ export default class Converter extends React.Component {
             <th>誤差</th>
             <th>月行改正</th>
             <th>誤差</th>
+            <th>日月改正</th>
           </tr>
           {(this.state.output || []).map((row) => {
             return (

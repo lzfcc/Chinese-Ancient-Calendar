@@ -3,6 +3,7 @@ import {
 } from './bind.mjs'
 import {
     AutoTcorr,
+    AutoDifAccum
 } from './astronomy_acrv.mjs'
 import {
     Interpolate3
@@ -106,7 +107,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
     const QuarNode = Node / 4
-    const MoonAvgVDeg = parseFloat(((Sidereal ? Sidereal : Solar) / Lunar + 1).toPrecision(14))
+    const MoonAvgVDeg = parseFloat(((Sidereal ? Sidereal : Solar) / Lunar + 1).toPrecision(13))
     const HalfSolar = Solar / 2
     const QuarSolar = Solar / 4
     const OriginDif = OriginDifRaw % Solar
@@ -612,13 +613,14 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
         Sidereal,
         Solar,
         Denom,
-        AcrTermList
+        AcrTermList,
+        MoonTcorrList,
+        MoonEcliDenom
     } = AutoPara[CalName]
     let {
         SunLimit1,
         SunLimit2,
         MoonLimit1,
-        MoonEcliDenom
     } = AutoPara[CalName]
     if (SunLimit1) {
         SunLimit1 /= Denom
@@ -653,16 +655,16 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
     let LimitCorrDif = 0
     if (isNewm) {
         if (CalName === 'Dayan') {
-            let AcrTermOrder = 0
-            const SunDcorrList = [0, 0, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385, 450, 385, 325, 270, 220, 175, 135, 100, 70, 45, 25, 10, 0, 10]
-            for (let j = 1; j <= 24; j++) {
+            let TermNum = 0
+            const SunDcorrList = [0, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385, 450, 385, 325, 270, 220, 175, 135, 100, 70, 45, 25, 10, 0, 10]
+            for (let j = 0; j <= 23; j++) {
                 if (OriginDif >= AcrTermList[j] && OriginDif < AcrTermList[j + 1]) {
-                    AcrTermOrder = Math.round(j % 24.1)
+                    TermNum = j % 24
                     break
                 }
             }
             // 接下來調用拉格朗日內插
-            const Initial = AcrTermList[AcrTermOrder] + ',' + SunDcorrList[AcrTermOrder] + ';' + AcrTermList[AcrTermOrder + 1] + ',' + SunDcorrList[AcrTermOrder + 1] + ';' + AcrTermList[AcrTermOrder + 2] + ',' + SunDcorrList[AcrTermOrder + 2]
+            const Initial = AcrTermList[TermNum] + ',' + SunDcorrList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + SunDcorrList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + SunDcorrList[TermNum + 2]
             LimitCorr = Interpolate3(OriginDif, Initial) // 當日差積
             if (OriginDif > HalfSolar) {
                 LimitCorr = -LimitCorr
@@ -733,7 +735,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
                     Last = 20
                 }
             }
-            Last -= Last * (AutoTcorr(AnomaAccum, 0, CalName).MoonDifAccum - AutoTcorr((AnomaAccum - 1 + Anoma) % Anoma, 0, CalName).MoonDifAccum) / MoonAvgVDeg // 再考慮入變增減率，卽實平行之差。速減遲加
+            Last -= Last * (MoonTcorrList[(~~AnomaAccum + 1) % Anoma] - MoonTcorrList[~~AnomaAccum]) / Denom
         } else {
             if (NodeDif <= 779 / Denom) {
                 Magni = 15 //   月全食
@@ -753,7 +755,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
             } else if (NodeDif < 520 / Denom) {
                 Last = 20.5
             }
-            Last -= Last * (AutoTcorr(AnomaAccum, 0, CalName).MoonDifAccum - AutoTcorr((AnomaAccum - 1 + Anoma) % Anoma, 0, CalName).MoonDifAccum) / MoonAvgVDeg
+            Last -= Last * (MoonTcorrList[(~~AnomaAccum + 1) % Anoma] - MoonTcorrList[~~AnomaAccum]) / Denom
         }
     } else if (['Wuji', 'Zhengyuan'].includes(CalName)) {
         if (CalName === 'Wuji') {
@@ -812,7 +814,8 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm, Cal
         Decimal
     }
 }
-// console.log(EclipseTable3(26.747352, 21.200901, 0.320611, 220.059, 1, 'Dayan').Magni) // 頁538示例
+// console.log(EclipseTable3(26.747352, 21.200901, 0.320611, 220.091118, 1, 'Dayan').Magni) // 頁538示例
+// console.log(EclipseTable3(26.74735, 21.20092, 0.3194809, 220.09112, 1, 'Dayan')) // 程序實際的參數
 // console.log(EclipseTable3(14.300434, 8.411596, 0.825769, 235.059, 0, 'Dayan').Decimal) 
 
 // 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
@@ -1261,29 +1264,6 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, OriginDifRaw, isNewm
 //     return {
 //         NewmEcliDirc,
 //         SyzygyEcliDirc
-//     }
-// }
-
-// if (CalName === 'Jingchu') {
-//     EcliAccum = (FirstEcliAccum + (ZhengOriginDif + i - 1) * LunarNumer) % EcliNumer + (isNewm ? 0 : LunarNumer / 2) // 注意這是乘了日法的。景初原本是平朔，不考慮月行遲疾，但照理說應該要加上
-//     if ((EcliAccum >= SunLimit1) || (EcliAccum <= LunarNumer / 2)) { // 是否需要自己設一個閾值修正LunarNumer / 8
-//         status = 1
-//         Sc += '◐'
-//     }
-//     YinyangAccum = FirstYinyangAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * LunarNumer // 求月在日道表裏
-//     if (YinyangAccum < EcliNumer) {
-//         Yinyang = JiYinyang
-//     } else {
-//         YinyangAccum -= EcliNumer
-//         Yinyang = -JiYinyang
-//     }
-//     Magni = EcliAccum / Denom
-//     if (status && (Magni < 10 || Magni > EcliNumer / Denom - 10)) {
-//         EcliStatus = '必偏食'
-//     } else if (status && (Magni < 15 || Magni > EcliNumer / Denom - 15)) {
-//         EcliStatus = '虧食微少'
-//     } else if (status) {
-//         EcliStatus = '交而不食'
 //     }
 // }
 //////// 乾象入陰陽曆

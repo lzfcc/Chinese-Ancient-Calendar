@@ -758,7 +758,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
             Tcorr2 = SunTcorr2 + MoonTcorr2
         }
         if (Type >= 6 && Type <= 10) { // 其他曆法都是這樣，不懂授時為何就是定朔加減差
-            NodeAccumCorr = SunTcorr2 - 0.0785077 * MoonTcorr2 // 皇極 465/5923，麟徳61/777，大衍343/4369，崇天141/1796，都是0.0785
+            NodeAccumCorr = SunTcorr2 + 0.0785077 * MoonTcorr2 // 皇極 465/5923，麟徳61/777，大衍343/4369，崇天141/1796，都是0.0785
         }
     }
     return {
@@ -771,7 +771,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         NodeAccumCorr,
     }
 }
-// console.log(AutoTcorr(27.4, 365.142, 'Tongtian', 1997).Tcorr2)
+// console.log(AutoTcorr(11.867306, 365.142, 'Dayan', 1997).MoonTcorr2)
 
 export const AutoDifAccum = (AnomaAccum, OriginDifRaw, CalName, year) => {
     const {

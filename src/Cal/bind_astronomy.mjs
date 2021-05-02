@@ -52,7 +52,7 @@ export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
     } = AutoDifAccum(AnomaAccum, OriginDifRaw, 'West', year)
     let Print = [{
         title: 'Fourier',
-        data: [WestSun.toFixed(6), 0, WestMoon.toFixed(6), 0, WestSunTcorr.toFixed(6), 0, WestMoonTcorr.toFixed(6), 0]
+        data: [WestSun.toFixed(5), 0, WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4)]
     }]
     Print = Print.concat(
         ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Zhengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Wuji', 'Zhengyuan', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'NewDaming', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian'].map(title => {
@@ -75,31 +75,32 @@ export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
                 SunTcorr1,
                 MoonTcorr1,
             } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
-            const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(6) : '-'
+            const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
             const SunDifAccumInac = SunDifAccum ? (SunDifAccum - WestSun).toFixed(4) : '-'
-            const MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(6) : '-'
+            const MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(5) : '-'
             const MoonDifAccumInac = MoonDifAccum ? (MoonDifAccum - WestMoon).toFixed(4) : '-'
             let SunTcorrPrint = '-'
             let SunTcorrInac = '-'
             if (SunTcorr2) {
-                SunTcorrPrint = SunTcorr2.toFixed(6)
+                SunTcorrPrint = SunTcorr2.toFixed(5)
                 SunTcorrInac = (SunTcorr2 - WestSunTcorr).toFixed(4)
             } else if (SunTcorr1) {
-                SunTcorrPrint = SunTcorr1.toFixed(6)
+                SunTcorrPrint = SunTcorr1.toFixed(5)
                 SunTcorrInac = (SunTcorr1 - WestSunTcorr).toFixed(4)
             }
             let MoonTcorrPrint = '-'
             let MoonTcorrInac = '-'
             if (MoonTcorr2) {
-                MoonTcorrPrint = MoonTcorr2.toFixed(6)
+                MoonTcorrPrint = MoonTcorr2.toFixed(5)
                 MoonTcorrInac = (MoonTcorr2 - WestMoonTcorr).toFixed(4)
             } else if (MoonTcorr1) {
-                MoonTcorrPrint = MoonTcorr1.toFixed(6)
+                MoonTcorrPrint = MoonTcorr1.toFixed(5)
                 MoonTcorrInac = (MoonTcorr1 - WestMoonTcorr).toFixed(4)
             }
+            const Tcorr = +MoonTcorrPrint + (+SunTcorrPrint || 0)
             return {
                 title: CalNameList[title],
-                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac]
+                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac, Tcorr.toFixed(4)]
             }
         }))
     // 符天授時必須單獨抽出來，否則AnomaAccum就會變得很大，不知道為何
@@ -115,7 +116,7 @@ export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
             } = AutoTcorr(AnomaAccumRaw, OriginDifRaw, title)
             return {
                 title: CalNameList[title],
-                data: [SunDifAccum.toFixed(6), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(6), (MoonDifAccum - WestMoon).toFixed(4), SunTcorr2.toFixed(6), (SunTcorr2 - WestSunTcorr).toFixed(4), MoonTcorr2.toFixed(6), (MoonTcorr2 - WestMoonTcorr).toFixed(4)]
+                data: [SunDifAccum.toFixed(5), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(5), (MoonDifAccum - WestMoon).toFixed(4), SunTcorr2.toFixed(5), (SunTcorr2 - WestSunTcorr).toFixed(4), MoonTcorr2.toFixed(5), (MoonTcorr2 - WestMoonTcorr).toFixed(4), (SunTcorr2 + MoonTcorr2).toFixed(4)]
             }
         }))
     return Print

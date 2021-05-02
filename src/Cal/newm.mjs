@@ -23,7 +23,6 @@ export default (CalName, year) => {
         LunarNumer,
         Denom,
         Anoma,
-        AnomaNumer,
         Node,
         YinyangOrigin,
         EcliOrigin,
@@ -110,6 +109,7 @@ export default (CalName, year) => {
         }
     }
     const SynodicAnomaDif = Lunar - Anoma
+    const HalfSynodicNodeDif = (Lunar - Node) / 2
     let JiSkip = 0
     let JiOrder = 0
     let JiYear = 0
@@ -280,8 +280,8 @@ export default (CalName, year) => {
             AvgOrderRaw[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(Math.floor(AvgMod[i]) + 1 + OriginDaySc) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
-            OriginDifRaw[i] = +(((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar).toFixed(4)
-            AnomaAccum[i] = +(((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(4)) // 上元積年大，精度只有那麼多了，再多的話沒意義            
+            OriginDifRaw[i] = +(((ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar).toFixed(5)
+            AnomaAccum[i] = +((FirstAnomaAccum + (ZhengOriginDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(5) // 上元積年大，精度只有那麼多了，再多的話誤差更大
             const TcorrBindFunc = AutoTcorr(AnomaAccum[i], OriginDifRaw[i], CalName)
             let Tcorr1 = 0
             if (Type <= 4) {
@@ -335,7 +335,7 @@ export default (CalName, year) => {
                 }
             }
             if (Node) {
-                NodeAccum[i] = +((FirstNodeAccum + (ZhengOriginDif + i - (isNewm ? 1 : 0.5)) * Lunar) % Node).toFixed(4)
+                NodeAccum[i] = +((FirstNodeAccum + (ZhengOriginDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
             }
         }
         return {
