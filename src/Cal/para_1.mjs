@@ -5,7 +5,7 @@ export default {
         Solar: 365.25, // 歲實
         OriginAd: -2760366, // 上元積年的公曆
         // JdOrigin: 1704250.5,
-        JdWsolstice: 1704250.5 + 46 * 365.25,
+        JdWinsols: 1704250.5 + 46 * 365.25,
         OriginYearSc: 51, // 上元年干支
         ZhengNum: 0, // 年首子月。這兩個一定要記得一起調
         OriginMonNum: 0, // 正月建子
@@ -20,7 +20,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2760423,
         // JdOrigin: 1683430.5,
-        JdWsolstice: 1721051.25,
+        JdWinsols: 1721051.25,
         OriginYearSc: 54,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -34,7 +34,7 @@ export default {
         Lunar: 27759 / 940,
         Solar: 365.25,
         // JdOrigin: 1783510.5,
-        JdWsolstice: 1721052.75,
+        JdWinsols: 1721052.75,
         OriginAd: -2760149,
         OriginYearSc: 28,
         ZhengNum: 0,
@@ -50,7 +50,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 1,
         OriginMonNum: 1,
@@ -65,7 +65,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0, // 隱元建丑
@@ -81,7 +81,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -97,7 +97,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -113,7 +113,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -129,7 +129,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -145,7 +145,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -161,7 +161,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWsolstice: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -177,7 +177,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2759875,
         // JdOrigin: 1883590.5,
-        JdWsolstice: 1721054.25,
+        JdWinsols: 1721054.25,
         OriginYearSc: 2,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -190,11 +190,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -60.875, // 冬至距雨水日數
-        WsolsticeOriginMon: -(2 + 7 / 114), // 冬至距雨水閏餘
+        WinsolsWinsolsDif: -60.875, // 冬至距雨水日數
+        WinsolsOriginMon: -(2 + 7 / 114), // 冬至距雨水閏餘
         OriginAd: -2759875,
         // JdOrigin: 1883650.5,
-        JdWsolstice: 1721053.375,
+        JdWinsols: 1721053.375,
         OriginYearSc: 2,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -207,11 +207,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -45.65625, // 立春爲曆元
-        WsolsticeOriginMon: -(1 + 83 / 152),
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWsolstice: 1721051 + 3 / 32,
+        JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52, // 曆元距甲子日數
         OriginDayCorr: 5,
         ZhengNum: 2, // 十月爲年首
@@ -225,11 +225,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -45.65625, // 立春爲曆元
-        WsolsticeOriginMon: -(1 + 83 / 152),
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWsolstice: 1721051 + 3 / 32,
+        JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         OriginDayCorr: 5,
         ZhengNum: -1, // 十月爲年首
@@ -243,11 +243,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -45.65625, // 立春爲曆元
-        WsolsticeOriginMon: -(1 + 83 / 152),
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWsolstice: 1721051 + 3 / 32,
+        JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         OriginDayCorr: 5,
         ZhengNum: -1, // 十月爲年首
@@ -262,11 +262,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -45.65625, // 立春爲曆元
-        WsolsticeOriginMon: -(1 + 83 / 152),
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWsolstice: 1721051 + 3 / 32,
+        JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         OriginDayCorr: 5,
         ZhengNum: -1, // 十月爲年首
@@ -281,11 +281,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -45.65625, // 立春爲曆元
-        WsolsticeOriginMon: -(1 + 83 / 152),
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWsolstice: 1721051 + 3 / 32,
+        JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         OriginDayCorr: 5,
         ZhengNum: -1, // 十月爲年首
@@ -300,11 +300,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WsolsticeOriginDif: -45.65625, // 立春爲曆元
-        WsolsticeOriginMon: -(1 + 83 / 152),
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWsolstice: 1721051 + 3 / 32,
+        JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         OriginDayCorr: 5,
         ZhengNum: -1, // 十月爲年首
@@ -321,7 +321,7 @@ export default {
         Solar: 365.25, // 歲實
         OriginAd: -1566, // 上元積年的公曆
         // JdOrigin: 1704249.75,
-        JdWsolstice: 1704249.75 + 46 * 365.25,
+        JdWinsols: 1704249.75 + 46 * 365.25,
         Ecli: 135 / 23,
         EcliRange: 513,
         Node: 27.212729649262943,
@@ -341,7 +341,7 @@ export default {
         OriginAd: -143230,
         OriginCloseAd: -103,
         // JdOrigin: 1683430.5,
-        JdWsolstice: 1683430.5 + 103 * 365.25,
+        JdWinsols: 1683430.5 + 103 * 365.25,
         OriginYearSc: 13,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -361,7 +361,7 @@ export default {
         Solar: 365 + 385 / 1539,
         OriginAd: -2760366,
         // JdOrigin: 1704250.5,
-        JdWsolstice: 1721052,
+        JdWinsols: 1721052,
         OriginYearSc: 51,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -377,7 +377,7 @@ export default {
         OriginAd: -2760480,
         OriginCloseAd: -160,
         // JdOrigin: 1662610.5,
-        JdWsolstice: 1662610.5 + 160 * 365.25,
+        JdWinsols: 1662610.5 + 160 * 365.25,
         OriginYearSc: 17,
         ZhengNum: 2,
         OriginMonNum: 2,

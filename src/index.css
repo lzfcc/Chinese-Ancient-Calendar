@@ -232,6 +232,7 @@ h2 {
 }
 
 .eclipse {
+  font-family: var(--codesans);
   border: 1px solid var(--gray);
   color: var(--gray);
   border-radius: .4em;
@@ -252,11 +253,24 @@ h2 {
 
 .term {
   background: var(--lettergreen);
+  color: var(--bg);
+  font-family: var(--serif);
   border-radius: .3em;
   padding: .2em .25em;
   margin-right: .25em;
   font-weight: bold;
+}
+
+.momie {
+  background: var(--black);
   color: var(--bg);
+  font-family: var(--serif);
+  width: 2em;
+  height: 2em;
+  padding: .35em;
+  border-radius: 999em;
+  margin: 0 .15em;
+  font-weight: bold;
 }
 
 table {
@@ -728,6 +742,7 @@ hr {
 
 .day-table td p.Sc {
   font-size: 1.2em;
+  font-family: var(--serif);
   letter-spacing: 1px;
   font-weight: bold;
 }

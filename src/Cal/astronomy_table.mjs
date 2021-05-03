@@ -144,7 +144,7 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
 }
 // console.log(Equator2EclipticTable(23,''))
 
-export const Longi2LatiTable1 = (OriginDifRaw, CalName) => {
+export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
     const {
         AutoPara,
     } = Bind(CalName)
@@ -159,9 +159,9 @@ export const Longi2LatiTable1 = (OriginDifRaw, CalName) => {
         DawnRange = 2.5
     }
     const HalfTermLeng = Solar / 24
-    const OriginDif = OriginDifRaw % Solar
-    const TermNum = ~~(OriginDif / HalfTermLeng) // 每日所在氣名
-    const TermDif = OriginDif - TermNum * HalfTermLeng
+    const WinsolsDif = WinsolsDifRaw % Solar
+    const TermNum = ~~(WinsolsDif / HalfTermLeng) // 每日所在氣名
+    const TermDif = WinsolsDif - TermNum * HalfTermLeng
     const Sunrise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
     const Dial = (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
     const Lati1 = (SunLatiList[TermNum] + (TermDif / HalfTermLeng) * (SunLatiList[TermNum + 1] - SunLatiList[TermNum]))
@@ -174,7 +174,7 @@ export const Longi2LatiTable1 = (OriginDifRaw, CalName) => {
     }
 }
 
-export const Longi2LatiTable2 = (OriginDifRaw, CalName) => {
+export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
     const {
         Type,
         AutoPara,
@@ -189,7 +189,7 @@ export const Longi2LatiTable2 = (OriginDifRaw, CalName) => {
         TermRangeA,
         TermRangeS
     } = AutoPara[CalName]
-    const OriginDif = OriginDifRaw % Solar
+    const WinsolsDif = WinsolsDifRaw % Solar
     let DawnRange = 2.5
     if (['Linde', 'NewDaming'].includes(CalName)) {
         DawnRange = 0
@@ -203,7 +203,7 @@ export const Longi2LatiTable2 = (OriginDifRaw, CalName) => {
     if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(CalName)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
-            if (OriginDif >= AcrTermList[j] && OriginDif < AcrTermList[j + 1]) {
+            if (WinsolsDif >= AcrTermList[j] && WinsolsDif < AcrTermList[j + 1]) {
                 TermNum = j
                 break
             }
@@ -220,16 +220,16 @@ export const Longi2LatiTable2 = (OriginDifRaw, CalName) => {
         const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDecimalDif[TermNum]
         const Initial1 = t1 + ',' + NightList[TermNum] + ';' + t2 + ',' + NightList[TermNum + 1] + ';' + t3 + ',' + NightList[TermNum + 2]
         const Initial2 = t1 + ',' + SunLatiList[TermNum] + ';' + t2 + ',' + SunLatiList[TermNum + 1] + ';' + t3 + ',' + SunLatiList[TermNum + 2]
-        Sunrise = DawnRange + Interpolate3(OriginDif, Initial1)
-        Lati1 = Interpolate3(OriginDif, Initial2)
+        Sunrise = DawnRange + Interpolate3(WinsolsDif, Initial1)
+        Lati1 = Interpolate3(WinsolsDif, Initial2)
         Lati = 91.31 - Lati1
     } else {
         ////////////平氣////////////
-        const TermNum = ~~(OriginDif / HalfTermLeng)
-        const TermDif = OriginDif - TermNum * HalfTermLeng
+        const TermNum = ~~(WinsolsDif / HalfTermLeng)
+        const TermDif = WinsolsDif - TermNum * HalfTermLeng
         let TermRange = 0
         if (Type === 6) {// 麟德   
-            if ((OriginDifRaw < 6 * HalfTermLeng) || (OriginDifRaw >= 18 * HalfTermLeng)) {
+            if ((WinsolsDifRaw < 6 * HalfTermLeng) || (WinsolsDifRaw >= 18 * HalfTermLeng)) {
                 TermRange = TermRangeA // 秋分後
             } else {
                 TermRange = TermRangeS // 春分後
@@ -328,7 +328,7 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
         Longi = Xiang - Longi
     }
     const OriginRaw = OriginRawRaw - Day % (Node / 2)
-    const OriginDif = OriginRaw % (Solar / 2)
+    const WinsolsDif = OriginRaw % (Solar / 2)
     let WhiteLongi = 0
     let Range = []
     if (['Huangji'].includes(CalName)) { // 麟徳沒有
@@ -392,13 +392,13 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
     }
     let EquatorWhiteDif = 0
     if (CalName === 'Dayan') {
-        EquatorWhiteDif = ~~(OriginDif / (Solar / 72)) / 18
+        EquatorWhiteDif = ~~(WinsolsDif / (Solar / 72)) / 18
     } else if (CalName === 'Qintian') {
-        const OriginXian = Math.abs(OriginDif - Solar / 4) / Xian // 限數
+        const OriginXian = Math.abs(WinsolsDif - Solar / 4) / Xian // 限數
         EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Xian / 2) * OriginXian / 1296 // 這個用公式來算黃白差，跟用表不一樣
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Xian / 8) * (1 - OriginXian / 324)
     } else if (CalName === 'Yingtian') {
-        const Hou = ~~(OriginDif / (Solar / 72)) / 18
+        const Hou = ~~(WinsolsDif / (Solar / 72)) / 18
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
     }
     let EquatorLongi = 0

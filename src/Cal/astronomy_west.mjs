@@ -16,15 +16,15 @@ const r2d = degree => big(degree).mul(180).div(pi)
 // }
 // console.log(tanliufenyi(14.1,1.1))
 
-// const SunAcrVWest = (OriginDifRaw, Solar) => { // 極值出現在冬至後0.47345個節氣，說明現在冬至並非近地點 0.47344981964   24.6116951198865  週期 24.1382453      f(x) =  0.9864 + 0.03331  *cos(x*0.2603) +  0.004126*sin(x*0.2603) 
-//     OriginDifRaw = big(OriginDifRaw).mul(24.1382453).div(Solar).add(0.47344981964)
-//     const SunAcrV = big(0.9864).add(big(0.03331).mul(big.mul(OriginDifRaw, 0.2603).cos())).add(big(0.004126).mul(big.mul(OriginDifRaw, 0.2603)).sin())
+// const SunAcrVWest = (WinsolsDifRaw, Solar) => { // 極值出現在冬至後0.47345個節氣，說明現在冬至並非近地點 0.47344981964   24.6116951198865  週期 24.1382453      f(x) =  0.9864 + 0.03331  *cos(x*0.2603) +  0.004126*sin(x*0.2603) 
+//     WinsolsDifRaw = big(WinsolsDifRaw).mul(24.1382453).div(Solar).add(0.47344981964)
+//     const SunAcrV = big(0.9864).add(big(0.03331).mul(big.mul(WinsolsDifRaw, 0.2603).cos())).add(big(0.004126).mul(big.mul(WinsolsDifRaw, 0.2603)).sin())
 //     return SunAcrV.toString()
 // }
 // console.log(SunAcrVWest(91, 365.2425))
 
-// const SunWest = (OriginDifRaw, Solar) => { // 我用定氣數據擬合的函數。 週期23.674398328214，極值2.023，-1.774 ，但是實際上應該是2.32，奇怪 0.1242-0.1018 *cos(x*0.2654) + 1.896*sin(x*0.2654)
-//     OriginDifRaw = d2r(big(OriginDifRaw).mul(24).div(Solar))
+// const SunWest = (WinsolsDifRaw, Solar) => { // 我用定氣數據擬合的函數。 週期23.674398328214，極值2.023，-1.774 ，但是實際上應該是2.32，奇怪 0.1242-0.1018 *cos(x*0.2654) + 1.896*sin(x*0.2654)
+//     WinsolsDifRaw = d2r(big(WinsolsDifRaw).mul(24).div(Solar))
 //     return SunDifAccum.toString()
 // }
 
@@ -82,20 +82,20 @@ export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬
 
 // console.log(MoonWest(7, 900))
 
-export const SunWest = (OriginDifRaw, year) => { // 武家璧《大衍曆日躔表的數學結構及其內插法》日躔差=真近點角V-平近點交角M。V=M+2*e*sinM+1.25*e**2*sin2M   M=90°極值2e。  
+export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔表的數學結構及其內插法》日躔差=真近點角V-平近點交角M。V=M+2*e*sinM+1.25*e**2*sin2M   M=90°極值2e。  
     const ConstFunc = ConstWest(year)
     const e = ConstFunc.eccentricity // 黃道離心率
     const perihelion = ConstFunc.perihelion // 近日點
     const Solar = ConstFunc.Solar
-    OriginDifRaw = ((OriginDifRaw - (perihelion - 270) * Solar / 360) + 360) % 360
-    const M = d2r(OriginDifRaw * 360 / Solar) // 距離冬至日數轉換成平黃經
-    const M1 = d2r((OriginDifRaw - 1) * 360 / Solar)
+    WinsolsDifRaw = ((WinsolsDifRaw - (perihelion - 270) * Solar / 360) + 360) % 360
+    const M = d2r(WinsolsDifRaw * 360 / Solar) // 距離冬至日數轉換成平黃經
+    const M1 = d2r((WinsolsDifRaw - 1) * 360 / Solar)
     let SunDifAccum = big(e).mul(2).mul(M.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M.mul(2)))) // 中心差=真-平近點角
     SunDifAccum = SunDifAccum.mul(3437.747 / 60).mul(Solar / 360) // 化為角分乘3437.747，不知道怎么来的
     let SunDifAccum1 = big(e).mul(2).mul(M1.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M1.mul(2))))
     SunDifAccum1 = SunDifAccum1.mul(3437.747 / 60).mul(Solar / 360)
     const SunAcrV = SunDifAccum.sub(SunDifAccum1).add(1)
-    const Longi = SunDifAccum.add(OriginDifRaw).toNumber() // 黃經。這是日數度，不是360度
+    const Longi = SunDifAccum.add(WinsolsDifRaw).toNumber() // 黃經。這是日數度，不是360度
     SunDifAccum = SunDifAccum.toNumber()
     return {
         SunDifAccum,
@@ -315,11 +315,11 @@ export const MoonLatiWest = (Day, NodeAvgV, Sidereal, year) => {
 // console.log(MoonLatiWest(6, 0, 360, 1000))
 
 // 下面這個加上了日躔。藤豔輝《宋代朔閏與交食研究》頁90,106
-export const EcliWest = (NodeAccum, AnomaAccum, Decimal, OriginDif, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
+export const EcliWest = (NodeAccum, AnomaAccum, Decimal, WinsolsDif, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
     const ConstWestFunc = ConstWest(year)
     const Solar = ConstWestFunc.Solar
     f = d2r(f)
-    const SunWestFunc = SunWest(OriginDif, year)
+    const SunWestFunc = SunWest(WinsolsDif, year)
     let Longi = (SunWestFunc.Longi) % Solar // 黃經
     let SunV = SunWestFunc.SunAcrV
     let MoonV = MoonWest(AnomaAccum, year).MoonAcrV

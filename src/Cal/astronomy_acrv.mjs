@@ -10,7 +10,7 @@ import {
     Interpolate3
 } from './equa_sn.mjs'
 
-const AutoMoonAvgV = CalName => {
+export const AutoMoonAvgV = CalName => {
     const { AutoPara, Type } = Bind(CalName)
     const { Sidereal } = AutoPara[CalName]
     let { Solar, Lunar } = AutoPara[CalName]
@@ -38,13 +38,13 @@ const AutoMoonAvgV = CalName => {
     } else if (Type === 11) {
         MoonAvgVDeg = 13.3687
     } else {
-        MoonAvgVDeg = parseFloat(((Sidereal ? Sidereal : Solar) / Lunar + 1 + Plus).toPrecision(14))
+        MoonAvgVDeg = parseFloat(((Sidereal || Solar) / Lunar + 1 + Plus).toPrecision(14))
     }
     return MoonAvgVDeg
 }
 
 // 大衍用不等間距二次內插，宣明也是。崇玄暫且用平氣。計算盈縮積
-export const SunDifAccumTable = (OriginDifRaw, CalName) => {
+export const SunDifAccumTable = (WinsolsDifRaw, CalName) => {
     const {
         Type,
         AutoPara
@@ -85,25 +85,25 @@ export const SunDifAccumTable = (OriginDifRaw, CalName) => {
     // }
     // AcrTermList[0] = 0
     // AcrTermList[24] = +Solar.toFixed(6)
-    const OriginDif = OriginDifRaw % Solar
+    const WinsolsDif = WinsolsDifRaw % Solar
     let SunDifAccum2 = 0
     if (Type === 7) {
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
-            if (OriginDif >= AcrTermList[j] && OriginDif < AcrTermList[j + 1]) {
+            if (WinsolsDif >= AcrTermList[j] && WinsolsDif < AcrTermList[j + 1]) {
                 TermNum = j
                 break
             }
         }
         const Initial = AcrTermList[TermNum] + ',' + SunDifAccumList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + SunDifAccumList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + SunDifAccumList[TermNum + 2]
-        SunDifAccum2 = Interpolate3(OriginDif, Initial) // 直接拉格朗日內插，懶得寫了
+        SunDifAccum2 = Interpolate3(WinsolsDif, Initial) // 直接拉格朗日內插，懶得寫了
     } else {
         let TermRange1 = 0
-        const TermNum1 = ~~(OriginDif / HalfTermLeng)  // 朔望所在氣名
+        const TermNum1 = ~~(WinsolsDif / HalfTermLeng)  // 朔望所在氣名
         const TermNum2 = (TermNum1 + 1) % 24
-        const TermNewmDif = OriginDif - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
+        const TermNewmDif = WinsolsDif - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
         if (['Linde', 'Huangji', 'Shenlong'].includes(CalName)) {
-            if ((OriginDif < 6 * HalfTermLeng) || (OriginDif >= 18 * HalfTermLeng)) {
+            if ((WinsolsDif < 6 * HalfTermLeng) || (WinsolsDif >= 18 * HalfTermLeng)) {
                 TermRange1 = TermRangeA // 秋分後
             } else {
                 TermRange1 = TermRangeS // 春分後
@@ -121,7 +121,7 @@ export const SunDifAccumTable = (OriginDifRaw, CalName) => {
 // console.log(SunDifAccumTable(14, 'Tongtian').SunDifAccum2)
 
 // 計算朓朒積
-const SunTcorrTable = (OriginDifRaw, CalName) => {
+const SunTcorrTable = (WinsolsDifRaw, CalName) => {
     const {
         AutoPara,
         Type
@@ -141,26 +141,26 @@ const SunTcorrTable = (OriginDifRaw, CalName) => {
         Solar = SolarRaw
     }
     let HalfTermLeng = Solar / 24
-    const OriginDif = OriginDifRaw % Solar
-    const TermNum = ~~(OriginDif / HalfTermLeng)
+    const WinsolsDif = WinsolsDifRaw % Solar
+    const TermNum = ~~(WinsolsDif / HalfTermLeng)
     let SunTcorr1 = 0
     let SunTcorr2 = 0
     if (Type === 7) {
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
-            if (OriginDif >= AcrTermList[j] && OriginDif < AcrTermList[j + 1]) {
+            if (WinsolsDif >= AcrTermList[j] && WinsolsDif < AcrTermList[j + 1]) {
                 TermNum = j
                 break
             }
         }
         const Initial = AcrTermList[TermNum] + ',' + SunTcorrList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + SunTcorrList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + SunTcorrList[TermNum + 2]
-        SunTcorr2 = Interpolate3(OriginDif, Initial)  // 直接拉格朗日內插，懶得寫了
+        SunTcorr2 = Interpolate3(WinsolsDif, Initial)  // 直接拉格朗日內插，懶得寫了
         const TermRange1 = AcrTermList[TermNum + 1] - AcrTermList[TermNum] // 本氣長度
-        SunTcorr1 = SunTcorrList[TermNum] + (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) * (OriginDif - AcrTermList[TermNum]) / TermRange1
+        SunTcorr1 = SunTcorrList[TermNum] + (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) * (WinsolsDif - AcrTermList[TermNum]) / TermRange1
     } else {
         let TermRange = HalfTermLeng
         if (['Huangji', 'Linde'].includes(CalName)) {
-            if ((OriginDifRaw < 6 * HalfTermLeng) || (OriginDifRaw >= 18 * HalfTermLeng)) {
+            if ((WinsolsDifRaw < 6 * HalfTermLeng) || (WinsolsDifRaw >= 18 * HalfTermLeng)) {
                 TermRange = TermRangeA // 秋分後
             } else {
                 TermRange = TermRangeS // 春分後
@@ -169,7 +169,7 @@ const SunTcorrTable = (OriginDifRaw, CalName) => {
         if (CalName === 'Wuiyn') {
             Denom = 11830
         }
-        const n = (OriginDif - TermNum * HalfTermLeng) / TermRange
+        const n = (WinsolsDif - TermNum * HalfTermLeng) / TermRange
         if (Type >= 5) {
             const Initial = SunTcorrList[TermNum] + ',' + SunTcorrList[TermNum + 1] + ',' + SunTcorrList[TermNum + 2]
             SunTcorr2 = Interpolate1(n + 1, Initial)
@@ -182,7 +182,7 @@ const SunTcorrTable = (OriginDifRaw, CalName) => {
 }
 // console.log(SunTcorrTable(56.51, 'Jiyuan'))
 
-export const SunFormula = (OriginDifRaw, CalName) => {
+export const SunFormula = (WinsolsDifRaw, CalName) => {
     const {
         AutoPara,
         Type
@@ -201,44 +201,44 @@ export const SunFormula = (OriginDifRaw, CalName) => {
     if (!Solar) {
         Solar = SolarRaw
     }
-    let OriginDif = OriginDifRaw % Solar
+    let WinsolsDif = WinsolsDifRaw % Solar
     const HalfSolar = +((Solar / 2).toFixed(6))
     let SunDifAccum = 0
     let signA = 1
     let Xian = 0
     let ExconT = 0
     if (Type === 11) {
-        if (OriginDif <= 88.909225) {
-            const ExconT = OriginDif
+        if (WinsolsDif <= 88.909225) {
+            const ExconT = WinsolsDif
             SunDifAccum = (ExpanDing * ExconT - ExpanPing * (ExconT ** 2) - ExpanLi * (ExconT ** 3)) / 10000 // 盈縮差
-        } else if (OriginDif <= HalfSolar) {
-            const ExconT = HalfSolar - OriginDif
+        } else if (WinsolsDif <= HalfSolar) {
+            const ExconT = HalfSolar - WinsolsDif
             SunDifAccum = (ContracDing * ExconT - ContracPing * (ExconT ** 2) - ContracLi * (ExconT ** 3)) / 10000
-        } else if (OriginDif <= HalfSolar + 93.712025) {
-            const ExconT = OriginDif - HalfSolar
+        } else if (WinsolsDif <= HalfSolar + 93.712025) {
+            const ExconT = WinsolsDif - HalfSolar
             SunDifAccum = -(ContracDing * ExconT - ContracPing * (ExconT ** 2) - ContracLi * (ExconT ** 3)) / 10000
         } else {
-            const ExconT = Solar - OriginDif
+            const ExconT = Solar - WinsolsDif
             SunDifAccum = -(ExpanDing * ExconT - ExpanPing * (ExconT ** 2) - ExpanLi * (ExconT ** 3)) / 10000
         }
     } else {
         if (CalName === 'Yitian') {
             const XianA = 897699.5
             const XianB = 946785.5 // 陳美東《崇玄儀天崇天三曆晷長計算法》改正該値
-            if (OriginDif <= XianA / Denom) {
+            if (WinsolsDif <= XianA / Denom) {
                 Xian = XianA
-                ExconT = OriginDif
-            } else if (OriginDif <= HalfSolar) {
+                ExconT = WinsolsDif
+            } else if (WinsolsDif <= HalfSolar) {
                 Xian = XianB
-                ExconT = HalfSolar - OriginDif
-            } else if (OriginDif <= HalfSolar + XianB / Denom) {
+                ExconT = HalfSolar - WinsolsDif
+            } else if (WinsolsDif <= HalfSolar + XianB / Denom) {
                 signA = -1
                 Xian = XianB
-                ExconT = OriginDif - HalfSolar
+                ExconT = WinsolsDif - HalfSolar
             } else {
                 signA = -1
                 Xian = XianA
-                ExconT = Solar - OriginDif
+                ExconT = Solar - WinsolsDif
             }
             const ExconAccum = 24543 // 盈縮積
             const E = ExconAccum * Denom * 2 / Xian // 初末限平率
@@ -250,46 +250,46 @@ export const SunFormula = (OriginDifRaw, CalName) => {
             const XianB = 93 + 8552 / 12030
             const SunDenomA = 3294
             const SunDenomB = 3659
-            if (OriginDif <= XianA) {
+            if (WinsolsDif <= XianA) {
                 Xian = XianA
                 SunDenom = SunDenomA
-                ExconT = OriginDif
-            } else if (OriginDif <= HalfSolar) {
+                ExconT = WinsolsDif
+            } else if (WinsolsDif <= HalfSolar) {
                 Xian = XianB
                 SunDenom = SunDenomB
-                ExconT = HalfSolar - OriginDif
-            } else if (OriginDif <= HalfSolar + XianB) {
+                ExconT = HalfSolar - WinsolsDif
+            } else if (WinsolsDif <= HalfSolar + XianB) {
                 Xian = XianB
                 SunDenom = SunDenomB
                 signA = -1
-                ExconT = OriginDif - HalfSolar
+                ExconT = WinsolsDif - HalfSolar
             } else {
                 Xian = XianA
                 SunDenom = SunDenomA
                 signA = -1
-                ExconT = Solar - OriginDif
+                ExconT = Solar - WinsolsDif
             }
             SunDifAccum = signA * (ExconT / SunDenom) * (Xian * 2 - ExconT) // 盈縮差度分。極值2.37
         } else if (CalName === 'Mingtian') {
-            if (OriginDif <= Solar / 4) {
-                ExconT = OriginDif
-            } else if (OriginDif <= HalfSolar) {
-                ExconT = HalfSolar - OriginDif
-            } else if (OriginDif <= Solar * 0.75) {
+            if (WinsolsDif <= Solar / 4) {
+                ExconT = WinsolsDif
+            } else if (WinsolsDif <= HalfSolar) {
+                ExconT = HalfSolar - WinsolsDif
+            } else if (WinsolsDif <= Solar * 0.75) {
                 signA = -1
-                ExconT = OriginDif - HalfSolar
+                ExconT = WinsolsDif - HalfSolar
             } else {
                 signA = -1
-                ExconT = Solar - OriginDif
+                ExconT = Solar - WinsolsDif
             }
             SunDifAccum = signA * ExconT * (200 - ExconT) / 4135 // 盈縮差度分。極值2.4
             // SunTcorr = signA * ExconT * (200 - ExconT) * 400 / 567/Denom 按照月速13.36875算出來，和上面的算式沒有區別，很好
         } else if (CalName === 'Futian') {
-            if (OriginDif > HalfSolar) {
-                OriginDif -= HalfSolar
+            if (WinsolsDif > HalfSolar) {
+                WinsolsDif -= HalfSolar
                 signA = -1
             }
-            SunDifAccum = signA * OriginDif * (HalfSolar - OriginDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得為立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000為分母。
+            SunDifAccum = signA * WinsolsDif * (HalfSolar - WinsolsDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得為立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000為分母。
         }
     }
     return SunDifAccum
@@ -607,8 +607,8 @@ const MoonFormula = (AnomaAccum, CalName) => {
         MoonAcrV = 1.0962 + signB * (0.11081575 - 0.0005815 * AnomaXian - 0.00000975 * AnomaXian * (AnomaXian - 1)) // 遲疾限下行度
     } else {
         if (CalName === 'Mingtian') {
-            // AnomaAccum = big.div(OriginAccum, Lunar).add(i - 1 + ZhengOriginDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
-            // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengOriginDif) * 2142887000 % AnomaNumer) / 81120000
+            // AnomaAccum = big.div(OriginAccum, Lunar).add(i - 1 + ZhengWinsolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
+            // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengWinsolsDif) * 2142887000 % AnomaNumer) / 81120000
             AnomaAccum *= 13.36875
             AnomaAccum %= 368.3708364275
             // 13.36875 是我算的轉法轉度母之比——後來看到現成的了
@@ -640,7 +640,7 @@ const MoonFormula = (AnomaAccum, CalName) => {
 }
 // console.log(MoonFormula(14, 'Mingtian').MoonDifAccum)
 
-export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
+export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, year) => {
     const {
         AutoPara,
         Type,
@@ -672,49 +672,49 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
         } else if (CalName === 'Liangwu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Liangwu').Tcorr1
         } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Huangji')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Huangji')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (CalName === 'Shenlong') {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Linde')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Linde')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (CalName === 'Zhide') {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Dayan')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Dayan')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (CalName === 'Qintian') {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Xuanming')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Xuanming')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Guantian')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Guantian')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (CalName === 'Yangji') {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Jiyuan')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Jiyuan')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (['Chunyou', 'Huitian', 'Bentian'].includes(CalName)) {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'Chengtian')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'Chengtian')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
-            TcorrFunc = AutoTcorr(AnomaAccum, OriginDifRaw, 'NewDaming')
+            TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'NewDaming')
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
         }
     } else {
         const MoonAvgVDeg = AutoMoonAvgV(CalName, AnomaAccum)
         if (['Daye', 'Wuyin'].includes(CalName)) {
-            SunTcorr1 = SunTcorrTable(OriginDifRaw, CalName).SunTcorr1
+            SunTcorr1 = SunTcorrTable(WinsolsDifRaw, CalName).SunTcorr1
             MoonTcorr1 = MoonTable1(AnomaAccum, CalName).MoonTcorr1
             Tcorr1 = SunTcorr1 + MoonTcorr1
         } else if (Type <= 4) {
             MoonTcorr1 = MoonTable1(AnomaAccum, CalName).MoonTcorr1
             Tcorr1 = MoonTcorr1
         } else if (['Yitian', 'Guantian'].includes(CalName)) {
-            SunDifAccum = SunFormula(OriginDifRaw, CalName)
+            SunDifAccum = SunFormula(WinsolsDifRaw, CalName)
             const moonFunc = MoonTcorrTable(AnomaAccum, CalName)
             MoonTcorr2 = moonFunc.MoonTcorr2
             MoonTcorr1 = moonFunc.MoonTcorr1
@@ -722,13 +722,13 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
             Tcorr2 = SunTcorr2 + MoonTcorr2
             Tcorr1 = SunTcorr2 + MoonTcorr1
         } else if (['Futian', 'Mingtian'].includes(CalName)) {
-            SunDifAccum = SunFormula(OriginDifRaw, CalName)
+            SunDifAccum = SunFormula(WinsolsDifRaw, CalName)
             MoonDifAccum = MoonFormula(AnomaAccum, CalName).MoonDifAccum
             SunTcorr2 = SunDifAccum / MoonAvgVDeg
             MoonTcorr2 = MoonDifAccum / MoonAvgVDeg
             Tcorr2 = SunTcorr2 + MoonTcorr2
         } else if (Type < 11) {
-            sunFunc = SunTcorrTable(OriginDifRaw, CalName)
+            sunFunc = SunTcorrTable(WinsolsDifRaw, CalName)
             moonFunc = MoonTcorrTable(AnomaAccum, CalName)
             SunTcorr2 = sunFunc.SunTcorr2
             SunTcorr1 = sunFunc.SunTcorr1
@@ -741,7 +741,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
             Tcorr2 = SunTcorr2 + MoonTcorr2
             Tcorr1 = SunTcorr1 + MoonTcorr1
         } else if (Type === 11) {
-            SunDifAccum = SunFormula(OriginDifRaw, CalName)
+            SunDifAccum = SunFormula(WinsolsDifRaw, CalName)
             moonFunc = MoonFormula(AnomaAccum, CalName)
             MoonDifAccum = moonFunc.MoonDifAccum
             SunTcorr2 = SunDifAccum * XianConst / moonFunc.MoonAcrV
@@ -749,7 +749,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
             Tcorr2 = SunTcorr2 + MoonTcorr2
             NodeAccumCorr = Tcorr2
         } else if (Type === 20) {
-            sunFunc = SunWest(OriginDifRaw, year)
+            sunFunc = SunWest(WinsolsDifRaw, year)
             moonFunc = MoonWest(AnomaAccum, year)
             SunDifAccum = sunFunc.SunDifAccum
             MoonDifAccum = moonFunc.MoonDifAccum
@@ -773,7 +773,7 @@ export const AutoTcorr = (AnomaAccum, OriginDifRaw, CalName, year) => {
 }
 // console.log(AutoTcorr(11.867306, 365.142, 'Dayan', 1997).MoonTcorr2)
 
-export const AutoDifAccum = (AnomaAccum, OriginDifRaw, CalName, year) => {
+export const AutoDifAccum = (AnomaAccum, WinsolsDifRaw, CalName, year) => {
     const {
         Type,
     } = Bind(CalName)
@@ -784,28 +784,28 @@ export const AutoDifAccum = (AnomaAccum, OriginDifRaw, CalName, year) => {
         MoonDifAccum = MoonTable1(AnomaAccum, CalName).MoonDifAccum1
         DifAccum = MoonDifAccum
     } else if (['Yitian', 'Guantian'].includes(CalName)) {
-        SunDifAccum = SunFormula(OriginDifRaw, CalName)
+        SunDifAccum = SunFormula(WinsolsDifRaw, CalName)
         MoonDifAccum = MoonDifAccumTable(AnomaAccum, CalName)
         MoonDifAccum = -MoonDifAccum
         DifAccum = SunDifAccum + MoonDifAccum
     } else if (['Futian', 'Mingtian'].includes(CalName) || Type === 11) {
-        SunDifAccum = SunFormula(OriginDifRaw, CalName)
+        SunDifAccum = SunFormula(WinsolsDifRaw, CalName)
         MoonDifAccum = MoonFormula(AnomaAccum, CalName).MoonDifAccum
         MoonDifAccum = -MoonDifAccum
         DifAccum = SunDifAccum + MoonDifAccum
     } else if (Type < 11) {
-        SunDifAccum = SunDifAccumTable(OriginDifRaw, CalName)
+        SunDifAccum = SunDifAccumTable(WinsolsDifRaw, CalName)
         MoonDifAccum = MoonDifAccumTable(AnomaAccum, CalName)
         if (['Xuanming', 'Yingtian'].includes(CalName)) {
             MoonDifAccum = -MoonDifAccum
         }
         DifAccum = SunDifAccum + MoonDifAccum
     } else if (Type === 11) {
-        SunDifAccum = SunFormula(OriginDifRaw, CalName)
+        SunDifAccum = SunFormula(WinsolsDifRaw, CalName)
         MoonDifAccum = MoonFormula(AnomaAccum, CalName).MoonDifAccum
         DifAccum = SunDifAccum + MoonDifAccum
     } else if (Type === 20) {
-        SunDifAccum = SunWest(OriginDifRaw, year).SunDifAccum
+        SunDifAccum = SunWest(WinsolsDifRaw, year).SunDifAccum
         MoonDifAccum = MoonWest(AnomaAccum, year).MoonDifAccum
         DifAccum = SunDifAccum + MoonDifAccum
     }

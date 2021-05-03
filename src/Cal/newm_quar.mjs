@@ -8,8 +8,8 @@ export default function CalQuar(CalName, year) {
     const {
         Lunar,
         Solar,
-        WsolsticeOriginDif,
-        WsolsticeOriginMon,
+        WinsolsWinsolsDif,
+        WinsolsOriginMon,
         OriginAd,
         OriginYearSc,
         OriginDayCorr,
@@ -32,28 +32,28 @@ export default function CalQuar(CalName, year) {
     }
     const BuSkip = Solar * BuRange % 60
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
-    const ZhengOriginDif = ZhengNum - OriginMonNum // 年首和正月的差
+    const ZhengWinsolsDif = ZhengNum - OriginMonNum // 年首和正月的差
     let OriginYear = year - OriginAd // 上元積年（算上）
     let JupiterSc = ''
     if (CalName === 'Taichu') {
-        JupiterSc = ScList[(Math.floor(OriginYear % 1728 * 145 / 144) + OriginYearSc) % 60] // 三統曆太歲
+        JupiterSc = ScList[(~~(OriginYear % 1728 * 145 / 144) + OriginYearSc) % 60] // 三統曆太歲
     }
-    const JiOrder = Math.floor(OriginYear % YuanRange / JiRange) // 入第幾紀
+    const JiOrder = ~~(OriginYear % YuanRange / JiRange) // 入第幾紀
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
-    const BuOrder = Math.floor(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
-    const BuScorder = (1 + BuOrder * BuSkip + (OriginDayCorr ? OriginDayCorr : 0)) % 60 // 蔀（統）的干支序號
-    const WsolsticeAccumRaw = (BuYear - 1) * Solar + (WsolsticeOriginDif ? WsolsticeOriginDif : 0) + (OriginCorr || 0) // 冬至積日
-    const WsolsticeAccumMod = (WsolsticeAccumRaw % 60 + 60) % 60
-    const OriginAccum = WsolsticeAccumRaw - (WsolsticeOriginDif ? WsolsticeOriginDif : 0) // 曆元積日
-    const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - Math.floor((BuYear - 1) * 7 / 19) + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
-    const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - Math.floor((BuYear - 2) * 7 / 19) + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
-    const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - Math.floor(BuYear * 7 / 19) + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) % 1 + 1) % 1).toPrecision(11))
+    const BuOrder = ~~(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
+    const BuScorder = (1 + BuOrder * BuSkip + (OriginDayCorr || 0)) % 60 // 蔀（統）的干支序號
+    const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsWinsolsDif || 0) + (OriginCorr || 0) // 冬至積日
+    const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
+    const OriginAccum = WinsolsAccumRaw - (WinsolsWinsolsDif || 0) // 曆元積日
+    const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
+    const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
+    const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - ~~(BuYear * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
     let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)) ? 1 : 0 // 是否有閏月
     let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11)) ? 1 : 0
     let isLeapAvgNext = LeapSurAvgNext >= parseFloat((12 / 19).toPrecision(11)) ? 1 : 0
-    let LeapNumAvgThis = isLeapAvgThis ? Math.floor(parseFloat(((1 - LeapSurAvgThis) * 228 / 7).toPrecision(12))) : 0 // 閏餘法今年閏月
-    let LeapNumAvgPrev = isLeapAvgPrev ? Math.floor(parseFloat(((1 - LeapSurAvgPrev) * 228 / 7).toPrecision(12))) : 0
-    let LeapNumAvgNext = isLeapAvgNext ? Math.floor(parseFloat(((1 - LeapSurAvgNext) * 228 / 7).toPrecision(12))) : 0
+    let LeapNumAvgThis = isLeapAvgThis ? ~~(parseFloat(((1 - LeapSurAvgThis) * 228 / 7).toPrecision(12))) : 0 // 閏餘法今年閏月
+    let LeapNumAvgPrev = isLeapAvgPrev ? ~~(parseFloat(((1 - LeapSurAvgPrev) * 228 / 7).toPrecision(12))) : 0
+    let LeapNumAvgNext = isLeapAvgNext ? ~~(parseFloat(((1 - LeapSurAvgNext) * 228 / 7).toPrecision(12))) : 0
     // 固定冬至法
     let LeapSurAvgFix = 0
     let isLeapAvgFix = 0
@@ -97,7 +97,7 @@ export default function CalQuar(CalName, year) {
     // 閏餘法閏月
     let LeapNumOriginLeapSur = 0
     if (LeapNumAvgThis) {
-        LeapNumOriginLeapSur = Math.round(((LeapNumAvgThis + ZhengOriginDif + 12) % 12 + 12) % 12.1)
+        LeapNumOriginLeapSur = Math.round(((LeapNumAvgThis + ZhengWinsolsDif + 12) % 12 + 12) % 12.1)
     }
     // 朔望
     const NewmAvgBare = []
@@ -112,22 +112,16 @@ export default function CalQuar(CalName, year) {
     const SyzygyOrderMod = []
     let SyzygySc = []
     const SyzygyDecimal = []
-    const Momie = []
-    if (CalName === 'Easthan') {
-        for (let i = 0; i <= 5; i++) {
-            Momie[i] = parseFloat((((BuYear - 1) * 5.25 + i) * (69 + 4 / 7)).toPrecision(14))
-        }
-    }
-    for (let i = 0; i <= 13; i++) { // 本來是1，不知道改成1可不可以
-        NewmAvgBare[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr || 0)).toPrecision(14))
+    for (let i = 0; i <= 14; i++) { // 本來是1
+        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScorder
         NewmAvgMod[i] = (NewmAvgRaw[i] % 60 + 60) % 60
         NewmOrderRaw[i] = ~~NewmAvgRaw[i]
         NewmOrderMod[i] = ~~NewmAvgMod[i]
         NewmAvgSc[i] = ScList[NewmOrderMod[i]]
         NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(4).slice(2, 6)
-        // NewmJd[i] = Math.round(parseFloat((JdOrigin + (Math.floor((Math.round(parseFloat((JdWsolstice + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
-        SyzygyAvgRaw[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr || 0)).toPrecision(14)) + BuScorder
+        // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdWinsols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
+        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr || 0)).toPrecision(14)) + BuScorder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
         SyzygyOrderMod[i] = ~~SyzygyAvgMod[i]
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]
@@ -136,9 +130,9 @@ export default function CalQuar(CalName, year) {
     // 月食
     let EcliAccum = 0
     if (Ecli) {
-        EcliAccum = Ecli * ((OriginYear % EcliRange) * (Solar / Lunar) / Ecli - Math.floor((OriginYear % EcliRange) * (Solar / Lunar) / Ecli))
+        EcliAccum = Ecli * ((OriginYear % EcliRange) * (Solar / Lunar) / Ecli - ~~((OriginYear % EcliRange) * (Solar / Lunar) / Ecli))
         for (let k = 1; k <= 3; k++) {
-            const a = Math.floor(Ecli * k - EcliAccum)
+            const a = ~~(Ecli * k - EcliAccum)
             SyzygySc[a] += `<span class='eclipse-symbol'>◐</span>`
         } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
     }
@@ -155,7 +149,7 @@ export default function CalQuar(CalName, year) {
     // const TermJd = []
     if ((isTermLeap && !LeapNumTerm) || (!isTermLeap && ((!isLeapAvgThis && !isLeapAvgNext) || (!isLeapAvgThis && !isAdvance) || (!isLeapAvgThis && isAdvance)))) {
         for (let i = 1; i <= 13; i++) {
-            TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 1) * TermLeng
+            TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 1) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
             TermOrderMod[i] = ~~TermAvgMod[i]
@@ -165,7 +159,7 @@ export default function CalQuar(CalName, year) {
         }
     } else {
         for (let i = 1; i <= 12; i++) {
-            TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 1) * TermLeng
+            TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 1) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
             TermAvgMod[i] = parseFloat((((TermAvgRaw[i]) % 60 + 60) % 60).toPrecision(12))
             TermOrderMod[i] = ~~TermAvgMod[i]
@@ -184,7 +178,7 @@ export default function CalQuar(CalName, year) {
         TermDecimal[LeapNumTerm + 1] = ''
         // TermJd[LeapNumTerm + 1] = ''
         for (let i = LeapNumTerm + 2; i <= 13; i++) {
-            TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 2) * TermLeng
+            TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 2) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
             TermOrderMod[i] = ~~TermAvgMod[i]
@@ -219,7 +213,7 @@ export default function CalQuar(CalName, year) {
         BuYear,
         BuScorder,
         JupiterSc,
-        WsolsticeAccumMod,
+        WinsolsAccumMod,
         OriginAccum,
         NewmAvgBare,
         NewmAvgRaw,
@@ -248,6 +242,6 @@ export default function CalQuar(CalName, year) {
         NewmSyzygyStart,
         NewmSyzygyEnd,
         TermStart,
-        TermEnd,
+        TermEnd
     }
 }

@@ -998,7 +998,7 @@ export default {
         NodeConst: 26.0388,
         Anoma: 27.5546, // 轉終：近點月
         AnomaConst: 13.0205, // 轉應：曆元前冬至距月過近地點
-        WsolsticeConst: 55.06, // 氣應：曆元前冬至日分
+        WinsolsConst: 55.06, // 氣應：曆元前冬至日分
         LeapConst: 20.205, // 閏應：曆元前冬至月齡
         MoonAvgVDeg: 13.36875,
         XianConst: 0.082, // 限法
@@ -1030,7 +1030,7 @@ export default {
         Anoma: 27.5546, // 轉終：近點月
         Node: 27.212224,
         NodeDeg: 363.7934,
-        WsolsticeConst: 55.0375, // 氣應：曆元前冬至日分
+        WinsolsConst: 55.0375, // 氣應：曆元前冬至日分
         LeapConst: 18.20708, // 閏應：曆元前冬至月齡18.217018
         AnomaConst: 20.969, // 轉應：曆元前冬至距月過近地點
         XianConst: 0.082, // 限法
@@ -1063,7 +1063,7 @@ export default {
         Anoma: 27.554551,
         EcliLimitA: 12.79,
         EcliLimitD: 4.27,
-        WsolsticeConst: 55.08125,
+        WinsolsConst: 55.08125,
         LeapConst: 20.2,
         AnomaConst: 13.17,
         XianConst: 0.08200773809523809524,

@@ -33,14 +33,14 @@ export default class Day extends React.Component {
     const MonInfo = this.state.output.MonInfo
     const MonColor = this.state.output.MonColor
     const list = this.state.output.DayData.slice(1)
-    if (list.length === 0) {
+    if (!list.length) {
       return null
     }
     list.forEach((item, index) => {
       item.id = index
     })
     return (
-      <section className='day-render'>
+      <section className='day-render' style={{ whiteSpace: "pre-wrap" }}>
         <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}萬年天文具注曆</h2>
         <p className='DayAccum'>{this.state.output.DayAccum}</p>
         <p>{this.state.output.YearGod}</p>
@@ -61,7 +61,7 @@ export default class Day extends React.Component {
           return (
             <div className="single-cal">
               <h3>{MonName[index + 1]}</h3>
-              <p>{MonInfo[index + 1]}</p>
+              <p dangerouslySetInnerHTML={{ __html: MonInfo[index + 1] }}></p>
               <span className='YearColor'>
                 <table>
                   {(MonColor[index + 1] || []).map((row) => {

@@ -41,8 +41,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         Denom,
         OriginMonNum,
         isTermLeap,
-        WsolsticeOriginDif,
-        WsolsticeConst,
+        WinsolsWinsolsDif,
+        WinsolsConst,
         MansionConst,
         MansionRaw,
         MansionFractPosition,
@@ -60,8 +60,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const {
             EquatorDegList,
         } = AutoMansion(CalName, year)
-        const ZhengOriginDif = ZhengNum - OriginMonNum
-        const WsolsticeMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
+        const ZhengWinsolsDif = ZhengNum - OriginMonNum
+        const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
         let LeapNumTermThis = mainThis.LeapNumTerm
         let isLeapTPv = mainThis.isLeapPrev
         const isLeapTA = mainThis.isLeapAdvan
@@ -90,14 +90,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let specialStart = 0
         let specialNewmSyzygyEnd = 0
         if (Type === 1) {
-            if ((isTermLeap && mainNext.TermSc[1] === '') || (!isTermLeap && mainNext.TermSc[WsolsticeMonNum] === '')) {
+            if ((isTermLeap && mainNext.TermSc[1] === '') || (!isTermLeap && mainNext.TermSc[WinsolsMonNum] === '')) {
                 specialNewmSyzygyEnd = 1
                 TermEnd = 1
                 LeapNumTermThis = 12
-                if (WsolsticeMonNum === 1) {
+                if (WinsolsMonNum === 1) {
                     TermEnd = 0
                 }
-            } else if ((isTermLeap && mainThis.TermSc[1] === '') || (!isTermLeap && mainThis.TermSc[WsolsticeMonNum] === '')) {
+            } else if ((isTermLeap && mainThis.TermSc[1] === '') || (!isTermLeap && mainThis.TermSc[WinsolsMonNum] === '')) {
                 specialStart = 1
                 LeapNumTermThis -= 1
             } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
@@ -111,7 +111,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 TermEnd = 0
             } else if (isLeapPvPt) {
                 isLeapTPv = 0
-                if (ZhengOriginDif <= 0) {
+                if (ZhengWinsolsDif <= 0) {
                     NewmSyzygyStart = -1
                     NewmSyzygyEnd = 0
                 } else {
@@ -147,7 +147,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             for (let i = 0; i <= 13; i++) {
                 TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
                 TermOrderMod[i] = Math.floor(TermAvgMod[i])
-                TermName[i] = TermList[(i + ZhengOriginDif + OriginMonNum + 12) % 12]
+                TermName[i] = TermList[(i + ZhengWinsolsDif + OriginMonNum + 12) % 12]
                 TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
                 TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
                 if (TermAcrRaw) {
@@ -174,7 +174,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 for (let i = LeapNumTermThis + 2; i <= 13; i++) {
                     TermAvgMod[i] = ((TermAvgRaw[i - 1]) % 60 + 60) % 60
                     TermOrderMod[i] = Math.floor(TermAvgMod[i])
-                    TermName[i] = TermList[(i + ZhengOriginDif + OriginMonNum + 11) % 12]
+                    TermName[i] = TermList[(i + ZhengWinsolsDif + OriginMonNum + 11) % 12]
                     TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
                     TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
                     if (TermAcrRaw) {
@@ -195,13 +195,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 if (LeapNumTermThis && (mainThis.isLeapAvgThis || specialNewmSyzygyEnd)) { // || (mainThis.isLeapAvgNext && mainThis.isAdvance)))
                     for (let i = 1; i <= 13; i++) {
                         if (i <= LeapNumTermThis) {
-                            Month[i] = (i + ZhengOriginDif + 12) % 12
+                            Month[i] = (i + ZhengWinsolsDif + 12) % 12
                             MonthName[i] = MonNumList[Month[i]]
                         } else if (i === LeapNumTermThis + 1) {
                             Month[i] = '氣閏'
                             MonthName[i] = Month[i]
                         } else {
-                            Month[i] = (i + ZhengOriginDif + 11) % 12
+                            Month[i] = (i + ZhengWinsolsDif + 11) % 12
                             MonthName[i] = MonNumList[Month[i]]
                         }
                         if (Month[i] === 0) {
@@ -211,7 +211,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
-                        Month[i] = (i + ZhengOriginDif + 12) % 12
+                        Month[i] = (i + ZhengWinsolsDif + 12) % 12
                         MonthName[i] = MonNumList[Month[i]]
                         if (Month[i] === 0) {
                             Month[i] = 12
@@ -223,7 +223,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 if ((mainThis.isLeapAvgFix || specialNewmSyzygyEnd) && !specialStart) {
                     for (let i = 1; i <= 13; i++) {
                         if (i <= 12) {
-                            Month[i] = (i + ZhengOriginDif + 12) % 12
+                            Month[i] = (i + ZhengWinsolsDif + 12) % 12
                             MonthName[i] = MonNumList[Month[i]]
                         } else {
                             Month[i] = '固閏'
@@ -236,7 +236,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
-                        Month[i] = (i + ZhengOriginDif + 12) % 12
+                        Month[i] = (i + ZhengWinsolsDif + 12) % 12
                         MonthName[i] = MonNumList[Month[i]]
                         if (Month[i] === 0) {
                             Month[i] = 12
@@ -295,8 +295,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         }
         if (Type === 11) {
             for (let i = 1; i <= 14; i++) {
-                NewmRaw[i] -= WsolsticeConst // 下面萬一還要用這個就要注意了
-                TermAcrRaw[i] -= WsolsticeConst
+                NewmRaw[i] -= WinsolsConst // 下面萬一還要用這個就要注意了
+                TermAcrRaw[i] -= WinsolsConst
             }
         }
         let NewmMansion = []
@@ -387,10 +387,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             const NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
             const NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
             const NewmDecimalPrint = NewmSyzygySlice(mainThis.NewmDecimal)
-            const NewmOriginDifRawPrint = NewmSyzygySlice(mainThis.NewmOriginDifRaw)
+            const NewmWinsolsDifRawPrint = NewmSyzygySlice(mainThis.NewmWinsolsDifRaw)
             const SyzygyNodeAccumPrint = NewmSyzygySlice(mainThis.SyzygyNodeAccum)
             const SyzygyAnomaAccumPrint = NewmSyzygySlice(mainThis.SyzygyAnomaAccum)
-            const SyzygyOriginDifRawPrint = NewmSyzygySlice(mainThis.SyzygyOriginDifRaw)
+            const SyzygyWinsolsDifRawPrint = NewmSyzygySlice(mainThis.SyzygyWinsolsDifRaw)
             for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                 // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
                 // if (Type === 11) {
@@ -407,7 +407,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 let NewmEcliFunc = {}
                 let SyzygyEcliFunc = {}
                 if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 25.86) {
-                    NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmOriginDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
+                    NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
                     const Newmstatus = NewmEcliFunc.status
                     let NewmMagni = 0
                     let NewmStartDecimal = 0
@@ -432,7 +432,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                 }
                 if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 25.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                    SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyOriginDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
+                    SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
                     const Syzygystatus = SyzygyEcliFunc.status
                     let SyzygyMagni = 0
                     let SyzygyStartDecimal = 0
@@ -477,10 +477,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             } else {
                 YearInfo += `${ThreeList[mainThis.JiOrder]}紀${ScList[mainThis.BuScorder]}蔀${mainThis.BuYear}`
             }
-            YearInfo += `  大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat((mainThis.WsolsticeAccumMod).toPrecision(6)).toFixed(4)}`
-            if (WsolsticeOriginDif === -45.65625) {
+            YearInfo += `  大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat((mainThis.WinsolsAccumMod).toPrecision(6)).toFixed(4)}`
+            if (WinsolsWinsolsDif === -45.65625) {
                 YearInfo += `立春${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
-            } else if (WsolsticeOriginDif === -60.875) {
+            } else if (WinsolsWinsolsDif === -60.875) {
                 YearInfo += `雨水${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
             YearInfo += `  閏餘${(LeapSur.toFixed(4))}`
@@ -552,12 +552,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             Month,
             LeapNumTermThis,
             OriginAccum,
-            NewmOrderRaw: NewmOrderRaw.slice(NewmSyzygyStart, 14 + NewmSyzygyEnd),
-            NewmAcrOrderRaw: (Type === 1 ? [] : NewmAcrOrderRaw.slice(NewmSyzygyStart, 14 + NewmSyzygyEnd)),
-            FirstAccum: mainThis.FirstAccum,
-            ZhengOriginDif: mainThis.ZhengOriginDif,
+            NewmOrderRaw: NewmOrderRaw.slice(NewmSyzygyStart),
+            NewmAcrOrderRaw: (Type === 1 ? [] : NewmAcrOrderRaw.slice(NewmSyzygyStart)),            
             FirstNodeAccum: mainThis.FirstNodeAccum,
-            SunDifAccum1: mainThis.SunDifAccum1
+            Momie: mainThis.Momie
         }
     }
     YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年

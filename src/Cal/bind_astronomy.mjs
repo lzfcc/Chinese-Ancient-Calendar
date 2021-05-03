@@ -35,21 +35,21 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 
-export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
-    OriginDifRaw = +OriginDifRaw
+export const BindTcorr = (AnomaAccumRaw, WinsolsDifRaw, year) => {
+    WinsolsDifRaw = +WinsolsDifRaw
     AnomaAccumRaw = +AnomaAccumRaw
     let AnomaAccum = AnomaAccumRaw
-    if (OriginDifRaw > 365.2425 || OriginDifRaw < 0) {
+    if (WinsolsDifRaw > 365.2425 || WinsolsDifRaw < 0) {
         throw (new Error('請輸入一回歸年內的日數！'))
     }
     const {
         SunTcorr2: WestSunTcorr,
         MoonTcorr2: WestMoonTcorr
-    } = AutoTcorr(AnomaAccum, OriginDifRaw, 'West', year)
+    } = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'West', year)
     const {
         SunDifAccum: WestSun,
         MoonDifAccum: WestMoon,
-    } = AutoDifAccum(AnomaAccum, OriginDifRaw, 'West', year)
+    } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, 'West', year)
     let Print = [{
         title: 'Fourier',
         data: [WestSun.toFixed(5), 0, WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4)]
@@ -68,13 +68,13 @@ export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
             const {
                 SunDifAccum,
                 MoonDifAccum,
-            } = AutoDifAccum(AnomaAccum, OriginDifRaw, title)
+            } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
             const {
                 SunTcorr2,
                 MoonTcorr2,
                 SunTcorr1,
                 MoonTcorr1,
-            } = AutoTcorr(AnomaAccum, OriginDifRaw, title)
+            } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
             const SunDifAccumInac = SunDifAccum ? (SunDifAccum - WestSun).toFixed(4) : '-'
             const MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(5) : '-'
@@ -109,11 +109,11 @@ export const BindTcorr = (AnomaAccumRaw, OriginDifRaw, year) => {
             const {
                 SunDifAccum,
                 MoonDifAccum,
-            } = AutoDifAccum(AnomaAccumRaw, OriginDifRaw, title)
+            } = AutoDifAccum(AnomaAccumRaw, WinsolsDifRaw, title)
             const {
                 SunTcorr2,
                 MoonTcorr2
-            } = AutoTcorr(AnomaAccumRaw, OriginDifRaw, title)
+            } = AutoTcorr(AnomaAccumRaw, WinsolsDifRaw, title)
             return {
                 title: CalNameList[title],
                 data: [SunDifAccum.toFixed(5), (SunDifAccum - WestSun).toFixed(4), MoonDifAccum.toFixed(5), (MoonDifAccum - WestMoon).toFixed(4), SunTcorr2.toFixed(5), (SunTcorr2 - WestSunTcorr).toFixed(4), MoonTcorr2.toFixed(5), (MoonTcorr2 - WestMoonTcorr).toFixed(4), (SunTcorr2 + MoonTcorr2).toFixed(4)]
@@ -414,11 +414,11 @@ export const BindMoonLongiLati = (Day, OriginRawRaw) => { // 該時刻入交日�
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
 
-export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
+export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     NewmDecimal = +('0.' + NewmDecimal)
-    OriginDifRaw = +OriginDifRaw
+    WinsolsDifRaw = +WinsolsDifRaw
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -427,13 +427,13 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw)
     if (AnomaAccum > 27.5545) {
         throw (new Error('請輸入一近點月27.5545內的日數'))
     }
-    if (OriginDifRaw > 365.2425) {
+    if (WinsolsDifRaw > 365.2425) {
         throw (new Error('請輸入一年365.2425內的日數'))
     }
     // 隋系是要根據月份來判斷的，這裏為了簡化輸入，我改為用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
-        if (OriginDifRaw >= j * HalfTermLeng && OriginDifRaw < (j + 1) * HalfTermLeng) {
+        if (WinsolsDifRaw >= j * HalfTermLeng && WinsolsDifRaw < (j + 1) * HalfTermLeng) {
             i = (j - 2 + 12) % 12
         }
         break
@@ -445,7 +445,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw)
                 Magni,
                 Last,
                 Decimal
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 1, title, i + 1, 0)
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw, 1, title, i + 1, 0)
             let LastPrint = '-'
             if (Last) {
                 LastPrint = Last.toFixed(4)
@@ -463,11 +463,11 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw)
 }
 // console.log(BindSunEclipse(0.1, 14, 1355, 14))
 
-export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw) => {
+export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     NewmDecimal = +('0.' + NewmDecimal)
-    OriginDifRaw = +OriginDifRaw
+    WinsolsDifRaw = +WinsolsDifRaw
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -476,13 +476,13 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw
     if (AnomaAccum > 27.5545) {
         throw (new Error('請輸入一近點月27.5545內的日數'))
     }
-    if (OriginDifRaw > 365.2425) {
+    if (WinsolsDifRaw > 365.2425) {
         throw (new Error('請輸入一年365.2425內的日數'))
     }
     // 隋系是要根據月份來判斷的，這裏為了簡化輸入，我改為用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
-        if (OriginDifRaw >= j * HalfTermLeng && OriginDifRaw < (j + 1) * HalfTermLeng) {
+        if (WinsolsDifRaw >= j * HalfTermLeng && WinsolsDifRaw < (j + 1) * HalfTermLeng) {
             i = (j - 2 + 12) % 12
         }
         break
@@ -494,7 +494,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw
                 Magni,
                 Last,
                 Decimal
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, OriginDifRaw, 0, title, i + 1, 0)
+            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw, 0, title, i + 1, 0)
             let LastPrint = '-'
             if (Last) {
                 LastPrint = Last.toFixed(4)

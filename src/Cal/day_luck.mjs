@@ -119,7 +119,7 @@ export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，
     const Sifu = Suide
     const KuiMon = (YuanYear % 6) + 2
     const GangMon = KuiMon + 6
-    const YearGod = '干' + YearStemFive + '支' + YearBranchFive + '，納音' + NayinList[Math.ceil(YearScOrder / 2)] + '。' + MaleFemale + '。魁' + NumList[KuiMon] + '月罡' + NumList[GangMon] + '月。太陰在' + Taiyin + '，歲德在' + Suide + '，歲刑在' + Suixing + '，歲破在' + Suipo + '；劫煞在' + Jiesha + '，災煞在' + Zaisha + '，歲煞在' + Suisha + '；將軍在' + Jiangjun + '；白虎在' + Baihu + '，黃幡在' + Huangfan + '，豹尾在' + Baowei + '；奏書在' + Zoushu + '，博士在' + Boshi + '，力士在' + Lishi + '，蠶室在' + Canshi + '；蠶官在' + Canguan + '，蠶命在' + Canming + '；官符在' + Guanfu + '，大煞在' + Dasha + '，喪門在' + Sangmen + '，病符在' + Bingfu + '，死符在' + Sifu + '；伏兵在' + Fubing
+    const YearGod = '干' + YearStemFive + '支' + YearBranchFive + '，納音' + NayinList[Math.ceil(YearScOrder / 2)] + '。' + MaleFemale + '。魁' + NumList[KuiMon] + '月罡' + NumList[GangMon] + `月。\n太陰在` + Taiyin + '，歲德在' + Suide + '，歲刑在' + Suixing + '，歲破在' + Suipo + '；劫煞在' + Jiesha + '，災煞在' + Zaisha + '，歲煞在' + Suisha + '；將軍在' + Jiangjun + '；白虎在' + Baihu + '，黃幡在' + Huangfan + '，豹尾在' + Baowei + '；奏書在' + Zoushu + '，博士在' + Boshi + '，力士在' + Lishi + '，蠶室在' + Canshi + '；蠶官在' + Canguan + '，蠶命在' + Canming + '；官符在' + Guanfu + '，大煞在' + Dasha + '，喪門在' + Sangmen + '，病符在' + Bingfu + '，死符在' + Sifu + '；伏兵在' + Fubing
     // 太歲、大將軍、太陰、歲刑、歲破、黃幡、豹尾
     return YearGod
 }
@@ -158,38 +158,35 @@ export const YearColorConvert = YuanYear => {
 }
 
 export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
+    const row1an = Math.round(((7 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row1bn = Math.round(((3 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row1cn = Math.round(((5 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row2an = Math.round(((6 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row2bn = Math.round(((8 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row2cn = Math.round(((1 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row3an = Math.round(((2 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row3bn = Math.round(((4 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row3cn = Math.round(((9 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
+    const row1a = `<span class='${ClassColorList[row1an]}'>` + ColorList[row1an] + NumList[row1an] + `</span>`
+    const row1b = `<span class='${ClassColorList[row1bn]}'>` + ColorList[row1bn] + NumList[row1bn] + `</span>`
+    const row1c = `<span class='${ClassColorList[row1cn]}'>` + ColorList[row1cn] + NumList[row1cn] + `</span>`
+    const row2a = `<span class='${ClassColorList[row2an]}'>` + ColorList[row2an] + NumList[row2an] + `</span>`
+    const row2b = `<span class='${ClassColorList[row2bn]}'>` + ColorList[row2bn] + NumList[row2bn] + `</span>`
+    const row2c = `<span class='${ClassColorList[row2cn]}'>` + ColorList[row2cn] + NumList[row2cn] + `</span>`
+    const row3a = `<span class='${ClassColorList[row3an]}'>` + ColorList[row3an] + NumList[row3an] + `</span>`
+    const row3b = `<span class='${ClassColorList[row3bn]}'>` + ColorList[row3bn] + NumList[row3bn] + `</span>`
+    const row3c = `<span class='${ClassColorList[row3cn]}'>` + ColorList[row3cn] + NumList[row3cn] + `</span>`
     let MonColor = []
-    if (YuanYear > 0) {
-        MonColor = []
-        const row1an = Math.round(((7 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row1bn = Math.round(((3 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row1cn = Math.round(((5 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row2an = Math.round(((6 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row2bn = Math.round(((8 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row2cn = Math.round(((1 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row3an = Math.round(((2 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row3bn = Math.round(((4 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row3cn = Math.round(((9 - YuanYear * 3 - i + 1) % 9 + 9) % 9.1)
-        const row1a = `<span class='${ClassColorList[row1an]}'>` + ColorList[row1an] + NumList[row1an] + `</span>`
-        const row1b = `<span class='${ClassColorList[row1bn]}'>` + ColorList[row1bn] + NumList[row1bn] + `</span>`
-        const row1c = `<span class='${ClassColorList[row1cn]}'>` + ColorList[row1cn] + NumList[row1cn] + `</span>`
-        const row2a = `<span class='${ClassColorList[row2an]}'>` + ColorList[row2an] + NumList[row2an] + `</span>`
-        const row2b = `<span class='${ClassColorList[row2bn]}'>` + ColorList[row2bn] + NumList[row2bn] + `</span>`
-        const row2c = `<span class='${ClassColorList[row2cn]}'>` + ColorList[row2cn] + NumList[row2cn] + `</span>`
-        const row3a = `<span class='${ClassColorList[row3an]}'>` + ColorList[row3an] + NumList[row3an] + `</span>`
-        const row3b = `<span class='${ClassColorList[row3bn]}'>` + ColorList[row3bn] + NumList[row3bn] + `</span>`
-        const row3c = `<span class='${ClassColorList[row3cn]}'>` + ColorList[row3cn] + NumList[row3cn] + `</span>`
-        MonColor.push([row1a, row1b, row1c])
-        MonColor.push([row2a, row2b, row2c])
-        MonColor.push([row3a, row3b, row3c])
-    }
+    MonColor.push([row1a, row1b, row1c])
+    MonColor.push([row2a, row2b, row2c])
+    MonColor.push([row3a, row3b, row3c])
     const MonSc = ScList[Math.round((ZhengMonScOrder + i - 1) % 60.1)]
     const MonSindhuName = MonSindhuNameList[i]
     const MonScaleName = MonScaleNameList[i]
     const MonHexagramName = MonHexagramNameList[i]
     const MonGod = MoonGodList[i]
     const Fourauspicious = FourauspiciousList[(i - 1) % 3]
-    const MonInfo = '【月建】' + MonSc + '【宿音卦】' + MonSindhuName + MonScaleName + MonHexagramName + '【月神】' + MonGod + '【吉時】' + Fourauspicious
+    const MonInfo = `<span class='eclipse'>月建</span>` + MonSc + `<span class='eclipse'>宿音卦</span>` + MonSindhuName + MonScaleName + MonHexagramName + `<span class='eclipse'>吉時</span>` + Fourauspicious + `\n` + `<span class='eclipse'>月神</span>` + MonGod
     return {
         MonInfo,
         MonColor
