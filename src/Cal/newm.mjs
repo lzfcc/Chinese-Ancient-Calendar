@@ -1,5 +1,4 @@
 import {
-    big,
     ScList,
 } from './para_constant.mjs'
 import {
@@ -188,12 +187,10 @@ export default (CalName, year) => {
         FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaConst) % Anoma + Anoma) % Anoma
     }
     let FirstNodeAccum = 0
-    if (Node) {
-        if (Type < 11) {
-            FirstNodeAccum = (FirstAccum + NodeOrigin + (YinyangOrigin === -1 ? Node / 2 : 0)) % Node
-        } else if (Type === 11) {
-            FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeConst) % Node + Node) % Node
-        }
+    if (Node && Type < 11) {
+        FirstNodeAccum = (FirstAccum + NodeOrigin + (YinyangOrigin === -1 ? Node / 2 : 0)) % Node
+    } else if (Type >= 11) {
+        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeConst) % Node + Node) % Node
     }
     const AccumPrint = '轉' + (OriginAccum % Anoma).toFixed(4) + (Node ? '交' + (OriginAccum % Node).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
     // const FirstNodeAccum = (FirstAccum.add(NodeOrigin)).mod(Node).toNumber()

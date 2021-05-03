@@ -383,9 +383,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
         let NewmEcli = []
         let SyzygyEcli = []
+        let NewmNodeAccumPrint = []
+        let NewmAnomaAccumPrint = []
         if (Type > 1) {
-            const NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
-            const NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
+            NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
+            NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
             const NewmDecimalPrint = NewmSyzygySlice(mainThis.NewmDecimal)
             const NewmWinsolsDifRawPrint = NewmSyzygySlice(mainThis.NewmWinsolsDifRaw)
             const SyzygyNodeAccumPrint = NewmSyzygySlice(mainThis.SyzygyNodeAccum)
@@ -420,7 +422,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                     if (Newmstatus) {
                         NewmMagni = NewmEcliFunc.Magni.toFixed(2)
-                        NewmEcli[i] = `<span class='eclipse'>日${NoleapMon}</span>`
+                        NewmEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
                         NewmEcli[i] += '分' + NewmMagni + (NewmStartDecimal ? '虧' + NewmStartDecimal : '') + (NewmTotalDecimal ? '甚' + NewmTotalDecimal : '')
                         if (Newmstatus === 1) {
                             NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
@@ -443,7 +445,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                     if (Syzygystatus) {
                         SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
-                        SyzygyEcli[i] = `<span class='eclipse'>月${NoleapMon}</span>`
+                        SyzygyEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
                         SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDecimal ? '虧' + SyzygyStartDecimal + '甚' + SyzygyTotalDecimal : '')
                         if (Syzygystatus === 1) {
                             SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
@@ -552,10 +554,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             Month,
             LeapNumTermThis,
             OriginAccum,
-            NewmOrderRaw: NewmOrderRaw.slice(NewmSyzygyStart),
-            NewmAcrOrderRaw: (Type === 1 ? [] : NewmAcrOrderRaw.slice(NewmSyzygyStart)),            
-            FirstNodeAccum: mainThis.FirstNodeAccum,
-            Momie: mainThis.Momie
+            NewmOrderRaw: NewmOrderRaw.slice(1 + NewmSyzygyStart), // 結尾就不切了，因為最後一個月還要看下個月的情況
+            NewmAcrOrderRaw: (Type === 1 ? [] : NewmAcrOrderRaw.slice(1 + NewmSyzygyStart)),
+            NewmNodeAccumPrint: (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmSyzygyStart)),
+            NewmAnomaAccumPrint: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmSyzygyStart))
         }
     }
     YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年

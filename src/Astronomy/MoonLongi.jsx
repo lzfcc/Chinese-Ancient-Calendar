@@ -58,7 +58,7 @@ export default class Converter extends React.Component {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d =>  {
+                {row.data.map(d => {
                   return (<td>{d}</td>)
                 })}
               </tr>
@@ -73,7 +73,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>月極黃經 ⇒ 極白經、赤經、極黃緯</h3>
-        <p className='note'>需要輸入此刻入降交點<n>正交</n>交點月的日數、距離冬至的日數。正交至半交：白大於黃，半交至正交：黃大於白。一交點月約 27.2122 日</p>
+        <p className='note'>需要輸入此刻入降交點<n>正交</n>交點月的日數、距離冬至的日數。正交至半交：白大於黃，半交至正交：黃大於白。一交點月約 27.21222 日。<v>大衍</v>月黃緯表用到了三次內插，前半段 <code>Δ = 171, -24, -8</code><code>後半段 Δ = -75, -40, 8</code></p>
         {this.input()}
         <button onClick={this.handle} className='button4-8'>月行九道</button>
         {this.result()}

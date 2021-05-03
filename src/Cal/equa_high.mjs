@@ -6,7 +6,7 @@ export const HighEqua1 = (nine, eight, seven, six, five, four, three, two, one, 
     let mid = 0
     let lower = 0
     let upper = Number(upperRaw)
-    const equation = (x) => big(nine).mul(big(x).pow(9)).add(big(eight).mul(big(x).pow(8))).add(big(seven).mul(big(x).pow(7))).add(big(six).mul(big(x).pow(6))).add(big(five).mul(big(x).pow(5))).add(big(four).mul(big(x).pow(4))).add(big(three).mul(big(x).pow(3))).add(big(two).mul(big(x).pow(2))).add(big(one).mul(x)).add(zero)
+    const equation = x => big(nine).mul(big(x).pow(9)).add(big(eight).mul(big(x).pow(8))).add(big(seven).mul(big(x).pow(7))).add(big(six).mul(big(x).pow(6))).add(big(five).mul(big(x).pow(5))).add(big(four).mul(big(x).pow(4))).add(big(three).mul(big(x).pow(3))).add(big(two).mul(big(x).pow(2))).add(big(one).mul(x)).add(zero)
     if (upper > 0) {
         while (big.sub(upper, lower).gt(1e-62)) {
             mid = big.add(lower, upper).div(2)

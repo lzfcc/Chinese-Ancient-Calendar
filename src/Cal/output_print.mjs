@@ -4,7 +4,7 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(2, 238, 239, 0, [ // mode, YearStart, YearEnd, auto,
+const printData = outputFile(2, 234, 239, 0, [ // mode, YearStart, YearEnd, auto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -95,8 +95,8 @@ const FilePath = './output1.md'
 if (fs.existsSync(FilePath)) {
     fs.unlinkSync(FilePath)
 }
-printData.forEach((contents) => {
-    contents.forEach((content) => {
+printData.forEach(contents => {
+    contents.forEach(content => {
         fs.appendFileSync(FilePath, content)
     })
     fs.appendFileSync(FilePath, '\n')

@@ -14,9 +14,9 @@
   --letterblue: #0088e8;
   --blue: #2fa0ff;
   --bgblue: #e1f3ff;
-  --purple: #c11bff;
+  --purple: #c300f4;
   --cyan: #00e1d9;
-  --green: #20c828;
+  --green: #00bf0d;
   --lettergreen: #009a0b;
   --serif: "Adobe Garamond Pro", Garamond, "Adobe Caslon Pro", Caslon, "Minion Pro", Minion, "Adobe Gurmukhi", "Palatino Linotype", "Adobe Garamond Pro", Garamond, "Adobe Caslon Pro", Caslon, "Minion Pro", Minion, "Adobe Gurmukhi", "Palatino Linotype", "Noto Serif CJK KR", "Source Han Serif K", "Noto Serif CJK SC", "Hiragino Mincho ProN", "Hiragino Mincho", "Yu Mincho", "Hana Mincho", "Ms Mincho";
   --codeserif: "Source Code Pro", Menlo, Inconsolata, "Courier New", "Anonymous Pro", monospace, "Noto Serif CJK KR", "Source Han Serif K", "Noto Serif CJK SC", "Hiragino Mincho ProN", "Hiragino Mincho", "Yu Mincho", "Hana Mincho", "Ms Mincho";
@@ -127,6 +127,7 @@ p {
   /* margin-bottom: .6em; */
   margin-bottom: -2em;
   text-shadow: 5px 5px 20px var(--yellow), 5px 5px 20px var(--yellow);
+  border: 1px solid var(--shallowgray);
 }
 
 .cover h1 {
@@ -164,7 +165,7 @@ p {
 }
 
 .main-render {
-  border-radius: 1.5em;
+  border-radius: 3em;
   /* box-shadow: 0 0 20px 0 var(--gray); */
   background: var(--bggray);
   border: 1px solid var(--shallowgray);
@@ -267,10 +268,17 @@ h2 {
   font-family: var(--serif);
   width: 2em;
   height: 2em;
-  padding: .35em;
+  padding: .3em;
   border-radius: 999em;
   margin: 0 .15em;
   font-weight: bold;
+}
+
+.sanfu {
+  background: var(--letterred);
+  color: var(--bg);
+  padding: .1em .15em;
+  border-radius: .25em;
 }
 
 table {
@@ -635,6 +643,7 @@ input {
   background-color: var(--bgblue);
   margin: 5em auto 0;
   width: 100vw;
+  border: 1px solid var(--shallowgray);
 }
 
 .comment {
@@ -692,18 +701,27 @@ hr {
 
 .day-render {
   overflow: visible;
+  border-radius: 3em;
+  background: var(--bggray);
+  border: 1px solid var(--shallowgray);
+  margin: 3em auto 0;
+  width: 93vw;
 }
 
 .day-render h2 {
-  margin: 3em auto 0;
+  margin: .5em auto 0;
   letter-spacing: .1em;
-  font-size: 2em;
+  font-size: 3em;
   line-height: 1.4;
   color: var(--red);
 }
 
+.daytitle-1 {
+  font-size: .7em;
+}
+
 .day-render h3 {
-  font-size: 1.5em;
+  font-size: 2em;
   color: var(--red);
   margin: 3em auto .5em;
   font-family: var(--serif);
@@ -718,11 +736,11 @@ hr {
 
 .DayAccum {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.4em;
 }
 
 .day-table table {
-  border: .3em solid var(--red);
+  border: 1px solid var(--shallowgray);
   font-size: .9em;
 }
 
@@ -731,7 +749,7 @@ hr {
   height: auto;
   padding: .4em .25em;
   vertical-align: top;
-  border: 1px solid var(--red);
+  border: 1px solid var(--shallowgray);
 }
 
 .day-table td p {
@@ -776,7 +794,7 @@ hr {
   color: var(--lettergreen);
 }
 
-.MoonEquartorPrint {
+.MoonEclipticPrint {
   color: var(--letterblue);
 }
 

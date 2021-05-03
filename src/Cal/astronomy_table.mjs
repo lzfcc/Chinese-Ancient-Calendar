@@ -1,3 +1,4 @@
+import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 import {
     Bind,
 } from './bind.mjs'
@@ -313,7 +314,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 }
 // console.log(Longi2LatiTable2(180, 0.5, 'NewDaming').Lati) // 《麟徳曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
-export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤白轉換//////
+export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////唐宋赤白轉換//////
     const {
         AutoPara
     } = Bind(CalName)
@@ -321,17 +322,17 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
         Node,
         Solar
     } = AutoPara[CalName]
-    const Xiang = 90.94335
-    const LongiRaw = 13.36876 * Day // 以月平行度乘之
-    let Longi = LongiRaw % (Xiang)
-    if ((LongiRaw > Xiang && LongiRaw <= Xiang * 2) || (LongiRaw >= Xiang * 3 && LongiRaw < Solar)) {
-        Longi = Xiang - Longi
+    const Quadrant = 90.94335
+    const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
+    let Longi = LongiRaw % (Quadrant)
+    if ((LongiRaw > Quadrant && LongiRaw <= Quadrant * 2) || (LongiRaw >= Quadrant * 3 && LongiRaw < Solar)) {
+        Longi = Quadrant - Longi
     }
-    const OriginRaw = OriginRawRaw - Day % (Node / 2)
-    const WinsolsDif = OriginRaw % (Solar / 2)
+    const WinsolsDif = WinsolsDifRaw - NodeAccum % (Node / 2)
+    const WinsolsDifHalf = WinsolsDif % (Solar / 2)
     let WhiteLongi = 0
     let Range = []
-    if (['Huangji'].includes(CalName)) { // 麟徳沒有
+    if (CalName === 'Huangji') { // 麟徳沒有
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2.94, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》頁60
     } else if (['Dayan', 'Qintian', 'Yingtian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0.94, 5, 5, 5, 5, 5, 5, 5, 5, 5]
@@ -339,12 +340,11 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
     let EclipticWhiteDif = 0
-    const Xian = Solar / 72
-
-    if (['Huangji'].includes(CalName)) {
+    const Smallquadrant = Solar / 72
+    if (CalName === 'Huangji') {
         LongiDifDifInitial = 11 / 45 // ⋯⋯四度爲限，初十一，每限損一，以終於一
         LongiDifDifChange = -1 / 45
-    } else if (['Dayan'].includes(CalName)) {
+    } else if (CalName === 'Dayan') {
         LongiDifDifInitial = 12 / 24
         LongiDifDifChange = -1 / 24
     } else if (CalName === 'Qintian') {
@@ -392,17 +392,17 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
     }
     let EquatorWhiteDif = 0
     if (CalName === 'Dayan') {
-        EquatorWhiteDif = ~~(WinsolsDif / (Solar / 72)) / 18
+        EquatorWhiteDif = ~~(WinsolsDifHalf / (Solar / 72)) / 18
     } else if (CalName === 'Qintian') {
-        const OriginXian = Math.abs(WinsolsDif - Solar / 4) / Xian // 限數
-        EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Xian / 2) * OriginXian / 1296 // 這個用公式來算黃白差，跟用表不一樣
-        EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Xian / 8) * (1 - OriginXian / 324)
+        const OriginXian = Math.abs(WinsolsDifHalf - Solar / 4) / Smallquadrant // 限數
+        EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，跟用表不一樣
+        EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
     } else if (CalName === 'Yingtian') {
-        const Hou = ~~(WinsolsDif / (Solar / 72)) / 18
+        const Hou = ~~(WinsolsDifHalf / (Solar / 72)) / 18
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
     }
     let EquatorLongi = 0
-    if ((LongiRaw >= 0 && LongiRaw < Xiang) || (LongiRaw >= Xiang * 2 && LongiRaw < Xiang * 3)) {
+    if ((LongiRaw >= 0 && LongiRaw < Quadrant) || (LongiRaw >= Quadrant * 2 && LongiRaw < Quadrant * 3)) {
         WhiteLongi = parseFloat((LongiRaw - EclipticWhiteDif).toPrecision(14))
         EquatorLongi = parseFloat((LongiRaw - EquatorWhiteDif).toPrecision(14))
     } else {
@@ -419,23 +419,18 @@ export const MoonLongiTable = (OriginRawRaw, Day, CalName) => { ///////唐宋赤
 // console.log(MoonLongiTable(55.25, 11.22, 'Dayan'))
 // console.log(MoonLongiTable(55.25, 11.22, 'Qintian'))
 
-export const MoonLatiTable = (DayRaw, CalName) => {
+export const MoonLatiTable = (NodeAccum, CalName) => {
     const {
         Type,
         AutoPara,
     } = Bind(CalName)
     const {
-        Lunar,
-        Ecli,
         MoonLatiDifList,
     } = AutoPara[CalName]
     let {
         Node,
         MoonLatiAccumList
     } = AutoPara[CalName]
-    if (!Node) {
-        Node = Lunar * Ecli / (0.5 + Ecli)
-    }
     ///////預處理陰陽曆////////
     let portion = 10
     if (Type <= 4) {
@@ -444,60 +439,52 @@ export const MoonLatiTable = (DayRaw, CalName) => {
         portion = 120
     }
     const MoonLatiDif = []
-    for (let i = 1; i <= 14; i++) {
+    for (let i = 0; i <= 13; i++) {
         MoonLatiDif[i] = MoonLatiDifList[i] / portion
     }
-    MoonLatiDif[0] = 0
     if (!MoonLatiAccumList) {
         MoonLatiAccumList = MoonLatiDif.slice()
-        for (let i = 1; i < MoonLatiAccumList.length; i++) {
+        for (let i = 1; i <= 14; i++) {
             MoonLatiAccumList[i] += MoonLatiAccumList[i - 1]
+            MoonLatiAccumList[i] = +MoonLatiAccumList[i].toFixed(13)
         }
     }
-    const Day = DayRaw % (Node / 2)
-    const Day1 = Math.floor(Day)
+    MoonLatiAccumList = MoonLatiAccumList.slice(-1).concat(MoonLatiAccumList.slice(0, -1))
+    MoonLatiAccumList[0] = 0
+    const NodeAccumHalf = NodeAccum % (Node / 2)
+    const NodeAccumHalfInt = ~~NodeAccumHalf
     let Yinyang = -1
-    if (DayRaw > Node / 2) {
+    if (NodeAccum > Node / 2) {
         Yinyang = 1
     }
     let Lati = 0
     if (Type < 6) {
-        Lati = Yinyang * (MoonLatiAccumList[Day1] + (Day - Day1) * MoonLatiDif[Day1])
-    } else if (Type === 6) {
-        let Initial = MoonLatiAccumList[Day1] + ',' + MoonLatiAccumList[Day1 + 1] + ',' + MoonLatiAccumList[Day1 + 2]
-        let n = 1 + Day - Day1
-        if (Day >= 13) {
-            Initial = MoonLatiAccumList[Day1 - 2] + ',' + MoonLatiAccumList[Day1 - 1] + ',' + MoonLatiAccumList[Day1]
-            n = 3 + Day - Day1
-        } else if (Day >= 12) {
-            Initial = MoonLatiAccumList[Day1 - 1] + ',' + MoonLatiAccumList[Day1] + ',' + MoonLatiAccumList[Day1 + 1]
-            n = 2 + Day - Day1
+        Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDif[NodeAccumHalfInt])
+    } else if (Type === 6) { // 二次
+        let Initial = MoonLatiAccumList[NodeAccumHalfInt] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 2]
+        let n = 1 + NodeAccumHalf - NodeAccumHalfInt
+        if (NodeAccumHalf >= 12) {
+            Initial = MoonLatiAccumList[NodeAccumHalfInt - 2] + ',' + MoonLatiAccumList[NodeAccumHalfInt - 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt]
+            n = 3 + NodeAccumHalf - NodeAccumHalfInt
         }
         Lati = Yinyang * Interpolate1(n, Initial) / portion
     } else if (Type === 7) { // 大衍的入交度數另有算式，我直接用月平行速來算
-        const LongiRaw = Day * 13.36875
-        const XianRaw = 1 + LongiRaw / (365.245 / 24)
-        let XianNum = Math.ceil(LongiRaw / (365.245 / 24))
-        if (XianNum === 0) {
-            XianNum = 1
-        }
-        // 就直接用二次內插，不想用三次了
-        let Initial = MoonLatiAccumList[XianNum] + ',' + MoonLatiAccumList[XianNum + 1] + ',' + MoonLatiAccumList[XianNum + 2]
-        let n = 1 + XianRaw - XianNum
-        if (Day >= 13) {
-            Initial = MoonLatiAccumList[XianNum - 2] + ',' + MoonLatiAccumList[XianNum - 1] + ',' + MoonLatiAccumList[XianNum]
-            n = 3 + XianRaw - XianNum
-        } else if (Day >= 12) {
-            Initial = MoonLatiAccumList[XianNum - 1] + ',' + MoonLatiAccumList[XianNum] + ',' + MoonLatiAccumList[XianNum + 1]
-            n = 2 + XianRaw - XianNum
-        }
+        const MoonAvgVDeg = AutoMoonAvgV(CalName)
+        const LongiRaw = NodeAccumHalf * MoonAvgVDeg
+        const Cycle = Node * MoonAvgVDeg
+        const Smallquadrant = Cycle / 24
+        const SmallquadrantAccum = LongiRaw / Smallquadrant
+        const SmallquadrantAccumInt = ~~SmallquadrantAccum
+        // 三次：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8
+        const Initial = MoonLatiAccumList[SmallquadrantAccumInt] + ',' + MoonLatiAccumList[SmallquadrantAccumInt + 1] + ',' + MoonLatiAccumList[SmallquadrantAccumInt + 2] + ',' + MoonLatiAccumList[SmallquadrantAccumInt + 3]
+        const n = 1 + SmallquadrantAccum - SmallquadrantAccumInt
         Lati = Yinyang * Interpolate1(n, Initial) / portion
     }
-    const Lati1 = 91.311 - Lati
+    const Lati1 = 91.31 - Lati
     return {
         Lati,
         Lati1
     }
 }
 // 大衍：《中國古代曆法》頁530
-// console.log(MoonLatiTable(14, 'Dayan'))
+// console.log(MoonLatiTable(13.61, 'Qianxiang'))

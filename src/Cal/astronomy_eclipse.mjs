@@ -112,58 +112,11 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     const QuarSolar = Solar / 4
     const WinsolsDif = WinsolsDifRaw % Solar
     const HalfTermLeng = Solar / 24
-    const TermNum = ~~(WinsolsDif / HalfTermLeng)
     let SunLimit1 = HalfSynodicNodeDif // 單位是時間而非度數！
-    let NodeAccumHalf = NodeAccum % HalfNode
-    let NodeAccumCorr = 0
-    if (['Daye', 'Wuyin'].includes(CalName)) {
-        if (CalName === 'Daye') {
-            if (TermNum <= 4) {
-                NodeAccumCorr = Math.abs(WinsolsDif - HalfTermLeng) * 1380 / NodeDenom
-            } else if (TermNum <= 8) {
-                NodeAccumCorr = 63600 / NodeDenom
-            } else if (TermNum <= 11) {
-                NodeAccumCorr = Math.abs(WinsolsDif - 11 * HalfTermLeng) * 1380 / NodeDenom
-            } else if (TermNum <= 16) {
-                NodeAccumCorr = -Math.abs(WinsolsDif - 13 * HalfTermLeng) * 900 / NodeDenom
-            } else if (TermNum <= 20) {
-                NodeAccumCorr = -55000 / NodeDenom
-            } else {
-                NodeAccumCorr = -Math.abs(WinsolsDif - 23 * HalfTermLeng) * 1770 / NodeDenom
-            }
-        } else if (CalName === 'Wuyin') {
-            if (TermNum >= 2 && TermNum <= 3) {
-                NodeAccumCorr = Math.abs(WinsolsDif - HalfTermLeng) * 1650 / NodeDenom
-            } else if (TermNum <= 7) {
-                NodeAccumCorr = 76100 / NodeDenom
-            } else if (TermNum <= 10) {
-                NodeAccumCorr = 76100 / NodeDenom - Math.abs(WinsolsDif - 8 * HalfTermLeng) * 1650 / NodeDenom
-            } else if (TermNum <= 12) { } else if (TermNum <= 16) {
-                NodeAccumCorr = -Math.abs(WinsolsDif - 13 * HalfTermLeng) * 1200 / NodeDenom
-            } else if (TermNum <= 20) {
-                NodeAccumCorr = -95825 / NodeDenom
-            } else {
-                NodeAccumCorr = -63300 / NodeDenom + Math.abs(WinsolsDif - 21 * HalfTermLeng) * 2110 / NodeDenom
-            }
-            if ((TermNum >= 2 && TermNum <= 3) || (TermNum === 9)) { // 後兩種修正與五星有關，暫時沒法加
-                if (NodeAccum <= 1 / 6) {
-                    NodeAccumCorr /= 2
-                } else {
-                    NodeAccumCorr = 0
-                }
-            }
-        }
-    } else if (Type === 6) { // 劉金沂《麟徳曆交食計算法》。
-        // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785
-        // 交後交在後，符號同定朔改正，交前，與定朔相反。
-        const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交
-        NodeAccumCorr = signNodeAccum * AutoTcorr(AnomaAccum, WinsolsDif, CalName).NodeAccumCorr
-    }
-    NodeAccum += NodeAccumCorr // 定交分
-    NodeAccumHalf = NodeAccum % HalfNode
+    const NodeAccumHalf = NodeAccum % HalfNode
     let NodeDif = NodeAccumHalf2NodeDif(NodeAccumHalf, QuarNode, HalfNode)
     const NoonDif = Math.abs(Decimal - 0.5)
-    const SummerDif = Math.abs(WinsolsDif - HalfSolar)
+    const SummsolsDif = Math.abs(WinsolsDif - HalfSolar)
     let status = 0
     let Tcorr = 0
     let Tcorr1 = 0 // 食甚時刻修正一
@@ -242,7 +195,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 sign1 = 1
             }
             if (WinsolsDif < HalfTermLeng * 5) { } else if (WinsolsDif < HalfTermLeng * 7) { } else if (WinsolsDif < HalfTermLeng * 17) { //若用定氣，有2986 / 1340的盈縮積，但肯定應該是平氣。                
-                const k = ~~(SummerDif / HalfTermLeng) // 距離夏至節氣數。皇極是距寒露驚蟄氣數。這樣完全相反，到底是那個
+                const k = ~~(SummsolsDif / HalfTermLeng) // 距離夏至節氣數。皇極是距寒露驚蟄氣數。這樣完全相反，到底是那個
                 Tcorr = sign1 * (2 * k + NodeDif * 4) / 100 + Dif // 劉洪濤的理解和《中國古代曆法》不一樣，我暫且用劉洪濤的
             } else if (WinsolsDif < HalfTermLeng * 19) { } else {
                 const k = ~~((WinsolsDif % Solar) / HalfTermLeng) // 距離冬至節氣數
@@ -320,17 +273,17 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             }
         } else if (CalName === 'Linde') {
             if (NodeAccum >= HalfNode && WinsolsDif >= Solar / 4 && WinsolsDif <= Solar * 0.75) { // 秋分至春分殘缺
-                if (NoonDif > 0.18 - 0.137 * SummerDif / QuarSolar) {
-                    SunLimit1 = 1373 / Denom + (137 / Denom) * SummerDif / QuarSolar
+                if (NoonDif > 0.18 - 0.137 * SummsolsDif / QuarSolar) {
+                    SunLimit1 = 1373 / Denom + (137 / Denom) * SummsolsDif / QuarSolar
                 }
             } else if (NodeAccum < HalfNode) { // 不應食而食有三組情況，滿足一組即可
                 if (WinsolsDif >= Solar / 4 && WinsolsDif <= Solar * 0.75) {
                     if (NoonDif <= 0.07) {
-                        SunLimit1 = 248 / Denom - (182.6 / Denom) * SummerDif / QuarSolar
-                    } else if (NoonDif < 0.1744 - 0.1014 * SummerDif / QuarSolar) {
+                        SunLimit1 = 248 / Denom - (182.6 / Denom) * SummsolsDif / QuarSolar
+                    } else if (NoonDif < 0.1744 - 0.1014 * SummsolsDif / QuarSolar) {
                         SunLimit1 = 60 / Denom
-                    } else if (NoonDif < 0.1044 - 0.1014 * SummerDif / QuarSolar) {
-                        SunLimit1 = 60 / Denom + (1644 / Denom) * SummerDif / QuarSolar
+                    } else if (NoonDif < 0.1044 - 0.1014 * SummsolsDif / QuarSolar) {
+                        SunLimit1 = 60 / Denom + (1644 / Denom) * SummsolsDif / QuarSolar
                     }
                 } else if (NoonDif <= 0.12) {
                     SunLimit1 = 60 / Denom
@@ -413,7 +366,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     } else if (CalName === 'Huangji') {
         if (isNewm) {
             let M = 0
-            if (SummerDif < 2 * HalfTermLeng) { // 朔在夏至前後二氣
+            if (SummsolsDif < 2 * HalfTermLeng) { // 朔在夏至前後二氣
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = Denom * 1.75 / 12
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -421,7 +374,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = Denom * 0.75 / 12
                 }
-            } else if (SummerDif < 3 * HalfTermLeng) { // 朔在夏至前後三氣
+            } else if (SummsolsDif < 3 * HalfTermLeng) { // 朔在夏至前後三氣
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = Denom * 1.25 / 12
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -429,25 +382,25 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = Denom * 0.25 / 12
                 }
-            } else if (SummerDif < 4 * HalfTermLeng) {
+            } else if (SummsolsDif < 4 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = Denom * 0.75 / 12
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
                     M = Denom * 0.25 / 12
                 }
-            } else if (SummerDif < 5 * HalfTermLeng) {
+            } else if (SummsolsDif < 5 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = Denom * 0.25 / 12
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) { } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = -10.1
                 }
-            } else if (SummerDif < 6 * HalfTermLeng) {
+            } else if (SummsolsDif < 6 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) { } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
                     M = -10.1
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = -15.2
                 }
-            } else if (SummerDif < 7 * HalfTermLeng) {
+            } else if (SummsolsDif < 7 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = -10.1
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -455,7 +408,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = -53.3
                 }
-            } else if (SummerDif < 8 * HalfTermLeng) {
+            } else if (SummsolsDif < 8 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = -15.2
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -463,7 +416,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = -60.9
                 }
-            } else if (SummerDif < 9 * HalfTermLeng) {
+            } else if (SummsolsDif < 9 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = -53.3
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -471,7 +424,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = -65.9
                 }
-            } else if (SummerDif < 10 * HalfTermLeng) {
+            } else if (SummsolsDif < 10 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = -60.9
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -479,7 +432,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (NoonDif >= 1.5 / 12 && NoonDif < 1 / 6) {
                     M = -71
                 }
-            } else if (SummerDif < 11 * HalfTermLeng) {
+            } else if (SummsolsDif < 11 * HalfTermLeng) {
                 if (NoonDif >= 1 / 24 && NoonDif < 1 / 12) {
                     M = -65.9
                 } else if (NoonDif >= 1 / 12 && NoonDif < 1.5 / 12) {
@@ -504,9 +457,9 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             // Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr 
             // 「以減望差，乃如月食法」
             if ((WinsolsDif > QuarSolar && WinsolsDif < HalfSolar) || WinsolsDif > Solar * 0.75) {
-                Dcorr = 15 * (3 * ~~(SummerDif / HalfTermLeng) + 2 * (10 + NodeDif * 12)) / HalfSynodicNodeDif
+                Dcorr = 15 * (3 * ~~(SummsolsDif / HalfTermLeng) + 2 * (10 + NodeDif * 12)) / HalfSynodicNodeDif
             } else {
-                Dcorr = 15 * (3 * ~~(SummerDif / HalfTermLeng) + 2 * (10 + NodeDif * 12) + 2 * ~~(QuarSolar - WinsolsDif % HalfSolar)) / HalfSynodicNodeDif
+                Dcorr = 15 * (3 * ~~(SummsolsDif / HalfTermLeng) + 2 * (10 + NodeDif * 12) + 2 * ~~(QuarSolar - WinsolsDif % HalfSolar)) / HalfSynodicNodeDif
             }
             Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr / Denom
         }
@@ -582,7 +535,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
         } else if (Magni === 15) {
             Last = LastList[Magni]
         }
-        Last -= Last * (AutoTcorr(AnomaAccum, 0, CalName).MoonDifAccum - AutoTcorr((AnomaAccum - 1 + Anoma) % Anoma, 0, CalName).MoonDifAccum) / MoonAvgVDeg // 再考慮入變增減率，卽實平行之差。速減遲加
+        Last -= Last * (AutoTcorr(AnomaAccum, 0, CalName).MoonTcorr2 - AutoTcorr((AnomaAccum - 1 + Anoma) % Anoma, 0, CalName).MoonTcorr2) // 再考慮入變增減率，卽實平行之差。速減遲加
     }
 
     if (Magni < 0) {
@@ -602,7 +555,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
 }
 // console.log(EclipseTable2(14.7, 24, 0.3, 15, 2, 0, 1, 'Huangji').Decimal)
 
-const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName) => { // 入交日，入轉日，定朔分，距冬至日數，月份，閏月序數，朔望，名字。用月份判斷很奇怪，但是沒有證據說是用節氣判斷，皇極有兩條「閏四月內」，那肯定就是月份
+const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName) => { // 入交定日，入轉日，定朔分，距冬至日數，月份，閏月序數，朔望，名字。用月份判斷很奇怪，但是沒有證據說是用節氣判斷，皇極有兩條「閏四月內」，那肯定就是月份
     const {
         AutoPara,
     } = Bind(CalName)
@@ -633,13 +586,11 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
     const QuarNode = Node / 4
-    let NodeAccumHalf = NodeAccum % HalfNode
+    const NodeAccumHalf = NodeAccum % HalfNode
     const MoonAvgVDeg = parseFloat(((Sidereal ? Sidereal : Solar) / Lunar + 1).toPrecision(14))
     const HalfSolar = Solar / 2
     const QuarSolar = Solar / 4
     const WinsolsDif = WinsolsDifRaw % Solar
-
-    let NodeAccumCorr = 0 // 入交日修正
     let LimitCorr = 0 // 大衍食限修正
     let Tcorr = 0 // 食甚時刻修正
     let Dcorr = 0 // 食分修正
@@ -647,10 +598,6 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     let status = 0 // 1全，2偏
     let Last = 0
     let SunLimit = 0
-    const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1 // 這個符號很迷惑，說陰曆跟定朔改正相反，陽曆相同，但頁538的算例都是相同的
-    NodeAccumCorr = signNodeAccum * AutoTcorr(AnomaAccum, WinsolsDif, CalName).NodeAccumCorr
-    NodeAccum += NodeAccumCorr
-    NodeAccumHalf = NodeAccum % HalfNode
     const NodeDif = NodeAccumHalf2NodeDif(NodeAccumHalf, QuarNode, HalfNode)
     let LimitCorrDif = 0
     if (isNewm) {
@@ -830,7 +777,6 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
         Solar,
         Lunar,
         Node,
-        Sidereal,
         Denom,
         XianConst,
     } = AutoPara[CalName]
@@ -849,19 +795,11 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
     const QuarNode = Node / 4
-    const MoonAvgVDeg = Sidereal / Lunar + 1
     const HalfSolar = Solar / 2
     const QuarSolar = Solar / 4
     const HalfTermLeng = Solar / 24
     let WinsolsDif = WinsolsDifRaw % Solar
     const TcorrFunc = AutoTcorr(AnomaAccumRaw, WinsolsDif, CalName)
-    let NodeAccumCorr = 0
-    if (Type === 9) { // 紀元沒有考慮交點退行
-        NodeAccumCorr = TcorrFunc.SunTcorr
-    } else {
-        NodeAccumCorr = TcorrFunc.NodeAccumCorr
-        NodeAccum += NodeAccumCorr
-    }
     // let NodeAccumHalf = NodeAccum % HalfNode // 用來判斷交前交後
     // let sign = 1
     // if (NodeAccumHalf > QuarNode) { // 交前、先交。按照《紀元曆日食算法及精度分析》頁147提到交前
@@ -1129,7 +1067,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
         }
     }
     Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther + k0) / Denom
-    NodeAccum += NodeAccumCorr + Dcorr // 入食限
+    NodeAccum += Dcorr // + NodeAccumCorr //入食限 
     NodeAccum %= HalfNode
     let AcrNodeDif = NodeAccum // 去交定分 NodeDif。// 宣明、崇天去交真定分，那其他曆法估計也差不多
     if (AcrNodeDif > QuarNode) {
@@ -1221,17 +1159,24 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
 
 export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName, i, Leap) => {
     const {
-        Type
+        Type,
+        AutoPara
     } = Bind(CalName)
+    const {
+        Solar
+    } = AutoPara[CalName]
     let Eclipse = {}
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = EclipseTable1(NodeAccum, CalName)
-    } else if (Type <= 6) {
-        Eclipse = EclipseTable2(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName, i, Leap)
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan'].includes(CalName)) {
-        Eclipse = EclipseTable3(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName)
-    } else if (Type <= 11) {
-        Eclipse = EclipseFormula(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName)
+    } else {
+        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw % Solar, CalName, NodeAccum).NodeAccumCorr  // 定交分 
+        if (Type <= 6) {
+            Eclipse = EclipseTable2(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName, i, Leap)
+        } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan'].includes(CalName)) {
+            Eclipse = EclipseTable3(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName)
+        } else if (Type <= 11) {
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName)
+        }
     }
     return Eclipse
 }

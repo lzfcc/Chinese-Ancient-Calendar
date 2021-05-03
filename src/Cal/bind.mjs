@@ -55,6 +55,7 @@ export const Bind = CalName => {
         Type
     }
 }
+// console.log(Bind('Dayan').Type)
 
 /////////
 

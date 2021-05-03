@@ -41,22 +41,25 @@ export default class Day extends React.Component {
     })
     return (
       <section className='day-render' style={{ whiteSpace: "pre-wrap" }}>
-        <h2>{this.state.output.Era}{CalNameDayList[this.state.calendars]}萬年天文具注曆</h2>
-        <p className='DayAccum'>{this.state.output.DayAccum}</p>
-        <p>{this.state.output.YearGod}</p>
-        <span className='YearColor'>
-          <table>
-            {(this.state.output.YearColor || []).map((row) => {
-              return (
-                <tr>
-                  {row.map(d => {
-                    return <td dangerouslySetInnerHTML={{ __html: d }}></td>
-                  })}
-                </tr>
-              );
-            })}
-          </table>
-        </span>
+        <div className='daytitle-wrap'>
+          <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />{CalNameDayList[this.state.calendars]}萬年天文具注曆</h2>
+          <p className='DayAccum'>{this.state.output.DayAccum}</p>
+          <p>{this.state.output.YearGod}</p>
+          <div className='YearColor'>
+            <table>
+              {(this.state.output.YearColor || []).map((row) => {
+                return (
+                  <tr>
+                    {row.map(d => {
+                      return <td dangerouslySetInnerHTML={{ __html: d }}></td>
+                    })}
+                  </tr>
+                );
+              })}
+            </table>
+          </div>
+        </div>
+        <hr/>
         {list.map((info, index) => {
           return (
             <div className="single-cal">
@@ -206,7 +209,7 @@ export default class Day extends React.Component {
           <li><span className='EquartorPrint'>紅色：太陽赤道宿度</span></li>
           <li><span className='EclipticPrint'>黃色：太陽黃道宿度</span></li>
           <li><span className='Lati'>綠色：太陽赤緯、日出刻度、正午晷長、昏中星</span></li>
-          <li><span className='MoonEquartorPrint'>藍色：月黃緯、月赤道宿度</span></li>
+          <li><span className='MoonEquartorPrint'>藍色：月黃緯、月黃道宿度</span></li>
           <li><span className='HouName'>黑色：七十二候、卦用事、土王用事</span></li>
           <li><span className='ManGod'>灰色：人神、血支血忌、日遊神</span></li>
           <li><span className='Luck'>紅色：各種日神</span></li>

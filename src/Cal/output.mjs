@@ -77,7 +77,7 @@ const PrintDay = result => {
         Sunrise,
         MidstarPrint,
         Dial,
-        MoonEquartorPrint,
+        MoonEclipticPrint,
         MoonEclipticLati,
         HouName,
         HexagramName,
@@ -156,11 +156,11 @@ const PrintDay = result => {
         }
     }
 
-    if ((MoonEquartorPrint || []).length > 0) {
-        Print += '**月赤經**\n'
-        for (let i = 1; i < MoonEquartorPrint.length; i++) {
+    if ((MoonEclipticPrint || []).length > 0) {
+        Print += '**月黃經**\n'
+        for (let i = 1; i < MoonEclipticPrint.length; i++) {
             Print += MonName[i] + '\n'
-            Print += MoonEquartorPrint[i].slice(1).join(' ')
+            Print += MoonEclipticPrint[i].slice(1).join(' ')
             Print += '\n'
         }
     }
