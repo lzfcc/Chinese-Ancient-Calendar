@@ -42,7 +42,7 @@ export default function CalQuar(CalName, year) {
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
     const BuOrder = Math.floor(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
     const BuScorder = (1 + BuOrder * BuSkip + (OriginDayCorr ? OriginDayCorr : 0)) % 60 // 蔀（統）的干支序號
-    const WsolsticeAccumRaw = (BuYear - 1) * Solar + (WsolsticeOriginDif ? WsolsticeOriginDif : 0) + (OriginCorr ? OriginCorr : 0) // 冬至積日
+    const WsolsticeAccumRaw = (BuYear - 1) * Solar + (WsolsticeOriginDif ? WsolsticeOriginDif : 0) + (OriginCorr || 0) // 冬至積日
     const WsolsticeAccumMod = (WsolsticeAccumRaw % 60 + 60) % 60
     const OriginAccum = WsolsticeAccumRaw - (WsolsticeOriginDif ? WsolsticeOriginDif : 0) // 曆元積日
     const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - Math.floor((BuYear - 1) * 7 / 19) + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
@@ -97,10 +97,7 @@ export default function CalQuar(CalName, year) {
     // 閏餘法閏月
     let LeapNumOriginLeapSur = 0
     if (LeapNumAvgThis) {
-        LeapNumOriginLeapSur = Math.round((LeapNumAvgThis + ZhengOriginDif + 12) % 12.1)
-        // if (LeapNumOriginLeapSur === 0) {
-        //     LeapNumOriginLeapSur = 12
-        // }
+        LeapNumOriginLeapSur = Math.round(((LeapNumAvgThis + ZhengOriginDif + 12) % 12 + 12) % 12.1)
     }
     // 朔望
     const NewmAvgBare = []
@@ -115,21 +112,26 @@ export default function CalQuar(CalName, year) {
     const SyzygyOrderMod = []
     let SyzygySc = []
     const SyzygyDecimal = []
+    const Momie = []
+    if (CalName === 'Easthan') {
+        for (let i = 0; i <= 5; i++) {
+            Momie[i] = parseFloat((((BuYear - 1) * 5.25 + i) * (69 + 4 / 7)).toPrecision(14))
+        }
+    }
     for (let i = 0; i <= 13; i++) { // 本來是1，不知道改成1可不可以
-        NewmAvgBare[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr ? OriginCorr : 0)).toPrecision(12))
+        NewmAvgBare[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScorder
         NewmAvgMod[i] = (NewmAvgRaw[i] % 60 + 60) % 60
-        NewmOrderRaw[i] = Math.floor(NewmAvgRaw[i])
-        NewmOrderMod[i] = Math.floor(NewmAvgMod[i])
+        NewmOrderRaw[i] = ~~NewmAvgRaw[i]
+        NewmOrderMod[i] = ~~NewmAvgMod[i]
         NewmAvgSc[i] = ScList[NewmOrderMod[i]]
-        NewmAvgDecimal[i] = ((NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(4)).slice(2, 6)
+        NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(4).slice(2, 6)
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (Math.floor((Math.round(parseFloat((JdWsolstice + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
-
-        SyzygyAvgRaw[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr ? OriginCorr : 0)).toPrecision(12)) + BuScorder
+        SyzygyAvgRaw[i] = parseFloat(((Math.floor((BuYear - 1) * 235 / 19 + (WsolsticeOriginMon ? WsolsticeOriginMon : 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr || 0)).toPrecision(14)) + BuScorder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
-        SyzygyOrderMod[i] = Math.floor(SyzygyAvgMod[i])
+        SyzygyOrderMod[i] = ~~SyzygyAvgMod[i]
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]
-        SyzygyDecimal[i] = ((SyzygyAvgMod[i] - SyzygyOrderMod[i]).toFixed(4)).slice(2, 6)
+        SyzygyDecimal[i] = (SyzygyAvgMod[i] - SyzygyOrderMod[i]).toFixed(4).slice(2, 6)
     }
     // 月食
     let EcliAccum = 0
@@ -137,7 +139,7 @@ export default function CalQuar(CalName, year) {
         EcliAccum = Ecli * ((OriginYear % EcliRange) * (Solar / Lunar) / Ecli - Math.floor((OriginYear % EcliRange) * (Solar / Lunar) / Ecli))
         for (let k = 1; k <= 3; k++) {
             const a = Math.floor(Ecli * k - EcliAccum)
-            SyzygySc[a] += '◐'
+            SyzygySc[a] += `<span class='eclipse-symbol'>◐</span>`
         } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
     }
     // const NewmMmdd = Jd2Date(NewmJd)
@@ -156,7 +158,7 @@ export default function CalQuar(CalName, year) {
             TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 1) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
-            TermOrderMod[i] = Math.floor(TermAvgMod[i])
+            TermOrderMod[i] = ~~TermAvgMod[i]
             TermName[i] = TermList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
@@ -166,7 +168,7 @@ export default function CalQuar(CalName, year) {
             TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 1) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
             TermAvgMod[i] = parseFloat((((TermAvgRaw[i]) % 60 + 60) % 60).toPrecision(12))
-            TermOrderMod[i] = Math.floor(TermAvgMod[i])
+            TermOrderMod[i] = ~~TermAvgMod[i]
             TermName[i] = TermList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
@@ -185,10 +187,10 @@ export default function CalQuar(CalName, year) {
             TermAvgBare[i] = WsolsticeAccumRaw + (i + ZhengNum - 2) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScorder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
-            TermOrderMod[i] = Math.floor(TermAvgMod[i])
+            TermOrderMod[i] = ~~TermAvgMod[i]
             TermName[i] = TermList[(i - 1 + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
+            TermDecimal[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
         }
     }
     // 最後是積月、月數

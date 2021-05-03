@@ -93,19 +93,12 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         if (Type >= 6) {
             NewmOrderRaw = NewmAcrOrderRaw
         }
-        const HouLeng = (Solar ? Solar : SolarRaw) / 72
-        const MoonAvgVDeg = parseFloat(((Sidereal ? Sidereal : Solar) / Lunar + 1).toPrecision(14))
-        if (!YinyangOrigin) {
-            YinyangOrigin = 1
-        }
-        if (!Node) {
-            Node = Lunar * Ecli / (0.5 + Ecli) // 獨創發明！
-        }
-        if (!Solar) {
-            Solar = SolarRaw
-        }
-        if (!Lunar) {
-            Lunar = LunarRaw
+        Solar = Solar || SolarRaw
+        Lunar = Lunar || LunarRaw
+        const HouLeng = (Solar || SolarRaw) / 72
+        const MoonAvgVDeg = parseFloat(((Sidereal || Solar) / Lunar + 1).toPrecision(14))
+        if (YinyangOrigin === -1) {
+            FirstNodeAccum += Node / 2
         }
         const SynodicNodeDif = Lunar - Node
         let HexagramAccumList = []
@@ -120,8 +113,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const OriginDecimal = OriginAccum - Math.floor(OriginAccum)
         /////////// 預處理72候列表//////////
         let HouAccum = []
-        for (let j = 1; j <= 100; j++) {
-            HouAccum[j] = HouLeng * (j - 1)
+        for (let j = 0; j < 90; j++) {
+            HouAccum[j] = HouLeng * j
             HouAccum[j] = parseFloat((HouAccum[j]).toPrecision(14))
         }
         const YearScOrder = ((year - 3) % 60 + 60) % 60
@@ -135,19 +128,15 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         } else {
             Era = '前 ' + (1 - year) + ' 年歲次' + YearSc + StemList1[YearStem] + BranchList1[YearBranch]
         }
-        let Yuan = 0
-        let YuanYear = 0
-        if (year >= 604) {
-            YuanYear = (year - 604) % 180 // 術數的元，以604甲子爲上元，60年一元，凡三元
-            const YuanOrder = Math.floor(YuanYear / 60)
-            const ThreeYuanYear = YuanYear - YuanOrder * 60
-            Yuan = YuanList[YuanOrder] + '元' + nzh.encodeS(ThreeYuanYear + 1) + '年'
-        }
+        const YuanYear = ((year - 604) % 180 + 180) % 180 // 術數的元，以604甲子爲上元，60年一元，凡三元
+        const YuanOrder = ~~(YuanYear / 60)
+        const ThreeYuanYear = YuanYear - YuanOrder * 60
+        const Yuan = YuanList[YuanOrder] + '元' + nzh.encodeS(ThreeYuanYear + 1) + '年'
         const YearGod = YearGodConvert(YearStem, YearBranch, YearScOrder, YuanYear)
         const YearColor = YearColorConvert(YuanYear)
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建
         const HalfTermLeng = Solar / 24
-        const OriginJdAccum = 2086292 + Math.floor(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作為儒略日標準
+        const OriginJdAccum = 2086292 + ~~(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作為儒略日標準
         const OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
         const MonName = []
         const MonInfo = []
@@ -192,7 +181,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 }
             }
             MonName[i] = MonNumList[NoleapMon] + '月'
-            if (i === LeapNumTermThis + 1) {
+            if (LeapNumTermThis > 0 && i === LeapNumTermThis + 1) { // 好像有LeapNumTermThis<0的情況
                 MonName[i] = '閏' + MonNumList[LeapNumTermThis] + '月'
             }
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)
@@ -250,9 +239,6 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 Lati[i][k] = Longi2Lati.Lati.toFixed(4) + '度'
                 Sunrise[i][k] = Longi2Lati.Sunrise.toFixed(4) + '刻'
                 Dial[i][k] = Longi2Lati.Dial ? Longi2Lati.Dial.toFixed(4) + '尺' : 0
-                if (YinyangOrigin === -1) {
-                    FirstNodeAccum += Node / 2
-                }
                 const NodeAccum = ((FirstNodeAccum + 2 * SynodicNodeDif + DayAccum - 1) % Node + Node) % Node // 夜半。不知道要不要-1 // + (NodeCorr ? NodeCorr : Tcorr)
                 const MoonLongiLati = AutoMoonLongiLati(NodeAccum, Type === 11 ? SunEclipticLongi : SunEquatorLongi, CalName)
                 if (Type <= 4) {
@@ -261,20 +247,17 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     MoonEquatorLongiAccum[i][k] = MoonLongiLati.MoonEquatorLongi ? MoonLongiLati.MoonEquatorLongi + OriginAccum : 0
                 }
                 MoonEclipticLati[i][k] = MoonLongiLati.MoonEclipticLati ? MoonLongiLati.MoonEclipticLati.toFixed(4) + '度' : 0
-                for (let j = HouOrder; j <= 100; j++) { // 氣候 
+                for (let j = HouOrder; j < 90; j++) { // 氣候 
                     if (HouAccum[j] >= OriginDifRaw - 1 && HouAccum[j] < OriginDifRaw) {
-                        HouOrder = Math.round(j % 72.1)
-                        let TermOrder = 0
-                        if (HouOrder % 3 === 1) {
-                            TermOrder = Math.round((HouOrder + 2) / 3)
-                        }
-                        HouName[i][k] = (TermOrder ? HalfTermList[TermOrder] : '') + HouList[HouOrder] + (HouAccum[j] + OriginAccum - Math.floor(HouAccum[j] + OriginAccum)).toFixed(4).slice(2, 6)
-                        if (j % 6 === 4) {
+                        HouOrder = j % 72
+                        const TermOrder = HouOrder % 3 ? -1 : (Math.round(HouOrder / 3)) % 24
+                        HouName[i][k] = (TermOrder >= 0 ? `<span class='term'>${HalfTermList[TermOrder]}</span>` : '') + HouList[HouOrder] + ((HouAccum[j] + OriginAccum - Math.floor(HouAccum[j] + OriginAccum)).toFixed(4)).slice(2, 6)
+                        if (j % 6 === 3) { // 立春等節
                             JieAccum = DayAccum
                         }
-                        if (j === 37) {
+                        if (j === 36) {
                             SummerDayAccum = DayAccum
-                        } else if (j === 46) {
+                        } else if (j === 45) {
                             AutumnDayAccum = DayAccum
                         }
                         break // 兩個要點：break；由於建寅，要循環不止72個
@@ -284,7 +267,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 }
                 if (DayAccum === 1) {
                     const XiaohanDifInt = NewmOrderRaw[1] - Math.floor(OriginAccum) - HalfTermLeng + DayAccum
-                    const tmp = Math.floor((OriginDifInt - XiaohanDifInt) / 12)
+                    const tmp = ~~((OriginDifInt - XiaohanDifInt) / 12)
                     const tmp1 = OriginDifInt - tmp * 12 - Branch
                     JianchuOrigin = tmp1 + 2 // 小寒後第一個丑開始建除
                     HuangheiOrigin = tmp1 + 12 // 小寒後第一個戌開始黃黑道
@@ -295,7 +278,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     JianchuDayAccum--
                     HuangheiDayAccum--
                 }
-                if (DayAccum === JieAccum + 1 && HouOrder !== 10) {
+                if (DayAccum === JieAccum + 1 && HouOrder !== 9) {
                     HuangheiDayAccum--
                 }
                 const Jianchu = JianchuList[((JianchuDayAccum - JianchuOrigin) % 12 + 12) % 12]
@@ -319,24 +302,24 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 HouName[i][k] += Fu
 
                 let FiveName = ''
-                for (let l = 1; l <= 10; l++) { // 8個五行
-                    if (FiveAccumList[l] >= OriginDifRaw && FiveAccumList[l] < OriginDifRaw + 1) {
-                        FiveOrder = Math.round((l + 1) % 8.1)
+                for (let l = 0; l < 10; l++) { // 8個五行
+                    if (FiveAccumList[l] >= OriginDifRaw - 1 && FiveAccumList[l] < OriginDifRaw) {
+                        FiveOrder = l % 8
                         FiveName = FiveList2[FiveOrder] + '王用事'
-                        const FiveDecimal = (FiveAccumList[l] - OriginDifRaw).toFixed(4).slice(2, 6)
-                        if (l % 2 === 1) {
+                        const FiveDecimal = (FiveAccumList[l] - OriginDifRaw + 1).toFixed(4).slice(2, 6)
+                        if (l % 2 === 0) {
                             FiveName += FiveDecimal
                         }
                         break
                     }
                 }
-                for (let m = HexagramOrder; m <= 80; m++) { // 64卦
-                    if (HexagramAccumList[m] >= OriginDifRaw && HexagramAccumList[m] < OriginDifRaw + 1) {
-                        HexagramOrder = Math.round((m + 1) % 64.1)
+                for (let m = HexagramOrder; m < 80; m++) { // 64卦
+                    if (HexagramAccumList[m] >= OriginDifRaw - 1 && HexagramAccumList[m] < OriginDifRaw) {
+                        HexagramOrder = m % 64
                         HexagramName[i][k] = HexagramList2[HexagramOrder]
-                        const HexagramDecimal = (HexagramAccumList[m] - OriginDifRaw).toFixed(4).slice(2, 6)
-                        if (HexagramOrder % 16 !== 1) {
-                            HexagramName[i][k] += +HexagramDecimal
+                        const HexagramDecimal = (HexagramAccumList[m] - OriginDifRaw + 1).toFixed(4).slice(2, 6)
+                        if ((HexagramOrder + 1) % 16) {
+                            HexagramName[i][k] += HexagramDecimal
                         }
                         break
                     } else {
@@ -350,8 +333,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 const Blood = BloodFunc.Blood
                 const Lin = BloodFunc.Lin
                 const TouringGod = TouringGodConvert(ScOrder)
-                Luck[i][k] = (Wangwang ? Wangwang : '') + (Fubao ? Fubao : '') + (Lin ? Lin : '') + (LongShortStar ? LongShortStar : '')
-                ManGod[i][k] = ManGodList[k] + (Blood ? Blood : '') + (TouringGod ? TouringGod : '')
+                Luck[i][k] = (Wangwang || '') + (Fubao || '') + (Lin || '') + (LongShortStar || '')
+                ManGod[i][k] = ManGodList[k] + (Blood || '') + (TouringGod || '')
                 HexagramName[i][k] += FiveName
                 Sc[i][k] = NumList[k] + '日' + Sc[i][k]
             }
@@ -375,11 +358,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 }
             }
             for (let i = 1; i < SunEclipticLongiAccum.length; i++) {
-                Ecliptic = Deg2Mansion(SunEclipticLongiAccum[i], (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EclipticDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+                Ecliptic = Deg2Mansion(SunEclipticLongiAccum[i], Solar || SolarRaw, Sidereal || Solar, EclipticDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
                 EclipticPrint[i] = Ecliptic.map(item => item.MansionResult)
             }
         }
-        DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + (Yuan ? Yuan : '')
+        DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + (Yuan || '')
         return {
             Era,
             DayAccum,

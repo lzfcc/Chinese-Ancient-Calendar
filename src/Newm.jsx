@@ -243,7 +243,7 @@ export default class Newm extends React.Component {
             return (
               <div className="single-cal" style={style}>
                 {index % calCount === 0 ? <h3>{CalInfo.Era}</h3> : null}
-                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: CalInfo.YearInfo }} ></p>
+                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: CalInfo.YearInfo }}></p>
                 <table>
                   <tr>{this.RenderTableContent(CalInfo)}</tr>
                 </table>

@@ -49,7 +49,7 @@ export default class Day extends React.Component {
             {(this.state.output.YearColor || []).map((row) => {
               return (
                 <tr>
-                  {row.map(d =>  {
+                  {row.map(d => {
                     return <td dangerouslySetInnerHTML={{ __html: d }}></td>
                   })}
                 </tr>
@@ -67,7 +67,7 @@ export default class Day extends React.Component {
                   {(MonColor[index + 1] || []).map((row) => {
                     return (
                       <tr>
-                        {row.map(d =>  {
+                        {row.map(d => {
                           return <td dangerouslySetInnerHTML={{ __html: d }}></td>
                         })}
                       </tr>
@@ -126,7 +126,7 @@ export default class Day extends React.Component {
             if ({ key } == 'MonColor') { } else {
               return (
                 /* {TableDayRowNameMap[key]}:  */
-                <p className={key}>{value}</p>
+                <p className={key} dangerouslySetInnerHTML={{ __html: value }}></p>
               )
             }
           })

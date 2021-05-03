@@ -250,6 +250,15 @@ h2 {
   font-size: 1.2em;
 }
 
+.term {
+  background: var(--lettergreen);
+  border-radius: .3em;
+  padding: .2em .25em;
+  margin-right: .25em;
+  font-weight: bold;
+  color: var(--bg);
+}
+
 table {
   font-family: var(--codesans);
   font-size: .9em;

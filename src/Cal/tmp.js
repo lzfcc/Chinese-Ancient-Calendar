@@ -1,1 +1,0 @@
-console.log(+1.526161411.toFixed(4) + 10)
