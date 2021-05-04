@@ -179,7 +179,7 @@ export default (CalName, year) => {
     // let FirstAnomaAccum = (FirstAccum.add((AnomaOrigin || 0) / Denom)).mod(Anoma).toNumber()
     let FirstAnomaAccum = 0
     if (CalName === 'Qianxiang') {
-        FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的。
+        FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
         // FirstAnomaAccum = big.floor(big(OriginYear + 1).mul(ZhangMon).div(ZhangRange)).mul(Lunar).add(1).mod(Anoma).toNumber()
     } else if (Type < 11) {
         FirstAnomaAccum = (FirstAccum + (AnomaOrigin || 0) / Denom + (CalName === 'Shenlong' ? Anoma / 2 : 0) + (AnomaCorr ? AnomaCorr : 0) + Anoma) % Anoma

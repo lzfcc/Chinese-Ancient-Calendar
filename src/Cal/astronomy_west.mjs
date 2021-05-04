@@ -60,6 +60,7 @@ export const ConstWest = year => {
         Lunar
     }
 }
+// console.log(ConstWest(500).perihelion)
 
 export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)
@@ -67,7 +68,7 @@ export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬
     const Sidereal = ConstFunc.Sidereal
     const Lunar = ConstFunc.Lunar
     const MoonAvgVDeg = big(Sidereal).div(Lunar).add(1)
-    let AnomaAccum1 = d2r((AnomaAccum - 1) * 360 / Anoma) // 順序不能換
+    let AnomaAccum1 = d2r(AnomaAccum * 360 / Anoma) // 順序不能換
     AnomaAccum = d2r(AnomaAccum * 360 / Anoma)
     AnomaAccum = AnomaAccum.mul(28.01241785825).div(Anoma) // 這個擬合函數的週期是28多，要化到一個近點月
     AnomaAccum1 = AnomaAccum1.mul(28.01241785825).div(Anoma)
@@ -103,7 +104,7 @@ export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔
         Longi
     }
 }
-// console.log(SunWest(91, 365.2425, 500))
+// console.log(SunWest(91, 4500))
 
 export const Equator2EclipticWest = (LongiRaw, Sidereal, year) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
     let Longi = LongiRaw % (Sidereal / 4)
