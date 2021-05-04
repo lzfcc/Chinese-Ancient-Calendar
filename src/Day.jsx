@@ -47,7 +47,7 @@ export default class Day extends React.Component {
           <p>{this.state.output.YearGod}</p>
           <div className='YearColor'>
             <table>
-              {(this.state.output.YearColor || []).map((row) => {
+              {(this.state.output.YearColor || []).map(row => {
                 return (
                   <tr>
                     {row.map(d => {
@@ -67,7 +67,7 @@ export default class Day extends React.Component {
               <p dangerouslySetInnerHTML={{ __html: MonInfo[index + 1] }}></p>
               <span className='YearColor'>
                 <table>
-                  {(MonColor[index + 1] || []).map((row) => {
+                  {(MonColor[index + 1] || []).map(row => {
                     return (
                       <tr>
                         {row.map(d => {
@@ -110,7 +110,7 @@ export default class Day extends React.Component {
     return (
       <div className='day-table'>
         <table>
-          {rows.map((row) => (
+          {rows.map(row => (
             <tr>{row}</tr>
           ))}
         </table>
@@ -243,7 +243,7 @@ export default class Day extends React.Component {
             <li>【天李】=天理=天獄。不可入官、入室</li>
             <li>【臨日】=赤帝臨日，忌臨民、訴訟。<n>以上王強<v>出土戰國秦漢數術文獻神煞研究</v></n></li>
           </ul>
-          <p>儒略日轉換為公曆日期的方法：之前都是每部曆法分別歸算出上元的儒略日數，再將積日等同於儒略日積日，算出公曆日期。這樣很麻煩，因為每部曆法要單獨歸算，更重要的是經常會出現一日的誤差，找不到原因。現在新方法非常妙：假設公元 1000 年年前冬至 12 月 16 日乙酉儒略日 2086292 爲曆元，算出該年假想冬至儒略日 <code>OriginJdAccum = 2086292 + Math.floor(365.243 * (year - 1000))</code> ，換算成干支序。另計算該曆冬至積日，兩者相減，卽 <code>OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)</code>。<code>OriginJdAccum + OriginJdDif</code> 卽爲該曆冬至儒略日，各加距冬至日數得每日儒略日。</p>
+          <p>儒略日轉換爲公曆日期的方法：之前都是每部曆法分別歸算出上元的儒略日數，再將積日等同於儒略日積日，算出公曆日期。這樣很麻煩，因爲每部曆法要單獨歸算，更重要的是經常會出現一日的誤差，找不到原因。現在新方法非常妙：假設公元 1000 年年前冬至 12 月 16 日乙酉儒略日 2086292 爲曆元，算出該年假想冬至儒略日 <code>OriginJdAccum = 2086292 + Math.floor(365.243 * (year - 1000))</code> ，換算成干支序。另計算該曆冬至積日，兩者相減，卽 <code>OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)</code>。<code>OriginJdAccum + OriginJdDif</code> 卽爲該曆冬至儒略日，各加距冬至日數得每日儒略日。</p>
         </article>
       </>
     )

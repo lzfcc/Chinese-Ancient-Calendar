@@ -29,7 +29,7 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
         }
     }
     const gcd = GcdLcm(a, b).gcd // 求最大公因數
-    ////////李銳「有日法求強弱」：只需要日法卽可。但是弱數要<強母，否則解不出來，這也是因為如果大於強母，則日法積分太多。李繼閔《再評清代學者的調日法研究》
+    ////////李銳「有日法求強弱」：只需要日法卽可。但是弱數要<強母，否則解不出來，這也是因爲如果大於強母，則日法積分太多。李繼閔《再評清代學者的調日法研究》
     const K = CongruenceModulo(SmallDenom, BigDenom)
     const J1 = Number(K.Result) * SmallDenom
     const N1 = SmallDenom * BigDenom

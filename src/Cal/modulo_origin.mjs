@@ -298,7 +298,7 @@ export const IndetermEqua = (a, b, z) => { // a彊母b弱母
 //     let TempSum = ''
 //     for (let k = 0; k <= i / 2 - 1; k++) {
 //         TempSum += Temp[k]
-//     } // 上面是為了湊出一個能給Sunzi函數用的字符串
+//     } // 上面是爲了湊出一個能給Sunzi函數用的字符串
 //     const S2 = Sunzi(TempSum).S
 //     const S2Print = '分母最小公倍數 ' + S1 + '，共同週期 ' + S2 + '/' + S1 + ' = ' + (S2 / S1) + 'n'
 //     const ZhangYuanRange = parseFloat(((S2 / Input[0]) * Input[1] / Input[3]).toPrecision(14))

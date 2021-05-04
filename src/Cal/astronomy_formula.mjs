@@ -50,7 +50,7 @@ export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的�
         // }
         EclipticLongiDif = Math.abs(Longi - h)
     }
-    if ((LongiRaw >= 0 && LongiRaw < QuarSolar) || (LongiRaw >= HalfSolar && LongiRaw < Solar * 0.75)) {
+    if (LongiRaw < QuarSolar || (LongiRaw >= HalfSolar && LongiRaw < Solar * 0.75)) {
         EclipticLongi = LongiRaw - LongiDif
         if (EclipticLongiDif) {
             EquatorLongi = LongiRaw + EclipticLongiDif
@@ -58,7 +58,7 @@ export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的�
     } else {
         EclipticLongi = LongiRaw + LongiDif
         if (EclipticLongiDif) {
-            EquatorLongi = LongiRaw + EclipticLongiDif
+            EquatorLongi = LongiRaw - EclipticLongiDif
         }
     }
     return {
@@ -262,7 +262,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
 // console.log(Longi2LatiFormula(31.816049, 'Jiyuan').Lati)
 
 // 崇玄赤轉黃，用的「赤道日度」，赤轉赤緯，「昏後夜半日數」，晷長：「日中入二至加時以來日數」
-export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿用大衍：正午與二至時刻的距離加上日躔。陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因為整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。崇玄、崇天的節接銜接不理想。
+export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿用大衍：正午與二至時刻的距離加上日躔。陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因爲整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。崇玄、崇天的節接銜接不理想。
     let Solar = 0
     if (CalName === 'Chongxuan') {
         Solar = 365.2445
@@ -349,8 +349,8 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
 // console.log(Longi2DialFormula(95, 'Jiyuan').Print)
 
 export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該日距冬至黃道度，入交日。不知是否應該加上日躔
-    const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum
     const {
+        Type,
         AutoPara
     } = Bind(CalName)
     const {
@@ -361,43 +361,48 @@ export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該�
         Quadrant = 90.92
     } else if (CalName === 'Jiyuan') {
         Quadrant = 90.9486
-    } else if (CalName === 'Shoushi') {
+    } else if (Type === 11) {
         Quadrant = 91.314375
     }
+    const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 月所入正交積度
     let Longi = LongiRaw % Quadrant
+    if (Longi > Quadrant / 2) {
+        Longi = Quadrant - Longi
+    }
     let Solar = 0
     if (['Chongtian', 'Mingtian'].includes(CalName)) {
         Solar = 365.24
     } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
         Solar = 365.2436
-    } else if (CalName === 'Shoushi') {
+    } else if (Type === 11) {
         Solar = 365.2425
     }
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
-    const WinsolsDif = WinsolsDifRaw - NodeAccum // % (Node / 2) // 正交距二至的黃道度。我猜的
+    const HalfNode = Node / 2
+    const WinsolsDif = WinsolsDifRaw - NodeAccum // 正交太陽黃度。我猜的
     let WinsolsDifHalf = WinsolsDif % HalfSolar
     if (WinsolsDifHalf > QuarSolar) { // 這一步沒有說明
         WinsolsDifHalf = HalfSolar - WinsolsDifHalf
     }
-    if (Longi > Quadrant / 2) {
-        Longi = Quadrant - Longi
-    }
+    let EclipticEquatorDif = 0
     let EclipticWhiteDif = 0
     let EquatorWhiteDif = 0
     let WhiteLongi = 0
     let EquatorLongi = 0
-    if (CalName === 'Shoushi') {
+    let EquatorLongiB = 0
+    let sign1 = 1
+    if (Type === 11) {
         let sign = -1
         if (WinsolsDif > Quadrant * 2) {
             sign = 1
         }
         const V1 = 98 + sign * 24 * WinsolsDifHalf / Quadrant // 定限度
-        const EquatorLongiRaw = Hushigeyuan(LongiRaw, 365.2575).EquatorLongi
-        EquatorLongi = EquatorLongiRaw % Quadrant // p128書上說直接由黃赤道率査得，問題是月道又不是日道，怎麼能一樣呢
+        EquatorLongi = Hushigeyuan(LongiRaw, 365.2575).EquatorLongi // p128書上說直接由黃赤道率査得
+        EquatorWhiteDif = EquatorLongi - LongiRaw
         WhiteLongi = EquatorLongi + (V1 - WinsolsDifHalf) * WinsolsDifHalf / 1000
     } else {
-        if (CalName === 'Chongtian') {
+        if (CalName === 'Chongtian') { // 半交後正交前-，正交後半交前+
             EclipticWhiteDif = Longi * (125 - Longi) / 2400
             EquatorWhiteDif = Longi * WinsolsDifHalf * (125 - Longi) / 216000
         } else if (CalName === 'Mingtian') {
@@ -407,29 +412,47 @@ export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該�
             EclipticWhiteDif = Longi * (400 - 3 * Longi) / 8000
             EquatorWhiteDif = Longi * WinsolsDifHalf * (400 - 3 * Longi) / 720000
         } else if (CalName === 'Jiyuan') {
-            EclipticWhiteDif = Longi * (101 - Longi) / 2000
-            if (LongiRaw <= Node / 2 && WinsolsDif <= HalfSolar) {
-                const F5 = Math.abs(WinsolsDifHalf - QuarSolar)
-                EquatorWhiteDif = 9 * F5 * Longi * (101 - Longi) / 16000 * Quadrant
-            } else if (LongiRaw > Node / 2 && WinsolsDif > HalfSolar) {
-                const F6 = Math.abs(WinsolsDifHalf - 3 * QuarSolar)
-                EquatorWhiteDif = 7 * F6 * Longi * (101 - Longi) / 16000 * Quadrant
+            EclipticWhiteDif = Longi * (101 - Longi) / 2000 // 我猜意思大概是這裏求出來是給求赤白差做鋪墊，不是真正要用這個
+            EquatorLongiB = Equator2EclipticFormula(LongiRaw, CalName).EquatorLongi // 直接用紀元的黃赤轉換求出來的，不是九道術的
+            // EclipticEquatorDif = EquatorLongi - LongiRaw
+            if ((NodeAccum <= HalfNode && (WinsolsDif < QuarSolar || WinsolsDif >= Solar * 0.75)) || (NodeAccum > HalfNode && WinsolsDif >= QuarSolar && WinsolsDif < Solar * 0.75)) {
+                const N1 = 1.125 * EclipticWhiteDif
+                const F5 = Math.abs(WinsolsDif - Solar * 0.75) // 正交度距秋分度數
+                EquatorWhiteDif = N1 * F5 / Quadrant
+                // 同名：赤白=黃赤+黃白，異名：赤白=黃赤-黃白 // WinsolsDif <= HalfSolar            
+                EclipticEquatorDif = EquatorWhiteDif - EclipticWhiteDif
+            } else {
+                const N2 = 0.875 * EclipticWhiteDif
+                const F6 = Math.abs(WinsolsDif - QuarSolar)
+                EquatorWhiteDif = N2 * F6 / Quadrant
+                EclipticEquatorDif = EquatorWhiteDif + EclipticWhiteDif
             }
         }
-        if ((LongiRaw >= 0 && LongiRaw < Quadrant) || (LongiRaw >= Quadrant * 2 && LongiRaw < Quadrant * 3)) {
-            WhiteLongi = parseFloat((LongiRaw - EclipticWhiteDif).toPrecision(14))
-            EquatorLongi = parseFloat((LongiRaw - EquatorWhiteDif).toPrecision(14))
+        let sign = 1
+        if ((LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant)) {
+            sign = -1
+        }
+        EclipticWhiteDif *= sign
+        EquatorWhiteDif *= sign
+        WhiteLongi = LongiRaw + EclipticWhiteDif
+        if (CalName === 'Jiyuan') {
+            EclipticEquatorDif *= sign
+            EquatorLongi = LongiRaw + EclipticEquatorDif
         } else {
-            WhiteLongi = parseFloat((LongiRaw + EclipticWhiteDif).toPrecision(14))
-            EquatorLongi = parseFloat((LongiRaw + EquatorWhiteDif).toPrecision(14))
+            EquatorLongi = WhiteLongi + EquatorWhiteDif
         }
     }
     return {
-        WhiteLongi,
-        EquatorLongi
+        EclipticEquatorDif,
+        EclipticWhiteDif,
+        EquatorWhiteDif,
+        LongiRaw,
+        EquatorLongi,
+        EquatorLongiB,
+        WhiteLongi
     }
 }
-// console.log(MoonLongiFormula(183, 15, 'Shoushi'))
+// console.log(MoonLongiFormula(183, 3, 'Jiyuan'))
 
 export const MoonLatiFormula = (NodeAccumRaw, CalName) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》
     let Cycle = 363.8

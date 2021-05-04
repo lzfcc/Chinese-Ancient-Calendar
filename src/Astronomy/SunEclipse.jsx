@@ -67,7 +67,7 @@ export default class Converter extends React.Component {
             <th>食延刻數</th>
             <th>食甚時刻</th>            
           </tr>
-          {(this.state.output || []).map((row) => {
+          {(this.state.output || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>

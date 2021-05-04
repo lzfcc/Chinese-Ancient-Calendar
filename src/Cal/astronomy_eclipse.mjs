@@ -203,7 +203,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             }
             Decimal += sign2 * Tcorr
         } else {
-            Tcorr = QuarDif * NodeDif * 2 / 7 // 去交時是以時辰為單位，卽1日12辰
+            Tcorr = QuarDif * NodeDif * 2 / 7 // 去交時是以時辰爲單位，卽1日12辰
             Decimal -= -sign2 * Tcorr
         }
     }
@@ -234,7 +234,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 }
             }
         } else if (CalName === 'Huangji') {
-            if (NodeAccum >= HalfNode) { // 在陰曆應食不食《中國古代曆法》頁531:黃道南食限小於黃道北，因為月在黃道北，視去交小於計算去交
+            if (NodeAccum >= HalfNode) { // 在陰曆應食不食《中國古代曆法》頁531:黃道南食限小於黃道北，因爲月在黃道北，視去交小於計算去交
                 if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 10 && NoonDif < 0.125 && NoonDif >= 1 / 12) {
                     SunLimit1 = 12.25 / 12
                 } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 20 && NoonDif < 0.125 && NoonDif >= 1 / 12) {
@@ -322,7 +322,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             let sign4 = 0
             if (WinsolsDif >= 2 * HalfTermLeng && WinsolsDif < 10 * HalfTermLeng && NodeDif > 5 / 12 && ((NodeAccum > HalfNode && NodeAccum < Node * 0.75) || NodeAccum < QuarNode)) { // 去後交五時外
                 sign4 = -1
-                // if (NodeAccumHalf > QuarNode) { // 交前 按照劉洪濤頁462的意思，他說的交前交後跟我這相反，到底那種是對的呢？不過這裏符號還是跟他一樣。劉洪濤和藤豔輝對術文理解不一，劉洪濤認為後面的「時差減者，先交減之，後交加之」一句用來描述前面的「皆去不食餘一時」，藤認為後面和前面是分開的，前面的一時符號都是-。感覺藤的說法可靠一些。
+                // if (NodeAccumHalf > QuarNode) { // 交前 按照劉洪濤頁462的意思，他說的交前交後跟我這相反，到底那種是對的呢？不過這裏符號還是跟他一樣。劉洪濤和藤豔輝對術文理解不一，劉洪濤認爲後面的「時差減者，先交減之，後交加之」一句用來描述前面的「皆去不食餘一時」，藤認爲後面和前面是分開的，前面的一時符號都是-。感覺藤的說法可靠一些。
                 //     if ((Decimal >= 1 / 4 && Decimal < 1 / 2) || (Decimal >= 3 / 4)) {
                 //         sign4 = 1
                 //     }
@@ -636,7 +636,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             }
         }
     }
-    if (['Dayan', 'Zhide'].includes(CalName)) { // 大衍以陽城為準，有月食食甚時刻修正，和日食修正一樣。正元五紀沒有月食時差記載，同大衍                
+    if (['Dayan', 'Zhide'].includes(CalName)) { // 大衍以陽城爲準，有月食食甚時刻修正，和日食修正一樣。正元五紀沒有月食時差記載，同大衍                
         Tcorr = NodeDif * 0.0785 / 20  // 同名（同在表）相加異名（同在裏）相減。但是頁540算例方向跟這裡不一樣
         if (WinsolsDif > QuarSolar && WinsolsDif < Solar * 0.75) { // 日在赤道北
             if (NodeAccum < HalfNode) {
@@ -661,7 +661,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 }
             } else {
                 style = 3 // 陽曆食
-                Magni = NodeDif / (90 / Denom) // (SunLimit1 - NodeDif) / (90 / Denom) // 《中國古代曆法》頁534改為注釋中的
+                Magni = NodeDif / (90 / Denom) // (SunLimit1 - NodeDif) / (90 / Denom) // 《中國古代曆法》頁534改爲注釋中的
             }
             const ExMagniFunc = ExMagni(Magni)
             Magni = ExMagniFunc.Magni
@@ -892,7 +892,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
     const WinsolsDifHalf = WinsolsDif % HalfSolar // 定朔
     const WinsolsDifTrueHalf = WinsolsDifTrue % HalfSolar // 食甚
     // 下爲食分改正
-    // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作為正負判斷依據，完全不對
+    // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作爲正負判斷依據，完全不對
     let sign1 = 1
     if (WinsolsDif >= QuarSolar && WinsolsDif < Solar * 0.75) {
         if (NodeAccum < HalfNode) {

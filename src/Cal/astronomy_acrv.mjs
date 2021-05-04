@@ -22,7 +22,7 @@ export const AutoMoonAvgV = CalName => {
     let Plus = 0
     if (CalName === 'Daye') { // 陳美東《月離表初探》
         Plus = -0.00036322096
-    } else if (CalName === 'Huangji') { // 皇極平行速695。皇極、宣明更好的方法是Math.floor，但是為了保持統一，這裏還是麻煩一下
+    } else if (CalName === 'Huangji') { // 皇極平行速695。皇極、宣明更好的方法是Math.floor，但是爲了保持統一，這裏還是麻煩一下
         Plus = -0.00295858
     } else if (CalName === 'Xuanming') {
         Plus = 0.000301739405
@@ -288,7 +288,7 @@ export const SunFormula = (WinsolsDif, CalName) => {
                 WinsolsDif -= HalfSolar
                 signA = -1
             }
-            SunDifAccum = signA * WinsolsDif * (HalfSolar - WinsolsDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得為立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000為分母。
+            SunDifAccum = signA * WinsolsDif * (HalfSolar - WinsolsDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得爲立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000爲分母。
         }
     }
     return SunDifAccum
@@ -441,7 +441,7 @@ export const MoonDifAccumTable = (AnomaAccum, CalName) => {
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
     // const MoonAvgV = parseFloat((MoonAvgVDeg * Denom).toPrecision(12))
     // 下月離表。麟德：盈加朒減，速減遲加
-    const MoonAcrAvgDifList = [] // 損益率。速差。消減息加，前消後息。加減數（限）。《古代曆法計算法》第515-518頁。《中國古代曆法》第453頁說劉洪濤誤會為實平行差。麟德爲增減率
+    const MoonAcrAvgDifList = [] // 損益率。速差。消減息加，前消後息。加減數（限）。《古代曆法計算法》第515-518頁。《中國古代曆法》第453頁說劉洪濤誤會爲實平行差。麟德爲增減率
     const MoonAcrAvgDifListA = []
     const MoonAcrAvgDifListB = []
     let MoonDifAccumList = []
@@ -792,7 +792,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             MoonTcorr2 = -MoonDifAccum / (moonFunc.MoonAcrV - sunFunc.SunAcrV)
             Tcorr2 = SunTcorr2 + MoonTcorr2
         }
-        if ((Type >= 5 && Type <= 10) || Type === 20) { // 其他曆法都是這樣，不懂授時為何就是定朔加減差
+        if ((Type >= 5 && Type <= 10) || Type === 20) { // 其他曆法都是這樣，不懂授時爲何就是定朔加減差
             NodeAccumCorr = SunTcorr2 + 0.0785077 * MoonTcorr2 //  // 劉金沂《麟徳曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟徳61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
         }
     }

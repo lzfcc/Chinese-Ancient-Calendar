@@ -104,6 +104,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const HouLeng = Solar / 72
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const HalfNode = Node / 2
+        const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
         const FirstOrderRaw = NewmOrderRaw[0]
         const FirstWinsolsDif = +(FirstOrderRaw - OriginAccum).toFixed(5) // 正月到冬至距離
         let HexagramAccumList = []
@@ -163,7 +164,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const YearColor = YearColorConvert(YuanYear)
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建
         const HalfTermLeng = Solar / 24
-        const OriginJdAccum = 2086292 + ~~(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作為儒略日標準
+        const OriginJdAccum = 2086292 + ~~(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
         const OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
         const MonName = []
         const MonInfo = []
@@ -282,33 +283,38 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     if (Type >= 7 && Type <= 10) { // 月行九道
                         if (WinsolsDif < 3 * HalfTermLeng || WinsolsDif >= 21 * HalfTermLeng) { // 冬
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticPrint[i][k] = '白陽'
+                                MoonEclipticLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticPrint[i][k] = '靑陰'
+                                MoonEclipticLati[i][k] = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
                             }
                         } else if (WinsolsDif >= 3 * HalfTermLeng && WinsolsDif < 9 * HalfTermLeng) {
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticPrint[i][k] = '朱陽'
+                                MoonEclipticLati[i][k] = `<span class='lati-red'>朱</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticPrint[i][k] = '黑陰'
+                                MoonEclipticLati[i][k] = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
                             }
                         } else if (WinsolsDif >= 9 * HalfTermLeng && WinsolsDif < 15 * HalfTermLeng) {
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticPrint[i][k] = '靑陽'
+                                MoonEclipticLati[i][k] = `<span class='lati-green'>靑</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticPrint[i][k] = '白陰'
+                                MoonEclipticLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yin'>陰</span>`
                             }
                         } else {
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticPrint[i][k] = '黑陽'
+                                MoonEclipticLati[i][k] = `<span class='lati-black'>黑</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticPrint[i][k] = '朱陰'
+                                MoonEclipticLati[i][k] = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
                             }
+                        }
+                        if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif) {
+                            MoonEclipticLati[i][k] = `<span class='lati-yellow'>黃</span><span class='lati-yang'>陽</span>`
+                        } else if ((NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
+                            MoonEclipticLati[i][k] = `<span class='lati-yellow'>黃</span><span class='lati-yin'>陰</span>`
                         }
                     }
                     MoonEclipticLongiAccum[i][k] = (WinsolsDifRaw * MoonAvgVDeg + MoonDifAccum) % Sidereal + OriginAccum
-                    const MoonLongiLatiFunc = AutoMoonLongiLati(NodeAccum + NodeAccumCorr, Type === 11 ? SunEclipticLongi : SunEquatorLongi, CalName)
-                    MoonEclipticLati[i][k] = MoonLongiLatiFunc.MoonEclipticLati.toFixed(3) + '度'
+                    const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclipticLongi : SunEquatorLongi, NodeAccum + NodeAccumCorr, CalName)
+                    MoonEclipticLati[i][k] += MoonLongiLatiFunc.MoonEclipticLati.toFixed(3) + '度'
                 }
                 const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclipticLongiNoon : SunEquatorLongiNoon, WinsolsDecimal, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'

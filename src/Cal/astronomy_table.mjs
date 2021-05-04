@@ -74,7 +74,7 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
-    if (['Huangji', 'Linde'].includes(CalName)) { // 為何皇極增速先慢後快，大衍先快後慢？
+    if (['Huangji', 'Linde'].includes(CalName)) { // 爲何皇極增速先慢後快，大衍先快後慢？
         LongiDifDifInitial = 97 / 450 // ⋯⋯四度爲限。初數九十七，每限增一，以終百七
         LongiDifDifChange = 1 / 450
     } else if (['Dayan', 'Zhide', 'Zhengyuan', 'Wuji'].includes(CalName)) {
@@ -340,7 +340,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////�
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
     let EclipticWhiteDif = 0
-    const Smallquadrant = Solar / 72
+    const Smallquadrant = 5.07 // Solar / 72// 欽天8節72限
     if (CalName === 'Huangji') {
         LongiDifDifInitial = 11 / 45 // ⋯⋯四度爲限，初十一，每限損一，以終於一
         LongiDifDifChange = -1 / 45
@@ -392,24 +392,28 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////�
     }
     let EquatorWhiteDif = 0
     if (CalName === 'Dayan') {
-        EquatorWhiteDif = ~~(WinsolsDifHalf / (Solar / 72)) / 18
+        EquatorWhiteDif = WinsolsDifHalf / (Solar / 72) / 18
     } else if (CalName === 'Qintian') {
         const OriginXian = Math.abs(WinsolsDifHalf - Solar / 4) / Smallquadrant // 限數
-        EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，跟用表不一樣
+        // EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，沒寫對
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
     } else if (CalName === 'Yingtian') {
         const Hou = ~~(WinsolsDifHalf / (Solar / 72)) / 18
         EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
     }
     let EquatorLongi = 0
-    if ((LongiRaw >= 0 && LongiRaw < Quadrant) || (LongiRaw >= Quadrant * 2 && LongiRaw < Quadrant * 3)) {
-        WhiteLongi = parseFloat((LongiRaw - EclipticWhiteDif).toPrecision(14))
-        EquatorLongi = parseFloat((LongiRaw - EquatorWhiteDif).toPrecision(14))
-    } else {
-        WhiteLongi = parseFloat((LongiRaw + EclipticWhiteDif).toPrecision(14))
-        EquatorLongi = parseFloat((LongiRaw + EquatorWhiteDif).toPrecision(14))
+    // 大衍：（黃白差）距半交前後各九限，以差數爲減；距正交前後各九限，以差數爲加
+    let sign = 1
+    // if (LongiRaw >= Quadrant && LongiRaw < Quadrant * 3) {
+    if ((LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant)) {
+        sign = -1
     }
+    EclipticWhiteDif *= sign
+    EquatorWhiteDif *= sign
+    WhiteLongi = LongiRaw + EclipticWhiteDif
+    EquatorLongi = EquatorWhiteDif ? WhiteLongi + EquatorWhiteDif : 0
     return {
+        LongiRaw,
         WhiteLongi,
         EquatorLongi,
         EclipticWhiteDif,
@@ -417,7 +421,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////�
     }
 }
 // console.log(MoonLongiTable(55.25, 11.22, 'Dayan'))
-// console.log(MoonLongiTable(55.25, 11.22, 'Qintian'))
+// console.log(MoonLongiTable(45, 3, 'Qintian').EquatorWhiteDif)
 
 export const MoonLatiTable = (NodeAccum, CalName) => {
     const {
@@ -442,15 +446,15 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     for (let i = 0; i <= 13; i++) {
         MoonLatiDif[i] = MoonLatiDifList[i] / portion
     }
-    if (!MoonLatiAccumList) {
-        MoonLatiAccumList = MoonLatiDif.slice()
-        for (let i = 1; i <= 14; i++) {
-            MoonLatiAccumList[i] += MoonLatiAccumList[i - 1]
-            MoonLatiAccumList[i] = +MoonLatiAccumList[i].toFixed(13)
-        }
-    }
-    MoonLatiAccumList = MoonLatiAccumList.slice(-1).concat(MoonLatiAccumList.slice(0, -1))
-    MoonLatiAccumList[0] = 0
+    // if (!MoonLatiAccumList) {
+    //     MoonLatiAccumList = MoonLatiDif.slice()
+    //     for (let i = 1; i <= 14; i++) {
+    //         MoonLatiAccumList[i] += MoonLatiAccumList[i - 1]
+    //         MoonLatiAccumList[i] = +MoonLatiAccumList[i].toFixed(13)
+    //     }
+    // }
+    // MoonLatiAccumList = MoonLatiAccumList.slice(-1).concat(MoonLatiAccumList.slice(0, -1))
+    // MoonLatiAccumList[0] = 0
     const NodeAccumHalf = NodeAccum % (Node / 2)
     const NodeAccumHalfInt = ~~NodeAccumHalf
     let Yinyang = -1
@@ -487,4 +491,4 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     }
 }
 // 大衍：《中國古代曆法》頁530
-// console.log(MoonLatiTable(13.61, 'Qianxiang'))
+// console.log(MoonLatiTable(13.61, 'Daming'))

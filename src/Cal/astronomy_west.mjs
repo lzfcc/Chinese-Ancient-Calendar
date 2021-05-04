@@ -29,7 +29,7 @@ const r2d = degree => big(degree).mul(180).div(pi)
 // }
 
 export const ConstWest = year => {
-    // 儒略世紀：36525日。我下面索性將100年作為儒略世紀，要不然太麻煩
+    // 儒略世紀：36525日。我下面索性將100年作爲儒略世紀，要不然太麻煩
     year = Number(year)
     // 黃赤交角
     // ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3   // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
@@ -92,7 +92,7 @@ export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔
     const M = d2r(WinsolsDifRaw * 360 / Solar) // 距離冬至日數轉換成平黃經
     const M1 = d2r((WinsolsDifRaw - 1) * 360 / Solar)
     let SunDifAccum = big(e).mul(2).mul(M.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M.mul(2)))) // 中心差=真-平近點角
-    SunDifAccum = SunDifAccum.mul(3437.747 / 60).mul(Solar / 360) // 化為角分乘3437.747，不知道怎么来的
+    SunDifAccum = SunDifAccum.mul(3437.747 / 60).mul(Solar / 360) // 化爲角分乘3437.747，不知道怎么来的
     let SunDifAccum1 = big(e).mul(2).mul(M1.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M1.mul(2))))
     SunDifAccum1 = SunDifAccum1.mul(3437.747 / 60).mul(Solar / 360)
     const SunAcrV = SunDifAccum.sub(SunDifAccum1).add(1)
@@ -138,7 +138,7 @@ export const Equator2EclipticWest = (LongiRaw, Sidereal, year) => { // 《中國
 // 一天之内太阳高度角的变化速率如何计算？ - Pjer https://www.zhihu.com/question/25909220/answer/1026387602 一年中太阳直射点在地球上的移动速度是多少？ - 黄诚赟的回答 https://www.zhihu.com/question/335690936/answer/754032487「太阳直射点的纬度变化不是匀速的，春分秋分最大，夏至冬至最小。」
 // https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE
 export const Longi2LatiWest = (lRaw, Sidereal, year) => { // 《中國古代曆法》頁630    
-    const Angle = big(lRaw).mul(pi).div(big.div(Sidereal, 2)).add(big.mul(pi, 1.5)) // 角度轉換為定義域
+    const Angle = big(lRaw).mul(pi).div(big.div(Sidereal, 2)).add(big.mul(pi, 1.5)) // 角度轉換爲定義域
     const E = d2r(ConstWest(year).obliquity) // 化爲定義域
     const d = Angle.sin().mul(E.sin()).asin() //.toPrecision(60) //.toSD(60)
     const Lati = d.mul(Sidereal / 2).div(pi).mul(Sidereal / 360).toNumber()
@@ -193,15 +193,15 @@ const zAcrConvert = (Decimal, Lati, f) => { // 日分，赤緯radius，緯度rad
         zAcr
     }
 }
-export const Deciaml2Angle = (f, h1, m1, s1, Day, h, m, s, year, height) => { // 丁豔、袁隆基、趙培濤、仝軍令《太陽視日軌跡跟蹤算法研究》
+export const Deciaml2Angle = (f, h1, m1, s1, WinsolsDifInt, h, m, s, year, height) => { // 丁豔、袁隆基、趙培濤、仝軍令《太陽視日軌跡跟蹤算法研究》
     f = d2r(f) // 地理緯度
-    Day = parseInt(Day) // 距年前冬至整數日數，冬至當日爲0
+    WinsolsDifInt = parseInt(WinsolsDifInt) // 距年前冬至整數日數，冬至當日爲0
     year = Number(year) // 那一年
     const Solar = ConstWest(year).Solar
     const Decimal1 = big(h1).div(24).add(big(m1).div(1440)).add(big(s1).div(86400)).toNumber() // 冬至
     const Decimal = big(h).div(24).add(big(m).div(1440)).add(big(s).div(86400)).toNumber() // 所求
-    Day += Decimal - Decimal1
-    const Longi = big(Day).add(SunWest(Day, year).SunDifAccum).mul(360).div(Solar) // 黃經
+    WinsolsDifInt += Decimal - Decimal1
+    const Longi = big(WinsolsDifInt).add(SunWest(WinsolsDifInt, year).SunDifAccum).mul(360).div(Solar) // 黃經
     const Lati = d2r(big(Longi2LatiWest(Longi, Solar, year).Lati).mul(360).div(Solar))
     // 假設正午時角是0，向西爲正，向東爲負
     const zAcrFunc = zAcrConvert(Decimal, Lati, f)
@@ -275,7 +275,7 @@ export const MoonLongiWest = (EclipticRaw, Sidereal, year) => {
 }
 // console.log(MoonLongiWest(105, 365.2575, 1281))
 
-export const MoonLatiWest = (Day, NodeAvgV, Sidereal, year) => {
+export const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
     const T = d2r(45)
     const cosT = T.cos()
     const sinT = T.sin()
@@ -287,7 +287,7 @@ export const MoonLatiWest = (Day, NodeAvgV, Sidereal, year) => {
     const sinE = E.sin()
     const cosE = E.cos()
     const cotE = big.tan(E.neg().add(pi.div(2)))
-    const n0 = NodeAvgV.mul(Day).mul(pi).div(Sidereal / 2)
+    const n0 = NodeAvgV.mul(NodeAccum).mul(pi).div(Sidereal / 2)
     const F = d2r(big(5.1453))
     const sinF = F.sin()
     const cosF = F.cos()

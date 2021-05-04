@@ -155,7 +155,7 @@ export const Interpolate1_big = (n, Initial) => {
 // console.log(Interpolate1(2.115, '27,64,125,216,343'))
 // console.log(Interpolate1_big(4.000001, 4, '27,64,125,216,343').Print)
 // console.log(Interpolate1_big(4.000001, 3, '25791，27341，28910，30499，32109').Print)
-// 算出來差分之後，求y。為了節省算力。delta由低次到高次。
+// 算出來差分之後，求y。爲了節省算力。delta由低次到高次。
 export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用decimal.js
     delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length

@@ -20,7 +20,7 @@ export default class Converter extends React.Component {
             this.setState({ a: e.currentTarget.value });
           }}
         />
-        <span> 經朔入轉</span>
+        <span> 經望入轉</span>
         <input
           value={this.state.b}
           onChange={e => {
@@ -34,7 +34,7 @@ export default class Converter extends React.Component {
             this.setState({ c: e.currentTarget.value });
           }}
         />
-        <span> 經朔距冬至</span>
+        <span> 經望距冬至</span>
         <input
           value={this.state.d}
           onChange={e => {
@@ -67,7 +67,7 @@ export default class Converter extends React.Component {
             <th>食延刻數</th>
             <th>食甚時刻</th>            
           </tr>
-          {(this.state.output || []).map((row) => {
+          {(this.state.output || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>

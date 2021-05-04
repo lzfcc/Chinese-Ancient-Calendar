@@ -55,7 +55,7 @@ export default class a extends React.Component {
     return (
       <div className="ans table2">
         <table>
-          {(this.state.output || []).map((row) => {
+          {(this.state.output || []).map(row => {
             return (
               <tr>
                 <td className="RowTitle">{row.title}</td>

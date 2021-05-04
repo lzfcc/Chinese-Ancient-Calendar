@@ -73,7 +73,7 @@ export default class a extends React.Component {
             <th>日法</th>
             <th>約餘</th>
           </tr>
-          {(this.state.output1 || []).map((row) => {
+          {(this.state.output1 || []).map(row => {
             return (
               <tr>
                 <td className="RowTitle">{row.title}</td>

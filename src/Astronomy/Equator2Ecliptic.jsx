@@ -58,12 +58,12 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>赤→黃</th>
+            <th>赤 ⇒ 黃</th>
             <th>誤差</th>
-            <th>黃→赤</th>
+            <th>黃 ⇒ 赤</th>
             <th>誤差</th>
           </tr>
-          {(this.state.outputEcliptic || []).map((row) => {
+          {(this.state.outputEcliptic || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>

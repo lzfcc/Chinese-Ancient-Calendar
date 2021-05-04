@@ -206,6 +206,11 @@ h2 {
   margin: .25em auto;
 }
 
+.ans.table2.right h3 {
+  margin: 1em auto .5em;
+  font-size: 1.2em;
+}
+
 .single-cal p {
   margin: 1em auto .3em;
   font-size: 1em;
@@ -335,7 +340,7 @@ table td {
 
 .table2 table td {
   width: auto;
-  padding: .15em .75em;
+  padding: .15em .7em;
   text-align: left;
 }
 
@@ -615,7 +620,7 @@ input {
 
 .modulo {
   margin: 5em auto;
-  max-width: 1000px;
+  max-width: 1060px;
 }
 
 .modulo h2 {
@@ -705,7 +710,8 @@ hr {
   background: var(--bggray);
   border: 1px solid var(--shallowgray);
   margin: 3em auto 0;
-  width: 93vw;
+  width: 1299px;
+  padding-bottom: 2em;
 }
 
 .day-render h2 {
@@ -740,7 +746,8 @@ hr {
 }
 
 .day-table table {
-  border: 1px solid var(--shallowgray);
+  border-top: 1px solid var(--shallowgray);
+  border-bottom: 1px solid var(--shallowgray);
   font-size: .9em;
 }
 
@@ -750,6 +757,7 @@ hr {
   padding: .4em .25em;
   vertical-align: top;
   border: 1px solid var(--shallowgray);
+  border-left: none;
 }
 
 .day-table td p {
@@ -874,6 +882,50 @@ hr {
   color: var(--bg);
   background: var(--purple);
   padding: 1em .5em;
+}
+
+.lati-red {
+  background: var(--letterred);
+  color: var(--bg);
+  padding: .1em .15em;
+}
+
+.lati-black {
+  background: var(--black);
+  color: var(--bg);
+  padding: .1em .15em;
+}
+
+.lati-white {
+  background: white;
+  color: var(--black);
+  padding: .1em .15em;
+}
+
+.lati-green {
+  background: var(--lettergreen);
+  color: var(--bg);
+  padding: .1em .15em;
+}
+
+.lati-yellow {
+  background: var(--letteryellow);
+  color: var(--bg);
+  padding: .1em .15em;
+}
+
+.lati-yang {
+  background: var(--bgpink);
+  color: var(--black);
+  padding: .1em .15em;
+  margin-right: .25em;
+}
+
+.lati-yin {
+  background: var(--gray);
+  color: var(--bg);
+  padding: .1em .15em;
+  margin-right: .25em;
 }
 
 /*!

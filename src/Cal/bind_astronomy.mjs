@@ -34,6 +34,7 @@ import {
 import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
+import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year) => {
     WinsolsDifRaw = +WinsolsDifRaw
@@ -55,15 +56,12 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year) => {
     const {
         MoonDifAccum: WestMoonB,
     } = AutoDifAccum(AnomaAccum + 13.7772755949, WinsolsDifRaw, 'West', year)
-    let Print = [{
-        title: '近地點',
-        data: []
-    }]
-    Print = Print.concat({
+
+    let Print1 = [{
         title: 'Fourier',
         data: [WestSun.toFixed(5), 0, WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4)]
-    })
-    Print = Print.concat(
+    }]
+    Print1 = Print1.concat(
         ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Zhengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Zhengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'NewDaming', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi'].map(title => {
             const {
                 SunDifAccum,
@@ -74,11 +72,13 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year) => {
                 MoonTcorr2,
                 SunTcorr1,
                 MoonTcorr1,
+                NodeAccumCorr
             } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             let SunTcorrPrint = '-'
             let SunTcorrInac = '-'
             let MoonTcorrPrint = '-'
             let MoonTcorrInac = '-'
+            let NodeAccumCorrPrint = '-'
             const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
             const SunDifAccumInac = SunDifAccum ? (SunDifAccum - WestSun).toFixed(4) : '-'
             const MoonDifAccumPrint = MoonDifAccum.toFixed(5)
@@ -97,23 +97,20 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year) => {
                 MoonTcorrPrint = MoonTcorr1.toFixed(5)
                 MoonTcorrInac = (MoonTcorr1 - WestMoonTcorr).toFixed(4)
             }
+            if (NodeAccumCorr) {
+                NodeAccumCorrPrint = NodeAccumCorr.toFixed(4)
+            }
             const Tcorr = +MoonTcorrPrint + (+SunTcorrPrint || 0)
             return {
                 title: CalNameList[title],
-                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac, Tcorr.toFixed(4)]
+                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac, Tcorr.toFixed(4), NodeAccumCorrPrint]
             }
         }))
-    Print = Print.concat(
-        {
-            title: '遠地點',
-            data: []
-        }
-    )
-    Print = Print.concat({
+    let Print2 = [{
         title: 'Fourier',
         data: [WestSun.toFixed(5), 0, WestMoonB.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorrB.toFixed(5), 0, (WestSunTcorr + WestMoonTcorrB).toFixed(4)]
-    })
-    Print = Print.concat(
+    }]
+    Print2 = Print2.concat(
         ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
             const {
                 SunDifAccum,
@@ -122,6 +119,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year) => {
             const {
                 SunTcorr2,
                 MoonTcorr2,
+                NodeAccumCorr
             } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const SunDifAccumPrint = SunDifAccum.toFixed(5)
             const SunDifAccumInac = (SunDifAccum - WestSun).toFixed(4)
@@ -134,10 +132,10 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year) => {
             const Tcorr = +MoonTcorrPrint + +SunTcorrPrint
             return {
                 title: CalNameList[title],
-                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac, Tcorr.toFixed(4)]
+                data: [SunDifAccumPrint, SunDifAccumInac, MoonDifAccumPrint, MoonDifAccumInac, SunTcorrPrint, SunTcorrInac, MoonTcorrPrint, MoonTcorrInac, Tcorr.toFixed(4), NodeAccumCorr.toFixed(4)]
             }
         }))
-    return Print
+    return { Print1, Print2 }
 }
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
@@ -221,7 +219,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName) => {
     const {
         Type,
     } = Bind(CalName)
-    LongiRaw += 0.5 - WinsolsDecimal // 以正午為準
+    LongiRaw += 0.5 - WinsolsDecimal // 以正午爲準
     let Longi2Lati = {}
     let Longi2LatiA = {}
     let Longi2LatiB = {}
@@ -341,7 +339,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
 }
 // console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
 
-export const AutoMoonLongiLati = (NodeAccum, WinsolsDif, CalName) => {
+export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
     const {
         Type,
     } = Bind(CalName)
@@ -366,7 +364,7 @@ export const AutoMoonLongiLati = (NodeAccum, WinsolsDif, CalName) => {
         MoonLongi = MoonLongiTable(WinsolsDif, NodeAccum, 'Dayan')
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        MoonLongi = MoonLongiFormula(WinsolsDif, NodeAccum, 'Yingtian')
+        MoonLongi = MoonLongiTable(WinsolsDif, NodeAccum, 'Yingtian')
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Chongtian', 'Guantian'].includes(CalName)) {
         MoonLongi = MoonLongiFormula(WinsolsDif, NodeAccum, CalName)
@@ -380,18 +378,30 @@ export const AutoMoonLongiLati = (NodeAccum, WinsolsDif, CalName) => {
     } else if (Type === 11) {
         MoonLongi = MoonLongiFormula(WinsolsDif, NodeAccum, CalName)
     }
-    const MoonEquatorLongi = MoonLongi.EquatorLongi || 0
-    const MoonWhiteLongi = MoonLongi.WhiteLongi || 0
+    const EclipticLongi = MoonLongi.LongiRaw || AutoMoonAvgV(CalName) * NodeAccum
+    const EquatorLongi = MoonLongi.EquatorLongi || 0
+    const WhiteLongi = MoonLongi.WhiteLongi || 0
+    const EclipticWhiteDif = MoonLongi.EclipticWhiteDif || 0
+    const EclipticEquatorDif = MoonLongi.EclipticEquatorDif || EquatorLongi - EclipticLongi
+    const EquatorWhiteDif = MoonLongi.EquatorWhiteDif || EquatorLongi - WhiteLongi
+    const EquatorLongiB = MoonLongi.EquatorLongiB || 0
+    const EclipticEquatorDifB = EquatorLongiB - EclipticLongi || 0
     const MoonEclipticLati = MoonLati.Lati || 0
     const MoonEclipticLati1 = MoonLati.Lati1 || 0
     return {
-        MoonEquatorLongi,
-        MoonWhiteLongi,
+        EclipticLongi,
+        EquatorLongi,
+        EquatorLongiB,
+        WhiteLongi,
+        EclipticWhiteDif,
+        EclipticEquatorDif,
+        EclipticEquatorDifB,
+        EquatorWhiteDif,
         MoonEclipticLati,
         MoonEclipticLati1
     }
 }
-// console.log(AutoMoonLongiLati(2.41,366,'Shoushi'))
+// console.log(AutoMoonLongiLati(366, 2.41, 'Huangji'))
 
 export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交日、距冬至日數
     NodeAccum = +NodeAccum
@@ -404,29 +414,48 @@ export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交
     }
     let Print = []
     Print = Print.concat(
-        ['Qianxiang', 'Daming', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
+        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
             let WhiteLongiPrint = '-'
             let EquatorLongiPrint = '-'
+            let EclipticWhiteDifPrint = '-'
+            let EclipticEquatorDifPrint = '-'
+            let EquatorWhiteDifPrint = '-'
             let Lati1Print = '-'
             let LatiPrint = '-'
             const {
-                MoonEquatorLongi,
-                MoonWhiteLongi,
+                EclipticLongi,
+                EquatorLongi,
+                EclipticEquatorDif,
+                EclipticWhiteDif,
+                EquatorWhiteDif,
+                WhiteLongi,
+                EquatorLongiB,
+                EclipticEquatorDifB,
                 MoonEclipticLati1,
                 MoonEclipticLati,
-            } = AutoMoonLongiLati(NodeAccum, WinsolsDif, title)
-            if (MoonEquatorLongi) {
-                EquatorLongiPrint = MoonEquatorLongi.toFixed(4)
-                WhiteLongiPrint = MoonWhiteLongi.toFixed(4)
+            } = AutoMoonLongiLati(WinsolsDif, NodeAccum, title)
+            if (EquatorLongi) {
+                if (EquatorLongiB) {
+                    EquatorLongiPrint = EquatorLongi.toFixed(4) + `\n` + EquatorLongiB.toFixed(4)
+                    EclipticEquatorDifPrint = EclipticEquatorDif.toFixed(4) + `\n` + EclipticEquatorDifB.toFixed(4)
+                } else {
+                    EquatorLongiPrint = EquatorLongi.toFixed(4)
+                    EclipticEquatorDifPrint = EclipticEquatorDif.toFixed(4)
+                }
+
+                EquatorWhiteDifPrint = EquatorWhiteDif.toFixed(4)
+            }
+            if (EclipticWhiteDif) {
+                WhiteLongiPrint = WhiteLongi.toFixed(4)
+                EclipticWhiteDifPrint = EclipticWhiteDif.toFixed(4)
             }
             if (MoonEclipticLati) {
                 Lati1Print = MoonEclipticLati1.toFixed(4)
                 LatiPrint = MoonEclipticLati.toFixed(4)
-                // LatiInac = (Lati - WestB).toFixed(4)
             }
             return {
                 title: CalNameList[title],
-                data: [WhiteLongiPrint, EquatorLongiPrint, Lati1Print, LatiPrint]
+                data: [EclipticLongi.toFixed(4), EquatorLongiPrint, EclipticEquatorDifPrint, WhiteLongiPrint, EclipticWhiteDifPrint, EquatorWhiteDifPrint, Lati1Print, LatiPrint]
             }
         }))
     return Print
@@ -449,7 +478,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw
     if (WinsolsDifRaw > 365.2425) {
         throw (new Error('請輸入一年365.2425內的日數'))
     }
-    // 隋系是要根據月份來判斷的，這裏為了簡化輸入，我改為用節氣判斷季節，這不準確
+    // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
         if (WinsolsDifRaw >= j * HalfTermLeng && WinsolsDifRaw < (j + 1) * HalfTermLeng) {
@@ -498,7 +527,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRa
     if (WinsolsDifRaw > 365.2425) {
         throw (new Error('請輸入一年365.2425內的日數'))
     }
-    // 隋系是要根據月份來判斷的，這裏為了簡化輸入，我改為用節氣判斷季節，這不準確
+    // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
         if (WinsolsDifRaw >= j * HalfTermLeng && WinsolsDifRaw < (j + 1) * HalfTermLeng) {

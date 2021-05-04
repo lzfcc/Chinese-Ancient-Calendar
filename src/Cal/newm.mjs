@@ -63,7 +63,7 @@ export default (CalName, year) => {
     let SolarChangeAccum = 0
     let LunarChangeAccum = 0
     let signX = 1
-    if (CalName === 'Tongtian') { // 《中國古代曆法》第610頁。如果不算消長的話就完全不對，因為上元積年就考慮了消長
+    if (CalName === 'Tongtian') { // 《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長
         if (year < 1194) {
             signX = -1
         }

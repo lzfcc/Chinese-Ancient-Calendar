@@ -554,7 +554,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             Month,
             LeapNumTermThis,
             OriginAccum,
-            NewmOrderRaw: NewmOrderRaw.slice(1 + NewmSyzygyStart), // 結尾就不切了，因為最後一個月還要看下個月的情況
+            NewmOrderRaw: NewmOrderRaw.slice(1 + NewmSyzygyStart), // 結尾就不切了，因爲最後一個月還要看下個月的情況
             NewmAcrOrderRaw: (Type === 1 ? [] : NewmAcrOrderRaw.slice(1 + NewmSyzygyStart)),
             NewmNodeAccumPrint: (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmSyzygyStart)),
             NewmAnomaAccumPrint: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmSyzygyStart))

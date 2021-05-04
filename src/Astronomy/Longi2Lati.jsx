@@ -81,7 +81,7 @@ export default class Converter extends React.Component {
             <th>晷長</th>
             <th>誤差</th>
           </tr>
-          {(this.state.output || []).map((row) => {
+          {(this.state.output || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
