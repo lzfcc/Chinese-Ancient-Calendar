@@ -33,9 +33,9 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     const K = CongruenceModulo(SmallDenom, BigDenom)
     const J1 = Number(K.Result) * SmallDenom
     const N1 = SmallDenom * BigDenom
-    const Temp1 = ((b % BigDenom) * J1) % N1
-    const M2_2 = Temp1 / SmallDenom
-    const M1_2 = (b - Temp1) / BigDenom
+    const tmp1 = ((b % BigDenom) * J1) % N1
+    const M2_2 = tmp1 / SmallDenom
+    const M1_2 = (b - tmp1) / BigDenom
     const a1_2 = BigNumer * M1_2 + SmallNumer * M2_2
     const b1_2 = BigDenom * M1_2 + SmallDenom * M2_2
     const Result2Title = '李銳有日法求彊弱'

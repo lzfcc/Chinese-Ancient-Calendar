@@ -10,10 +10,10 @@ import {
 export const Sn1 = (a, b, n) => { // 上有寬a個、長b個，下有寬c個、長d個，n層，每層長寬各多1個。芻童就是長方稜臺
     const c = big(a).add(n).sub(1)
     const d = big(b).add(n).sub(1)
-    const Temp1 = big(a).mul(big(big(2).mul(b)).add(d))
-    const Temp2 = c.mul(big(big(2).mul(d)).add(b))
-    const Temp3 = c.sub(a).mul(n).div(6)
-    const S = big(Temp1.add(Temp2)).mul(n).div(6).add(Temp3)
+    const tmp1 = big(a).mul(big(big(2).mul(b)).add(d))
+    const tmp2 = c.mul(big(big(2).mul(d)).add(b))
+    const tmp3 = c.sub(a).mul(n).div(6)
+    const S = big(tmp1.add(tmp2)).mul(n).div(6).add(tmp3)
     const Print = 'sum = ' + S
     return {
         Print

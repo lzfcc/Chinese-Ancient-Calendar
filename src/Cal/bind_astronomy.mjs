@@ -10,12 +10,14 @@ import {
 } from './astronomy_table.mjs'
 import {
     Equator2EclipticFormula,
-    Hushigeyuan,
     Longi2LatiFormula,
     Longi2DialFormula,
     MoonLatiFormula,
     MoonLongiFormula
 } from './astronomy_formula.mjs'
+import {
+    Hushigeyuan,
+} from './equa_geometry'
 import {
     Equator2EclipticWest,
     Longi2LatiWest,
@@ -164,13 +166,13 @@ export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
         Equator2EclipticDif = Func.Equator2EclipticDif
         Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
     } else if (Type === 11) {
-        Ecliptic2Equator = Hushigeyuan(LongiRaw, 365.2575).Ecliptic2Equator
+        Ecliptic2Equator = Hushigeyuan(LongiRaw).Ecliptic2Equator
     }
     Ecliptic2EquatorDif = Ecliptic2Equator ? (Ecliptic2EquatorDif || Ecliptic2Equator - LongiRaw) : 0
     return {
+        Equator2Ecliptic,
         Equator2EclipticDif,
         Ecliptic2Equator,
-        Equator2Ecliptic,
         Ecliptic2EquatorDif
     }
 }
@@ -271,7 +273,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName) => {
         Longi2LatiB = Longi2DialFormula(LongiRaw, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
-        Longi2Lati = Hushigeyuan(LongiRaw, 365.2575)
+        Longi2Lati = Hushigeyuan(LongiRaw)
     }
     let Lati = 0
     let Lati1 = 0
@@ -370,7 +372,7 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
     } = AutoPara[CalName]
     WinsolsDif %= Solar
     const SunEquatorLongi = WinsolsDif + AutoDifAccum(0, WinsolsDif, CalName).SunDifAccum
-    const SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName).EclipticLongi
+    const SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName).Equator2Ecliptic
     let MoonLongi = {}
     let MoonLati = {}
     if (Type <= 3) {
@@ -429,7 +431,7 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
         MoonEclipticLati1
     }
 }
-// console.log(AutoMoonLongiLati(66, 2.41, 'Huangji'))
+// console.log(AutoMoonLongiLati(66, 2.41, 'Jiyuan').EquatorLongi)
 
 export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交日、距冬至日數
     NodeAccum = +NodeAccum

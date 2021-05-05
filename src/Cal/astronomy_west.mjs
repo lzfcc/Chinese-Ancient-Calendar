@@ -62,6 +62,18 @@ export const ConstWest = year => {
 }
 // console.log(ConstWest(500).perihelion)
 
+export const RoundH2LWest = (r, h) => { // 半徑，矢
+    let c = (big(h).mul(big(2).mul(r).sub(h))).sqrt() // 半弦長
+    const a = r2d(c.div(r).asin().mul(2)) // 圓心角=asin(sqrt(2rb-h^2)/r)
+    let l = pi.mul(2 * r).mul(a / 360).toNumber() // 弧
+    return {
+        c: c.mul(2).toNumber(),
+        l,
+        a: a.toNumber()
+    }
+}
+// console.log(RoundH2LWest(10, 10,365.25/360))
+
 export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)
     const Anoma = ConstFunc.Anoma

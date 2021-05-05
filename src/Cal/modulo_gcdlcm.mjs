@@ -111,20 +111,20 @@ export const FracLcm1 = function () {
 //     let z = a / b
 //     let Numer = a
 //     let Denom = b
-//     let Temp = b
+//     let tmp = b
 //     let i = 0
 //     if (z === Math.floor(z)) {
 //         Result = b
 //     } else {
 //         const Divi = (Numer, Denom) => Math.max(Numer, Denom) % Math.min(Numer, Denom)
-//         while (Divi(Temp, Numer) > 0) {
-//             Denom = Temp
+//         while (Divi(tmp, Numer) > 0) {
+//             Denom = tmp
 //             if (i === 0) {
 //                 Denom = b
 //             }
-//             Temp = Numer
+//             tmp = Numer
 //             if (i === 0) {
-//                 Temp = b
+//                 tmp = b
 //             }
 //             Numer = Divi(Numer, Denom)
 //             i++

@@ -424,7 +424,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////å”
     }
 }
 // console.log(MoonLongiTable(55.25, 11.22, 'Dayan'))
-// console.log(MoonLongiTable(45, 3, 'Qintian').EquatorWhiteDif)
+// console.log(MoonLongiTable(45, 3, 'Qintian'))
 
 export const MoonLatiTable = (NodeAccum, CalName) => {
     const {

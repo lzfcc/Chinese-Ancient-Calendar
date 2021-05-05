@@ -178,11 +178,11 @@ export const IndetermEqua1 = (a, b, z) => { // 二元一次不定方程
     } else if (gcd > 1 && (z / gcd !== Math.floor(z / gcd))) {
         throw (new Error('不滿足有解的充要條件！'))
     }
-    const Temp = b
+    const tmp = b
     let isExchange = 0
     if (b === 1) {
         b = a
-        a = Temp
+        a = tmp
         isExchange = 1
     }
     const u = Number(CongruenceModulo(a, b).Result)
@@ -291,15 +291,15 @@ export const IndetermEqua = (a, b, z) => { // a彊母b弱母
 //     for (let k = 0; k < Denom.length; k++) {
 //         Yuan[k] = S1 * Numer[k] / Denom[k]
 //     }
-//     let Temp = []
+//     let tmp = []
 //     for (let k = 0; k <= i / 2 - 1; k++) {
-//         Temp[k] = 0 + ',' + Yuan[k] + ';'
+//         tmp[k] = 0 + ',' + Yuan[k] + ';'
 //     }
-//     let TempSum = ''
+//     let tmpSum = ''
 //     for (let k = 0; k <= i / 2 - 1; k++) {
-//         TempSum += Temp[k]
+//         tmpSum += tmp[k]
 //     } // 上面是爲了湊出一個能給Sunzi函數用的字符串
-//     const S2 = Sunzi(TempSum).S
+//     const S2 = Sunzi(tmpSum).S
 //     const S2Print = '分母最小公倍數 ' + S1 + '，共同週期 ' + S2 + '/' + S1 + ' = ' + (S2 / S1) + 'n'
 //     const ZhangYuanRange = parseFloat(((S2 / Input[0]) * Input[1] / Input[3]).toPrecision(14))
 //     return {
@@ -336,21 +336,21 @@ export const ZhangModulo = (SolarFrac, SolarDenom, LunarFrac, Denom) => {
     const ZhangRange = IndetermEqua1(SolarNumer, LunarNumer, 0).x[1]
     const ZhangMon = ZhangRange * SolarNumerRaw * Denom / SolarDenom / LunarNumerRaw
     const ZhangLeap = ZhangMon - 12 * ZhangRange
-    const Temp = SolarNumerRaw + ',' + SolarDenom + ';' + LunarNumerRaw + ',' + Denom + ';60,1'
-    const Temp2 = SolarNumerRaw + ',' + SolarDenom + ';' + LunarNumerRaw + ',' + Denom + ';1,1'
+    const tmp = SolarNumerRaw + ',' + SolarDenom + ';' + LunarNumerRaw + ',' + Denom + ';60,1'
+    const tmp2 = SolarNumerRaw + ',' + SolarDenom + ';' + LunarNumerRaw + ',' + Denom + ';1,1'
     // let ZhangBuRange = 0
     // let ZhangYuanRange = 0
     // if (Type < 2) {
-    //     ZhangBuRange = FracLcm(Temp2).ZhangYuanRange
-    //     ZhangYuanRange = FracLcm(Temp).ZhangYuanRange
+    //     ZhangBuRange = FracLcm(tmp2).ZhangYuanRange
+    //     ZhangYuanRange = FracLcm(tmp).ZhangYuanRange
     // }
     // if (Type === 1) {
     //     BuRange = ZhangBuRange
     //     YuanRange = ZhangYuanRange
     // } 
     // else     if (Type === 2) {
-    //     BuRange = parseFloat((((FracLcm1(Temp2).lcmResult) / SolarNumerRaw) * SolarDenom).toPrecision(14))
-    //     YuanRange = parseFloat((((FracLcm1(Temp).lcmResult) / SolarNumerRaw) * SolarDenom).toPrecision(14))
+    //     BuRange = parseFloat((((FracLcm1(tmp2).lcmResult) / SolarNumerRaw) * SolarDenom).toPrecision(14))
+    //     YuanRange = parseFloat((((FracLcm1(tmp).lcmResult) / SolarNumerRaw) * SolarDenom).toPrecision(14))
     // } 
     // else {
     //     BuRange = parseFloat((ZhangBuRange / ZhangRange).toPrecision(12))
@@ -360,8 +360,8 @@ export const ZhangModulo = (SolarFrac, SolarDenom, LunarFrac, Denom) => {
     // const YuanDay = parseFloat((YuanRange * SolarNumerRaw / SolarDenom).toPrecision(12))
     // const YuanBuNum = parseFloat((YuanRange / BuRange).toPrecision(12))
     // const BuZhangNum = parseFloat((BuRange / ZhangRange).toPrecision(12))
-    const BuRangeRaw = FracLcm1(Temp2).lcmResult
-    const YuanRangeRaw = FracLcm1(Temp).lcmResult
+    const BuRangeRaw = FracLcm1(tmp2).lcmResult
+    const YuanRangeRaw = FracLcm1(tmp).lcmResult
     const BuRange = (big.mul(big(BuRangeRaw).div(SolarNumerRaw), SolarDenom)).toString()
     const YuanRange = (big.mul(big(YuanRangeRaw).div(SolarNumerRaw), SolarDenom)).toString()
     const BuMon = big(ZhangMon).mul(BuRange).div(ZhangRange)
@@ -403,8 +403,8 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
     const SolarComm = SolarNumer * Denom
     const LunarComm = LunarNumer * SolarDenom
     const ScComm = 60 * portion
-    const Temp = OriginComm + ',' + ScComm + ',' + LeapComm + ',' + LunarComm // 0 + ',' + SolarComm + ',' +
-    const Result = (Sunzi(Temp).x) / SolarComm
+    const tmp = OriginComm + ',' + ScComm + ',' + LeapComm + ',' + LunarComm // 0 + ',' + SolarComm + ',' +
+    const Result = (Sunzi(tmp).x) / SolarComm
     const Print = '入元 ' + Result + ' 年（算外）'
     return {
         Print
@@ -427,8 +427,8 @@ export const OriginModulo = (Denom, SolarFrac, OriginConstRaw, FirstConstRaw) =>
     const SolarNumer = Denom * 365 + SolarFrac
     const LunarNumer = Denom * 29 + LunarFrac
     const YearLeap = SolarNumer - 12 * LunarNumer // 歲閏
-    const Temp = SolarFrac + ',' + Denom + ',' + OriginConst
-    const gcd = GcdLcmGroup(Temp).gcd // 斗分和日法的公因數：等數
+    const tmp = SolarFrac + ',' + Denom + ',' + OriginConst
+    const gcd = GcdLcmGroup(tmp).gcd // 斗分和日法的公因數：等數
     SolarFrac /= gcd
     OriginConst /= gcd
     const BuRange = Denom / gcd

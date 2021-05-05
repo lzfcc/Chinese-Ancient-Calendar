@@ -46,9 +46,9 @@ export const SqrtA = (Input, Mode) => {
         }
     }
     a = a.toString()
-    const Temp1 = a.slice(0, LenAns)
-    const Temp2 = a.slice(LenAns)
-    let ans = parseFloat((Number(Temp1.concat('.').concat(Temp2))).toPrecision(14))
+    const tmp1 = a.slice(0, LenAns)
+    const tmp2 = a.slice(LenAns)
+    let ans = parseFloat((Number(tmp1.concat('.').concat(tmp2))).toPrecision(14))
     let Print = ans + ' ^ 2 = ' + parseFloat(((ans ** Mode)).toPrecision(14))
     if (Mode === 3) {
         Print = ans + ' ^ 3 = ' + parseFloat(((ans ** Mode)).toPrecision(14))
@@ -128,9 +128,9 @@ export const SqrtC = (Input, Mode) => {
 
     }
     a = a.toString()
-    const Temp1 = a.slice(0, LenAns)
-    const Temp2 = a.slice(LenAns)
-    let ans = parseFloat((Number(Temp1.concat('.').concat(Temp2))).toPrecision(14))
+    const tmp1 = a.slice(0, LenAns)
+    const tmp2 = a.slice(LenAns)
+    let ans = parseFloat((Number(tmp1.concat('.').concat(tmp2))).toPrecision(14))
     const Print = ans + ' ^ ' + Mode.toString() + ' = ' + parseFloat(((ans ** Mode)).toPrecision(14))
     return {
         Print
