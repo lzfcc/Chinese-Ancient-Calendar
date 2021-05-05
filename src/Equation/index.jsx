@@ -9,30 +9,34 @@ import Interpolate1 from './Interpolate1'
 import Interpolate2 from './Interpolate2'
 import Interpolate3 from './Interpolate3'
 import Round from './Round'
+import Round1 from './Round1'
+import Round2 from './Round2'
 import Heron from './Heron'
 
 export default class Equation extends React.Component {
   render() {
     return (
       <section className='modulo'>
-          <h2>開方之什</h2>
-          <Sqrt1 />
-          <Sqrt3 />
-          <h2>方程之什</h2>
-          <Equa1 />
-          <h2>垛積之什</h2>
-          <Sn1 />
-          <Sn5 />
-          <Sn2 />
-          <h2>內插之什</h2>
-          <Interpolate1 />
-          <Interpolate2 />
-          <Interpolate3 />
-          <h2>幾何之什</h2>
-          <Round />
-          <h3>弧矢割圓術</h3>
-          <p className='note'><v>授時曆</v>黃赤轉換、白赤轉換，見「天文」標籤</p>
-          <Heron />
+        <h2>垛積之什</h2>
+        <Sn1 />
+        <Sn5 />
+        <Sn2 />
+        <h2>內插之什</h2>
+        <Interpolate1 />
+        <Interpolate2 />
+        <Interpolate3 />
+        <h2>幾何之什</h2>
+        <Round />
+        <Round2 />
+        <Round1 />
+        <h3>弧矢割圓術</h3>
+        <p className='note'><v>授時曆</v>黃赤轉換、白赤轉換，見「天文」標籤</p>
+        <Heron />
+        <h2>開方之什</h2>
+        <Sqrt1 />
+        <Sqrt3 />
+        <h2>方程之什</h2>
+        <Equa1 />
       </section>
     )
   }

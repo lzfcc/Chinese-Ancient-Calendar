@@ -1,53 +1,28 @@
 import {
     big
 } from './para_constant.mjs'
-import {
-    RoundH2LWest
-} from './astronomy_west.mjs'
+
+const pi = big.acos(-1)
+const r2d = degree => big(degree).mul(180).div(pi)
+const d2r = degree => big(degree).mul(pi).div(180)
+const RoundC2LWest = (r, c) => r2d(big(c).div(r).asin().mul(2)).toNumber() // 半徑，半弦// 圓心角l=arcsin(sqrt(2rh-h^2)/r) 
+// console.log(RoundC2LWest(10, 10,365.25/360))
+const RoundL2HWest = (r, l) => big(r).sub(big.sqrt(big(r).pow(2).mul(big(1).sub((d2r(l).sin()).pow(2))))).toNumber()  // 半徑，弧長   半弦c,半弧l，c=rsinl, h=sqrt(r^2-c^2)+r ==> h=r-sqrt(r^2*(1-(sinl)^2))
+// console.log (RoundL2HWest(58,180))
 
 // 會圓術已知矢長求弧長 
-const RoundH2L = h => { // 弓弦長 2* sqrt (r^2-(r-h)^2) //半徑，矢長
+const RoundH2LC = h => { // 弓弦長 2* sqrt (r^2-(r-h)^2) //半徑，矢長
     const r = 60.875
-    let c = 2 * Math.sqrt(h * (2 * r - h))
+    let Halfc = Math.sqrt(h * (2 * r - h))
+    const c = Halfc * 2
     let l = h ** 2 / r + c // h^2 / r + c    
     return {
+        Halfc,
         c,
         l
     }
 }
-export const RoundH2LPrint = (h, R, Sidereal) => {
-    h = +h
-    R = +R
-    Sidereal = +Sidereal
-    const pi = 3.141592653589793
-    const r = 60.875 // 會圓術系數3，不是pi
-    const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
-    const portion2 = Sidereal / 360
-    const portion3 = pi / 3
-    const portion4 = R === 60.875 ? 1 : R / r
-    const rReal = portion4 * Sidereal / pi / 2 // 60.875對應的直徑：116.26268592862955
-    const hReal = h / portion3 * portion1
-    const Func = RoundH2L(h / portion4)
-    let c = Func.c
-    let l = Func.l
-    const WestFunc = RoundH2LWest(rReal, hReal)
-    const lWest = WestFunc.l / portion4
-    const cWest = WestFunc.c / portion4
-    const a = WestFunc.a * portion2
-    c *= portion1 //* portion4
-    l *= portion1 //* portion4
-    let Print = [{
-        title: '會圓術',
-        data: [c.toFixed(6), (c - cWest).toFixed(4), l.toFixed(6), (l - lWest).toFixed(4)]
-    }]
-    Print = Print.concat({
-        title: '三角函數',
-        data: [cWest.toFixed(6), 0, lWest.toFixed(6), 0, a.toFixed(4)]
-    })
-    return Print
-}
-console.log(RoundH2LPrint(60.875, 60.875, 365.25))
-const RoundL2H = l => { // 會圓術已知弧長反求矢長
+const RoundL2H = l => { // 會圓術已知半弧長反求矢長
     const r = 60.875
     const d = 121.75
     const equation = x => (x ** 4) / d ** 2 + (1 - 2 * l / d) * x ** 2 - d * x + l ** 2
@@ -63,6 +38,114 @@ const RoundL2H = l => { // 會圓術已知弧長反求矢長
         }
     }
     return upper // 矢長
+}
+const RoundC2HL = c => { // c 半弦長
+    const r = 60.875
+    const h = r - Math.sqrt(r ** 2 - c ** 2)
+    const l = 2 * c + h ** 2 / r
+    const Halfl = l / 2
+    return {
+        h,
+        l,
+        Halfl
+    }
+}
+export const RoundH2LPrint = (h, R, Sidereal) => {
+    h = +h
+    R = +R
+    if (h > R) {
+        throw (new Error('h <= R'))
+    }
+    Sidereal = +Sidereal
+    const pi = 3.141592653589793
+    const r = 60.875 // 會圓術系數3，不是pi
+    const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
+    const portion2 = pi / 3
+    const portion3 = R === 60.875 ? 1 : R / r
+    const portion4 = Sidereal === 360 ? 1 : Sidereal / 360
+    const Func = RoundH2LC(h / portion3)
+    let c = Func.c * portion1
+    const a = Func.l * portion1
+    const l = a * portion3
+    const rReal = portion3 * Sidereal / pi / 2 // 60.875對應的直徑：116.26268592862955
+    const hReal = h / portion2 * portion1
+    let cWest = Math.sqrt(hReal * (2 * rReal - hReal))
+    const aWest = RoundC2LWest(rReal, cWest) * portion4
+    const lWest = aWest * portion3
+    cWest *= 2 / portion3
+    let Print = [{
+        title: '會圓術',
+        data: [l.toFixed(6), (l - lWest).toFixed(4), a.toFixed(6), (a - aWest).toFixed(4), c.toFixed(6), (c - cWest).toFixed(4)]
+    }]
+    Print = Print.concat({
+        title: '三角函數',
+        data: [lWest.toFixed(6), 0, aWest.toFixed(6), 0, cWest.toFixed(6), 0]
+    })
+    return Print
+}
+// console.log(RoundH2LPrint(60.875, 60.875, 365.25))
+export const RoundL2HPrint = (lRaw, Sidereal) => {
+    lRaw = +lRaw
+    const l = lRaw / 2
+    Sidereal = +Sidereal
+    const pi = 3.141592653589793
+    const r = 60.875 // 會圓術系數3，不是pi
+    const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
+    const portion2 = pi / 3
+    const portion4 = Sidereal === 360 ? 1 : Sidereal / 360
+    let h = RoundL2H(l)
+    if (lRaw === 0) {
+        h = 0
+    }
+    let c = lRaw - h ** 2 / r
+    h *= portion1
+    c *= portion1
+    const rReal = portion2 * Sidereal / pi / 2
+    const lReal = l / portion4
+    let hWest = RoundL2HWest(rReal, lReal)
+    const cWest = RoundH2LC(hWest).c / portion2
+    let Print = [{
+        title: '會圓術',
+        data: [h.toFixed(6), (h - hWest).toFixed(4), c.toFixed(6), (c - cWest).toFixed(4)]
+    }]
+    Print = Print.concat({
+        title: '三角函數',
+        data: [hWest.toFixed(6), 0, cWest.toFixed(6), 0]
+    })
+    return Print
+}
+// console.log(RoundL2HPrint(182.625, 60.875, 365.25))
+export const RoundC2LHPrint = (cRaw, Sidereal) => {
+    cRaw = +cRaw
+    const c = cRaw / 2
+    if (cRaw > 121.75) {
+        throw (new Error('c <= 121.75'))
+    }
+    Sidereal = +Sidereal
+    // const pi = 3.141592653589793
+    // const r = 60.875 // 會圓術系數3，不是pi
+    const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
+    // const portion2 = pi / 3
+    // const portion4 = Sidereal === 360 ? 1 : Sidereal / 360
+    const Func = RoundC2HL(c)
+    let l = Func.l
+    let h = Func.h
+    h *= portion1
+    l *= portion1
+    // const rReal = Sidereal / pi / 2 //
+    // const cReal = c / portion2 * portion1
+    // const lWest = RoundC2LWest(rReal, cReal) * portion2//* portion4
+    let Print = [{
+        title: '會圓術',
+        // data: [l.toFixed(6), (l - lWest).toFixed(4), h.toFixed(6), (h - hWest).toFixed(4)]
+        data: [l.toFixed(6), '-', h.toFixed(6), '-']
+    }]
+    // Print = Print.concat({
+    //     title: '三角函數',
+    //     // data: [lWest.toFixed(6), 0, hWest.toFixed(6), 0]
+    //     data: [lWest.toFixed(6), 0, 0, 0]
+    // })
+    return Print
 }
 
 // 弧矢割圓術黃赤轉換。跟《黃赤道率》立成表分毫不差，耶！！！
