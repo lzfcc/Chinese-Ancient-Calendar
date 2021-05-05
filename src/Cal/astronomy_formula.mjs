@@ -1,6 +1,6 @@
 import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 import {
-    big
+    big, frc
 } from './para_constant.mjs'
 import {
     Bind,
@@ -19,56 +19,61 @@ export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的�
     }
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
-    let EclipticLongi = 0
-    let EquatorLongi = 0
-    let Longi = LongiRaw % (Solar / 8)
-    if ((LongiRaw > Solar / 8 && LongiRaw <= QuarSolar) || (LongiRaw > 3 * Solar / 8 && LongiRaw <= HalfSolar) || (LongiRaw > 5 * Solar / 8 && LongiRaw <= 3 * QuarSolar) || (LongiRaw > 7 * Solar / 8)) {
-        Longi = Solar / 8 - Longi
+    const EighthSolar = Solar / 8
+    let Equator2Ecliptic = 0
+    let Ecliptic2Equator = 0
+    let Longi = LongiRaw % EighthSolar
+    if ((LongiRaw > EighthSolar && LongiRaw <= QuarSolar) || (LongiRaw > 3 * EighthSolar && LongiRaw <= HalfSolar) || (LongiRaw > 5 * EighthSolar && LongiRaw <= 3 * QuarSolar) || (LongiRaw > 7 * EighthSolar)) {
+        Longi = EighthSolar - Longi
     }
-    let LongiDif = 0
+    let h = 0
+    let Ecliptic2EquatorDif = 0
+    let Equator2EclipticDif = 0
     // 這些函數並不是以91度或者45度對稱，而是將近60度左右
     if (CalName === 'Chongxuan') {
-        LongiDif = ((1315 - 14.4 * Longi) * Longi - Longi * (4566 - Longi) / 1696) / 10000
+        Equator2EclipticDif = ((1315 - 14.4 * Longi) * Longi - Longi * (4566 - Longi) / 1696) / 10000
+        // const tmp1 =(frc('8685 4566/1696').div(frc(14.4).sub('1/1696'))).div(2).toFraction(true) // '301 81608 / 122107'
+        // const tmp2=frc(10000).div(frc(14.4).sub('1/1696')).toFraction(true) // "694 57742/122107"
+        h = Math.sqrt((694 + 57742 / 122107) * Longi + (301 + 81608 / 122107) ** 2) - (301 + 81608 / 122107)
     } else if (CalName === 'Chongtian') {
-        LongiDif = Longi * (125 - Longi) / 1200
+        Equator2EclipticDif = Longi * (125 - Longi) / 1200
+        h = Math.sqrt(288906.25 + 1200 * Longi) - 537.5
     } else if (CalName === 'Mingtian') {
-        LongiDif = Longi * (111.37 - Longi) / 1000
+        Equator2EclipticDif = Longi * (111.37 - Longi) / 1000
+        h = Math.sqrt(197415.819225 + 1000 * Longi) - 444.315
     } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
-        LongiDif = Longi * (400 - 3 * Longi) / 4000
+        Equator2EclipticDif = Longi * (400 - 3 * Longi) / 4000
+        h = Math.sqrt(360000 + (4000 / 3) * Longi) - 600
     } else if (CalName === 'Jiyuan') { // 紀元一直到南宋、大明、庚午
-        LongiDif = Longi * (101 - Longi) / 1000
-    }
-    // 《古代曆法》頁123    沒明白。曲安京《中国古代的二次求根公式与反函数》，西北大学学报(自然科学版). 1997(01)。曆法中二次反函數僅有的例子是大衍行星行度、紀元。赤道度爲Solar/8，黃道度就是43.1287。兩篇公式不一樣，最後畫圖才想明白。
-    let h = 0
-    let EclipticLongiDif = 0
-    if (CalName === 'Jiyuan') {
+        Equator2EclipticDif = Longi * (101 - Longi) / 1000
         // if (LongiRaw < QuarSolar || (LongiRaw >= HalfSolar && LongiRaw < Solar * 0.75)) {
         h = Math.sqrt(202050.25 + 1000 * Longi) - 449.5
         // }
         //  else {
         //     h = -Math.sqrt(303050.25 - 1000 * Longi1) + 550.5 // 這兩個公式是一樣的，只是對稱而已
         // }
-        EclipticLongiDif = Math.abs(Longi - h)
     }
+    // 《古代曆法》頁123    沒明白。曲安京《中国古代的二次求根公式与反函数》，西北大学学报(自然科学版). 1997(01)。曆法中二次反函數僅有的例子是大衍行星行度、紀元。赤道度爲Solar/8，黃道度就是43.1287。兩篇公式不一樣，最後畫圖才想明白。我把其他幾個曆法補出來了
+    Ecliptic2EquatorDif = Math.abs(Longi - h)
+    let sign1 = 1
+    let sign2 = 1
     if (LongiRaw < QuarSolar || (LongiRaw >= HalfSolar && LongiRaw < Solar * 0.75)) {
-        EclipticLongi = LongiRaw - LongiDif
-        if (EclipticLongiDif) {
-            EquatorLongi = LongiRaw + EclipticLongiDif
-        }
+        sign1 = -1
     } else {
-        EclipticLongi = LongiRaw + LongiDif
-        if (EclipticLongiDif) {
-            EquatorLongi = LongiRaw - EclipticLongiDif
-        }
+        sign2 = -1
     }
+    Equator2EclipticDif *= sign1
+    Ecliptic2EquatorDif *= sign2
+    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
+    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
     return {
-        EclipticLongi,
-        LongiDif,
-        EquatorLongi,
-        EclipticLongiDif
+        Equator2Ecliptic,
+        Equator2EclipticDif,
+        Ecliptic2Equator,
+        Ecliptic2EquatorDif
     }
 }
-// console.log(Equator2EclipticFormula(91,0.4, 'Chongxuan'))
+// console.log(Equator2EclipticFormula(91, 'Chongxuan'))
 
 // 弧矢割圓術黃赤轉換。跟《黃赤道率》立成表分毫不差，耶！！！
 export const Hushigeyuan = (LongiRaw, Sidereal) => {
@@ -102,13 +107,13 @@ export const Hushigeyuan = (LongiRaw, Sidereal) => {
     let Lati = p2 + v2 ** 2 / d // 赤緯、黃赤內外度 BC
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    const LongiDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
-    let EquatorLongi = 0
-    // let EclipticLongi = 0
+    const Ecliptic2EquatorDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
+    let Ecliptic2Equator = 0
+    // let Equator2Ecliptic = 0
     if ((LongiRaw >= 0 && LongiRaw < QuarSidereal) || (LongiRaw >= HalfSidereal && LongiRaw < Sidereal * 0.75)) {
-        EquatorLongi = LongiRaw + LongiDif
+        Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
     } else {
-        EquatorLongi = LongiRaw - LongiDif
+        Ecliptic2Equator = LongiRaw - Ecliptic2EquatorDif
     }
     let sign = 1
     if (LongiRaw < QuarSidereal || LongiRaw > Sidereal * 0.75) {
@@ -123,12 +128,12 @@ export const Hushigeyuan = (LongiRaw, Sidereal) => {
     const Sunrise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
     //  const MidStar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
     return {
-        EquatorLongi,
-        // EclipticLongi,
+        Ecliptic2Equator,
+        Ecliptic2EquatorDif,
+        // Equator2Ecliptic,
         Lati,
         Lati1,
-        Sunrise,
-        LongiDif
+        Sunrise        
     }
 }
 // console.log(Hushigeyuan(1, 365.2575).Sunrise)
@@ -141,13 +146,13 @@ export const Hushigeyuan2 = LongiRaw => {
     LongiRaw = (LongiRaw + a) % Sidereal
     const v0 = a - Math.abs(LongiRaw - a)
     const a0 = k * v0 / a
-    let EquatorLongi = 0
+    let Ecliptic2Equator = 0
     if (LongiRaw < HalfSidereal) {
-        EquatorLongi = QuarSidereal + a0
+        Ecliptic2Equator = QuarSidereal + a0
     } else {
-        EquatorLongi = QuarSidereal - a0
+        Ecliptic2Equator = QuarSidereal - a0
     }
-    return EquatorLongi
+    return Ecliptic2Equator
 }
 // console.log(Hushigeyuan2(0))
 // 魏晉的黃道去極，是根據節氣來的，日書就不調用了
@@ -391,16 +396,21 @@ export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該�
     let WhiteLongi = 0
     let EquatorLongi = 0
     let EquatorLongiB = 0
-    let sign1 = 1
-    if (Type === 11) {
+    if (Type === 11) { //《中國古代曆法》頁127
         let sign = -1
         if (WinsolsDif > Quadrant * 2) {
             sign = 1
         }
-        const V1 = 98 + sign * 24 * WinsolsDifHalf / Quadrant // 定限度
+        const WinsolsDifQuar = WinsolsDif % Quadrant // 書上說是減去不是反減
+        const V1 = 98 + sign * 24 * WinsolsDifQuar / Quadrant // 定限度
         EquatorLongi = Hushigeyuan(LongiRaw, 365.2575).EquatorLongi // p128書上說直接由黃赤道率査得
-        EquatorWhiteDif = EquatorLongi - LongiRaw
-        WhiteLongi = EquatorLongi + (V1 - WinsolsDifHalf) * WinsolsDifHalf / 1000
+        let sign2 = -1
+        if ((LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant)) {
+            sign2 = 1
+        }
+        EquatorWhiteDif = sign2 * (V1 - WinsolsDifQuar) * WinsolsDifQuar / 1000
+        WhiteLongi = EquatorLongi + EquatorWhiteDif
+        EclipticWhiteDif = WhiteLongi - LongiRaw
     } else {
         if (CalName === 'Chongtian') { // 半交後正交前-，正交後半交前+
             EclipticWhiteDif = Longi * (125 - Longi) / 2400

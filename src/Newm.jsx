@@ -143,21 +143,21 @@ export default class Newm extends React.Component {
 
   handleRetrieve() {
     if (this.state.calendars.length === 0) {
-      alert('請選擇曆法！');
+      alert('Please choose a calendar');
       return;
     }
     if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
-      alert('請輸入起始年或終止年！');
+      alert('Please input year(s)');
       return;
     }
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
     if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
-      alert('年份範圍 -3807 至 9999');
+      alert('year range: -3807 to 9999');
       return;
     }
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
-      alert('格式不合法！');
+      alert('illegal input!');
       return;
     }
     if (Number.isNaN(YearStart)) {
@@ -165,7 +165,7 @@ export default class Newm extends React.Component {
         YearStart = YearEnd;
         this.setState({ YearStart })
       } else {
-        alert('起始年不合法！');
+        alert('illegal start year!');
         return;
       }
     }
@@ -174,15 +174,14 @@ export default class Newm extends React.Component {
         YearEnd = YearStart;
         this.setState({ YearEnd })
       } else {
-        alert('終止年不合法！');
+        alert('illegal end year!');
         return;
       }
     }
     if (YearStart > YearEnd) {
-      alert('起始年不可大於終止年！');
-      return;
+      [YearStart, YearEnd] = [YearEnd, YearStart]
     }
-    const callWorker = (eventName) => {
+    const callWorker = eventName => {
       this.setState({ loading: true });
       this.worker.postMessage({
         eventName,

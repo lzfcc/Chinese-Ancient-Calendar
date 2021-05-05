@@ -280,7 +280,15 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
                         SunEclipticLongiNoon = (WinsolsDifRaw + SunDifAccumNoon) % Sidereal
                     }
-                    if (Type >= 7 && Type <= 10) { // 月行九道
+                    if (Type <= 6) {
+                        if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
+                            MoonEclipticLati[i][k] = `<span class='lati-yellow'>黃</span>`
+                        } else if (NodeAccum < HalfNode) {
+                            MoonEclipticLati[i][k] = `<span class='lati-yang'>陽</span>`
+                        } else {
+                            MoonEclipticLati[i][k] = `<span class='lati-yin'>陰</span>`
+                        }
+                    } else if (Type >= 7 && Type <= 10) { // 月行九道
                         if (WinsolsDif < 3 * HalfTermLeng || WinsolsDif >= 21 * HalfTermLeng) { // 冬
                             if (NodeAccum < HalfNode) {
                                 MoonEclipticLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`

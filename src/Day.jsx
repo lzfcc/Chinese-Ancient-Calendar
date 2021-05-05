@@ -140,21 +140,21 @@ export default class Day extends React.Component {
 
   handleRetrieve(e) {
     if (this.state.calendars.length === 0) {
-      alert('請選擇曆法！');
+      alert('Please choose a calendar');
       return
     }
     if (this.state.YearStart.length === 0) {
-      alert('請輸入年份！');
+      alert('Please input year(s)');
       return
     }
     let YearStart = parseInt(this.state.YearStart)
-    if (YearStart < -4710 || YearStart > 3000) {
-      alert('年份範圍 -1500 至 2500');
+    if (YearStart < -1500 || YearStart > 3000) {
+      alert('year range: -1500 to 3000');
       return
     }
     let YearEnd = YearStart
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
-      alert('格式不合法！');
+      alert('illegal input!');
       return;
     }
     const callWorker = (eventName) => {
@@ -217,8 +217,8 @@ export default class Day extends React.Component {
         </article>
         {this.renderDayTableList()}
         <hr />
-        <article><h2 id="-">曆書說明</h2>
-          <p>曆書按月提供全年每一日的信息，中間彩色爲天文曆部分，其餘爲具注曆部分。由於內容很多，曆書只能計算一曆一年。</p>
+        <article><h2 id="-">具注曆說明</h2>
+          <p>〔天文曆說明見「天文」模塊〕曆書按月提供全年每一日的信息，中間彩色爲天文曆部分，其餘爲具注曆部分。由於內容很多，曆書只能計算一曆一年。</p>
           <p>天文曆：</p>
           <ul>
             <li>【昏中星】太陽落山後約 2.5 刻<n>夜漏開始時刻</n>，正南的星宿。</li>

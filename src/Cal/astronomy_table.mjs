@@ -35,15 +35,15 @@ import {
 //             LongiOrder = j
 //         }
 //     }
-//     const LongiDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 線性內插
+//     const Equator2EclipticDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 線性內插
 //     if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
-//         EclipticLongi = LongiRaw - LongiDif
+//         EclipticLongi = LongiRaw - Equator2EclipticDif
 //     } else {
-//         EclipticLongi = LongiRaw + LongiDif
+//         EclipticLongi = LongiRaw + Equator2EclipticDif
 //     }
 //     return {
 //         EclipticLongi,
-//         LongiDif
+//         Equator2EclipticDif
 //     }
 // }
 
@@ -63,7 +63,7 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
         Longi = Sidereal / 4 - Longi
     }
-    let EclipticLongi = 0
+    let Equator2Ecliptic = 0
     let Range = []
     if (Type <= 4) {
         Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
@@ -134,14 +134,17 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
             LongiOrder = j
         }
     }
-    const LongiDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
-
+    let Equator2EclipticDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
+    let sign1 = 1
     if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
-        EclipticLongi = parseFloat((LongiRaw - LongiDif).toPrecision(14))
-    } else {
-        EclipticLongi = parseFloat((LongiRaw + LongiDif).toPrecision(14))
+        sign1 = -1
     }
-    return EclipticLongi
+    Equator2EclipticDif *= sign1
+    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
+    return {
+        Equator2Ecliptic,
+        Equator2EclipticDif
+    }
 }
 // console.log(Equator2EclipticTable(23,''))
 

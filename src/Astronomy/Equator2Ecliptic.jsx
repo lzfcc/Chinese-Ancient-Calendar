@@ -59,15 +59,17 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th>赤 ⇒ 黃</th>
+            <th>黃-赤</th>
             <th>誤差</th>
             <th>黃 ⇒ 赤</th>
+            <th>赤-黃</th>
             <th>誤差</th>
           </tr>
           {(this.state.outputEcliptic || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d =>  {
+                {row.data.map(d => {
                   return (<td>{d}</td>)
                 })}
               </tr>
@@ -77,12 +79,12 @@ export default class Converter extends React.Component {
       </div>
     )
   }
-  
+
   render() {
     return (
       <div>
         <h3>赤經 ⇌ 極黃經</h3>
-        <p className='note'>度數從冬至起算，二至到二分：赤大於黃；二分到二至：黃大於赤</p>
+        <p className='note'>度數從冬至起算，二至到二分：赤大於黃；二分到二至：黃大於赤。只有<v>紀元</v>有黃轉赤公式，其餘只能赤轉黃，我用與<v>紀元</v>相同的求反函數思路，補出各宋系曆法的黃轉赤公式。小數點後 4 位的精度就是 0.36”</p>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>ecliptic&equator</button>
         {this.result()}

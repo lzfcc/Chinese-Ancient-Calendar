@@ -115,22 +115,26 @@ export const Equator2EclipticWest = (LongiRaw, Sidereal, year) => { // 《中國
     const E = d2r(ConstWest(year).obliquity)
     const Ecliptic = Angle.tan().mul(E.cos()).atan().mul(Sidereal / 2).div(pi)
     const Equator = Angle.tan().div(E.cos()).atan().mul(Sidereal / 2).div(pi)
-    let LongiDif = big.sub(Longi, Ecliptic).abs()
-    let EclipticLongiDif = big.sub(Longi, Equator).abs()
-    let EquatorLongi = 0
-    let EclipticLongi = 0
+    let Equator2EclipticDif = big.sub(Longi, Ecliptic).abs().toNumber()
+    let Ecliptic2EquatorDif = big.sub(Longi, Equator).abs().toNumber()
+    let Ecliptic2Equator = 0
+    let Equator2Ecliptic = 0
+    let sign1 = 1
+    let sign2 = 1
     if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
-        EclipticLongi = big.sub(LongiRaw, LongiDif)
-        EquatorLongi = big.add(LongiRaw, EclipticLongiDif)
+        sign1 = -1
     } else {
-        EclipticLongi = big.add(LongiRaw, LongiDif)
-        EquatorLongi = big.sub(LongiRaw, EclipticLongiDif)
+        sign2 = -1
     }
+    Equator2EclipticDif *= sign1
+    Ecliptic2EquatorDif *= sign2
+    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
+    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
     return {
-        EquatorLongi,
-        EclipticLongi,
-        LongiDif: LongiDif.toNumber(),
-        EclipticLongiDif: EclipticLongiDif.toNumber(),
+        Ecliptic2Equator,
+        Equator2Ecliptic,
+        Equator2EclipticDif,
+        Ecliptic2EquatorDif,
     }
 }
 
@@ -389,7 +393,7 @@ export const Node2Cycle = (Node, Lunar) => {
     } else {
         Node = frc('27 ' + Node)
         Lunar = frc('29 ' + Lunar)
-        Cycle = frc(1 / 2).mul(Node.div(Lunar)).mul(Lunar.div(Lunar.sub(Node))).toFraction(true)
+        Cycle = frc('1/2').mul(Node.div(Lunar)).mul(Lunar.div(Lunar.sub(Node))).toFraction(true)
     }
     return Cycle
 }
