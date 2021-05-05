@@ -1,3 +1,4 @@
+import { ConstWest } from './astronomy_west.mjs'
 import {
     big
 } from './para_constant.mjs'
@@ -9,6 +10,7 @@ const RoundC2LWest = (r, c) => r2d(big(c).div(r).asin().mul(2)).toNumber() // �
 // console.log(RoundC2LWest(10, 10,365.25/360))
 const RoundL2HWest = (r, l) => big(r).sub(big.sqrt(big(r).pow(2).mul(big(1).sub((d2r(l).sin()).pow(2))))).toNumber()  // 半徑，弧長   半弦c,半弧l，c=rsinl, h=sqrt(r^2-c^2)+r ==> h=r-sqrt(r^2*(1-(sinl)^2))
 // console.log (RoundL2HWest(58,180))
+const RoundH2LWest = (r, h) => r2d(big.sqrt(h * (2 * r - h)).div(r).asin()).toNumber()// c=sqrt(h(2r-h)), sinl=c/r ==>半弧l=arcsin(sqrt(h(2r-h))/r)
 
 // 會圓術已知矢長求弧長 
 const RoundH2LC = h => { // 弓弦長 2* sqrt (r^2-(r-h)^2) //半徑，矢長
@@ -84,6 +86,26 @@ export const RoundH2LPrint = (h, R, Sidereal) => {
     return Print
 }
 // console.log(RoundH2LPrint(60.875, 60.875, 365.25))
+export const RoundC2LHPrint = (cRaw, Sidereal) => {
+    cRaw = +cRaw
+    const c = cRaw / 2
+    if (cRaw > 121.75) {
+        throw (new Error('c <= 121.75'))
+    }
+    Sidereal = +Sidereal
+    const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
+    const Func = RoundC2HL(c)
+    let l = Func.l
+    let h = Func.h
+    h *= portion1
+    l *= portion1
+    let Print = [{
+        title: '會圓術',
+        // data: [l.toFixed(6), (l - lWest).toFixed(4), h.toFixed(6), (h - hWest).toFixed(4)]
+        data: [l.toFixed(6), '-', h.toFixed(6), '-']
+    }]
+    return Print
+}
 export const RoundL2HPrint = (lRaw, Sidereal) => {
     lRaw = +lRaw
     const l = lRaw / 2
@@ -91,8 +113,6 @@ export const RoundL2HPrint = (lRaw, Sidereal) => {
     const pi = 3.141592653589793
     const r = 60.875 // 會圓術系數3，不是pi
     const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
-    const portion2 = pi / 3
-    const portion4 = Sidereal === 360 ? 1 : Sidereal / 360
     let h = RoundL2H(l)
     if (lRaw === 0) {
         h = 0
@@ -100,9 +120,10 @@ export const RoundL2HPrint = (lRaw, Sidereal) => {
     let c = lRaw - h ** 2 / r
     h *= portion1
     c *= portion1
-    const rReal = portion2 * Sidereal / pi / 2
+    const portion2 = pi / 3
+    const portion4 = Sidereal === 360 ? 1 : Sidereal / 360
     const lReal = l / portion4
-    let hWest = RoundL2HWest(rReal, lReal)
+    let hWest = RoundL2HWest(r, lReal)
     const cWest = RoundH2LC(hWest).c / portion2
     let Print = [{
         title: '會圓術',
@@ -115,39 +136,6 @@ export const RoundL2HPrint = (lRaw, Sidereal) => {
     return Print
 }
 // console.log(RoundL2HPrint(182.625, 60.875, 365.25))
-export const RoundC2LHPrint = (cRaw, Sidereal) => {
-    cRaw = +cRaw
-    const c = cRaw / 2
-    if (cRaw > 121.75) {
-        throw (new Error('c <= 121.75'))
-    }
-    Sidereal = +Sidereal
-    // const pi = 3.141592653589793
-    // const r = 60.875 // 會圓術系數3，不是pi
-    const portion1 = Sidereal === 365.25 ? 1 : Sidereal / 365.25
-    // const portion2 = pi / 3
-    // const portion4 = Sidereal === 360 ? 1 : Sidereal / 360
-    const Func = RoundC2HL(c)
-    let l = Func.l
-    let h = Func.h
-    h *= portion1
-    l *= portion1
-    // const rReal = Sidereal / pi / 2 //
-    // const cReal = c / portion2 * portion1
-    // const lWest = RoundC2LWest(rReal, cReal) * portion2//* portion4
-    let Print = [{
-        title: '會圓術',
-        // data: [l.toFixed(6), (l - lWest).toFixed(4), h.toFixed(6), (h - hWest).toFixed(4)]
-        data: [l.toFixed(6), '-', h.toFixed(6), '-']
-    }]
-    // Print = Print.concat({
-    //     title: '三角函數',
-    //     // data: [lWest.toFixed(6), 0, hWest.toFixed(6), 0]
-    //     data: [lWest.toFixed(6), 0, 0, 0]
-    // })
-    return Print
-}
-
 // 弧矢割圓術黃赤轉換。跟《黃赤道率》立成表分毫不差，耶！！！
 export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》頁629
     const Sidereal = 365.25
@@ -166,7 +154,6 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const p1 = Math.sqrt(r ** 2 - (r - v1) ** 2) // LB黃半弧弦
     const p2 = p * (r - v1) / r // BN,LM
     const v2 = r - Math.sqrt(r ** 2 - p2 ** 2) // NC赤二弦差、黃赤內外矢。後面一堆是用來擬合立成表的。加上0.14，在50度左右正正好跟立成合上，前後略差
-    let Lati = p2 + v2 ** 2 / d // 赤緯、黃赤內外度 BC
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
     const Ecliptic2EquatorDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
@@ -177,6 +164,7 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     } else {
         Ecliptic2Equator = LongiRaw - Ecliptic2EquatorDif
     }
+    let Lati = p2 + v2 ** 2 / d // 赤緯、黃赤內外度 BC
     let sign = 1
     if (LongiRaw < QuarSidereal || LongiRaw > Sidereal * 0.75) {
         Lati = -Lati
@@ -198,7 +186,40 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
         Sunrise
     }
 }
-// console.log(Hushigeyuan(1, 365.2575).Sunrise)
+// console.log (Hushigeyuan(22))
+export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見《中國古代曆法》頁629
+    const pi = 3.141592653589793
+    const QuarSidereal = Sidereal / 4
+    const HalfSidereal = Sidereal / 2
+    let Longi = LongiRaw % QuarSidereal
+    if ((LongiRaw > QuarSidereal && LongiRaw <= HalfSidereal) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
+        Longi = QuarSidereal - Longi
+    }
+    const portion4 = Sidereal / 360
+    Longi /= portion4
+    const p = +ConstWest(year).obliquity // 黃赤交角
+    const r = 360 / pi / 2
+    const v1 = RoundL2HWest(r, Longi) // LD
+    const p1 = Math.sqrt(r ** 2 - (r - v1) ** 2) // LB黃半弧弦
+    const p2 = p * (r - v1) / r // BN,LM
+    const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
+    const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
+    const EquatorLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
+    // const EquatorLongi = RoundC2LWest(r, p3) / 2
+    const Ecliptic2EquatorDif = (EquatorLongi - Longi) * portion4
+    let Ecliptic2Equator = 0
+    if ((LongiRaw >= 0 && LongiRaw < QuarSidereal) || (LongiRaw >= HalfSidereal && LongiRaw < Sidereal * 0.75)) {
+        Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
+    } else {
+        Ecliptic2Equator = LongiRaw - Ecliptic2EquatorDif
+    }
+    return {
+        Ecliptic2Equator,
+        Ecliptic2EquatorDif,
+        // Equator2Ecliptic,
+    }
+}
+// console.log(HushigeyuanWest(32, 365.25, 1000).Ecliptic2Equator)
 export const Hushigeyuan2 = LongiRaw => {
     const Sidereal = 365.2575
     const QuarSidereal = Sidereal / 4

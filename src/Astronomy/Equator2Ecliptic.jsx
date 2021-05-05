@@ -60,10 +60,12 @@ export default class Converter extends React.Component {
             <th></th>
             <th>赤 ⇒ 黃</th>
             <th>黃-赤</th>
-            <th>誤差</th>
+            <th>誤差1</th>
+            <th>誤差2</th>
             <th>黃 ⇒ 赤</th>
             <th>赤-黃</th>
-            <th>誤差</th>
+            <th>誤差1</th>
+            <th>誤差2</th>
           </tr>
           {(this.state.outputEcliptic || []).map(row => {
             return (
@@ -84,7 +86,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>赤經 ⇌ 極黃經</h3>
-        <p className='note'>度數從冬至起算，二至到二分：赤大於黃；二分到二至：黃大於赤。只有<v>紀元</v>有黃轉赤公式，其餘只能赤轉黃，我用與<v>紀元</v>相同的求反函數思路，補出各宋系曆法的黃轉赤公式。小數點後 4 位的精度就是 0.36”</p>
+        <p className='note'>第一行「球面三角」是黃赤經轉換的公式，第二行「三角割圓」是用三角函數代替會圓術的弧矢割圓術，<v>授時</v>弧矢割圓術用的是會圓術。弧矢割圓術是近似三角形、勾股定理、會圓術的組合，前兩者都是精確公式，只有會圓術是近似公式，那麼從理論上來講，如果用三角函數代替會圓術，就能得到和球面三角完全一致的結果，事實上並不是這麼回事，我猜測，這應該是極黃經與黃經坐標的區別，弧矢割圓術的模型是極黃經，而球面三角是現代天文學的黃經。我已經排除了單位系的問題（詳見會圓術，會圓術的系數是 3，一般意義上幾何的系數是 π），應該比較可靠。度數從冬至起算，二至到二分：赤大於黃；二分到二至：黃大於赤。只有<v>紀元</v>有黃轉赤公式，其餘只能赤轉黃，我用與<v>紀元</v>相同的求反函數思路，補出各宋系曆法的黃轉赤公式。小數點後 4 位的精度就是 0.36”</p>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>ecliptic&equator</button>
         {this.result()}

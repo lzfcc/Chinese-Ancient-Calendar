@@ -4,7 +4,7 @@ export default class Equa extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      A: 180,
+      A: 68.500769,
       c: 365.25
     };
     this.handle = this.handle.bind(this)

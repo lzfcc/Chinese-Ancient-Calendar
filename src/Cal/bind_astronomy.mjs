@@ -17,6 +17,7 @@ import {
 } from './astronomy_formula.mjs'
 import {
     Hushigeyuan,
+    HushigeyuanWest,
 } from './equa_geometry'
 import {
     Equator2EclipticWest,
@@ -200,18 +201,31 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         Ecliptic2EquatorDif: WestA1
     } = Equator2EclipticWest(LongiRaw, Sidereal, year)
     let Print = [{
-        title: '球面三角',
-        data: [WestB.toFixed(6), WestB1.toFixed(4), 0, WestA.toFixed(6), WestA1.toFixed(4), 0]
+        title: '1球面三角',
+        data: [WestB.toFixed(6), WestB1.toFixed(4), 0, 0, WestA.toFixed(6), WestA1.toFixed(4), 0, 0]
     }]
+    const {
+        // Equator2Ecliptic: West2B,
+        // Equator2EclipticDif: West2B1,
+        Ecliptic2Equator: West2A,
+        Ecliptic2EquatorDif: West2A1
+    } = HushigeyuanWest(LongiRaw, Sidereal, year)
+    Print = Print.concat({
+        title: '2三角割圓',
+        // data: [WestB.toFixed(6), WestB1.toFixed(4), 0, WestA.toFixed(6), WestA1.toFixed(4), 0]
+        data: ['-', '-', '-', 0, West2A.toFixed(6), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0]
+    })
     Print = Print.concat(
         ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
             let EclipticLongiPrint = '-'
             let EclipticLongiInac = '-'
+            let EclipticLongi2Inac = '-'
             let EquatorLongiPrint = '-'
             let EquatorLongiInac = '-'
+            let EquatorLongi2Inac = '-'
             let Equator2EclipticDifPrint = '-'
             let Ecliptic2EquatorDifPrint = '-'
-            const Func = AutoEquator2Ecliptic(LongiRaw, title)
+            const Func = AutoEquator2Ecliptic(LongiRaw, title, Sidereal, year)
             const Equator2Ecliptic = Func.Equator2Ecliptic
             const Ecliptic2Equator = Func.Ecliptic2Equator
             const Equator2EclipticDif = Func.Equator2EclipticDif
@@ -224,11 +238,12 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
             if (Ecliptic2Equator) {
                 EquatorLongiPrint = Ecliptic2Equator.toFixed(6)
                 EquatorLongiInac = (Ecliptic2Equator - WestA).toFixed(4)
+                EquatorLongi2Inac = (Ecliptic2Equator - West2A).toFixed(4)
                 Ecliptic2EquatorDifPrint = Ecliptic2EquatorDif.toFixed(4)
             }
             return {
                 title: CalNameList[title],
-                data: [EclipticLongiPrint, Equator2EclipticDifPrint, EclipticLongiInac, EquatorLongiPrint, Ecliptic2EquatorDifPrint, EquatorLongiInac]
+                data: [EclipticLongiPrint, Equator2EclipticDifPrint, EclipticLongiInac, EclipticLongi2Inac, EquatorLongiPrint, Ecliptic2EquatorDifPrint, EquatorLongiInac, EquatorLongi2Inac]
             }
         }))
     return {
