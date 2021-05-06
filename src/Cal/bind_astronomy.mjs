@@ -238,13 +238,13 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
             const Equator2EclipticDif = Func.Equator2EclipticDif
             const Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
             if (Equator2Ecliptic) {
-                EclipticLongiPrint = Equator2Ecliptic.toFixed(6)                
+                EclipticLongiPrint = Equator2Ecliptic.toFixed(6)
                 Equator2EclipticDifPrint = Equator2EclipticDif.toFixed(4)
                 EclipticLongiInacPrint = (Equator2Ecliptic - WestB).toFixed(4)
                 EclipticLongi2InacPrint = (Equator2Ecliptic - West2B).toFixed(4)
             }
             if (Ecliptic2Equator) {
-                EquatorLongiPrint = Ecliptic2Equator.toFixed(6)                
+                EquatorLongiPrint = Ecliptic2Equator.toFixed(6)
                 Ecliptic2EquatorDifPrint = Ecliptic2EquatorDif.toFixed(4)
                 EquatorLongiInacPrint = (Ecliptic2Equator - WestA).toFixed(4)
                 EquatorLongi2InacPrint = (Ecliptic2Equator - West2A).toFixed(4)

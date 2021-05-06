@@ -138,24 +138,38 @@ export const RoundL2HPrint = (lRaw, Sidereal) => {
 // console.log(RoundL2HPrint(182.625, 60.875, 365.25))
 // 弧矢割圓術黃赤轉換。跟《黃赤道率》立成表分毫不差，耶！！！
 export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》頁629
-    const Sidereal = 365.25
+    // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915
+    const Sidereal = 365.2575
     const r = 60.875
     const d = 121.75
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
+    const pAnother = 23.71 // 二至黃赤內外半弧弦
     const q = 56.0268 // OK
-    const v = 4.8482 // KE    
+    // const v = 4.8482 // KE    
     const QuarSidereal = Sidereal / 4
     const HalfSidereal = Sidereal / 2
     let Longi = LongiRaw % QuarSidereal
     if ((LongiRaw > QuarSidereal && LongiRaw <= HalfSidereal) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
         Longi = QuarSidereal - Longi
     }
-    const v1 = RoundL2H(Longi) // LD
-    const p1 = Math.sqrt(r ** 2 - (r - v1) ** 2) // LB黃半弧弦
-    const p2 = p * (r - v1) / r // BN,LM
+    const v1 = RoundL2H(Longi) // LD黃道矢度 
+    const cSmall1 = r - v1 // 黃赤小弦
+    const p1 = Math.sqrt(r ** 2 - cSmall1 ** 2) // LB黃半弧弦
+    const p2 = p * cSmall1 / r // BN,LM
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
     let Ecliptic2EquatorDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
+    ///// 緯度
+    const ySmall = cSmall1 * q / r // 黃赤小股
+    const cSmall2 = Math.sqrt(p1 ** 2 + ySmall ** 2) // 赤小弦
+    const HalfCDif = (r - cSmall2) ** 2 / d // 半背弦差 // r - cSmall2赤二弦差
+    const clSmall = pAnother * cSmall1 / r// 黃赤小弧弦、黃赤內外半弧弦
+    let Lati = clSmall + HalfCDif
+    let sign = 1
+    if (LongiRaw < QuarSidereal || LongiRaw > Sidereal * 0.75) {
+        Lati = -Lati
+        sign = -1
+    }
     /////赤轉黃/////
     const PE = RoundL2H(Longi)
     const OP = r - PE
@@ -180,21 +194,12 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     Equator2EclipticDif *= sign2
     Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
     Equator2Ecliptic = LongiRaw + Equator2EclipticDif
-    const LatiFunc = RoundC2HL(p2)
-    let Lati = LatiFunc.Halfl
-    const v2 = LatiFunc.h
-    // const v2 = r - Math.sqrt(r ** 2 - p2 ** 2) // NC赤二弦差、黃赤內外矢。後面一堆是用來擬合立成表的。加上0.14，在50度左右正正好跟立成合上，前後略差
-    // let Lati = p2 + v2 ** 2 / d // 赤緯、黃赤內外度 BC
-    let sign = 1
-    if (LongiRaw < QuarSidereal || LongiRaw > Sidereal * 0.75) {
-        Lati = -Lati
-        sign = -1
-    }
     const Lati1 = QuarSidereal - Lati
-    //////////晷漏//////// 北京緯度40.95
-    const v2adj = v2 // - (Math.cos(Longi * 2 * 3.1415926585 / Sidereal) * 0.05 + 0.08 - Longi * 0.0018)
-    const SunHundred = 6 * (r - v2adj) + 1 // 日行百刻度
-    const Banhubei = p2 * 19.9614 / 23.71
+    //////////晷漏//////// 
+    // const v2 = LatiFunc.h
+    const ON = Math.sqrt(r ** 2 - p2 ** 2) //v2  NC赤二弦差、黃赤內外矢
+    const SunHundred = 6 * ON + 1 // 日行百刻度
+    const Banhubei = clSmall * 19.9614 / pAnother // 19.9614：二至出入差半弧背
     const Sunrise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
     //  const MidStar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
     return {
@@ -207,7 +212,7 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
         Sunrise
     }
 }
-// console.log (Hushigeyuan(22))
+// console.log(Hushigeyuan(40).Sunrise)
 export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見《中國古代曆法》頁629
     const pi = 3.141592653589793
     const QuarSidereal = Sidereal / 4
