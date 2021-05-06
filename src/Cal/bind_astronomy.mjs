@@ -171,7 +171,11 @@ export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
         Equator2EclipticDif = Func.Equator2EclipticDif
         Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
     } else if (Type === 11) {
-        Ecliptic2Equator = Hushigeyuan(LongiRaw).Ecliptic2Equator
+        const Func = Hushigeyuan(LongiRaw)
+        Equator2Ecliptic = Func.Equator2Ecliptic
+        Ecliptic2Equator = Func.Ecliptic2Equator
+        Equator2EclipticDif = Func.Equator2EclipticDif
+        Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
     }
     Ecliptic2EquatorDif = Ecliptic2Equator ? (Ecliptic2EquatorDif || Ecliptic2Equator - LongiRaw) : 0
     return {
@@ -613,7 +617,6 @@ const InacPrintAnaly_SunTcorr = (CalName, AnomaAccum, year) => {
     for (let i = 0; i <= 365; i++) {// i:WinsolsDifRaw
         SunTcorrInac[i] = BindTcorr(AnomaAccum, i, year, CalName).SunTcorrInac
     }
-    SunTcorrInac.join('')
     return SunTcorrInac
 }
-console.log (InacPrintAnaly_SunTcorr('Shoushi', 7, 1247))
+// console.log (InacPrintAnaly_SunTcorr('Shoushi', 7, 1247))

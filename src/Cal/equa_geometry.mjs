@@ -143,7 +143,7 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const d = 121.75
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
     const q = 53.288
-    const v = 4.8482
+    const v = 4.8482 // KE
     const QuarSidereal = Sidereal / 4
     const HalfSidereal = Sidereal / 2
     let Longi = LongiRaw % QuarSidereal
@@ -155,24 +155,32 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const p2 = p * (r - v1) / r // BN,LM
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    const Ecliptic2EquatorDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
+    let Ecliptic2EquatorDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
     /////赤轉黃/////
-    // const PE = RoundL2H(Longi)
-    // const OP = r - PE
-    // const OP = r - PE
-    // // const PC = Math.sqrt(r ** 2 - OP ** 2)
-    // const PC = RoundH2LC(PE).Halfc
-    // const BN = p * OP / r
-    // MN / PC === ON / r ==> ON === MN * r / PC, MN ** 2 + OM ** 2=ON ** 2 ==> sqrt(MN ** 2 + OM ** 2) === MN * r / PC
-    //   BN ^ 2 + ON ^ 2 === r ^ 2, ==>
-    // PQ/DK=OP/
+    const PE = RoundL2H(Longi)
+    const OP = r - PE
+    const PC = Math.sqrt(r ** 2 - OP ** 2)
+    const OK = r - v
+    const CT = p * OP / OK // PQ=CT，T是C向上垂直，超出了球體。Q是P垂直向上，交OD
+    const OT = Math.sqrt(r ** 2 + CT ** 2) // OT=r+BT
+    const BN = CT * r / OT
+    const PQ = p * OP / OK
+    const BL = PC * BN / PQ
+    const BD = RoundC2HL(BL).Halfl
+    let Equator2EclipticDif = Longi - BD
+    let sign1 = 1
+    let sign2 = 1
     let Ecliptic2Equator = 0
     let Equator2Ecliptic = 0
     if ((LongiRaw >= 0 && LongiRaw < QuarSidereal) || (LongiRaw >= HalfSidereal && LongiRaw < Sidereal * 0.75)) {
-        Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
+        sign2 = -1
     } else {
-        Ecliptic2Equator = LongiRaw - Ecliptic2EquatorDif
+        sign1 = -1
     }
+    Ecliptic2EquatorDif *= sign1
+    Equator2EclipticDif *= sign2
+    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
+    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
     const LatiFunc = RoundC2HL(p2)
     let Lati = LatiFunc.Halfl
     const v2 = LatiFunc.h
@@ -193,7 +201,8 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     return {
         Ecliptic2Equator,
         Ecliptic2EquatorDif,
-        // Equator2Ecliptic,
+        Equator2Ecliptic,
+        Equator2EclipticDif,
         Lati,
         Lati1,
         Sunrise
