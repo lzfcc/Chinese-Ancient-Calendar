@@ -236,9 +236,9 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     const p1 = Math.sqrt(r ** 2 - OL ** 2) // LB黃半弧弦
     const p2 = p * OL / r // BN,LM
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
-    const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    const EquaLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
-    // const EquaLongi = RoundC2LWest(r, p3)
+    // const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
+    // const EquaLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
+    const EquaLongi = RoundC2LWest(r, p3)
     ///// 黃轉赤的赤緯
     // const OM = OL * q / r // 黃赤小股
     // const NC = r - Math.sqrt(p1 ** 2 + OM ** 2)

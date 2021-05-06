@@ -142,13 +142,16 @@ export const Equa2EclpWest = (LongiRaw, Sidereal, year) => { // 《中國古代�
 // 一天之内太阳高度角的变化速率如何计算？ - Pjer https://www.zhihu.com/question/25909220/answer/1026387602 一年中太阳直射点在地球上的移动速度是多少？ - 黄诚赟的回答 https://www.zhihu.com/question/335690936/answer/754032487「太阳直射点的纬度变化不是匀速的，春分秋分最大，夏至冬至最小。」
 // https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE
 export const Longi2LatiWest = (lRaw, Sidereal, year) => { // 《中國古代曆法》頁630    
-    const Angle = big(lRaw).mul(pi).div(big.div(Sidereal, 2)).add(big.mul(pi, 1.5)) // 角度轉換爲定義域
+    const portion = Sidereal / 360
+    lRaw /= portion
+    lRaw += 270
+    const Angle = d2r(lRaw) // 角度轉換爲定義域
     const E = d2r(ConstWest(year).obliquity) // 化爲定義域
-    const d = Angle.sin().mul(E.sin()).asin() //.toPrecision(60) //.toSD(60)
-    const Lati = d.mul(Sidereal / 2).div(pi).mul(Sidereal / 360).toNumber()
+    const d = r2d(Angle.sin().mul(E.sin()).asin()).toNumber() //.toPrecision(60) //.toSD(60)
+    const Lati = d * portion
     const Lati1 = Sidereal / 4 - Lati // 去極度
     return {
-        d: d.toNumber(),
+        d,
         Lati,
         Lati1,
     }
@@ -261,7 +264,7 @@ export const MoonLongiWest = (EclpRaw, year) => { // 統一360度
     const a0Raw = tana0.atan() // a0距差
     const a0 = r2d(a0Raw).abs().toNumber() // a0距差=赤經    
     let EquaLongi = 0
-    if ((Eclp >= 90 && Eclp <180)||(Eclp >= 270)) {
+    if ((Eclp >= 90 && Eclp < 180) || (Eclp >= 270)) {
         EquaLongi = 90 + a0
     } else {
         EquaLongi = 90 - a0
