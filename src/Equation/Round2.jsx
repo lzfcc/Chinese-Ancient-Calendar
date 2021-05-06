@@ -4,8 +4,7 @@ export default class Equa extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      A: 66.858059,
-      c: 365.25
+      A: 66.858059
     };
     this.handle = this.handle.bind(this)
   }
@@ -21,20 +20,13 @@ export default class Equa extends React.Component {
             this.setState({ A: e.currentTarget.value });
           }}
         />
-        <span> 週天度</span>
-        <input className='width3'
-          value={this.state.c}
-          onChange={e => {
-            this.setState({ c: e.currentTarget.value });
-          }}
-        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = RoundC2LHPrint(this.state.A, this.state.c)
+      const Print = RoundC2LHPrint(this.state.A)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

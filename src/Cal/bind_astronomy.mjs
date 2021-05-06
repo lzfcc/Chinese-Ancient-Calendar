@@ -154,6 +154,7 @@ export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
     let Ecliptic2Equator = 0
     let Equator2EclipticDif = 0
     let Ecliptic2EquatorDif = 0
+    let Ecliptic2EquatorLati = 0
     if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         const Func = Equator2EclipticTable(LongiRaw, CalName)
         Equator2Ecliptic = Func.Equator2Ecliptic
@@ -176,13 +177,15 @@ export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
         Ecliptic2Equator = Func.Ecliptic2Equator
         Equator2EclipticDif = Func.Equator2EclipticDif
         Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
+        Ecliptic2EquatorLati = Func.Lati
     }
     Ecliptic2EquatorDif = Ecliptic2Equator ? (Ecliptic2EquatorDif || Ecliptic2Equator - LongiRaw) : 0
     return {
         Equator2Ecliptic,
         Equator2EclipticDif,
         Ecliptic2Equator,
-        Ecliptic2EquatorDif
+        Ecliptic2EquatorDif,
+        Ecliptic2EquatorLati
     }
 }
 
@@ -208,22 +211,28 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         Ecliptic2Equator: WestA,
         Ecliptic2EquatorDif: WestA1
     } = Equator2EclipticWest(LongiRaw, Sidereal, year)
+    const {
+        Lati: WestLati
+    } = Longi2LatiWest(LongiRaw, Sidereal, year)
     let Print = [{
-        title: '1球面三角',
-        data: [WestB.toFixed(6), WestB1.toFixed(4), 0, 0, WestA.toFixed(6), WestA1.toFixed(4), 0, 0]
+        title: '1球面',
+        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, 0, WestA.toFixed(5), WestA1.toFixed(4), 0, 0, WestLati.toFixed(4)]
     }]
     const {
         Equator2Ecliptic: West2B,
         Equator2EclipticDif: West2B1,
         Ecliptic2Equator: West2A,
-        Ecliptic2EquatorDif: West2A1
+        Ecliptic2EquatorDif: West2A1,
+        Lati: West2Lati
     } = HushigeyuanWest(LongiRaw, Sidereal, year)
     Print = Print.concat({
-        title: '2三角割圓',
-        data: [West2B.toFixed(6), West2B1.toFixed(4), (West2B - WestB).toFixed(4), 0, West2A.toFixed(6), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0]
+        title: '2割圓',
+        data: [West2B.toFixed(5), West2B1.toFixed(4), (West2B - WestB).toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0, West2Lati.toFixed(4), (West2Lati - WestLati).toFixed(4)]
     })
+    const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
+    const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
-        ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
+        List1.map(title => {
             let EclipticLongiPrint = '-'
             let EclipticLongiInacPrint = '-'
             let EclipticLongi2InacPrint = '-'
@@ -232,26 +241,39 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
             let EquatorLongi2InacPrint = '-'
             let Equator2EclipticDifPrint = '-'
             let Ecliptic2EquatorDifPrint = '-'
+            let Ecliptic2EquatorLatiPrint = '-'
+            let Ecliptic2EquatorLatiInacPrint = '-'
             const Func = AutoEquator2Ecliptic(LongiRaw, title, Sidereal, year)
             const Equator2Ecliptic = Func.Equator2Ecliptic
             const Ecliptic2Equator = Func.Ecliptic2Equator
             const Equator2EclipticDif = Func.Equator2EclipticDif
             const Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
+            let Ecliptic2EquatorLati = 0
+            if (title === 'Shoushi') {
+                Ecliptic2EquatorLati = Func.Ecliptic2EquatorLati
+            } else if (List2.indexOf(title) > 0) {
+                Ecliptic2EquatorLati = AutoLongi2Lati(LongiRaw, 0.5, title, 1).Lati
+            }
+            const Ecliptic2EquatorLatiInac = Ecliptic2EquatorLati - WestLati
             if (Equator2Ecliptic) {
-                EclipticLongiPrint = Equator2Ecliptic.toFixed(6)
+                EclipticLongiPrint = Equator2Ecliptic.toFixed(5)
                 Equator2EclipticDifPrint = Equator2EclipticDif.toFixed(4)
                 EclipticLongiInacPrint = (Equator2Ecliptic - WestB).toFixed(4)
                 EclipticLongi2InacPrint = (Equator2Ecliptic - West2B).toFixed(4)
             }
             if (Ecliptic2Equator) {
-                EquatorLongiPrint = Ecliptic2Equator.toFixed(6)
+                EquatorLongiPrint = Ecliptic2Equator.toFixed(5)
                 Ecliptic2EquatorDifPrint = Ecliptic2EquatorDif.toFixed(4)
                 EquatorLongiInacPrint = (Ecliptic2Equator - WestA).toFixed(4)
                 EquatorLongi2InacPrint = (Ecliptic2Equator - West2A).toFixed(4)
             }
+            if (Ecliptic2EquatorLati) {
+                Ecliptic2EquatorLatiPrint = Ecliptic2EquatorLati.toFixed(4)
+                Ecliptic2EquatorLatiInacPrint = Ecliptic2EquatorLatiInac.toFixed(4)
+            }
             return {
                 title: CalNameList[title],
-                data: [EclipticLongiPrint, Equator2EclipticDifPrint, EclipticLongiInacPrint, EclipticLongi2InacPrint, EquatorLongiPrint, Ecliptic2EquatorDifPrint, EquatorLongiInacPrint, EquatorLongi2InacPrint]
+                data: [EclipticLongiPrint, Equator2EclipticDifPrint, EclipticLongiInacPrint, EclipticLongi2InacPrint, EquatorLongiPrint, Ecliptic2EquatorDifPrint, EquatorLongiInacPrint, EquatorLongi2InacPrint, Ecliptic2EquatorLatiPrint, Ecliptic2EquatorLatiInacPrint]
             }
         }))
     return {
@@ -261,7 +283,7 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
 }
 // console.log(BindEquator2Ecliptic(360, 365.2575, 0).Range)
 
-export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName) => {
+export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => {
     const {
         Type,
     } = Bind(CalName)
@@ -270,7 +292,8 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName) => {
     let Longi2LatiA = {}
     let Longi2LatiB = {}
     let special = 0
-    if (Type >= 8 && !['Yingtian', 'Qianyuan'].includes(CalName)) {
+    // 公式曆法加上日躔
+    if (isBare) { } else if (Type >= 8 && !['Yingtian', 'Qianyuan'].includes(CalName)) {
         LongiRaw += AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
     }
     if (Type <= 3) {

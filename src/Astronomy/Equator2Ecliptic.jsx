@@ -61,11 +61,13 @@ export default class Converter extends React.Component {
             <th>赤 ⇒ 黃</th>
             <th>黃-赤</th>
             <th>誤差1</th>
-            <th>誤差2</th>
+            <th>誤差2</th>            
             <th>黃 ⇒ 赤</th>
             <th>赤-黃</th>
             <th>誤差1</th>
             <th>誤差2</th>
+            <th>赤緯</th>
+            <th>誤差1</th>
           </tr>
           {(this.state.outputEcliptic || []).map(row => {
             return (
