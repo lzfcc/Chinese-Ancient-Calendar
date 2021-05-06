@@ -244,14 +244,14 @@ export const ManGodList = ['', '大趾', '外踝', '股內', '腰', '口舌', '�
 export const JianchuList = '建除滿平定執破危成收開閉' // 建除十二客（値、辰）
 export const HuangheiList = ['青龍', '明堂', '天刑', '朱雀', '金匱', '天德', '白虎', '玉堂', '天牢', '玄武', '司命', '句陳'] // https://www.zhihu.com/question/20167015/answer/15508998
 
-const EquatorDegTaichu = [0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 16, 2, 9, 33, 4, 15, 7, 18, 18, 17] // 太初至麟德
-// const EquatorDegTaichu = [0, 0, 12, 21, 36, 41, 46, 64, 75, 101, 109, 121, 131, 148, 164, 173, 189, 201, 215, 226, 242, 244, 253, 286, 290, 305, 312, 330, 348]
-const EquatorDegDayan = [0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 17, 1, 10, 33, 3, 15, 7, 18, 18, 17] // 大衍以後。太=0.75
-// const EquatorDegMingtian = [0, 12, 9, 16, 5, 6, 19, 10, 25, 7, 11, 10, 16, 17, 9, 16, 12, 15, 11, 18, 1, 10, 34, 2, 14, 7, 18, 18, 17] // 明天的新値。「自漢太初後至唐開元治曆之初，凡八百年間，悉無更易。今雖測驗與舊不同，亦歲月未久。新曆兩備其數，如淳風從舊之意。」所以還是沿用以前的
-const EquatorDegJiyuan = [0, 12, 9.25, 16, 5.75, 6.25, 19.25, 10.5, 25, 7.25, 11.25, 9, 15.5, 17, 8.75, 16.5, 12, 15, 11.25, 17.25, 0.5, 10.5, 33.25, 2.5, 13.75, 6.75, 17.25, 18.75, 17] // 少=1/4，太3/4。紀元的新値「如考唐，用唐所測；考古，用古所測：卽各得當時宿度。」根據年份用當時的觀測值。注意虛分要減去週天餘。金大明沿用紀元
-const EquatorDegShoushi = [0, 12.1, 9.2, 16.3, 5.6, 6.5, 19.1, 10.4, 25.2, 7.2, 11.35, 8.7, 15.4, 17.1, 8.6, 16.6, 11.8, 15.6, 11.3, 17.4, 0.05, 11.1, 33.3, 2.2, 13.3, 6.3, 17.25, 18.75, 17.3] // 弦策少是0.25，太就是0.75。觜初五，說明初=0。大統同授時
+const EquaDegTaichu = [0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 16, 2, 9, 33, 4, 15, 7, 18, 18, 17] // 太初至麟德
+// const EquaDegTaichu = [0, 0, 12, 21, 36, 41, 46, 64, 75, 101, 109, 121, 131, 148, 164, 173, 189, 201, 215, 226, 242, 244, 253, 286, 290, 305, 312, 330, 348]
+const EquaDegDayan = [0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 17, 1, 10, 33, 3, 15, 7, 18, 18, 17] // 大衍以後。太=0.75
+// const EquaDegMingtian = [0, 12, 9, 16, 5, 6, 19, 10, 25, 7, 11, 10, 16, 17, 9, 16, 12, 15, 11, 18, 1, 10, 34, 2, 14, 7, 18, 18, 17] // 明天的新値。「自漢太初後至唐開元治曆之初，凡八百年間，悉無更易。今雖測驗與舊不同，亦歲月未久。新曆兩備其數，如淳風從舊之意。」所以還是沿用以前的
+const EquaDegJiyuan = [0, 12, 9.25, 16, 5.75, 6.25, 19.25, 10.5, 25, 7.25, 11.25, 9, 15.5, 17, 8.75, 16.5, 12, 15, 11.25, 17.25, 0.5, 10.5, 33.25, 2.5, 13.75, 6.75, 17.25, 18.75, 17] // 少=1/4，太3/4。紀元的新値「如考唐，用唐所測；考古，用古所測：卽各得當時宿度。」根據年份用當時的觀測值。注意虛分要減去週天餘。金大明沿用紀元
+const EquaDegShoushi = [0, 12.1, 9.2, 16.3, 5.6, 6.5, 19.1, 10.4, 25.2, 7.2, 11.35, 8.7, 15.4, 17.1, 8.6, 16.6, 11.8, 15.6, 11.3, 17.4, 0.05, 11.1, 33.3, 2.2, 13.3, 6.3, 17.25, 18.75, 17.3] // 弦策少是0.25，太就是0.75。觜初五，說明初=0。大統同授時
 // let MansionDegAccumList = []
-// MansionDegAccumList = EquatorDegTaichu.slice()
+// MansionDegAccumList = EquaDegTaichu.slice()
 // for (let i = 1; i <= 28; i++) {
 //     MansionDegAccumList[i] += MansionDegAccumList[i - 1]
 //     MansionDegAccumList[i] = parseFloat((MansionDegAccumList[i]).toPrecision(10))
@@ -259,50 +259,50 @@ const EquatorDegShoushi = [0, 12.1, 9.2, 16.3, 5.6, 6.5, 19.1, 10.4, 25.2, 7.2, 
 // MansionDegAccumList = MansionDegAccumList.slice(-1).concat(MansionDegAccumList.slice(0, -1))
 // MansionDegAccumList[0] = 0
 // 要在這就直接把積度定下來不太現實，因爲每部曆法斗分都不一樣。放棄。
-const EclipticDegEasthan = [0, 13, 10, 16, 5, 5, 18, 10, 24, 7, 11, 10, 16, 18, 10, 17, 12, 15, 12, 16, 3, 8, 30, 4, 14, 7, 17, 19, 18]
-const EclipticDegHuangji = [0, 13, 10, 16, 5, 5, 17, 10.5, 24, 7, 11.5, 10, 17, 17, 10, 17, 13, 15, 11, 15.5, 2, 9, 30, 4, 14.5, 7, 17, 19, 18] // 《中國古代曆法》頁25的胃本來是15，寫成14了
-const EclipticDegLinde = [0, 13, 10, 16, 5, 5, 18, 10, 24, 7, 11, 10, 16, 18, 10, 17, 13, 15, 11, 16, 2, 9, 30, 4, 14, 7, 17, 19, 18]
-const EclipticDegDayan = [0, 13, 9.5, 15.75, 5, 4.75, 17, 10.25, 23.5, 7.5, 11.25, 10, 17.75, 17.25, 9.75, 17.5, 12.5, 14.75, 11, 16.25, 1, 9.25, 30, 2.75, 14.25, 6.75, 18.75, 19.25, 18.75]
-const EclipticDegYingtian = [0, 13, 9.5, 15.25, 5, 5, 17.25, 10.25, 23.5, 7.5, 11.75, 10, 17.25, 16.75, 10.25, 17.5, 12.75, 14.25, 11, 16.5, 1, 9.25, 30, 2.75, 14.5, 7, 18.25, 19.25, 18.75]
-const EclipticDegMingtian = [0, 13, 9.5, 15.5, 5, 4.75, 17, 10, 23.5, 7.5, 11.5, 10, 17.75, 17.25, 9.75, 17.75, 12.75, 14.5, 10.75, 16, 1, 9.25, 30, 2.75, 14.25, 7, 18.75, 19.5, 18.75] // 明天、觀天
-const EclipticDegJiyuan = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18, 9.5, 18, 12.75, 15.5, 11, 16.5, 0.5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5]
-const EclipticDegNewDaming = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18.25, 9.5, 17.75, 12.75, 15.5, 11, 16.5, 0.5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5] // 重修大明、庚午
-const EclipticDegShoushi = [0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34, 17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28, 31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75] // 黃道度
+const EclpDegEasthan = [0, 13, 10, 16, 5, 5, 18, 10, 24, 7, 11, 10, 16, 18, 10, 17, 12, 15, 12, 16, 3, 8, 30, 4, 14, 7, 17, 19, 18]
+const EclpDegHuangji = [0, 13, 10, 16, 5, 5, 17, 10.5, 24, 7, 11.5, 10, 17, 17, 10, 17, 13, 15, 11, 15.5, 2, 9, 30, 4, 14.5, 7, 17, 19, 18] // 《中國古代曆法》頁25的胃本來是15，寫成14了
+const EclpDegLinde = [0, 13, 10, 16, 5, 5, 18, 10, 24, 7, 11, 10, 16, 18, 10, 17, 13, 15, 11, 16, 2, 9, 30, 4, 14, 7, 17, 19, 18]
+const EclpDegDayan = [0, 13, 9.5, 15.75, 5, 4.75, 17, 10.25, 23.5, 7.5, 11.25, 10, 17.75, 17.25, 9.75, 17.5, 12.5, 14.75, 11, 16.25, 1, 9.25, 30, 2.75, 14.25, 6.75, 18.75, 19.25, 18.75]
+const EclpDegYingtian = [0, 13, 9.5, 15.25, 5, 5, 17.25, 10.25, 23.5, 7.5, 11.75, 10, 17.25, 16.75, 10.25, 17.5, 12.75, 14.25, 11, 16.5, 1, 9.25, 30, 2.75, 14.5, 7, 18.25, 19.25, 18.75]
+const EclpDegMingtian = [0, 13, 9.5, 15.5, 5, 4.75, 17, 10, 23.5, 7.5, 11.5, 10, 17.75, 17.25, 9.75, 17.75, 12.75, 14.5, 10.75, 16, 1, 9.25, 30, 2.75, 14.25, 7, 18.75, 19.5, 18.75] // 明天、觀天
+const EclpDegJiyuan = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18, 9.5, 18, 12.75, 15.5, 11, 16.5, 0.5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5]
+const EclpDegNewDaming = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18.25, 9.5, 17.75, 12.75, 15.5, 11, 16.5, 0.5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5] // 重修大明、庚午
+const EclpDegShoushi = [0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34, 17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28, 31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75] // 黃道度
 
 export const AutoMansion = (CalName, year) => {
-    let EquatorDegList = [] // 不同時期用不同的宿度
+    let EquaDegList = [] // 不同時期用不同的宿度
     if (year >= 1260) {
-        EquatorDegList = EquatorDegShoushi
+        EquaDegList = EquaDegShoushi
     } else if (year >= 1100) {
-        EquatorDegList = EquatorDegJiyuan
+        EquaDegList = EquaDegJiyuan
     } else if (year >= 724) {
-        EquatorDegList = EquatorDegDayan
+        EquaDegList = EquaDegDayan
     } else {
-        EquatorDegList = EquatorDegTaichu
+        EquaDegList = EquaDegTaichu
     }
-    let EclipticDegList = []
+    let EclpDegList = []
     if (year >= 1281) {
-        EclipticDegList = EclipticDegShoushi
+        EclpDegList = EclpDegShoushi
     } else if (CalName === 'NewDaming') {
-        EclipticDegList = EclipticDegNewDaming
+        EclpDegList = EclpDegNewDaming
     } else if (year >= 1106) {
-        EclipticDegList = EclipticDegJiyuan
+        EclpDegList = EclpDegJiyuan
     } else if (year >= 1065) {
-        EclipticDegList = EclipticDegMingtian
+        EclpDegList = EclpDegMingtian
     } else if (year >= 964) {
-        EclipticDegList = EclipticDegYingtian
+        EclpDegList = EclpDegYingtian
     } else if (year >= 729) {
-        EclipticDegList = EclipticDegDayan
+        EclpDegList = EclpDegDayan
     } else if (year >= 665) {
-        EclipticDegList = EclipticDegLinde
+        EclpDegList = EclpDegLinde
     } else if (CalName === 'Huangji') {
-        EclipticDegList = EclipticDegHuangji
+        EclpDegList = EclpDegHuangji
     } else {
-        EclipticDegList = EclipticDegEasthan
+        EclpDegList = EclpDegEasthan
     }
     return {
-        EquatorDegList,
-        EclipticDegList
+        EquaDegList,
+        EclpDegList
     }
 }
 export const WestGongNameList = ['白羊', '金牛', '陰陽', '巨蟹', '獅子', '雙女', '天秤', '天蝎', '人馬', '磨羯', '寶瓶', '雙魚'] // 回回曆法
@@ -366,12 +366,12 @@ export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30] 
 //     [17, '軫'], // 28
 // ]
 // 黃赤度經過以下檢驗都沒問題了
-// let EquatorDegList = []
-// let EquatorDegAccumList = []
-// EquatorDegList = EquatorDegShoushi.slice()
-// EquatorDegAccumList = EquatorDegList.slice()
+// let EquaDegList = []
+// let EquaDegAccumList = []
+// EquaDegList = EquaDegShoushi.slice()
+// EquaDegAccumList = EquaDegList.slice()
 // for (let i = 1; i <= 29; i++) {
-//     EquatorDegAccumList[i] += EquatorDegAccumList[i - 1]
+//     EquaDegAccumList[i] += EquaDegAccumList[i - 1]
 // }
-// EquatorDegAccumList = EquatorDegAccumList.slice(-1).concat(EquatorDegAccumList.slice(0, -1))
-// EquatorDegAccumList[0] = 0
+// EquaDegAccumList = EquaDegAccumList.slice(-1).concat(EquaDegAccumList.slice(0, -1))
+// EquaDegAccumList[0] = 0

@@ -163,7 +163,7 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const p2Another = pAnother * OL / r // BN黃赤小弧弦、黃赤內外半弧弦
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    let Ecliptic2EquatorDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
+    let Eclp2EquaDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
     ///// 黃轉赤的赤緯
     const OM = OL * q / r // 黃赤小股
     const ON = Math.sqrt(p1 ** 2 + OM ** 2) // 赤小弦// const ON = Math.sqrt(r ** 2 - p2 ** 2) //v2
@@ -183,20 +183,20 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const PQ = p * OP / q
     const BL = PC * BN / PQ
     const BD = RoundC2HL(BL).Halfl
-    let Equator2EclipticDif = Longi - BD
+    let Equa2EclpDif = Longi - BD
     let sign1 = 1
     let sign2 = 1
-    let Ecliptic2Equator = 0
-    let Equator2Ecliptic = 0
+    let Eclp2Equa = 0
+    let Equa2Eclp = 0
     if ((LongiRaw >= 0 && LongiRaw < QuarSidereal) || (LongiRaw >= HalfSidereal && LongiRaw < Sidereal * 0.75)) {
         sign2 = -1
     } else {
         sign1 = -1
     }
-    Ecliptic2EquatorDif *= sign1
-    Equator2EclipticDif *= sign2
-    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
-    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
+    Eclp2EquaDif *= sign1
+    Equa2EclpDif *= sign2
+    Eclp2Equa = LongiRaw + Eclp2EquaDif
+    Equa2Eclp = LongiRaw + Equa2EclpDif
     const Lati1 = QuarSidereal - Lati
     //////////晷漏//////// 
     // const v2 = LatiFunc.h
@@ -205,16 +205,16 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const Sunrise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
     //  const MidStar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
     return {
-        Ecliptic2Equator,
-        Ecliptic2EquatorDif,
-        Equator2Ecliptic,
-        Equator2EclipticDif,
+        Eclp2Equa,
+        Eclp2EquaDif,
+        Equa2Eclp,
+        Equa2EclpDif,
         Lati,
         Lati1,
         Sunrise
     }
 }
-// console.log(Hushigeyuan(40).Ecliptic2Equator)
+// console.log(Hushigeyuan(40).Eclp2Equa)
 export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見《中國古代曆法》頁629
     const pi = 3.141592653589793
     const QuarSidereal = Sidereal / 4
@@ -237,8 +237,8 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     const p2 = p * OL / r // BN,LM
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    const EquatorLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
-    // const EquatorLongi = RoundC2LWest(r, p3)
+    const EquaLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
+    // const EquaLongi = RoundC2LWest(r, p3)
     ///// 黃轉赤的赤緯
     // const OM = OL * q / r // 黃赤小股
     // const NC = r - Math.sqrt(p1 ** 2 + OM ** 2)
@@ -258,49 +258,100 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     const BL = PC * BN / PQ
     const BD = RoundC2LWest(r, BL)
     //////轉換為365.25度//////
-    let Ecliptic2EquatorDif = (EquatorLongi - Longi) * portion4
-    let Equator2EclipticDif = (Longi - BD) * portion4
+    let Eclp2EquaDif = (EquaLongi - Longi) * portion4
+    let Equa2EclpDif = (Longi - BD) * portion4
     Lati *= portion4
     let sign1 = 1
     let sign2 = 1
-    let Ecliptic2Equator = 0
-    let Equator2Ecliptic = 0
+    let Eclp2Equa = 0
+    let Equa2Eclp = 0
     if ((LongiRaw >= 0 && LongiRaw < QuarSidereal) || (LongiRaw >= HalfSidereal && LongiRaw < Sidereal * 0.75)) {
         sign2 = -1
     } else {
         sign1 = -1
     }
-    Ecliptic2EquatorDif *= sign1
-    Equator2EclipticDif *= sign2
-    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
-    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
+    Eclp2EquaDif *= sign1
+    Equa2EclpDif *= sign2
+    Eclp2Equa = LongiRaw + Eclp2EquaDif
+    Equa2Eclp = LongiRaw + Equa2EclpDif
     return {
-        Ecliptic2Equator,
-        Ecliptic2EquatorDif,
-        Equator2Ecliptic,
-        Equator2EclipticDif,
+        Eclp2Equa,
+        Eclp2EquaDif,
+        Equa2Eclp,
+        Equa2EclpDif,
         Lati
     }
 }
-console.log(HushigeyuanWest(32, 365.25, 1000).Ecliptic2Equator)
-export const Hushigeyuan2 = LongiRaw => {
+// console.log(HushigeyuanWest(32, 365.25, 1000).Eclp2Equa)
+// 曲安京《授時曆的白赤道座標變換法》//《中國古代曆法》頁127
+// 授時放棄了九道術的黃白轉換，改從白赤轉換入手。
+export const HushigeyuanMoon = (WinsolsDifRaw, NodeAccum) => { // 黃道度（距冬至數加上日躔），入交泛日
     const Sidereal = 365.2575
-    const QuarSidereal = Sidereal / 4
+    const r = 60.87625
     const HalfSidereal = Sidereal / 2
-    const k = 14.66 // 正交極數
-    const a = QuarSidereal
-    LongiRaw = (LongiRaw + a) % Sidereal
-    const v0 = a - Math.abs(LongiRaw - a)
-    const a0 = k * v0 / a
-    let Ecliptic2Equator = 0
-    if (LongiRaw < HalfSidereal) {
-        Ecliptic2Equator = QuarSidereal + a0
-    } else {
-        Ecliptic2Equator = QuarSidereal - a0
+    const QuarSidereal = Sidereal / 4
+    const EighthSidereal = Sidereal / 8
+    const ThreequarSidereal = Sidereal * 0.75
+    const e = 23.9  // 黃赤大距
+    const I = 6 // 黃白大距
+    const k = 14.66 // 正交極數：二至白赤正交與黃白正交的距離。白赤大距6，黃赤大距23.9，三角函數得14.73: tan(k)=tan6/sin23.9
+    const NodeWhiteEclp_Eclp = WinsolsDifRaw - NodeAccum  // 我假設是正交黃度
+    const LongiPlus = 13.3687 * NodeAccum // 輸入的時候要先加上NodeAccumCorr
+    // 先求冬至時刻赤度（冬至正度），加象限，得四正赤度，再算赤道正交宿度
+    const NodeWhiteEclp_Equa = Hushigeyuan(NodeWhiteEclp_Eclp).Eclp2Equa % HalfSidereal // 黃經轉換爲赤經，黃白正交赤度
+    const v0A = NodeWhiteEclp_Equa % HalfSidereal
+    const v0 = QuarSidereal - Math.abs(NodeWhiteEclp_Equa - QuarSidereal) // 反減。黃白正交到二至的距離，黃白正交在回歸年中的位置：正交在二至後初末限，冬至距正交積度
+    const a0 = k * v0 / QuarSidereal // 距差
+    let sign2 = 1
+    if (WinsolsDifRaw >= QuarSidereal && WinsolsDifRaw < ThreequarSidereal) {
+
     }
-    return Ecliptic2Equator
+    let base = QuarSidereal
+    if (WinsolsDifRaw >= HalfSidereal) {
+        base = ThreequarSidereal // 問題來了，為何不直接是黃白正交加距差？？？
+    }
+    const NodeWhiteEqua_Equa = base + sign2 * a0 // 白赤正交赤度「月離赤道正交」
+    const ElcpLongi = NodeWhiteEclp_Eclp + LongiPlus // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道
+    const EquaLongi = Hushigeyuan(ElcpLongi).Eclp2Equa
+    //////////// 白赤大距：赤道正交後半交白道出入赤道內外度
+    const u = e + I * (QuarSidereal - v0) / QuarSidereal // 白赤大距。黃白正交黃度v0=45誤差最大，165誤差最小
+    let NF = WinsolsDifRaw % QuarSidereal // 月亮赤度弧
+    if ((WinsolsDifRaw > QuarSidereal && WinsolsDifRaw <= HalfSidereal) || (WinsolsDifRaw >= ThreequarSidereal && WinsolsDifRaw < Sidereal)) {
+        NF = QuarSidereal - NF
+    }
+    const VF = RoundL2H(NF)
+    const EquaLati = u * (r - VF) / r
+    /////////// 白度 //////////
+    let sign1 = -1
+    if (WinsolsDifRaw >= HalfSidereal) { // 冬至後- 夏至後+
+        sign1 = 1
+    }
+    const tmpDing = 98 + sign1 * 24 * (QuarSidereal - v0) / QuarSidereal // 定限度
+    let sign3 = -1
+    if (v0A >= QuarSidereal) {
+        sign3 = 1
+    }
+    const EquaWhiteDif = sign3 * (tmpDing - v0) * v0 / 1000
+    let sign4 = 1
+    let EquaLongiHalf = EquaLongi % HalfSidereal
+    if (EquaLongiHalf > QuarSidereal) {
+        EquaLongiHalf = HalfSidereal - EquaLongiHalf
+    }
+    if (EquaLongiHalf > EighthSidereal) {
+        sign4 = -1
+    }
+    const WhiteLongi = EquaLongi + sign4 * EquaWhiteDif
+    return {
+        a0,
+        // Eclp2Equa,
+        u,
+        WhiteLongi,
+        EquaLati,
+        ElcpLongi,
+        EquaLongi
+    }
 }
-// console.log(Hushigeyuan2(0))
+// console.log(HushigeyuanMoon(45.7))
 
 // 南宋秦九韶的《数书九章》（Mathematical Treatise in Nine Sections）中的三斜求积术：以小斜幂，并大斜幂，减中斜幂，余半之，自乘于上；以小斜幂乘大斜幂，减上，余四约之，为实；一为从隅，开平方得积。秦九韶他把三角形的三条边分别称为小斜、中斜和大斜。“术”即方法。三斜求积术就是用小斜平方加上大斜平方，减中斜平方，取余数的一半的平方，而得一个数。小斜平方乘以大斜平方，减上面所得到的那个数。相减后余数被4除,开平方后即得面积。化下简就会发现这就是传说中的已知三边求三角形面积的海伦公式。
 // 海伦公式 sqrt(p (p-a) (p-b) (p-c)), p=(a+b+c)/2

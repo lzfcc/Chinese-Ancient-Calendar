@@ -40,7 +40,7 @@ import {
 } from './bind.mjs'
 import CalNewm from './newm_index.mjs'
 import {
-    AutoEquator2Ecliptic,
+    AutoEqua2Eclp,
     AutoLongi2Lati,
     AutoMoonLongiLati
 } from './bind_astronomy.mjs'
@@ -92,8 +92,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             NewmOrderRaw,
         } = CalNewm(CalName, year)[0]
         const {
-            EquatorDegList,
-            EclipticDegList
+            EquaDegList,
+            EclpDegList
         } = AutoMansion(CalName, year)
         if (Type >= 6) {
             NewmOrderRaw = NewmAcrOrderRaw
@@ -173,11 +173,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const Jd = []
         const Nayin = []
         const Week = []
-        const SunEquatorLongiAccum = []
-        const SunEclipticLongiAccum = []
-        const MoonEclipticLongiAccum = []
-        const MoonEclipticPrint = []
-        const MoonEclipticLati = []
+        const SunEquaLongiAccum = []
+        const SunEclpLongiAccum = []
+        const MoonEclpLongiAccum = []
+        const MoonEclpPrint = []
+        const MoonEclpLati = []
         const Sunrise = [] // 日出時刻
         const Dial = [] // 晷長
         const Lati = [] // 日赤緯
@@ -224,11 +224,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             Sunrise[i] = []
             Dial[i] = []
             Lati[i] = []
-            SunEquatorLongiAccum[i] = []
-            SunEclipticLongiAccum[i] = []
-            MoonEclipticLongiAccum[i] = []
-            MoonEclipticPrint[i] = []
-            MoonEclipticLati[i] = []
+            SunEquaLongiAccum[i] = []
+            SunEclpLongiAccum[i] = []
+            MoonEclpLongiAccum[i] = []
+            MoonEclpPrint[i] = []
+            MoonEclpLati[i] = []
             // MoName[i] = []
             HouName[i] = []
             HexagramName[i] = []
@@ -241,90 +241,91 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 const WinsolsDifNoon = WinsolsDifRaw + 0.5 // 每日正午
                 DayAccum++
                 //////////天文曆///////////
-                let SunEquatorLongi = 0
-                let SunEclipticLongi = 0
-                let SunEquatorLongiNoon = 0
-                let SunEclipticLongiNoon = 0
+                let SunEquaLongi = 0
+                let SunEclpLongi = 0
+                let SunEquaLongiNoon = 0
+                let SunEclpLongiNoon = 0
                 if (Type === 1) {
                     if (Type < 11) {
-                        SunEquatorLongi = WinsolsDifRaw % Sidereal // 從正月開始
-                        SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
-                        SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName).EclipticLongi
-                        SunEclipticLongiAccum[i][k] = SunEclipticLongi + OriginAccum
+                        SunEquaLongi = WinsolsDifRaw % Sidereal // 從正月開始
+                        SunEquaLongiAccum[i][k] = SunEquaLongi + OriginAccum
+                        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).EclpLongi
+                        SunEclpLongiAccum[i][k] = SunEclpLongi + OriginAccum
                     } else {
-                        SunEclipticLongi = WinsolsDifRaw % Sidereal
-                        SunEclipticLongiAccum[i][k] = SunEclipticLongi + OriginAccum
-                        SunEquatorLongi = AutoEquator2Ecliptic(SunEclipticLongi, CalName).EquatorLongi
-                        SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
+                        SunEclpLongi = WinsolsDifRaw % Sidereal
+                        SunEclpLongiAccum[i][k] = SunEclpLongi + OriginAccum
+                        SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).EquaLongi
+                        SunEquaLongiAccum[i][k] = SunEquaLongi + OriginAccum
                     }
-                    MoonEclipticLongiAccum[i][k] = (WinsolsDifRaw * MoonAvgVDeg) % Sidereal + OriginAccum
+                    MoonEclpLongiAccum[i][k] = (WinsolsDifRaw * MoonAvgVDeg) % Sidereal + OriginAccum
                 } else {
-                    const NodeAccum = (NewmNodeAccumPrint[i - 1] + k - 1) % Node
+                    let NodeAccum = (NewmNodeAccumPrint[i - 1] + k - 1) % Node
                     const AnomaAccum = (NewmAnomaAccumPrint[i - 1] + k - 1) % Anoma
                     const TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDifRaw, CalName, NodeAccum)
                     const DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDifRaw, CalName)
                     const NodeAccumCorr = TcorrFunc.NodeAccumCorr
+                    NodeAccum += NodeAccumCorr
                     const SunDifAccum = DifAccumFunc.SunDifAccum
                     const SunDifAccumNoon = AutoDifAccum(AnomaAccum, WinsolsDifNoon, CalName).SunDifAccum
                     const MoonDifAccum = DifAccumFunc.MoonDifAccum
                     if (Type < 11) {
-                        SunEquatorLongi = (WinsolsDifRaw + SunDifAccum) % Sidereal
-                        SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
-                        SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName).EclipticLongi
-                        SunEclipticLongiAccum[i][k] = SunEclipticLongi + OriginAccum
-                        SunEquatorLongiNoon = (WinsolsDifRaw + SunDifAccumNoon) % Sidereal
+                        SunEquaLongi = (WinsolsDifRaw + SunDifAccum) % Sidereal
+                        SunEquaLongiAccum[i][k] = SunEquaLongi + OriginAccum
+                        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).EclpLongi
+                        SunEclpLongiAccum[i][k] = SunEclpLongi + OriginAccum
+                        SunEquaLongiNoon = (WinsolsDifRaw + SunDifAccumNoon) % Sidereal
                     } else {
-                        SunEclipticLongi = (WinsolsDifRaw + SunDifAccum) % Sidereal
-                        SunEclipticLongiAccum[i][k] = SunEclipticLongi + OriginAccum
-                        SunEquatorLongi = AutoEquator2Ecliptic(SunEclipticLongi, CalName).EquatorLongi
-                        SunEquatorLongiAccum[i][k] = SunEquatorLongi + OriginAccum
-                        SunEclipticLongiNoon = (WinsolsDifRaw + SunDifAccumNoon) % Sidereal
+                        SunEclpLongi = (WinsolsDifRaw + SunDifAccum) % Sidereal
+                        SunEclpLongiAccum[i][k] = SunEclpLongi + OriginAccum
+                        SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).EquaLongi
+                        SunEquaLongiAccum[i][k] = SunEquaLongi + OriginAccum
+                        SunEclpLongiNoon = (WinsolsDifRaw + SunDifAccumNoon) % Sidereal
                     }
                     if (Type <= 6) {
                         if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
-                            MoonEclipticLati[i][k] = `<span class='lati-yellow'>黃</span>`
+                            MoonEclpLati[i][k] = `<span class='lati-yellow'>黃</span>`
                         } else if (NodeAccum < HalfNode) {
-                            MoonEclipticLati[i][k] = `<span class='lati-yang'>陽</span>`
+                            MoonEclpLati[i][k] = `<span class='lati-yang'>陽</span>`
                         } else {
-                            MoonEclipticLati[i][k] = `<span class='lati-yin'>陰</span>`
+                            MoonEclpLati[i][k] = `<span class='lati-yin'>陰</span>`
                         }
                     } else if (Type >= 7 && Type <= 10) { // 月行九道
                         if (WinsolsDif < 3 * HalfTermLeng || WinsolsDif >= 21 * HalfTermLeng) { // 冬
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticLati[i][k] = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
                             }
                         } else if (WinsolsDif >= 3 * HalfTermLeng && WinsolsDif < 9 * HalfTermLeng) {
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticLati[i][k] = `<span class='lati-red'>朱</span><span class='lati-yang'>陽</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-red'>朱</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticLati[i][k] = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
                             }
                         } else if (WinsolsDif >= 9 * HalfTermLeng && WinsolsDif < 15 * HalfTermLeng) {
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticLati[i][k] = `<span class='lati-green'>靑</span><span class='lati-yang'>陽</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-green'>靑</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yin'>陰</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-white'>白</span><span class='lati-yin'>陰</span>`
                             }
                         } else {
                             if (NodeAccum < HalfNode) {
-                                MoonEclipticLati[i][k] = `<span class='lati-black'>黑</span><span class='lati-yang'>陽</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-black'>黑</span><span class='lati-yang'>陽</span>`
                             } else {
-                                MoonEclipticLati[i][k] = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
+                                MoonEclpLati[i][k] = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
                             }
                         }
                         if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif) {
-                            MoonEclipticLati[i][k] = `<span class='lati-yellow'>黃</span><span class='lati-yang'>陽</span>`
+                            MoonEclpLati[i][k] = `<span class='lati-yellow'>黃</span><span class='lati-yang'>陽</span>`
                         } else if ((NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
-                            MoonEclipticLati[i][k] = `<span class='lati-yellow'>黃</span><span class='lati-yin'>陰</span>`
+                            MoonEclpLati[i][k] = `<span class='lati-yellow'>黃</span><span class='lati-yin'>陰</span>`
                         }
                     }
-                    MoonEclipticLongiAccum[i][k] = (WinsolsDifRaw * MoonAvgVDeg + MoonDifAccum) % Sidereal + OriginAccum
-                    const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclipticLongi : SunEquatorLongi, NodeAccum + NodeAccumCorr, CalName)
-                    MoonEclipticLati[i][k] += MoonLongiLatiFunc.MoonEclipticLati.toFixed(3) + '度'
+                    MoonEclpLongiAccum[i][k] = (WinsolsDifRaw * MoonAvgVDeg + MoonDifAccum) % Sidereal + OriginAccum
+                    const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccum, CalName)
+                    MoonEclpLati[i][k] += MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }
-                const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclipticLongiNoon : SunEquatorLongiNoon, WinsolsDecimal, CalName)
+                const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, WinsolsDecimal, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Sunrise[i][k] = Longi2LatiFunc.Sunrise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
@@ -450,22 +451,22 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         }
         ////////////下調用宿度模塊////////////////
         let EquartorFunc = []
-        let EclipticFunc = []
-        let MoonEclipticFunc = []
+        let EclpFunc = []
+        let MoonEclpFunc = []
         const EquartorPrint = []
         const MidstarPrint = []
-        let EclipticPrint = []
+        let EclpPrint = []
         if (MansionRaw) {
             for (let i = 1; i < Month.length; i++) {
-                EquartorFunc = Deg2Mansion(SunEquatorLongiAccum[i], Solar, Sidereal, EquatorDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+                EquartorFunc = Deg2Mansion(SunEquaLongiAccum[i], Solar, Sidereal, EquaDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
                 EquartorPrint[i] = EquartorFunc.map(item => item.MansionResult)
                 // MidstarPrint[i] = EquartorFunc.map(item => item.MidstarResult)                
-                MoonEclipticFunc = Deg2Mansion(MoonEclipticLongiAccum[i], Solar, Sidereal, EclipticDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
-                MoonEclipticPrint[i] = MoonEclipticFunc.map(item => item.MansionResult)
+                MoonEclpFunc = Deg2Mansion(MoonEclpLongiAccum[i], Solar, Sidereal, EclpDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+                MoonEclpPrint[i] = MoonEclpFunc.map(item => item.MansionResult)
             }
-            for (let i = 1; i < SunEclipticLongiAccum.length; i++) {
-                EclipticFunc = Deg2Mansion(SunEclipticLongiAccum[i], Solar || SolarRaw, Sidereal || Solar, EclipticDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
-                EclipticPrint[i] = EclipticFunc.map(item => item.MansionResult)
+            for (let i = 1; i < SunEclpLongiAccum.length; i++) {
+                EclpFunc = Deg2Mansion(SunEclpLongiAccum[i], Solar || SolarRaw, Sidereal || Solar, EclpDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+                EclpPrint[i] = EclpFunc.map(item => item.MansionResult)
             }
         }
         DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + Yuan
@@ -482,13 +483,13 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             Nayin,
             Week,
             EquartorPrint,
-            EclipticPrint,
+            EclpPrint,
             Lati,
             Sunrise,
             // MidstarPrint,
             Dial,
-            MoonEclipticPrint,
-            MoonEclipticLati,
+            MoonEclpPrint,
+            MoonEclpLati,
             HouName,
             HexagramName,
             ManGod,

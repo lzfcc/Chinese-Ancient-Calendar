@@ -57,6 +57,7 @@ export default class Converter extends React.Component {
             <th>赤白差</th>
             <th>去極度</th>
             <th>黃緯</th>
+            <th>赤緯</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

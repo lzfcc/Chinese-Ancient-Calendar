@@ -9,12 +9,12 @@ import {
 } from './equa_sn.mjs'
 
 // /////乾象魏晉黃赤轉換//////
-// const Equator2EclipticTable1 = (LongiRaw, Sidereal) => {
+// const Equa2EclpTable1 = (LongiRaw, Sidereal) => {
 //     let Longi = LongiRaw % (Sidereal / 4)
 //     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
 //         Longi = Sidereal / 4 - Longi
 //     }
-//     let EclipticLongi = 0
+//     let EclpLongi = 0
 //     //  const Range = [0, 4, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 5 + Sidereal / 4 - Math.floor(Sidereal / 4), 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3] // 《中國古代曆法》57頁
 //     const Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - Math.floor(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
 //     let RangeAccum = Range.slice()
@@ -35,19 +35,19 @@ import {
 //             LongiOrder = j
 //         }
 //     }
-//     const Equator2EclipticDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 線性內插
+//     const Equa2EclpDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 線性內插
 //     if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
-//         EclipticLongi = LongiRaw - Equator2EclipticDif
+//         EclpLongi = LongiRaw - Equa2EclpDif
 //     } else {
-//         EclipticLongi = LongiRaw + Equator2EclipticDif
+//         EclpLongi = LongiRaw + Equa2EclpDif
 //     }
 //     return {
-//         EclipticLongi,
-//         Equator2EclipticDif
+//         EclpLongi,
+//         Equa2EclpDif
 //     }
 // }
 
-export const Equator2EclipticTable = (LongiRaw, CalName) => {
+export const Equa2EclpTable = (LongiRaw, CalName) => {
     const {
         AutoPara,
         Type
@@ -63,7 +63,7 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
         Longi = Sidereal / 4 - Longi
     }
-    let Equator2Ecliptic = 0
+    let Equa2Eclp = 0
     let Range = []
     if (Type <= 4) {
         Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
@@ -134,19 +134,19 @@ export const Equator2EclipticTable = (LongiRaw, CalName) => {
             LongiOrder = j
         }
     }
-    let Equator2EclipticDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
+    let Equa2EclpDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
     let sign1 = 1
     if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
         sign1 = -1
     }
-    Equator2EclipticDif *= sign1
-    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
+    Equa2EclpDif *= sign1
+    Equa2Eclp = LongiRaw + Equa2EclpDif
     return {
-        Equator2Ecliptic,
-        Equator2EclipticDif
+        Equa2Eclp,
+        Equa2EclpDif
     }
 }
-// console.log(Equator2EclipticTable(23,''))
+// console.log(Equa2EclpTable(23,''))
 
 export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
     const {
@@ -317,22 +317,32 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 }
 // console.log(Longi2LatiTable2(180, 0.5, 'NewDaming').Lati) // 《麟徳曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
-export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////唐宋赤白轉換//////
+export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////唐宋赤白轉換//////
     const {
         AutoPara
     } = Bind(CalName)
     const {
         Node,
-        Solar
+        Solar,
+    } = AutoPara[CalName]
+    let {
+        Sidereal
     } = AutoPara[CalName]
     const Quadrant = 90.94335
+    const NodeAccum = NodeAccumRaw// % (Node / 2)
     const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
-    let Longi = LongiRaw % (Quadrant)
-    if ((LongiRaw > Quadrant && LongiRaw <= Quadrant * 2) || (LongiRaw >= Quadrant * 3 && LongiRaw < Solar)) {
+    let Longi = LongiRaw % Quadrant
+    if ((LongiRaw >= Quadrant && LongiRaw < Quadrant * 2) || (LongiRaw >= Quadrant * 3)) { // (LongiRaw >= Quadrant)
         Longi = Quadrant - Longi
     }
-    const WinsolsDif = WinsolsDifRaw - NodeAccum % (Node / 2)
+    Sidereal = Sidereal || Solar
+    const WinsolsDif = WinsolsDifRaw - NodeAccum
     const WinsolsDifHalf = WinsolsDif % (Solar / 2)
+    let Plus = 0
+    // if (NodeAccumRaw > Node / 2) {
+    //     Plus = (Node / 2) * AutoMoonAvgV(CalName)
+    // }
+    const EclpLongi = (WinsolsDif + Plus + LongiRaw) % Sidereal
     let WhiteLongi = 0
     let Range = []
     if (CalName === 'Huangji') { // 麟徳沒有
@@ -342,7 +352,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////�
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
-    let EclipticWhiteDif = 0
+    let EclpWhiteDif = 0
     const Smallquadrant = 5.07 // Solar / 72// 欽天8節72限
     if (CalName === 'Huangji') {
         LongiDifDifInitial = 11 / 45 // ⋯⋯四度爲限，初十一，每限損一，以終於一
@@ -389,41 +399,41 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccum, CalName) => { ///////�
             LongiOrder = j
         }
     }
-    EclipticWhiteDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
+    EclpWhiteDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
     if (CalName !== 'Huangji') {
-        EclipticWhiteDif /= 2
+        EclpWhiteDif /= 2
     }
-    let EquatorWhiteDif = 0
+    let EquaWhiteDif = 0
     if (CalName === 'Dayan') {
-        EquatorWhiteDif = WinsolsDifHalf / (Solar / 72) / 18
+        EquaWhiteDif = WinsolsDifHalf / (Solar / 72) / 18
     } else if (CalName === 'Qintian') {
         const OriginXian = Math.abs(WinsolsDifHalf - Solar / 4) / Smallquadrant // 限數
-        // EclipticWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，沒寫對
-        EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
+        // EclpWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，沒寫對
+        EquaWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
     } else if (CalName === 'Yingtian') {
         const Hou = ~~(WinsolsDifHalf / (Solar / 72)) / 18
-        EquatorWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
+        EquaWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
     }
-    let EquatorLongi = 0
+    let EquaLongi = 0
     // 大衍：（黃白差）距半交前後各九限，以差數爲減；距正交前後各九限，以差數爲加
     let sign = 1
     // if (LongiRaw >= Quadrant && LongiRaw < Quadrant * 3) {
     if ((LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant)) {
         sign = -1
     }
-    EclipticWhiteDif *= sign
-    EquatorWhiteDif *= sign
-    WhiteLongi = LongiRaw + EclipticWhiteDif
-    EquatorLongi = EquatorWhiteDif ? WhiteLongi + EquatorWhiteDif : 0
+    EclpWhiteDif *= sign
+    EquaWhiteDif *= sign
+    WhiteLongi = EclpLongi + EclpWhiteDif
+    EquaLongi = EquaWhiteDif ? WhiteLongi + EquaWhiteDif : 0
     return {
-        LongiRaw,
+        EclpLongi,
         WhiteLongi,
-        EquatorLongi,
-        EclipticWhiteDif,
-        EquatorWhiteDif
+        EquaLongi,
+        EclpWhiteDif,
+        EquaWhiteDif
     }
 }
-// console.log(MoonLongiTable(55.25, 11.22, 'Dayan'))
+// console.log(MoonLongiTable(55.25, 11.22, 'Qianxiang').EclpLongi)
 // console.log(MoonLongiTable(45, 3, 'Qintian'))
 
 export const MoonLatiTable = (NodeAccum, CalName) => {

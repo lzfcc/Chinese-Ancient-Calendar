@@ -58,7 +58,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
     const calculate = year => {
         const [mainPrev, mainThis, mainNext] = YearMemo
         const {
-            EquatorDegList,
+            EquaDegList,
         } = AutoMansion(CalName, year)
         const ZhengWinsolsDif = ZhengNum - OriginMonNum
         const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
@@ -304,11 +304,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let TermMansionB = []
         let TermMansion = []
         if (MansionRaw) {
-            NewmMansion = Deg2Mansion(NewmRaw, (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EquatorDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+            NewmMansion = Deg2Mansion(NewmRaw, (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EquaDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
             if (Type <= 4) {
-                TermMansion = Deg2Mansion(TermAvgRaw, (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EquatorDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+                TermMansion = Deg2Mansion(TermAvgRaw, (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EquaDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
             } else {
-                TermMansion = Deg2Mansion(TermAcrRaw, (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EquatorDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
+                TermMansion = Deg2Mansion(TermAcrRaw, (Solar ? Solar : SolarRaw), (Sidereal ? Sidereal : Solar), EquaDegList, MansionConst, MansionRaw, MansionFractPosition, NightList)
             }
         }
         if (Type === 1 && (LeapNumTermThis && (mainThis.isLeapAvgThis || specialNewmSyzygyEnd))) { // 這裏只適用於無中置閏的漢曆

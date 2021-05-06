@@ -72,13 +72,13 @@ const PrintDay = result => {
         Nayin,
         Week,
         EquartorPrint,
-        EclipticPrint,
+        EclpPrint,
         Lati,
         Sunrise,
         MidstarPrint,
         Dial,
-        MoonEclipticPrint,
-        MoonEclipticLati,
+        MoonEclpPrint,
+        MoonEclpLati,
         HouName,
         HexagramName,
         ManGod,
@@ -121,7 +121,7 @@ const PrintDay = result => {
     Print += '**日黃經**\n'
     for (let i = 1; i < EquartorPrint.length; i++) {
         Print += MonName[i] + '\n'
-        Print += EclipticPrint[i].slice(1).join(' ')
+        Print += EclpPrint[i].slice(1).join(' ')
         Print += '\n'
     }
     // }
@@ -156,19 +156,19 @@ const PrintDay = result => {
         }
     }
 
-    if ((MoonEclipticPrint || []).length > 0) {
+    if ((MoonEclpPrint || []).length > 0) {
         Print += '**月黃經**\n'
-        for (let i = 1; i < MoonEclipticPrint.length; i++) {
+        for (let i = 1; i < MoonEclpPrint.length; i++) {
             Print += MonName[i] + '\n'
-            Print += MoonEclipticPrint[i].slice(1).join(' ')
+            Print += MoonEclpPrint[i].slice(1).join(' ')
             Print += '\n'
         }
     }
-    if ((MoonEclipticLati || []).length > 0) {
+    if ((MoonEclpLati || []).length > 0) {
         Print += '**月黃緯**\n'
-        for (let i = 1; i < MoonEclipticLati.length; i++) {
+        for (let i = 1; i < MoonEclpLati.length; i++) {
             Print += MonName[i] + '\n'
-            Print += MoonEclipticLati[i].slice(1).join(' ')
+            Print += MoonEclpLati[i].slice(1).join(' ')
             Print += '\n'
         }
     }

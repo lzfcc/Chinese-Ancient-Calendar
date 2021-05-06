@@ -2,14 +2,14 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    Equator2EclipticTable,
+    Equa2EclpTable,
     Longi2LatiTable1,
     Longi2LatiTable2,
     MoonLongiTable,
     MoonLatiTable
 } from './astronomy_table.mjs'
 import {
-    Equator2EclipticFormula,
+    Equa2EclpFormula,
     Longi2LatiFormula,
     Longi2DialFormula,
     MoonLatiFormula,
@@ -17,10 +17,11 @@ import {
 } from './astronomy_formula.mjs'
 import {
     Hushigeyuan,
+    HushigeyuanMoon,
     HushigeyuanWest,
 } from './equa_geometry.mjs'
 import {
-    Equator2EclipticWest,
+    Equa2EclpWest,
     Longi2LatiWest,
     Longi2SunriseWest,
     Longi2DialWest,
@@ -38,6 +39,7 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import { AutoMoonAvgV } from './astronomy_acrv.mjs'
+// import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     WinsolsDifRaw = +WinsolsDifRaw
@@ -146,50 +148,50 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 }
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
-export const AutoEquator2Ecliptic = (LongiRaw, CalName) => {
+export const AutoEqua2Eclp = (LongiRaw, CalName) => {
     const {
         Type,
     } = Bind(CalName)
-    let Equator2Ecliptic = 0
-    let Ecliptic2Equator = 0
-    let Equator2EclipticDif = 0
-    let Ecliptic2EquatorDif = 0
-    let Ecliptic2EquatorLati = 0
+    let Equa2Eclp = 0
+    let Eclp2Equa = 0
+    let Equa2EclpDif = 0
+    let Eclp2EquaDif = 0
+    let Eclp2EquaLati = 0
     if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        const Func = Equator2EclipticTable(LongiRaw, CalName)
-        Equator2Ecliptic = Func.Equator2Ecliptic
-        Equator2EclipticDif = Func.Equator2EclipticDif
+        const Func = Equa2EclpTable(LongiRaw, CalName)
+        Equa2Eclp = Func.Equa2Eclp
+        Equa2EclpDif = Func.Equa2EclpDif
     } else if (Type === 8) {
-        const Func = Equator2EclipticFormula(LongiRaw, CalName)
-        Equator2Ecliptic = Func.Equator2Ecliptic
-        Ecliptic2Equator = Func.Ecliptic2Equator
-        Equator2EclipticDif = Func.Equator2EclipticDif
-        Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
+        const Func = Equa2EclpFormula(LongiRaw, CalName)
+        Equa2Eclp = Func.Equa2Eclp
+        Eclp2Equa = Func.Eclp2Equa
+        Equa2EclpDif = Func.Equa2EclpDif
+        Eclp2EquaDif = Func.Eclp2EquaDif
     } else if (Type === 9 || Type === 10) {
-        const Func = Equator2EclipticFormula(LongiRaw, 'Jiyuan')
-        Equator2Ecliptic = Func.Equator2Ecliptic
-        Ecliptic2Equator = Func.Ecliptic2Equator
-        Equator2EclipticDif = Func.Equator2EclipticDif
-        Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
+        const Func = Equa2EclpFormula(LongiRaw, 'Jiyuan')
+        Equa2Eclp = Func.Equa2Eclp
+        Eclp2Equa = Func.Eclp2Equa
+        Equa2EclpDif = Func.Equa2EclpDif
+        Eclp2EquaDif = Func.Eclp2EquaDif
     } else if (Type === 11) {
         const Func = Hushigeyuan(LongiRaw)
-        Equator2Ecliptic = Func.Equator2Ecliptic
-        Ecliptic2Equator = Func.Ecliptic2Equator
-        Equator2EclipticDif = Func.Equator2EclipticDif
-        Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
-        Ecliptic2EquatorLati = Func.Lati
+        Equa2Eclp = Func.Equa2Eclp
+        Eclp2Equa = Func.Eclp2Equa
+        Equa2EclpDif = Func.Equa2EclpDif
+        Eclp2EquaDif = Func.Eclp2EquaDif
+        Eclp2EquaLati = Func.Lati
     }
-    Ecliptic2EquatorDif = Ecliptic2Equator ? (Ecliptic2EquatorDif || Ecliptic2Equator - LongiRaw) : 0
+    Eclp2EquaDif = Eclp2Equa ? (Eclp2EquaDif || Eclp2Equa - LongiRaw) : 0
     return {
-        Equator2Ecliptic,
-        Equator2EclipticDif,
-        Ecliptic2Equator,
-        Ecliptic2EquatorDif,
-        Ecliptic2EquatorLati
+        Equa2Eclp,
+        Equa2EclpDif,
+        Eclp2Equa,
+        Eclp2EquaDif,
+        Eclp2EquaLati
     }
 }
 
-export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
+export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
     Sidereal = +Sidereal
     LongiRaw = +LongiRaw
     if (LongiRaw >= Sidereal || LongiRaw < 0) {
@@ -206,74 +208,70 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         Range += '秋分 → 冬至，赤度 < 黃度'
     }
     const {
-        Equator2Ecliptic: WestB,
-        Equator2EclipticDif: WestB1,
-        Ecliptic2Equator: WestA,
-        Ecliptic2EquatorDif: WestA1
-    } = Equator2EclipticWest(LongiRaw, Sidereal, year)
+        Equa2Eclp: WestB,
+        Equa2EclpDif: WestB1,
+        Eclp2Equa: WestA,
+        Eclp2EquaDif: WestA1
+    } = Equa2EclpWest(LongiRaw, Sidereal, year)
     const {
         Lati: WestLati
     } = Longi2LatiWest(LongiRaw, Sidereal, year)
     let Print = [{
-        title: '1球面三角',
-        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, 0, WestA.toFixed(5), WestA1.toFixed(4), 0, 0, WestLati.toFixed(4)]
+        title: '球面三角',
+        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4)]
     }]
     const {
-        Equator2Ecliptic: West2B,
-        Equator2EclipticDif: West2B1,
-        Ecliptic2Equator: West2A,
-        Ecliptic2EquatorDif: West2A1,
+        Equa2Eclp: West2B,
+        Equa2EclpDif: West2B1,
+        Eclp2Equa: West2A,
+        Eclp2EquaDif: West2A1,
         Lati: West2Lati
     } = HushigeyuanWest(LongiRaw, Sidereal, year)
     Print = Print.concat({
-        title: '2三角割圓',
-        data: [West2B.toFixed(5), West2B1.toFixed(4), (West2B - WestB).toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0, West2Lati.toFixed(4), (West2Lati - WestLati).toFixed(4)]
+        title: '三角割圓',
+        data: [West2B.toFixed(5), West2B1.toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), 0, West2Lati.toFixed(4), (West2Lati - WestLati).toFixed(4)]
     })
     const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
         List1.map(title => {
-            let EclipticLongiPrint = '-'
-            let EclipticLongiInacPrint = '-'
-            let EclipticLongi2InacPrint = '-'
-            let EquatorLongiPrint = '-'
-            let EquatorLongiInacPrint = '-'
-            let EquatorLongi2InacPrint = '-'
-            let Equator2EclipticDifPrint = '-'
-            let Ecliptic2EquatorDifPrint = '-'
-            let Ecliptic2EquatorLatiPrint = '-'
-            let Ecliptic2EquatorLatiInacPrint = '-'
-            const Func = AutoEquator2Ecliptic(LongiRaw, title, Sidereal, year)
-            const Equator2Ecliptic = Func.Equator2Ecliptic
-            const Ecliptic2Equator = Func.Ecliptic2Equator
-            const Equator2EclipticDif = Func.Equator2EclipticDif
-            const Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
-            let Ecliptic2EquatorLati = 0
+            let EclpLongiPrint = '-'
+            let EclpLongiInacPrint = '-'
+            let EquaLongiPrint = '-'
+            let EquaLongiInacPrint = '-'
+            let Equa2EclpDifPrint = '-'
+            let Eclp2EquaDifPrint = '-'
+            let Eclp2EquaLatiPrint = '-'
+            let Eclp2EquaLatiInacPrint = '-'
+            const Func = AutoEqua2Eclp(LongiRaw, title, Sidereal, year)
+            const Equa2Eclp = Func.Equa2Eclp
+            const Eclp2Equa = Func.Eclp2Equa
+            const Equa2EclpDif = Func.Equa2EclpDif
+            const Eclp2EquaDif = Func.Eclp2EquaDif
+            let Eclp2EquaLati = 0
             if (title === 'Shoushi') {
-                Ecliptic2EquatorLati = Func.Ecliptic2EquatorLati
+                Eclp2EquaLati = Func.Eclp2EquaLati
             } else if (List2.indexOf(title) > 0) {
-                Ecliptic2EquatorLati = AutoLongi2Lati(LongiRaw, 0.5, title, 1).Lati
+                Eclp2EquaLati = AutoLongi2Lati(LongiRaw, 0.5, title, 1).Lati
             }
-            const Ecliptic2EquatorLatiInac = Ecliptic2EquatorLati - WestLati
-            if (Equator2Ecliptic) {
-                EclipticLongiPrint = Equator2Ecliptic.toFixed(5)
-                Equator2EclipticDifPrint = Equator2EclipticDif.toFixed(4)
-                EclipticLongiInacPrint = (Equator2Ecliptic - WestB).toFixed(4)
-                EclipticLongi2InacPrint = (Equator2Ecliptic - West2B).toFixed(4)
+            const Eclp2EquaLatiInac = Eclp2EquaLati - WestLati
+            if (Equa2Eclp) {
+                EclpLongiPrint = Equa2Eclp.toFixed(5)
+                Equa2EclpDifPrint = Equa2EclpDif.toFixed(4)
+                EclpLongiInacPrint = (Equa2Eclp - WestB).toFixed(4)
             }
-            if (Ecliptic2Equator) {
-                EquatorLongiPrint = Ecliptic2Equator.toFixed(5)
-                Ecliptic2EquatorDifPrint = Ecliptic2EquatorDif.toFixed(4)
-                EquatorLongiInacPrint = (Ecliptic2Equator - WestA).toFixed(4)
-                EquatorLongi2InacPrint = (Ecliptic2Equator - West2A).toFixed(4)
+            if (Eclp2Equa) {
+                EquaLongiPrint = Eclp2Equa.toFixed(5)
+                Eclp2EquaDifPrint = Eclp2EquaDif.toFixed(4)
+                EquaLongiInacPrint = (Eclp2Equa - WestA).toFixed(4)
             }
-            if (Ecliptic2EquatorLati) {
-                Ecliptic2EquatorLatiPrint = Ecliptic2EquatorLati.toFixed(4)
-                Ecliptic2EquatorLatiInacPrint = Ecliptic2EquatorLatiInac.toFixed(4)
+            if (Eclp2EquaLati) {
+                Eclp2EquaLatiPrint = Eclp2EquaLati.toFixed(4)
+                Eclp2EquaLatiInacPrint = Eclp2EquaLatiInac.toFixed(4)
             }
             return {
                 title: CalNameList[title],
-                data: [EclipticLongiPrint, Equator2EclipticDifPrint, EclipticLongiInacPrint, EclipticLongi2InacPrint, EquatorLongiPrint, Ecliptic2EquatorDifPrint, EquatorLongiInacPrint, EquatorLongi2InacPrint, Ecliptic2EquatorLatiPrint, Ecliptic2EquatorLatiInacPrint]
+                data: [EclpLongiPrint, Equa2EclpDifPrint, EclpLongiInacPrint, EquaLongiPrint, Eclp2EquaDifPrint, EquaLongiInacPrint, Eclp2EquaLatiPrint, Eclp2EquaLatiInacPrint]
             }
         }))
     return {
@@ -281,7 +279,7 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         Print
     }
 }
-// console.log(BindEquator2Ecliptic(360, 365.2575, 0).Range)
+// console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
 export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => {
     const {
@@ -413,12 +411,19 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
         Type,
         AutoPara
     } = Bind(CalName)
-    const {
-        Solar
+    let {
+        Solar,
+        SolarRaw
     } = AutoPara[CalName]
+    Solar = Solar || SolarRaw
     WinsolsDif %= Solar
-    const SunEquatorLongi = WinsolsDif + AutoDifAccum(0, WinsolsDif, CalName).SunDifAccum
-    const SunEclipticLongi = AutoEquator2Ecliptic(SunEquatorLongi, CalName).Equator2Ecliptic
+    const SunEquaLongi = WinsolsDif + AutoDifAccum(0, WinsolsDif, CalName).SunDifAccum
+    let SunEclpLongi = 0
+    if (Type === 11) { // 授時直接就是黃度
+        SunEclpLongi = SunEquaLongi
+    } else {
+        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).Equa2Eclp
+    }
     let MoonLongi = {}
     let MoonLati = {}
     if (Type <= 3) {
@@ -428,56 +433,63 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
     } else if (Type === 4) {
         MoonLati = MoonLatiTable(NodeAccum, 'Daming')
     } else if (Type === 6) {
-        MoonLongi = MoonLongiTable(SunEclipticLongi, NodeAccum, 'Huangji')
+        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Huangji')
         MoonLati = MoonLatiTable(NodeAccum, 'Huangji')
     } else if (CalName === 'Qintian') {
-        MoonLongi = MoonLongiTable(SunEclipticLongi, NodeAccum, 'Qintian')
+        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Qintian')
         MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
     } else if (Type === 7) {
-        MoonLongi = MoonLongiTable(SunEclipticLongi, NodeAccum, 'Dayan')
+        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Dayan')
         MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
     } else if (CalName === 'Chongxuan') {
-        MoonLongi = MoonLongiTable(SunEclipticLongi, NodeAccum, 'Dayan')
+        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Dayan')
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        MoonLongi = MoonLongiTable(SunEclipticLongi, NodeAccum, 'Yingtian')
+        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Yingtian')
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Chongtian', 'Guantian'].includes(CalName)) {
-        MoonLongi = MoonLongiFormula(SunEclipticLongi, NodeAccum, CalName)
+        MoonLongi = MoonLongiFormula(SunEclpLongi, NodeAccum, CalName)
         MoonLati = MoonLatiFormula(NodeAccum, CalName)
     } else if (CalName === 'Mingtian') {
-        MoonLongi = MoonLongiFormula(SunEclipticLongi, NodeAccum, CalName)
+        MoonLongi = MoonLongiFormula(SunEclpLongi, NodeAccum, CalName)
         MoonLati = MoonLatiFormula(NodeAccum, 'Guantian')
     } else if (Type === 9 || Type === 10) {
-        MoonLongi = MoonLongiFormula(SunEclipticLongi, NodeAccum, 'Jiyuan')
+        MoonLongi = MoonLongiFormula(SunEclpLongi, NodeAccum, 'Jiyuan')
         MoonLati = MoonLatiFormula(NodeAccum, 'Jiyuan')
     } else if (Type === 11) {
-        MoonLongi = MoonLongiFormula(SunEclipticLongi, NodeAccum, CalName)
+        MoonLongi = HushigeyuanMoon(SunEclpLongi, NodeAccum)
+        MoonLati = MoonLongi
     }
-    const EclipticLongi = MoonLongi.LongiRaw || AutoMoonAvgV(CalName) * NodeAccum
-    const EquatorLongi = MoonLongi.EquatorLongi || 0
+    let EclpLongi = MoonLongi.EclpLongi || 0
+    if (!EclpLongi) {
+        const WinsolsDif1 = WinsolsDif - NodeAccum
+        EclpLongi = WinsolsDif1 + AutoMoonAvgV(CalName) * NodeAccum
+    }
+    const EquaLongi = MoonLongi.EquaLongi || 0
     const WhiteLongi = MoonLongi.WhiteLongi || 0
-    const EclipticWhiteDif = MoonLongi.EclipticWhiteDif || 0
-    const EclipticEquatorDif = MoonLongi.EclipticEquatorDif || EquatorLongi - EclipticLongi
-    const EquatorWhiteDif = MoonLongi.EquatorWhiteDif || EquatorLongi - WhiteLongi
-    const EquatorLongiB = MoonLongi.EquatorLongiB || 0
-    const EclipticEquatorDifB = EquatorLongiB - EclipticLongi || 0
-    const MoonEclipticLati = MoonLati.Lati || 0
-    const MoonEclipticLati1 = MoonLati.Lati1 || 0
+    const EclpWhiteDif = MoonLongi.EclpWhiteDif || 0
+    const EclpEquaDif = MoonLongi.EclpEquaDif || EquaLongi - EclpLongi
+    const EquaWhiteDif = MoonLongi.EquaWhiteDif || EquaLongi - WhiteLongi
+    const EquaLongiB = MoonLongi.EquaLongiB || 0
+    const EclpEquaDifB = EquaLongiB - EclpLongi || 0
+    const MoonEclpLati = MoonLati.Lati || 0
+    const MoonEclpLati1 = MoonLati.Lati1 || 0
+    const MoonEquaLati = MoonLati.EquaLati || 0
     return {
-        EclipticLongi,
-        EquatorLongi,
-        EquatorLongiB,
+        EclpLongi,
+        EquaLongi,
+        EquaLongiB,
         WhiteLongi,
-        EclipticWhiteDif,
-        EclipticEquatorDif,
-        EclipticEquatorDifB,
-        EquatorWhiteDif,
-        MoonEclipticLati,
-        MoonEclipticLati1
+        EclpWhiteDif,
+        EclpEquaDif,
+        EclpEquaDifB,
+        EquaWhiteDif,
+        MoonEclpLati,
+        MoonEclpLati1,
+        MoonEquaLati
     }
 }
-// console.log(AutoMoonLongiLati(66, 2.41, 'Jiyuan').EquatorLongi)
+// console.log(AutoMoonLongiLati(66, 2.41, 'Shoushi').EquaLongi)
 
 export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交日、距冬至日數
     NodeAccum = +NodeAccum
@@ -492,46 +504,51 @@ export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交
     Print = Print.concat(
         ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
             let WhiteLongiPrint = '-'
-            let EquatorLongiPrint = '-'
-            let EclipticWhiteDifPrint = '-'
-            let EclipticEquatorDifPrint = '-'
-            let EquatorWhiteDifPrint = '-'
+            let EquaLongiPrint = '-'
+            let EclpWhiteDifPrint = '-'
+            let EclpEquaDifPrint = '-'
+            let EquaWhiteDifPrint = '-'
             let Lati1Print = '-'
             let LatiPrint = '-'
+            let EquaLatiPrint = '-'
             const {
-                EclipticLongi,
-                EquatorLongi,
-                EclipticEquatorDif,
-                EclipticWhiteDif,
-                EquatorWhiteDif,
+                EclpLongi,
+                EquaLongi,
+                EclpEquaDif,
+                EclpWhiteDif,
+                EquaWhiteDif,
                 WhiteLongi,
-                EquatorLongiB,
-                EclipticEquatorDifB,
-                MoonEclipticLati1,
-                MoonEclipticLati,
+                EquaLongiB,
+                EclpEquaDifB,
+                MoonEclpLati1,
+                MoonEclpLati,
+                MoonEquaLati
             } = AutoMoonLongiLati(WinsolsDif, NodeAccum, title)
-            if (EquatorLongi) {
-                if (EquatorLongiB) {
-                    EquatorLongiPrint = EquatorLongi.toFixed(4) + `\n` + EquatorLongiB.toFixed(4)
-                    EclipticEquatorDifPrint = EclipticEquatorDif.toFixed(4) + `\n` + EclipticEquatorDifB.toFixed(4)
+            if (EquaLongi) {
+                if (EquaLongiB) {
+                    EquaLongiPrint = EquaLongi.toFixed(4) + `\n` + EquaLongiB.toFixed(4)
+                    EclpEquaDifPrint = EclpEquaDif.toFixed(4) + `\n` + EclpEquaDifB.toFixed(4)
                 } else {
-                    EquatorLongiPrint = EquatorLongi.toFixed(4)
-                    EclipticEquatorDifPrint = EclipticEquatorDif.toFixed(4)
+                    EquaLongiPrint = EquaLongi.toFixed(4)
+                    EclpEquaDifPrint = EclpEquaDif.toFixed(4)
                 }
 
-                EquatorWhiteDifPrint = EquatorWhiteDif.toFixed(4)
+                EquaWhiteDifPrint = EquaWhiteDif.toFixed(4)
             }
             if (WhiteLongi) {
                 WhiteLongiPrint = WhiteLongi.toFixed(4)
-                EclipticWhiteDifPrint = EclipticWhiteDif.toFixed(4)
+                EclpWhiteDifPrint = EclpWhiteDif.toFixed(4)
             }
-            if (MoonEclipticLati) {
-                Lati1Print = MoonEclipticLati1.toFixed(4)
-                LatiPrint = MoonEclipticLati.toFixed(4)
+            if (MoonEclpLati) {
+                Lati1Print = MoonEclpLati1.toFixed(4)
+                LatiPrint = MoonEclpLati.toFixed(4)
+            }
+            if (MoonEquaLati) {
+                EquaLatiPrint = MoonEquaLati.toFixed(4)
             }
             return {
                 title: CalNameList[title],
-                data: [EclipticLongi.toFixed(4), EquatorLongiPrint, EclipticEquatorDifPrint, WhiteLongiPrint, EclipticWhiteDifPrint, EquatorWhiteDifPrint, Lati1Print, LatiPrint]
+                data: [EclpLongi.toFixed(4), EquaLongiPrint, EclpEquaDifPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
             }
         }))
     return Print

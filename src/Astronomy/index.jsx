@@ -1,6 +1,6 @@
 import React from 'react'
 import BindTcorr from './AcrV'
-import BindEquator2Ecliptic from './Equator2Ecliptic'
+import BindEqua2Eclp from './Equa2Eclp'
 import BindLongi2Lati from './Longi2Lati'
 import MoonLongi from './MoonLongi'
 import Const from './Const'
@@ -9,8 +9,8 @@ import SunEclipse from './SunEclipse'
 import MoonEclipse from './MoonEclipse'
 import Node2Cycle from './Node'
 import Cycle2Node from './EcliCycle'
-// import  BindEquator2Ecliptic from './'
-// import  BindEquator2Ecliptic from './' 
+// import  BindEqua2Eclp from './'
+// import  BindEqua2Eclp from './' 
 
 export default class Astronomy extends React.Component {
   // constructor(props) {
@@ -112,7 +112,7 @@ export default class Astronomy extends React.Component {
         <h2>躔離之什</h2>
         <BindTcorr />
         <h2>軌道之什</h2>
-        <BindEquator2Ecliptic />
+        <BindEqua2Eclp />
         <BindLongi2Lati />
         <MoonLongi />
         <h2>交食之什</h2>

@@ -106,19 +106,19 @@ export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔
 }
 // console.log(SunWest(91, 4500))
 
-export const Equator2EclipticWest = (LongiRaw, Sidereal, year) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
+export const Equa2EclpWest = (LongiRaw, Sidereal, year) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
     let Longi = LongiRaw % (Sidereal / 4)
     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
         Longi = Sidereal / 4 - Longi
     }
     const Angle = big(Longi).mul(pi).div(big.div(Sidereal, 2))
     const E = d2r(ConstWest(year).obliquity)
-    const Ecliptic = Angle.tan().mul(E.cos()).atan().mul(Sidereal / 2).div(pi)
-    const Equator = Angle.tan().div(E.cos()).atan().mul(Sidereal / 2).div(pi)
-    let Equator2EclipticDif = big.sub(Longi, Ecliptic).abs().toNumber()
-    let Ecliptic2EquatorDif = big.sub(Longi, Equator).abs().toNumber()
-    let Ecliptic2Equator = 0
-    let Equator2Ecliptic = 0
+    const Eclp = Angle.tan().mul(E.cos()).atan().mul(Sidereal / 2).div(pi)
+    const Equa = Angle.tan().div(E.cos()).atan().mul(Sidereal / 2).div(pi)
+    let Equa2EclpDif = big.sub(Longi, Eclp).abs().toNumber()
+    let Eclp2EquaDif = big.sub(Longi, Equa).abs().toNumber()
+    let Eclp2Equa = 0
+    let Equa2Eclp = 0
     let sign1 = 1
     let sign2 = 1
     if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
@@ -126,15 +126,15 @@ export const Equator2EclipticWest = (LongiRaw, Sidereal, year) => { // 《中國
     } else {
         sign2 = -1
     }
-    Equator2EclipticDif *= sign1
-    Ecliptic2EquatorDif *= sign2
-    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
-    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
+    Equa2EclpDif *= sign1
+    Eclp2EquaDif *= sign2
+    Equa2Eclp = LongiRaw + Equa2EclpDif
+    Eclp2Equa = LongiRaw + Eclp2EquaDif
     return {
-        Ecliptic2Equator,
-        Equator2Ecliptic,
-        Equator2EclipticDif,
-        Ecliptic2EquatorDif,
+        Eclp2Equa,
+        Equa2Eclp,
+        Equa2EclpDif,
+        Eclp2EquaDif,
     }
 }
 
@@ -249,37 +249,39 @@ export const Longi2DialWest = (l, f, Sidereal, year) => { // 黃經，周天，�
 // console.log(Longi2DialWest(182.62225, 34.4047, 365.2445, 1000))
 
 // ε黃赤交角 Φ 黃白交角
-export const MoonLongiWest = (EclipticRaw, Sidereal, year) => {
-    const Ecliptic = (EclipticRaw + 90) % 360
-    const v0 = d2r(Ecliptic) // 距冬至轉換成距離春分的度數
+export const MoonLongiWest = (EclpRaw, year) => { // 統一360度
+    const Eclp = EclpRaw //(EclpRaw + 90) % 360
+    const v0 = d2r(Eclp) // 距冬至轉換成距離春分的黃經
     const I = d2r(5.1453) // 授時黃白大距6
-    const E = d2r(ConstWest(year).obliquity) // 授時黃赤大距23.9
-    // const k = r2d(big.tan(I).div(big.sin(E)).atan()) // 授時正交極數：14.66
-    const tank = big.tan(I).div(big.sin(E))
-    const tana0 = tank.mul(v0.sin()).div(big(1).add(tank.mul(E.cos()).mul(v0.cos())))
+    let E = d2r(ConstWest(year).obliquity) // 授時黃赤大距23.9
+    const cosE = big.cos(E) // 0.9
+    const tank = big.tan(I).div(big.sin(E)) // tank 0.22
+    const k = tank.atan() // k正交極數 12.7
+    const tana0 = tank.mul(v0.sin()).div(tank.mul(cosE.mul(v0.cos())).add(1))
     const a0Raw = tana0.atan() // a0距差
-    const a0 = r2d(a0Raw).abs().toNumber() // a0距差    
-    let EquatorLongi = 0
-    if (Ecliptic > 90 && Ecliptic < 270) {
-        EquatorLongi = Ecliptic + a0
+    const a0 = r2d(a0Raw).abs().toNumber() // a0距差=赤經    
+    let EquaLongi = 0
+    if ((Eclp >= 90 && Eclp <180)||(Eclp >= 270)) {
+        EquaLongi = 90 + a0
     } else {
-        EquatorLongi = Ecliptic - a0
+        EquaLongi = 90 - a0
     }
-    // a0 =k*Ecliptic/(Sidereal/4) //k=14.66 授時
+    // a0 =k*Eclp/(Sidereal/4) //k=14.66 授時
     // 月離赤道正交：白赤道降交點
     const sinu = I.sin().mul(v0.sin()).div(a0Raw.sin()) // 白赤大距
     const u = r2d(sinu.asin())
     const l = r2d(a0Raw.sin().div(a0Raw.sin().pow(2).sub(I.sin().pow(2).mul(v0.sin().pow(2))).sqrt()).atan()) // WhiteLongi
     return {
-        // EquatorLongi,
+        EquaLongi,
         a0,
         u: u.toNumber(),
         l: l.toNumber(),
     }
 }
-// console.log(MoonLongiWest(105, 365.2575, 1281))
+// console.log(MoonLongiWest(165, 365.2575, 1281).u)
 
-export const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
+// 下陳美東公式
+const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
     const T = d2r(45)
     const cosT = T.cos()
     const sinT = T.sin()
@@ -292,7 +294,7 @@ export const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
     const cosE = E.cos()
     const cotE = big.tan(E.neg().add(pi.div(2)))
     const n0 = NodeAvgV.mul(NodeAccum).mul(pi).div(Sidereal / 2)
-    const F = d2r(big(5.1453))
+    const F = d2r(5.1453)
     const sinF = F.sin()
     const cosF = F.cos()
     /////甲/////

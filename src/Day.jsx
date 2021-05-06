@@ -207,7 +207,7 @@ export default class Day extends React.Component {
           <li><span className='Jd'>灰色：儒略日、公曆日期</span></li>
           <li><span className='Nayin'>黑色：納音、建除、黃道黑道；七曜值日、星期幾、二十八宿值日、二十八禽值日</span></li>
           <li><span className='EquartorPrint'>紅色：太陽赤道宿度</span></li>
-          <li><span className='EclipticPrint'>黃色：太陽黃道宿度</span></li>
+          <li><span className='EclpPrint'>黃色：太陽黃道宿度</span></li>
           <li><span className='Lati'>綠色：太陽赤緯、日出刻度、正午晷長、昏中星</span></li>
           <li><span className='MoonEquartorPrint'>藍色：月黃緯、月黃道宿度</span></li>
           <li><span className='HouName'>黑色：七十二候、卦用事、土王用事</span></li>

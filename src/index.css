@@ -782,7 +782,7 @@ hr {
   color: var(--letterred);
 }
 
-.EclipticPrint {
+.EclpPrint {
   color: var(--letteryellow);
 }
 
@@ -802,11 +802,11 @@ hr {
   color: var(--lettergreen);
 }
 
-.MoonEclipticPrint {
+.MoonEclpPrint {
   color: var(--letterblue);
 }
 
-.MoonEclipticLati {
+.MoonEclpLati {
   color: var(--letterblue);
 }
 
