@@ -215,7 +215,7 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         Lati: WestLati
     } = Longi2LatiWest(LongiRaw, Sidereal, year)
     let Print = [{
-        title: '1球面',
+        title: '1球面三角',
         data: [WestB.toFixed(5), WestB1.toFixed(4), 0, 0, WestA.toFixed(5), WestA1.toFixed(4), 0, 0, WestLati.toFixed(4)]
     }]
     const {
@@ -226,7 +226,7 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         Lati: West2Lati
     } = HushigeyuanWest(LongiRaw, Sidereal, year)
     Print = Print.concat({
-        title: '2割圓',
+        title: '2三角割圓',
         data: [West2B.toFixed(5), West2B1.toFixed(4), (West2B - WestB).toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0, West2Lati.toFixed(4), (West2Lati - WestLati).toFixed(4)]
     })
     const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
