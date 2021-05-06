@@ -796,7 +796,21 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             NodeAccumCorr = SunTcorr2 + 0.0785077 * MoonTcorr2 //  // 劉金沂《麟徳曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟徳61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
         }
     }
+    let SunTcorr = 0 // 默認選項
+    let MoonTcorr = 0
+    if (SunTcorr2) {
+        SunTcorr = SunTcorr2
+    } else if (SunTcorr1) {
+        SunTcorr = SunTcorr1
+    }
+    if (MoonTcorr2) {
+        MoonTcorr = MoonTcorr2
+    } else if (MoonTcorr1) {
+        MoonTcorr = MoonTcorr1
+    }
     return {
+        SunTcorr,
+        MoonTcorr,
         SunTcorr2,
         SunTcorr1,
         MoonTcorr2,

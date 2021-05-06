@@ -7,7 +7,7 @@ import {
 } from './bind.mjs'
 import {
     Hushigeyuan
-} from './equa_geometry'
+} from './equa_geometry.mjs'
 
 export const Equator2EclipticFormula = (LongiRaw, CalName) => { // 公式化的，週天度就用自己的
     let Solar = 0
