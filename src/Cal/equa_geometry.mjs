@@ -8,7 +8,7 @@ const r2d = degree => big(degree).mul(180).div(pi)
 const d2r = degree => big(degree).mul(pi).div(180)
 const RoundC2LWest = (r, c) => r2d(big(c).div(r).asin().mul(2)).toNumber() // 半徑，半弦// 圓心角l=arcsin(sqrt(2rh-h^2)/r) 
 // console.log(RoundC2LWest(10, 10,365.25/360))
-const RoundL2HWest = (r, l) => big(r).sub(big.sqrt(big(r).pow(2).mul(big(1).sub((d2r(l).sin()).pow(2))))).toNumber()  // 半徑，弧長   半弦c,半弧l，c=rsinl, h=sqrt(r^2-c^2)+r ==> h=r-sqrt(r^2*(1-(sinl)^2))
+const RoundL2HWest = (r, l) => big(r).sub(big.sqrt(big(r).pow(2).mul(big(1).sub((d2r(l).sin()).pow(2))))).toNumber()  // 半弦c,半弧l，c=rsinl, h=sqrt(r^2-c^2)+r ==> h=r-sqrt(r^2*(1-(sinl)^2))
 // console.log (RoundL2HWest(58,180))
 const RoundH2LWest = (r, h) => r2d(big.sqrt(h * (2 * r - h)).div(r).asin()).toNumber()// c=sqrt(h(2r-h)), sinl=c/r ==>半弧l=arcsin(sqrt(h(2r-h))/r)
 
@@ -142,8 +142,8 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const r = 60.875
     const d = 121.75
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
-    const q = 53.288
-    const v = 4.8482 // KE
+    const q = 56.0268 // OK
+    const v = 4.8482 // KE    
     const QuarSidereal = Sidereal / 4
     const HalfSidereal = Sidereal / 2
     let Longi = LongiRaw % QuarSidereal
@@ -160,11 +160,10 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const PE = RoundL2H(Longi)
     const OP = r - PE
     const PC = Math.sqrt(r ** 2 - OP ** 2)
-    const OK = r - v
-    const CT = p * OP / OK // PQ=CT，T是C向上垂直，超出了球體。Q是P垂直向上，交OD
+    const CT = p * OP / q // PQ=CT，T是C向上垂直，超出了球體。Q是P垂直向上，交OD
     const OT = Math.sqrt(r ** 2 + CT ** 2) // OT=r+BT
     const BN = CT * r / OT
-    const PQ = p * OP / OK
+    const PQ = p * OP / q
     const BL = PC * BN / PQ
     const BD = RoundC2HL(BL).Halfl
     let Equator2EclipticDif = Longi - BD
@@ -220,8 +219,10 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     ////轉換爲360度////
     const portion4 = Sidereal / 360
     Longi /= portion4
-    const p = +ConstWest(year).obliquity // 黃赤交角
     const r = 360 / pi / 2
+    const p = +ConstWest(year).obliquity // 黃赤交角
+    const v = RoundL2HWest(r, p) // KE
+    const OK = r - v
     const v1 = RoundL2HWest(r, Longi) // LD
     const p1 = Math.sqrt(v1 * (2 * r - v1))// Math.sqrt(r ** 2 - (r - v1) ** 2) // LB黃半弧弦
     const p2 = p * (r - v1) / r // BN,LM
@@ -229,18 +230,37 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
     const EquatorLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
     // const EquatorLongi = RoundC2LWest(r, p3) / 2
+    /////赤轉黃/////
+    const PE = RoundL2HWest(r, Longi)
+    const OP = r - PE
+    const PC = Math.sqrt(r ** 2 - OP ** 2)
+    const CT = p * OP / OK // PQ=CT，T是C向上垂直，超出了球體。Q是P垂直向上，交OD
+    const OT = Math.sqrt(r ** 2 + CT ** 2) // OT=r+BT
+    const BN = CT * r / OT
+    const PQ = p * OP / OK
+    const BL = PC * BN / PQ
+    const BD = RoundC2LWest(r, BL) / 2
     //////轉換為365.25度//////
-    const Ecliptic2EquatorDif = (EquatorLongi - Longi) * portion4
+    let Ecliptic2EquatorDif = (EquatorLongi - Longi) * portion4
+    let Equator2EclipticDif = (Longi - BD) * portion4
+    let sign1 = 1
+    let sign2 = 1
     let Ecliptic2Equator = 0
+    let Equator2Ecliptic = 0
     if ((LongiRaw >= 0 && LongiRaw < QuarSidereal) || (LongiRaw >= HalfSidereal && LongiRaw < Sidereal * 0.75)) {
-        Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
+        sign2 = -1
     } else {
-        Ecliptic2Equator = LongiRaw - Ecliptic2EquatorDif
+        sign1 = -1
     }
+    Ecliptic2EquatorDif *= sign1
+    Equator2EclipticDif *= sign2
+    Ecliptic2Equator = LongiRaw + Ecliptic2EquatorDif
+    Equator2Ecliptic = LongiRaw + Equator2EclipticDif
     return {
         Ecliptic2Equator,
         Ecliptic2EquatorDif,
-        // Equator2Ecliptic,
+        Equator2Ecliptic,
+        Equator2EclipticDif,
     }
 }
 // console.log(HushigeyuanWest(32, 365.25, 1000).Ecliptic2Equator)

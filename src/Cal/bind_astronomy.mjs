@@ -213,15 +213,14 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
         data: [WestB.toFixed(6), WestB1.toFixed(4), 0, 0, WestA.toFixed(6), WestA1.toFixed(4), 0, 0]
     }]
     const {
-        // Equator2Ecliptic: West2B,
-        // Equator2EclipticDif: West2B1,
+        Equator2Ecliptic: West2B,
+        Equator2EclipticDif: West2B1,
         Ecliptic2Equator: West2A,
         Ecliptic2EquatorDif: West2A1
     } = HushigeyuanWest(LongiRaw, Sidereal, year)
     Print = Print.concat({
         title: '2三角割圓',
-        // data: [WestB.toFixed(6), WestB1.toFixed(4), 0, WestA.toFixed(6), WestA1.toFixed(4), 0]
-        data: ['-', '-', '-', 0, West2A.toFixed(6), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0]
+        data: [West2B.toFixed(6), West2B1.toFixed(4), (West2B - WestB).toFixed(4), 0, West2A.toFixed(6), West2A1.toFixed(4), (West2A - WestA).toFixed(4), 0]
     })
     Print = Print.concat(
         ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
@@ -239,15 +238,16 @@ export const BindEquator2Ecliptic = (LongiRaw, Sidereal, year) => {
             const Equator2EclipticDif = Func.Equator2EclipticDif
             const Ecliptic2EquatorDif = Func.Ecliptic2EquatorDif
             if (Equator2Ecliptic) {
-                EclipticLongiPrint = Equator2Ecliptic.toFixed(6)
-                EclipticLongiInacPrint = (Equator2Ecliptic - WestB).toFixed(4)
+                EclipticLongiPrint = Equator2Ecliptic.toFixed(6)                
                 Equator2EclipticDifPrint = Equator2EclipticDif.toFixed(4)
+                EclipticLongiInacPrint = (Equator2Ecliptic - WestB).toFixed(4)
+                EclipticLongi2InacPrint = (Equator2Ecliptic - West2B).toFixed(4)
             }
             if (Ecliptic2Equator) {
-                EquatorLongiPrint = Ecliptic2Equator.toFixed(6)
+                EquatorLongiPrint = Ecliptic2Equator.toFixed(6)                
+                Ecliptic2EquatorDifPrint = Ecliptic2EquatorDif.toFixed(4)
                 EquatorLongiInacPrint = (Ecliptic2Equator - WestA).toFixed(4)
                 EquatorLongi2InacPrint = (Ecliptic2Equator - West2A).toFixed(4)
-                Ecliptic2EquatorDifPrint = Ecliptic2EquatorDif.toFixed(4)
             }
             return {
                 title: CalNameList[title],
