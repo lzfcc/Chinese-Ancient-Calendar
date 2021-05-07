@@ -12,6 +12,7 @@ import Round from './Round'
 import Round1 from './Round1'
 import Round2 from './Round2'
 import Heron from './Heron'
+import Hushigeyuan from './Hushigeyuan'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import md1 from '../note/equation.md';
@@ -39,16 +40,18 @@ export default class Equation extends React.Component {
           <Sn2 />
           <h2>內插之什</h2>
           <Interpolate1 />
+          <p></p>
           <Interpolate2 />
           <Interpolate3 />
           <h2>方程之什</h2>
           <Equa1 />
           <h2>幾何之什</h2>
           <Round />
+          <p></p>
           <Round2 />
+          <p></p>
           <Round1 />
-          <h3>弧矢割圓術</h3>
-          <p className='note'><v>授時曆</v>黃赤轉換，見「天文」標籤</p>
+          <Hushigeyuan />
           <Heron />
           {/* <h2>開方之什</h2>
         <Sqrt1 />

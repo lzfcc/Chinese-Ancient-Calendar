@@ -54,6 +54,13 @@ body {
   text-align: center;
 }
 
+img {
+  max-width: 100%;
+  border-radius: .6em;
+  border: 1px solid var(--shallowgray);
+  margin: .5em auto;
+}
+
 article {
   margin: 4em auto 0;
   width: 850px;
@@ -72,13 +79,17 @@ article h3 {
   font-size: 1.6em;
 }
 
-pre {
-  background: var(--bgblue);
-  border-radius: 1.5em;
-  padding: 1em .25em;
+article h4{
+  font-size: 1.3em;
 }
 
-pre code{
+pre {
+  background: var(--bgblue);
+  border-radius: 1.2em;
+  padding: 1em;
+}
+
+pre code {
   background: none;
 }
 
@@ -119,6 +130,14 @@ b {
 v {
   border-bottom: .1em dashed var(--gray);
   margin: 0 .2em
+}
+
+
+blockquote {
+  background: var(--bgpink);
+  margin: 0 0 0 1em;
+  padding: 0 .25em;
+  border-radius: .5em
 }
 
 q {

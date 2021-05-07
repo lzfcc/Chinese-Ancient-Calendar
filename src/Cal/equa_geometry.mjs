@@ -2,6 +2,10 @@ import { ConstWest } from './astronomy_west.mjs'
 import {
     big
 } from './para_constant.mjs'
+import {
+    Equa2EclpWest,
+    Longi2LatiWest
+} from './astronomy_west.mjs'
 
 const pi = big.acos(-1)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -140,16 +144,11 @@ export const RoundL2HPrint = lRaw => {
     return Print
 }
 // console.log(RoundL2HPrint(182.625, 60.875, 365.25))
-// 弧矢割圓術黃赤轉換。跟元志六《黃赤道率》立成表分毫不差，耶！！！
-export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》頁629
-    // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915
-    const Sidereal = 365.2575
+const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
+    const Sidereal = 365.25
     const r = 60.875
     const d = 121.75
-    const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
-    const pAnother = 23.71 // 二至黃赤內外半弧弦
-    const q = 56.0268 // OK
-    // const v = 4.8482 // KE    
+    pAnother = pAnother || p
     const QuarSidereal = Sidereal / 4
     const HalfSidereal = Sidereal / 2
     let Longi = LongiRaw % QuarSidereal
@@ -197,7 +196,28 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     Equa2EclpDif *= sign2
     Eclp2Equa = LongiRaw + Eclp2EquaDif
     Equa2Eclp = LongiRaw + Equa2EclpDif
-    const Lati1 = QuarSidereal - Lati
+    return {
+        Eclp2EquaDif,
+        Equa2EclpDif,
+        Eclp2Equa,
+        Equa2Eclp,
+        Lati,
+        ON,
+        p2Another,
+        sign
+    }
+
+}
+// 弧矢割圓術黃赤轉換。跟元志六《黃赤道率》立成表分毫不差，耶！！！
+export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》頁629
+    // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915    
+    const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
+    const pAnother = 23.71 // 二至黃赤內外半弧弦
+    const q = 56.0268 // OK
+    // const v = 4.8482 // KE    
+    const { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lati, ON, p2Another, sign
+    } = Hushigeyuan_Sub(LongiRaw, p, q, pAnother)
+    const Lati1 = 91.3125 - Lati // 91.314375
     //////////晷漏//////// 
     // const v2 = LatiFunc.h
     const SunHundred = 6 * ON + 1 // 日行百刻度
@@ -214,8 +234,25 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
         Sunrise
     }
 }
+const Hushigeyuan_Ex = (LongiRaw, e) => { // 度數，黃赤交角
+    const r = 60.875
+    const h = RoundL2H(e)
+    const p = Math.sqrt(r ** 2 - (r - h) ** 2)
+    const q = r - h
+    const { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lati
+    } = Hushigeyuan_Sub(LongiRaw, p, q)
+    return {
+        Eclp2Equa,
+        Eclp2EquaDif,
+        Equa2Eclp,
+        Equa2EclpDif,
+        Lati,
+    }
+}
 // console.log(Hushigeyuan(40).Eclp2Equa)
-export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見《中國古代曆法》頁629
+// console.log(Hushigeyuan_Ex(40, 24).Eclp2Equa) // 弧矢割圓的黃赤交角以24度算
+
+const HushigeyuanWest = (LongiRaw, Sidereal, DE) => { // DE黃赤交角。變量名見《中國古代曆法》頁629
     const pi = 3.141592653589793
     const QuarSidereal = Sidereal / 4
     const HalfSidereal = Sidereal / 2
@@ -227,7 +264,6 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     const portion4 = Sidereal / 360
     Longi /= portion4
     const r = 360 / pi / 2
-    const DE = +ConstWest(year).obliquity // DE黃赤交角
     const p = RoundL2CWest(r, DE) // DK
     const v = RoundL2HWest(r, DE) // KE
     const q = r - v // OK
@@ -283,6 +319,50 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     }
 }
 // console.log(HushigeyuanWest(32, 365.25, 1000).Eclp2Equa)
+
+export const Hushigeyuan_Ex_Print = (LongiRaw, eRaw) => {
+    const Sidereal = 365.25
+    eRaw = +eRaw
+    LongiRaw = +LongiRaw
+    const e = eRaw * 360 / Sidereal
+    const {
+        Equa2Eclp: WestB,
+        Equa2EclpDif: WestB1,
+        Eclp2Equa: WestA,
+        Eclp2EquaDif: WestA1
+    } = Equa2EclpWest(LongiRaw, Sidereal, 0, e)
+    const {
+        Lati: WestLati
+    } = Longi2LatiWest(LongiRaw, Sidereal, 0, e)
+    let Print = [{
+        title: '球面三角',
+        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4), 0]
+    }]
+    const {
+        Equa2Eclp: West2B,
+        Equa2EclpDif: West2B1,
+        Eclp2Equa: West2A,
+        Eclp2EquaDif: West2A1,
+        Lati: West2Lati
+    } = HushigeyuanWest(LongiRaw, Sidereal, e)
+    Print = Print.concat({
+        title: '三角割圓',
+        data: [West2B.toFixed(5), West2B1.toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), 0, West2Lati.toFixed(4), 0]
+    })
+    const {
+        Equa2Eclp: GeyuanB,
+        Equa2EclpDif: GeyuanB1,
+        Eclp2Equa: GeyuanA,
+        Eclp2EquaDif: GeyuanA1,
+        Lati: GeyuanLati
+    } = Hushigeyuan_Ex(LongiRaw, eRaw)
+    Print = Print.concat({
+        title: '弧矢割圓',
+        data: [GeyuanB.toFixed(5), GeyuanB1.toFixed(4), (GeyuanB - WestB).toFixed(4), GeyuanA.toFixed(5), GeyuanA1.toFixed(4), (GeyuanA - WestA).toFixed(4), GeyuanLati.toFixed(4), (GeyuanLati - WestLati).toFixed(4)]
+    })
+    return Print
+}
+
 // 曲安京《授時曆的白赤道座標變換法》//《中國古代曆法》頁127
 // 授時放棄了九道術的黃白轉換，改從白赤轉換入手。
 export const HushigeyuanMoon = (WinsolsDifRaw, NodeAccum) => { // 黃道度（距冬至數加上日躔），入交泛日

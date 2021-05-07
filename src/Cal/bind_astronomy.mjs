@@ -18,7 +18,6 @@ import {
 import {
     Hushigeyuan,
     HushigeyuanMoon,
-    HushigeyuanWest,
 } from './equa_geometry.mjs'
 import {
     Equa2EclpWest,
@@ -222,17 +221,6 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
         title: '球面三角',
         data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4), 0]
     }]
-    const {
-        Equa2Eclp: West2B,
-        Equa2EclpDif: West2B1,
-        Eclp2Equa: West2A,
-        Eclp2EquaDif: West2A1,
-        Lati: West2Lati
-    } = HushigeyuanWest(LongiRaw, Sidereal, year)
-    Print = Print.concat({
-        title: '三角割圓',
-        data: [West2B.toFixed(5), West2B1.toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), 0, West2Lati.toFixed(4), 0]
-    })
     const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(

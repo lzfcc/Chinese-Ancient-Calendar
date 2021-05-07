@@ -106,13 +106,14 @@ export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔
 }
 // console.log(SunWest(91, 4500))
 
-export const Equa2EclpWest = (LongiRaw, Sidereal, year) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
+export const Equa2EclpWest = (LongiRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
     let Longi = LongiRaw % (Sidereal / 4)
     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
         Longi = Sidereal / 4 - Longi
     }
-    const Angle = big(Longi).mul(pi).div(big.div(Sidereal, 2))
-    const E = d2r(ConstWest(year).obliquity)
+    const Angle = big(Longi).mul(pi).div(big.div(Sidereal, 2)) // 古度轉radius
+    E = E || ConstWest(year).obliquity
+    E = d2r(E)
     const Eclp = Angle.tan().mul(E.cos()).atan().mul(Sidereal / 2).div(pi)
     const Equa = Angle.tan().div(E.cos()).atan().mul(Sidereal / 2).div(pi)
     let Equa2EclpDif = big.sub(Longi, Eclp).abs().toNumber()
@@ -141,12 +142,13 @@ export const Equa2EclpWest = (LongiRaw, Sidereal, year) => { // 《中國古代�
 // sinδ=sinλsinε :λ黃，ε：黃赤交角。黃度轉赤緯 
 // 一天之内太阳高度角的变化速率如何计算？ - Pjer https://www.zhihu.com/question/25909220/answer/1026387602 一年中太阳直射点在地球上的移动速度是多少？ - 黄诚赟的回答 https://www.zhihu.com/question/335690936/answer/754032487「太阳直射点的纬度变化不是匀速的，春分秋分最大，夏至冬至最小。」
 // https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE
-export const Longi2LatiWest = (lRaw, Sidereal, year) => { // 《中國古代曆法》頁630    
+export const Longi2LatiWest = (lRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630    
     const portion = Sidereal / 360
     lRaw /= portion
     lRaw += 270
     const Angle = d2r(lRaw) // 角度轉換爲定義域
-    const E = d2r(ConstWest(year).obliquity) // 化爲定義域
+    E = E || ConstWest(year).obliquity // 化爲定義域
+    E = d2r(E)
     const d = r2d(Angle.sin().mul(E.sin()).asin()).toNumber() //.toPrecision(60) //.toSD(60)
     const Lati = d * portion
     const Lati1 = Sidereal / 4 - Lati // 去極度
