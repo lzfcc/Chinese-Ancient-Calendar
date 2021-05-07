@@ -5,10 +5,10 @@ import { convertLatex } from "../utils";
 export default class a extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {  };
+    this.state = {};
     this.handle = this.handle.bind(this);
   }
-  
+
   input() {
     return (
       <span className='year-select width4'>
@@ -37,7 +37,10 @@ export default class a extends React.Component {
       return null
     }
     return (
-      <div className='ans' style={{whiteSpace: 'pre-wrap'}}>
+      <div className='ans' style={{ whiteSpace: 'pre-wrap' }}>
+        {(this.state.outputContinuedFrac13 || []).length > 0 ?
+          <MathJax rawLatex={convertLatex(this.state.outputContinuedFrac13)} /> : null
+        }
         <p>{this.state.output1}</p>
         <p>{this.state.output2}</p>
       </div>
@@ -46,12 +49,9 @@ export default class a extends React.Component {
   render() {
     return (
       <div>
-  {this.input()}
-          <button onClick={this.handle} className='button4-3'>衝衝衝</button>
-          {(this.state.outputContinuedFrac13 || []).length > 0 ?
-            <MathJax rawLatex={convertLatex(this.state.outputContinuedFrac13)} /> : null
-          }
-          {this.result()}
+        {this.input()}
+        <button onClick={this.handle} className='button4-3'>衝衝衝</button>
+        {this.result()}
       </div>
     );
   }

@@ -13,9 +13,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width4">
-        <p className="note">
-          萬法之法，孫子定理、不定方程、調日法、演紀都需要求一術。輸入兩個互質整數<n>衍數、定母</n>，求方程 <code>a * x ≡ 1 (mod b)</code> 的解 x<span className="decimal64">.64</span>
-        </p>
         <span>
           泛用<n>用數</n> = 衍數
         </span>
@@ -61,11 +58,10 @@ export default class a extends React.Component {
     return (
       <div>
         <h3>大衍求一術</h3>
-        <h4>解一次同餘式的核心模塊</h4>
         {this.input()}
         <button onClick={this.handle} className="button4-2">
           秦九韶再世
-        </button>
+        </button><span className="decimal64">.64</span>
         {this.result()}
       </div>
     );

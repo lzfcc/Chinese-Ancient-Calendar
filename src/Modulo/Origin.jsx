@@ -15,10 +15,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width2">
-        <p className="note">
-          依次輸入斗分、日法、冬至大小餘、天正經朔大小餘，大餘卽干支序數，無須 -
-          1
-        </p>
         <span> 斗分</span>
         <input
           value={this.state.SolarFrac}

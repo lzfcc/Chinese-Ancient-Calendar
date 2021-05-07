@@ -11,7 +11,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width4">
-        <p className="note">給定一個分數，求其連分數、各漸進連分數。非常適合與調日法參照</p>
         <span>分子</span>
         <input
           value={this.state.fracA}
@@ -52,6 +51,9 @@ export default class a extends React.Component {
     }
     return (
       <div className="ans" style={{ whiteSpace: "pre-wrap" }}>
+        {(this.state.output3 || []).length ? (
+          <MathJax rawLatex={convertLatex(this.state.output3)} />
+        ) : null}
         <p>{this.state.output1}</p>
         <p>{this.state.output2}</p>
       </div>
@@ -63,13 +65,9 @@ export default class a extends React.Component {
       <div>
         <h3>連分數　漸進分數</h3>
         {this.input()}
-        <span className="decimal64">.64</span>
         <button onClick={this.handle} className="button4-3">
           快快快
-        </button>
-        {(this.state.output3 || []).length > 0 ? (
-          <MathJax rawLatex={convertLatex(this.state.output3)} />
-        ) : null}
+        </button><span className="decimal64">.64</span>
         {this.result()}
       </div>
     );

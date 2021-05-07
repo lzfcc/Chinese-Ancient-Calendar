@@ -10,7 +10,6 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <p className='note'>「芻童」卽長方稜臺。上有寬 a 個、長 b 個，下有寬 c 個、長 d 個，共 n 層，每層長寬各多 1 個。<span className='decimal64'>.64</span></p>
         <span>頂層寬</span>
         <input className='width3'
           value={this.state.Sn1a}
@@ -61,7 +60,7 @@ export default class Equa extends React.Component {
       <div>
         <h3>隙積術　芻童垛</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>沈括</button>
+        <button onClick={this.handle} className='button4-3'>沈括</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     );

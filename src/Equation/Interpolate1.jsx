@@ -13,7 +13,6 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <p className='note'>在「數列」框中輸入一組離散値，數量 = 次數 + 1，以第一個數爲起算點。「次數」爲進行幾次內插，卽幾次多項式。n 爲所求的數，第一個離散値的 n 爲 1。內插公式的一般形式：f(x<sub>0</sub>+x) = f(x<sub>0</sub>) + Δ<sup>1</sup>x + Δ<sup>2</sup> 1/2! x (x-1) +...+ Δ<sup>p</sup> 1/p! x (x-1) ... (x-p+1)。初始値爲<v>大衍曆</v>晷影五次差分表<span className='decimal64'>.64</span></p>
         <span>n</span>
         <input className='width4'
           value={this.state.Interpolate1N}
@@ -56,10 +55,10 @@ export default class Equa extends React.Component {
   render() {
     return (
       <div>
-        <h3>招差術　如像招數</h3>
+        <h3>招差術</h3>
         <h4>等間距高次內插</h4>
         {this.input()}
-        <button onClick={this.handle} className='button4-5'>朱世傑</button>
+        <button onClick={this.handle} className='button4-5'>朱世傑</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     );

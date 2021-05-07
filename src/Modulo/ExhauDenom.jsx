@@ -63,9 +63,6 @@ export default class Exhau extends React.Component {
     return (
       <div>
         <h3>第一步、窮舉日法</h3>
-        <p className="note">
-          暴力窮舉所有符合條件的日法
-        </p>
         {this.input()}
         <button onClick={this.handle} className="button4-7">
           暴力

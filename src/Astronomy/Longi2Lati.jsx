@@ -77,9 +77,11 @@ export default class Converter extends React.Component {
             <th>赤緯</th>
             <th>誤差</th>
             <th>日出</th>
-            <th>誤差</th>
+            <th>誤差1</th>
+            <th>誤差2</th>
             <th>晷長</th>
-            <th>誤差</th>
+            <th>誤差1</th>
+            <th>誤差2</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -100,7 +102,6 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>積日 ⇒ 去極度、赤緯、日出、晷長</h3>
-        <p className='note'>黃道去極度 = 週天/4 - 赤緯。<v>崇玄</v>、<v>崇天</v>、<v>明天</v>、<v>觀天</v>、<v>紀元</v>使用各自的週天度，不受輸入的週天度影響。日出時刻 = 夜半漏 + 2.5 刻<n>一日百刻。</n>球面三角的日出、晷長有兩行，上行計入蒙氣差、日視半徑等修正因素，作爲古曆理論値；下行未加入修正</p>
         {this.input()}
         <button onClick={this.handle} className='button4-2'>longi2lati</button>
         {this.result()}

@@ -14,10 +14,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width3">
-        <p className="note">
-          依次輸入斗分、歲實分母、朔餘、日法
-          <span className="decimal64">.64</span>
-        </p>
         <span>年 365+</span>
         <input
           value={this.state.SolarFrac2}
@@ -82,7 +78,7 @@ export default class a extends React.Component {
         {this.input()}
         <button onClick={this.handle} className="button4-6">
           祖沖之變法
-        </button>
+        </button><span className="decimal64">.64</span>
         {this.result()}
       </div>
     );

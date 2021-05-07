@@ -13,7 +13,6 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <p className='note'>數列中依次輸入各組 x, y 値。拉格朗日不等間距內插公式：y = Σ(n,1) yiLi, Li = Π(n,j=1,j≠i) (x-xj)/(xi-xj)<span className='decimal64'>.64</span></p>
         <span>n</span>
         <input className='width4'
           value={this.state.n}
@@ -59,7 +58,7 @@ export default class Equa extends React.Component {
         <h3>拉格朗日內插</h3>
         <h4>不等間距高次內插</h4>
         {this.input()}
-        <button onClick={this.handle} className='button4-6'>Lagrange</button>
+        <button onClick={this.handle} className='button4-6'>Lagrange</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     );

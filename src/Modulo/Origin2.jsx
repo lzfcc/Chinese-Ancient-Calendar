@@ -11,16 +11,12 @@ export default class a extends React.Component {
       OriginConst3: "34+3/4",
       FirstConst3: "11+410/940",
     }
-
     this.handle = this.handle.bind(this)
   }
 
   input() {
     return (
       <span className="year-select width2">
-        <p className="note">
-          依次輸入年月參數、冬至大小餘、天正經朔大小餘，大餘卽干支序數，無須 - 1
-        </p>
         <span>年 365+</span>
         <input
           value={this.state.SolarFrac3}

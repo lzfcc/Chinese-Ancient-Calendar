@@ -57,9 +57,8 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>交點月 ⇌ 交食週期</h3>
-        <p className='note'>我的獨創發明：<code>Node = Lunar * EcliCycle / (1/2 + EcliCycle)</code>，以<v>皇極</v>驗之，可見<v>皇極</v>之交點月正以此公式化之。<v>大明</v>以前無交點月，只有交食週期，我藉此全部統一爲用交點月進行計算，非常方便。可輸入小數或分數，算出來的小數可通過「同餘」標籤中的「連分數」化爲漸進分數<span className="decimal64">n/d</span><span className="decimal64">.64</span></p>
         {this.input()}
-        <button onClick={this.handle} className='button4-7'>cycle2node</button>
+        <button onClick={this.handle} className='button4-7'>cycle2node</button><span className="decimal64">n/d</span><span className="decimal64">.64</span>
         {this.result()}
       </div>
     )

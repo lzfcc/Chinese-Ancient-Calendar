@@ -76,7 +76,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
 // console.log(Equa2EclpFormula(91, 'Chongxuan'))
 
 // 魏晉的黃道去極，是根據節氣來的，日書就不調用了
-// 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致。又說：魏晉南北、皇極、戊寅、應天、乾元、儀天自變量用的平氣，麟徳之後用的定氣。
+// 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致。又說：魏晉南北、皇極、戊寅、應天、乾元、儀天自變量用的平氣，麟徳大衍宣明崇玄之後用的定氣。
 export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆法》頁128。漏刻頁135
     let Solar = 0
     if (CalName === 'Chongxuan') {

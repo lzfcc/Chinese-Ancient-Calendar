@@ -164,7 +164,7 @@ export const Longi2LatiWest = (lRaw, Sidereal, year) => { // 《中國古代曆�
 // 跟壽星天文曆比，0.85修正之後的，夏至日出早了2分鐘，冬至晚了2分鐘。如果用0.51:日出定義是上邊緣出現的那一刻，而非中心點在地平線上。夏至合，而冬至晚了2分鐘
 export const Longi2SunriseWest = (lRaw, f, Sidereal, year) => {
     f = big(f).mul(pi).div(big.div(Sidereal, 2))
-    const d = Longi2LatiWest(lRaw, Sidereal, year).d
+    const d = d2r(Longi2LatiWest(lRaw, Sidereal, year).d)
     // let v1 = big.tan(f).mul(big.tan(d))
     let v1 = big(0).sub(f.sin().mul(big.sin(d))).div(f.cos().mul(big.cos(d)))
     let v = big.sin(d2r(-0.51)).sub(big.sin(f).mul(big.sin(d))).div(big.cos(f).mul(big.cos(d)))

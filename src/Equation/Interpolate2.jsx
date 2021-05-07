@@ -15,7 +15,7 @@ export default class Equa extends React.Component {
     return (
       <span className='year-select'>
         <p></p>
-        <p className='note'>已知差分<n>由低次到高次排列</n>，求 y(n)。次數爲差分的個數。第一個數的 n 是 0，上面的是 1。<span className='decimal64'>.64</span></p>
+        <p className='note'><span className='decimal64'>.64</span></p>
         <span>n</span>
         <input className='width4'
           value={this.state.Interpolate2N}

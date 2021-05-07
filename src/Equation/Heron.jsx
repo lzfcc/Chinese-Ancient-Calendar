@@ -10,7 +10,6 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <p className='note'>輸入三角形三邊邊長，求面積。<span className='decimal64'>.64</span></p>
         <span>a</span>
         <input className='width3'
           value={this.state.HeronA}
@@ -61,7 +60,7 @@ export default class Equa extends React.Component {
       <div>
         <h3>三斜求積術</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-1'>秦九韶</button>
+        <button onClick={this.handle} className='button4-1'>秦九韶</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     );

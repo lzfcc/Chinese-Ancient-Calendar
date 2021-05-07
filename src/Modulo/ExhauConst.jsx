@@ -97,9 +97,6 @@ export default class Exhau extends React.Component {
     return (
       <div>
         <h3>第三步、窮舉參數</h3>
-        <p className="note">
-          計算恆星年、近點月、交點月等參數。
-        </p>
         {this.input()}
         <button onClick={this.handle} className="button4-7">
           暴力

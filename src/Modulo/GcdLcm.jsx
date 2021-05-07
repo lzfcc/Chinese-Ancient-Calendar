@@ -11,10 +11,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width5">
-        <p className="note">
-          求多個整數或小數的最大公因數 gcd、最小公倍數 lcm
-          <span className="decimal64">.64</span>
-        </p>
         <input
           value={this.state.GcdLcmIn}
           onChange={e => {
@@ -52,7 +48,7 @@ export default class a extends React.Component {
         {this.input()}
         <button onClick={this.handle} className="button4-6">
           try
-        </button>
+        </button><span className="decimal64">.64</span>
         {this.result()}
       </div>
     );

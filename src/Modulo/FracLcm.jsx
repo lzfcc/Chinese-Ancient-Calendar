@@ -12,11 +12,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width5">
-        <p className="note">
-          求多組分數的最小公倍數 lcm，依次輸入各組分子、分母
-          <n>整數分母用 1 表示。</n>
-          <span className="decimal64">.64</span>
-        </p>
         <input
           value={this.state.FracLcmIn}
           onChange={e => {
@@ -54,7 +49,7 @@ export default class a extends React.Component {
         {this.input()}
         <button onClick={this.handle} className="button4-6">
           try
-        </button>
+        </button><span className="decimal64">.64</span>
         {this.result()}
       </div>
     );

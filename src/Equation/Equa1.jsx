@@ -22,7 +22,6 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <p className='note'>需要預先估計根所在的範圍，正負皆可。也可用來高次開方。<span className='decimal64'>.64</span></p>
         <input className='width2'
           value={this.state.nine1}
           onChange={e => {
@@ -130,7 +129,7 @@ export default class Equa extends React.Component {
       <div>
         <h3>二分迭代法</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-6'>解</button>
+        <button onClick={this.handle} className='button4-6'>解</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     );

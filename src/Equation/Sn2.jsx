@@ -13,7 +13,6 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <p className='note'>卽自然數平方級數求和。1+4+9+...+n^2 = 1/3 n (n+1) (n+1/2)=1/6 n (n+1) (2n+1)<span className='decimal64'>.64</span></p>
         <span>n</span>
         <input className='width3'
           value={this.state.Sn2N}
@@ -57,7 +56,7 @@ export default class Equa extends React.Component {
       <div>
         <h3>四角垛　方垛</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>解</button>
+        <button onClick={this.handle} className='button4-3'>解</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     );

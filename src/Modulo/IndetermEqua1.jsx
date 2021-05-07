@@ -11,8 +11,7 @@ export default class a extends React.Component {
     return (
       <span className="year-select width3">
         <p className="note">
-          ax - by = c 等價於 ax ≡ c (mod b)，有解的充要條件：(a,b)|c，卽 c 能被
-          a、b的最大公因數整除
+   
         </p>
         <input
           value={this.state.a}

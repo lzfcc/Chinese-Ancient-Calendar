@@ -48,9 +48,8 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>天文常數</h3>
-        <p className='note'>計算當年天文常數<span className='decimal64'>.64</span></p>
         {this.input()}
-        <button onClick={this.handle} className='button4-5'>每年都在變</button>
+        <button onClick={this.handle} className='button4-5'>每年都在變</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     )

@@ -121,9 +121,8 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>任意時刻太陽高度、方位角、晷長</h3>
-        <p className='note'>輸入年前冬至時刻<n>（例如計算 2020 年 12 月 29 日、2021 年 6 月 29 日，均輸入 2020 年 12 月 21 日冬至時刻。可通過廖育棟網站、壽星天文曆、日梭天文曆、中國天文年曆等査詢）</n>、該日距冬至的整數日數<n>（冬至當日爲 0）</n>、想要計算的時刻、地理緯度、影桿的高度<n>（北京約 39 度）</n>、公元年。程序將距冬至日數轉換爲眞黃經、赤緯。方位角正負：子線或午線以右以東爲負，以左以西爲正，本程序計算出的方位角不大於 90°<span className='decimal64'>.64</span></p>
         {this.input()}
-        <button onClick={this.handle} className='button4-1'>太強了</button>
+        <button onClick={this.handle} className='button4-1'>太強了</button><span className='decimal64'>.64</span>
         {this.result()}
       </div>
     )
