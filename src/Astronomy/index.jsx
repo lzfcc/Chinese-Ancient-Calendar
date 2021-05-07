@@ -13,7 +13,7 @@ import Cycle2Node from './EcliCycle'
 // import  BindEqua2Eclp from './' 
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import md1 from '../astronomy.md';
+import md1 from '../note/astronomy.md';
 
 export default class Astronomy extends React.Component {
   constructor(props) {
@@ -30,26 +30,28 @@ export default class Astronomy extends React.Component {
   render() {
     const { md } = this.state
     return (
-      <section className='modulo'>
-        <h2>躔離之什</h2>
-        <BindTcorr />
-        <h2>軌道之什</h2>
-        <BindEqua2Eclp />
-        <BindLongi2Lati />
-        <MoonLongi />
-        <h2>交食之什</h2>
-        <SunEclipse />
-        <MoonEclipse />
-        <Cycle2Node />
-        <Node2Cycle />
-        <h2>現代天文計算</h2>
-        <Deciaml2Angle />
-        <Const />
+      <>
+        <section className='modulo'>
+          <h2>躔離之什</h2>
+          <BindTcorr />
+          <h2>軌道之什</h2>
+          <BindEqua2Eclp />
+          <BindLongi2Lati />
+          <MoonLongi />
+          <h2>交食之什</h2>
+          <SunEclipse />
+          <MoonEclipse />
+          <Cycle2Node />
+          <Node2Cycle />
+          <h2>現代天文計算</h2>
+          <Deciaml2Angle />
+          <Const />
+        </section>
         <hr />
         <article>
           <ReactMarkdown rehypePlugins={[rehypeRaw]} children={md} />
         </article>
-      </section>
+      </>
     )
   }
 }

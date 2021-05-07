@@ -7,7 +7,7 @@ import SC from './SC'
 import Year from './Year'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import md1 from '../time.md';
+import md1 from '../note/time.md';
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -24,21 +24,23 @@ export default class Time extends React.Component {
   render() {
     const { md } = this.state
     return (
-      <section className="modulo">
-        <Clock />
-        <p></p>
-        <Clock1 />
-        <JD />
-        <p></p>
-        <Date />
-        <Year />
-        <p></p>
-        <SC />
+      <>
+        <section className="modulo">
+          <Clock />
+          <p></p>
+          <Clock1 />
+          <JD />
+          <p></p>
+          <Date />
+          <Year />
+          <p></p>
+          <SC />
+        </section>
         <hr />
         <article>
           <ReactMarkdown rehypePlugins={[rehypeRaw]} children={md} />
         </article>
-      </section>
+      </>
     );
   }
 }

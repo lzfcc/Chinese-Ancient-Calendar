@@ -59,6 +59,27 @@ article {
   width: 850px;
   text-align: justify;
   text-justify: inter-ideograph;
+  font-size: 1.1em;
+  line-height: 1.9;
+}
+
+article h2 {
+  font-size: 1.8em;
+}
+
+article h3 {
+  font-family: var(--serif);
+  font-size: 1.6em;
+}
+
+pre {
+  background: var(--bgblue);
+  border-radius: 1.5em;
+  padding: 1em .25em;
+}
+
+pre code{
+  background: none;
 }
 
 a {
@@ -98,6 +119,19 @@ b {
 v {
   border-bottom: .1em dashed var(--gray);
   margin: 0 .2em
+}
+
+q {
+  background: var(--bgpink);
+  border-radius: .2em;
+}
+
+q:before {
+  content: none
+}
+
+q:after {
+  content: none
 }
 
 n {

@@ -257,7 +257,7 @@ export const HushigeyuanWest = (LongiRaw, Sidereal, year) => { // 變量名見�
     const PQ = p * OP / q
     const BL = PC * BN / PQ
     const BD = RoundC2LWest(r, BL)
-    //////轉換為365.25度//////
+    //////轉換爲365.25度//////
     let Eclp2EquaDif = (EquaLongi - Longi) * portion4
     let Equa2EclpDif = (Longi - BD) * portion4
     Lati *= portion4
@@ -308,7 +308,7 @@ export const HushigeyuanMoon = (WinsolsDifRaw, NodeAccum) => { // 黃道度（�
     }
     let base = QuarSidereal
     if (WinsolsDifRaw >= HalfSidereal) {
-        base = ThreequarSidereal // 問題來了，為何不直接是黃白正交加距差？？？
+        base = ThreequarSidereal // 問題來了，爲何不直接是黃白正交加距差？？？
     }
     const NodeWhiteEqua_Equa = base + sign2 * a0 // 白赤正交赤度「月離赤道正交」
     const ElcpLongi = NodeWhiteEclp_Eclp + LongiPlus // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道

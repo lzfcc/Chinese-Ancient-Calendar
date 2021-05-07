@@ -16,7 +16,7 @@ import ExhauOrigin from './ExhauOrigin'
 import ExhauConst from './ExhauConst'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import md1 from '../modulo.md';
+import md1 from '../note/modulo.md';
 
 export default class Converter extends React.Component {
   constructor(props) {

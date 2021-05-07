@@ -14,7 +14,7 @@ import Round2 from './Round2'
 import Heron from './Heron'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import md1 from '../equation.md';
+import md1 from '../note/equation.md';
 
 export default class Equation extends React.Component {
   constructor(props) {
@@ -31,32 +31,34 @@ export default class Equation extends React.Component {
   render() {
     const { md } = this.state
     return (
-      <section className='modulo'>
-        <h2>垛積之什</h2>
-        <Sn1 />
-        <Sn5 />
-        <Sn2 />
-        <h2>內插之什</h2>
-        <Interpolate1 />
-        <Interpolate2 />
-        <Interpolate3 />
-        <h2>方程之什</h2>
-        <Equa1 />
-        <h2>幾何之什</h2>
-        <Round />
-        <Round2 />
-        <Round1 />
-        <h3>弧矢割圓術</h3>
-        <p className='note'><v>授時曆</v>黃赤轉換，見「天文」標籤</p>
-        <Heron />
-        {/* <h2>開方之什</h2>
+      <>
+        <section className='modulo'>
+          <h2>垛積之什</h2>
+          <Sn1 />
+          <Sn5 />
+          <Sn2 />
+          <h2>內插之什</h2>
+          <Interpolate1 />
+          <Interpolate2 />
+          <Interpolate3 />
+          <h2>方程之什</h2>
+          <Equa1 />
+          <h2>幾何之什</h2>
+          <Round />
+          <Round2 />
+          <Round1 />
+          <h3>弧矢割圓術</h3>
+          <p className='note'><v>授時曆</v>黃赤轉換，見「天文」標籤</p>
+          <Heron />
+          {/* <h2>開方之什</h2>
         <Sqrt1 />
         <Sqrt3 /> */}
+        </section>
         <hr />
         <article>
           <ReactMarkdown rehypePlugins={[rehypeRaw]} children={md} />
         </article>
-      </section>
+      </>
     )
   }
 }

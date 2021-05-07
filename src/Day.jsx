@@ -3,7 +3,7 @@ import { CalNameDayList } from './Cal/para_constant'
 import MenuSelect from './MenuSelect'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import md1 from './day.md';
+import md1 from './note/day.md';
 
 export default class Day extends React.Component {
   constructor(props) {

@@ -1,13 +1,10 @@
 import React from 'react'
-// import ReactDOM from 'react-dom';
 import { CalNameList } from './Cal/para_constant'
 import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
-import { TagPicker } from 'rsuite';
-import data3 from './data3.mjs'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import md1 from './newm.md';
+import md1 from './note/newm.md';
 const TableRowNameMap = {
   MonthPrint: ' ',
   NewmAvgScPrint: '平朔',
@@ -105,12 +102,12 @@ export default class Newm extends React.Component {
   //     </div>
   //   );
   // }
-  instance() {
-    return (
-      <div>
-        <TagPicker data={data3} groupBy="role" style={{ width: 300 }} />
-      </div>);
-  }
+  // instance() {
+  //   return (
+  //     <div>
+  //       <TagPicker data={data3} groupBy="role" style={{ width: 300 }} />
+  //     </div>);
+  // }
   renderCalendar() {
     const cals = CalNameList
     return (
