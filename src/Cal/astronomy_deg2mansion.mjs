@@ -1,8 +1,31 @@
+import { AutoLongi2Lati } from './bind_astronomy.mjs'
 import {
+    AutoMansion,
     MansionNameList,
 } from './para_constant.mjs' // 賦值解構
+import {
+    Bind
+} from './bind.mjs'
 
-export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, MansionFractPosition, NightList) => { // Deg2Mansion
+export const Deg2Mansion = (Accum, CalName, year, NewmWinsolsDifRaw, WinsolsDecimal) => { // Deg2Mansion
+    const {
+        AutoPara
+    } = Bind(CalName)
+    const {
+        SolarRaw,
+        AcrTermList,
+        WinsolsConst,
+        MansionConst,
+        MansionRaw,
+        MansionFractPosition
+    } = AutoPara[CalName]
+    let { Sidereal, Solar } = AutoPara[CalName]
+    const {
+        EquaDegList: DegListRaw
+    } = AutoMansion(CalName, year)
+    Solar = Solar || SolarRaw
+    Sidereal = Sidereal || Solar
+    const TermLeng = Solar / 12
     // 下預處理二十八宿列表
     let MansionDegList = []
     let MansionDegAccumList = []
@@ -11,7 +34,7 @@ export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, Ma
         MansionDegList = DegListRaw.slice()
         MansionDegList[MansionFractPosition] += Sidereal - ~~Sidereal
         MansionDegAccumList = MansionDegList.slice()
-        for (let i = 1; i <= 28; i++) {
+        for (let i = 1; i <= 28; i++) { // 從1開始索引
             MansionDegAccumList[i] += MansionDegAccumList[i - 1]
             MansionDegAccumList[i] = parseFloat((MansionDegAccumList[i]).toPrecision(10))
         }
@@ -20,46 +43,54 @@ export default (Accum, Solar, Sidereal, DegListRaw, MansionConst, MansionRaw, Ma
         MansionDegAccumList[29] = Sidereal
         Mansion = MansionDegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     }
-    // 上面的三個Sidereal之前是Solar
-    return Accum.map(a => {
+    let LongiRaw = []
+    if (NewmWinsolsDifRaw) { // 朔
+        LongiRaw = NewmWinsolsDifRaw
+    } else { // 中氣
+        if (AcrTermList) {
+            LongiRaw = AcrTermList
+        } else {
+            for (let i = 0; i <= 11; i++) {
+                LongiRaw[i] = TermLeng * (i + 2)
+            }
+        }
+    }
+    const MansionResult = []
+    const MidstarResult = []
+    for (let i = 0; i < (NewmWinsolsDifRaw.length || 12); i++) { // 這個括號不能刪
+        Accum[i] -= WinsolsConst || 0 // 授時要減去氣應？
         let MansionOrder = 0
-        let MansionResult = 0
-        let MansionAccum = 0
-        let MansionName = 0
-        let MansionDeg = 0
-        let MidstarRaw = 0
         let MidstarOrder = 0
-        let MidstarName = 0
-        let MidstarDeg = 0
-        let MidstarResult = 0
-        if (Mansion) {
-            MansionAccum = parseFloat((((Mansion + (MansionConst ? MansionConst : 0) + a) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(12))
-            for (let j = 1; j <= 28; j++) {
-                if (MansionDegAccumList[j] <= MansionAccum && MansionAccum < MansionDegAccumList[j + 1]) {
-                    MansionOrder = j
+        const MansionAccum = parseFloat((((Mansion + (MansionConst || 0) + Accum[i]) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(12))
+        for (let j = 1; j <= 28; j++) {
+            if (MansionDegAccumList[j] <= MansionAccum && MansionAccum < MansionDegAccumList[j + 1]) {
+                MansionOrder = j
+                break
+            }
+        }
+        const MansionName = MansionNameList[MansionOrder]
+        const MansionDeg = (MansionAccum - MansionDegAccumList[MansionOrder]).toFixed(3)
+        MansionResult[i] = MansionName + MansionDeg
+        /////////昏中星/////////       
+        // 昏中=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
+        if (WinsolsDecimal) {
+            const Sunrise = AutoLongi2Lati(LongiRaw[i] % Solar, WinsolsDecimal, CalName).Sunrise / 100
+            // const MidstarRaw = (MansionAccum + (0.5 - Sunrise) * Sidereal - Sunrise + 1 + Sidereal) % Sidereal
+            const MidstarRaw = (MansionAccum + (0.5 - Sunrise + 0.025) * Sidereal + Sidereal) % Sidereal
+            for (let k = 1; k <= 28; k++) {
+                if (MansionDegAccumList[k] < MidstarRaw && MidstarRaw < MansionDegAccumList[k + 1]) {
+                    MidstarOrder = k
                     break
                 }
             }
-            MansionName = MansionNameList[MansionOrder]
-            MansionDeg = (MansionAccum - MansionDegAccumList[MansionOrder]).toFixed(3)
-            MansionResult = MansionName + MansionDeg
-            /////////昏中星/////////
-            if (NightList) {
-                MidstarRaw = MansionAccum + ((100 - 2 * NightList[Math.round(MansionAccum / 24) + 1]) * Sidereal - 2 * NightList[Math.round(MansionAccum / 24) + 1]) / 200 + 1
-                MidstarRaw = ((MidstarRaw + Sidereal) % Sidereal)
-                for (let k = 1; k <= 28; k++) {
-                    if (MansionDegAccumList[k] < MidstarRaw && MidstarRaw < MansionDegAccumList[k + 1]) {
-                        MidstarOrder = k
-                    }
-                }
-                MidstarName = MansionNameList[MidstarOrder]
-                MidstarDeg = (MidstarRaw - MansionDegAccumList[MidstarOrder]).toFixed(3)
-                MidstarResult = MidstarName + MidstarDeg
-            }
+            const MidstarName = MansionNameList[MidstarOrder]
+            const MidstarDeg = (MidstarRaw - MansionDegAccumList[MidstarOrder]).toFixed(3)
+            MidstarResult[i] = MidstarName + MidstarDeg
         }
-        return {
-            MansionResult,
-            MidstarResult
-        }
-    })
+    }
+    return {
+        MansionResult,
+        MidstarResult
+    }
 }
+// console.log(Deg2Mansion([134141, 1414131], 'Yuanjia', 500, [34.15, 144]).MansionResult)

@@ -106,6 +106,7 @@ export default function CalQuar(CalName, year) {
     const NewmOrderRaw = []
     const NewmOrderMod = []
     const NewmAvgSc = []
+    const NewmWinsolsDifRaw = [] // 朔距冬至日數
     const NewmAvgDecimal = []
     const SyzygyAvgRaw = []
     const SyzygyAvgMod = []
@@ -120,6 +121,7 @@ export default function CalQuar(CalName, year) {
         NewmOrderMod[i] = ~~NewmAvgMod[i]
         NewmAvgSc[i] = ScList[NewmOrderMod[i]]
         NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(4).slice(2, 6)
+        NewmWinsolsDifRaw[i] = NewmAvgBare[i] - WinsolsAccumRaw
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdWinsols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
         SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr || 0)).toPrecision(14)) + BuScorder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
@@ -223,6 +225,7 @@ export default function CalQuar(CalName, year) {
         // NewmJd,
         // NewmMmdd,
         NewmAvgDecimal,
+        NewmWinsolsDifRaw,
         SyzygySc,
         SyzygyDecimal,
         TermAvgBare,

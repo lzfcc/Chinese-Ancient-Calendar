@@ -4,7 +4,7 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(2, 233, 239, 0, [ // mode, YearStart, YearEnd, auto,
+const printData = outputFile(1, 234, 238, 0, [ // mode, YearStart, YearEnd, auto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -27,7 +27,7 @@ const printData = outputFile(2, 233, 239, 0, [ // mode, YearStart, YearEnd, auto
     // 'Shiji',
     // 'Taichu',
     // 'Qianzaodu',
-    // 'Easthan', // 上四分系
+    'Easthan', // 上四分系
     // 'Qianxiang',
     // 'Huangchu',
     // 'Jingchu',
@@ -54,7 +54,7 @@ const printData = outputFile(2, 233, 239, 0, [ // mode, YearStart, YearEnd, auto
     // 'Liuxiaosun',
     // 'Huangji',
     // 'Linde', // 上隋、初唐系
-    'Dayan', // 大衍入轉日感覺少了0.5
+    // 'Dayan', // 大衍入轉日感覺少了0.5
     // 'Zhide',
     // 'Wuji',
     // 'Zhengyuan',
@@ -91,7 +91,7 @@ const printData = outputFile(2, 233, 239, 0, [ // mode, YearStart, YearEnd, auto
     // 'Huihui', 
 ]) // 注意，-1000年爲公元前1001年，因爲沒有公元0年
 
-const FilePath = './output1.md'
+const FilePath = 'output.md'
 if (fs.existsSync(FilePath)) {
     fs.unlinkSync(FilePath)
 }

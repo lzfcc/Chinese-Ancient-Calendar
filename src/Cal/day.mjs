@@ -48,7 +48,7 @@ import {
     AutoDifAccum,
     AutoMoonAvgV
 } from './astronomy_acrv.mjs'
-import Deg2Mansion from './astronomy_deg2mansion.mjs'
+import { Deg2Mansion } from './astronomy_deg2mansion.mjs'
 import {
     Jd2Date1
 } from './time_jd2date.mjs'

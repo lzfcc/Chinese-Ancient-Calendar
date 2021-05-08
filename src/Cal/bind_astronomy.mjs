@@ -271,11 +271,19 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
 }
 // console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
-export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => {
+export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
     const {
         Type,
+        AutoPara
     } = Bind(CalName)
-    LongiRaw += 0.5 - WinsolsDecimal // 以正午爲準
+    const {
+        SolarRaw
+    } = AutoPara[CalName]
+    let {
+        Solar
+    } = AutoPara[CalName]
+    Solar = Solar || SolarRaw
+    LongiRaw += WinsolsDecimal - 0.5 // 以正午爲準
     let Longi2Lati = {}
     let Longi2LatiA = {}
     let Longi2LatiB = {}

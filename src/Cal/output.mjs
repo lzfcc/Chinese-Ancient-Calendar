@@ -25,6 +25,7 @@ const PrintNewm = result => {
         TermAcrDecimalPrint,
         TermScPrint,
         TermDecimalPrint,
+        TermEquaPrint,
         TermMidstarPrint,
     } = result
     let Print = YearInfo
@@ -53,6 +54,7 @@ const PrintNewm = result => {
         Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDecimalPrint.join(' ') + '\n'
     }
     if (TermMidstarPrint[1] !== 0) {
+        Print += '**氣赤**' + TermEquaPrint.join(' ') + '\n'
         Print += '**昏中** ' + TermMidstarPrint.join(' ') + '\n'
     }
     return Print + '\n'
@@ -274,7 +276,7 @@ export const outputData = (start, end, auto, list) => {
     const outputData = []
     start = parseInt(start)
     end = parseInt(end)
-    list.forEach((CalName) => {
+    list.forEach(CalName => {
         let Year = start
         CalNewm(CalName, start, end).forEach((result, index) => {
             Year = start + index

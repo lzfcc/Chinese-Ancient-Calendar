@@ -22,6 +22,7 @@ const TableRowNameMap = {
   TermAcrDecimalPrint: ' ',
   TermScPrint: '平氣',
   TermDecimalPrint: ' ',
+  TermEquaPrint: '氣赤',
   TermMidstarPrint: '昏中'
 }
 const heightCache = createCache();
@@ -114,7 +115,7 @@ export default class Newm extends React.Component {
       <div className='calendar-select'>
         <MenuSelect
           calMap={cals}
-          onSelect={(selected) => {
+          onSelect={selected => {
             this.setState({ calendars: selected })
           }}
         />
