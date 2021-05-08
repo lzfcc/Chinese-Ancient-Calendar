@@ -189,7 +189,7 @@ export const ContinuedFrac1 = x => {
 //             z = z.slice(0, -1)
 //             break
 //         }
-//         Result += '(' + Number(i + 1) + ') ' + p[i + 1] + '/' + q[i + 1] + '\n'
+//         Result += '(' + Number(i + 1) + ') ' + p[i + 1] + '/' + q[i + 1] + `\n`
 //         i++
 //     }
 //     const zPrint = a + ' = [' + z + ']'

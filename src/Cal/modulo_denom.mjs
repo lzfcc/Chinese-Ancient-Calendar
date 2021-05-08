@@ -8,30 +8,30 @@ import {
 
 export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強弱之數」：日法朔餘都要有。有些宋曆算不出來，不知道是不是我寫的有問題。
     const Small = CongruenceModulo(BigNumer, BigDenom) // 此三行已知強率，以大衍求一術求弱率
-    const SmallNumer = Number(Small.SmallNumer)
-    const SmallDenom = Number(Small.Result)
+    const SmallNumer = +(Small.SmallNumer)
+    const SmallDenom = +(Small.Result)
     const SmallPrint = '弱率 ' + SmallNumer + '/' + SmallDenom + ' ≒ ' + parseFloat((SmallNumer / SmallDenom).toPrecision(12))
-    a = Number(a)
-    b = Number(b)
-    BigNumer = Number(BigNumer)
-    BigDenom = Number(BigDenom)
+    a = +a
+    b = +b
+    BigNumer = +BigNumer
+    BigDenom = +BigDenom
     if (a / b > BigNumer / BigDenom) {
         throw (new Error('大於彊率，無法求解！'))
     } else if (a / b < SmallNumer / SmallDenom && a / b > 0) {
         throw (new Error('小於弱率，無法求解！'))
     }
-    if (Math.floor(a) !== a) { //這行是處理小數。輸入的一般都是整數，萬一有小數，一位*10，兩位*100
-        a = a * 10
-        b = b * 10
-        if (Math.floor(a) !== a) {
-            a = a * 10
-            b = b * 10
+    if (~~a !== a) { //這行是處理小數。輸入的一般都是整數，萬一有小數，一位*10，兩位*100
+        a *= 10
+        b *= 10
+        if (~~a !== a) {
+            a *= 10
+            b *= 10
         }
     }
     const gcd = GcdLcm(a, b).gcd // 求最大公因數
     ////////李銳「有日法求強弱」：只需要日法卽可。但是弱數要<強母，否則解不出來，這也是因爲如果大於強母，則日法積分太多。李繼閔《再評清代學者的調日法研究》
     const K = CongruenceModulo(SmallDenom, BigDenom)
-    const J1 = Number(K.Result) * SmallDenom
+    const J1 = +(K.Result) * SmallDenom
     const N1 = SmallDenom * BigDenom
     const tmp1 = ((b % BigDenom) * J1) % N1
     const M2_2 = tmp1 / SmallDenom
@@ -43,11 +43,6 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     const Result2b = b1_2 + ' = ' + BigDenom + '×' + M1_2 + ' + ' + SmallDenom + '×' + M2_2
     const Result2c = parseFloat((a1_2 / b1_2).toPrecision(12))
     const Result = []
-    Result.push({
-        title: Result2Title,
-        data: [Result2a, Result2b, Result2c]
-    })
-
     ////////陳久金調日法公式（《調日法研究》）顧觀光用輾轉相減，化簡後就是陳久金公式 
     const M1_3 = a * SmallDenom - b * SmallNumer
     const M2_3 = b * BigNumer - a * BigDenom
@@ -57,11 +52,6 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     const Result3a = a1_3 + ' = ' + BigNumer + '×' + M1_3 + ' + ' + SmallNumer + '×' + M2_3
     const Result3b = b1_3 + ' = ' + BigDenom + '×' + M1_3 + ' + ' + SmallDenom + '×' + M2_3
     const Result3c = parseFloat((a1_3 / b1_3).toPrecision(12))
-    Result.push({
-        title: Result3Title,
-        data: [Result3a, Result3b, Result3c]
-    })
-
     ///////////李銳：累強弱之數
     // | 弱母      強母 |  a朔餘，b日法，BigNumer彊子，BigDenom彊母，SmallNumer弱子，SmallDenom弱母
     // | 弱子      強子 |
@@ -78,8 +68,8 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     let Node = []
     let i = 0
     if (gcd !== 1) {
-        a = a / gcd
-        b = b / gcd
+        a /= gcd
+        b /= gcd
     }
     const Decimal = (M1_1, M2_1) => (BigNumer * M1_1 + SmallNumer * M2_1) / (BigDenom * M1_1 + SmallDenom * M2_1)
     while (b1_1 < b) {
@@ -103,10 +93,17 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     const Result1c = parseFloat((a1_1 / b1_1).toPrecision(12))
     const Foot = '最大公因數：' + gcd + `。累彊弱法各漸進分數：\n` + Node
     Result.push({
+        title: Result2Title,
+        data: [Result2a, Result2b, Result2c]
+    })
+    Result.push({
+        title: Result3Title,
+        data: [Result3a, Result3b, Result3c]
+    })
+    Result.push({
         title: Result1Title,
         data: [Result1a, Result1b, Result1c]
     })
-
     return {
         SmallPrint,
         Result,

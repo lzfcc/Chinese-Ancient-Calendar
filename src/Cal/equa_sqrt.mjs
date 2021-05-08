@@ -6,7 +6,7 @@ import {
 export const SqrtA = (Input, Mode) => {
     Mode = parseInt(Mode)
     if (Mode < 2 || Mode > 3) {
-        throw (new Error('【開方】請輸入2或3！'))
+        throw (new Error('[開方]請輸入2或3！'))
     }
     let c = SliceNum(Input, Mode).cString
     const z = SliceNum(Input, Mode).a
@@ -48,12 +48,12 @@ export const SqrtA = (Input, Mode) => {
     a = a.toString()
     const tmp1 = a.slice(0, LenAns)
     const tmp2 = a.slice(LenAns)
-    let ans = parseFloat((Number(tmp1.concat('.').concat(tmp2))).toPrecision(14))
+    let ans = parseFloat((+(tmp1.concat('.').concat(tmp2))).toPrecision(14))
     let Print = ans + ' ^ 2 = ' + parseFloat(((ans ** Mode)).toPrecision(14))
     if (Mode === 3) {
         Print = ans + ' ^ 3 = ' + parseFloat(((ans ** Mode)).toPrecision(14))
     }
-    Input = Number(Input)
+    Input = +Input
     a = parseInt(a)
     if (Mode === 2) {
         if (parseFloat(((ans ** Mode)).toPrecision(14)) !== Input) {

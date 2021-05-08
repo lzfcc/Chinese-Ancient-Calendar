@@ -45,7 +45,7 @@ export const Bind = CalName => {
         //     AutoPara = P2
         //     Type = 12 // 回回
         // }
-        else if (['West'].includes(CalName)) {
+        else if (CalName === 'West') {
             Type = 20
         }
     }

@@ -8,8 +8,8 @@ export const ExhauDenom = (lower, upper, End) => {
     if (End !== 1 && End !== 10 && End !== 100 && End !== 1000) {
         throw (new Error('請輸入 1, 10, 100, 1000'))
     }
-    lower = Number(lower)
-    upper = Number(upper)
+    lower = +lower
+    upper = +upper
     if (lower > upper) {
         throw (new Error('lower > upper !'))
     }
@@ -18,7 +18,7 @@ export const ExhauDenom = (lower, upper, End) => {
     while (i < 40000) {
         const LunarFrac = IndetermEqua(49, 17, i).LunarFrac1
         const Lunar = LunarFrac / i
-        if (Lunar > lower && Lunar < upper && (i / End === Math.floor(i / End))) {
+        if (Lunar > lower && Lunar < upper && (i / End === ~~(i / End))) {
             Denom += LunarFrac + '/' + i + ', '
         }
         i++
@@ -29,14 +29,14 @@ export const ExhauDenom = (lower, upper, End) => {
 // 暴力求上元演紀
 export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUpper, FirstLower, FirstUpper) => {
     // 會天1256年中冬至癸丑卯正初刻
-    const SolarNumer = Math.round(Number('0.' + SolarRaw) * Denom)
+    const SolarNumer = Math.round(+('0.' + SolarRaw) * Denom)
     const Solar = SolarNumer / Denom + 365
-    LunarNumer = Number(LunarNumer)
-    Denom = Number(Denom)
-    OriginLower = Number(OriginLower)
-    OriginUpper = Number(OriginUpper)
-    FirstLower = Number(FirstLower)
-    FirstUpper = Number(FirstUpper)
+    LunarNumer = +LunarNumer
+    Denom = +Denom
+    OriginLower = +OriginLower
+    OriginUpper = +OriginUpper
+    FirstLower = +FirstLower
+    FirstUpper = +FirstUpper
 
     const Lunar = 29 + LunarNumer / Denom
     let i = 100000
@@ -61,19 +61,19 @@ export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUppe
 }
 
 export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper) => {
-    SolarNumer = Number(SolarNumer)
+    SolarNumer = +SolarNumer
     Denom = parseInt(Denom)
     year = parseInt(year)
     const Solar = 365 + SolarNumer / Denom
     const OriginAccum = year * Solar
     x = String(x)
-    const x1 = Number('0.' + x.split('.')[1])
-    const FracInt = Math.floor(Denom * x1)
-    const Int = Number(x.split('.')[0])
-    x = Number(x)
-    Range = Number(Range)
-    lower = Number(lower)
-    upper = Number(upper)
+    const x1 = +('0.' + x.split('.')[1])
+    const FracInt = ~~(Denom * x1)
+    const Int = +(x.split('.')[0])
+    x = +x
+    Range = +Range
+    lower = +lower
+    upper = +upper
     let result = ''
     for (let i = 1; i <= 20000; i++) {
         const Anoma = Int + (FracInt + i * 0.0001) / Denom

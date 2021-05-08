@@ -17,7 +17,7 @@ const PrintNewm = result => {
         NewmDecimal2Print,
         NewmDecimal1Print,
         // NewmMmddPrint,
-        NewmMansionPrint,
+        NewmEquaPrint,
         SyzygyScPrint,
         SyzygyDecimalPrint,
         TermNamePrint,
@@ -29,35 +29,35 @@ const PrintNewm = result => {
         TermMidstarPrint,
     } = result
     let Print = YearInfo
-    Print += '\n**月** ' + MonthPrint.join(' ') + '\n'
+    Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
     if (NewmScPrint.length > 0) {
-        Print += '**定朔** ' + NewmScPrint.join(' ') + '\n'
+        Print += '**定朔** ' + NewmScPrint.join(' ') + `\n`
         if (NewmDecimal3Print.length > 0) {
-            Print += '**三次** ' + NewmDecimal3Print.join(' ') + '\n'
+            Print += '**三次** ' + NewmDecimal3Print.join(' ') + `\n`
         }
         if (NewmDecimal2Print.length > 0) {
-            Print += '**二次** ' + NewmDecimal2Print.join(' ') + '\n'
+            Print += '**二次** ' + NewmDecimal2Print.join(' ') + `\n`
         }
         if (NewmDecimal1Print.length > 0) {
-            Print += '**線性** ' + NewmDecimal1Print.join(' ') + '\n'
+            Print += '**線性** ' + NewmDecimal1Print.join(' ') + `\n`
         }
-        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + '\n'
+        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + `\n`
     } else {
-        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + '\n'
+        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + `\n`
     }
-    if (NewmMansionPrint.length > 0) {
-        Print += '**赤度** ' + NewmMansionPrint.join(' ') + '\n'
+    if (NewmEquaPrint.length > 0) {
+        Print += '**赤度** ' + NewmEquaPrint.join(' ') + `\n`
     }
-    Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDecimalPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + '\n'
-    Print += '**平氣** ' + TermScPrint.join(' ') + '\n**分** ' + TermDecimalPrint.join(' ') + '\n'
+    Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDecimalPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
+    Print += '**平氣** ' + TermScPrint.join(' ') + '\n**分** ' + TermDecimalPrint.join(' ') + `\n`
     if (TermAcrScPrint.length > 0) {
-        Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDecimalPrint.join(' ') + '\n'
+        Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDecimalPrint.join(' ') + `\n`
     }
     if (TermMidstarPrint[1] !== 0) {
-        Print += '**氣赤**' + TermEquaPrint.join(' ') + '\n'
-        Print += '**昏中** ' + TermMidstarPrint.join(' ') + '\n'
+        Print += '**氣赤**' + TermEquaPrint.join(' ') + `\n`
+        Print += '**昏中** ' + TermMidstarPrint.join(' ') + `\n`
     }
-    return Print + '\n'
+    return Print + `\n`
 }
 
 const PrintDay = result => {
@@ -86,125 +86,125 @@ const PrintDay = result => {
         ManGod,
         Luck,
     } = result
-    let Print = Era + `\n` + DayAccum + '\n' + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
+    let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
     Print += '\n**干支**\n'
     for (let i = 1; i < Sc.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += Sc[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     Print += '\n**儒略日**\n'
     for (let i = 1; i < Jd.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += Jd[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     Print += '\n**納音建除**\n'
     for (let i = 1; i < Nayin.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += Nayin[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     if ((Week || []).length > 0) {
         Print += '\n**値日**\n'
         for (let i = 1; i < Week.length; i++) {
-            Print += MonName[i] + '\n'
+            Print += MonName[i] + `\n`
             Print += Week[i].slice(1).join(' ')
-            Print += '\n'
+            Print += `\n`
         }
     }
     Print += '**日赤經**\n'
     for (let i = 1; i < EquartorPrint.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += EquartorPrint[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     // if ((EquartorPrint || []).length > 0) {
     Print += '**日黃經**\n'
     for (let i = 1; i < EquartorPrint.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += EclpPrint[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     // }
     // if ((Lati || []).length > 0) {
     Print += '\n**日赤緯**\n'
     for (let i = 1; i < Lati.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += Lati[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     // }
     Print += '\n**日出**\n'
     for (let i = 1; i < Sunrise.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += Sunrise[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     if (MidstarPrint) {
         Print += '\n**昏中星**\n'
         for (let i = 1; i < MidstarPrint.length; i++) {
-            Print += MonName[i] + '\n'
+            Print += MonName[i] + `\n`
             Print += MidstarPrint[i].slice(1).join(' ') // 一定注意，這是兩個坑
-            Print += '\n'
+            Print += `\n`
         }
     }
     if ((Dial || []).length > 0) {
         Print += '\n**晷長**\n'
         for (let i = 1; i < Dial.length; i++) {
-            Print += MonName[i] + '\n'
+            Print += MonName[i] + `\n`
             Print += Dial[i].slice(1).join(' ')
-            Print += '\n'
+            Print += `\n`
         }
     }
 
     if ((MoonEclpPrint || []).length > 0) {
         Print += '**月黃經**\n'
         for (let i = 1; i < MoonEclpPrint.length; i++) {
-            Print += MonName[i] + '\n'
+            Print += MonName[i] + `\n`
             Print += MoonEclpPrint[i].slice(1).join(' ')
-            Print += '\n'
+            Print += `\n`
         }
     }
     if ((MoonEclpLati || []).length > 0) {
         Print += '**月黃緯**\n'
         for (let i = 1; i < MoonEclpLati.length; i++) {
-            Print += MonName[i] + '\n'
+            Print += MonName[i] + `\n`
             Print += MoonEclpLati[i].slice(1).join(' ')
-            Print += '\n'
+            Print += `\n`
         }
     }
     // if ((HouName || []).length > 0) {
     Print += '**候**\n'
     for (let i = 1; i < HouName.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += HouName[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     // }
     // if ((HexagramName || []).length > 0) {
     Print += '**卦、土王用事**\n'
     for (let i = 1; i < HexagramName.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += HexagramName[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     // }
     Print += '**人神**\n'
     for (let i = 1; i < ManGod.length; i++) {
-        Print += MonName[i] + '\n'
+        Print += MonName[i] + `\n`
         Print += ManGod[i].slice(1).join(' ')
-        Print += '\n'
+        Print += `\n`
     }
     if ((Luck || []).length > 0) {
         Print += '**日神**\n'
         for (let i = 1; i < Luck.length; i++) {
-            Print += MonName[i] + '\n'
+            Print += MonName[i] + `\n`
             Print += Luck[i].slice(1).join(' ')
-            Print += '\n'
+            Print += `\n`
         }
     }
-    return Print + '\n'
+    return Print + `\n`
 }
 
 /**

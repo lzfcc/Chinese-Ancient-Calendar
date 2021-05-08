@@ -1,6 +1,10 @@
 import big from 'decimal.js'
 import frc from 'fraction.js'
 import nzh from 'nzh/hk.js'
+import {
+    Bind
+} from './bind.mjs'
+
 big.config({
     precision: 64,
     toExpNeg: -17,
@@ -269,42 +273,69 @@ const EclpDegJiyuan = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9,
 const EclpDegNewDaming = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18.25, 9.5, 17.75, 12.75, 15.5, 11, 16.5, 0.5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5] // 重修大明、庚午
 const EclpDegShoushi = [0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34, 17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28, 31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75] // 黃道度
 
-export const AutoMansion = (CalName, year) => {
-    let EquaDegList = [] // 不同時期用不同的宿度
-    if (year >= 1260) {
-        EquaDegList = EquaDegShoushi
-    } else if (year >= 1100) {
-        EquaDegList = EquaDegJiyuan
-    } else if (year >= 724) {
-        EquaDegList = EquaDegDayan
+export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是黃道度
+    const {
+        AutoPara
+    } = Bind(CalName)
+    const {
+        Solar,
+        SolarRaw,
+        MansionRaw,
+        MansionFractPosition
+    } = AutoPara[CalName]
+    let {
+        Sidereal
+    } = AutoPara[CalName]
+    let DegListRaw = [] // 不同時期用不同的宿度
+    if (isEclp) {
+        if (year >= 1281) {
+            DegListRaw = EclpDegShoushi
+        } else if (CalName === 'NewDaming') {
+            DegListRaw = EclpDegNewDaming
+        } else if (year >= 1106) {
+            DegListRaw = EclpDegJiyuan
+        } else if (year >= 1065) {
+            DegListRaw = EclpDegMingtian
+        } else if (year >= 964) {
+            DegListRaw = EclpDegYingtian
+        } else if (year >= 729) {
+            DegListRaw = EclpDegDayan
+        } else if (year >= 665) {
+            DegListRaw = EclpDegLinde
+        } else if (CalName === 'Huangji') {
+            DegListRaw = EclpDegHuangji
+        } else {
+            DegListRaw = EclpDegEasthan
+        }
     } else {
-        EquaDegList = EquaDegTaichu
+        if (year >= 1260) {
+            DegListRaw = EquaDegShoushi
+        } else if (year >= 1100) {
+            DegListRaw = EquaDegJiyuan
+        } else if (year >= 724) {
+            DegListRaw = EquaDegDayan
+        } else {
+            DegListRaw = EquaDegTaichu
+        }
     }
-    let EclpDegList = []
-    if (year >= 1281) {
-        EclpDegList = EclpDegShoushi
-    } else if (CalName === 'NewDaming') {
-        EclpDegList = EclpDegNewDaming
-    } else if (year >= 1106) {
-        EclpDegList = EclpDegJiyuan
-    } else if (year >= 1065) {
-        EclpDegList = EclpDegMingtian
-    } else if (year >= 964) {
-        EclpDegList = EclpDegYingtian
-    } else if (year >= 729) {
-        EclpDegList = EclpDegDayan
-    } else if (year >= 665) {
-        EclpDegList = EclpDegLinde
-    } else if (CalName === 'Huangji') {
-        EclpDegList = EclpDegHuangji
-    } else {
-        EclpDegList = EclpDegEasthan
+    Sidereal = Sidereal || (Solar || SolarRaw)
+    let DegList = []
+    let DegAccumList = []
+    if (MansionRaw) {
+        DegList = DegListRaw.slice()
+        DegList[MansionFractPosition] += Sidereal - ~~Sidereal
+        DegAccumList = DegList.slice()
+        for (let i = 1; i <= 28; i++) { // 從1開始索引
+            DegAccumList[i] += DegAccumList[i - 1]
+            DegAccumList[i] = parseFloat((DegAccumList[i]).toPrecision(10))
+        }
+        DegAccumList = DegAccumList.slice(-1).concat(DegAccumList.slice(0, -1))
+        DegAccumList[0] = 0
+        DegAccumList[29] = Sidereal
     }
-    return {
-        EquaDegList,
-        EclpDegList
-    }
+    return DegAccumList
 }
+
 export const WestGongNameList = ['白羊', '金牛', '陰陽', '巨蟹', '獅子', '雙女', '天秤', '天蝎', '人馬', '磨羯', '寶瓶', '雙魚'] // 回回曆法
 export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30] // 已上十二宮，所謂不動之月，凡三百六十五日，乃歲周之日也。若遇宮分有閏之年，於雙魚宮加一日，凡三百六十六日
 

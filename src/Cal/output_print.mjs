@@ -4,7 +4,7 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 234, 238, 0, [ // mode, YearStart, YearEnd, auto,
+const printData = outputFile(1, 233, 234, 0, [ // mode, YearStart, YearEnd, auto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -28,7 +28,7 @@ const printData = outputFile(1, 234, 238, 0, [ // mode, YearStart, YearEnd, auto
     // 'Taichu',
     // 'Qianzaodu',
     'Easthan', // 上四分系
-    // 'Qianxiang',
+    'Qianxiang',
     // 'Huangchu',
     // 'Jingchu',
     // 'Liuzhi',
@@ -99,7 +99,7 @@ printData.forEach(contents => {
     contents.forEach(content => {
         fs.appendFileSync(FilePath, content)
     })
-    fs.appendFileSync(FilePath, '\n')
+    fs.appendFileSync(FilePath, `\n`)
 })
 
 // console.log('耗時 ', (new Date() - date) / 1000, 's')

@@ -87,7 +87,7 @@ export const CongruenceModulo = (aRaw, bRaw) => { // 大衍求一術：奇數 * 
         Result = big.sub(L1, L2).mul(sign)
     }
     if (big.mul(aRaw, Result).mod(bRaw).eq(1)) {} else {
-        throw (new Error('【大衍求一】兩數不互質！'))
+        throw (new Error('[大衍求一] 兩數不互質！'))
     }
     const Yong = big.mul(aRaw, Result) // 乘率對乘衍數得泛用
     const Print = aRaw + ' × ' + Result + ' = ' + Yong + ' ≡ ' + big.mod(Yong, bRaw) + ' (mod ' + bRaw + ')'

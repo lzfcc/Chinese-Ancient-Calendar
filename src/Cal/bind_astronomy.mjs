@@ -152,7 +152,14 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 export const AutoEqua2Eclp = (LongiRaw, CalName) => {
     const {
         Type,
+        AutoPara
     } = Bind(CalName)
+    const {
+        Sidereal,
+        Solar,
+        SolarRaw
+    } = AutoPara[CalName]
+    LongiRaw %= (Sidereal || (Solar || SolarRaw))
     let Equa2Eclp = 0
     let Eclp2Equa = 0
     let Equa2EclpDif = 0
@@ -277,12 +284,10 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         AutoPara
     } = Bind(CalName)
     const {
+        Solar,
         SolarRaw
     } = AutoPara[CalName]
-    let {
-        Solar
-    } = AutoPara[CalName]
-    Solar = Solar || SolarRaw
+    LongiRaw %= (Solar || SolarRaw)
     LongiRaw += WinsolsDecimal - 0.5 // 以正午爲準
     let Longi2Lati = {}
     let Longi2LatiA = {}

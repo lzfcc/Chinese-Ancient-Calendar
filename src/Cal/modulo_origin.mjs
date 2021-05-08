@@ -115,7 +115,7 @@ export const Sunzi = function () {
             while (ci - 1 - Num2 >= 0) {
                 const gcd = GcdLcm(Ding[ci], Ding[ci - 1 - Num2]).gcd
                 const rRawDif = Math.abs(rRaw[ci] - rRaw[ci - 1 - Num2])
-                if (rRawDif / gcd !== Math.floor(rRawDif / gcd)) {
+                if (rRawDif / gcd !== ~~(rRawDif / gcd)) {
                     throw (new Error('【大衍總數｜定母】' + Ding[ci] + ',' + Ding[ci - 1 - Num2] + '不滿足 (a,b)|c，無解！'))
                 }
                 Num2++
@@ -171,11 +171,11 @@ export const IndetermEqua1 = (a, b, z) => { // 二元一次不定方程
         z = -z
     }
     const gcd = GcdLcm(a, b).gcd
-    if (gcd > 1 && (z / gcd === Math.floor(z / gcd))) {
+    if (gcd > 1 && (z / gcd === ~~(z / gcd))) {
         a /= gcd
         b /= gcd
         z /= gcd
-    } else if (gcd > 1 && (z / gcd !== Math.floor(z / gcd))) {
+    } else if (gcd > 1 && (z / gcd !== ~~(z / gcd))) {
         throw (new Error('不滿足有解的充要條件！'))
     }
     const tmp = b
@@ -185,7 +185,7 @@ export const IndetermEqua1 = (a, b, z) => { // 二元一次不定方程
         a = tmp
         isExchange = 1
     }
-    const u = Number(CongruenceModulo(a, b).Result)
+    const u = ~~(CongruenceModulo(a, b).Result)
     let x = []
     let y = []
     x[0] = (u * z % b) // x≡ u * z(mod b)
@@ -216,17 +216,17 @@ export const IndetermEqua = (a, b, z) => { // a彊母b弱母
         b = -b
         z = -z
     }
-    const SmallNumer = b - Number(CongruenceModulo(a, b).Result)
+    const SmallNumer = b - ~~(CongruenceModulo(a, b).Result)
     const BigNumer = (1 + a * SmallNumer) / b
     const gcd = GcdLcm(a, b).gcd
-    if (gcd > 1 && (z / gcd === Math.floor(z / gcd))) {
+    if (gcd > 1 && (z / gcd === ~~(z / gcd))) {
         a /= gcd
         b /= gcd
         z /= gcd
-    } else if (gcd > 1 && (z / gcd !== Math.floor(z / gcd))) {
+    } else if (gcd > 1 && (z / gcd !== ~~(z / gcd))) {
         throw (new Error('【秦調日法】不滿足有解的充要條件！'))
     }
-    const u = Number(CongruenceModulo(a, b).Result)
+    const u = ~~(CongruenceModulo(a, b).Result)
     let x = []
     let y = []
     x[0] = (u * z % b) // x≡ u * z(mod b)
@@ -318,10 +318,10 @@ export const IndetermEqua = (a, b, z) => { // a彊母b弱母
 
 //////////////////// 求章法元法
 export const ZhangModulo = (SolarFrac, SolarDenom, LunarFrac, Denom) => {
-    SolarFrac = Number(SolarFrac)
-    SolarDenom = Number(SolarDenom)
-    LunarFrac = Number(LunarFrac)
-    Denom = Number(Denom)
+    SolarFrac = +SolarFrac
+    SolarDenom = +SolarDenom
+    LunarFrac = +LunarFrac
+    Denom = +Denom
     // let Type = 0
     // if (SolarDenom === Denom) { // 唐宋
     //     Type = 2
@@ -388,10 +388,10 @@ export const ZhangModulo = (SolarFrac, SolarDenom, LunarFrac, Denom) => {
 
 // 四分魏晉南北曆推算入元年
 export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginConstRaw, FirstConstRaw) => { //  LunarFrac,
-    SolarFrac = Number(SolarFrac)
-    SolarDenom = Number(SolarDenom)
-    LunarFrac = Number(LunarFrac)
-    Denom = Number(Denom)
+    SolarFrac = +SolarFrac
+    SolarDenom = +SolarDenom
+    LunarFrac = +LunarFrac
+    Denom = +Denom
     const OriginConstNumer = Frac2FalseFrac(OriginConstRaw).Numer
     const FirstConstNumer = Frac2FalseFrac(FirstConstRaw).Numer
     const SolarNumer = SolarDenom * 365 + SolarFrac
@@ -419,8 +419,8 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
 // const OriginConst = // 實測冬至距離甲子的日數和小餘，分母日法（開禧氣定骨）
 // const FirstConst = // 實測天正經朔（開禧閏泛骨）
 export const OriginModulo = (Denom, SolarFrac, OriginConstRaw, FirstConstRaw) => { //  LunarFrac,
-    Denom = Number(Denom)
-    SolarFrac = Number(SolarFrac)
+    Denom = +Denom
+    SolarFrac = +SolarFrac
     let OriginConst = Frac2FalseFrac(OriginConstRaw).Numer
     const FirstConst = Frac2FalseFrac(FirstConstRaw).Numer
     const LunarFrac = IndetermEqua(49, 17, Denom).LunarFrac1

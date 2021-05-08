@@ -5,7 +5,6 @@ import {
     CalNameList,
     MonNumList
 } from './para_constant.mjs'
-import { Deg2Mansion } from './astronomy_deg2mansion.mjs'
 import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
@@ -13,32 +12,21 @@ import {
     Bind
 } from './bind.mjs'
 
-/**
- * 计算历法数据
- * @param {string} CalName 历法名称
- * @param {number} YearStart 起始年份
- * @param {number?} YearEnd 结束年份，可不加，即仅查 YearStart 一年
- */
-
 export default (CalName, YearStart, YearEnd) => { // CalNewm
     const {
         Type,
         AutoNewm,
         AutoPara
     } = Bind(CalName)
-    let isExcl = 0
-    if (Type >= 4) {
-        isExcl = 1
-    }
-    const { // 這幾個是要用到的常量        
+    const isExcl = Type >= 4 ? 1 : 0
+    const {
         OriginAd,
         ZhangRange,
         ZhengNum,
         Denom,
         OriginMonNum,
         isTermLeap,
-        WinsolsWinsolsDif,
-        MansionRaw
+        WinsolsWinsolsDif
     } = AutoPara[CalName]
     let {
         OriginDaySc
@@ -49,28 +37,29 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const [mainPrev, mainThis, mainNext] = YearMemo // 去年，今年，明年
         const ZhengWinsolsDif = ZhengNum - OriginMonNum
         const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
-        let LeapNumTermThis = mainThis.LeapNumTerm
-        let isLeapTPv = mainThis.isLeapPrev
-        const isLeapTA = mainThis.isLeapAdvan
-        let isLeapNP = mainNext.isLeapPrev
-        const isLeapNA = mainNext.isLeapAdvan
-        let isLeapTT = mainThis.isLeapThis
-        const isLeapTPt = mainThis.isLeapPost
         const isLeapPvPt = mainPrev.isLeapPost
-        const JiScOrder = mainThis.JiScOrder
-        const OriginAccum = mainThis.OriginAccum
-        const NewmOrderRaw = mainThis.NewmOrderRaw
-        const NewmAcrOrderRaw = mainThis.NewmAcrOrderRaw
-        const NewmOrderMod = mainThis.NewmOrderMod
-        const NewmAvgBare = mainThis.NewmAvgBare
-        const NewmAcrRaw = mainThis.NewmAcrRaw
-        const TermAvgRaw = mainThis.TermAvgRaw
-        let TermAcrRaw = mainThis.TermAcrRaw
-        let NewmSyzygyStart = mainThis.NewmSyzygyStart
-        let NewmSyzygyEnd = mainThis.NewmSyzygyEnd
-        let TermStart = mainThis.TermStart
-        let TermEnd = mainThis.TermEnd
-        const AccumPrint = mainThis.AccumPrint
+        const { isLeapAdvan: isLeapTA,
+            JiScOrder: JiScOrder,
+            OriginAccum: OriginAccum,
+            NewmOrderRaw: NewmOrderRaw,
+            NewmAcrOrderRaw: NewmAcrOrderRaw,
+            NewmOrderMod: NewmOrderMod,
+            NewmEqua: NewmEqua,
+            TermEqua: TermEqua,
+            TermMidstar: TermMidstar,
+            TermAvgRaw: TermAvgRaw,
+            AccumPrint: AccumPrint
+        } = mainThis
+        let {
+            LeapNumTerm: LeapNumTermThis,
+            isLeapPrev: isLeapTPv,
+            isLeapThis: isLeapTT,
+            TermAcrRaw: TermAcrRaw,
+            NewmSyzygyStart: NewmSyzygyStart,
+            NewmSyzygyEnd: NewmSyzygyEnd,
+            TermStart: TermStart,
+            TermEnd: TermEnd,
+        } = mainThis
         let specialStart = 0
         let specialNewmSyzygyEnd = 0
         if (Type === 1) {
@@ -90,7 +79,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermStart += specialStart
             LeapNumTermThis -= NewmSyzygyStart
         } else {
-            if (isLeapTPt) {
+            if (mainThis.isLeapPost) {
                 NewmSyzygyEnd = 0
                 TermEnd = 0
             } else if (isLeapPvPt) {
@@ -105,7 +94,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 TermEnd = 1
                 isLeapTT = 1
                 LeapNumTermThis = 1
-            } else if (isLeapNP && isLeapNA) {
+            } else if (mainNext.isLeapPrev && mainNext.isLeapAdvan) {
                 TermEnd = 1
                 isLeapTT = 1
                 NewmSyzygyEnd = 1
@@ -270,51 +259,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] + 60) % 60
             ZhengSmallSur = parseFloat(((mainThis.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
         }
-
         const MonthPrint = MonthName.slice(1)
         const NewmSyzygySlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
-        ////////////下調用宿度模塊////////////////
-        const NewmRaw = NewmSyzygySlice(NewmAvgBare || NewmAcrRaw) // 各月朔積日。切了再調用
-        let TermAccumInput = []
-        if (Type === 1) {
-            TermAccumInput = mainThis.TermAvgBare
-        } else {
-            TermAccumInput = TermAcrRaw || TermAvgRaw
-        }
-        const TermRaw = TermSlice(TermAccumInput)
-        const NewmWinsolsDifRawPrint = NewmSyzygySlice(mainThis.NewmWinsolsDifRaw)
-        const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
-        let TermEqua = []
-        let TermMidstar = []
-        let TermMidstarPrint = []
-        let TermEquaPrint = []
-        let NewmMansionPrint = []
-        if (MansionRaw) {
-            const NewmMansionFunc = Deg2Mansion(NewmRaw, CalName, year, NewmWinsolsDifRawPrint)
-            const TermMansionFunc = Deg2Mansion(TermRaw, CalName, year, 0, WinsolsDecimal)
-            NewmMansionPrint = NewmMansionFunc.MansionResult //  NewmMansionFunc.map(item => item.MansionResult) //[{a:1,b:2},{a:3,b:4}] 取[1,3]
-            TermEquaPrint = TermMansionFunc.MansionResult
-            TermMidstarPrint = TermMansionFunc.MidstarResult
-        }
-        if (Type === 1 && (LeapNumTermThis && (mainThis.isLeapAvgThis || specialNewmSyzygyEnd))) { // 這裏只適用於無中置閏的漢曆
-            const TermEquaA = TermEquaPrint.slice(0, LeapNumTermThis + 1)
-            const TermEquaB = TermEquaPrint.slice(LeapNumTermThis + 2)
-            TermEquaPrint = TermEquaA.concat('').concat(TermEquaB)
-            TermEquaPrint = TermEquaPrint.slice(1).concat(TermEquaPrint.slice(0, 1))
-            const TermMidstarA = TermMidstarPrint.slice(0, LeapNumTermThis + 1)
-            const TermMidstarB = TermMidstarPrint.slice(LeapNumTermThis + 2)
-            TermMidstarPrint = TermMidstarA.concat('').concat(TermMidstarB)
-            TermMidstarPrint = TermMidstarPrint.slice(1).concat(TermMidstarPrint.slice(0, 1))            
-        } else if (Type >= 2 && isLeapTT) {
-            const TermEquaA = TermEquaPrint.slice(0, LeapNumTermThis + 1)
-            const TermEquaB = TermEquaPrint.slice(LeapNumTermThis + 1)
-            TermEqua = TermEquaA.concat('').concat(TermEquaB)
-            const TermMidstarA = TermMidstarPrint.slice(0, LeapNumTermThis + 1)
-            const TermMidstarB = TermMidstarPrint.slice(LeapNumTermThis + 1)
-            TermMidstarPrint = TermMidstarA.concat('').concat(TermMidstarB)
-        }
         ////////////下爲調整輸出////////////
+        const NewmWinsolsDifRawPrint = NewmSyzygySlice(mainThis.NewmWinsolsDifRaw)
         const NewmAvgScPrint = NewmSyzygySlice(mainThis.NewmAvgSc)
         const NewmAvgDecimalPrint = NewmSyzygySlice(mainThis.NewmAvgDecimal)
         let NewmScPrint = []
@@ -332,6 +281,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         if (Type >= 5 && Type <= 10) {
             NewmDecimal2Print = NewmSyzygySlice(mainThis.NewmDecimal2)
         }
+        const NewmEquaPrint = NewmSyzygySlice(NewmEqua)
         const SyzygyScPrint = NewmSyzygySlice(mainThis.SyzygySc)
         const SyzygyDecimalPrint = NewmSyzygySlice(mainThis.SyzygyDecimal)
         let TermNamePrint = []
@@ -359,6 +309,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermScPrint = TermSlice(TermSc)
             TermDecimalPrint = TermSlice(TermDecimal)
         }
+        const TermEquaPrint = TermSlice(TermEqua)
+        const TermMidstarPrint = TermSlice(TermMidstar)
         ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
         let NewmEcli = []
         let SyzygyEcli = []
@@ -373,9 +325,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             const SyzygyWinsolsDifRawPrint = NewmSyzygySlice(mainThis.SyzygyWinsolsDifRaw)
             for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                 // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
-                // if (Type === 11) {
-                //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
-                // }
                 let NoleapMon = i + 1
                 if (LeapNumTermThis > 0) {
                     if (i === LeapNumTermThis) {
@@ -518,7 +467,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             NewmDecimal3Print,
             NewmDecimal2Print,
             NewmDecimal1Print,
-            NewmMansionPrint,
+            NewmEquaPrint,
             SyzygyScPrint,
             SyzygyDecimalPrint,
             TermNamePrint,

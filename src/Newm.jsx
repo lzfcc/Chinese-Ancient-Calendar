@@ -14,7 +14,7 @@ const TableRowNameMap = {
   NewmDecimal3Print: '三次',
   NewmDecimal2Print: '二次',
   NewmDecimal1Print: '線性',
-  NewmMansionPrint: '赤度',
+  NewmEquaPrint: '赤度',
   SyzygyScPrint: '望',
   SyzygyDecimalPrint: ' ',
   TermNamePrint: '氣名',
@@ -264,8 +264,8 @@ export default class Newm extends React.Component {
   BACKUP_renderTableList() {
     return (
       <div>
-        {(this.state.output || []).map((CalData) => {
-          const yearGroup = CalData.map((CalInfo) => {
+        {(this.state.output || []).map(CalData => {
+          const yearGroup = CalData.map(CalInfo => {
             return (
               <div className='single-cal'>
                 <p>{CalInfo.YearInfo}</p>

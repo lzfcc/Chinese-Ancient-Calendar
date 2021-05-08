@@ -434,7 +434,7 @@ tr.TermNamePrint {
   color: var(--gray);
 }
 
-tr.NewmMansionPrint {
+tr.NewmEquaPrint {
   border-bottom: 2px solid var(--gray);
   color: var(--gray);
   font-size: .8em;
@@ -831,11 +831,11 @@ hr {
   color: var(--gray)
 }
 
-.EquartorPrint {
+.Equa {
   color: var(--letterred);
 }
 
-.EclpPrint {
+.Eclp {
   color: var(--letteryellow);
 }
 
@@ -851,11 +851,11 @@ hr {
   color: var(--lettergreen);
 }
 
-.MidstarPrint {
+.Midstar {
   color: var(--lettergreen);
 }
 
-.MoonEclpPrint {
+.MoonEclp {
   color: var(--letterblue);
 }
 
