@@ -63,7 +63,7 @@ export const CalNameList = { // 按照時間順序排列
     Yuanjia: '元嘉', // 何承天
     Daming: '大明', // 祖沖之
     Liangwu: '明克讓(擬大同代)', // 梁武帝大同曆
-    Zhengguang: '正光', // 李業興等
+    Tsrengguang: '正光', // 李業興等
     Xinghe: '興和', // 李業興
     Tianbao: '天保', // 宋景業。
     Jiayin: '甲寅(擬)', // 董峻、鄭元偉
@@ -81,7 +81,7 @@ export const CalNameList = { // 按照時間順序排列
     Dayan: '大衍', // 一行
     Zhide: '至德(擬)', //
     Wuji: '五紀', // 寶應五紀曆。肅宗最後一個年號。郭獻之，綜合大衍、麟德
-    Zhengyuan: '正元', // 德宗時期徐承嗣、楊景風綜合麟德、大衍
+    Tsrengyuan: '正元', // 德宗時期徐承嗣、楊景風綜合麟德、大衍
     Xuanming: '宣明', // 憲宗即位，徐昂上《觀象曆》，沒有記載。穆宗時期，宣明。晷漏、交會稍增損，更立新術以步五星，其餘都沿襲大衍。《中國古代曆法》第570頁宣明定朔進朔：秋分—春分：0.75，夏至0.74005，清明0.74924，小暑0.74031，穀雨0.74479，大暑0.74124，立夏0.74276，立秋0.74276，小滿0.74124，處暑0.74479，芒種0.74031，白露0.74924，請用戶自行進朔
     Chongxuan: '崇玄', // 昭宗時期邊岡、胡秀林、王墀。沿襲大衍，能用巧算。
     Futian: '符天(擬)', // 至元年間780-820術士曹士蔿。定氣注曆，但我還是平氣注曆。後晉天福時期，沿襲符天曆。在遼行用於947-994。失傳
@@ -113,7 +113,7 @@ export const CalNameList = { // 按照時間順序排列
     Shoushi: '授時',
     Datong: '大統',
     // Huihui: '回回',
-    West: '現代近似',
+    // West: '現代近似',
 }
 export const CalNameDayList = { // 可計算日書的曆法
     // West: '球面三角',
@@ -124,7 +124,7 @@ export const CalNameDayList = { // 可計算日書的曆法
     Xuanshi: '玄始(擬)',
     Yuanjia: '元嘉',
     Daming: '大明',
-    Zhengguang: '正光',
+    Tsrengguang: '正光',
     Xinghe: '興和',
     Tianbao: '天保',
     Tianhe: '天和(擬)',
@@ -137,7 +137,7 @@ export const CalNameDayList = { // 可計算日書的曆法
     Dayan: '大衍',
     Zhide: '至德(擬)',
     Wuji: '五紀',
-    Zhengyuan: '正元',
+    Tsrengyuan: '正元',
     Xuanming: '宣明',
     Chongxuan: '崇玄',
     Qintian: '欽天',

@@ -19,7 +19,7 @@ export const Bind = CalName => {
         Type = 1 // 四分
     } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
         Type = 2 // 魏晉
-    } else if (['Xuanshi', 'Zhengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang'].includes(CalName)) {
+    } else if (['Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang'].includes(CalName)) {
         Type = 3 // 北朝
     } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'Wuyin'].includes(CalName)) {
         Type = 4 // 南朝
@@ -29,7 +29,7 @@ export const Bind = CalName => {
             Type = 5 // 天竺
         } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde', 'Shenlong'].includes(CalName)) {
             Type = 6 // 隋初唐
-        } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
+        } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
             Type = 7 // 唐五代
         } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
             Type = 8 // 北宋
@@ -127,7 +127,7 @@ const CalRange = {
         [412, 439],
         [452, 522]
     ],
-    Zhengguang: [
+    Tsrengguang: [
         [523, 558]
     ],
     Xinghe: [
@@ -166,7 +166,7 @@ const CalRange = {
     Wuji: [
         [762, 783]
     ],
-    Zhengyuan: [
+    Tsrengyuan: [
         [784, 806]
     ],
     Xuanming: [

@@ -201,6 +201,10 @@ export default function CalQuar(CalName, year) {
         TermName[LeapNumTerm + 1] = '无'
         TermSc[LeapNumTerm + 1] = ''
         TermDecimal[LeapNumTerm + 1] = ''
+        if (MansionRaw) {
+            TermEqua[LeapNumTerm + 1] = ''
+            TermMidstar[LeapNumTerm + 1] = ''
+        }
         // TermJd[LeapNumTerm + 1] = ''
         for (let i = LeapNumTerm + 2; i <= 13; i++) {
             TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 2) * TermLeng

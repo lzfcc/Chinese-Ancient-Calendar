@@ -73,13 +73,13 @@ const PrintDay = result => {
         Jd,
         Nayin,
         Week,
-        EquartorPrint,
-        EclpPrint,
+        Equa,
+        Eclp,
         Lati,
         Sunrise,
-        MidstarPrint,
+        Midstar,
         Dial,
-        MoonEclpPrint,
+        MoonEclp,
         MoonEclpLati,
         HouName,
         HexagramName,
@@ -114,16 +114,16 @@ const PrintDay = result => {
         }
     }
     Print += '**日赤經**\n'
-    for (let i = 1; i < EquartorPrint.length; i++) {
+    for (let i = 1; i < Equa.length; i++) {
         Print += MonName[i] + `\n`
-        Print += EquartorPrint[i].slice(1).join(' ')
+        Print += Equa[i].slice(1).join(' ')
         Print += `\n`
     }
-    // if ((EquartorPrint || []).length > 0) {
+    // if ((Equa || []).length > 0) {
     Print += '**日黃經**\n'
-    for (let i = 1; i < EquartorPrint.length; i++) {
+    for (let i = 1; i < Equa.length; i++) {
         Print += MonName[i] + `\n`
-        Print += EclpPrint[i].slice(1).join(' ')
+        Print += Eclp[i].slice(1).join(' ')
         Print += `\n`
     }
     // }
@@ -141,11 +141,11 @@ const PrintDay = result => {
         Print += Sunrise[i].slice(1).join(' ')
         Print += `\n`
     }
-    if (MidstarPrint) {
+    if (Midstar) {
         Print += '\n**昏中星**\n'
-        for (let i = 1; i < MidstarPrint.length; i++) {
+        for (let i = 1; i < Midstar.length; i++) {
             Print += MonName[i] + `\n`
-            Print += MidstarPrint[i].slice(1).join(' ') // 一定注意，這是兩個坑
+            Print += Midstar[i].slice(1).join(' ') // 一定注意，這是兩個坑
             Print += `\n`
         }
     }
@@ -158,11 +158,11 @@ const PrintDay = result => {
         }
     }
 
-    if ((MoonEclpPrint || []).length > 0) {
+    if ((MoonEclp || []).length > 0) {
         Print += '**月黃經**\n'
-        for (let i = 1; i < MoonEclpPrint.length; i++) {
+        for (let i = 1; i < MoonEclp.length; i++) {
             Print += MonName[i] + `\n`
-            Print += MoonEclpPrint[i].slice(1).join(' ')
+            Print += MoonEclp[i].slice(1).join(' ')
             Print += `\n`
         }
     }
@@ -313,19 +313,19 @@ export const outputData = (start, end, auto, list) => {
 /**
  * 将 CalDay 输出转换成以月日维度的输出。寫了整整一個下午
  * CalDay：{
-        EquartorPrint: [Array(31), Array(30),...] (length = 13)
-        MidstarPrint: [Array(31), Array(30),...] (length = 13)
+        Equa: [Array(31), Array(30),...] (length = 13)
+        Midstar: [Array(31), Array(30),...] (length = 13)
     }
     =>
     Day: [
         [
-            { EquartorPrint: ..., MidstarPrint: ..., ... }, (1 月 1 日)
-            { EquartorPrint: ..., MidstarPrint: ..., ... }, (1 月 2 日)
+            { Equa: ..., Midstar: ..., ... }, (1 月 1 日)
+            { Equa: ..., Midstar: ..., ... }, (1 月 2 日)
             ...
         ],
         [
-            { EquartorPrint: ..., MidstarPrint: ..., ... }, (2 月 1 日)
-            { EquartorPrint: ..., MidstarPrint: ..., ... }, (2 月 2 日)
+            { Equa: ..., Midstar: ..., ... }, (2 月 1 日)
+            { Equa: ..., Midstar: ..., ... }, (2 月 2 日)
             ...
         ],
         ...,

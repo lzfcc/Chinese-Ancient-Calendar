@@ -69,7 +69,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
         Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
     } else if (['Huangji', 'Linde'].includes(CalName)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
-    } else if (['Dayan', 'Zhide', 'Zhengyuan', 'Wuji', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Tsrengyuan', 'Wuji', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + Sidereal / 4 - ~~(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
@@ -77,7 +77,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     if (['Huangji', 'Linde'].includes(CalName)) { // 爲何皇極增速先慢後快，大衍先快後慢？
         LongiDifDifInitial = 97 / 450 // ⋯⋯四度爲限。初數九十七，每限增一，以終百七
         LongiDifDifChange = 1 / 450
-    } else if (['Dayan', 'Zhide', 'Zhengyuan', 'Wuji'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Tsrengyuan', 'Wuji'].includes(CalName)) {
         LongiDifDifInitial = 12 / 24
         LongiDifDifChange = -1 / 24
     } else if (CalName === 'Qintian') {

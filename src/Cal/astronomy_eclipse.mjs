@@ -11,6 +11,7 @@ import {
 import {
     Longi2LatiFormula
 } from './astronomy_formula.mjs'
+import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 const NodeAccumHalf2NodeDif = (NodeAccumHalf, QuarNode, HalfNode) => {// 去交分 NodeDif
     let NodeDif = NodeAccumHalf
@@ -563,12 +564,10 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
         Node,
         Anoma,
         Lunar,
-        Sidereal,
         Solar,
         Denom,
         AcrTermList,
-        MoonTcorrList,
-        MoonEcliDenom
+        MoonTcorrList
     } = AutoPara[CalName]
     let {
         SunLimit1,
@@ -581,19 +580,19 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     }
     if (MoonLimit1) {
         MoonLimit1 /= Denom
-        MoonEcliDenom /= Denom
+        // MoonEcliDenom /= Denom
     }
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfNode = Node / 2
     const QuarNode = Node / 4
     const NodeAccumHalf = NodeAccum % HalfNode
-    const MoonAvgVDeg = parseFloat(((Sidereal ? Sidereal : Solar) / Lunar + 1).toPrecision(14))
+    const MoonAvgVDeg = AutoMoonAvgV(CalName)
     const HalfSolar = Solar / 2
     const QuarSolar = Solar / 4
     const WinsolsDif = WinsolsDifRaw % Solar
     let LimitCorr = 0 // 大衍食限修正
-    let Tcorr = 0 // 食甚時刻修正
-    let Dcorr = 0 // 食分修正
+    let Tcorr = 0 // 食甚時刻
+    let Dcorr = 0
     let Magni = 0 // 食分
     let status = 0 // 1全，2偏
     let Last = 0
@@ -704,7 +703,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             }
             Last -= Last * (MoonTcorrList[(~~AnomaAccum + 1) % Anoma] - MoonTcorrList[~~AnomaAccum]) / Denom
         }
-    } else if (['Wuji', 'Zhengyuan'].includes(CalName)) {
+    } else if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
         if (CalName === 'Wuji') {
             if (NodeAccum > Node / 2) {
                 if (WinsolsDif > Solar * 0.75 || WinsolsDif < Solar / 4) { // 本來應該是5，夏至不盡，我直接改成連續了
@@ -1172,7 +1171,7 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNew
         NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw % Solar, CalName, NodeAccum).NodeAccumCorr  // 定交分 
         if (Type <= 6) {
             Eclipse = EclipseTable2(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName, i, Leap)
-        } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan'].includes(CalName)) {
+        } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
             Eclipse = EclipseTable3(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName)
         } else if (Type <= 11) {
             Eclipse = EclipseFormula(NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName)

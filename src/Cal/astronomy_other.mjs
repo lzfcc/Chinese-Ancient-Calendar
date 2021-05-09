@@ -7,14 +7,9 @@ import {
 } from './bind.mjs'
 
 export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
-    const {
-        AutoPara
+    const { AutoPara
     } = Bind(CalName)
-    const {
-        SolarRaw,
-        WinsolsConst,
-        MansionConst,
-        MansionRaw
+    const { SolarRaw, WinsolsConst, MansionConst, MansionRaw
     } = AutoPara[CalName]
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
@@ -72,8 +67,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
 // }
 
 export const AutoNewmPlus = (Decimal, CalName) => { // 朔小分
-    const {
-        Type
+    const { Type
     } = Bind(CalName)
     let standard = 0.75
     let NewmPlus = 0
@@ -86,18 +80,11 @@ export const AutoNewmPlus = (Decimal, CalName) => { // 朔小分
 }
 
 export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九道法
-    const {
-        Type,
-        AutoPara,
+    const { Type, AutoPara,
     } = Bind(CalName)
-    const {
-        SolarRaw,
-        Node,
-        LunarRaw
+    const { SolarRaw, Node, LunarRaw
     } = AutoPara[CalName]
-    let {
-        Solar,
-        Lunar
+    let { Solar, Lunar
     } = AutoPara[CalName]
     Lunar = Lunar || LunarRaw
     Solar = Solar || SolarRaw

@@ -102,3 +102,76 @@ $ npm run build
   - `print` 本地打印入口。`const printData = outputFile(2, 1255, 1255, 0` 第一个数字为模式，`1` 为朔闰表，`2` 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持
   - `frontend-worker` Web Worker，朔闰表、历书两个模块的前端调用入口
 
+## 命名規範
+
+### 天文參數 Astronomy constants
+
+- Solar 回歸年 solar year
+- Sidereal 恆星年 sidereal year
+- Lunar 朔望月 Synodic month
+- Anoma 近點月 anoma month
+- Node 交點月 node month
+- SunLimit 日食食限
+- MoonLimit 月食食限
+- LeapLimit 閏限 The limit for arranging a leap
+- Equa 赤道 equator
+- Eclp 黃道 ecliptic
+- Ecli 交食 eclipse
+- Longi 經度 longitude
+- Lati 緯度 latitude
+
+### 變量 Variables
+
+- Origin 上元以來的
+- Winsols 冬至 winter solstice
+- Newm 朔 new moon
+- Syzygy 望 syzygy
+- First 天正月，卽冬至所在月 The month in which the winter solstice falls
+- Zheng 正月，建正
+- LeapSur 閏餘 leap surplus
+- GreatSur 大餘，干支的整數部分
+- SmallSur 小餘，干支的小數部分
+- LeapNumTerm 無中氣置閏法的閏月
+- Midstar 昬中星
+- Accum 積日。OriginAccum 上元至年前冬至積日 AnomaAccum 入轉日 NodeAccum 入交日
+
+### 常量 Constants
+
+- Sc 干支 sexagenary cycle 
+- Stem 天干
+- Branch 地支
+- CalName 曆法名 calendar name
+- Hexagram 八卦
+- Mansion 宿
+- MoonGod 月神
+- ManGod 人神
+
+### 時間長度
+
+- Leng 長度 length
+- Range 長度
+- Term 十二中氣 HalfTerm 二十四節氣
+- Hou 七十二候
+- Zhang 章
+- Bu 蔀
+- Ji 紀
+- Tong 統
+- Yuan 元
+
+### 其他
+
+- Raw 未經某種處理的變量 Variables before processing in some way 
+- V 速度 velocity
+- Corr 修正改正 correction
+- Tcorr 日月速度改正，或交食食甚時刻改正
+- DifAccum 日盈縮積、月遲疾積
+- Dcorr 食分修正
+- Avg 平均的 average
+- Acr  精確的 accurate
+- Deg 度數 degree
+- Dif 兩個常數之差 The difference between constants A and B. WinsolsDif 某日距離年前冬至的積日
+- Halfxxx 某常數的一半 Half of a constant
+- xxxHalf 某變量的一半 Half of a variable
+- Numer 分子 numerator
+- Denom 分母 denominator
+- Num 序號 number

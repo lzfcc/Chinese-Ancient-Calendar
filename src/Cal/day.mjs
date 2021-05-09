@@ -9,14 +9,7 @@ import {
     nzh, AutoDegAccumList, NumList, MonNumList,
 } from './para_constant.mjs'
 import {
-    YearGodConvert,
-    YearColorConvert,
-    MonColorConvert,
-    WangwangConvert,
-    FubaoConvert,
-    LsStarConvert,
-    BloodConvert,
-    TouringGodConvert
+    YearGodConvert, YearColorConvert, MonColorConvert, WangwangConvert, FubaoConvert, LsStarConvert, BloodConvert, TouringGodConvert
 } from './day_luck.mjs'
 import CalNewm from './newm_index.mjs'
 import {
@@ -57,7 +50,6 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             Lunar,
         } = AutoPara[CalName]
         const {
-            Month,
             LeapNumTermThis,
             OriginAccum,
             NewmAcrOrderRaw,
@@ -210,7 +202,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 const WinsolsDifRaw = FirstWinsolsDif + DayAccum // 每日夜半距冬至日數
                 const WinsolsDifInt = FirstOrderRaw - Math.floor(OriginAccum) + DayAccum // 冬至當日爲0
                 const WinsolsDifNoon = WinsolsDifRaw + 0.5 // 每日正午
-                DayAccum++
+                DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 let SunEquaLongi = 0
                 let SunEquaLongiAccum = 0
@@ -223,37 +215,36 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     if (Type < 11) {
                         SunEquaLongi = WinsolsDifRaw % Sidereal // 從正月開始
                         SunEquaLongiAccum = SunEquaLongi + OriginAccum
-                        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).EclpLongi
+                        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).Equa2Eclp
                         SunEclpLongiAccum = SunEclpLongi + OriginAccum
                     } else {
                         SunEclpLongi = WinsolsDifRaw % Sidereal
                         SunEclpLongiAccum = SunEclpLongi + OriginAccum
-                        SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).EquaLongi
+                        SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).Eclp2Equa
                         SunEquaLongiAccum = SunEquaLongi + OriginAccum
                     }
-                    MoonEclpLongiAccum = WinsolsDifRaw * MoonAvgVDeg + OriginAccum
+                    MoonEclpLongiAccum = (OriginAccum + WinsolsDifRaw) * MoonAvgVDeg
                 } else {
                     let NodeAccum = (NewmNodeAccumPrint[i - 1] + k - 1) % Node
                     const AnomaAccum = (NewmAnomaAccumPrint[i - 1] + k - 1) % Anoma
-                    const DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDifRaw, CalName)
                     NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw, CalName, NodeAccum).NodeAccumCorr
-                    const SunDifAccum = DifAccumFunc.SunDifAccum
+                    const SunDifAccum = AutoDifAccum(AnomaAccum, WinsolsDifRaw, CalName).SunDifAccum
                     const SunDifAccumNoon = AutoDifAccum(AnomaAccum, WinsolsDifNoon, CalName).SunDifAccum
-                    const MoonDifAccum = DifAccumFunc.MoonDifAccum
                     if (Type < 11) {
                         SunEquaLongi = WinsolsDifRaw + SunDifAccum
                         SunEquaLongiAccum = SunEquaLongi + OriginAccum
-                        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).EclpLongi
+                        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).Equa2Eclp
                         SunEclpLongiAccum = SunEclpLongi + OriginAccum
                         SunEquaLongiNoon = WinsolsDifNoon + SunDifAccumNoon
                     } else { // 授時直接以黃道為準
                         SunEclpLongi = WinsolsDifRaw + SunDifAccum
                         SunEclpLongiAccum = SunEclpLongi + OriginAccum
-                        SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).EquaLongi
+                        SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).Eclp2Equa
                         SunEquaLongiAccum = SunEquaLongi + OriginAccum
                         SunEclpLongiNoon = WinsolsDifNoon + SunDifAccumNoon
                     }
-                    MoonEclpLongiAccum = WinsolsDifRaw * MoonAvgVDeg + MoonDifAccum + OriginAccum
+                    // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
+                    MoonEclpLongiAccum = WinsolsDifRaw * MoonAvgVDeg + OriginAccum //  + MoonDifAccum
                     const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccum, CalName)
                     MoonEclpLati[i][k] = AutoNineOrbit(NodeAccum, WinsolsDifRaw % Solar, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }

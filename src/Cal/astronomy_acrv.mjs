@@ -308,7 +308,7 @@ const MoonTable1 = (AnomaAccum, CalName) => {
     } = AutoPara[CalName]
     AnomaAccum %= Anoma
     const MoonAcrVList = MoonAcrVRaw.slice()
-    if (['Zhengguang', 'Xinghe', 'Tianbao', 'Daming',].includes(CalName)) {
+    if (['Tsrengguang', 'Xinghe', 'Tianbao', 'Daming',].includes(CalName)) {
         for (let i = 0; i <= 27; i++) {
             MoonAcrVList[i] = Math.round(MoonAcrVList[i] * ZhangRange)
         }
@@ -340,7 +340,7 @@ const MoonTable1 = (AnomaAccum, CalName) => {
         }
         const MoonAcrV1 = MoonAcrVList[AnomaAccumInt] + AnomaAccumFract * MoonAcrDayDif[AnomaAccumInt]
         MoonTcorr1 = -MoonDifAccum1 / (MoonAcrV1 - SunAvgV)
-    } else if (['Zhengguang', 'Xinghe', 'Tianbao'].includes(CalName)) {
+    } else if (['Tsrengguang', 'Xinghe', 'Tianbao'].includes(CalName)) {
         MoonTcorr1 = -MoonDifAccum1 / MoonAvgV
     }
     MoonDifAccum1 /= ZhangRange
@@ -673,7 +673,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Jingchu').Tcorr1
         } else if (CalName === 'Xuanshi') {
-            Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Zhengguang').Tcorr1
+            Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Tsrengguang').Tcorr1
         } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(CalName)) {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Tianbao').Tcorr1
         } else if (CalName === 'Kaihuang') {
@@ -688,7 +688,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             } else if (CalName === 'Zhide') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Dayan')
             } else if (CalName === 'Qintian') {
-                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Zhengyuan') // 欽天近地點入轉
+                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Tsrengyuan') // 欽天近地點入轉
             } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Guantian')
             } else if (CalName === 'Yangji') {
@@ -792,7 +792,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             MoonTcorr2 = -MoonDifAccum / (moonFunc.MoonAcrV - sunFunc.SunAcrV)
             Tcorr2 = SunTcorr2 + MoonTcorr2
         }
-        if ((Type >= 5 && Type <= 10) || Type === 20) { // 其他曆法都是這樣，不懂授時爲何就是定朔加減差
+        if (Type >= 5 && Type <= 10) { // 其他曆法都是這樣，不懂授時爲何就是定朔加減差
             NodeAccumCorr = SunTcorr2 + 0.0785077 * MoonTcorr2 //  // 劉金沂《麟徳曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟徳61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
         }
     }
@@ -846,7 +846,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
         } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Jingchu').MoonDifAccum
         } else if (CalName === 'Xuanshi') {
-            MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Zhengguang').MoonDifAccum
+            MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Tsrengguang').MoonDifAccum
         } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(CalName)) {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Tianbao').MoonDifAccum
         } else if (CalName === 'Kaihuang') {
@@ -861,7 +861,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
             } else if (CalName === 'Zhide') {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Dayan')
             } else if (CalName === 'Qintian') {
-                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Zhengyuan') // 欽天近地點入轉
+                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Tsrengyuan') // 欽天近地點入轉
             } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Guantian')
             } else if (CalName === 'Yangji') {

@@ -358,8 +358,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
                     const Newmstatus = NewmEcliFunc.status
                     let NewmMagni = 0
-                    let NewmStartDecimal = 0
-                    let NewmTotalDecimal = 0
+                    let NewmStartDecimal = 0 // 初虧
+                    let NewmTotalDecimal = 0 // 食甚
                     if (NewmEcliFunc.StartDecimal) {
                         NewmStartDecimal = NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
                     }
@@ -498,7 +498,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermMidstarPrint,
             Era,
             ////////////// 以下用於日書/////////////
-            Month,
+            // Month,
             LeapNumTermThis,
             OriginAccum,
             NewmOrderRaw: NewmOrderRaw.slice(1 + NewmSyzygyStart), // 結尾就不切了，因爲最後一個月還要看下個月的情況

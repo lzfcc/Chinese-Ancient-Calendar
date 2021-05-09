@@ -67,7 +67,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         title: '現代近似',
         data: [WestSun.toFixed(5), 0, WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
     }]
-    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Zhengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Zhengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'NewDaming', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi']
+    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'NewDaming', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian']
     List1 = CalName ? [CalName] : List1
     List2 = CalName ? [CalName] : List2
@@ -303,7 +303,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Longi2Lati = Longi2LatiTable1(LongiRaw, CalName)
     } else if (Type === 6) {
         Longi2Lati = Longi2LatiTable2(LongiRaw, CalName)
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Zhengyuan'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(LongiRaw, 'Dayan')
     } else if (['Xuanming', 'Qintian'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(LongiRaw, 'Xuanming')
@@ -589,7 +589,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw
     }
     let Print = []
     Print = Print.concat(
-        ['Zhengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
+        ['Tsrengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
             const {
                 Magni,
                 Last,
@@ -638,7 +638,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRa
     }
     let Print = []
     Print = Print.concat(
-        ['Zhengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
+        ['Tsrengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
             const {
                 Magni,
                 Last,
