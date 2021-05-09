@@ -6,7 +6,7 @@ import {
 export const SqrtA = (Input, Mode) => {
     Mode = parseInt(Mode)
     if (Mode < 2 || Mode > 3) {
-        throw (new Error('[開方]請輸入2或3！'))
+        throw (new Error('[開方] 請輸入2或3！'))
     }
     let c = SliceNum(Input, Mode).cString
     const z = SliceNum(Input, Mode).a
@@ -75,7 +75,7 @@ export const SqrtA = (Input, Mode) => {
 export const SqrtC = (Input, Mode) => {
     Mode = parseInt(Mode)
     if (![2, 3, 5, 7, 9].includes(Mode)) {
-        throw (new Error('【開方】請輸入2、3、5、7、9！'))
+        throw (new Error('[開方] 請輸入2、3、5、7、9！'))
     }
     let c = SliceNum(Input, Mode).cString
     const z = SliceNum(Input, Mode).a

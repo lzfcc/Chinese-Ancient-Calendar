@@ -5,7 +5,7 @@ import {
     ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
     WeekList, MansionNameList, MansionAnimalNameList,
     ManGodList, JianchuList, HuangheiList, YuanList,
-    HalfTermList, HouList, HexagramList2, HexagramAccumListA, FiveAccumListA, HexagramAccumListB, FiveAccumListB, FiveList2,
+    HalfTermList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
     nzh, AutoDegAccumList, NumList, MonNumList,
 } from './para_constant.mjs'
 import {
@@ -68,25 +68,79 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         Lunar = Lunar || LunarRaw
         const HouLeng = Solar / 72
         const HalfTermLeng = Solar / 24
+        let HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        const FirstOrderRaw = NewmOrderRaw[0]
-        const FirstWinsolsDif = +(FirstOrderRaw - OriginAccum).toFixed(5) // 正月到冬至距離
-        let HexagramAccumList = []
-        let FiveAccumList = []
-        if (Type < 6) {
-            HexagramAccumList = HexagramAccumListA
-            FiveAccumList = FiveAccumListA
-        } else {
-            HexagramAccumList = HexagramAccumListB
-            FiveAccumList = FiveAccumListB
-        }
+        const ZhengOrderRaw = NewmOrderRaw[0]
+        const FirstWinsolsDif = +(ZhengOrderRaw - OriginAccum).toFixed(5) // 正月到冬至距離
         const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
-        /////////// 預處理72候列表//////////
+        /////////// 預處理72候、五行、八卦列表//////////
+        let HouList = []
+        if (Type < 7) {
+            HouList = HouListA
+        } else {
+            HouList = HouListB
+        }
+        let Hexagram64List = []
+        let HexagramSymbolList = []
+        if (Type < 6) {
+            Hexagram64List = Hexagram64ListA
+            HexagramSymbolList = HexagramSymbolListA
+        } else {
+            Hexagram64List = Hexagram64ListB
+            HexagramSymbolList = HexagramSymbolListB
+        }
+        let FiveAccumList = []
+        let HexagramAccumList = []
         let HouAccum = []
         for (let j = 0; j < 90; j++) {
             HouAccum[j] = HouLeng * j
-            HouAccum[j] = parseFloat((HouAccum[j]).toPrecision(14))
+            HouAccum[j] = parseFloat((HouAccum[j]).toPrecision(13))
         }
+        const FiveLeng1 = Solar / 5
+        const FiveLeng2 = Solar / 4 - FiveLeng1
+        for (let i = 0; i <= 10; i++) {
+            let FiveLeng = FiveLeng1
+            if (i % 2 === 1) {
+                FiveLeng = FiveLeng2
+            }
+            FiveAccumList[i] = FiveLeng
+        }
+        for (let i = 1; i <= 10; i++) {
+            FiveAccumList[i] += FiveAccumList[i - 1]
+            FiveAccumList[i] = parseFloat((FiveAccumList[i]).toPrecision(13))
+        }
+        FiveAccumList = FiveAccumList.slice(-1).concat(FiveAccumList.slice(0, -1))
+        FiveAccumList[0] = 0
+        if (['Qianxiang', 'Jingchu'].includes(CalName)) { // 乾象景初用京房，後來都用孟喜
+            const HexagramRangeA = 7 - HexagramLeng
+            const HexagramRangeB = HexagramLeng - HexagramRangeA
+            const HexagramRangeC = (Solar - (28 - 4 * HexagramRangeA)) / 56
+            for (let i = 0; i <= 63; i++) {
+                if (i === 0 || i === 16 || i === 33 || i === 48) {
+                    HexagramAccumList[i] = HexagramRangeA
+                } else if (i === 15 || i === 31 || i === 47 || i === 63) {
+                    HexagramAccumList[i] = HexagramRangeB
+                } else {
+                    HexagramAccumList[i] = HexagramRangeC
+                }
+            }
+            for (let i = 1; i <= 63; i++) {
+                HexagramAccumList[i] += HexagramAccumList[i - 1]
+                HexagramAccumList[i] = parseFloat((HexagramAccumList[i]).toPrecision(13))
+            }
+            HexagramAccumList = HexagramAccumList.slice(-1).concat(HexagramAccumList.slice(0, -1))
+            HexagramAccumList[0] = 0
+            for (let i = 64; i <= 80; i++) {
+                HexagramAccumList[i] = HexagramAccumList[i - 64] + Solar
+                HexagramAccumList[i] = parseFloat((HexagramAccumList[i]).toPrecision(13))
+            }
+        } else {
+            for (let j = 0; j < 75; j++) {
+                HexagramAccumList[j] = HexagramLeng * j
+                HexagramAccumList[j] = parseFloat((HexagramAccumList[j]).toPrecision(13))
+            }
+        }
+        ///////
         const YearScOrder = ((year - 3) % 60 + 60) % 60
         const YearSc = ScList[YearScOrder]
         const YearStem = StemList.indexOf(YearSc[0])
@@ -149,13 +203,14 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const Lati = [] // 日赤緯
         const HouName = [] // 候名 
         const HexagramName = [] // 推卦用事
+        const FiveName = []
         const ManGod = [] // 人神
         const Luck = [] // 宜忌
         let DayAccum = 0
         let JieAccum = 0 // 各節積日
         let SummsolsDayAccum = 0 // 夏至積日
         let AutumnDayAccum = 0 // 立秋積日
-        let JianchuDayAccum = FirstOrderRaw - Math.floor(OriginAccum) // 建除
+        let JianchuDayAccum = ZhengOrderRaw - Math.floor(OriginAccum) // 建除
         let HuangheiDayAccum = JianchuDayAccum
         let JianchuOrigin = 0
         let HuangheiOrigin = 0
@@ -196,11 +251,12 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             MoonEclpLati[i] = []
             HouName[i] = []
             HexagramName[i] = []
+            FiveName[i] = []
             ManGod[i] = []
             Luck[i] = []
             for (let k = 1; k <= NewmOrderRaw[i] - NewmOrderRaw[i - 1]; k++) { // 每月日數                
                 const WinsolsDifRaw = FirstWinsolsDif + DayAccum // 每日夜半距冬至日數
-                const WinsolsDifInt = FirstOrderRaw - Math.floor(OriginAccum) + DayAccum // 冬至當日爲0
+                const WinsolsDifInt = ZhengOrderRaw - Math.floor(OriginAccum) + DayAccum // 冬至當日爲0
                 const WinsolsDifNoon = WinsolsDifRaw + 0.5 // 每日正午
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
@@ -258,7 +314,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
                 MoonEclp[i][k] = Deg2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
                 ///////////具注曆////////////
-                const ScOrder = (FirstOrderRaw % 60 + 60 + DayAccum) % 60
+                const ScOrder = (ZhengOrderRaw % 60 + 60 + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]
                 Jd[i][k] = parseInt(OriginJdAccum + OriginJdDif + WinsolsDifInt + 1)
                 Jd[i][k] += ' ' + Jd2Date1(Jd[i][k]).Mmdd
@@ -296,7 +352,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     }
                 }
                 if (DayAccum === 1) {
-                    const XiaohanDifInt = FirstOrderRaw - Math.floor(OriginAccum) - HalfTermLeng + DayAccum
+                    const XiaohanDifInt = ZhengOrderRaw - Math.floor(OriginAccum) - HalfTermLeng + DayAccum
                     const tmp = ~~((WinsolsDifInt + 1 - XiaohanDifInt) / 12)
                     const tmp1 = WinsolsDifInt + 1 - tmp * 12 - Branch
                     JianchuOrigin = tmp1 + 2 // 小寒後第一個丑開始建除
@@ -339,29 +395,24 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         break
                     }
                 }
-                let FiveName = ''
                 for (let l = 0; l < 10; l++) { // 8個五行
-                    if (FiveAccumList[l] >= WinsolsDifRaw && FiveAccumList[l] < WinsolsDifRaw + 1) {
+                    if (WinsolsDifRaw >= FiveAccumList[l] && WinsolsDifRaw < FiveAccumList[l] + 1) {
                         FiveOrder = l % 8
-                        FiveName = FiveList2[FiveOrder] + '王用事'
-                        const FiveDecimal = (FiveAccumList[l] - WinsolsDifRaw).toFixed(4).slice(2, 6)
-                        if (l % 2 === 0) {
-                            FiveName += FiveDecimal
-                        }
+                        const FiveDecimal = (WinsolsDifRaw - FiveAccumList[l]).toFixed(4).slice(2, 6)
+                        FiveName[i][k] = `<span class='FiveNameSymbol'>` + FiveList2[FiveOrder] + `</span>` + FiveDecimal
                         break
                     }
                 }
-                for (let m = HexagramOrder; m < 80; m++) { // 64卦
-                    if (HexagramAccumList[m] >= WinsolsDifRaw && HexagramAccumList[m] < WinsolsDifRaw + 1) {
-                        HexagramOrder = m % 64
-                        HexagramName[i][k] = HexagramList2[HexagramOrder]
-                        const HexagramDecimal = (HexagramAccumList[m] - WinsolsDifRaw).toFixed(4).slice(2, 6)
-                        if ((HexagramOrder + 1) % 16) {
-                            HexagramName[i][k] += HexagramDecimal
+                if (Type < 11) { // 授時不算64卦
+                    for (let m = HexagramOrder; m < 80; m++) {
+                        if (WinsolsDifRaw >= HexagramAccumList[m] && WinsolsDifRaw < HexagramAccumList[m] + 1) {
+                            HexagramOrder = m % (Hexagram64List === Hexagram64ListA ? 64 : 60)
+                            const HexagramDecimal = (WinsolsDifRaw - HexagramAccumList[m]).toFixed(4).slice(2, 6)
+                            HexagramName[i][k] = Hexagram64List[HexagramOrder] + `<span class='HexagramSymbol'>` + HexagramSymbolList[HexagramOrder] + `</span>` + HexagramDecimal
+                            break
+                        } else {
+                            HexagramName[i][k] = ''
                         }
-                        break
-                    } else {
-                        HexagramName[i][k] = ''
                     }
                 }
                 const Wangwang = WangwangConvert(NoleapMon, Stem, Branch, JieNum, JieDifInt)
@@ -373,7 +424,6 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 const TouringGod = TouringGodConvert(ScOrder)
                 Luck[i][k] = (Wangwang || '') + (Fubao || '') + (Lin || '') + (LongShortStar || '')
                 ManGod[i][k] = ManGodList[k] + (Blood || '') + (TouringGod || '')
-                HexagramName[i][k] += FiveName
                 Sc[i][k] = NumList[k] + '日' + Sc[i][k]
             }
         }
@@ -400,6 +450,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             MoonEclpLati,
             HouName,
             HexagramName,
+            FiveName,
             ManGod,
             Luck
         }

@@ -79,7 +79,7 @@ article h3 {
   font-size: 1.6em;
 }
 
-article h4{
+article h4 {
   font-size: 1.3em;
 }
 
@@ -318,25 +318,6 @@ h2 {
   padding: .2em .25em;
   margin-right: .25em;
   font-weight: bold;
-}
-
-.momie {
-  background: var(--black);
-  color: var(--bg);
-  font-family: var(--serif);
-  width: 2em;
-  height: 2em;
-  padding: .3em;
-  border-radius: 999em;
-  margin: 0 .15em;
-  font-weight: bold;
-}
-
-.sanfu {
-  background: var(--letterred);
-  color: var(--bg);
-  padding: .1em .15em;
-  border-radius: .25em;
 }
 
 table {
@@ -863,22 +844,49 @@ hr {
   color: var(--letterblue);
 }
 
-.HouName {
-  font-size: .9em;
+.day-table td p.HexagramName {
+  font-size: .85em;
 }
 
-.HexagramName {
-  font-size: .9em;
+.HexagramSymbol {
+  font-size: 2em;
+  margin: 0 .1em;
 }
+
 
 .ManGod {
   color: var(--gray);
-  font-size: .9em;
 }
 
 .Luck {
   color: var(--letterred);
-  font-size: .9em;
+}
+
+.momie {
+  background: var(--black);
+  color: var(--bg);
+  font-family: var(--serif);
+  width: 2em;
+  height: 2em;
+  padding: .3em;
+  border-radius: 999em;
+  margin: 0 .15em;
+  font-weight: bold;
+}
+
+.FiveNameSymbol {
+  border: 2px solid var(--black);
+  border-radius: .5em;
+  padding: .2em .25em;
+  margin: 0 .25em;
+  font-weight: bold;
+}
+
+.sanfu {
+  background: var(--letterred);
+  color: var(--bg);
+  padding: .1em .15em;
+  border-radius: .25em;
 }
 
 .YearColor table {

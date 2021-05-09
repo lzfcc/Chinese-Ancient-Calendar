@@ -11,7 +11,7 @@ import {
     MonHexagramNameList,
     MonScaleNameList,
     StemList,
-    HexagramList1,
+    Hexagram8List,
     FourauspiciousList,
     NumList
 } from './para_constant.mjs'
@@ -87,10 +87,10 @@ export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，
         LishiOrder = 1
         CanshiOrder = 5
     }
-    const Zoushu = HexagramList1[ZoushuOrder]
-    const Boshi = HexagramList1[BoshiOrder]
-    const Lishi = HexagramList1[LishiOrder]
-    const Canshi = HexagramList1[CanshiOrder]
+    const Zoushu = Hexagram8List[ZoushuOrder]
+    const Boshi = Hexagram8List[BoshiOrder]
+    const Lishi = Hexagram8List[LishiOrder]
+    const Canshi = Hexagram8List[CanshiOrder]
     ///////
     const Four = Math.round((b % 4 + 4) % 4.1) // 4個爲一單元
     let tmp7 = Four * 3 - 1

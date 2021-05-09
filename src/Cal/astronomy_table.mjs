@@ -315,7 +315,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         Sunrise
     }
 }
-// console.log(Longi2LatiTable2(180, 0.5, 'NewDaming').Lati) // 《麟徳曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
+// console.log(Longi2LatiTable2(180, 0.5, 'NewDaming').Lati) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////唐宋赤白轉換//////
     const {
@@ -345,7 +345,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { //////
     const EclpLongi = (WinsolsDif + Plus + LongiRaw) % Sidereal
     let WhiteLongi = 0
     let Range = []
-    if (CalName === 'Huangji') { // 麟徳沒有
+    if (CalName === 'Huangji') { // 麟德沒有
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2.94, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》頁60
     } else if (['Dayan', 'Qintian', 'Yingtian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0.94, 5, 5, 5, 5, 5, 5, 5, 5, 5]

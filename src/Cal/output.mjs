@@ -82,6 +82,7 @@ const PrintDay = result => {
         MoonEclp,
         MoonEclpLati,
         HouName,
+        FiveName,
         HexagramName,
         ManGod,
         Luck,
@@ -183,10 +184,16 @@ const PrintDay = result => {
     }
     // }
     // if ((HexagramName || []).length > 0) {
-    Print += '**卦、土王用事**\n'
+    Print += '**卦**\n'
     for (let i = 1; i < HexagramName.length; i++) {
         Print += MonName[i] + `\n`
         Print += HexagramName[i].slice(1).join(' ')
+        Print += `\n`
+    }
+    Print += '**土王用事**\n'
+    for (let i = 1; i < FiveName.length; i++) {
+        Print += MonName[i] + `\n`
+        Print += FiveName[i].slice(1).join(' ')
         Print += `\n`
     }
     // }

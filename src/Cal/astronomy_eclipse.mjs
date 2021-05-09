@@ -181,7 +181,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             Tcorr = -Tcorr
         }
         Decimal += Tcorr // 戊寅時差極值2.57小時=0.107
-    } else if (Type === 6 && isNewm) { // 麟徳月食食甚時刻卽定望。
+    } else if (Type === 6 && isNewm) { // 麟德月食食甚時刻卽定望。
         // 還要加上：月食：晨昏之間不可見食甚，日出後日入前12.5刻，就不注月食
         const QuarDif = Decimal2QuarDif(Decimal)
         let sign2 = -1
@@ -464,7 +464,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
             }
             Magni = 15 * (HalfSynodicNodeDif - NodeDif) / HalfSynodicNodeDif + Dcorr / Denom
         }
-        // const LastList = [0, 19, 6, 8, 4, 18, 16, 14, 12, 10, 8, 6, 4, 2, 1, 0] // 實在無法理解，暫時案麟徳
+        // const LastList = [0, 19, 6, 8, 4, 18, 16, 14, 12, 10, 8, 6, 4, 2, 1, 0] // 實在無法理解，暫時案麟德
         if (NodeDif < 0) {
             Magni = 15
             status = 1 // 不足減者，食旣    
@@ -479,7 +479,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
         } else if (Magni === 15) {
             Last = LastList[Magni]
         }
-    } else if (CalName === 'Linde') { // 下麟徳求食分。NodeDif去交前後定分。558、552的不同，《中國古代曆法》頁82說要統一爲552，不過如果用定氣思路來看，興許不用改。
+    } else if (CalName === 'Linde') { // 下麟德求食分。NodeDif去交前後定分。558、552的不同，《中國古代曆法》頁82說要統一爲552，不過如果用定氣思路來看，興許不用改。
         if (isNewm) {
             if (NodeAccum > HalfNode) { // 月在內道
                 if (WinsolsDif < QuarSolar) {

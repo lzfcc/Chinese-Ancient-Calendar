@@ -28,7 +28,7 @@ const printData = outputFile(2, 235, 235, 0, [ // mode, YearStart, YearEnd, auto
     // 'Taichu',
     // 'Qianzaodu',
     // 'Easthan', // 上四分系
-    // 'Qianxiang',
+    'Qianxiang',
     // 'Huangchu',
     // 'Jingchu',
     // 'Liuzhi',
@@ -54,7 +54,7 @@ const printData = outputFile(2, 235, 235, 0, [ // mode, YearStart, YearEnd, auto
     // 'Liuxiaosun',
     // 'Huangji',
     // 'Linde', // 上隋、初唐系
-    'Dayan', // 大衍入轉日感覺少了0.5
+    // 'Dayan', // 大衍入轉日感覺少了0.5
     // 'Zhide',
     // 'Wuji',
     // 'Tsrengyuan',
