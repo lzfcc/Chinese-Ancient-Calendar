@@ -312,7 +312,13 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Sunrise[i][k] = Longi2LatiFunc.Sunrise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
-                MoonEclp[i][k] = Deg2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
+                const MoonEclpFunc = Deg2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName)
+                const MoonMansionOrder = MoonEclpFunc.MansionOrder
+                let MoonMansionNote = ''
+                if ((Type >= 2 && Type <= 7) && (MoonMansionOrder === 5 || MoonMansionOrder === 26)) { // 乾象規定月在張心署之
+                    MoonMansionNote = `<span class='MoonMansionNote'>忌刑</span>`
+                }
+                MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote
                 ///////////具注曆////////////
                 const ScOrder = (ZhengOrderRaw % 60 + 60 + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]

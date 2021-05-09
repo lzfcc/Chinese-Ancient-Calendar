@@ -56,6 +56,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
         MidstarResult = MidstarName + MidstarDeg
     }
     return {
+        MansionOrder,
         MansionResult,
         MidstarResult
     }

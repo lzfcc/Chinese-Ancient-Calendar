@@ -83,18 +83,33 @@ export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬
 
 // console.log(MoonWest(7, 900))
 
+// 《數》頁135
+// E偏近點角，e偏心率 盈縮積=
+// 2arctan(sqrt((1 + e) / (1 - e))tan(E / 2)) - E + esinE
+export const SunWest_BACKUP = (WinsolsDifRaw, year) => {
+    const ConstFunc = ConstWest(year)
+    const e = ConstFunc.eccentricity
+    const perihelion = ConstFunc.perihelion
+    const Solar = ConstFunc.Solar
+    const portion = 360 / Solar
+    WinsolsDifRaw *= portion
+    const E = 3.1415926 * (((WinsolsDifRaw + 270 - perihelion) + 360) % 360) / 360 // 以冬至起算
+    return big(2).mul(big.atan(big.sqrt((1 + e) / (1 - e)).mul(big.tan(E / 2)))).sub(E).add(big(e).mul(big.sin(E))).toNumber()
+}
+// console.log(SunWest(35, 1247))
 export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔表的數學結構及其內插法》日躔差=真近點角V-平近點交角M。V=M+2*e*sinM+1.25*e**2*sin2M   M=90°極值2e。  
     const ConstFunc = ConstWest(year)
     const e = ConstFunc.eccentricity // 黃道離心率
     const perihelion = ConstFunc.perihelion // 近日點
     const Solar = ConstFunc.Solar
-    WinsolsDifRaw = ((WinsolsDifRaw - (perihelion - 270) * Solar / 360) + 360) % 360
-    const M = d2r(WinsolsDifRaw * 360 / Solar) // 距離冬至日數轉換成平黃經
-    const M1 = d2r((WinsolsDifRaw - 1) * 360 / Solar)
+    const portion = 360 / Solar
+    WinsolsDifRaw = ((WinsolsDifRaw - (perihelion - 270) / portion) + 360) % 360
+    const M = d2r(WinsolsDifRaw * portion) // 距離冬至日數轉換成平黃經
+    const M1 = d2r((WinsolsDifRaw - 1) * portion)
     let SunDifAccum = big(e).mul(2).mul(M.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M.mul(2)))) // 中心差=真-平近點角
-    SunDifAccum = SunDifAccum.mul(3437.747 / 60).mul(Solar / 360) // 化爲角分乘3437.747，不知道怎么来的
+    SunDifAccum = SunDifAccum.mul(3437.747 / 60).div(portion) // 化爲角分乘3437.747，不知道怎么来的
     let SunDifAccum1 = big(e).mul(2).mul(M1.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M1.mul(2))))
-    SunDifAccum1 = SunDifAccum1.mul(3437.747 / 60).mul(Solar / 360)
+    SunDifAccum1 = SunDifAccum1.mul(3437.747 / 60).div(portion)
     const SunAcrV = SunDifAccum.sub(SunDifAccum1).add(1)
     const Longi = SunDifAccum.add(WinsolsDifRaw).toNumber() // 黃經。這是日數度，不是360度
     SunDifAccum = SunDifAccum.toNumber()
