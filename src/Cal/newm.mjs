@@ -18,44 +18,17 @@ import {
 } from './bind_astronomy.mjs'
 
 export default (CalName, year) => {
-    const {
-        Type,
-        AutoPara,
+    const { Type, AutoPara,
     } = Bind(CalName)
     const {
-        Sidereal,
-        SolarNumer,
-        LunarNumer,
-        Denom,
-        Anoma,
-        Node,
-        YinyangOrigin,
-        EcliOrigin,
-        OriginAd,
-        CloseOriginAd,
-        OriginMonNum,
-        ZhengNum,
-        YuanRange,
-        JiRange,
-        ZhangRange,
-        ZhangLeap,
-        AnomaOrigin,
-        NightList,
-        FirstCorr,
-        AnomaCorr,
-        OriginCorr,
-        WinsolsConst,
-        LeapConst,
-        AnomaConst,
-        NodeConst,
-        AcrTermList
+        Sidereal, SolarNumer, LunarNumer, Denom, Anoma, AnomaOrigin, Node, YinyangOrigin, EcliOrigin,
+        OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
+        YuanRange, JiRange, ZhangRange, ZhangLeap,
+        FirstCorr, AnomaCorr, OriginCorr, WinsolsConst, LeapConst, AnomaConst, NodeConst,
+        NightList, AcrTermList
     } = AutoPara[CalName]
     let {
-        Solar,
-        SolarRaw,
-        Lunar,
-        LunarRaw,
-        OriginDaySc,
+        Solar, SolarRaw, Lunar, LunarRaw, OriginDaySc,
     } = AutoPara[CalName]
     OriginDaySc = OriginDaySc || 0
     SolarRaw = SolarRaw || Solar
@@ -172,7 +145,6 @@ export default (CalName, year) => {
         LeapSurAvgPrev = parseFloat(((AccumLeapPrev % Lunar + Lunar) % Lunar).toPrecision(14))
         LeapSurAvgNext = parseFloat(((AccumLeapNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
-    const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
     let FirstAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
@@ -245,15 +217,15 @@ export default (CalName, year) => {
         const AvgMod = []
         const AvgSc = []
         const AvgDecimal = []
-        // const TermAvgBare = []
         const TermAvgRaw = []
         const TermAcrRaw = []
+        const TermAcrWinsolsDif = []
+        const TermAvgWinsolsDif = []
         const AnomaAccum = []
         const NodeAccum = []
         const OrderMod = []
         const AcrOrderRaw = []
         const Tcorr = []
-        // const AcrBare = []
         const AcrRaw = []
         const AcrMod = []
         const Sc = []
@@ -263,8 +235,6 @@ export default (CalName, year) => {
         const Decimal = []
         const WinsolsDifRaw = []
         const Equa = []
-        const TermEqua = []
-        const TermMidstar = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
             AvgMod[i] = (AvgRaw[i] % 60 + 60) % 60
@@ -312,17 +282,13 @@ export default (CalName, year) => {
                     Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
                 }
                 Equa[i] = Deg2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
-                const TermAvgWinsolsDif = (i + ZhengWinsolsDif - 1) * TermLeng
-                TermAvgRaw[i] = OriginAccum + TermAvgWinsolsDif
+                TermAvgWinsolsDif[i] = (i + ZhengWinsolsDif - 1) * TermLeng
+                TermAvgRaw[i] = OriginAccum + TermAvgWinsolsDif[i]
                 const TermNum3 = 2 * (i + ZhengWinsolsDif - 1)
-                let TermAcrWinsolsDif = 0
                 if (Type >= 5) {
-                    TermAcrWinsolsDif = AcrTermList[TermNum3 % 24] + (TermNum3 >= 24 ? Solar : 0)
-                    TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif
+                    TermAcrWinsolsDif[i] = AcrTermList[TermNum3 % 24] + (TermNum3 >= 24 ? Solar : 0)
+                    TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif[i]
                 }
-                const Func = Deg2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrWinsolsDif || TermAvgWinsolsDif), WinsolsDecimal)
-                TermEqua[i] = Func.MansionResult
-                TermMidstar[i] = Func.MidstarResult
             }
             /////合朔漏刻//////
             if (Type === 4) {
@@ -341,7 +307,7 @@ export default (CalName, year) => {
             TermAvgRaw, TermAcrRaw, Tcorr,
             AvgOrderRaw, AcrOrderRaw, OrderMod, AcrRaw, AcrMod, AvgSc, AvgDecimal, Sc,
             Decimal, Decimal1, Decimal2, Decimal3,
-            Equa, TermEqua, TermMidstar,
+            Equa, TermAcrWinsolsDif, TermAvgWinsolsDif,
             /// 交食用到
             NodeAccum, AnomaAccum, WinsolsDifRaw,
         }
@@ -365,8 +331,8 @@ export default (CalName, year) => {
         Decimal2: NewmDecimal2,
         Decimal3: NewmDecimal3,
         Equa: NewmEqua,
-        TermEqua: TermEqua,
-        TermMidstar: TermMidstar
+        TermAcrWinsolsDif: TermAcrWinsolsDif,
+        TermAvgWinsolsDif: TermAvgWinsolsDif
     } = Newm
     const {
         Sc: SyzygySc,
@@ -435,7 +401,7 @@ export default (CalName, year) => {
         isAdvance, isLeapAdvan, isLeapPost, isLeapThis, isLeapPrev, isLeapNext,
         NewmSyzygyStart, NewmSyzygyEnd, TermStart, TermEnd,
         AccumPrint,
-        NewmEqua, TermEqua, TermMidstar,
+        NewmEqua, TermAvgWinsolsDif, TermAcrWinsolsDif, EquaDegAccumList,
         //////// 交食用
         NewmNodeAccum: Newm.NodeAccum,
         NewmAnomaAccum: Newm.AnomaAccum,

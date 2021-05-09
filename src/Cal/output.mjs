@@ -45,7 +45,7 @@ const PrintNewm = result => {
     } else {
         Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + `\n`
     }
-    if (NewmEquaPrint.length > 0) {
+    if ((NewmEquaPrint || []).length > 0) {
         Print += '**赤度** ' + NewmEquaPrint.join(' ') + `\n`
     }
     Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDecimalPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
@@ -53,7 +53,7 @@ const PrintNewm = result => {
     if (TermAcrScPrint.length > 0) {
         Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDecimalPrint.join(' ') + `\n`
     }
-    if (TermMidstarPrint[1] !== 0) {
+    if ((TermMidstarPrint || []).length > 0) {
         Print += '**氣赤**' + TermEquaPrint.join(' ') + `\n`
         Print += '**昏中** ' + TermMidstarPrint.join(' ') + `\n`
     }

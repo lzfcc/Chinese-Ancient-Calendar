@@ -349,7 +349,7 @@ export default {
         TongRange: 1539, // 統法
         isTermLeap: 1,
         // MansionRaw: [8, 26], // 牽牛初度。
-        MansionRaw: [9, 0], // 這兩個結果都等於牛1.00
+        MansionRaw: [9, 0], // 這兩個結果都等於牛0
         MansionFractPosition: 8,
         Ecli: 135 / 23,
         EcliRange: 513,

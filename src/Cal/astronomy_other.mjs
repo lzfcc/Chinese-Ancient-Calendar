@@ -22,7 +22,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
     Accum -= WinsolsConst || 0 // 授時要減去氣應？
     let MansionOrder = 0
     let MidstarOrder = 0
-    const MansionAccum = parseFloat((((Mansion + (MansionConst || 0) + Accum) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(12))
+    const MansionAccum = ((Mansion + (MansionConst || 0) + Accum) % Sidereal + Sidereal + 1e-10) % Sidereal
     for (let j = 1; j <= 28; j++) {
         if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
             MansionOrder = j
@@ -36,9 +36,20 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
     /////////昏中星/////////               
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
-    if (WinsolsDecimal) {
+    let LightRange = 0.025 // 宣明不能確定，各個節氣都不一樣
+    if (CalName === 'Huangji') {
+        LightRange = 0.02365
+    } else if (CalName === 'Linde') {
+        LightRange = 0.0228
+    }
+    if (WinsolsDecimal >= 0) { // 一個小坑，四分曆存在WinsolsDecimal===0的情況，所以要加上>=0，只保留undefined
         const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
-        const MidstarRaw = (MansionAccum + (0.525 - Sunrise) * Sidereal - Sunrise + 1 + Sidereal) % Sidereal
+        let MidstarRaw = 0
+        if (CalName === 'Dayan') { // 大衍只考慮了昬時距午度
+            MidstarRaw = (MansionAccum + (0.5 - Sunrise + LightRange) * Sidereal) % Sidereal
+        } else {
+            MidstarRaw = (MansionAccum + (0.5 + LightRange - Sunrise) * Sidereal - Sunrise + 1) % Sidereal
+        }
         for (let k = 1; k <= 28; k++) {
             if (DegAccumList[k] < MidstarRaw && MidstarRaw < DegAccumList[k + 1]) {
                 MidstarOrder = k

@@ -1,4 +1,7 @@
 import {
+    Bind
+} from './bind.mjs'
+import {
     TermList,
     ScList,
     ThreeList,
@@ -9,68 +12,60 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import {
-    Bind
-} from './bind.mjs'
+    Deg2Mansion
+} from './astronomy_other.mjs'
 
 export default (CalName, YearStart, YearEnd) => { // CalNewm
-    const {
-        Type,
-        AutoNewm,
-        AutoPara
+    const { Type, AutoNewm, AutoPara
     } = Bind(CalName)
     const isExcl = Type >= 4 ? 1 : 0
-    const {
-        OriginAd,
-        ZhangRange,
-        ZhengNum,
-        Denom,
-        OriginMonNum,
-        isTermLeap,
-        WinsolsWinsolsDif
+    const { OriginAd, ZhangRange, ZhengNum, Denom, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
     } = AutoPara[CalName]
-    let {
-        OriginDaySc
+    let { OriginDaySc
     } = AutoPara[CalName]
     OriginDaySc = OriginDaySc || 0
     const YearMemo = []
     const calculate = year => {
-        const [mainPrev, mainThis, mainNext] = YearMemo // 去年，今年，明年
+        const [PrevYear, ThisYear, NextYear] = YearMemo
         const ZhengWinsolsDif = ZhengNum - OriginMonNum
         const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
-        const isLeapPvPt = mainPrev.isLeapPost
-        const { isLeapAdvan: isLeapTA,
+        const isLeapPvPt = PrevYear.isLeapPost
+        const {
+            isLeapAdvan: isLeapTA,
             JiScOrder: JiScOrder,
             OriginAccum: OriginAccum,
             NewmOrderRaw: NewmOrderRaw,
             NewmAcrOrderRaw: NewmAcrOrderRaw,
             NewmOrderMod: NewmOrderMod,
             NewmEqua: NewmEqua,
-            TermEqua: TermEqua,
-            TermMidstar: TermMidstar,
             TermAvgRaw: TermAvgRaw,
+            TermAcrRaw: TermAcrRaw,
+            EquaDegAccumList: EquaDegAccumList,
+            TermAvgWinsolsDif: TermAvgWinsolsDif,
+            TermAcrWinsolsDif: TermAcrWinsolsDif,
             AccumPrint: AccumPrint
-        } = mainThis
+        } = ThisYear
         let {
             LeapNumTerm: LeapNumTermThis,
             isLeapPrev: isLeapTPv,
             isLeapThis: isLeapTT,
-            TermAcrRaw: TermAcrRaw,
             NewmSyzygyStart: NewmSyzygyStart,
             NewmSyzygyEnd: NewmSyzygyEnd,
             TermStart: TermStart,
             TermEnd: TermEnd,
-        } = mainThis
+        } = ThisYear
+        const WinsolsDecimal = +(OriginAccum - Math.floor(OriginAccum)).toFixed(5)
         let specialStart = 0
         let specialNewmSyzygyEnd = 0
         if (Type === 1) {
-            if ((isTermLeap && mainNext.TermSc[1] === '') || (!isTermLeap && mainNext.TermSc[WinsolsMonNum] === '')) {
+            if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[WinsolsMonNum] === '')) {
                 specialNewmSyzygyEnd = 1
                 TermEnd = 1
                 LeapNumTermThis = 12
                 if (WinsolsMonNum === 1) {
                     TermEnd = 0
                 }
-            } else if ((isTermLeap && mainThis.TermSc[1] === '') || (!isTermLeap && mainThis.TermSc[WinsolsMonNum] === '')) {
+            } else if ((isTermLeap && ThisYear.TermSc[1] === '') || (!isTermLeap && ThisYear.TermSc[WinsolsMonNum] === '')) {
                 specialStart = 1
                 LeapNumTermThis -= 1
             } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
@@ -79,7 +74,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermStart += specialStart
             LeapNumTermThis -= NewmSyzygyStart
         } else {
-            if (mainThis.isLeapPost) {
+            if (ThisYear.isLeapPost) {
                 NewmSyzygyEnd = 0
                 TermEnd = 0
             } else if (isLeapPvPt) {
@@ -94,7 +89,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 TermEnd = 1
                 isLeapTT = 1
                 LeapNumTermThis = 1
-            } else if (mainNext.isLeapPrev && mainNext.isLeapAdvan) {
+            } else if (NextYear.isLeapPrev && NextYear.isLeapAdvan) {
                 TermEnd = 1
                 isLeapTT = 1
                 NewmSyzygyEnd = 1
@@ -116,6 +111,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let TermAcrDecimal = []
         let TermAcrMod = []
         let TermAcrOrderMod = []
+        const TermEqua = []
+        const TermMidstar = []
         if (Type >= 2) {
             for (let i = 0; i <= 13; i++) {
                 TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
@@ -128,6 +125,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     TermAcrOrderMod = Math.floor(TermAcrMod)
                     TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
                     TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
+                }
+                if (MansionRaw) {
+                    const Func = Deg2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrWinsolsDif[i] || TermAvgWinsolsDif[i]), WinsolsDecimal)
+                    TermEqua[i] = Func.MansionResult
+                    TermMidstar[i] = Func.MidstarResult
                 }
             }
             if (isLeapTT) {
@@ -144,6 +146,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
                 TermSc[LeapNumTermThis + 1] = ''
                 TermDecimal[LeapNumTermThis + 1] = ''
+                if (MansionRaw) {
+                    TermEqua[LeapNumTermThis + 1] = ''
+                    TermMidstar[LeapNumTermThis + 1] = ''
+                }
                 for (let i = LeapNumTermThis + 2; i <= 13; i++) {
                     TermAvgMod[i] = ((TermAvgRaw[i - 1]) % 60 + 60) % 60
                     TermOrderMod[i] = Math.floor(TermAvgMod[i])
@@ -156,6 +162,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
                         TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                     }
+                    if (MansionRaw) {
+                        const Func = Deg2Mansion((TermAcrRaw[i - 1] || TermAvgRaw[i - 1]), EquaDegAccumList, CalName, (TermAcrWinsolsDif[i - 1] || TermAvgWinsolsDif[i - 1]), WinsolsDecimal)
+                        TermEqua[i] = Func.MansionResult
+                        TermMidstar[i] = Func.MidstarResult
+                    }
                 }
             }
         }
@@ -165,7 +176,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const MonthName = []
         if (Type === 1) {
             if (isTermLeap) {
-                if (LeapNumTermThis && (mainThis.isLeapAvgThis || specialNewmSyzygyEnd)) { // || (mainThis.isLeapAvgNext && mainThis.isAdvance)))
+                if (LeapNumTermThis && (ThisYear.isLeapAvgThis || specialNewmSyzygyEnd)) { // || (ThisYear.isLeapAvgNext && ThisYear.isAdvance)))
                     for (let i = 1; i <= 13; i++) {
                         if (i <= LeapNumTermThis) {
                             Month[i] = (i + ZhengWinsolsDif + 12) % 12
@@ -193,7 +204,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                 }
             } else {
-                if ((mainThis.isLeapAvgFix || specialNewmSyzygyEnd) && !specialStart) {
+                if ((ThisYear.isLeapAvgFix || specialNewmSyzygyEnd) && !specialStart) {
                     for (let i = 1; i <= 13; i++) {
                         if (i <= 12) {
                             Month[i] = (i + ZhengWinsolsDif + 12) % 12
@@ -250,79 +261,87 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let ZhengGreatSur = 0
         let ZhengSmallSur = 0
         if (Type === 1) {
-            ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] - mainThis.BuScorder + 60) % 60
-            ZhengSmallSur = parseFloat(((mainThis.NewmAvgRaw[1 + NewmSyzygyStart] - NewmOrderRaw[1 + NewmSyzygyStart]) * Denom).toPrecision(5))
+            ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] - ThisYear.BuScOrder + 60) % 60
+            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmSyzygyStart] - NewmOrderRaw[1 + NewmSyzygyStart]) * Denom).toPrecision(5))
         } else if (Type === 2 || Type === 3) {
             ZhengGreatSur = Math.round((NewmOrderMod[1 + NewmSyzygyStart] - JiScOrder + 60) % 60)
-            ZhengSmallSur = parseFloat(((mainThis.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
+            ZhengSmallSur = parseFloat(((ThisYear.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
         } else if (Type === 4) {
             ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] + 60) % 60
-            ZhengSmallSur = parseFloat(((mainThis.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
+            ZhengSmallSur = parseFloat(((ThisYear.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
         }
         const MonthPrint = MonthName.slice(1)
         const NewmSyzygySlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
         ////////////下爲調整輸出////////////
-        const NewmWinsolsDifRawPrint = NewmSyzygySlice(mainThis.NewmWinsolsDifRaw)
-        const NewmAvgScPrint = NewmSyzygySlice(mainThis.NewmAvgSc)
-        const NewmAvgDecimalPrint = NewmSyzygySlice(mainThis.NewmAvgDecimal)
+        const NewmWinsolsDifRawPrint = NewmSyzygySlice(ThisYear.NewmWinsolsDifRaw)
+        const NewmAvgScPrint = NewmSyzygySlice(ThisYear.NewmAvgSc)
+        const NewmAvgDecimalPrint = NewmSyzygySlice(ThisYear.NewmAvgDecimal)
         let NewmScPrint = []
         let NewmDecimal3Print = []
         let NewmDecimal2Print = []
         let NewmDecimal1Print = []
         if (Type >= 2) {
-            NewmScPrint = NewmSyzygySlice(mainThis.NewmSc)
-            if (Type <= 10 && mainThis.NewmDecimal1[1] !== 'N') {
-                NewmDecimal1Print = NewmSyzygySlice(mainThis.NewmDecimal1)
+            NewmScPrint = NewmSyzygySlice(ThisYear.NewmSc)
+            if (Type <= 10 && (ThisYear.NewmDecimal1 || []).length) {
+                NewmDecimal1Print = NewmSyzygySlice(ThisYear.NewmDecimal1)
             } else if (Type === 11) {
-                NewmDecimal3Print = NewmSyzygySlice(mainThis.NewmDecimal3)
+                NewmDecimal3Print = NewmSyzygySlice(ThisYear.NewmDecimal3)
             }
         }
         if (Type >= 5 && Type <= 10) {
-            NewmDecimal2Print = NewmSyzygySlice(mainThis.NewmDecimal2)
+            NewmDecimal2Print = NewmSyzygySlice(ThisYear.NewmDecimal2)
         }
         const NewmEquaPrint = NewmSyzygySlice(NewmEqua)
-        const SyzygyScPrint = NewmSyzygySlice(mainThis.SyzygySc)
-        const SyzygyDecimalPrint = NewmSyzygySlice(mainThis.SyzygyDecimal)
+        const SyzygyScPrint = NewmSyzygySlice(ThisYear.SyzygySc)
+        const SyzygyDecimalPrint = NewmSyzygySlice(ThisYear.SyzygyDecimal)
         let TermNamePrint = []
         let TermScPrint = []
         let TermDecimalPrint = []
         let TermAcrScPrint = []
         let TermAcrDecimalPrint = []
+        let TermEquaPrint = []
+        let TermMidstarPrint = []
         if (Type === 1) {
-            TermNamePrint = TermSlice(mainThis.TermName)
-            TermScPrint = TermSlice(mainThis.TermSc)
-            TermDecimalPrint = TermSlice(mainThis.TermDecimal)
+            TermNamePrint = TermSlice(ThisYear.TermName)
+            TermScPrint = TermSlice(ThisYear.TermSc)
+            TermDecimalPrint = TermSlice(ThisYear.TermDecimal)
+            TermEquaPrint = TermSlice(ThisYear.TermEqua)
+            TermMidstarPrint = TermSlice(ThisYear.TermMidstar)
             if (LeapNumTermThis === 12 && specialNewmSyzygyEnd && !TermEnd) {
                 TermNamePrint.push('无')
                 TermScPrint.push('')
                 TermDecimalPrint.push('')
+                TermEquaPrint.push('')
+                TermMidstarPrint.push('')
             }
-        } else if (Type >= 2 && Type <= 4) {
-            TermNamePrint = TermSlice(TermName)
-            TermScPrint = TermSlice(TermSc)
-            TermDecimalPrint = TermSlice(TermDecimal)
         } else {
-            TermNamePrint = TermSlice(TermName)
-            TermAcrScPrint = TermSlice(TermAcrSc)
-            TermAcrDecimalPrint = TermSlice(TermAcrDecimal)
-            TermScPrint = TermSlice(TermSc)
-            TermDecimalPrint = TermSlice(TermDecimal)
+            if (Type >= 2 && Type <= 4) {
+                TermNamePrint = TermSlice(TermName)
+                TermScPrint = TermSlice(TermSc)
+                TermDecimalPrint = TermSlice(TermDecimal)
+            } else {
+                TermNamePrint = TermSlice(TermName)
+                TermAcrScPrint = TermSlice(TermAcrSc)
+                TermAcrDecimalPrint = TermSlice(TermAcrDecimal)
+                TermScPrint = TermSlice(TermSc)
+                TermDecimalPrint = TermSlice(TermDecimal)
+            }
+            TermEquaPrint = TermSlice(TermEqua)
+            TermMidstarPrint = TermSlice(TermMidstar)
         }
-        const TermEquaPrint = TermSlice(TermEqua)
-        const TermMidstarPrint = TermSlice(TermMidstar)
         ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
         let NewmEcli = []
         let SyzygyEcli = []
         let NewmNodeAccumPrint = []
         let NewmAnomaAccumPrint = []
         if (Type > 1) {
-            NewmNodeAccumPrint = NewmSyzygySlice(mainThis.NewmNodeAccum)
-            NewmAnomaAccumPrint = NewmSyzygySlice(mainThis.NewmAnomaAccum)
-            const NewmDecimalPrint = NewmSyzygySlice(mainThis.NewmDecimal)
-            const SyzygyNodeAccumPrint = NewmSyzygySlice(mainThis.SyzygyNodeAccum)
-            const SyzygyAnomaAccumPrint = NewmSyzygySlice(mainThis.SyzygyAnomaAccum)
-            const SyzygyWinsolsDifRawPrint = NewmSyzygySlice(mainThis.SyzygyWinsolsDifRaw)
+            NewmNodeAccumPrint = NewmSyzygySlice(ThisYear.NewmNodeAccum)
+            NewmAnomaAccumPrint = NewmSyzygySlice(ThisYear.NewmAnomaAccum)
+            const NewmDecimalPrint = NewmSyzygySlice(ThisYear.NewmDecimal)
+            const SyzygyNodeAccumPrint = NewmSyzygySlice(ThisYear.SyzygyNodeAccum)
+            const SyzygyAnomaAccumPrint = NewmSyzygySlice(ThisYear.SyzygyAnomaAccum)
+            const SyzygyWinsolsDifRawPrint = NewmSyzygySlice(ThisYear.SyzygyWinsolsDifRaw)
             for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                 // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
                 let NoleapMon = i + 1
@@ -397,28 +416,28 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         if (Type === 1) {
             let LeapSur = 0
             if (!isTermLeap) {
-                LeapSur = mainThis.LeapSurAvgFix
+                LeapSur = ThisYear.LeapSurAvgFix
             } else {
-                LeapSur = mainThis.LeapSurAvgThis
+                LeapSur = ThisYear.LeapSurAvgThis
             }
             if (CalName === 'Taichu') {
-                YearInfo += `${ScList[mainThis.BuScorder]}統${mainThis.BuYear}${mainThis.JupiterSc}`
+                YearInfo += `${ScList[ThisYear.BuScOrder]}統${ThisYear.BuYear}${ThisYear.JupiterSc}`
             } else {
-                YearInfo += `${ThreeList[mainThis.JiOrder]}紀${ScList[mainThis.BuScorder]}蔀${mainThis.BuYear}`
+                YearInfo += `${ThreeList[ThisYear.JiOrder]}紀${ScList[ThisYear.BuScOrder]}蔀${ThisYear.BuYear}`
             }
-            YearInfo += `  大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat((mainThis.WinsolsAccumMod).toPrecision(6)).toFixed(4)}`
+            YearInfo += `  大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat((ThisYear.WinsolsAccumMod).toPrecision(6)).toFixed(4)}`
             if (WinsolsWinsolsDif === -45.65625) {
                 YearInfo += `立春${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             } else if (WinsolsWinsolsDif === -60.875) {
                 YearInfo += `雨水${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
             YearInfo += `  閏餘${(LeapSur.toFixed(4))}`
-            if (mainThis.LeapNumOriginLeapSur) {
-                YearInfo += `閏${mainThis.LeapNumOriginLeapSur - NewmSyzygyStart}`
+            if (ThisYear.LeapNumOriginLeapSur) {
+                YearInfo += `閏${ThisYear.LeapNumOriginLeapSur - NewmSyzygyStart}`
             }
         } else {
             if (JiScOrder) {
-                YearInfo += `${ScList[JiScOrder]}紀${mainThis.JiYear}`
+                YearInfo += `${ScList[JiScOrder]}紀${ThisYear.JiYear}`
             }
             if (ZhengGreatSur || ZhengSmallSur) {
                 YearInfo += ` 大餘${ZhengGreatSur}小餘${ZhengSmallSur}`
@@ -432,13 +451,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 YearInfo += `${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
             if (Type === 2) {
-                YearInfo += `  平${mainThis.LeapSurAvgThis}定${(mainThis.LeapSurAcrThis).toFixed(2)}準${mainThis.LeapLimit}`
+                YearInfo += `  平${ThisYear.LeapSurAvgThis}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${ThisYear.LeapLimit}`
             } else if (Type === 3) {
-                YearInfo += `  平${Math.round((mainThis.LeapSurAvgThis) * ZhangRange)}定${((mainThis.LeapSurAcrThis) * ZhangRange).toFixed(2)}準${Math.round((mainThis.LeapLimit) * ZhangRange)}`
+                YearInfo += `  平${Math.round((ThisYear.LeapSurAvgThis) * ZhangRange)}定${((ThisYear.LeapSurAcrThis) * ZhangRange).toFixed(2)}準${Math.round((ThisYear.LeapLimit) * ZhangRange)}`
             } else if (Type <= 7) {
-                YearInfo += `  平${parseFloat((mainThis.LeapSurAvgThis).toPrecision(8))}定${(mainThis.LeapSurAcrThis).toFixed(2)}準${(mainThis.LeapLimit)}`
+                YearInfo += `  平${parseFloat((ThisYear.LeapSurAvgThis).toPrecision(8))}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(ThisYear.LeapLimit)}`
             } else {
-                YearInfo += `  平${(mainThis.LeapSurAvgThis).toFixed(2)}定${(mainThis.LeapSurAcrThis).toFixed(2)}準${(mainThis.LeapLimit).toFixed(2)}`
+                YearInfo += `  平${(ThisYear.LeapSurAvgThis).toFixed(2)}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(ThisYear.LeapLimit).toFixed(2)}`
             }
         }
         if (AccumPrint) {

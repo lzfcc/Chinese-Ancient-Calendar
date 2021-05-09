@@ -327,7 +327,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是
         DegAccumList = DegList.slice()
         for (let i = 1; i <= 28; i++) { // 從1開始索引
             DegAccumList[i] += DegAccumList[i - 1]
-            DegAccumList[i] = parseFloat((DegAccumList[i]).toPrecision(10))
+            DegAccumList[i] = parseFloat((DegAccumList[i]).toPrecision(13))
         }
         DegAccumList = DegAccumList.slice(-1).concat(DegAccumList.slice(0, -1))
         DegAccumList[0] = 0
