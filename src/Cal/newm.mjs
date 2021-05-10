@@ -11,7 +11,7 @@ import {
     ConstWest
 } from './astronomy_west.mjs'
 import {
-    Deg2Mansion, AutoNewmPlus
+    Deg2Mansion, AutoNewmPlus, AutoSyzygySub
 } from './astronomy_other.mjs'
 import {
     AutoEqua2Eclp
@@ -25,7 +25,7 @@ export default (CalName, year) => {
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
         FirstCorr, AnomaCorr, OriginCorr, WinsolsConst, LeapConst, AnomaConst, NodeConst,
-        NightList, AcrTermList
+        AcrTermList
     } = AutoPara[CalName]
     let {
         Solar, SolarRaw, Lunar, LunarRaw, OriginDaySc,
@@ -70,7 +70,6 @@ export default (CalName, year) => {
         }
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
-    const HalfTermLeng = Solar / 24
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
     let NodeOrigin = 0
     if (EcliOrigin) {
@@ -145,6 +144,7 @@ export default (CalName, year) => {
         LeapSurAvgPrev = parseFloat(((AccumLeapPrev % Lunar + Lunar) % Lunar).toPrecision(14))
         LeapSurAvgNext = parseFloat(((AccumLeapNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
+    const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
     let FirstAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
@@ -290,14 +290,12 @@ export default (CalName, year) => {
                     TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif[i]
                 }
             }
-            /////合朔漏刻//////
-            if (CalName === 'Yuanjia') {
-                const TermNum1 = ~~(WinsolsDifRaw[i] / HalfTermLeng) // 朔望所在氣名
-                const TermNewmDif = WinsolsDifRaw[i] - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
-                const Dawn = (NightList[TermNum1] + TermNewmDif * (NightList[TermNum1 + 1] - NightList[TermNum1])) / 100 // 日出时刻=夜半漏+2.5刻                
-                if (isNewm && AcrRaw[i] - AcrOrderRaw[i] < Dawn) { // 按元嘉，合朔月食在黎明前是前一天
-                    Sc[i] = ScList[OrderMod[i]] + `<span class='NewmPlus'>-</span>`
-                }
+            if (!isNewm) {
+                const { SyzygySub: SyzygySub, SyzygySubPrint: SyzygySubPrint
+                } = AutoSyzygySub(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////退望/////                
+                OrderMod[i] += SyzygySub
+                AcrOrderRaw[i] += SyzygySub
+                Sc[i] += (SyzygySubPrint || '')
             }
             if (Node) {
                 NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
@@ -356,7 +354,7 @@ export default (CalName, year) => {
             LeapNumTerm -= 1
         }
         while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmOrderRaw[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmOrderRaw[LeapNumTerm + 2] - 2.5)) {
-            LeapNumTerm ++
+            LeapNumTerm++
         }
         if (LeapNumTerm < 1) {
             isLeapAdvan = 1

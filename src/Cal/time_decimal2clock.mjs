@@ -113,10 +113,10 @@ const ClockSong = Decimal => { // 皇祐之後、元、明。（之前假設初�
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 
-const ClockQing = Decimal => { // 清
+const ClockQing = Decimal => { // 清代96刻
     Decimal += 100 / 24 // 夜半子半
     const KeRaw = Decimal * 0.96
-    const KeOrder = ~~KeRaw // 清代96刻
+    const KeOrder = ~~KeRaw
     const ClockOrder = ~~(KeRaw / 8)
     const HalfOrder = ~~((KeOrder - ClockOrder * 8) / 4)
     const QuarOrder = KeOrder - (ClockOrder * 8 + HalfOrder * 4)
@@ -175,4 +175,4 @@ export const BindClock1 = Decimal => {
     })
     return Print
 }
-console.log(BindClock1('5')) // 128  9584  9999
+// console.log(BindClock1('5')) // 128  9584  9999

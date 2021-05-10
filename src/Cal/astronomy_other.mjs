@@ -8,6 +8,16 @@ import {
     Bind
 } from './bind.mjs'
 
+const AutoLightRange = CalName => {
+    let LightRange = 0.025 // 宣明不能確定，各個節氣都不一樣
+    if (CalName === 'Huangji') {
+        LightRange = 0.02365
+    } else if (CalName === 'Linde') {
+        LightRange = 0.0228
+    }
+    return LightRange
+}
+
 export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
     const { AutoPara
     } = Bind(CalName)
@@ -33,12 +43,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
     /////////昏中星/////////               
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
-    let LightRange = 0.025 // 宣明不能確定，各個節氣都不一樣
-    if (CalName === 'Huangji') {
-        LightRange = 0.02365
-    } else if (CalName === 'Linde') {
-        LightRange = 0.0228
-    }
+    const LightRange = AutoLightRange(CalName)
     if (WinsolsDecimal >= 0) { // 一個小坑，四分曆存在WinsolsDecimal===0的情況，所以要加上>=0，只保留undefined
         const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
         let MidstarRaw = 0
@@ -80,6 +85,18 @@ export const AutoNewmPlus = (Decimal, CalName) => { // 朔小分
         Print = `<span class='NewmPlus'>+</span>`
     }
     return { NewmPlus, Print }
+}
+
+export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => {
+    const LightRange = AutoLightRange(CalName)
+    const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
+    let SyzygySub = 0
+    let Print = ''
+    if (Decimal < Sunrise - LightRange) {
+        SyzygySub = -1
+        Print = `<span class='NewmPlus'>-</span>`
+    }
+    return { SyzygySub, Print }
 }
 
 export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九道法
