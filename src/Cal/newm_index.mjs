@@ -137,7 +137,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     LeapNumTermThis -= 1
                 }
                 while (LeapNumTermThis <= 11 && (TermAvgRaw[LeapNumTermThis + 1] < NewmOrderRaw[LeapNumTermThis + 2]) && (TermAvgRaw[LeapNumTermThis + 1] >= NewmOrderRaw[LeapNumTermThis + 2] - 2.5)) {
-                    LeapNumTermThis += 1
+                    LeapNumTermThis ++
                 }
                 TermName[LeapNumTermThis + 1] = '无'
                 if (TermAcrRaw) {

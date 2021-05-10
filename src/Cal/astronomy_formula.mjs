@@ -80,7 +80,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
 }
 // console.log(Equa2EclpFormula(91, 'Chongxuan'))
 
-// 魏晉的黃道去極，是根據節氣來的，日書就不調用了
+// 魏晉的黃道去極，是根據節氣來的，日書就不調用了。崇玄內外度是「昏後夜半日數」，紀元「午中日行積度」
 // 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致。又說：魏晉南北、皇極、戊寅、應天、乾元、儀天自變量用的平氣，麟德大衍宣明崇玄之後用的定氣。
 export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆法》頁128。漏刻頁135
     let Solar = 0
@@ -112,7 +112,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
         } else {
             Lati = -23.8859 + g
         }
-    } else if (CalName === 'Yitian') { // 儀天的自變量是距二至的日數，其他都是實行度。
+    } else if (CalName === 'Yitian') { // 儀天的自變量是距二至的日數
         if (LongiRaw >= QuarSolar && LongiRaw < 3 * QuarSolar) { // 冬至後次象
             if (Longi1 > 93.7412) {
                 Longi1 = HalfSolar - Longi1
@@ -237,7 +237,7 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
         } else {
             Dial = 1.478 + 1e-7 * (4881.67 - 4.01 * Deg) * Deg ** 2
         }
-    } else if (CalName === 'Mingtian' || CalName === 'Guantian') {
+    } else if (['Mingtian', 'Guantian'].includes(CalName)) {
         if ((DegRaw >= HalfSolar && Deg > 137) || (DegRaw < HalfSolar && Deg > 45.62)) {
             Deg = parseFloat((HalfSolar - Deg).toPrecision(14))
         }

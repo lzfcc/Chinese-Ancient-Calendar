@@ -36,7 +36,7 @@ const ClockJingchu = Daydecimal => { // 劉洪濤頁219
     const ClockFrac = Daydecimal.sub(big(ClockOrder - 1).mul(portion))
     const Twelve = ((big.div(ClockFrac, portion)).mul(12)).floor().toNumber()
     if (Twelve === 11) {
-        ClockOrder += 1
+        ClockOrder ++
     }
     const TwelveName = TwelveList[Twelve]
     return ClockName + '時 ' + TwelveName
@@ -51,7 +51,7 @@ const ClockTang = Daydecimal => {
     const ClockFrac = Daydecimal.sub(big(ClockOrder - 1).mul(portion))
     const Twelve = ((big.div(ClockFrac, portion)).mul(12)).floor().toNumber()
     if (Twelve === 11) {
-        ClockOrder += 1
+        ClockOrder ++
     }
     const TwelveName = TwelveList[Twelve]
     return ClockName + '時 ' + TwelveName

@@ -196,7 +196,7 @@ export default function CalQuar(CalName, year) {
             LeapNumTerm -= 1
         }
         while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmOrderRaw[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmOrderRaw[LeapNumTerm + 2] - 2)) {
-            LeapNumTerm += 1
+            LeapNumTerm ++
         }
         TermName[LeapNumTerm + 1] = '无'
         TermSc[LeapNumTerm + 1] = ''

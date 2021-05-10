@@ -356,7 +356,7 @@ export default (CalName, year) => {
             LeapNumTerm -= 1
         }
         while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmOrderRaw[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmOrderRaw[LeapNumTerm + 2] - 2.5)) {
-            LeapNumTerm += 1
+            LeapNumTerm ++
         }
         if (LeapNumTerm < 1) {
             isLeapAdvan = 1

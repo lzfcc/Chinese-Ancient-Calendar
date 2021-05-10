@@ -300,37 +300,44 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
     let Longi2LatiB = {}
     let special = 0
     // 公式曆法加上日躔
-    if (isBare) { } else if (['Chongxuan', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].includes(CalName)) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔
-        LongiRaw += AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
+    let Plus1 = 0
+    let Plus2 = 0
+    if ((!isBare) && ['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].includes(CalName)) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔
+        Plus1 = AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
     }
+    if (CalName === 'Chongxuan') {
+        Plus1 = -0.5
+    }
+    const Longi1 = LongiRaw + Plus1
+    const Longi2 = LongiRaw + Plus2
     if (Type <= 3) {
-        Longi2Lati = Longi2LatiTable1(LongiRaw, 'Easthan')
+        Longi2Lati = Longi2LatiTable1(Longi1, 'Easthan')
     } else if (CalName === 'Liangwu') {
-        Longi2Lati = Longi2LatiTable1(LongiRaw, 'Daming')
+        Longi2Lati = Longi2LatiTable1(Longi1, 'Daming')
     } else if (Type === 4) {
-        Longi2Lati = Longi2LatiTable1(LongiRaw, CalName)
+        Longi2Lati = Longi2LatiTable1(Longi1, CalName)
     } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, 'Huangji')
+        Longi2Lati = Longi2LatiTable2(Longi1, 'Huangji')
     } else if (Type === 6) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, CalName)
+        Longi2Lati = Longi2LatiTable2(Longi1, CalName)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, 'Dayan')
+        Longi2Lati = Longi2LatiTable2(Longi1, 'Dayan')
     } else if (['Xuanming', 'Qintian'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, 'Xuanming')
+        Longi2Lati = Longi2LatiTable2(Longi1, 'Xuanming')
     } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, CalName)
+        Longi2Lati = Longi2LatiTable2(Longi1, CalName)
     } else if (['NewDaming', 'Gengwu'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(LongiRaw, 'NewDaming')
+        Longi2Lati = Longi2LatiTable2(Longi1, 'NewDaming')
     } else if (Type === 8) {
-        Longi2LatiA = Longi2LatiFormula(LongiRaw, CalName)
-        Longi2LatiB = Longi2DialFormula(LongiRaw, CalName)
+        Longi2LatiA = Longi2LatiFormula(Longi1, CalName)
+        Longi2LatiB = Longi2DialFormula(Longi2, CalName)
         special = 1
     } else if (Type <= 10) {
-        Longi2LatiA = Longi2LatiFormula(LongiRaw, 'Jiyuan')
-        Longi2LatiB = Longi2DialFormula(LongiRaw, 'Jiyuan')
+        Longi2LatiA = Longi2LatiFormula(Longi1, 'Jiyuan')
+        Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
-        Longi2Lati = Hushigeyuan(LongiRaw)
+        Longi2Lati = Hushigeyuan(Longi1)
     }
     let Lati = 0
     let Lati1 = 0
