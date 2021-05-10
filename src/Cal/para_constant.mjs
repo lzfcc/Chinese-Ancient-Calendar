@@ -405,6 +405,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是
     }
     return DegAccumList
 }
+// console.log(AutoDegAccumList('Daming', 543))
 
 export const WestGongNameList = ['白羊', '金牛', '陰陽', '巨蟹', '獅子', '雙女', '天秤', '天蝎', '人馬', '磨羯', '寶瓶', '雙魚'] // 回回曆法
 export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30] // 已上十二宮，所謂不動之月，凡三百六十五日，乃歲周之日也。若遇宮分有閏之年，於雙魚宮加一日，凡三百六十六日

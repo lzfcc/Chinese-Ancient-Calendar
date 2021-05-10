@@ -61,7 +61,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
         MidstarResult
     }
 }
-// console.log(Deg2Mansion(131536,34 ,[34.15, 144], 'Yuanjia').MansionResult)
+// console.log(Deg2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
 
 // if (Type === 11) {
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
@@ -135,3 +135,22 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九�
     }
     return Print
 }
+
+const Exhaustion = () => { // 大同歲實365.2469 設在0.015-0.018之間。365.262566
+    let Sidereal = 365.2579
+    let Print = ''
+    while (Sidereal < 365.2689) {
+        Sidereal = +(Sidereal + 0.000001).toFixed(6)
+        const Solar = 365 + 9681 / 39616
+        const Accum = Solar * 1025699
+        const MansionAccum = (121.2599 + Accum) % Sidereal
+        // const MidstarRaw = (MansionAccum + 0.225 * Sidereal + 0.7) % Sidereal
+        if (MansionAccum >= 87 && MansionAccum < 87.9) {
+            // if (MidstarRaw >= 183.2599 && MidstarRaw < 184.2499) {
+            Print += ',' + Sidereal // + ':' + MansionAccum}
+            // }
+        }
+        return Print
+    }
+}
+console.log(Exhaustion())

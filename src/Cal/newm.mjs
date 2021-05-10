@@ -291,7 +291,7 @@ export default (CalName, year) => {
                 }
             }
             /////合朔漏刻//////
-            if (Type === 4) {
+            if (CalName === 'Yuanjia') {
                 const TermNum1 = ~~(WinsolsDifRaw[i] / HalfTermLeng) // 朔望所在氣名
                 const TermNewmDif = WinsolsDifRaw[i] - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
                 const Dawn = (NightList[TermNum1] + TermNewmDif * (NightList[TermNum1 + 1] - NightList[TermNum1])) / 100 // 日出时刻=夜半漏+2.5刻                

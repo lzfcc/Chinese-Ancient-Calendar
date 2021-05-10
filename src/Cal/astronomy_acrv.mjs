@@ -679,7 +679,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         } else if (CalName === 'Kaihuang') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Yuanjia').Tcorr1
         } else if (CalName === 'Liangwu') {
-            Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Liangwu').Tcorr1
+            Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Daming').Tcorr1
         } else {
             if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Huangji')

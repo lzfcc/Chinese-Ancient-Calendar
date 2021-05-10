@@ -299,6 +299,8 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
     }
     if (Type <= 3) {
         Longi2Lati = Longi2LatiTable1(LongiRaw, 'Easthan')
+    } else if (CalName === 'Liangwu') {
+        Longi2Lati = Longi2LatiTable1(LongiRaw, 'Daming')
     } else if (Type === 4) {
         Longi2Lati = Longi2LatiTable1(LongiRaw, CalName)
     } else if (Type === 6) {
