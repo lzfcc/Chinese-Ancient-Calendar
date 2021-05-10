@@ -213,8 +213,7 @@ export default (CalName, year) => {
     const EquaDegAccumList = AutoDegAccumList(CalName, year)
     const AutoNewmSyzygy = isNewm => {
         const AvgRaw = []
-        const AvgOrderRaw = []
-        const AvgMod = []
+        const AvgInt = []
         const AvgSc = []
         const AvgDecimal = []
         const TermAvgRaw = []
@@ -223,8 +222,7 @@ export default (CalName, year) => {
         const TermAvgWinsolsDif = []
         const AnomaAccum = []
         const NodeAccum = []
-        const OrderMod = []
-        const AcrOrderRaw = []
+        const AcrInt = []
         const Tcorr = []
         const AcrRaw = []
         const AcrMod = []
@@ -237,12 +235,11 @@ export default (CalName, year) => {
         const Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
-            AvgMod[i] = (AvgRaw[i] % 60 + 60) % 60
-            AvgOrderRaw[i] = Math.floor(AvgRaw[i])
-            AvgSc[i] = ScList[(Math.floor(AvgMod[i]) + 1 + OriginDaySc) % 60]
+            AvgInt[i] = Math.floor(AvgRaw[i])
+            AvgSc[i] = ScList[(((AvgInt[i] + 1 + OriginDaySc) % 60) + 60) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
             WinsolsDifRaw[i] = +(((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar).toFixed(5)
-            AnomaAccum[i] = +((FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(5) // 上元積年大，精度只有那麼多了，再多的話誤差更大
+            AnomaAccum[i] = +((FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(5) // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
             const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
             let Tcorr1 = 0
             if (Type <= 4) {
@@ -255,28 +252,30 @@ export default (CalName, year) => {
             }
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
-            AcrOrderRaw[i] = Math.floor(AvgRaw[i] + Tcorr[i])
+            AcrInt[i] = Math.floor(AcrRaw[i])
             if (Type <= 4) {
-                Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
+                Decimal[i] = AcrRaw[i] - AcrInt[i]
                 Decimal1[i] = Decimal[i].toFixed(4).slice(2, 6)
             } else if (Type < 11) {
-                Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
+                Decimal[i] = AcrRaw[i] - AcrInt[i]
                 Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
                 if (Tcorr1) {
                     Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
                 }
             } else if (Type === 11) {
-                Decimal[i] = AcrRaw[i] - AcrOrderRaw[i]
+                Decimal[i] = AcrRaw[i] - AcrInt[i]
                 Decimal3[i] = Decimal[i].toFixed(4).slice(2, 6)
             }
-            OrderMod[i] = Math.floor(AcrMod[i])
-            Sc[i] = ScList[(OrderMod[i] + 1 + OriginDaySc) % 60] // 算外            
+            let NewmPlus = 0
+            let NewmPlusPrint = ''
+            let SyzygySub = 0
+            let SyzygySubPrint = ''
             if (isNewm) {
-                const { NewmPlus: NewmPlus, NewmPlusPrint: NewmPlusPrint
-                } = AutoNewmPlus(Decimal[i], CalName) /////進朔/////
-                OrderMod[i] += NewmPlus
-                AcrOrderRaw[i] += NewmPlus
-                Sc[i] += (NewmPlusPrint || '')
+                if ((Type >= 7 || CalName === 'Linde') && Type <= 10) {
+                    const Func = AutoNewmPlus(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////進朔/////
+                    NewmPlus = Func.NewmPlus
+                    NewmPlusPrint = Func.Print
+                }
                 let Eclp2EquaDif = 0
                 if (Type === 11) { // 授時要黃轉赤
                     Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
@@ -289,23 +288,22 @@ export default (CalName, year) => {
                     TermAcrWinsolsDif[i] = AcrTermList[TermNum3 % 24] + (TermNum3 >= 24 ? Solar : 0)
                     TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif[i]
                 }
+            } else {
+                const Func = AutoSyzygySub(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////退望/////       
+                SyzygySub = Func.SyzygySub
+                SyzygySubPrint = Func.Print
             }
-            if (!isNewm) {
-                const { SyzygySub: SyzygySub, SyzygySubPrint: SyzygySubPrint
-                } = AutoSyzygySub(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////退望/////                
-                OrderMod[i] += SyzygySub
-                AcrOrderRaw[i] += SyzygySub
-                Sc[i] += (SyzygySubPrint || '')
-            }
+            AcrInt[i] += NewmPlus + SyzygySub
+            AvgInt[i] += NewmPlus + SyzygySub
+            Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
             if (Node) {
                 NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
             }
         }
         return {
-            TermAvgRaw, TermAcrRaw, Tcorr,
-            AvgOrderRaw, AcrOrderRaw, OrderMod, AcrRaw, AcrMod, AvgSc, AvgDecimal, Sc,
+            AvgSc, Tcorr, AvgDecimal, AvgInt, AcrInt, Sc,
             Decimal, Decimal1, Decimal2, Decimal3,
-            Equa, TermAcrWinsolsDif, TermAvgWinsolsDif,
+            Equa, TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif,
             /// 交食用到
             NodeAccum, AnomaAccum, WinsolsDifRaw,
         }
@@ -313,22 +311,19 @@ export default (CalName, year) => {
     const Newm = AutoNewmSyzygy(1)
     const Syzygy = AutoNewmSyzygy(0)
     const {
-        TermAvgRaw: TermAvgRaw,
-        TermAcrRaw: TermAcrRaw,
         Tcorr: NewmTcorr,
         AvgSc: NewmAvgSc,
         AvgDecimal: NewmAvgDecimal,
-        AcrRaw: NewmAcrRaw,
-        AcrMod: NewmAcrMod,
-        AvgOrderRaw: NewmOrderRaw,
-        AcrOrderRaw: NewmAcrOrderRaw,
-        OrderMod: NewmOrderMod,
+        AvgInt: NewmAvgInt,
+        AcrInt: NewmAcrInt,
         Sc: NewmSc,
         Decimal: NewmDecimal,
         Decimal1: NewmDecimal1,
         Decimal2: NewmDecimal2,
         Decimal3: NewmDecimal3,
         Equa: NewmEqua,
+        TermAvgRaw: TermAvgRaw,
+        TermAcrRaw: TermAcrRaw,
         TermAcrWinsolsDif: TermAcrWinsolsDif,
         TermAvgWinsolsDif: TermAvgWinsolsDif
     } = Newm
@@ -342,6 +337,10 @@ export default (CalName, year) => {
     } else {
         LeapSurAcrThis = LeapSurAvgThis - NewmTcorr[1] // * Denom
     }
+    let NewmInt = NewmAvgInt
+    if (Type >= 5) { // 麟德以後用定朔注曆
+        NewmInt = NewmAcrInt
+    }
     // 中氣
     let LeapNumTerm = 0
     if (LeapNumAvgThis) {
@@ -350,10 +349,10 @@ export default (CalName, year) => {
     let isLeapAdvan = 0
     let isLeapPost = 0
     if (isLeapThis) {
-        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmOrderRaw[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmOrderRaw[LeapNumTerm + 1] + 2.5)) {
-            LeapNumTerm -= 1
+        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2.5)) {
+            LeapNumTerm--
         }
-        while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmOrderRaw[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmOrderRaw[LeapNumTerm + 2] - 2.5)) {
+        while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - 2.5)) {
             LeapNumTerm++
         }
         if (LeapNumTerm < 1) {
@@ -384,22 +383,14 @@ export default (CalName, year) => {
         TermEnd = 0
     }
     return {
-        LeapLimit, OriginYear,
-        // 上爲常量。下曆書用
-        FirstAccum, FirstNodeAccum,
-        //////////////////
-        JiYear, JiScOrder, OriginAccum,
-        NewmAvgSc, NewmAvgDecimal, NewmAcrMod, NewmSc,
-        NewmOrderRaw, NewmAcrOrderRaw, NewmOrderMod,
-        NewmDecimal1, NewmDecimal2, NewmDecimal3,
-        NewmAcrRaw,
+        LeapLimit, OriginYear, JiYear, JiScOrder, OriginAccum, AccumPrint,
+        NewmAvgSc, NewmAvgDecimal,
+        NewmSc, NewmInt, NewmDecimal1, NewmDecimal2, NewmDecimal3,
         SyzygySc, SyzygyDecimal,
         TermAvgRaw, TermAcrRaw,
-        LeapSurAvgThis, LeapSurAcrThis, LeapNumTerm,
-        isAdvance, isLeapAdvan, isLeapPost, isLeapThis, isLeapPrev, isLeapNext,
+        LeapSurAvgThis, LeapSurAcrThis, LeapNumTerm, isAdvance, isLeapAdvan, isLeapPost, isLeapThis, isLeapPrev, isLeapNext,
         NewmSyzygyStart, NewmSyzygyEnd, TermStart, TermEnd,
-        AccumPrint,
-        NewmEqua, TermAvgWinsolsDif, TermAcrWinsolsDif, EquaDegAccumList,
+        EquaDegAccumList, NewmEqua, TermAvgWinsolsDif, TermAcrWinsolsDif,
         //////// 交食用
         NewmNodeAccum: Newm.NodeAccum,
         NewmAnomaAccum: Newm.AnomaAccum,

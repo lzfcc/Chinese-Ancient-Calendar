@@ -2,11 +2,7 @@ import {
     Bind
 } from './bind.mjs'
 import {
-    TermList,
-    ScList,
-    ThreeList,
-    CalNameList,
-    MonNumList
+    TermList, ScList, ThreeList, CalNameList, MonNumList
 } from './para_constant.mjs'
 import {
     AutoEclipse
@@ -34,8 +30,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             isLeapAdvan: isLeapTA,
             JiScOrder: JiScOrder,
             OriginAccum: OriginAccum,
-            NewmOrderRaw: NewmOrderRaw,
-            NewmAcrOrderRaw: NewmAcrOrderRaw,
+            NewmInt: NewmInt,
             NewmOrderMod: NewmOrderMod,
             NewmEqua: NewmEqua,
             TermAvgRaw: TermAvgRaw,
@@ -43,7 +38,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             EquaDegAccumList: EquaDegAccumList,
             TermAvgWinsolsDif: TermAvgWinsolsDif,
             TermAcrWinsolsDif: TermAcrWinsolsDif,
-            AccumPrint: AccumPrint
+            AccumPrint: AccumPrint,
+            LeapLimit: LeapLimit
         } = ThisYear
         let {
             LeapNumTerm: LeapNumTermThis,
@@ -67,7 +63,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             } else if ((isTermLeap && ThisYear.TermSc[1] === '') || (!isTermLeap && ThisYear.TermSc[WinsolsMonNum] === '')) {
                 specialStart = 1
-                LeapNumTermThis -= 1
+                LeapNumTermThis--
             } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
             NewmSyzygyStart += specialStart
             NewmSyzygyEnd += specialNewmSyzygyEnd
@@ -133,11 +129,15 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
             if (isLeapTT) {
-                while (LeapNumTermThis >= 2 && (TermAvgRaw[LeapNumTermThis] >= NewmOrderRaw[LeapNumTermThis + 1]) && (TermAvgRaw[LeapNumTermThis] < NewmOrderRaw[LeapNumTermThis + 1] + 2.5)) { // 若不用進朔，需要把2改成3.5
-                    LeapNumTermThis -= 1
+                let Plus = 2.5
+                if (Type === 11) { // 若不用進朔，需要把2改成3.5
+                    Plus = 3.5
                 }
-                while (LeapNumTermThis <= 11 && (TermAvgRaw[LeapNumTermThis + 1] < NewmOrderRaw[LeapNumTermThis + 2]) && (TermAvgRaw[LeapNumTermThis + 1] >= NewmOrderRaw[LeapNumTermThis + 2] - 2.5)) {
-                    LeapNumTermThis ++
+                while (LeapNumTermThis >= 2 && (TermAvgRaw[LeapNumTermThis] >= NewmInt[LeapNumTermThis + 1]) && (TermAvgRaw[LeapNumTermThis] < NewmInt[LeapNumTermThis + 1] + Plus)) {
+                    LeapNumTermThis--
+                }
+                while (LeapNumTermThis <= 11 && (TermAvgRaw[LeapNumTermThis + 1] < NewmInt[LeapNumTermThis + 2]) && (TermAvgRaw[LeapNumTermThis + 1] >= NewmInt[LeapNumTermThis + 2] - Plus)) {
+                    LeapNumTermThis++
                 }
                 TermName[LeapNumTermThis + 1] = '无'
                 if (TermAcrRaw) {
@@ -262,13 +262,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let ZhengSmallSur = 0
         if (Type === 1) {
             ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] - ThisYear.BuScOrder + 60) % 60
-            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmSyzygyStart] - NewmOrderRaw[1 + NewmSyzygyStart]) * Denom).toPrecision(5))
-        } else if (Type === 2 || Type === 3) {
-            ZhengGreatSur = Math.round((NewmOrderMod[1 + NewmSyzygyStart] - JiScOrder + 60) % 60)
-            ZhengSmallSur = parseFloat(((ThisYear.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
-        } else if (Type === 4) {
-            ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] + 60) % 60
-            ZhengSmallSur = parseFloat(((ThisYear.NewmAcrMod[1 + NewmSyzygyStart] - NewmOrderMod[1 + NewmSyzygyStart]) * Denom).toPrecision(5)).toFixed(2)
+            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmSyzygyStart] - NewmInt[1 + NewmSyzygyStart]) * Denom).toPrecision(5))
         }
         const MonthPrint = MonthName.slice(1)
         const NewmSyzygySlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
@@ -439,25 +433,22 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             if (JiScOrder) {
                 YearInfo += `${ScList[JiScOrder]}紀${ThisYear.JiYear}`
             }
-            if (ZhengGreatSur || ZhengSmallSur) {
-                YearInfo += ` 大餘${ZhengGreatSur}小餘${ZhengSmallSur}`
-            }
             if (Type <= 10) {
                 if (OriginMonNum === 2) {
                     YearInfo += `雨`
                 } else {
                     YearInfo += `冬`
                 }
-                YearInfo += `${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
+                YearInfo += `${((OriginAccum % 60 + 60) % 60).toFixed(4)}`
             }
             if (Type === 2) {
-                YearInfo += `  平${ThisYear.LeapSurAvgThis}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${ThisYear.LeapLimit}`
+                YearInfo += `  平${ThisYear.LeapSurAvgThis}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${LeapLimit}`
             } else if (Type === 3) {
-                YearInfo += `  平${Math.round((ThisYear.LeapSurAvgThis) * ZhangRange)}定${((ThisYear.LeapSurAcrThis) * ZhangRange).toFixed(2)}準${Math.round((ThisYear.LeapLimit) * ZhangRange)}`
+                YearInfo += `  平${Math.round((ThisYear.LeapSurAvgThis) * ZhangRange)}定${((ThisYear.LeapSurAcrThis) * ZhangRange).toFixed(2)}準${Math.round((LeapLimit) * ZhangRange)}`
             } else if (Type <= 7) {
-                YearInfo += `  平${parseFloat((ThisYear.LeapSurAvgThis).toPrecision(8))}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(ThisYear.LeapLimit)}`
+                YearInfo += `  平${parseFloat((ThisYear.LeapSurAvgThis).toPrecision(8))}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(LeapLimit)}`
             } else {
-                YearInfo += `  平${(ThisYear.LeapSurAvgThis).toFixed(2)}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(ThisYear.LeapLimit).toFixed(2)}`
+                YearInfo += `  平${(ThisYear.LeapSurAvgThis).toFixed(2)}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(LeapLimit).toFixed(2)}`
             }
         }
         if (AccumPrint) {
@@ -478,31 +469,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             }
         }
         return {
-            YearInfo,
-            MonthPrint,
-            NewmAvgScPrint,
-            NewmAvgDecimalPrint,
-            NewmScPrint,
-            NewmDecimal3Print,
-            NewmDecimal2Print,
-            NewmDecimal1Print,
-            NewmEquaPrint,
-            SyzygyScPrint,
-            SyzygyDecimalPrint,
-            TermNamePrint,
-            TermScPrint,
-            TermDecimalPrint,
-            TermAcrScPrint,
-            TermAcrDecimalPrint,
-            TermEquaPrint,
-            TermMidstarPrint,
-            Era,
+            Era, YearInfo, MonthPrint,
+            NewmAvgScPrint, NewmAvgDecimalPrint, NewmScPrint, NewmDecimal3Print, NewmDecimal2Print, NewmDecimal1Print, NewmEquaPrint,
+            SyzygyScPrint, SyzygyDecimalPrint,
+            TermNamePrint, TermScPrint, TermDecimalPrint, TermAcrScPrint, TermAcrDecimalPrint, TermEquaPrint, TermMidstarPrint,
             ////////////// 以下用於日書/////////////
-            // Month,
-            LeapNumTermThis,
-            OriginAccum,
-            NewmOrderRaw: NewmOrderRaw.slice(1 + NewmSyzygyStart), // 結尾就不切了，因爲最後一個月還要看下個月的情況
-            NewmAcrOrderRaw: (Type === 1 ? [] : NewmAcrOrderRaw.slice(1 + NewmSyzygyStart)),
+            LeapNumTermThis, OriginAccum,
+            NewmInt: NewmInt.slice(1 + NewmSyzygyStart), // 結尾就不切了，因爲最後一個月還要看下個月的情況
             NewmNodeAccumPrint: (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmSyzygyStart)),
             NewmAnomaAccumPrint: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmSyzygyStart))
         }

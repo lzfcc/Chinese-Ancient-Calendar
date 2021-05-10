@@ -108,7 +108,7 @@ export default function CalQuar(CalName, year) {
     const NewmAvgBare = []
     const NewmAvgRaw = []
     const NewmAvgMod = []
-    const NewmOrderRaw = []
+    const NewmInt = []
     const NewmOrderMod = []
     const NewmAvgSc = []
     const NewmWinsolsDifRaw = [] // 朔距冬至日數
@@ -123,10 +123,10 @@ export default function CalQuar(CalName, year) {
         NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
         NewmAvgMod[i] = (NewmAvgRaw[i] % 60 + 60) % 60
-        NewmOrderRaw[i] = ~~NewmAvgRaw[i]
+        NewmInt[i] = ~~NewmAvgRaw[i]
         NewmOrderMod[i] = ~~NewmAvgMod[i]
         NewmAvgSc[i] = ScList[NewmOrderMod[i]]
-        NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmOrderRaw[i]).toFixed(4).slice(2, 6)
+        NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmWinsolsDifRaw[i] = NewmAvgBare[i] - WinsolsAccumRaw
         if (MansionRaw) {
             NewmEqua[i] = Deg2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
@@ -192,11 +192,11 @@ export default function CalQuar(CalName, year) {
                 TermMidstar[i] = Func.MidstarResult
             }
         }
-        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmOrderRaw[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmOrderRaw[LeapNumTerm + 1] + 2)) {
-            LeapNumTerm -= 1
+        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2)) {
+            LeapNumTerm--
         }
-        while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmOrderRaw[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmOrderRaw[LeapNumTerm + 2] - 2)) {
-            LeapNumTerm ++
+        while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - 2)) {
+            LeapNumTerm++
         }
         TermName[LeapNumTerm + 1] = '无'
         TermSc[LeapNumTerm + 1] = ''
@@ -244,14 +244,11 @@ export default function CalQuar(CalName, year) {
     return {
         OriginYear, JiOrder, BuYear, BuScOrder, JupiterSc,
         WinsolsAccumMod, OriginAccum,
-        NewmAvgBare, NewmAvgRaw, NewmOrderRaw, NewmOrderMod, NewmAvgSc,
-        // NewmJd,
-        // NewmMmdd,
-        NewmAvgDecimal, NewmWinsolsDifRaw, SyzygySc, SyzygyDecimal,
-        TermAvgBare, TermAvgRaw, TermName, TermSc, TermDecimal,
+        NewmAvgBare, NewmAvgRaw, NewmInt, NewmOrderMod, NewmAvgSc, NewmAvgDecimal,
+        SyzygySc, SyzygyDecimal,
+        TermAvgBare, TermName, TermSc, TermDecimal,
         LeapSurAvgFix, LeapSurAvgThis, LeapNumOriginLeapSur, LeapNumTerm,
-        isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext,
-        NewmSyzygyStart, NewmSyzygyEnd, TermStart, TermEnd,
+        isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext, NewmSyzygyStart, NewmSyzygyEnd, TermStart, TermEnd,
         NewmEqua, TermEqua, TermMidstar
     }
 }

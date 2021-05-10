@@ -45,14 +45,14 @@ const printData = outputFile(1, 605, 605, 0, [ // mode, YearStart, YearEnd, auto
     // 'Yuanjia', 
     // 'Daming',
     // 'Liangwu',
-    'Daye',
+    // 'Daye',
     // 'Wuyin', // 上南朝系
     // 'Jiuzhi',
     // 'Shenlong',
     // 'Futian', // 上印度系
     // 'Zhangmengbin',
-    'Liuxiaosun',
-    'Huangji',
+    // 'Liuxiaosun',
+    // 'Huangji',
     // 'Linde', // 上隋、初唐系
     // 'Dayan', // 大衍入轉日感覺少了0.5
     // 'Zhide',
@@ -69,7 +69,7 @@ const printData = outputFile(1, 605, 605, 0, [ // mode, YearStart, YearEnd, auto
     // 'Fengyuan',
     // 'Guantian',
     // 'Zhantian', 
-    // 'Jiyuan', 
+    'Jiyuan', 
     // 'Tongyuan',
     // 'Qiandao', 
     // 'Chunxi', 

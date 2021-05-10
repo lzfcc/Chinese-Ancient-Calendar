@@ -305,7 +305,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
     if ((!isBare) && ['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].includes(CalName)) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔
         Plus1 = AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
     }
-    if (CalName === 'Chongxuan') {
+    if (CalName === 'Chongxuan') { // 崇玄說昏後夜半
         Plus1 = -0.5
     }
     const Longi1 = LongiRaw + Plus1

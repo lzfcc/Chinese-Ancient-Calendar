@@ -32,37 +32,14 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         YearEnd = YearStart
     }
     const Day = (CalName, year) => {
-        const {
-            Type,
-            AutoPara,
+        const { Type, AutoPara,
         } = Bind(CalName)
-        const {
-            LunarRaw,
-            Node,
-            Anoma,
-            SolarRaw,
-            WeekCorr,
-            MansionCorr
+        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionCorr
         } = AutoPara[CalName]
-        let {
-            Solar,
-            Sidereal,
-            Lunar,
+        let { Solar, Sidereal, Lunar,
         } = AutoPara[CalName]
-        const {
-            LeapNumTermThis,
-            OriginAccum,
-            NewmAcrOrderRaw,
-            NewmNodeAccumPrint,
-            NewmAnomaAccumPrint
+        const { NewmInt, LeapNumTermThis, OriginAccum, NewmNodeAccumPrint, NewmAnomaAccumPrint
         } = CalNewm(CalName, year)[0]
-        let {
-            NewmOrderRaw,
-        } = CalNewm(CalName, year)[0]
-
-        if (Type >= 6) {
-            NewmOrderRaw = NewmAcrOrderRaw
-        }
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
         Lunar = Lunar || LunarRaw
@@ -70,7 +47,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const HalfTermLeng = Solar / 24
         let HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        const ZhengOrderRaw = NewmOrderRaw[0]
+        const ZhengOrderRaw = NewmInt[0]
         const FirstWinsolsDif = +(ZhengOrderRaw - OriginAccum).toFixed(5) // 正月到冬至距離
         const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
         /////////// 預處理72候、五行、八卦列表//////////
@@ -233,7 +210,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             if (LeapNumTermThis > 0 && i === LeapNumTermThis + 1) { // 好像有LeapNumTermThis<0的情況
                 MonName[i] = '閏' + MonNumList[LeapNumTermThis] + '月'
             }
-            MonName[i] += NewmOrderRaw[i] - NewmOrderRaw[i - 1] === 29 ? '小' : '大'
+            MonName[i] += NewmInt[i] - NewmInt[i - 1] === 29 ? '小' : '大'
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)
             MonInfo[i] = MonColorFunc.MonInfo
             MonColor[i] = MonColorFunc.MonColor
@@ -254,7 +231,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             FiveName[i] = []
             ManGod[i] = []
             Luck[i] = []
-            for (let k = 1; k <= NewmOrderRaw[i] - NewmOrderRaw[i - 1]; k++) { // 每月日數                
+            for (let k = 1; k <= NewmInt[i] - NewmInt[i - 1]; k++) { // 每月日數                
                 const WinsolsDifRaw = FirstWinsolsDif + DayAccum // 每日夜半距冬至日數
                 const WinsolsDifInt = ZhengOrderRaw - Math.floor(OriginAccum) + DayAccum // 冬至當日爲0
                 const WinsolsDifNoon = WinsolsDifRaw + 0.5 // 每日正午
@@ -330,8 +307,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 // 順序不一樣！立春1，驚蟄2，清明3，立夏4，芒種5，小暑6，立秋7，白露8，寒露9，立冬10，大雪11，小寒12
                 const JieDifInt = ~~((WinsolsDifRaw - (JieNum * 2 + 1) * HalfTermLeng + WinsolsDecimal + Solar) % Solar)
                 if (Type >= 6) {
-                    const WeekOrder = Math.round(((NewmOrderRaw[i - 1] + k - 1) % 7 + 5 + (WeekCorr || 0)) % 7.1)
-                    const MansionOrder = Math.round((((NewmOrderRaw[i - 1] + k - 1) % 28 + 23 + (MansionCorr || 0)) + 28) % 28.1)
+                    const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekCorr || 0)) % 7.1)
+                    const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionCorr || 0)) + 28) % 28.1)
                     Week[i][k] = WeekList[WeekOrder] + NumList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
                 }
                 for (let j = HouOrder; j < 90; j++) { // 氣候 

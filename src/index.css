@@ -400,6 +400,7 @@ tr.MonthPrint {
 }
 
 tr.NewmScPrint {
+  border-top: 1px solid var(--gray);
   font-weight: bold;
 }
 
@@ -441,10 +442,6 @@ tr.TermMidstarPrint {
 
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
-}
-
-tr.NewmAvgDecimalPrint {
-  border-bottom: 1px solid var(--gray);
 }
 
 tr.SyzygyScPrint {

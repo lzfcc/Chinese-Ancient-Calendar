@@ -74,13 +74,24 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
 
-export const AutoNewmPlus = (Decimal, CalName) => { // 朔小分
-    const { Type
+export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => { // 朔小分
+    const { Type, AutoPara
     } = Bind(CalName)
+    const { Solar } = AutoPara[CalName]
+    const QuarSolar = Solar / 4
+    const SpringequinoxSunrise = AutoLongi2Lati(QuarSolar, WinsolsDecimal, CalName).Sunrise / 100
+    const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
     let standard = 0.75
+    let portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多
+    if (Type === 7 || CalName === 'Linde') {
+        portion = 4.8 // 據宣明各節氣進朔推算
+    }
+    if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
+        standard = 0.75 + (Sunrise - SpringequinoxSunrise) / portion
+    }
     let NewmPlus = 0
     let Print = ''
-    if ((Type >= 7 || CalName === 'Linde') && Type <= 10 && (Decimal >= standard)) {
+    if (Decimal >= standard) {
         NewmPlus = 1
         Print = `<span class='NewmPlus'>+</span>`
     }
