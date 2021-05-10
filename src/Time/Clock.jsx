@@ -1,5 +1,5 @@
 import React from "react"
-import { Clock } from "../Cal/time_decimal2clock"
+import { BindClock1 } from "../Cal/time_decimal2clock"
 export default class a extends React.Component {
   constructor(props) {
     super(props)
@@ -24,7 +24,7 @@ export default class a extends React.Component {
 
   handle() {
     try {
-      const Print = Clock(this.state.a);
+      const Print = BindClock1(this.state.a);
       this.setState({ output: Print });
     } catch (e) {
       alert(e.message);

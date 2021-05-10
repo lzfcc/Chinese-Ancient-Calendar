@@ -184,6 +184,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         AutoPara,
     } = Bind(CalName)
     const {
+        Denom,
         Solar,
         Sidereal,
         NightList,
@@ -249,7 +250,12 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         }
         const nAvg = 1 + (TermDif + TermAvgNoonDecimalDif[TermNum]) / TermRange
         const Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2]
-        Sunrise = DawnRange + Interpolate1(nAvg, Initial3)
+        const Initial4 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2] + ',' + NightList[TermNum + 3]
+        if (Type === 10) { // 重修大明的日出分是三次內插
+            Sunrise = Interpolate1(nAvg, Initial4) / Denom
+        } else {
+            Sunrise = DawnRange + Interpolate1(nAvg, Initial3)
+        }
         if (Type === 6) {
             const Initial1 = DialList[TermNum] + ',' + DialList[TermNum + 1] + ',' + DialList[TermNum + 2]
             Dial = Interpolate1(nAvg, Initial1)

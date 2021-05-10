@@ -326,14 +326,16 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Longi2Lati = Longi2LatiTable2(Longi1, 'Xuanming')
     } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)
-    } else if (['NewDaming', 'Gengwu'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, 'NewDaming')
     } else if (Type === 8) {
         Longi2LatiA = Longi2LatiFormula(Longi1, CalName)
         Longi2LatiB = Longi2DialFormula(Longi2, CalName)
         special = 1
-    } else if (Type <= 10) {
+    } else if (Type === 9) {
         Longi2LatiA = Longi2LatiFormula(Longi1, 'Jiyuan')
+        Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
+        special = 1
+    } else if (Type === 10) {
+        Longi2LatiA = Longi2LatiTable2(Longi1, 'NewDaming')
         Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
