@@ -131,7 +131,7 @@ export const AutoClock = (Decimal, CalName) => {
     let Print = ''
     if (Type <= 6 && CalName !== 'Linde') {
         Print = ClockWeijin(Decimal, CalName)
-    } else if (Type === 7 || ['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    } else if (Type === 7 || ['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian'].includes(CalName)) { // 因為宋志皇祐渾儀排在明天之後觀天之前
         Print = ClockTang(Decimal)
     } else if (Type >= 8) {
         Print = ClockSong(Decimal)

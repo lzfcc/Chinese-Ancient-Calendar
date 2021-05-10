@@ -75,35 +75,57 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
 // }
 
 export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => { // 朔小分
-    const { Type, AutoPara
+    const { AutoPara
     } = Bind(CalName)
     const { Solar } = AutoPara[CalName]
     const QuarSolar = Solar / 4
     const SpringequinoxSunrise = AutoLongi2Lati(QuarSolar, WinsolsDecimal, CalName).Sunrise / 100
     const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
+    const LightRange = AutoLightRange(CalName)
     let standard = 0.75
     let portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多
-    if (Type === 7 || CalName === 'Linde') {
-        portion = 4.8 // 據宣明各節氣進朔推算
+    if (CalName === 'Xuanming') {
+        portion = 5
+    } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+        portion = 2
     }
-    if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
+    if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
+        standard = Sunrise - 0.1 - LightRange
+    } else if (CalName === 'Chongxuan') {
+        standard = Sunrise - LightRange
+    } else if (['Linde', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
+        standard = 1 - Sunrise
+    } else if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
         standard = 0.75 + (Sunrise - SpringequinoxSunrise) / portion
     }
     let NewmPlus = 0
     let Print = ''
-    if (Decimal >= standard) {
-        NewmPlus = 1
-        Print = `<span class='NewmPlus'>+</span>`
+    if (['Wuji', 'Tsrengyuan', 'Chongxuan'].includes(CalName)) {
+        if (1 - Decimal <= standard) {
+            NewmPlus = 1
+            Print = `<span class='NewmPlus'>+</span>`
+        }
+    } else {
+        if (Decimal >= standard) {
+            NewmPlus = 1
+            Print = `<span class='NewmPlus'>+</span>`
+        }
     }
     return { NewmPlus, Print }
 }
 
 export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => {
+    const { Type
+    } = Bind(CalName)
     const LightRange = AutoLightRange(CalName)
     const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
+    let standard = Sunrise - LightRange
+    if (Type >= 8 || CalName === 'Qintian') {
+        standard = Sunrise
+    }
     let SyzygySub = 0
     let Print = ''
-    if (Decimal < Sunrise - LightRange) {
+    if (Decimal < standard) { // 晨前刻、晨初餘數
         SyzygySub = -1
         Print = `<span class='NewmPlus'>-</span>`
     }
