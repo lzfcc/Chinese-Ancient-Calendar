@@ -153,4 +153,4 @@ const Exhaustion = () => { // 大同歲實365.2469 設在0.015-0.018之間。365
         return Print
     }
 }
-console.log(Exhaustion())
+// console.log(Exhaustion())

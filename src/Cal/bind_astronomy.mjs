@@ -303,6 +303,8 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Longi2Lati = Longi2LatiTable1(LongiRaw, 'Daming')
     } else if (Type === 4) {
         Longi2Lati = Longi2LatiTable1(LongiRaw, CalName)
+    } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable2(LongiRaw, 'Huangji')
     } else if (Type === 6) {
         Longi2Lati = Longi2LatiTable2(LongiRaw, CalName)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
