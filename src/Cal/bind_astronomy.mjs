@@ -165,7 +165,13 @@ export const AutoEqua2Eclp = (LongiRaw, CalName) => {
     let Equa2EclpDif = 0
     let Eclp2EquaDif = 0
     let Eclp2EquaLati = 0
-    if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    if (CalName === 'Dayan') {
+        const Func = Equa2EclpFormula(LongiRaw, CalName)
+        Equa2Eclp = Func.Equa2Eclp
+        Eclp2Equa = Func.Eclp2Equa
+        Equa2EclpDif = Func.Equa2EclpDif
+        Eclp2EquaDif = Func.Eclp2EquaDif
+    } else if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         const Func = Equa2EclpTable(LongiRaw, CalName)
         Equa2Eclp = Func.Equa2Eclp
         Equa2EclpDif = Func.Equa2EclpDif

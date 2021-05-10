@@ -1,6 +1,8 @@
-import { AutoLongi2Lati } from './bind_astronomy.mjs'
 import {
-    MansionNameList,
+    AutoLongi2Lati
+} from './bind_astronomy.mjs'
+import {
+    MansionNameList
 } from './para_constant.mjs' // 賦值解構
 import {
     Bind

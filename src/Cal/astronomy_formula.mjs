@@ -10,8 +10,8 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     let Solar = 0
     if (CalName === 'Chongxuan') {
         Solar = 365.2548
-    } else if (CalName === 'Chongtian') { // 崇天用了365.25 .27兩個値，我折衷統一
-        Solar = 365.26
+    } else if (['Dayan', 'Chongtian'].includes(CalName)) { // 崇天用了365.25 .27兩個値
+        Solar = 365.25
     } else if (CalName === 'Mingtian') {
         Solar = 365.24
     } else if (['Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(CalName)) {
@@ -35,9 +35,14 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
         // const tmp1 =(frc('8685 4566/1696').div(frc(14.4).sub('1/1696'))).div(2).toFraction(true) // '301 81608 / 122107'
         // const tmp2=frc(10000).div(frc(14.4).sub('1/1696')).toFraction(true) // "694 57742/122107"
         h = Math.sqrt((694 + 57742 / 122107) * Longi + (301 + 81608 / 122107) ** 2) - (301 + 81608 / 122107)
-    } else if (CalName === 'Chongtian') {
-        Equa2EclpDif = Longi * (125 - Longi) / 1200
-        h = Math.sqrt(288906.25 + 1200 * Longi) - 537.5
+    } else if (['Dayan', 'Chongtian'].includes(CalName)) {
+        if (Longi <= 45) {
+            Equa2EclpDif = Longi * (125 - Longi) / 1200 // 在45度正好=3，所以45以上處理爲依平
+            h = Math.sqrt(288906.25 + 1200 * Longi) - 537.5
+        } else {
+            Equa2EclpDif = 3
+            h = 3
+        }
     } else if (CalName === 'Mingtian') {
         Equa2EclpDif = Longi * (111.37 - Longi) / 1000
         h = Math.sqrt(197415.819225 + 1000 * Longi) - 444.315
