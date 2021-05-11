@@ -34,33 +34,31 @@ export const ConstWest = year => {
     // 黃赤交角
     // ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3   // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
     const t = big.sub(year, 2000).div(100)
-    const obliquity = big(84381.448).sub(t.mul(46.84024)).sub(t.pow(2).mul(big(10).pow(-5).mul(59))).add(t.pow(3).mul(big(10).pow(-6).mul(1813))).div(3600)
-
+    const obliquity = +(big(84381.448).sub(t.mul(46.84024)).sub(t.pow(2).mul(big(10).pow(-5).mul(59))).add(t.pow(3).mul(big(10).pow(-6).mul(1813))).div(3600).toFixed(10))
     //《古曆新探》頁322.近日點平黃經 ω=281+13/60+15/3600+1.719175*T+ (1.63/3600)*T^2+(0.012/3600)*T^3 // T自1900起算的儒略世紀數。也就是說近日點越來越向春分移動 。375年在大雪，1247年近日點在冬至
     const T = big(year - 1900).div(100)
-    const perihelion = big(281).add(13 / 60).add(15 / 3600).add(T.mul(1.719175)).add(big.div(1.63, 3600).mul(T).pow(2)).add(big.div(0.012, 3600).mul(T).pow(3)).toNumber()
-
+    const perihelion = +(big(281).add(13 / 60).add(15 / 3600).add(T.mul(1.719175)).add(big.div(1.63, 3600).mul(T).pow(2)).add(big.div(0.012, 3600).mul(T).pow(3)).toFixed(8))
     // 黃道離心率 e=0.01670862 -0.00004204T-0.000000124T**2
-    const eccentricity = big(0.01675104).sub(big(0.0000418).mul(T)).sub(big(0.00000000126).mul(T).pow(2))
+    const eccentricity = +(big(0.01675104).sub(big(0.0000418).mul(T)).sub(big(0.00000000126).mul(T).pow(2)).toFixed(8))
     const y = year - 2000
     const Solar = big(365.24218968).sub(big(0.0000000616).mul(y)).toNumber()
     const Sidereal = big(365.25636042).add(big(0.000000001).mul(y)).toNumber()
     const Lunar = big(29.530588853).add(big(0.000000002162).mul(y)).toNumber()
     const Anoma = big(27.554549878).sub(big(0.00000001039).mul(y)).toNumber() // 近點月
     const Node = big(27.21222082).add(big(0.0000000038).mul(y)).toNumber()
-    const Print = '朔望月 ' + Lunar + ` 日\n` + '近點月 ' + Anoma + ` 日\n` + '交點月 ' + Node + ` 日\n回歸年 ` + Solar + ` 日\n` + '恆星年 ' + Sidereal + ` 日\n` + '黃赤交角 ' + obliquity.toNumber() + `°\n` + '黃道離心率 ' + eccentricity.toNumber() + `\n` + '近日點平黃經 ' + perihelion + '°'
+    const Print = '朔望月 ' + Lunar + ` 日\n` + '近點月 ' + Anoma + ` 日\n` + '交點月 ' + Node + ` 日\n回歸年 ` + Solar + ` 日\n` + '恆星年 ' + Sidereal + ` 日\n` + '黃赤交角 ' + obliquity + `°\n` + '黃道離心率 ' + eccentricity + `\n` + '近日點平黃經 ' + perihelion + '°'
     return {
         Print,
-        obliquity: obliquity.toString(),
+        obliquity,
         perihelion,
-        eccentricity: eccentricity.toString(),
+        eccentricity,
         Anoma,
         Solar,
         Sidereal,
         Lunar
     }
 }
-// console.log(ConstWest(500).perihelion)
+// console.log(ConstWest(501).perihelion)
 
 export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)
