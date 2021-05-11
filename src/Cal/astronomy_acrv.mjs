@@ -2,8 +2,8 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    SunWest,
-    MoonWest
+    SunAcrVWest,
+    MoonAcrVWest
 } from './astronomy_west.mjs'
 import {
     Interpolate1,
@@ -784,8 +784,8 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             Tcorr2 = SunTcorr2 + MoonTcorr2
             NodeAccumCorr = Tcorr2
         } else if (Type === 20) {
-            sunFunc = SunWest(WinsolsDif, year)
-            moonFunc = MoonWest(AnomaAccum, year)
+            sunFunc = SunAcrVWest(WinsolsDif, year)
+            moonFunc = MoonAcrVWest(AnomaAccum, year)
             SunDifAccum = sunFunc.SunDifAccum
             MoonDifAccum = moonFunc.MoonDifAccum
             SunTcorr2 = SunDifAccum / (moonFunc.MoonAcrV - sunFunc.SunAcrV)
@@ -893,8 +893,8 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
             SunDifAccum = SunDifAccumTable(WinsolsDif, CalName)
             MoonDifAccum = MoonDifAccumTable(AnomaAccum, CalName)
         } else if (Type === 20) {
-            SunDifAccum = SunWest(WinsolsDif, year).SunDifAccum
-            MoonDifAccum = MoonWest(AnomaAccum, year).MoonDifAccum
+            SunDifAccum = SunAcrVWest(WinsolsDif, year).SunDifAccum
+            MoonDifAccum = MoonAcrVWest(AnomaAccum, year).MoonDifAccum
         }
     }
     return {

@@ -10,7 +10,7 @@ import Intro from './Intro'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['簡介', '朔閏表', '曆書', '同餘', '方程', '天文', '時間']
+    this.tabTitles = ['簡介', '朔閏表', '曆書', '同餘', '招差', '天文', '時間']
     this.state = {
       calendars: [],
       YearStart: '',

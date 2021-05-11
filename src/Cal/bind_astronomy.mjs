@@ -11,7 +11,7 @@ import {
     Hushigeyuan, HushigeyuanMoon,
 } from './equa_geometry.mjs'
 import {
-    Equa2EclpWest, Longi2LatiWest, Longi2SunriseWest, Longi2DialWest, SunWest,    // MoonWest
+    Equa2EclpWest, Longi2LatiWest, Longi2SunriseWest, Longi2DialWest, SunAcrVWest,    // MoonAcrVWest
 } from './astronomy_west.mjs'
 import {
     AutoTcorr, AutoDifAccum
@@ -431,7 +431,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
     if (LongiRaw >= Sidereal || LongiRaw < 0) {
         throw (new Error('請輸入一週天度內的度數'))
     }
-    const Longi = LongiRaw + SunWest(LongiRaw, year).SunDifAccum // 積日轉換爲黃經
+    const Longi = LongiRaw + SunAcrVWest(LongiRaw, year).SunDifAccum // 積日轉換爲黃經
     const {
         Lati1: WestA,
         Lati: WestB

@@ -11,8 +11,11 @@ import SunEclipse from './SunEclipse'
 import MoonEclipse from './MoonEclipse'
 import Node2Cycle from './Node'
 import Cycle2Node from './EcliCycle'
-// import  BindEqua2Eclp from './'
-// import  BindEqua2Eclp from './' 
+import Round from './Round'
+import Round1 from './Round1'
+import Round2 from './Round2'
+import Hushigeyuan from './Hushigeyuan'
+import Heron from './Heron'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import md1 from '../note/astronomy.md';
@@ -36,12 +39,21 @@ export default class Astronomy extends React.Component {
         <section className='modulo'>
           <h2>躔離之什</h2>
           <BindTcorr />
-          <h2>軌道之什</h2>
-          <BindEqua2Eclp />
+          <h2>日度之什</h2>
           <Deg2Mansion />
           <p></p>
           <Mansion2Deg />
+          <BindEqua2Eclp />
+          <Round />
+          <p></p>
+          <Round2 />
+          <p></p>
+          <Round1 />
+          <Hushigeyuan />
+          <Heron />
+          <h2>步晷漏</h2>
           <BindLongi2Lati />
+          <h2>月度月緯</h2>
           <MoonLongi />
           <h2>交食之什</h2>
           <SunEclipse />

@@ -22,7 +22,7 @@ export default {
         ZhengNum: 2, // 建寅
         OriginCorr: -0.379, // 不太對，所以加這個修正一下。
         MansionRaw: [8, 13], // 斗13度
-        MansionFractPosition: 8, // 闕，擬
+        MansionFractPosition: 8
     },
     Liuxiaosun: { // 開元占經保存的數據。《中國古代曆法》第427頁
         YuanRange: 160940, // 元法

@@ -58,7 +58,6 @@ img {
   max-width: 100%;
   border-radius: .6em;
   border: 1px solid var(--shallowgray);
-  margin: .5em auto;
 }
 
 article {

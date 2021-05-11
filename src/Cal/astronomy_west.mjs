@@ -23,7 +23,7 @@ const r2d = degree => big(degree).mul(180).div(pi)
 // }
 // console.log(SunAcrVWest(91, 365.2425))
 
-// const SunWest = (WinsolsDifRaw, Solar) => { // 我用定氣數據擬合的函數。 週期23.674398328214，極值2.023，-1.774 ，但是實際上應該是2.32，奇怪 0.1242-0.1018 *cos(x*0.2654) + 1.896*sin(x*0.2654)
+// const SunAcrVWest = (WinsolsDifRaw, Solar) => { // 我用定氣數據擬合的函數。 週期23.674398328214，極值2.023，-1.774 ，但是實際上應該是2.32，奇怪 0.1242-0.1018 *cos(x*0.2654) + 1.896*sin(x*0.2654)
 //     WinsolsDifRaw = d2r(big(WinsolsDifRaw).mul(24).div(Solar))
 //     return SunDifAccum.toString()
 // }
@@ -60,7 +60,7 @@ export const ConstWest = year => {
 }
 // console.log(ConstWest(501).perihelion)
 
-export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
+export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)
     const Anoma = ConstFunc.Anoma
     const Sidereal = ConstFunc.Sidereal
@@ -79,12 +79,12 @@ export const MoonWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬
     }
 }
 
-// console.log(MoonWest(7, 900))
+// console.log(MoonAcrVWest(7, 900))
 
 // 《數》頁135
 // E偏近點角，e偏心率 盈縮積=
 // 2arctan(sqrt((1 + e) / (1 - e))tan(E / 2)) - E + esinE
-export const SunWest_BACKUP = (WinsolsDifRaw, year) => {
+const SunWest_BACKUP = (WinsolsDifRaw, year) => {
     const ConstFunc = ConstWest(year)
     const e = ConstFunc.eccentricity
     const perihelion = ConstFunc.perihelion
@@ -94,8 +94,8 @@ export const SunWest_BACKUP = (WinsolsDifRaw, year) => {
     const E = 3.1415926 * (((WinsolsDifRaw + 270 - perihelion) + 360) % 360) / 360 // 以冬至起算
     return big(2).mul(big.atan(big.sqrt((1 + e) / (1 - e)).mul(big.tan(E / 2)))).sub(E).add(big(e).mul(big.sin(E))).toNumber()
 }
-// console.log(SunWest(35, 1247))
-export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔表的數學結構及其內插法》日躔差=真近點角V-平近點交角M。V=M+2*e*sinM+1.25*e**2*sin2M   M=90°極值2e。  
+// console.log(SunAcrVWest(35, 1247))
+export const SunAcrVWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔表的數學結構及其內插法》日躔差=真近點角V-平近點交角M。V=M+2*e*sinM+1.25*e**2*sin2M   M=90°極值2e。  
     const ConstFunc = ConstWest(year)
     const e = ConstFunc.eccentricity // 黃道離心率
     const perihelion = ConstFunc.perihelion // 近日點
@@ -117,7 +117,7 @@ export const SunWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆日躔
         Longi
     }
 }
-// console.log(SunWest(91, 4500))
+// console.log(SunAcrVWest(91, 4500))
 
 export const Equa2EclpWest = (LongiRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
     let Longi = LongiRaw % (Sidereal / 4)
@@ -223,7 +223,7 @@ export const Deciaml2Angle = (f, h1, m1, s1, WinsolsDifInt, h, m, s, year, heigh
     const Decimal1 = big(h1).div(24).add(big(m1).div(1440)).add(big(s1).div(86400)).toNumber() // 冬至
     const Decimal = big(h).div(24).add(big(m).div(1440)).add(big(s).div(86400)).toNumber() // 所求
     WinsolsDifInt += Decimal - Decimal1
-    const Longi = big(WinsolsDifInt).add(SunWest(WinsolsDifInt, year).SunDifAccum).mul(360).div(Solar) // 黃經
+    const Longi = big(WinsolsDifInt).add(SunAcrVWest(WinsolsDifInt, year).SunDifAccum).mul(360).div(Solar) // 黃經
     const Lati = d2r(big(Longi2LatiWest(Longi, Solar, year).Lati).mul(360).div(Solar))
     // 假設正午時角是0，向西爲正，向東爲負
     const zAcrFunc = zAcrConvert(Decimal, Lati, f)
@@ -298,6 +298,8 @@ export const MoonLongiWest = (EclpRaw, year) => { // 統一360度
 }
 // console.log(MoonLongiWest(165, 365.2575, 1281).u)
 
+// 《數》頁348白赤差
+
 // 下陳美東公式
 const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
     const T = d2r(45)
@@ -344,10 +346,10 @@ export const EcliWest = (NodeAccum, AnomaAccum, Decimal, WinsolsDif, f, year) =>
     const ConstWestFunc = ConstWest(year)
     const Solar = ConstWestFunc.Solar
     f = d2r(f)
-    const SunWestFunc = SunWest(WinsolsDif, year)
+    const SunWestFunc = SunAcrVWest(WinsolsDif, year)
     let Longi = (SunWestFunc.Longi) % Solar // 黃經
     let SunV = SunWestFunc.SunAcrV
-    let MoonV = MoonWest(AnomaAccum, year).MoonAcrV
+    let MoonV = MoonAcrVWest(AnomaAccum, year).MoonAcrV
     SunV *= 360 / Solar
     MoonV *= 360 / Solar
     const d = Longi2LatiWest(Longi, Solar, year).d // 赤緯radius

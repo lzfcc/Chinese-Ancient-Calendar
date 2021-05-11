@@ -8,11 +8,6 @@ import Sn5 from './Sn5'
 import Interpolate1 from './Interpolate1'
 import Interpolate2 from './Interpolate2'
 import Interpolate3 from './Interpolate3'
-import Round from './Round'
-import Round1 from './Round1'
-import Round2 from './Round2'
-import Heron from './Heron'
-import Hushigeyuan from './Hushigeyuan'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import md1 from '../note/equation.md';
@@ -45,14 +40,6 @@ export default class Equation extends React.Component {
           <Interpolate3 />
           <h2>方程之什</h2>
           <Equa1 />
-          <h2>幾何之什</h2>
-          <Round />
-          <p></p>
-          <Round2 />
-          <p></p>
-          <Round1 />
-          <Hushigeyuan />
-          <Heron />
           {/* <h2>開方之什</h2>
         <Sqrt1 />
         <Sqrt3 /> */}

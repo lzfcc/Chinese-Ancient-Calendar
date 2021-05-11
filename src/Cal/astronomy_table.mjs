@@ -323,7 +323,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 }
 // console.log(Longi2LatiTable2(180, 0.5, 'Daming3').Lati) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
-export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////唐宋赤白轉換//////
+export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
     const {
         AutoPara
     } = Bind(CalName)
@@ -336,6 +336,8 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { //////
     } = AutoPara[CalName]
     const Quadrant = 90.94335
     const NodeAccum = NodeAccumRaw// % (Node / 2)
+    // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
+    
     const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
     let Longi = LongiRaw % Quadrant
     if ((LongiRaw >= Quadrant && LongiRaw < Quadrant * 2) || (LongiRaw >= Quadrant * 3)) { // (LongiRaw >= Quadrant)
