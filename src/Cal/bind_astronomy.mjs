@@ -23,7 +23,7 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import { AutoMoonAvgV } from './astronomy_acrv.mjs'
-import { Deg2Mansion } from './astronomy_other.mjs'
+import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
 // import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
@@ -305,6 +305,42 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     return Print
 }
 // console.log(BindDeg2Mansion(334, 'Qianxiang'))
+
+export const BindMansion2Deg = (Mansion, CalName) => {
+    const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
+    const EquaAccumListHuangji = []
+    const EquaAccumListLinde = []
+    const EquaAccumListDayan = AutoDegAccumList(CalName, 729)
+    const EquaAccumListYingtian = []
+    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
+    const EquaAccumListJiyuan = AutoDegAccumList(CalName, 1106)
+    const EquaAccumListDaming3 = []
+    const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
+    const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
+    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
+    const EclpAccumListLinde = AutoDegAccumList(CalName, 665, 1) // 麟德
+    const EclpAccumListDayan = AutoDegAccumList(CalName, 729, 1) // 大衍
+    const EclpAccumListYingtian = AutoDegAccumList(CalName, 964) // 應天
+    const EclpAccumListMingtian = AutoDegAccumList(CalName, 1065, 1) // 明天
+    const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
+    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
+    const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
+    const Print = ['Taichu', 'Huangji', 'Linde', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
+        const EclpList = eval('EclpAccumList' + title)
+        const Eclp = Mansion2Deg(Mansion, EclpList, CalName)
+        const EquaList = eval('EquaAccumList' + title)
+        let Equa = ''
+        if ((EquaList || []).length) {
+            Equa = Mansion2Deg(Mansion, EquaList, CalName)
+        }
+        return {
+            title: CalNameList[title],
+            data: [Equa, Eclp]
+        }
+    })
+    return Print
+}
+
 export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
     const {
         Type,
