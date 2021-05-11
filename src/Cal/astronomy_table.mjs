@@ -196,7 +196,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
     } = AutoPara[CalName]
     const WinsolsDif = WinsolsDifRaw % Solar
     let DawnRange = 2.5
-    if (['Linde', 'NewDaming'].includes(CalName)) {
+    if (['Linde', 'Daming3'].includes(CalName)) {
         DawnRange = 0
     }
     const f = 34.475 // 大衍地理緯度
@@ -321,7 +321,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         Sunrise
     }
 }
-// console.log(Longi2LatiTable2(180, 0.5, 'NewDaming').Lati) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
+// console.log(Longi2LatiTable2(180, 0.5, 'Daming3').Lati) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////唐宋赤白轉換//////
     const {

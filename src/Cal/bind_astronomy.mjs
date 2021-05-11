@@ -2,42 +2,28 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    Equa2EclpTable,
-    Longi2LatiTable1,
-    Longi2LatiTable2,
-    MoonLongiTable,
-    MoonLatiTable
+    Equa2EclpTable, Longi2LatiTable1, Longi2LatiTable2, MoonLongiTable, MoonLatiTable
 } from './astronomy_table.mjs'
 import {
-    Equa2EclpFormula,
-    Longi2LatiFormula,
-    Longi2DialFormula,
-    MoonLatiFormula,
-    MoonLongiFormula
+    Equa2EclpFormula, Longi2LatiFormula, Longi2DialFormula, MoonLatiFormula, MoonLongiFormula
 } from './astronomy_formula.mjs'
 import {
-    Hushigeyuan,
-    HushigeyuanMoon,
+    Hushigeyuan, HushigeyuanMoon,
 } from './equa_geometry.mjs'
 import {
-    Equa2EclpWest,
-    Longi2LatiWest,
-    Longi2SunriseWest,
-    Longi2DialWest,
-    SunWest,
-    // MoonWest
+    Equa2EclpWest, Longi2LatiWest, Longi2SunriseWest, Longi2DialWest, SunWest,    // MoonWest
 } from './astronomy_west.mjs'
 import {
-    AutoTcorr,
-    AutoDifAccum
+    AutoTcorr, AutoDifAccum
 } from './astronomy_acrv.mjs'
 import {
-    CalNameList
+    CalNameList, AutoDegAccumList
 } from './para_constant.mjs'
 import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import { AutoMoonAvgV } from './astronomy_acrv.mjs'
+import { Deg2Mansion } from './astronomy_other.mjs'
 // import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
@@ -67,7 +53,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         title: '現代近似',
         data: [WestSun.toFixed(5), 0, WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
     }]
-    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'NewDaming', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi']
+    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian']
     List1 = CalName ? [CalName] : List1
     List2 = CalName ? [CalName] : List2
@@ -284,6 +270,41 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
 }
 // console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
+export const BindDeg2Mansion = (Deg, CalName) => {
+    const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
+    const EquaAccumListHuangji = []
+    const EquaAccumListLinde = []
+    const EquaAccumListDayan = AutoDegAccumList(CalName, 729)
+    const EquaAccumListYingtian = []
+    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
+    const EquaAccumListJiyuan = AutoDegAccumList(CalName, 1106)
+    const EquaAccumListDaming3 = []
+    const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
+    const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
+    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
+    const EclpAccumListLinde = AutoDegAccumList(CalName, 665, 1) // 麟德
+    const EclpAccumListDayan = AutoDegAccumList(CalName, 729, 1) // 大衍
+    const EclpAccumListYingtian = AutoDegAccumList(CalName, 964) // 應天
+    const EclpAccumListMingtian = AutoDegAccumList(CalName, 1065, 1) // 明天
+    const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
+    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
+    const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
+    const Print = ['Taichu', 'Huangji', 'Linde', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
+        const EclpList = eval('EclpAccumList' + title)
+        const Eclp = Deg2Mansion(Deg, EclpList, CalName)
+        const EquaList = eval('EquaAccumList' + title)
+        let Equa = ''
+        if ((EquaList || []).length) {
+            Equa = Deg2Mansion(Deg, EquaList, CalName)
+        }
+        return {
+            title: CalNameList[title],
+            data: [Equa, Eclp]
+        }
+    })
+    return Print
+}
+// console.log(BindDeg2Mansion(334, 'Qianxiang'))
 export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
     const {
         Type,
@@ -335,7 +356,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
         special = 1
     } else if (Type === 10) {
-        Longi2LatiA = Longi2LatiTable2(Longi1, 'NewDaming')
+        Longi2LatiA = Longi2LatiTable2(Longi1, 'Daming3')
         Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
@@ -392,7 +413,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
         data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, (WestC1 - WestC).toFixed(4), `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0, (WestD1 - WestD).toFixed(4)]
     }]
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'NewDaming', 'Shoushi'].map(title => {
+        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
             let Lati1Print = '-'
             let LatiPrint = '-'
             let LatiInacPrint = '-'

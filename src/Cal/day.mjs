@@ -18,7 +18,7 @@ import {
 import {
     AutoTcorr, AutoDifAccum, AutoMoonAvgV
 } from './astronomy_acrv.mjs'
-import { Deg2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
+import { Accum2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
 import {
     Jd2Date1
 } from './time_jd2date.mjs'
@@ -277,15 +277,15 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccum, CalName)
                     MoonEclpLati[i][k] = AutoNineOrbit(NodeAccum, WinsolsDifRaw, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }
-                const EquaFunc = Deg2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
+                const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
                 Equa[i][k] = EquaFunc.MansionResult
                 Midstar[i][k] = EquaFunc.MidstarResult
-                Eclp[i][k] = Deg2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
+                Eclp[i][k] = Accum2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
                 const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, WinsolsDecimal, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Sunrise[i][k] = Longi2LatiFunc.Sunrise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
-                const MoonEclpFunc = Deg2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName)
+                const MoonEclpFunc = Accum2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName)
                 const MoonMansionOrder = MoonEclpFunc.MansionOrder
                 let MoonMansionNote = ''
                 if ((Type >= 2 && Type <= 7) && (MoonMansionOrder === 5 || MoonMansionOrder === 26)) { // 乾象規定月在張心署之

@@ -4,7 +4,7 @@ import {
     AutoDegAccumList
 } from './para_constant.mjs'
 import AutoPara from './para_1.mjs'
-import { Deg2Mansion } from './astronomy_other.mjs'
+import { Accum2Mansion } from './astronomy_other.mjs'
 
 export default function CalQuar(CalName, year) {
     const {
@@ -125,7 +125,7 @@ export default function CalQuar(CalName, year) {
         NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmWinsolsDifRaw[i] = NewmAvgBare[i] - WinsolsAccumRaw
         if (MansionRaw) {
-            NewmEqua[i] = Deg2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
+            NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
         }
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdWinsols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
         SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr || 0)).toPrecision(14)) + BuScOrder
@@ -167,7 +167,7 @@ export default function CalQuar(CalName, year) {
             TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Deg2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
                 TermEqua[i] = Func.MansionResult
                 TermMidstar[i] = Func.MidstarResult
             }
@@ -183,7 +183,7 @@ export default function CalQuar(CalName, year) {
             TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Deg2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
                 TermEqua[i] = Func.MansionResult
                 TermMidstar[i] = Func.MidstarResult
             }
@@ -212,7 +212,7 @@ export default function CalQuar(CalName, year) {
             TermDecimal[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Deg2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
                 TermEqua[i] = Func.MansionResult
                 TermMidstar[i] = Func.MidstarResult
             }

@@ -167,7 +167,7 @@ export default class Day extends React.Component {
       alert('illegal input!');
       return;
     }
-    const callWorker = (eventName) => {
+    const callWorker = eventName => {
       this.setState({ loading: true });
       this.worker.postMessage({
         eventName,
@@ -199,7 +199,7 @@ export default class Day extends React.Component {
       <div className='calendar-select'>
         <MenuSelect
           calMap={cals}
-          onSelect={(selected) => {
+          onSelect={selected => {
             this.setState({ calendars: selected })
           }}
         />

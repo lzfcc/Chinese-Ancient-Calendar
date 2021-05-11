@@ -105,9 +105,9 @@ export const CalNameList = { // 按照時間順序排列
     Huitian: '會天(擬)',
     Chengtian: '成天', // 上南宋
     Bentian: '本天(擬)',
-    // Jiajun: '賈俊大明(擬)',
-    Yangji: '楊級大明(擬)',
-    NewDaming: '重修大明',
+    // Daming1: '賈俊大明(擬)',
+    Daming2: '楊級大明(擬)',
+    Daming3: '重修大明',
     Yiwei: '乙未(廢)',
     Gengwu: '庚午',
     Shoushi: '授時',
@@ -159,8 +159,8 @@ export const CalNameDayList = { // 可計算日書的曆法
     Chunyou: '淳祐(擬)',
     Huitian: '會天(擬)',
     Chengtian: '成天',
-    Yangji: '楊級大明(擬)',
-    NewDaming: '重修大明',
+    Daming2: '楊級大明(擬)',
+    Daming3: '重修大明',
     Gengwu: '庚午',
     Shoushi: '授時',
     Datong: '大統',
@@ -340,7 +340,7 @@ export const HuangheiList = ['青龍', '明堂', '天刑', '朱雀', '金匱', '
 const EquaDegTaichu = [0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 16, 2, 9, 33, 4, 15, 7, 18, 18, 17] // 太初至麟德
 // const EquaDegTaichu = [0, 0, 12, 21, 36, 41, 46, 64, 75, 101, 109, 121, 131, 148, 164, 173, 189, 201, 215, 226, 242, 244, 253, 286, 290, 305, 312, 330, 348]
 const EquaDegDayan = [0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 17, 1, 10, 33, 3, 15, 7, 18, 18, 17] // 大衍以後。太=0.75
-// const EquaDegMingtian = [0, 12, 9, 16, 5, 6, 19, 10, 25, 7, 11, 10, 16, 17, 9, 16, 12, 15, 11, 18, 1, 10, 34, 2, 14, 7, 18, 18, 17] // 明天的新値。「自漢太初後至唐開元治曆之初，凡八百年間，悉無更易。今雖測驗與舊不同，亦歲月未久。新曆兩備其數，如淳風從舊之意。」所以還是沿用以前的
+const EquaDegMingtian = [0, 12, 9, 16, 5, 6, 19, 10, 25, 7, 11, 10, 16, 17, 9, 16, 12, 15, 11, 18, 1, 10, 34, 2, 14, 7, 18, 18, 17] // 明天的新値。「自漢太初後至唐開元治曆之初，凡八百年間，悉無更易。今雖測驗與舊不同，亦歲月未久。新曆兩備其數，如淳風從舊之意。」所以還是沿用以前的
 const EquaDegJiyuan = [0, 12, 9.25, 16, 5.75, 6.25, 19.25, 10.5, 25, 7.25, 11.25, 9, 15.5, 17, 8.75, 16.5, 12, 15, 11.25, 17.25, 0.5, 10.5, 33.25, 2.5, 13.75, 6.75, 17.25, 18.75, 17] // 少=1/4，太3/4。紀元的新値「如考唐，用唐所測；考古，用古所測：卽各得當時宿度。」根據年份用當時的觀測值。注意虛分要減去週天餘。金大明沿用紀元
 const EquaDegShoushi = [0, 12.1, 9.2, 16.3, 5.6, 6.5, 19.1, 10.4, 25.2, 7.2, 11.35, 8.7, 15.4, 17.1, 8.6, 16.6, 11.8, 15.6, 11.3, 17.4, 0.05, 11.1, 33.3, 2.2, 13.3, 6.3, 17.25, 18.75, 17.3] // 弦策少是0.25，太就是0.75。觜初五，說明初=0。大統同授時
 const EclpDegEasthan = [0, 13, 10, 16, 5, 5, 18, 10, 24, 7, 11, 10, 16, 18, 10, 17, 12, 15, 12, 16, 3, 8, 30, 4, 14, 7, 17, 19, 18]
@@ -355,7 +355,7 @@ const EclpDegShoushi = [0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 23.47, 6.
 
 export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是黃道度
     const {
-        AutoPara
+        AutoPara, Type
     } = Bind(CalName)
     const {
         Solar,
@@ -370,7 +370,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是
     if (isEclp) {
         if (year >= 1281) {
             DegListRaw = EclpDegShoushi
-        } else if (CalName === 'NewDaming') {
+        } else if (Type === 10 && year >= 1180 && year <= 1280) { // 'Daming3'
             DegListRaw = EclpDegNewDaming
         } else if (year >= 1106) {
             DegListRaw = EclpDegJiyuan
@@ -388,11 +388,13 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是
             DegListRaw = EclpDegEasthan
         }
     } else {
-        if (year >= 1260) {
+        if (year >= 1281) {
             DegListRaw = EquaDegShoushi
-        } else if (year >= 1100) {
+        } else if (year >= 1106) {
             DegListRaw = EquaDegJiyuan
-        } else if (year >= 724) {
+        } else if (year >= 1065 && CalName === 'Mingtian') {
+            DegListRaw = EquaDegMingtian
+        } else if (year >= 729) {
             DegListRaw = EquaDegDayan
         } else {
             DegListRaw = EquaDegTaichu

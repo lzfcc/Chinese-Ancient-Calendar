@@ -18,7 +18,27 @@ const AutoLightRange = CalName => {
     return LightRange
 }
 
-export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
+export const Deg2Mansion = (Deg, DegAccumList, CalName) => {
+    const { AutoPara
+    } = Bind(CalName)
+    const { SolarRaw,
+    } = AutoPara[CalName]
+    let { Sidereal, Solar } = AutoPara[CalName]
+    Sidereal = Sidereal || (Solar || SolarRaw)
+    let MansionOrder = 0
+    const MansionAccum = (Deg % Sidereal + Sidereal + 1e-12) % Sidereal
+    for (let j = 1; j <= 28; j++) {
+        if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
+            MansionOrder = j
+            break
+        }
+    }
+    const MansionName = MansionNameList[MansionOrder]
+    const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(3)
+    return MansionName + MansionDeg    
+}
+
+export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
     const { AutoPara
     } = Bind(CalName)
     const { SolarRaw, WinsolsConst, MansionConst, MansionRaw
@@ -29,7 +49,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
     Accum -= WinsolsConst || 0 // 授時要減去氣應？
     let MansionOrder = 0
     let MidstarOrder = 0
-    const MansionAccum = ((Mansion + (MansionConst || 0) + Accum) % Sidereal + Sidereal + 1e-10) % Sidereal
+    const MansionAccum = ((Mansion + (MansionConst || 0) + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
     for (let j = 1; j <= 28; j++) {
         if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
             MansionOrder = j
@@ -39,10 +59,10 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
     const MansionName = MansionNameList[MansionOrder]
     const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(3)
     const MansionResult = MansionName + MansionDeg
-    let MidstarResult = 0
     /////////昏中星/////////               
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
+    let MidstarResult = 0
     const LightRange = AutoLightRange(CalName)
     if (WinsolsDecimal >= 0) { // 一個小坑，四分曆存在WinsolsDecimal===0的情況，所以要加上>=0，只保留undefined
         const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
@@ -68,7 +88,7 @@ export const Deg2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winsols
         MidstarResult
     }
 }
-// console.log(Deg2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
+// console.log(Accum2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
 
 // if (Type === 11) {
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來

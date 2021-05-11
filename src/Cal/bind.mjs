@@ -35,7 +35,7 @@ export const Bind = CalName => {
             Type = 8 // 北宋
         } else if (['Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Bentian'].includes(CalName)) {
             Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
-        } else if (['Yangji', 'NewDaming', 'Yiwei', 'Gengwu'].includes(CalName)) {
+        } else if (['Daming2', 'Daming3', 'Yiwei', 'Gengwu'].includes(CalName)) {
             Type = 10 // 遼金元
         } else if (['Shoushi', 'Datong'].includes(CalName)) {
             Type = 11 // 授時
@@ -182,10 +182,10 @@ const CalRange = {
     Futian: [
         [961, 993]
     ],
-    Yangji: [
+    Daming2: [
         [1127, 1279]
     ],
-    NewDaming: [
+    Daming3: [
         [1180, 1280]
     ],
     Yingtian: [

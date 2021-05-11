@@ -8,7 +8,7 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import {
-    Deg2Mansion
+    Accum2Mansion
 } from './astronomy_other.mjs'
 
 export default (CalName, YearStart, YearEnd) => { // CalNewm
@@ -122,7 +122,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                 }
                 if (MansionRaw) {
-                    const Func = Deg2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrWinsolsDif[i] || TermAvgWinsolsDif[i]), WinsolsDecimal)
+                    const Func = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrWinsolsDif[i] || TermAvgWinsolsDif[i]), WinsolsDecimal)
                     TermEqua[i] = Func.MansionResult
                     TermMidstar[i] = Func.MidstarResult
                 }
@@ -162,7 +162,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                     }
                     if (MansionRaw) {
-                        const Func = Deg2Mansion((TermAcrRaw[i - 1] || TermAvgRaw[i - 1]), EquaDegAccumList, CalName, (TermAcrWinsolsDif[i - 1] || TermAvgWinsolsDif[i - 1]), WinsolsDecimal)
+                        const Func = Accum2Mansion((TermAcrRaw[i - 1] || TermAvgRaw[i - 1]), EquaDegAccumList, CalName, (TermAcrWinsolsDif[i - 1] || TermAvgWinsolsDif[i - 1]), WinsolsDecimal)
                         TermEqua[i] = Func.MansionResult
                         TermMidstar[i] = Func.MidstarResult
                     }

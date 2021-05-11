@@ -11,7 +11,7 @@ import {
     ConstWest
 } from './astronomy_west.mjs'
 import {
-    Deg2Mansion, AutoNewmPlus, AutoSyzygySub
+    Accum2Mansion, AutoNewmPlus, AutoSyzygySub
 } from './astronomy_other.mjs'
 import {
     AutoEqua2Eclp
@@ -280,7 +280,7 @@ export default (CalName, year) => {
                 if (Type === 11) { // 授時要黃轉赤
                     Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
                 }
-                Equa[i] = Deg2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
+                Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
                 TermAvgWinsolsDif[i] = (i + ZhengWinsolsDif - 1) * TermLeng
                 TermAvgRaw[i] = OriginAccum + TermAvgWinsolsDif[i]
                 const TermNum3 = 2 * (i + ZhengWinsolsDif - 1)

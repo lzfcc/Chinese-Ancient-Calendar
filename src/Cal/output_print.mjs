@@ -80,9 +80,9 @@ const printData = outputFile(1, 1010, 1400, 0, [ // mode, YearStart, YearEnd, au
     // 'Huitian',
     // 'Chengtian',
     // 'Bentian',
-    // 'Jiajun' // 賈俊大明
-    // 'Yangji', 
-    // 'NewDaming', // 上宋金系
+    // 'Daming1' // 賈俊大明
+    // 'Daming2', 
+    // 'Daming3', // 上宋金系
     // 'Yiwei',
     // 'Gengwu', 
     // 'Shoushi',

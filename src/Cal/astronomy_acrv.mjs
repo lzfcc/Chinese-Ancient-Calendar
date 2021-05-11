@@ -667,7 +667,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
     let NodeAccumCorr = 0
     let SunDifAccum = 0
     let MoonDifAccum = 0
-    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Fengyuan', 'Zhantian', 'Yangji', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
         if (CalName === 'Huangchu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Qianxiang').Tcorr1
         } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
@@ -691,12 +691,12 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Tsrengyuan') // 欽天近地點入轉
             } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Guantian')
-            } else if (CalName === 'Yangji') {
+            } else if (CalName === 'Daming2') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Jiyuan')
             } else if (['Chunyou', 'Huitian', 'Bentian'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Chengtian')
             } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
-                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'NewDaming')
+                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Daming3')
             }
             Tcorr1 = TcorrFunc.Tcorr1
             Tcorr2 = TcorrFunc.Tcorr2
@@ -840,7 +840,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
     let DifAccumFunc = {}
     let SunDifAccum = 0
     let MoonDifAccum = 0
-    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Fengyuan', 'Zhantian', 'Yangji', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
         if (CalName === 'Huangchu') {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Qianxiang').MoonDifAccum
         } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
@@ -864,12 +864,12 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Tsrengyuan') // 欽天近地點入轉
             } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Guantian')
-            } else if (CalName === 'Yangji') {
+            } else if (CalName === 'Daming2') {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Jiyuan')
             } else if (['Chunyou', 'Huitian', 'Bentian'].includes(CalName)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Chengtian')
             } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
-                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'NewDaming')
+                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Daming3')
             }
             SunDifAccum = DifAccumFunc.SunDifAccum
             MoonDifAccum = DifAccumFunc.MoonDifAccum

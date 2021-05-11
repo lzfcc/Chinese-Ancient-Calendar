@@ -1,6 +1,7 @@
 import React from 'react'
 import BindTcorr from './AcrV'
 import BindEqua2Eclp from './Equa2Eclp'
+import Deg2Mansion from './Deg2Mansion'
 import BindLongi2Lati from './Longi2Lati'
 import MoonLongi from './MoonLongi'
 import Const from './Const'
@@ -36,6 +37,7 @@ export default class Astronomy extends React.Component {
           <BindTcorr />
           <h2>軌道之什</h2>
           <BindEqua2Eclp />
+          <Deg2Mansion />
           <BindLongi2Lati />
           <MoonLongi />
           <h2>交食之什</h2>
