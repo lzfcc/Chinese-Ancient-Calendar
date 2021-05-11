@@ -132,7 +132,7 @@ export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =
     return { SyzygySub, Print }
 }
 
-export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九道法
+export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行九道法
     const { Type, AutoPara,
     } = Bind(CalName)
     const { SolarRaw, Node, LunarRaw
@@ -144,6 +144,8 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九�
     const HalfNode = Node / 2
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
+    const NodeAccumHalf = NodeAccum % HalfNode
+    const WinsolsDif = WinsolsDifRaw - NodeAccumHalf
     let Print = ''
     if (Type <= 6) {
         if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {

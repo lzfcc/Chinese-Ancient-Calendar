@@ -13,14 +13,10 @@ import {
 } from './day_luck.mjs'
 import CalNewm from './newm_index.mjs'
 import {
-    AutoEqua2Eclp,
-    AutoLongi2Lati,
-    AutoMoonLongiLati
+    AutoEqua2Eclp, AutoLongi2Lati, AutoMoonLongiLati
 } from './bind_astronomy.mjs'
 import {
-    AutoTcorr,
-    AutoDifAccum,
-    AutoMoonAvgV
+    AutoTcorr, AutoDifAccum, AutoMoonAvgV
 } from './astronomy_acrv.mjs'
 import { Deg2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
 import {
@@ -279,7 +275,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
                     MoonEclpLongiAccum = WinsolsDifRaw * MoonAvgVDeg + OriginAccum //  + MoonDifAccum
                     const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccum, CalName)
-                    MoonEclpLati[i][k] = AutoNineOrbit(NodeAccum, WinsolsDifRaw % Solar, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
+                    MoonEclpLati[i][k] = AutoNineOrbit(NodeAccum, WinsolsDifRaw, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }
                 const EquaFunc = Deg2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
                 Equa[i][k] = EquaFunc.MansionResult
