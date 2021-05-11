@@ -179,7 +179,7 @@ p {
   /* margin-bottom: .6em; */
   margin-bottom: -2em;
   text-shadow: 5px 5px 20px var(--yellow), 5px 5px 20px var(--yellow);
-  border: 1px solid var(--shallowgray);
+  border-bottom: 1px solid var(--shallowgray);
 }
 
 .cover h1 {
@@ -686,7 +686,7 @@ input {
   background-color: var(--bgblue);
   margin: 5em auto 0;
   width: 100vw;
-  border: 1px solid var(--shallowgray);
+  border-top: 1px solid var(--shallowgray);
 }
 
 .comment {
@@ -700,9 +700,52 @@ input {
   font-family: var(--sans)
 }
 
+.contributor {
+  border-top: 1px solid var(--shallowgray);
+  background: var(--bgpink);
+  padding-top: 3em;
+  padding-bottom: 5em;
+}
+
+.contributor-wrap {
+  margin: 3em auto;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3em 1.5em;
+  justify-content: center;
+  align-items: start;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.contributor img {
+  width: 130px;
+  height: 130px;
+  border-radius: 999em;
+}
+
+.contributor p {
+  margin: 0;
+  color: var(--gray);
+}
+
+.contributor a {
+  font-weight: bold;
+}
+
+.contributor a:after {
+  content: none;
+}
+
+.contributor h3 {
+  text-align: center;
+  font-size: 2em;
+}
+
 footer {
   margin: 0 auto 2em;
-  padding: 2em 0;
+  padding: 5em 0;
   width: 100%;
   text-align: center;
   background: var(--black);
