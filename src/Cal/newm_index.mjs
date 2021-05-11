@@ -30,8 +30,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             isLeapAdvan: isLeapTA,
             JiScOrder: JiScOrder,
             OriginAccum: OriginAccum,
-            NewmInt: NewmInt,
-            NewmOrderMod: NewmOrderMod,
             NewmEqua: NewmEqua,
             TermAvgRaw: TermAvgRaw,
             TermAcrRaw: TermAcrRaw,
@@ -42,6 +40,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             LeapLimit: LeapLimit
         } = ThisYear
         let {
+            NewmInt: NewmInt,
             LeapNumTerm: LeapNumTermThis,
             isLeapPrev: isLeapTPv,
             isLeapThis: isLeapTT,
@@ -130,7 +129,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             }
             if (isLeapTT) {
                 let Plus = 2.5
-                if (Type === 11) { // 若不用進朔，需要把2改成3.5
+                if (Type === 11) { // 若不用進朔，需要改成3.5
                     Plus = 3.5
                 }
                 while (LeapNumTermThis >= 2 && (TermAvgRaw[LeapNumTermThis] >= NewmInt[LeapNumTermThis + 1]) && (TermAvgRaw[LeapNumTermThis] < NewmInt[LeapNumTermThis + 1] + Plus)) {
@@ -258,37 +257,56 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
         }
+        const NewmSlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
+        const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
+        ////////////下爲調整輸出////////////
+        const NewmWinsolsDifRawPrint = NewmSlice(ThisYear.NewmWinsolsDifRaw)
+        const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
+        const NewmAvgDecimalPrint = NewmSlice(ThisYear.NewmAvgDecimal)
+        NewmInt = NewmInt.slice(1 + NewmSyzygyStart)
+        const step = []
+        for (let i = 0; i < NewmAvgScPrint.length; i++) {
+            step[i] = NewmInt[i + 1] - NewmInt[i]
+        }
+        // const checkStep = (num, time, array) => array.reduce(function (p, c) { c === num ? p + 1 : (p < time ? 0 : p) }, 0) >= time
+        // const sdfsdg = checkStep(30, 2, [30, 29, 30, 30, 30])
+        let tmp30 = 0
+        let tmp29 = 0
+        for (let i = 0; i < step.length - 2; i++) {
+            if (step[i] === 30 && step[i + 1] === 30 && step[i + 2] === 30 && step[i + 3] === 30) {
+                tmp30 = 4
+                break
+            }
+            if (step[i] === 29 && step[i + 1] === 29 && step[i + 2] === 29) {
+                tmp29 = 3
+                break
+            }
+        }
         let ZhengGreatSur = 0
         let ZhengSmallSur = 0
         if (Type === 1) {
-            ZhengGreatSur = (NewmOrderMod[1 + NewmSyzygyStart] - ThisYear.BuScOrder + 60) % 60
-            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmSyzygyStart] - NewmInt[1 + NewmSyzygyStart]) * Denom).toPrecision(5))
+            ZhengGreatSur = (NewmInt[0] - ThisYear.BuScOrder + 60) % 60
+            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmSyzygyStart] - NewmInt[0]) * Denom).toPrecision(5))
         }
         const MonthPrint = MonthName.slice(1)
-        const NewmSyzygySlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
-        const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
-        ////////////下爲調整輸出////////////
-        const NewmWinsolsDifRawPrint = NewmSyzygySlice(ThisYear.NewmWinsolsDifRaw)
-        const NewmAvgScPrint = NewmSyzygySlice(ThisYear.NewmAvgSc)
-        const NewmAvgDecimalPrint = NewmSyzygySlice(ThisYear.NewmAvgDecimal)
         let NewmScPrint = []
         let NewmDecimal3Print = []
         let NewmDecimal2Print = []
         let NewmDecimal1Print = []
         if (Type >= 2) {
-            NewmScPrint = NewmSyzygySlice(ThisYear.NewmSc)
+            NewmScPrint = NewmSlice(ThisYear.NewmSc)
             if (Type <= 10 && (ThisYear.NewmDecimal1 || []).length) {
-                NewmDecimal1Print = NewmSyzygySlice(ThisYear.NewmDecimal1)
+                NewmDecimal1Print = NewmSlice(ThisYear.NewmDecimal1)
             } else if (Type === 11) {
-                NewmDecimal3Print = NewmSyzygySlice(ThisYear.NewmDecimal3)
+                NewmDecimal3Print = NewmSlice(ThisYear.NewmDecimal3)
             }
         }
         if (Type >= 5 && Type <= 10) {
-            NewmDecimal2Print = NewmSyzygySlice(ThisYear.NewmDecimal2)
+            NewmDecimal2Print = NewmSlice(ThisYear.NewmDecimal2)
         }
-        const NewmEquaPrint = NewmSyzygySlice(NewmEqua)
-        const SyzygyScPrint = NewmSyzygySlice(ThisYear.SyzygySc)
-        const SyzygyDecimalPrint = NewmSyzygySlice(ThisYear.SyzygyDecimal)
+        const NewmEquaPrint = NewmSlice(NewmEqua)
+        const SyzygyScPrint = NewmSlice(ThisYear.SyzygySc)
+        const SyzygyDecimalPrint = NewmSlice(ThisYear.SyzygyDecimal)
         let TermNamePrint = []
         let TermScPrint = []
         let TermDecimalPrint = []
@@ -330,12 +348,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let NewmNodeAccumPrint = []
         let NewmAnomaAccumPrint = []
         if (Type > 1) {
-            NewmNodeAccumPrint = NewmSyzygySlice(ThisYear.NewmNodeAccum)
-            NewmAnomaAccumPrint = NewmSyzygySlice(ThisYear.NewmAnomaAccum)
-            const NewmDecimalPrint = NewmSyzygySlice(ThisYear.NewmDecimal)
-            const SyzygyNodeAccumPrint = NewmSyzygySlice(ThisYear.SyzygyNodeAccum)
-            const SyzygyAnomaAccumPrint = NewmSyzygySlice(ThisYear.SyzygyAnomaAccum)
-            const SyzygyWinsolsDifRawPrint = NewmSyzygySlice(ThisYear.SyzygyWinsolsDifRaw)
+            NewmNodeAccumPrint = NewmSlice(ThisYear.NewmNodeAccum)
+            NewmAnomaAccumPrint = NewmSlice(ThisYear.NewmAnomaAccum)
+            const NewmDecimalPrint = NewmSlice(ThisYear.NewmDecimal)
+            const SyzygyNodeAccumPrint = NewmSlice(ThisYear.SyzygyNodeAccum)
+            const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
+            const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
             for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                 // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
                 let NoleapMon = i + 1
@@ -468,6 +486,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 YearInfo += `\n` + SyzygyEcliPrint
             }
         }
+        if (tmp29 === 3) {
+            YearInfo += `<span class='step30'>三連小</span>`
+        }
+        if (tmp30 === 4) {
+            YearInfo += `<span class='step30'>四連大</span>`
+        }
         return {
             Era, YearInfo, MonthPrint,
             NewmAvgScPrint, NewmAvgDecimalPrint, NewmScPrint, NewmDecimal3Print, NewmDecimal2Print, NewmDecimal1Print, NewmEquaPrint,
@@ -475,7 +499,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             TermNamePrint, TermScPrint, TermDecimalPrint, TermAcrScPrint, TermAcrDecimalPrint, TermEquaPrint, TermMidstarPrint,
             ////////////// 以下用於日書/////////////
             LeapNumTermThis, OriginAccum,
-            NewmInt: NewmInt.slice(1 + NewmSyzygyStart), // 結尾就不切了，因爲最後一個月還要看下個月的情況
+            NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
             NewmNodeAccumPrint: (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmSyzygyStart)),
             NewmAnomaAccumPrint: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmSyzygyStart))
         }

@@ -107,9 +107,7 @@ export default function CalQuar(CalName, year) {
     // 朔望
     const NewmAvgBare = []
     const NewmAvgRaw = []
-    const NewmAvgMod = []
     const NewmInt = []
-    const NewmOrderMod = []
     const NewmAvgSc = []
     const NewmWinsolsDifRaw = [] // 朔距冬至日數
     const NewmAvgDecimal = []
@@ -122,10 +120,8 @@ export default function CalQuar(CalName, year) {
     for (let i = 0; i <= 14; i++) { // 本來是1
         NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
-        NewmAvgMod[i] = (NewmAvgRaw[i] % 60 + 60) % 60
         NewmInt[i] = ~~NewmAvgRaw[i]
-        NewmOrderMod[i] = ~~NewmAvgMod[i]
-        NewmAvgSc[i] = ScList[NewmOrderMod[i]]
+        NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]
         NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmWinsolsDifRaw[i] = NewmAvgBare[i] - WinsolsAccumRaw
         if (MansionRaw) {
@@ -244,7 +240,7 @@ export default function CalQuar(CalName, year) {
     return {
         OriginYear, JiOrder, BuYear, BuScOrder, JupiterSc,
         WinsolsAccumMod, OriginAccum,
-        NewmAvgBare, NewmAvgRaw, NewmInt, NewmOrderMod, NewmAvgSc, NewmAvgDecimal,
+        NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmAvgDecimal,
         SyzygySc, SyzygyDecimal,
         TermAvgBare, TermName, TermSc, TermDecimal,
         LeapSurAvgFix, LeapSurAvgThis, LeapNumOriginLeapSur, LeapNumTerm,

@@ -511,6 +511,14 @@ year-range {
   width: 45em;
 }
 
+.step30 {
+  background: var(--darkyellow);
+  color: var(--bg);
+  font-weight: bold;
+  border-radius: .5em;
+  padding: .25em .4em;
+}
+
 code {
   font-family: var(--codesans);
   background: var(--bgblue);
