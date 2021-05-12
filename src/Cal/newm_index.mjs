@@ -346,10 +346,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let NewmEcli = []
         let SyzygyEcli = []
         let NewmNodeAccumPrint = []
+        let NewmNodeAccumNightPrint = []
         let NewmAnomaAccumPrint = []
+        let NewmAnomaAccumNightPrint = []
         if (Type > 1) {
             NewmNodeAccumPrint = NewmSlice(ThisYear.NewmNodeAccum)
+            NewmNodeAccumNightPrint = NewmSlice(ThisYear.NewmNodeAccumNight)
             NewmAnomaAccumPrint = NewmSlice(ThisYear.NewmAnomaAccum)
+            NewmAnomaAccumNightPrint = NewmSlice(ThisYear.NewmAnomaAccumNight)
             const NewmDecimalPrint = NewmSlice(ThisYear.NewmDecimal)
             const SyzygyNodeAccumPrint = NewmSlice(ThisYear.SyzygyNodeAccum)
             const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
@@ -501,8 +505,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             LeapNumTermThis, OriginAccum,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
             NewmRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmRaw)),
+            NewmAcrRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
+            // NewmAcrInt: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrInt)),
             NewmNodeAccumPrint, // : (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmStart)), // 為什麼還要切一遍？？
-            NewmAnomaAccumPrint //: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmStart))
+            NewmNodeAccumNightPrint,
+            NewmAnomaAccumPrint, //: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmStart))
+            NewmAnomaAccumNightPrint
         }
     }
     YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年
