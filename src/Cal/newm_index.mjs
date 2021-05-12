@@ -44,8 +44,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             LeapNumTerm: LeapNumTermThis,
             isLeapPrev: isLeapTPv,
             isLeapThis: isLeapTT,
-            NewmSyzygyStart: NewmSyzygyStart,
-            NewmSyzygyEnd: NewmSyzygyEnd,
+            NewmStart: NewmStart,
+            NewmEnd: NewmEnd,
             TermStart: TermStart,
             TermEnd: TermEnd,
         } = ThisYear
@@ -64,22 +64,22 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 specialStart = 1
                 LeapNumTermThis--
             } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
-            NewmSyzygyStart += specialStart
-            NewmSyzygyEnd += specialNewmSyzygyEnd
+            NewmStart += specialStart
+            NewmEnd += specialNewmSyzygyEnd
             TermStart += specialStart
-            LeapNumTermThis -= NewmSyzygyStart
+            LeapNumTermThis -= NewmStart
         } else {
             if (ThisYear.isLeapPost) {
-                NewmSyzygyEnd = 0
+                NewmEnd = 0
                 TermEnd = 0
             } else if (isLeapPvPt) {
                 isLeapTPv = 0
                 if (ZhengWinsolsDif <= 0) {
-                    NewmSyzygyStart = -1
-                    NewmSyzygyEnd = 0
+                    NewmStart = -1
+                    NewmEnd = 0
                 } else {
-                    NewmSyzygyStart = 0
-                    NewmSyzygyEnd = 1
+                    NewmStart = 0
+                    NewmEnd = 1
                 }
                 TermEnd = 1
                 isLeapTT = 1
@@ -87,11 +87,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             } else if (NextYear.isLeapPrev && NextYear.isLeapAdvan) {
                 TermEnd = 1
                 isLeapTT = 1
-                NewmSyzygyEnd = 1
+                NewmEnd = 1
                 LeapNumTermThis = 12
             } else if (isLeapTPv && isLeapTA) {
-                NewmSyzygyStart = 1
-                NewmSyzygyEnd = 1
+                NewmStart = 1
+                NewmEnd = 1
                 TermEnd = 0
                 isLeapTT = 0
                 isLeapTPv = 1
@@ -169,7 +169,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
         }
-        LeapNumTermThis -= NewmSyzygyStart
+        LeapNumTermThis -= NewmStart
         // 月序
         const Month = []
         const MonthName = []
@@ -257,13 +257,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
         }
-        const NewmSlice = array => array.slice(1 + NewmSyzygyStart, 13 + NewmSyzygyEnd)
+        const NewmSlice = array => array.slice(1 + NewmStart, 13 + NewmEnd)
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
         ////////////下爲調整輸出////////////
         const NewmWinsolsDifRawPrint = NewmSlice(ThisYear.NewmWinsolsDifRaw)
         const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
         const NewmAvgDecimalPrint = NewmSlice(ThisYear.NewmAvgDecimal)
-        NewmInt = NewmInt.slice(1 + NewmSyzygyStart)
+        NewmInt = NewmInt.slice(1 + NewmStart)
         const step = []
         for (let i = 0; i < NewmAvgScPrint.length; i++) {
             step[i] = NewmInt[i + 1] - NewmInt[i]
@@ -286,7 +286,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let ZhengSmallSur = 0
         if (Type === 1) {
             ZhengGreatSur = (NewmInt[0] - ThisYear.BuScOrder + 60) % 60
-            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmSyzygyStart] - NewmInt[0]) * Denom).toPrecision(5))
+            ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmStart] - NewmInt[0]) * Denom).toPrecision(5))
         }
         const MonthPrint = MonthName.slice(1)
         let NewmScPrint = []
@@ -445,7 +445,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             }
             YearInfo += `  閏餘${(LeapSur.toFixed(4))}`
             if (ThisYear.LeapNumOriginLeapSur) {
-                YearInfo += `閏${ThisYear.LeapNumOriginLeapSur - NewmSyzygyStart}`
+                YearInfo += `閏${ThisYear.LeapNumOriginLeapSur - NewmStart}`
             }
         } else {
             if (JiScOrder) {
@@ -500,8 +500,9 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             ////////////// 以下用於日書/////////////
             LeapNumTermThis, OriginAccum,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
-            NewmNodeAccumPrint: (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmSyzygyStart)),
-            NewmAnomaAccumPrint: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmSyzygyStart))
+            NewmRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmRaw)),
+            NewmNodeAccumPrint, // : (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmStart)), // 為什麼還要切一遍？？
+            NewmAnomaAccumPrint //: (Type === 1 ? [] : NewmAnomaAccumPrint.slice(NewmStart))
         }
     }
     YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年

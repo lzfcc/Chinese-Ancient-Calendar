@@ -59,6 +59,7 @@ export default class Converter extends React.Component {
             <th></th>
             <th>日盈縮積</th>
             <th>誤差</th>
+            <th>月實行度</th>
             <th>月遲疾積</th>
             <th>誤差</th>
             <th>日行改正</th>
@@ -85,6 +86,7 @@ export default class Converter extends React.Component {
             <th></th>
             <th>日盈縮積</th>
             <th>誤差</th>
+            <th>月實行度</th>
             <th>月遲疾積</th>
             <th>誤差</th>
             <th>日行改正</th>

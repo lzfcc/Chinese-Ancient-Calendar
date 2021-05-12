@@ -323,6 +323,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 }
 // console.log(Longi2LatiTable2(180, 0.5, 'Daming3').Lati) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
+// 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
     const {
         AutoPara

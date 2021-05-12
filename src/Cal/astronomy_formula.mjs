@@ -278,13 +278,11 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
 }
 // console.log(Longi2DialFormula(95, 'Jiyuan').Print)
 
+// 《數》頁361:先求 月行與黃道泛差EclpWhiteDif，
 export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該日距冬至黃道度，入交日。不知是否應該加上日躔
-    const {
-        AutoPara
+    const { AutoPara
     } = Bind(CalName)
-    const {
-        Node,
-        Sidereal
+    const { Node, Sidereal
     } = AutoPara[CalName]
     let Quadrant = 90.94
     if (CalName === 'Mingtian') {
@@ -328,7 +326,7 @@ export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該�
         EclpWhiteDif = Longi * (400 - 3 * Longi) / 8000
         EquaWhiteDif = Longi * WinsolsDifHalf * (400 - 3 * Longi) / 720000
     } else if (CalName === 'Jiyuan') {
-        EclpWhiteDif = Longi * (101 - Longi) / 2000 // 我猜意思大概是這裏求出來是給求赤白差做鋪墊，不是真正要用這個            
+        EclpWhiteDif = Longi * (101 - Longi) / 2000
         // EclpEquaDif = EquaLongi - LongiRaw
         if ((NodeAccum <= HalfNode && (WinsolsDif < QuarSolar || WinsolsDif >= Solar * 0.75)) || (NodeAccum > HalfNode && WinsolsDif >= QuarSolar && WinsolsDif < Solar * 0.75)) {
             const N1 = 1.125 * EclpWhiteDif

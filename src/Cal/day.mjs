@@ -34,7 +34,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         } = AutoPara[CalName]
         let { Solar, Sidereal, Lunar,
         } = AutoPara[CalName]
-        const { NewmInt, LeapNumTermThis, OriginAccum, NewmNodeAccumPrint, NewmAnomaAccumPrint
+        const { NewmInt, NewmRaw, LeapNumTermThis, OriginAccum, NewmNodeAccumPrint, NewmAnomaAccumPrint
         } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
@@ -272,8 +272,13 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         SunEquaLongiAccum = SunEquaLongi + OriginAccum
                         SunEclpLongiNoon = WinsolsDifNoon + SunDifAccumNoon
                     }
+                    // 元嘉開始計算月度就有計入遲疾的方法，大業就完全是定朔，但又是平朔注曆，這樣會衝突，我只能把麟德以前全部求平行度。
                     // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
-                    MoonEclpLongiAccum = WinsolsDifRaw * MoonAvgVDeg + OriginAccum //  + MoonDifAccum
+                    if (Type <= 5) {
+                        MoonEclpLongiAccum = NewmRaw[i - 1] + DayAccum - 1 - (NewmRaw[i - 1] - NewmInt[i - 1]) * MoonAvgVDeg + OriginAccum
+                    }else{
+                        
+                    }
                     const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccum, CalName)
                     MoonEclpLati[i][k] = AutoNineOrbit(NodeAccum, WinsolsDifRaw, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }

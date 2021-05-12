@@ -157,7 +157,7 @@ export default (CalName, year) => {
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
-        FirstAnomaAccum = (FirstAccum + (AnomaOrigin || 0) / Denom + (CalName === 'Shenlong' ? Anoma / 2 : 0) + (AnomaCorr ? AnomaCorr : 0) + Anoma) % Anoma
+        FirstAnomaAccum = (FirstAccum + (AnomaOrigin || 0) / Denom + (CalName === 'Shenlong' ? Anoma / 2 : 0) + (AnomaCorr || 0) + Anoma) % Anoma
     } else if (Type === 11) {
         FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaConst) % Anoma + Anoma) % Anoma
     }
@@ -223,6 +223,8 @@ export default (CalName, year) => {
         const AnomaAccum = []
         const NodeAccum = []
         const AcrInt = []
+        let Int = []
+        let Raw = []
         const Tcorr = []
         const AcrRaw = []
         const AcrMod = []
@@ -251,6 +253,11 @@ export default (CalName, year) => {
                 Tcorr[i] = TcorrBindFunc.Tcorr2
             }
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
+            if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) { // 定朔入轉同經朔，若定朔大餘有變化，則加減一整日
+                AnomaAccum[i] += 1
+            } else if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) {
+                AnomaAccum[i] -= 1
+            }
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrInt[i] = Math.floor(AcrRaw[i])
             if (Type <= 4) {
@@ -295,13 +302,20 @@ export default (CalName, year) => {
             }
             AcrInt[i] += NewmPlus + SyzygySub
             AvgInt[i] += NewmPlus + SyzygySub
+            if (Type >= 6) { // 麟德以後用定朔注曆
+                Int[i] = AcrInt[i]
+                Raw[i] = AcrRaw[i]
+            } else {
+                Int[i] = AvgInt[i]
+                Raw[i] = AvgRaw[i]
+            }
             Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
             if (Node) {
                 NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
             }
         }
         return {
-            AvgSc, Tcorr, AvgDecimal, AvgInt, AcrInt, Sc,
+            AvgSc, Tcorr, AvgDecimal, Int, Sc,
             Decimal, Decimal1, Decimal2, Decimal3,
             Equa, TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif,
             /// 交食用到
@@ -314,8 +328,8 @@ export default (CalName, year) => {
         Tcorr: NewmTcorr,
         AvgSc: NewmAvgSc,
         AvgDecimal: NewmAvgDecimal,
-        AvgInt: NewmAvgInt,
-        AcrInt: NewmAcrInt,
+        Int: NewmInt,
+        Raw: NewmRaw,
         Sc: NewmSc,
         Decimal: NewmDecimal,
         Decimal1: NewmDecimal1,
@@ -336,10 +350,6 @@ export default (CalName, year) => {
         LeapSurAcrThis = (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange
     } else {
         LeapSurAcrThis = LeapSurAvgThis - NewmTcorr[1] // * Denom
-    }
-    let NewmInt = NewmAvgInt
-    if (Type >= 5) { // 麟德以後用定朔注曆
-        NewmInt = NewmAcrInt
     }
     // 中氣
     let LeapNumTerm = 0
@@ -364,32 +374,32 @@ export default (CalName, year) => {
         }
     }
     // 最後是積月、月數
-    let NewmSyzygyStart = 0
-    let NewmSyzygyEnd = 0
+    let NewmStart = 0
+    let NewmEnd = 0
     if (isAdvance && isLeapPrev) {
-        NewmSyzygyStart = 1
+        NewmStart = 1
     }
     if (isLeapThis) {
-        NewmSyzygyEnd = 1
+        NewmEnd = 1
     } else {
-        NewmSyzygyEnd = NewmSyzygyStart
+        NewmEnd = NewmStart
     }
-    let TermStart = NewmSyzygyStart
-    let TermEnd = NewmSyzygyEnd
+    let TermStart = NewmStart
+    let TermEnd = NewmEnd
     if ((isAdvance && isLeapPrev)) {
         TermStart = 0
     }
-    if (NewmSyzygyStart && !TermStart) {
+    if (NewmStart && !TermStart) {
         TermEnd = 0
     }
     return {
         LeapLimit, OriginYear, JiYear, JiScOrder, OriginAccum, AccumPrint,
         NewmAvgSc, NewmAvgDecimal,
-        NewmSc, NewmInt, NewmDecimal1, NewmDecimal2, NewmDecimal3,
+        NewmSc, NewmInt, NewmRaw, NewmDecimal1, NewmDecimal2, NewmDecimal3,
         SyzygySc, SyzygyDecimal,
         TermAvgRaw, TermAcrRaw,
         LeapSurAvgThis, LeapSurAcrThis, LeapNumTerm, isAdvance, isLeapAdvan, isLeapPost, isLeapThis, isLeapPrev, isLeapNext,
-        NewmSyzygyStart, NewmSyzygyEnd, TermStart, TermEnd,
+        NewmStart, NewmEnd, TermStart, TermEnd,
         EquaDegAccumList, NewmEqua, TermAvgWinsolsDif, TermAcrWinsolsDif,
         //////// 交食用
         NewmNodeAccum: Newm.NodeAccum,

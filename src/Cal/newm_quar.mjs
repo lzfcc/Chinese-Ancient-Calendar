@@ -219,22 +219,22 @@ export default function CalQuar(CalName, year) {
         }
     }
     // 最後是積月、月數
-    let NewmSyzygyStart = 0
-    let NewmSyzygyEnd = 0
+    let NewmStart = 0
+    let NewmEnd = 0
     if ((isAdvance && isLeapAvgPrev) || (!isTermLeap && ZhengNum > 0 && !isAdvance && isLeapAvgThis)) {
-        NewmSyzygyStart = 1
+        NewmStart = 1
     }
     if ((isTermLeap && isLeapAvgThis) || isLeapAvgFix) {
-        NewmSyzygyEnd = 1
+        NewmEnd = 1
     } else {
-        NewmSyzygyEnd = NewmSyzygyStart
+        NewmEnd = NewmStart
     }
-    let TermStart = NewmSyzygyStart
-    let TermEnd = NewmSyzygyEnd
+    let TermStart = NewmStart
+    let TermEnd = NewmEnd
     if (isAdvance && isLeapAvgPrev) {
         TermStart = 0
     }
-    if (NewmSyzygyStart && NewmSyzygyStart && !TermStart) {
+    if (NewmStart && NewmStart && !TermStart) {
         TermEnd = 0
     }
     return {
@@ -244,7 +244,7 @@ export default function CalQuar(CalName, year) {
         SyzygySc, SyzygyDecimal,
         TermAvgBare, TermName, TermSc, TermDecimal,
         LeapSurAvgFix, LeapSurAvgThis, LeapNumOriginLeapSur, LeapNumTerm,
-        isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext, NewmSyzygyStart, NewmSyzygyEnd, TermStart, TermEnd,
+        isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext, NewmStart, NewmEnd, TermStart, TermEnd,
         NewmEqua, TermEqua, TermMidstar
     }
 }

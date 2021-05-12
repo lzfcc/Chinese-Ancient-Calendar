@@ -369,6 +369,7 @@ table td {
 .table2 table {
   font-size: .9em;
   margin: .25em auto;
+
 }
 
 .table2 table td {
@@ -658,7 +659,7 @@ input {
 
 .modulo {
   margin: 5em auto;
-  max-width: 1075px;
+  max-width: 1160px;
 }
 
 .modulo h2 {
