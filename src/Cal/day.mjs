@@ -24,9 +24,7 @@ import {
 } from './time_jd2date.mjs'
 
 export const CalDay = (CalName, YearStart, YearEnd) => {
-    if (YearEnd === undefined) {
-        YearEnd = YearStart
-    }
+    YearEnd = YearEnd || YearStart
     const Day = (CalName, year) => {
         const { Type, AutoPara,
         } = Bind(CalName)
@@ -34,7 +32,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         } = AutoPara[CalName]
         let { Solar, Sidereal, Lunar,
         } = AutoPara[CalName]
-        const { NewmInt, NewmRaw, NewmAcrRaw, LeapNumTermThis, OriginAccum, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint
+        const { LeapNumTermThis, OriginAccum,
+            NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumPrint, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint
         } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
@@ -268,13 +267,17 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 let SunEclpLongiAccum = 0
                 let SunEquaLongiNoon = 0
                 let SunEclpLongiNoon = 0
+                let MoonEclpLongi = 0
                 let MoonEclpLongiAccum = 0
+                let AnomaAccumNight = 0
+                let NodeAccumNight = 0
+                let MoonLongiLatiFunc = {}
                 if (Type === 1) {
                     SunEquaLongiAccum = WinsolsDifNight + OriginAccum
                     MoonEclpLongiAccum = SunEquaLongiAccum * MoonAvgVDeg
                 } else {
-                    let NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node
-                    const AnomaAccumNight = (NewmAnomaAccumNightPrint[i - 1] + k - 1) % Anoma
+                    NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node
+                    AnomaAccumNight = (NewmAnomaAccumNightPrint[i - 1] + k - 1) % Anoma
                     const AnomaAccumNoon = (AnomaAccumNight + 0.5) % Anoma // 正午入轉                    
                     NodeAccumNight = (NodeAccumNight + AutoTcorr(AnomaAccumNight, WinsolsDifNight, CalName, NodeAccumNight).NodeAccumCorr) % Node
                     const SunDifAccumNight = AutoDifAccum(AnomaAccumNight, WinsolsDifNight, CalName).SunDifAccum
@@ -295,12 +298,14 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     // 元嘉開始計算月度就有計入遲疾的方法，大業就完全是定朔，但又是平朔注曆，這樣會衝突，我只能把麟德以前全部求平行度。
                     // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
                     if (Type < 4) {
-                        MoonEclpLongiAccum = MoonEclpLongiNewmNight + (k - 1) * MoonAvgVDeg + OriginAccum
+                        MoonEclpLongi = MoonEclpLongiNewmNight + (k - 1) * MoonAvgVDeg
+                        MoonEclpLongiAccum = MoonEclpLongi + OriginAccum
                     } else {
                         const MoonAcrSNight = AutoMoonAcrS(AnomaAccumNight, CalName).MoonAcrS
-                        MoonEclpLongiAccum = SunEclpLongiNewm + (MoonAcrSNight - MoonAcrSNewm + AnomaCycle) % AnomaCycle + OriginAccum
+                        MoonEclpLongi = SunEclpLongiNewm + (MoonAcrSNight - MoonAcrSNewm + AnomaCycle) % AnomaCycle
+                        MoonEclpLongiAccum = MoonEclpLongi + OriginAccum
                     }
-                    const MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccumNight, CalName)
+                    MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccumNight, CalName)
                     MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }
                 const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
@@ -311,13 +316,14 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Sunrise[i][k] = Longi2LatiFunc.Sunrise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
+                // 每日夜半月黃經
                 const MoonEclpFunc = Accum2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName)
                 const MoonMansionOrder = MoonEclpFunc.MansionOrder
                 let MoonMansionNote = ''
                 if ((Type >= 2 && Type <= 4) && (MoonMansionOrder === 5 || MoonMansionOrder === 26)) { // 乾象規定月在張心署之
                     MoonMansionNote = `<span class='MoonMansionNote'>忌刑</span>`
                 }
-                MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote
+                MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote + (MoonLongiLatiFunc.EclpWhiteDif ? `\n黃白差` + MoonLongiLatiFunc.EclpWhiteDif.toFixed(4) : '')
                 ///////////具注曆////////////
                 const ScOrder = (ZhengInt % 60 + 60 + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]
@@ -393,10 +399,10 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 HouName[i][k] += Fu
                 for (let j = 0; j < 7; j++) {
                     if (MieWinsolsDif[j] >= WinsolsDifNight && MieWinsolsDif[j] < WinsolsDifNight + 1) {
-                        HouName[i][k] += `<span class='momie'>滅</span>` + (MieWinsolsDif[j] + OriginAccum - Math.floor(MieWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
+                        HouName[i][k] += `\n<span class='momie'>滅</span>` + (MieWinsolsDif[j] + OriginAccum - Math.floor(MieWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
                         break
                     } else if (MoWinsolsDif[j] >= WinsolsDifNight && MoWinsolsDif[j] < WinsolsDifNight + 1) {
-                        HouName[i][k] += `<span class='momie'>沒</span>` + (MoWinsolsDif[j] + OriginAccum - Math.floor(MoWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
+                        HouName[i][k] += `\n<span class='momie'>沒</span>` + (MoWinsolsDif[j] + OriginAccum - Math.floor(MoWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
                         break
                     }
                 }

@@ -179,20 +179,9 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
 }
 
 export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
-    const {
-        Type,
-        AutoPara,
+    const { Type, AutoPara,
     } = Bind(CalName)
-    const {
-        Denom,
-        Solar,
-        Sidereal,
-        NightList,
-        DialList,
-        SunLatiList,
-        AcrTermList,
-        TermRangeA,
-        TermRangeS
+    const { Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
     } = AutoPara[CalName]
     const WinsolsDif = WinsolsDifRaw % Solar
     let DawnRange = 2.5
@@ -252,7 +241,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2]
         const Initial4 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2] + ',' + NightList[TermNum + 3]
         if (Type === 10) { // 重修大明的日出分是三次內插
-            Sunrise = Interpolate1(nAvg, Initial4) / Denom
+            Sunrise = 100 * (Interpolate1(nAvg, Initial4) / Denom)
         } else {
             Sunrise = DawnRange + Interpolate1(nAvg, Initial3)
         }
@@ -321,10 +310,10 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         Sunrise
     }
 }
-// console.log(Longi2LatiTable2(180, 0.5, 'Daming3').Lati) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
+// console.log(Longi2LatiTable2(40, 0.5, 'Daming3').Sunrise) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
-export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
+const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
     const {
         AutoPara
     } = Bind(CalName)
@@ -338,7 +327,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { //////
     const Quadrant = 90.94335
     const NodeAccum = NodeAccumRaw// % (Node / 2)
     // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
-    
+
     const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
     let Longi = LongiRaw % Quadrant
     if ((LongiRaw >= Quadrant && LongiRaw < Quadrant * 2) || (LongiRaw >= Quadrant * 3)) { // (LongiRaw >= Quadrant)
@@ -347,11 +336,7 @@ export const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { //////
     Sidereal = Sidereal || Solar
     const WinsolsDif = WinsolsDifRaw - NodeAccum
     const WinsolsDifHalf = WinsolsDif % (Solar / 2)
-    let Plus = 0
-    // if (NodeAccumRaw > Node / 2) {
-    //     Plus = (Node / 2) * AutoMoonAvgV(CalName)
-    // }
-    const EclpLongi = (WinsolsDif + Plus + LongiRaw) % Sidereal
+    const EclpLongi = (WinsolsDif + LongiRaw) % Sidereal
     let WhiteLongi = 0
     let Range = []
     if (CalName === 'Huangji') { // 麟德沒有

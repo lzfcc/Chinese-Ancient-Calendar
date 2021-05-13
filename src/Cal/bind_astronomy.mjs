@@ -2,7 +2,7 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    Equa2EclpTable, Longi2LatiTable1, Longi2LatiTable2, MoonLongiTable, MoonLatiTable
+    Equa2EclpTable, Longi2LatiTable1, Longi2LatiTable2, MoonLatiTable
 } from './astronomy_table.mjs'
 import {
     Equa2EclpFormula, Longi2LatiFormula, Longi2DialFormula, MoonLatiFormula, MoonLongiFormula
@@ -506,17 +506,32 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
     let {
         Solar,
         SolarRaw,
-        Sidereal
+        Sidereal,
+        Node
     } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     WinsolsDif %= Solar
-    const SunEquaLongi = WinsolsDif + AutoDifAccum(0, WinsolsDif, CalName).SunDifAccum
+    let Quadrant = 90
+    if (CalName === 'Jiyuan') {
+        Quadrant = 90.9486
+    }
+    const SunEquaLongi = WinsolsDif //+ AutoDifAccum(0, WinsolsDif, CalName).SunDifAccum    
     let SunEclpLongi = 0
     if (Type === 11) { // 授時直接就是黃度
         SunEclpLongi = SunEquaLongi
     } else {
         SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).Equa2Eclp
     }
+    const MoonAvgVDeg = AutoMoonAvgV(CalName)
+    // 正交月黃經。《數》頁351
+    // const tmp2 = Node - NewmNodeAccumPrint[i - 1] // 平交入朔
+    // const NodeAnomaAccum = (AnomaAccumNight + tmp2) % Anoma // 每日夜半平交入轉
+    const tmp3 = Node - NodeAccum // 距後日
+    const tmp4 = tmp3 * MoonAvgVDeg // 距後度
+    // let NodeWinsolsDifDay = WinsolsDif + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
+    const NodeWinsolsDifDeg = (WinsolsDif + tmp4) % Sidereal // 正交距冬至度數 // 算出來好迷啊，莫名其妙
+    // const NodeWinsolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, WinsolsDif, CalName, NodeAccum).MoonTcorr // 遲加疾減
+    // NodeWinsolsDifDay = (NodeWinsolsDifDay + NodeWinsolsDifMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
     let MoonLongi = {}
     let MoonLati = {}
     if (Type <= 3) {
@@ -526,28 +541,28 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
     } else if (Type === 4) {
         MoonLati = MoonLatiTable(NodeAccum, 'Daming')
     } else if (Type === 6) {
-        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Huangji')
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, 'Huangji')
         MoonLati = MoonLatiTable(NodeAccum, 'Huangji')
     } else if (CalName === 'Qintian') {
-        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Qintian')
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, 'Qintian')
         MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
     } else if (Type === 7) {
-        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Dayan')
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, 'Dayan')
         MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
     } else if (CalName === 'Chongxuan') {
-        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Dayan')
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, 'Dayan')
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        MoonLongi = MoonLongiTable(SunEclpLongi, NodeAccum, 'Yingtian')
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, 'Yingtian')
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Chongtian', 'Guantian'].includes(CalName)) {
-        MoonLongi = MoonLongiFormula(SunEclpLongi, NodeAccum, CalName)
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, CalName)
         MoonLati = MoonLatiFormula(NodeAccum, CalName)
     } else if (CalName === 'Mingtian') {
-        MoonLongi = MoonLongiFormula(SunEclpLongi, NodeAccum, CalName)
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, CalName)
         MoonLati = MoonLatiFormula(NodeAccum, 'Guantian')
     } else if (Type === 9 || Type === 10) {
-        MoonLongi = MoonLongiFormula(SunEclpLongi, NodeAccum, 'Jiyuan')
+        MoonLongi = MoonLongiFormula(NodeWinsolsDifDeg, SunEclpLongi, NodeAccum, 'Jiyuan')
         MoonLati = MoonLatiFormula(NodeAccum, 'Jiyuan')
     } else if (Type === 11) {
         MoonLongi = HushigeyuanMoon(SunEclpLongi, NodeAccum)
@@ -561,21 +576,15 @@ export const AutoMoonLongiLati = (WinsolsDif, NodeAccum, CalName) => {
     const EquaLongi = MoonLongi.EquaLongi || 0
     const WhiteLongi = MoonLongi.WhiteLongi || 0
     const EclpWhiteDif = MoonLongi.EclpWhiteDif || 0
-    const EclpEquaDif = MoonLongi.EclpEquaDif || EquaLongi - EclpLongi
-    const EquaWhiteDif = MoonLongi.EquaWhiteDif || EquaLongi - WhiteLongi
-    const EquaLongiB = MoonLongi.EquaLongiB || 0
-    const EclpEquaDifB = EquaLongiB - EclpLongi || 0
+    const EquaWhiteDif = MoonLongi.EquaWhiteDif || 0 // EquaLongi - WhiteLongi
     const MoonEquaLati = MoonLati.EquaLati || 0
     const MoonEclpLati = MoonLati.Lati || MoonEquaLati - AutoLongi2Lati(SunEclpLongi, 0.5, CalName).Lati
     const MoonEclpLati1 = MoonLati.Lati1 || Sidereal / 4 - MoonEclpLati
     return {
-        EclpLongi,
+        NodeWinsolsDifDeg,
         EquaLongi,
-        EquaLongiB,
         WhiteLongi,
         EclpWhiteDif,
-        EclpEquaDif,
-        EclpEquaDifB,
         EquaWhiteDif,
         MoonEclpLati,
         MoonEclpLati1,
@@ -596,6 +605,7 @@ export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交
     let Print = []
     Print = Print.concat(
         ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
+            let NodeWinsolsDifDegPrint = '-'
             let WhiteLongiPrint = '-'
             let EquaLongiPrint = '-'
             let EclpWhiteDifPrint = '-'
@@ -605,27 +615,20 @@ export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交
             let LatiPrint = '-'
             let EquaLatiPrint = '-'
             const {
-                EclpLongi,
+                NodeWinsolsDifDeg,
                 EquaLongi,
-                EclpEquaDif,
                 EclpWhiteDif,
                 EquaWhiteDif,
                 WhiteLongi,
-                EquaLongiB,
-                EclpEquaDifB,
                 MoonEclpLati1,
                 MoonEclpLati,
                 MoonEquaLati
             } = AutoMoonLongiLati(WinsolsDif, NodeAccum, title)
+            if (NodeWinsolsDifDeg) {
+                NodeWinsolsDifDegPrint = NodeWinsolsDifDeg.toFixed(4)
+            }
             if (EquaLongi) {
-                if (EquaLongiB) {
-                    EquaLongiPrint = EquaLongi.toFixed(4) + `\n` + EquaLongiB.toFixed(4)
-                    EclpEquaDifPrint = EclpEquaDif.toFixed(4) + `\n` + EclpEquaDifB.toFixed(4)
-                } else {
-                    EquaLongiPrint = EquaLongi.toFixed(4)
-                    EclpEquaDifPrint = EclpEquaDif.toFixed(4)
-                }
-
+                EquaLongiPrint = EquaLongi.toFixed(4)
                 EquaWhiteDifPrint = EquaWhiteDif.toFixed(4)
             }
             if (WhiteLongi) {
@@ -641,7 +644,7 @@ export const BindMoonLongiLati = (NodeAccum, WinsolsDif) => { // 該時刻入交
             }
             return {
                 title: CalNameList[title],
-                data: [EclpLongi.toFixed(4), EquaLongiPrint, EclpEquaDifPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
+                data: [NodeWinsolsDifDegPrint, EquaLongiPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
             }
         }))
     return Print

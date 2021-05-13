@@ -1,5 +1,8 @@
 import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 import {
+    AutoEqua2Eclp
+} from './bind_astronomy.mjs'
+import {
     big
 } from './para_constant.mjs'
 import {
@@ -175,7 +178,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
         } else if (LongiRaw < HalfSolar) {
             Night = 22.49 - Lati / 4.8
         } else if (LongiRaw < 3 * QuarSolar) {
-            Night = 22.51 + Lati / 4.8
+            Night = 22.51 - Lati / 4.8
         } else {
             Night = 22.47 - Lati / 4.76
         }
@@ -279,93 +282,85 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
 // console.log(Longi2DialFormula(95, 'Jiyuan').Print)
 
 // 《數》頁361:先求 月行與黃道泛差EclpWhiteDif，
-export const MoonLongiFormula = (WinsolsDifRaw, NodeAccum, CalName) => { // 該日距冬至黃道度，入交日。不知是否應該加上日躔
+export const MoonLongiFormula = (NodeWinsolsDifDeg, SunEclp, NodeAccum, CalName) => { // 該日距冬至黃道度，入交日。不知是否應該加上日躔
     const { AutoPara
     } = Bind(CalName)
-    const { Node, Sidereal
+    const { Node, SolarRaw
     } = AutoPara[CalName]
-    let Quadrant = 90.94
-    if (CalName === 'Mingtian') {
-        Quadrant = 90.92
-    } else if (CalName === 'Jiyuan') {
+    let { Solar
+    } = AutoPara[CalName]
+    Solar = Solar || SolarRaw
+    let Quadrant = 90
+    if (CalName === 'Jiyuan') {
         Quadrant = 90.9486
     }
-    const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 月所入正交積度
-    let Longi = LongiRaw % Quadrant
-    if (Longi > Quadrant / 2) {
-        Longi = Quadrant - Longi
-    }
-    let Solar = 0
-    if (['Chongtian', 'Mingtian'].includes(CalName)) {
-        Solar = 365.24
-    } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
-        Solar = 365.2436
-    }
+    // let Solar = 0
+    // if (['Chongtian', 'Mingtian'].includes(CalName)) {
+    //     Solar = 365.24
+    // } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
+    //     Solar = 365.2436
+    // }
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
     const HalfNode = Node / 2
-    const WinsolsDif = WinsolsDifRaw - NodeAccum // 正交太陽黃度。我猜的
-    const EclpLongi = (WinsolsDif + LongiRaw) % Sidereal
-    let WinsolsDifHalf = WinsolsDif % HalfSolar
-    if (WinsolsDifHalf > QuarSolar) { // 這一步沒有說明
-        WinsolsDifHalf = HalfSolar - WinsolsDifHalf
+    let Longi = NodeWinsolsDifDeg % Quadrant // 所入初末限：置黃道宿積度，滿交象度（90多那個）去之，在半交象已下爲初限
+    if (Longi > Quadrant / 2) {
+        Longi = Quadrant - Longi
     }
+    const LongiRev = Math.abs(NodeWinsolsDifDeg % HalfSolar - Solar / 4) // 去二分度。黃白差在二分爲0
+    // if (LongiRev > QuarSolar) { // 去二至度
+    //     LongiRev = HalfSolar - LongiRev
+    // }
     let EclpEquaDif = 0
     let EclpWhiteDif = 0
     let EquaWhiteDif = 0
     let WhiteLongi = 0
     let EquaLongi = 0
     let EquaLongiB = 0
-    if (CalName === 'Chongtian') { // 半交後正交前-，正交後半交前+
-        EclpWhiteDif = Longi * (125 - Longi) / 2400
-        EquaWhiteDif = Longi * WinsolsDifHalf * (125 - Longi) / 216000
-    } else if (CalName === 'Mingtian') {
-        EclpWhiteDif = Longi * (111.37 - Longi) / 2000
-        EquaWhiteDif = Longi * WinsolsDifHalf * (111.37 - Longi) / 180000
-    } else if (CalName === 'Guantian') {
-        EclpWhiteDif = Longi * (400 - 3 * Longi) / 8000
-        EquaWhiteDif = Longi * WinsolsDifHalf * (400 - 3 * Longi) / 720000
-    } else if (CalName === 'Jiyuan') {
-        EclpWhiteDif = Longi * (101 - Longi) / 2000
-        // EclpEquaDif = EquaLongi - LongiRaw
-        if ((NodeAccum <= HalfNode && (WinsolsDif < QuarSolar || WinsolsDif >= Solar * 0.75)) || (NodeAccum > HalfNode && WinsolsDif >= QuarSolar && WinsolsDif < Solar * 0.75)) {
-            const N1 = 1.125 * EclpWhiteDif
-            const F5 = Math.abs(WinsolsDif - Solar * 0.75) // 正交度距秋分度數
-            EquaWhiteDif = N1 * F5 / Quadrant
-            // 同名：赤白=黃赤+黃白，異名：赤白=黃赤-黃白 // WinsolsDif <= HalfSolar            
-            EclpEquaDif = EquaWhiteDif - EclpWhiteDif
+    // if (['Chongtian', 'Mingtian', 'Guantian'].includes(CalName)) {
+    //     if (CalName === 'Chongtian') { // 半交後正交前-，正交後半交前+
+    //         EclpWhiteDif = Longi * (125 - Longi) / 2400
+    //     } else if (CalName === 'Mingtian') {
+    //         EclpWhiteDif = Longi * (111.37 - Longi) / 2000
+    //     } else {
+    //         EclpWhiteDif = Longi * (400 - 3 * Longi) / 8000
+    //     }
+    //     EquaWhiteDif = EclpWhiteDif * LongiRev / 90
+    // } else if (CalName === 'Jiyuan') { // 正交在二至，黃白差大
+    //     EclpWhiteDif = Longi * (101 - Longi) / 2000
+    //     if (NodeAccum <= HalfNode && NodeWinsolsDifDeg < HalfSolar) {
+    //         EclpWhiteDif *= 1.125
+    //     } else {
+    //         EclpWhiteDif *= 0.875
+    //     }
+    //     EquaWhiteDif = EclpWhiteDif * LongiRev / Quadrant // 同名：赤白=黃赤+黃白，異名：赤白=黃赤-黃白 ？？            
+    // }
+    EclpWhiteDif = Math.abs(AutoEqua2Eclp(Longi, CalName).Equa2EclpDif) / 2
+    if (CalName === 'Jiyuan') {
+        if (NodeWinsolsDifDeg < HalfSolar) {
+            EclpWhiteDif *= 1.125
         } else {
-            const N2 = 0.875 * EclpWhiteDif
-            const F6 = Math.abs(WinsolsDif - QuarSolar)
-            EquaWhiteDif = N2 * F6 / Quadrant
-            EclpEquaDif = EquaWhiteDif + EclpWhiteDif
+            EclpWhiteDif *= 0.875
         }
     }
-    let sign = 1
-    if ((LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant)) {
-        sign = -1
+    EclpWhiteDif *= LongiRev / Quadrant
+    let sign1 = -1
+    let sign2 = -1
+    // if ((NodeWinsolsDifDeg >= Quadrant && NodeWinsolsDifDeg < 2 * Quadrant) || (NodeWinsolsDifDeg >= 3 * Quadrant)) {
+    if (SunEclp > QuarSolar && SunEclp < Solar * 0.75) { // 同名相加異名相減
+        sign1 = 1
     }
-    EclpWhiteDif *= sign
-    EquaWhiteDif *= sign
-    WhiteLongi = EclpLongi + EclpWhiteDif
-    if (CalName === 'Jiyuan') {
-        EclpEquaDif *= sign
-        EquaLongi = EclpLongi + EclpEquaDif
-    } else {
-        EquaLongi = WhiteLongi + EquaWhiteDif
+    if (NodeAccum > HalfNode) {
+        sign2 = 1
     }
-    EquaLongiB = Equa2EclpFormula(EclpLongi, CalName).Eclp2Equa // 直接用黃赤轉換求出來的，不是九道術的
+    EclpWhiteDif *= sign1 * sign2
+    WhiteLongi = NodeWinsolsDifDeg + EclpWhiteDif
     return {
-        EclpLongi,
-        EclpEquaDif,
         EclpWhiteDif,
-        EquaWhiteDif,
-        EquaLongi,
-        EquaLongiB,
         WhiteLongi
     }
 }
-// console.log(MoonLongiFormula(184, 3, 'Jiyuan').EclpLongi)
+// console.log(MoonLongiFormula(12, 184, 3, 'Dayan').EclpWhiteDif)
 
 export const MoonLatiFormula = (NodeAccumRaw, CalName) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》
     let Cycle = 363.8

@@ -49,9 +49,8 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>極黃經</th>       
+            <th>正交黃經</th>       
             <th>赤經</th>
-            <th>赤-黃</th>
             <th>極白經</th>
             <th>白-黃</th>
             <th>赤白差</th>

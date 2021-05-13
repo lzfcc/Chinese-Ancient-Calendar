@@ -838,7 +838,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             moonFunc = MoonFormula(AnomaAccum, CalName)
             MoonDifAccum = moonFunc.MoonDifAccum
             SunTcorr2 = SunDifAccum * XianConst / moonFunc.MoonAcrV
-            MoonTcorr2 = MoonDifAccum * XianConst / moonFunc.MoonAcrV
+            MoonTcorr2 = -MoonDifAccum * XianConst / moonFunc.MoonAcrV
             Tcorr2 = SunTcorr2 + MoonTcorr2
             NodeAccumCorr = Tcorr2
         } else if (Type === 20) {
@@ -878,7 +878,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         NodeAccumCorr,
     }
 }
-// console.log(AutoTcorr(9, 9, 'Shoushi', 1997).MoonTcorr2)
+// console.log(AutoTcorr(6, 9, 'Shoushi', 1997).MoonTcorr2)
 
 export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
     const { AutoPara, Type,
