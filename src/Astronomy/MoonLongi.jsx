@@ -5,8 +5,6 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 1.25351,
-      b: 45.15
     }
     this.handle = this.handle.bind(this)
   }
@@ -22,13 +20,6 @@ export default class Converter extends React.Component {
         />
         <span> 月黃經</span>
         <input className='width3'
-          value={this.state.c}
-          onChange={e => {
-            this.setState({ c: e.currentTarget.value });
-          }}
-        />
-        <span> 太陽距冬至日數</span>
-        <input className='width3'
           value={this.state.b}
           onChange={e => {
             this.setState({ b: e.currentTarget.value });
@@ -40,7 +31,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = BindMoonLongiLati(this.state.a, this.state.b, this.state.c)
+      const Print = BindMoonLongiLati(this.state.a, this.state.b)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -83,9 +74,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>月極黃經 ⇒ 極白經、赤經、極黃緯</h3>
+        <h3>月極黃經 ⇒ 極白經、赤經、黃緯</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-8'>月行九道</button>
+        <button onClick={this.handle} className='button4-8'>月行九道</button><span className='decimal64'>？</span>
         {this.result()}
       </div>
     )

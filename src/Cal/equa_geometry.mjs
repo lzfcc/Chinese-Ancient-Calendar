@@ -363,75 +363,54 @@ export const Hushigeyuan_Ex_Print = (LongiRaw, eRaw) => {
     return Print
 }
 
-// 曲安京《授時曆的白赤道座標變換法》//《中國古代曆法》頁127
+// 曲安京《授時曆的白赤道座標變換法》，《數》頁370，《中國古代曆法》頁127
 // 授時放棄了九道術的黃白轉換，改從白赤轉換入手。
-export const HushigeyuanMoon = (WinsolsDifRaw, NodeAccum) => { // 黃道度（距冬至數加上日躔），入交泛日
+// 距離白赤交點、半交點的赤道度（入初末限） +-白赤差 = 月離白道積度：月亮到白赤交點的白道度
+export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交黃度，月在正交後黃度
     const Sidereal = 365.2575
-    const r = 60.87625
+    const Solar = 365.2425
     const HalfSidereal = Sidereal / 2
     const QuarSidereal = Sidereal / 4
-    const EighthSidereal = Sidereal / 8
-    const ThreequarSidereal = Sidereal * 0.75
     const e = 23.9  // 黃赤大距
     const I = 6 // 黃白大距
     const k = 14.66 // 正交極數：二至白赤正交與黃白正交的距離。白赤大距6，黃赤大距23.9，三角函數得14.73: tan(k)=tan6/sin23.9
-    const NodeWhiteEclp_Eclp = WinsolsDifRaw - NodeAccum  // 我假設是正交黃度
-    const LongiPlus = 13.3687 * NodeAccum // 輸入的時候要先加上NodeAccumCorr
-    // 先求冬至時刻赤度（冬至正度），加象限，得四正赤度，再算赤道正交宿度
-    const NodeWhiteEclp_Equa = Hushigeyuan(NodeWhiteEclp_Eclp).Eclp2Equa % HalfSidereal // 黃經轉換爲赤經，黃白正交赤度
-    const v0A = NodeWhiteEclp_Equa % HalfSidereal
-    const v0 = QuarSidereal - Math.abs(NodeWhiteEclp_Equa - QuarSidereal) // 反減。黃白正交到二至的距離，黃白正交在回歸年中的位置：正交在二至後初末限，冬至距正交積度
-    const a0 = k * v0 / QuarSidereal // 距差
+    const NodeEclpHalf = NodeEclp % HalfSidereal
+    const v0 = QuarSidereal - Math.abs(NodeEclp - QuarSidereal) // NodeEclpRev。黃白正交到二至的距離，黃白正交在回歸年中的位置：正交在二至後初末限，冬至距正交積度
+    const d = v0 * k / QuarSidereal // 定差EH
+    const a0 = k - d // 距差BH：白赤交點赤經
     let sign2 = 1
-    if (WinsolsDifRaw >= QuarSidereal && WinsolsDifRaw < ThreequarSidereal) {
-
+    if (NodeEclpHalf < QuarSidereal) { // 初限- 末限+
+        sign2 = -1
     }
-    let base = QuarSidereal
-    if (WinsolsDifRaw >= HalfSidereal) {
-        base = ThreequarSidereal // 問題來了，爲何不直接是黃白正交加距差？？？
+    let base = Solar / 4
+    if (NodeEclp >= HalfSidereal) {
+        base = Solar * 0.75
     }
-    const NodeWhiteEqua_Equa = base + sign2 * a0 // 白赤正交赤度「月離赤道正交」
-    const ElcpLongi = NodeWhiteEclp_Eclp + LongiPlus // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道
-    const EquaLongi = Hushigeyuan(ElcpLongi).Eclp2Equa
+    const NodeEqua = base + sign2 * a0 // 白赤正交赤度、月離赤道正交宿度
+    const EquaLongi = Hushigeyuan(NodeEclp + MoonNodeEclpDif).Eclp2Equa // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道
     //////////// 白赤大距：赤道正交後半交白道出入赤道內外度
-    const u = e + I * (QuarSidereal - v0) / QuarSidereal // 白赤大距。黃白正交黃度v0=45誤差最大，165誤差最小
-    let NF = WinsolsDifRaw % QuarSidereal // 月亮赤度弧
-    if ((WinsolsDifRaw > QuarSidereal && WinsolsDifRaw <= HalfSidereal) || (WinsolsDifRaw >= ThreequarSidereal && WinsolsDifRaw < Sidereal)) {
-        NF = QuarSidereal - NF
-    }
+    const u = e + I * (QuarSidereal - NodeEclpHalf) / QuarSidereal // KF白赤大距。黃白正交黃度v0=45誤差最大，165誤差最小
+    const HN = NodeEqua % QuarSidereal
+    const NF = QuarSidereal - HN // 「白道積」
+    const a = Math.min(HN, NF) // 赤道初末限度
     const VF = RoundL2H(NF)
-    const EquaLati = u * (r - VF) / r
+    const EquaLati = u * (60.875 - VF) / 60.875
     /////////// 白度 //////////
     let sign1 = -1
-    if (WinsolsDifRaw >= HalfSidereal) { // 冬至後- 夏至後+
+    if (NodeEclp >= HalfSidereal) { // 冬至後- 夏至後+
         sign1 = 1
     }
-    const tmpDing = 98 + sign1 * 24 * (QuarSidereal - v0) / QuarSidereal // 定限度
-    let sign3 = -1
-    if (v0A >= QuarSidereal) {
-        sign3 = 1
+    const tmpDing = 98 + sign1 * 24 * (QuarSidereal - NodeEclpHalf) / QuarSidereal // 定限度 // 《數》頁384
+    let sign3 = 1
+    if (MoonNodeEclpDif % HalfSidereal > QuarSidereal) { // 正交中交後+ 半交後-
+        sign3 = -1
     }
-    const EquaWhiteDif = sign3 * (tmpDing - v0) * v0 / 1000
-    let sign4 = 1
-    let EquaLongiHalf = EquaLongi % HalfSidereal
-    if (EquaLongiHalf > QuarSidereal) {
-        EquaLongiHalf = HalfSidereal - EquaLongiHalf
-    }
-    if (EquaLongiHalf > EighthSidereal) {
-        sign4 = -1
-    }
-    const WhiteLongi = EquaLongi + sign4 * EquaWhiteDif
-    return {
-        a0,
-        // Eclp2Equa,
-        u,
-        WhiteLongi,
-        EquaLati,
-        ElcpLongi,
-        EquaLongi
-    }
+    // 《數》頁381：HN赤道初末限，卽N到白赤交點或半交點的距離，HM月離白道定積度，HN正交後赤道積度
+    const EquaWhiteDif = sign3 * (tmpDing - a) * a / 1000
+    const WhiteLongi = EquaLongi + EquaWhiteDif
+    return { a0, u, EquaWhiteDif, EquaLongi, WhiteLongi, EquaLati }
 }
-// console.log(HushigeyuanMoon(45.7))
+// console.log(HushigeyuanMoon(61, 70).EquaWhiteDif)
 
 // 南宋秦九韶的《数书九章》（Mathematical Treatise in Nine Sections）中的三斜求积术：以小斜幂，并大斜幂，减中斜幂，余半之，自乘于上；以小斜幂乘大斜幂，减上，余四约之，为实；一为从隅，开平方得积。秦九韶他把三角形的三条边分别称为小斜、中斜和大斜。“术”即方法。三斜求积术就是用小斜平方加上大斜平方，减中斜平方，取余数的一半的平方，而得一个数。小斜平方乘以大斜平方，减上面所得到的那个数。相减后余数被4除,开平方后即得面积。化下简就会发现这就是传说中的已知三边求三角形面积的海伦公式。
 // 海伦公式 sqrt(p (p-a) (p-b) (p-c)), p=(a+b+c)/2

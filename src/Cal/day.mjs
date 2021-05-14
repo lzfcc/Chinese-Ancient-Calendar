@@ -304,9 +304,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         const MoonAcrSNight = AutoMoonAcrS(AnomaAccumNight, CalName).MoonAcrS
                         MoonEclpLongi = SunEclpLongiNewm + (MoonAcrSNight - MoonAcrSNewm + AnomaCycle) % AnomaCycle
                         MoonEclpLongiAccum = MoonEclpLongi + OriginAccum
+                    }                    
+                    if (Type < 11) {
+                        MoonLongiLatiFunc = AutoMoonLati(NodeAccumNight, CalName)
+                        MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                     }
-                    MoonLongiLatiFunc = AutoMoonLati(NodeAccumNight, CalName)
-                    MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }
                 const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
                 Equa[i][k] = EquaFunc.MansionResult
@@ -325,7 +327,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 }
                 let MoonEclpWhiteDif = ''
                 if (Type > 5 && Type < 11) {
-                    MoonEclpWhiteDif = `\n黃白差` + AutoMoonLongi(SunEclpLongi, MoonEclpLongi, NodeAccumNight, CalName).EclpWhiteDif.toFixed(4)
+                    MoonEclpWhiteDif = `\n黃白差` + AutoMoonLongi(NodeAccumNight, MoonEclpLongi, CalName).EclpWhiteDif.toFixed(4)
                 }
                 MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote + (MoonEclpWhiteDif || '')
                 ///////////具注曆////////////

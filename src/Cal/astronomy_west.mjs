@@ -267,11 +267,11 @@ export const Longi2DialWest = (l, f, Sidereal, year) => { // 黃經，周天，�
 // console.log(Longi2DialWest(182.62225, 34.4047, 365.2445, 1000))
 
 // ε黃赤交角 Φ 黃白交角
-export const MoonLongiWest = (EclpRaw, year) => { // 統一360度
+const MoonLongiWest_BACKUP = (EclpRaw, year) => { // 統一360度
     const Eclp = EclpRaw //(EclpRaw + 90) % 360
     const v0 = d2r(Eclp) // 距冬至轉換成距離春分的黃經
     const I = d2r(5.1453) // 授時黃白大距6
-    let E = d2r(ConstWest(year).obliquity) // 授時黃赤大距23.9
+    const E = d2r(ConstWest(year).obliquity) // 授時黃赤大距23.9
     const cosE = big.cos(E) // 0.9
     const tank = big.tan(I).div(big.sin(E)) // tank 0.22
     const k = tank.atan() // k正交極數 12.7
@@ -299,6 +299,18 @@ export const MoonLongiWest = (EclpRaw, year) => { // 統一360度
 // console.log(MoonLongiWest(165, 365.2575, 1281).u)
 
 // 《數》頁348白赤差
+const MoonLongiWest = (NodeEclpLongi, MoonEclpLongi, year) => {
+    const E = d2r(ConstWest(year).obliquity)
+    const I = d2r(5.1453)
+    const v = d2r(NodeEclpLongi) // 升交點黃經
+    const b = d2r(MoonEclpLongi - NodeEclpLongi) // 月亮到升交點的黃道度
+    const tmp = b.cos().mul(I.cos()).sub(I.sin().mul(big.cos(v.add(b))).mul(E.tan()))
+    const g = r2d(b.sin().div(tmp).atan()) // 月亮距離升交點的白道度
+    const EclpWhiteDif = g.sub(r2d(b)).toNumber()
+    const WhiteLongi = MoonEclpLongi + EclpWhiteDif
+    return { EclpWhiteDif, WhiteLongi }
+}
+// console.log (MoonLongiWest(0, 170, 1222))
 
 // 下陳美東公式
 const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
