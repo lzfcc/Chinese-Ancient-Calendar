@@ -325,7 +325,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 }
                 let MoonEclpWhiteDif = ''
                 if (Type > 5 && Type < 11) {
-                    MoonEclpWhiteDif = `\n黃白差` + AutoMoonLongi(WinsolsDifNight, MoonEclpLongi, NodeAccumNight, CalName).EclpWhiteDif.toFixed(4)
+                    MoonEclpWhiteDif = `\n黃白差` + AutoMoonLongi(SunEclpLongi, MoonEclpLongi, NodeAccumNight, CalName).EclpWhiteDif.toFixed(4)
                 }
                 MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote + (MoonEclpWhiteDif || '')
                 ///////////具注曆////////////

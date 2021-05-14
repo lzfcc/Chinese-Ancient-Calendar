@@ -541,21 +541,14 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
 }
 // console.log(AutoMoonLati(66, 2.41, 'Shoushi').EquaLongi)
 
-export const AutoMoonLongi = (WinsolsDif, MoonEclp, NodeAccum, CalName) => {
+export const AutoMoonLongi = (SunEclpLongi, MoonEclp, NodeAccum, CalName) => {
     const { Type, AutoPara
     } = Bind(CalName)
     let { Solar, SolarRaw, Sidereal, Node
     } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
-    WinsolsDif %= Solar
-    const SunEquaLongi = WinsolsDif //+ AutoDifAccum(0, WinsolsDif, CalName).SunDifAccum    
-    let SunEclpLongi = 0
-    if (Type === 11) { // 授時直接就是黃度
-        SunEclpLongi = SunEquaLongi
-    } else {
-        SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).Equa2Eclp
-    }
+    SunEclpLongi %= Solar
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
     // 正交月黃經。《數》頁351
     // const tmp2 = Node - NewmNodeAccumPrint[i - 1] // 平交入朔

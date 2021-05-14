@@ -281,7 +281,7 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
 }
 // console.log(Longi2DialFormula(95, 'Jiyuan').Print)
 
-// 《數》頁361:先求 月行與黃道泛差EclpWhiteDif，
+// 《數》頁361 白道度是以黃道度、正交黃經的二元函數
 export const MoonLongiFormula = (NodeEclpLongi, MoonEclpLongi, SunEclpLongi, NodeAccum, CalName) => { // 該日距冬至黃道度，入交日。不知是否應該加上日躔
     const { AutoPara
     } = Bind(CalName)
@@ -301,10 +301,11 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonEclpLongi, SunEclpLongi, Nod
     if (MoonEclpLongiRev > Quadrant / 2) {
         MoonEclpLongiRev = Quadrant - MoonEclpLongiRev
     }
-    const NodeEclpLongiRev = Math.abs(NodeEclpLongi % HalfSolar - Solar / 4) // 去二分度。黃白差在二分爲0
-    // if (NodeEclpLongiRev > QuarSolar) { // 去二至度
-    //     NodeEclpLongiRev = HalfSolar - NodeEclpLongiRev
-    // }
+    let NodeEclpLongiRev = NodeEclpLongi % HalfSolar
+    // const NodeEclpLongiRev = Math.abs(NodeEclpLongi % HalfSolar - Solar / 4) // 去二分度。黃白差在二分爲0
+    if (NodeEclpLongiRev > QuarSolar) { // 去二至度
+        NodeEclpLongiRev = HalfSolar - NodeEclpLongiRev
+    }
     // if (['Chongtian', 'Mingtian', 'Guantian'].includes(CalName)) {
     //     if (CalName === 'Chongtian') { // 半交後正交前-，正交後半交前+
     //         EclpWhiteDif = MoonEclpLongiRev * (125 - MoonEclpLongiRev) / 2400
@@ -334,14 +335,17 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonEclpLongi, SunEclpLongi, Nod
     }
     EclpWhiteDif *= NodeEclpLongiRev / Quadrant
     let sign1 = -1
-    let sign2 = -1
+    let sign2 = 1 // -1
     // if ((NodeEclpLongi >= Quadrant && NodeEclpLongi < 2 * Quadrant) || (NodeEclpLongi >= 3 * Quadrant)) {
-    if (SunEclpLongi > QuarSolar && SunEclpLongi < Solar * 0.75) { // 同名相加異名相減
+    // if (SunEclpLongi > QuarSolar && SunEclpLongi < Solar * 0.75) { // 同名相加異名相減
+    //     sign1 = 1
+    // }
+    if (NodeEclpLongi < HalfSolar) {
         sign1 = 1
     }
-    if (NodeAccum > HalfNode) {
-        sign2 = 1
-    }
+    // if (NodeAccum > HalfNode) {
+    //     sign2 = 1
+    // }
     EclpWhiteDif *= sign1 * sign2
     const WhiteLongi = MoonEclpLongi + EclpWhiteDif
     return {
@@ -349,7 +353,7 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonEclpLongi, SunEclpLongi, Nod
         WhiteLongi
     }
 }
-// console.log(MoonLongiFormula(45, 15, 3, 'Jiyuan').EclpWhiteDif)
+// console.log(MoonLongiFormula(271, 46, 3, 4, 'Jiyuan').EclpWhiteDif)
 
 export const MoonLatiFormula = (NodeAccumRaw, CalName) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》
     let Cycle = 363.8
