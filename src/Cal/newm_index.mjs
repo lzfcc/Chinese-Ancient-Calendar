@@ -260,7 +260,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const NewmSlice = array => array.slice(1 + NewmStart, 13 + NewmEnd)
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
         ////////////下爲調整輸出////////////
-        const NewmWinsolsDifRawPrint = NewmSlice(ThisYear.NewmWinsolsDifRaw)
+        const NewmWinsolsDifRawPrint = ThisYear.NewmWinsolsDifRaw ? NewmSlice(ThisYear.NewmWinsolsDifRaw) : []
         const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
         const NewmAvgDecimalPrint = NewmSlice(ThisYear.NewmAvgDecimal)
         NewmInt = NewmInt.slice(1 + NewmStart)

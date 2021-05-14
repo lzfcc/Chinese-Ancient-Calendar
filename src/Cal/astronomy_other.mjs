@@ -5,6 +5,9 @@ import {
     MansionNameList
 } from './para_constant.mjs' // 賦值解構
 import {
+    AutoMoonAvgV
+} from './astronomy_acrv.mjs'
+import {
     Bind
 } from './bind.mjs'
 
@@ -177,8 +180,7 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行�
     const HalfNode = Node / 2
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
-    const NodeAccumHalf = NodeAccum % HalfNode
-    const WinsolsDif = WinsolsDifRaw - NodeAccumHalf
+    const WinsolsDif = WinsolsDifRaw + (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
     let Print = ''
     if (Type <= 6) {
         if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
