@@ -563,6 +563,7 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     // const NodeWinsolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, WinsolsDif, CalName, NodeAccum).MoonTcorr // 遲加疾減
     // NodeWinsolsDifDay = (NodeWinsolsDifDay + NodeWinsolsDifMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
     const MoonNodeDif = MoonEclp - NodeEclp
+    const MoonNodeDifHalf = MoonNodeDif % (Quadrant * 2)
     let MoonNodeDifRev = MoonNodeDif % Quadrant // 所入初末限：置黃道宿積度，滿交象度（90多那個）去之，在半交象已下爲初限
     if (MoonNodeDifRev > Quadrant / 2) {
         MoonNodeDifRev = Quadrant - MoonNodeDifRev
@@ -591,6 +592,11 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
         EquaLongi = Func.EquaLongi
         WhiteLongi = Func.WhiteLongi
     }
+    let sign1 = 1
+    if (MoonNodeDifHalf > Quadrant) { // 距半交後正交前，以差數爲減；距正交後、半交前，以差數爲加
+        sign1 = -1
+    }
+    EclpWhiteDif *= sign1
     if (Type < 11) {
         WhiteLongi = MoonEclp + EclpWhiteDif
     }

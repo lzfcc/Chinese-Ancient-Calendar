@@ -392,7 +392,7 @@ export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交
     const u = e + I * (QuarSidereal - NodeEclpHalf) / QuarSidereal // KF白赤大距。黃白正交黃度v0=45誤差最大，165誤差最小
     const HN = NodeEqua % QuarSidereal
     const NF = QuarSidereal - HN // 「白道積」
-    const a = Math.min(HN, NF) // 赤道初末限度
+    const a = Math.min(HN, NF) // 赤道初末限度。在給定a=45的情況下，與頁387計算相合
     const VF = RoundL2H(NF)
     const EquaLati = u * (60.875 - VF) / 60.875
     /////////// 白度 //////////

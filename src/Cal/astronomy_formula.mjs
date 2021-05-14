@@ -330,19 +330,6 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
         }
     }
     EclpWhiteDif *= NodeEclpLongiRev / Quadrant
-    let sign1 = -1
-    let sign2 = 1 // -1
-    // if ((NodeEclpLongi >= Quadrant && NodeEclpLongi < 2 * Quadrant) || (NodeEclpLongi >= 3 * Quadrant)) {
-    // if (SunEclpLongi > QuarSolar && SunEclpLongi < Solar * 0.75) { // 同名相加異名相減
-    //     sign1 = 1
-    // }
-    if (NodeEclpLongi < HalfSolar) {
-        sign1 = 1
-    }
-    // if (NodeAccum > HalfNode) {
-    //     sign2 = 1
-    // }
-    EclpWhiteDif *= sign1 * sign2
     return EclpWhiteDif
 }
 // console.log(MoonLongiFormula(91, 92, 'Jiyuan').EclpWhiteDif)
