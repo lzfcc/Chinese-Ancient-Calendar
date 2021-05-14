@@ -27,7 +27,7 @@ const printData = outputFile(2, 1010, 1010, 0, [ // mode, YearStart, YearEnd, au
     // 'Shiji',
     // 'Taichu',
     // 'Qianzaodu',
-    'Easthan', // 上四分系
+    // 'Easthan', // 上四分系
     // 'Qianxiang',
     // 'Huangchu',
     // 'Jingchu',
@@ -84,7 +84,7 @@ const printData = outputFile(2, 1010, 1010, 0, [ // mode, YearStart, YearEnd, au
     // 'Daming2', 
     // 'Daming3', // 上宋金系
     // 'Yiwei',
-    // 'Gengwu', 
+    'Gengwu', 
     // 'Shoushi',
     // 'Datong', 
     // 'West', // 上授時系

@@ -961,16 +961,64 @@ export const AutoMoonAcrS = (AnomaAccum, CalName) => {
     } = AutoPara[CalName]
     let MoonAcrS = 0
     let AnomaCycle = 0
-    if (Type > 1 && Type < 5) {
-        MoonAcrS = MoonAcrSTable1(AnomaAccum, CalName)
-        AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, CalName)
-    } else {
-        if (['Futian', 'Mingtian', 'Shoushi', 'Datong'].includes(CalName)) {
-            MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
-            AnomaCycle = MoonFormula(Anoma - 1e-13, CalName).MoonAcrS
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
+        if (CalName === 'Huangchu') {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Qianxiang')
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Qianxiang')
+        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Jingchu')
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Jingchu')
+        } else if (CalName === 'Xuanshi') {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Tsrengguang')
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Tsrengguang')
+        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(CalName)) {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Tianbao')
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Tianbao')
+        } else if (CalName === 'Kaihuang') {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Yuanjia')
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Yuanjia')
+        } else if (CalName === 'Liangwu') {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Daming')
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Daming')
         } else {
-            MoonAcrS = MoonAcrSTable2(AnomaAccum, CalName)
-            AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, CalName)
+            if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Huangji')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Huangji')
+            } else if (CalName === 'Shenlong') {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Linde')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Linde')
+            } else if (CalName === 'Zhide') {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Dayan')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Dayan')
+            } else if (CalName === 'Qintian') {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Tsrengyuan')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Tsrengyuan')
+            } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Guantian')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Guantian')
+            } else if (CalName === 'Daming2') {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Jiyuan')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Jiyuan')
+            } else if (['Chunyou', 'Huitian', 'Bentian'].includes(CalName)) {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Chengtian')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Chengtian')
+            } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Daming3')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Daming3')
+            }
+        }
+    } else {
+        if (Type > 1 && Type < 5) {
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, CalName)
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, CalName)
+        } else {
+            if (['Futian', 'Mingtian', 'Shoushi', 'Datong'].includes(CalName)) {
+                MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
+                AnomaCycle = MoonFormula(Anoma - 1e-13, CalName).MoonAcrS
+            } else {
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, CalName)
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, CalName)
+            }
         }
     }
     if (['Xuanming', 'Yingtian', 'Yitian'].includes(CalName)) {
