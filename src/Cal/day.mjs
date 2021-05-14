@@ -13,7 +13,7 @@ import {
 } from './day_luck.mjs'
 import CalNewm from './newm_index.mjs'
 import {
-    AutoEqua2Eclp, AutoLongi2Lati, AutoMoonLongiLati
+    AutoEqua2Eclp, AutoLongi2Lati, AutoMoonLongi, AutoMoonLati
 } from './bind_astronomy.mjs'
 import {
     AutoTcorr, AutoDifAccum, AutoMoonAvgV, AutoMoonAcrS
@@ -33,7 +33,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         let { Solar, Sidereal, Lunar,
         } = AutoPara[CalName]
         const { LeapNumTermThis, OriginAccum,
-            NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumPrint, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint
+            NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint
         } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
@@ -305,7 +305,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         MoonEclpLongi = SunEclpLongiNewm + (MoonAcrSNight - MoonAcrSNewm + AnomaCycle) % AnomaCycle
                         MoonEclpLongiAccum = MoonEclpLongi + OriginAccum
                     }
-                    MoonLongiLatiFunc = AutoMoonLongiLati(Type === 11 ? SunEclpLongi : SunEquaLongi, NodeAccumNight, CalName)
+                    MoonLongiLatiFunc = AutoMoonLati(NodeAccumNight, CalName)
                     MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                 }
                 const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
@@ -323,7 +323,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 if ((Type >= 2 && Type <= 4) && (MoonMansionOrder === 5 || MoonMansionOrder === 26)) { // 乾象規定月在張心署之
                     MoonMansionNote = `<span class='MoonMansionNote'>忌刑</span>`
                 }
-                MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote + (MoonLongiLatiFunc.EclpWhiteDif ? `\n黃白差` + MoonLongiLatiFunc.EclpWhiteDif.toFixed(4) : '')
+                let MoonEclpWhiteDif = ''
+                if (Type > 5 && Type < 11) {
+                    MoonEclpWhiteDif = `\n黃白差` + AutoMoonLongi(WinsolsDifNight, MoonEclpLongi, NodeAccumNight, CalName).EclpWhiteDif.toFixed(4)
+                }
+                MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote + (MoonEclpWhiteDif || '')
                 ///////////具注曆////////////
                 const ScOrder = (ZhengInt % 60 + 60 + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]
@@ -399,10 +403,10 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 HouName[i][k] += Fu
                 for (let j = 0; j < 7; j++) {
                     if (MieWinsolsDif[j] >= WinsolsDifNight && MieWinsolsDif[j] < WinsolsDifNight + 1) {
-                        HouName[i][k] += `\n<span class='momie'>滅</span>` + (MieWinsolsDif[j] + OriginAccum - Math.floor(MieWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
+                        HouName[i][k] += `<span class='momie'>滅</span>` + (MieWinsolsDif[j] + OriginAccum - Math.floor(MieWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
                         break
                     } else if (MoWinsolsDif[j] >= WinsolsDifNight && MoWinsolsDif[j] < WinsolsDifNight + 1) {
-                        HouName[i][k] += `\n<span class='momie'>沒</span>` + (MoWinsolsDif[j] + OriginAccum - Math.floor(MoWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
+                        HouName[i][k] += `<span class='momie'>沒</span>` + (MoWinsolsDif[j] + OriginAccum - Math.floor(MoWinsolsDif[j] + OriginAccum)).toFixed(4).slice(2, 6)
                         break
                     }
                 }
