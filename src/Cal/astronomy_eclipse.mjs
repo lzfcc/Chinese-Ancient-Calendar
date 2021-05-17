@@ -122,7 +122,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     let Tcorr = 0
     let Tcorr1 = 0 // 食甚時刻修正一
     let Tcorr2 = 0 // 日食食甚時刻修正二
-    if (['Daye', 'Wuyin'].includes(CalName) && isNewm) {
+    if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName) && isNewm) {
         //  下戊寅食甚時刻修正（大業月食食甚無修正）。當然要先算出是否食，再來修正。戊寅時法6503：半日法，時餘：不足半辰的日分數的12倍。離交點越遠，修正值越大
         if (CalName === 'Daye') {
             if (i <= 3 && NodeDif >= 7 / 12) {
@@ -134,7 +134,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                     Tcorr1 = 48 / Denom
                 }
             }
-        } else if (CalName === 'Wuyin') { // 「初命子半以一算，自後皆以二算爲一辰」也就是說初唐開始已經用子半了。
+        } else { // 「初命子半以一算，自後皆以二算爲一辰」也就是說初唐開始已經用子半了。
             if (AnomaAccum < 7 || (AnomaAccum >= 21 && AnomaAccum < 27)) {
                 Tcorr1 = -(isNewm ? 300 : 280) / Denom // 分母應該是日法。日食爲300月食爲280
             } else if ((AnomaAccum >= 7 && AnomaAccum < 13) || (AnomaAccum >= 14 && AnomaAccum < 21)) {
@@ -209,7 +209,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
         }
     }
     if (isNewm) {
-        if (['Daye', 'Wuyin'].includes(CalName)) { // 《劉洪濤》頁458。最後有個條件是五星伏見，目前沒辦法加上去，還有個條件不懂什麼意思。戊寅見舊唐志一
+        if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) { // 《劉洪濤》頁458。最後有個條件是五星伏見，目前沒辦法加上去，還有個條件不懂什麼意思。戊寅見舊唐志一
             if (NodeAccum >= HalfNode) {
                 if (NoonDif <= 0.125 && (i === 5 || i === 6)) {
                     SunLimit1 = 13 / 12
@@ -302,7 +302,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
     let Magni = 0
     let Last = 0
     let Dcorr = 0
-    if (['Daye', 'Wuyin'].includes(CalName)) {
+    if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
         if (isNewm) {
             let Tcorr4 = 184000
             if (CalName === 'Daye') {
@@ -311,7 +311,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                 } else if (WinsolsDif < Solar * 0.75) {
                     Tcorr4 = 184000 * (WinsolsDif - HalfSolar) * 2000 // 2015.08
                 }
-            } else if (CalName === 'Wuyin') {
+            } else {
                 Tcorr4 = 220800
                 if (WinsolsDif < 4 * HalfTermLeng) { } else if (WinsolsDif < HalfSolar) {
                     Tcorr4 = 220800 * (HalfSolar - WinsolsDif) * 1810 // 1813.577
@@ -557,22 +557,11 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
 // console.log(EclipseTable2(14.7, 24, 0.3, 15, 2, 0, 1, 'Huangji').Decimal)
 
 const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName) => { // 入交定日，入轉日，定朔分，距冬至日數，月份，閏月序數，朔望，名字。用月份判斷很奇怪，但是沒有證據說是用節氣判斷，皇極有兩條「閏四月內」，那肯定就是月份
-    const {
-        AutoPara,
+    const { AutoPara,
     } = Bind(CalName)
-    const {
-        Node,
-        Anoma,
-        Lunar,
-        Solar,
-        Denom,
-        AcrTermList,
-        MoonTcorrList
+    const { Node, Anoma, Lunar, Solar, Denom, AcrTermList, MoonTcorrList
     } = AutoPara[CalName]
-    let {
-        SunLimit1,
-        SunLimit2,
-        MoonLimit1,
+    let { SunLimit1, SunLimit2, MoonLimit1,
     } = AutoPara[CalName]
     if (SunLimit1) {
         SunLimit1 /= Denom
@@ -1157,14 +1146,14 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
 // 藤豔輝論文從1開始索引，我從0開始索引，結果相差不大，都在辰正。
 
 export const AutoEclipse = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, CalName, i, Leap) => {
-    const {
-        Type,
-        AutoPara
+    const { Type, AutoPara
     } = Bind(CalName)
-    const {
-        Solar
+    const { Solar
     } = AutoPara[CalName]
     let Eclipse = {}
+    // 入交定日=去交定日=定朔望時刻日月距離黃白交點的時間（黃經差）。紀元、授時：求定朔望加時入交，先假設平朔望黃白交點不懂，算出定朔望時刻月亮運動到交點的時間，與定朔算法一致，在算了氣差刻差之後，纔考慮交點推行。
+    // 由於日月速度不同，月亮從正交運動到平朔望時刻的時間與太陽不同。月亮去交泛日=(Vs-Vn)/(Vm-Vn) * rs。Vn：交點退行速度，rs：入交日，(Vs-Vn)/(Vm-Vn)=交率/交數=交點月/交點年
+    // NodeAccum 是太陽入交泛日，那麼月亮入交泛日是0.0785077 * NodeAccum。太陽入交定日=NodeAccum+NodeAccumCorr，月亮入交定日=0.0785077 * NodeAccum+NodeAccumCorr2
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = EclipseTable1(NodeAccum, CalName)
     } else {

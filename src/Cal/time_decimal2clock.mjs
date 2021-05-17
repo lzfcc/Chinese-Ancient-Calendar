@@ -36,7 +36,7 @@ const ClockWeijin = (Decimal, CalName) => {
     let ClockOrder = (Decimal.div(portion)).floor().toNumber()
     const ClockFrac = Decimal.sub(big(ClockOrder).mul(portion))
     const Twelve = ((big.div(ClockFrac, portion)).mul(12)).floor().toNumber()
-    if (Twelve === 11 && CalName !== 'Wuyin') {
+    if (Twelve === 11 && CalName !== 'WuyinA') {
         ClockOrder++
     }
     let TwelveName = ''
@@ -44,7 +44,7 @@ const ClockWeijin = (Decimal, CalName) => {
         TwelveName = TwelveList[Twelve]
     } else if (CalName === 'Huangji') {
         TwelveName = TwelveListHuangji[Twelve]
-    } else if (CalName === 'Wuyin') { // 戊寅交食加時。滕艳辉等:《戊寅元历》的日月食推算方法
+    } else if (CalName === 'WuyinA') { // 戊寅交食加時。滕艳辉等:《戊寅元历》的日月食推算方法
         TwelveName = TwelveListWuyin[Twelve]
     }
     return BranchList[ClockOrder + 1] + '時' + TwelveName
@@ -147,7 +147,7 @@ export const BindClock1 = Decimal => {
     }]
     Decimal *= 100 + 1e-12
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'Wuyin', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
+        ['Easthan', 'Yuanjia', 'WuyinA', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
             return {
                 title: ClockNameList[title],
                 data: AutoClock(Decimal, title)

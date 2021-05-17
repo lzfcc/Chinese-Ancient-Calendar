@@ -12,19 +12,27 @@ import P2 from './para_2.mjs'
  */
 export const Bind = CalName => {
     let Type = 0
+    let isAcr = 0
     let AutoNewm = N2
     let AutoPara = P1
-    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan'].includes(CalName)) {
-        AutoNewm = N1
-        Type = 1 // 四分
-    } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
-        Type = 2 // 魏晉
-    } else if (['Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang'].includes(CalName)) {
-        Type = 3 // 北朝
-    } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'Wuyin'].includes(CalName)) {
-        Type = 4 // 南朝
+    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
+        isAcr = 0
+        if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan'].includes(CalName)) {
+            AutoNewm = N1
+            Type = 1 // 四分
+        } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
+            Type = 2 // 魏晉
+        } else if (['Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang'].includes(CalName)) {
+            Type = 3 // 北朝
+        } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
+            Type = 4 // 南朝
+        }
+    } else if (CalName === 'WuyinA') {
+        isAcr = 1
+        Type = 4
     } else {
         AutoPara = P2
+        isAcr = 1
         if (['Jiuzhi'].includes(CalName)) {
             Type = 5 // 天竺
         } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde', 'Shenlong'].includes(CalName)) {
@@ -49,11 +57,7 @@ export const Bind = CalName => {
             Type = 20
         }
     }
-    return {
-        AutoNewm,
-        AutoPara,
-        Type
-    }
+    return { AutoNewm, AutoPara, Type, isAcr }
 }
 // console.log(Bind('Dayan').Type)
 
@@ -112,7 +116,7 @@ const CalRange = {
         [223, 280]
     ],
     Jingchu: [
-        [237, 444]
+        [237, 451]
     ],
     Yuanjia: [
         [445, 509]
@@ -151,8 +155,12 @@ const CalRange = {
     Daye: [
         [597, 618]
     ],
-    Wuyin: [
-        [619, 664]
+    WuyinA: [
+        [619, 645]
+        [646, 664]
+    ],
+    WuyinB: [
+        [623, 625]
     ],
     Linde: [
         [665, 728]

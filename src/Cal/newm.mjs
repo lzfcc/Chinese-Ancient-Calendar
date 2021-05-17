@@ -18,7 +18,7 @@ import {
 } from './bind_astronomy.mjs'
 
 export default (CalName, year) => {
-    const { Type, AutoPara,
+    const { Type, AutoPara, isAcr
     } = Bind(CalName)
     const {
         Sidereal, SolarNumer, LunarNumer, Denom, Anoma, AnomaOrigin, Node, YinyangOrigin, EcliOrigin,
@@ -257,9 +257,9 @@ export default (CalName, year) => {
             }
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) { // 定朔入轉同經朔，若定朔大餘有變化，則加減一整日。變的應該是夜半，而非加時
-                AnomaAccumNight[i] += 1
+                AnomaAccumNight[i] ++
             } else if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) {
-                AnomaAccumNight[i] -= 1
+                AnomaAccumNight[i] --
             }
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrInt[i] = Math.floor(AcrRaw[i])
@@ -303,7 +303,7 @@ export default (CalName, year) => {
                 SyzygySub = Func.SyzygySub
                 SyzygySubPrint = Func.Print
             }
-            if (Type >= 6) { // 麟德以後用定朔注曆
+            if (isAcr) { // 麟德以後用定朔注曆
                 Int[i] = AcrInt[i]
                 Raw[i] = AcrRaw[i]
             } else {

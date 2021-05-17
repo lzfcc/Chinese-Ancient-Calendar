@@ -52,7 +52,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         title: '現代近似',
         data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
     }]
-    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi']
+    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Futian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian']
     List1 = CalName ? [CalName] : List1 // 這行用來給誤差分析程序
     List2 = CalName ? [CalName] : List2
@@ -458,7 +458,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
         data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, (WestC1 - WestC).toFixed(4), `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0, (WestD1 - WestD).toFixed(4)]
     }]
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
+        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
             let Lati1Print = '-'
             let LatiPrint = '-'
             let LatiInacPrint = '-'
@@ -697,7 +697,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw
     }
     let Print = []
     Print = Print.concat(
-        ['Tsrengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
             const {
                 Magni,
                 Last,
@@ -746,7 +746,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRa
     }
     let Print = []
     Print = Print.concat(
-        ['Tsrengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'Linde', 'Dayan', 'Jiyuan'].map(title => {
             const {
                 Magni,
                 Last,

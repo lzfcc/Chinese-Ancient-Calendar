@@ -25,7 +25,7 @@ export const AutoMoonAvgV = CalName => {
     } else if (CalName === 'Xuanming') {
         Plus = 0.000301739405
     }
-    if (CalName === 'Wuyin') {
+    if (['WuyinA', 'WuyinB'].includes(CalName)) {
         MoonAvgVDeg = parseFloat((Solar / Lunar + 1).toPrecision(14))
     } else if (CalName === 'Chongxuan') {
         MoonAvgVDeg = 13 + 7 / 19
@@ -296,7 +296,7 @@ const MoonTcorrTable1 = (AnomaAccum, CalName) => {
     let MoonDifAccum1 = MoonDifAccumList[AnomaAccumInt] + AnomaAccumFract * (MoonDifAccumList[AnomaAccumInt + 1] - MoonDifAccumList[AnomaAccumInt]) //* MoonAcrAvgDifList[AnomaAccumInt]
     const SunAvgV = ZhangRange
     let MoonTcorr1 = 0
-    if (['Qianxiang', 'Jingchu', 'Daming', 'Daye', 'Wuyin'].includes(CalName)) {
+    if (['Qianxiang', 'Jingchu', 'Daming', 'Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
         MoonTcorr1 = -MoonDifAccum1 / (MoonAcrVList[~~AnomaAccum] - SunAvgV)
     } else if (['Yuanjia'].includes(CalName)) { // 「賓等依何承天法」
         const MoonAcrDayDif = [] // 列差
@@ -723,6 +723,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
     let Tcorr2 = 0 // 二次或三次內插
     let Tcorr1 = 0 // 線性內插
     let NodeAccumCorr = 0
+    let NodeAccumCorr2 = 0
     let SunDifAccum = 0
     let MoonDifAccum = 0
     if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
@@ -765,7 +766,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         }
     } else {
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        if (['Daye', 'Wuyin'].includes(CalName)) {
+        if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
             SunTcorr1 = SunTcorrTable(WinsolsDif, CalName).SunTcorr1
             MoonTcorr1 = MoonTcorrTable1(AnomaAccum, CalName).MoonTcorr1
             Tcorr1 = SunTcorr1 + MoonTcorr1
@@ -852,6 +853,8 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         }
         if (Type >= 5 && Type <= 10) { // 其他曆法都是這樣，不懂授時爲何就是定朔加減差
             NodeAccumCorr = SunTcorr2 + 0.0785077 * MoonTcorr2 //  // 劉金沂《麟德曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟德61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > QuarNode ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
+            // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
+            NodeAccumCorr2 = 0.0785077 * SunTcorr2 + MoonTcorr2 // 太陽入交定日，上面是月亮入交定日
         }
     }
     let SunTcorr = 0 // 默認選項
@@ -876,6 +879,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         Tcorr2,
         Tcorr1,
         NodeAccumCorr,
+        NodeAccumCorr2,
     }
 }
 // console.log(AutoTcorr(6, 9, 'Shoushi', 1997).MoonTcorr2)
@@ -928,7 +932,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
             MoonDifAccum = DifAccumFunc.MoonDifAccum
         }
     } else {
-        if (['Daye', 'Wuyin'].includes(CalName)) {
+        if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
             SunDifAccum = AutoTcorr(AnomaAccum, WinsolsDif, CalName).SunTcorr1 * AutoMoonAvgV(CalName)
             MoonDifAccum = MoonTcorrTable1(AnomaAccum, CalName).MoonDifAccum1
         } else if (Type <= 4) {

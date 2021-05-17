@@ -1,4 +1,4 @@
-import { AutoMoonAvgV } from './astronomy_acrv.mjs'
+import { AutoMoonAvgV, AutoTcorr } from './astronomy_acrv.mjs'
 import {
     AutoEqua2Eclp
 } from './bind_astronomy.mjs'
@@ -334,7 +334,11 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
 }
 // console.log(MoonLongiFormula(91, 92, 'Jiyuan').EclpWhiteDif)
 
-export const MoonLatiFormula = (NodeAccumRaw, CalName) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》
+export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
+    const { AutoPara
+    } = Bind(CalName)
+    const { Node
+    } = AutoPara[CalName]
     let Cycle = 363.8
     let MoonAvgVDeg = AutoMoonAvgV(CalName) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
     if (CalName === 'Qintian') {
@@ -344,63 +348,56 @@ export const MoonLatiFormula = (NodeAccumRaw, CalName) => { // 《中國古代�
     }
     const HalfCycle = Cycle / 2
     const QuarCycle = Cycle / 4
-    const Longi1 = NodeAccumRaw * MoonAvgVDeg
-    let Longi2 = Longi1 % HalfCycle
-    let Longi = 0
+    const EighthCycle = Cycle / 8
+    const Longi = NodeAccum * MoonAvgVDeg
+    const LongiHalf = Longi % HalfCycle
+    let LongiHalfRev = LongiHalf
+    if (LongiHalfRev > QuarCycle) {
+        LongiHalfRev = HalfCycle - LongiHalfRev
+    }
+    // let LongiQuarRev = LongiHalf % QuarCycle
+    // if (LongiQuarRev > QuarCycle) {
+    //     LongiQuarRev = QuarCycle - LongiQuarRev
+    // }
     let Lati = 0
-    if (CalName === 'Chongxuan') { // 我沒反減，就沒事。奇怪。
-        Longi = Longi1 % (QuarCycle)
-        if (Longi2 > QuarCycle) {
-            Longi = QuarCycle - Longi
-        }
-        if (Longi2 <= 30 || Longi2 > QuarCycle + 61) {
-            // if (Longi2 > QuarCycle + 61) {
-            //     Longi = QuarCycle - Longi
-            // }
-            Lati = (81305 * Longi - 386 * Longi ** 2) / 700000 // n=30,極值=3
+    // 崇玄「以四百一乘朔望加時入交常日⋯⋯得定朔望入交定積度分」，也就是說應該不用加入NodeAccumCorr
+    // 崇玄崇天是反減半交，觀天紀元是反減交中度。但經過試驗，全部都是反減交中度
+    if (CalName === 'Chongxuan') {
+        const f1 = (HalfCycle - LongiHalfRev) * LongiHalfRev / (10000 / 7.3)
+        const f2 = (QuarCycle - LongiHalfRev) * LongiHalfRev / 5600
+        const f3 = (QuarCycle - LongiHalfRev) ** 2 / 11500
+        if (LongiHalfRev < 30) {
+            Lati = f1 - f2
         } else {
-            // if (Longi2 >= 30 && Longi2 < QuarCycle) {
-            //     Longi = QuarCycle - Longi
-            // }
-            Lati = (1656200 - 314440 * Longi + 1733 * Longi ** 2) / 2100000
+            Lati = f1 - f3
         }
     } else if (CalName === 'Qintian') {
-        const NodeAccum = NodeAccumRaw % HalfCycle
-        Lati = (245 * NodeAccum - 18 * NodeAccum * NodeAccum) / 139
+        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw, CalName, NodeAccum).NodeAccumCorr // 欽天用入交定日                
+        const NodeAccumHalf = NodeAccum % HalfCycle
+        Lati = (Node / 2 - NodeAccumHalf) * NodeAccumHalf / (556 / 72)
     } else if (CalName === 'Chongtian') {
-        Longi = Longi2
-        if (Longi2 > QuarCycle) {
-            Longi = HalfCycle - Longi
+        const f1 = (1010 - 5 * LongiHalfRev) * LongiHalfRev / 8400
+        const f2 = (EighthCycle - LongiHalfRev) * LongiHalfRev / 4000 // 這兩個是一樣的
+        const f3 = (QuarCycle - LongiHalfRev) * (LongiHalfRev - QuarCycle / 2) / 4000
+        if (LongiHalfRev < EighthCycle) {
+            Lati = f1 - f2
+        } else {
+            Lati = f1 + f3
         }
-        // if (Longi > Cycle / 8) {
-        // Longi = QuarCycle - Longi
-        // }
-        // if (Longi <= Cycle / 8) {
-        Lati = (91451 * Longi - 290 * Longi ** 2) / 840000
-        // } 
-        // else {
-        //     Lati = -(868359 - 129646 * Longi - 710 * Longi ** 2) / 840000 // 這個增長很快，x要在38內，y在6內
-        // }
     } else if (CalName === 'Guantian') {
-        Longi = Longi2
-        if (Longi2 > QuarCycle) {
-            Longi = HalfCycle - Longi
+        const f1 = (HalfCycle - LongiHalfRev) * LongiHalfRev / 1380
+        const f2 = LongiHalfRev / 500
+        const f3 = (LongiHalfRev - QuarCycle) / 500
+        if (LongiHalfRev < EighthCycle) {
+            Lati = f1 - f2
+        } else {
+            Lati = f1 + f3
         }
-        // if (Longi <= Cycle / 8) {
-        Lati = (2239 / 17250) * Longi - Longi ** 2 / 1380
-        // }
-        //  else {
-        //     Lati = -0.18188 + (1154 / 8625) * Longi - Longi ** 2 / 1380 // 這兩個幾乎沒什麼區別
-        // }
     } else if (CalName === 'Jiyuan') {
-        Longi = Longi2
-        if (Longi2 > QuarCycle) {
-            Longi = HalfCycle - Longi
-        }
-        Lati = big(372026500).mul(Longi).sub(big(763324).mul(big(Longi).pow(2))).sub(big(8181).mul(big(Longi).pow(3))).sub(big(10).mul(big(Longi).pow(4))).div(3437500000).toNumber()
+        const tmp = LongiHalfRev - (QuarCycle - LongiHalfRev) * LongiHalfRev / 500
+        Lati = (HalfCycle - tmp) * tmp / 1375
     }
-    Lati = -Math.abs(Lati)
-    if (Longi1 > HalfCycle) { // 調用需要注意：此處統一先陽曆後陰曆
+    if (Longi < HalfCycle) { // 調用需要注意：此處統一先陽曆後陰曆
         Lati = -Lati
     }
     const Lati1 = 91.311 - Lati

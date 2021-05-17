@@ -214,6 +214,7 @@ p {
 
 .section-select:hover {
   color: var(--black);
+  cursor: pointer;
 }
 
 .main-render {

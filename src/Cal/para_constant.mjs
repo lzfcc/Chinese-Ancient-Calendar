@@ -74,7 +74,8 @@ export const CalNameList = { // 按照時間順序排列
     Zhangmengbin: '張孟賓(擬)',
     Liuxiaosun: '劉孝孫(擬)',
     Huangji: '皇極', // 劉焯
-    Wuyin: '戊寅', // 傅仁均
+    WuyinA: '戊寅(定)', // 傅仁均
+    WuyinB: '戊寅(平)',
     Shenlong: '神龍(擬)', // 這是武則天的年號
     Linde: '麟德', // 李淳風。麟德在708-716、開元九-十六年用進朔法(黃一農《中國史曆表朔閏訂正舉隅———以唐〈麟德曆〉行用時期爲例》，頁291—296)
     // Jiuzhi: '九執(擬)', // 顯慶年間印度曆法
@@ -132,7 +133,8 @@ export const CalNameDayList = { // 可計算日書的曆法
     Kaihuang: '開皇(擬)',
     Daye: '大業',
     Huangji: '皇極',
-    Wuyin: '戊寅',
+    WuyinA: '戊寅(定)',
+    WuyinB: '戊寅(平)',
     Linde: '麟德',
     Dayan: '大衍',
     Zhide: '至德(擬)',
@@ -181,7 +183,7 @@ export const TwentyfourList = '子癸丑艮寅甲卯乙辰巽巳丙午丁未坤�
 export const ClockNameList = {
     Easthan: '後漢四分',
     Yuanjia: '魏晉南北',
-    Wuyin: '戊寅曆',
+    WuyinA: '戊寅曆',
     Huangji: '皇極曆',
     Dayan: '唐北宋前期',
     Mingtian: '南宋元明'
