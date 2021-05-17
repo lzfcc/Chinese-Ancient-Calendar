@@ -272,7 +272,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
                     SunLimit1 = 0.5 / 12
                 }
             }
-        } else if (CalName === 'Linde') {
+        } else if (['LindeA', 'LindeB'].includes(CalName)) {
             if (NodeAccum >= HalfNode && WinsolsDif >= Solar / 4 && WinsolsDif <= Solar * 0.75) { // 秋分至春分殘缺
                 if (NoonDif > 0.18 - 0.137 * SummsolsDif / QuarSolar) {
                     SunLimit1 = 1373 / Denom + (137 / Denom) * SummsolsDif / QuarSolar
@@ -479,7 +479,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
         } else if (Magni === 15) {
             Last = LastList[Magni]
         }
-    } else if (CalName === 'Linde') { // 下麟德求食分。NodeDif去交前後定分。558、552的不同，《中國古代曆法》頁82說要統一爲552，不過如果用定氣思路來看，興許不用改。
+    } else if (['LindeA', 'LindeB'].includes(CalName)) { // 下麟德求食分。NodeDif去交前後定分。558、552的不同，《中國古代曆法》頁82說要統一爲552，不過如果用定氣思路來看，興許不用改。
         if (isNewm) {
             if (NodeAccum > HalfNode) { // 月在內道
                 if (WinsolsDif < QuarSolar) {

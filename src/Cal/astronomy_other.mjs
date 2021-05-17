@@ -15,7 +15,7 @@ const AutoLightRange = CalName => {
     let LightRange = 0.025 // 宣明不能確定，各個節氣都不一樣
     if (CalName === 'Huangji') {
         LightRange = 0.02365
-    } else if (CalName === 'Linde') {
+    } else if (['LindeA', 'LindeB'].includes(CalName)) {
         LightRange = 0.0228
     }
     return LightRange
@@ -129,7 +129,7 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
         standard = 1 - Sunrise + LightRange + 0.1
     } else if (CalName === 'Chongxuan') {
         standard = Math.max(0.725, 1 - Sunrise + LightRange)
-    } else if (['Linde', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
+    } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
         standard = 1 - Sunrise
     } else if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
         standard = 0.75 + (Sunrise - SpringequinoxSunrise) / portion

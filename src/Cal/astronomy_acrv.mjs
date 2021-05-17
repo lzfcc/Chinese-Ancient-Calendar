@@ -92,7 +92,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
         const TermNum1 = ~~(WinsolsDif / HalfTermLeng)  // 朔望所在氣名
         const TermNum2 = (TermNum1 + 1) % 24
         const TermNewmDif = WinsolsDif - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
-        if (['Linde', 'Huangji', 'Shenlong'].includes(CalName)) {
+        if (['LindeA','LindeB', 'Huangji', 'Shenlong'].includes(CalName)) {
             if ((WinsolsDif < 6 * HalfTermLeng) || (WinsolsDif >= 18 * HalfTermLeng)) {
                 TermRange1 = TermRangeA // 秋分後
             } else {
@@ -139,7 +139,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
         SunTcorr1 = SunTcorrList[TermNum] + (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) * (WinsolsDif - AcrTermList[TermNum]) / TermRange
     } else {
         let TermRange = HalfTermLeng
-        if (['Huangji', 'Linde'].includes(CalName)) {
+        if (['Huangji', 'LindeA','LindeB',].includes(CalName)) {
             if ((WinsolsDif < 6 * HalfTermLeng) || (WinsolsDif >= 18 * HalfTermLeng)) {
                 TermRange = TermRangeA // 秋分後
             } else {
@@ -743,7 +743,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Huangji')
             } else if (CalName === 'Shenlong') {
-                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Linde')
+                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'LindeA')
             } else if (CalName === 'Zhide') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Dayan')
             } else if (CalName === 'Qintian') {
@@ -914,7 +914,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
             if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Huangji')
             } else if (CalName === 'Shenlong') {
-                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Linde')
+                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'LindeA')
             } else if (CalName === 'Zhide') {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Dayan')
             } else if (CalName === 'Qintian') {
@@ -989,8 +989,8 @@ export const AutoMoonAcrS = (AnomaAccum, CalName) => {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Huangji')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Huangji')
             } else if (CalName === 'Shenlong') {
-                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Linde')
-                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Linde')
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, 'LindeA')
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'LindeA')
             } else if (CalName === 'Zhide') {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Dayan')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Dayan')

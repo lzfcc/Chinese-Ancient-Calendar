@@ -67,14 +67,14 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     let Range = []
     if (Type <= 4) {
         Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
-    } else if (['Huangji', 'Linde'].includes(CalName)) {
+    } else if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
     } else if (['Dayan', 'Zhide', 'Tsrengyuan', 'Wuji', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + Sidereal / 4 - ~~(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
-    if (['Huangji', 'Linde'].includes(CalName)) { // 爲何皇極增速先慢後快，大衍先快後慢？
+    if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) { // 爲何皇極增速先慢後快，大衍先快後慢？
         LongiDifDifInitial = 97 / 450 // ⋯⋯四度爲限。初數九十七，每限增一，以終百七
         LongiDifDifChange = 1 / 450
     } else if (['Dayan', 'Zhide', 'Tsrengyuan', 'Wuji'].includes(CalName)) {
@@ -185,7 +185,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
     } = AutoPara[CalName]
     const WinsolsDif = WinsolsDifRaw % Solar
     let DawnRange = 2.5
-    if (['Linde', 'Daming3'].includes(CalName)) {
+    if (['LindeA', 'Daming3'].includes(CalName)) {
         DawnRange = 0
     }
     const f = 34.475 // 大衍地理緯度
