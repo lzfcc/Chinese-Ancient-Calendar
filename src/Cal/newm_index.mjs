@@ -12,7 +12,7 @@ import {
 } from './astronomy_other.mjs'
 
 export default (CalName, YearStart, YearEnd) => { // CalNewm
-    const { Type, AutoNewm, AutoPara
+    const { Type, AutoNewm, AutoPara, isNewmPlus
     } = Bind(CalName)
     const isExcl = Type >= 4 ? 1 : 0
     const { OriginAd, ZhangRange, ZhengNum, Denom, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
@@ -114,9 +114,9 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
             if (isLeapTT) {
-                let Plus = 2.5
-                if (Type === 11) { // 若不用進朔，需要改成3.5
-                    Plus = 3.5
+                let Plus = 3.5
+                if (isNewmPlus) { // 若不用進朔，需要改成3.5
+                    Plus = 2.5
                 }
                 while (LeapNumTermThis >= 2 && (TermAvgRaw[LeapNumTermThis] >= NewmInt[LeapNumTermThis + 1]) && (TermAvgRaw[LeapNumTermThis] < NewmInt[LeapNumTermThis + 1] + Plus)) {
                     LeapNumTermThis--

@@ -366,12 +366,16 @@ export default (CalName, year) => {
         LeapNumTerm = LeapNumAvgThis
     }
     let isLeapAdvan = 0
-    let isLeapPost = 0
+    let isLeapPost = 0    
     if (isLeapThis) {
-        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2.5)) {
+        let Plus = 3.5
+        if (isNewmPlus) { // 若不用進朔，需要改成3.5
+            Plus = 2.5
+        }
+        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + Plus)) {
             LeapNumTerm--
         }
-        while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - 2.5)) {
+        while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - Plus)) {
             LeapNumTerm++
         }
         if (LeapNumTerm < 1) {

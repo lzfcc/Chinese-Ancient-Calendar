@@ -12,8 +12,8 @@ import P2 from './para_2.mjs'
  */
 export const Bind = CalName => {
     let Type = 0
-    let isAcr = 0
-    let isNewmPlus = 0
+    let isAcr = 0 // 是否定朔注曆
+    let isNewmPlus = 0 // 是否進朔
     let AutoNewm = N2
     let AutoPara = P1
     if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
@@ -37,8 +37,10 @@ export const Bind = CalName => {
         isNewmPlus = 1
         if (['Jiuzhi'].includes(CalName)) {
             Type = 5 // 天竺
+            isNewmPlus = 0
         } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde', 'Shenlong'].includes(CalName)) {
             Type = 6 // 隋初唐
+            isNewmPlus = 0
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
             Type = 7 // 唐五代
         } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
