@@ -26,28 +26,14 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const ZhengWinsolsDif = ZhengNum - OriginMonNum
         const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
         const isLeapPvPt = PrevYear.isLeapPost
-        const {
-            isLeapAdvan: isLeapTA,
+        const { isLeapAdvan: isLeapTA,
             JiScOrder: JiScOrder,
-            OriginAccum: OriginAccum,
-            NewmEqua: NewmEqua,
-            TermAvgRaw: TermAvgRaw,
-            TermAcrRaw: TermAcrRaw,
-            EquaDegAccumList: EquaDegAccumList,
-            TermAvgWinsolsDif: TermAvgWinsolsDif,
-            TermAcrWinsolsDif: TermAcrWinsolsDif,
-            AccumPrint: AccumPrint,
-            LeapLimit: LeapLimit
+            OriginAccum, NewmEqua, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgWinsolsDif, TermAcrWinsolsDif, AccumPrint, LeapLimit
         } = ThisYear
-        let {
-            NewmInt: NewmInt,
-            LeapNumTerm: LeapNumTermThis,
+        let { LeapNumTerm: LeapNumTermThis,
             isLeapPrev: isLeapTPv,
             isLeapThis: isLeapTT,
-            NewmStart: NewmStart,
-            NewmEnd: NewmEnd,
-            TermStart: TermStart,
-            TermEnd: TermEnd,
+            NewmInt, NewmStart, NewmEnd, TermStart, TermEnd,
         } = ThisYear
         const WinsolsDecimal = +(OriginAccum - Math.floor(OriginAccum)).toFixed(5)
         let specialStart = 0
@@ -264,24 +250,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
         const NewmAvgDecimalPrint = NewmSlice(ThisYear.NewmAvgDecimal)
         NewmInt = NewmInt.slice(1 + NewmStart)
-        const step = []
-        for (let i = 0; i < NewmAvgScPrint.length; i++) {
-            step[i] = NewmInt[i + 1] - NewmInt[i]
-        }
-        // const checkStep = (num, time, array) => array.reduce(function (p, c) { c === num ? p + 1 : (p < time ? 0 : p) }, 0) >= time
-        // const sdfsdg = checkStep(30, 2, [30, 29, 30, 30, 30])
-        let tmp30 = 0
-        let tmp29 = 0
-        for (let i = 0; i < step.length - 2; i++) {
-            if (step[i] === 30 && step[i + 1] === 30 && step[i + 2] === 30 && step[i + 3] === 30) {
-                tmp30 = 4
-                break
-            }
-            if (step[i] === 29 && step[i + 1] === 29 && step[i + 2] === 29) {
-                tmp29 = 3
-                break
-            }
-        }
         let ZhengGreatSur = 0
         let ZhengSmallSur = 0
         if (Type === 1) {
@@ -490,11 +458,33 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 YearInfo += `\n` + SyzygyEcliPrint
             }
         }
-        if (tmp29 === 3) {
-            YearInfo += `<span class='step30'>三連小</span>`
+        const step = []
+        let NewmIntLong = NewmInt.concat(NextYear.NewmInt)
+        NewmIntLong = Array.from(new Set(NewmIntLong))
+        for (let i = 0; i < 18; i++) {
+            step[i] = NewmIntLong[i + 1] - NewmIntLong[i]
+        }
+        // const checkStep = (num, time, array) => array.reduce(function (p, c) { c === num ? p + 1 : (p < time ? 0 : p) }, 0) >= time
+        // const sdfsdg = checkStep(30, 2, [30, 29, 30, 30, 30])
+        let tmp30 = 0
+        let tmp29 = 0
+        for (let i = 0; i < step.length - 1; i++) {
+            if (step[i] === 30 && step[i + 1] === 30 && step[i + 2] === 30 && step[i + 3] === 30) {
+                tmp30 = 4
+                break
+            }
+        }
+        for (let i = 0; i < step.length - 1; i++) {
+            if (step[i] === 29 && step[i + 1] === 29 && step[i + 2] === 29) {
+                tmp29 = 3
+                break
+            }
         }
         if (tmp30 === 4) {
             YearInfo += `<span class='step30'>四連大</span>`
+        }
+        if (tmp29 === 3) {
+            YearInfo += `<span class='step30'>三連小</span>`
         }
         return {
             Era, YearInfo, MonthPrint,

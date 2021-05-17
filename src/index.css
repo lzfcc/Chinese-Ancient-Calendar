@@ -287,7 +287,7 @@ h2 {
 }
 
 .eclipse-wrap {
-  margin: auto 2em;
+  margin: auto 1em auto 2em;
 }
 
 .eclipse {
@@ -518,6 +518,7 @@ year-range {
   font-weight: bold;
   border-radius: .5em;
   padding: .25em .4em;
+  margin-left: .6em;
 }
 
 code {
