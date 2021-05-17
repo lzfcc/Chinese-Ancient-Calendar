@@ -28,7 +28,7 @@ export const Bind = CalName => {
         } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
             Type = 4 // 南朝
         }
-    } else if (CalName === 'WuyinA') {
+    } else if (CalName === 'WuyinA') { // 戊寅A定朔B平朔。麟德A不進朔B進朔
         isAcr = 1
         Type = 4
     } else {
@@ -38,9 +38,12 @@ export const Bind = CalName => {
         if (['Jiuzhi'].includes(CalName)) {
             Type = 5 // 天竺
             isNewmPlus = 0
-        } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde', 'Shenlong'].includes(CalName)) {
+        } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'LindeA', 'Shenlong'].includes(CalName)) {
             Type = 6 // 隋初唐
             isNewmPlus = 0
+        } else if (CalName === 'LindeB') {
+            Type = 6
+            isNewmPlus = 1
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
             Type = 7 // 唐五代
         } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
@@ -167,8 +170,13 @@ const CalRange = {
     WuyinB: [
         [645, 664]
     ],
-    Linde: [
-        [665, 728]
+    LindeA: [
+        [665, 707],
+        [717, 720]
+    ],
+    LindeB: [
+        [708, 716],
+        [721, 728],
     ],
     Dayan: [
         [729, 757]
