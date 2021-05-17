@@ -50,7 +50,7 @@ const printData = outputFile(1, 645, 646, 0, [ // mode, YearStart, YearEnd, auto
     // 'WuyinB', // 上南朝系
     // 'Jiuzhi',
     // 'Shenlong',
-    'Futian', // 上印度系
+    // 'Futian', // 上印度系
     // 'Zhangmengbin',
     // 'Liuxiaosun',
     // 'Huangji',
@@ -61,7 +61,7 @@ const printData = outputFile(1, 645, 646, 0, [ // mode, YearStart, YearEnd, auto
     // 'Xuanming',
     // 'Chongxuan',
     // 'Qintian', // 上唐五代系
-    // 'Yingtian',  
+    'Yingtian',  
     // 'Qianyuan', 
     // 'Yitian', 
     // 'Chongtian',

@@ -877,7 +877,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
     let DcorrClock = 0
     let DcorrOther = 0 // 儀天加差全同宣明
     let Dcorr = 0
-    const WinsolsDifHalf = WinsolsDif % HalfSolar // 定朔
+    let WinsolsDifHalf = WinsolsDif % HalfSolar // 定朔
     const WinsolsDifTrueHalf = WinsolsDifTrue % HalfSolar // 食甚
     // 下爲食分改正
     // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作爲正負判斷依據，完全不對
