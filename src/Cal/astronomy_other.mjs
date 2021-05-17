@@ -126,9 +126,9 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
         portion = 2
     }
     if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
-        standard = Sunrise - 0.1 - LightRange
+        standard = 1 - Sunrise + LightRange + 0.1
     } else if (CalName === 'Chongxuan') {
-        standard = Sunrise - LightRange
+        standard = Math.max(0.725, 1 - Sunrise + LightRange)
     } else if (['Linde', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
         standard = 1 - Sunrise
     } else if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
@@ -136,19 +136,13 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
     }
     let NewmPlus = 0
     let Print = ''
-    if (['Wuji', 'Tsrengyuan', 'Chongxuan'].includes(CalName)) {
-        if (1 - Decimal <= standard) {
-            NewmPlus = 1
-            Print = `<span class='NewmPlus'>+</span>`
-        }
-    } else {
-        if (Decimal >= standard) {
-            NewmPlus = 1
-            Print = `<span class='NewmPlus'>+</span>`
-        }
+    if (Decimal >= standard) {
+        NewmPlus = 1
+        Print = `<span class='NewmPlus'>+</span>`
     }
     return { NewmPlus, Print }
 }
+// console.log( AutoNewmPlus (0.75, 191, 0.9, 'Chongxuan') )
 
 export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => {
     const { Type

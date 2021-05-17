@@ -157,7 +157,7 @@ export default (CalName, year) => {
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
-        FirstAnomaAccum = (FirstAccum + (AnomaOrigin || 0) / Denom + (CalName === 'Shenlong' ? Anoma / 2 : 0) + (AnomaCorr || 0) + Anoma) % Anoma
+        FirstAnomaAccum = ((FirstAccum + (AnomaOrigin / Denom || 0) + (CalName === 'Shenlong' ? Anoma / 2 : 0) + (AnomaCorr || 0)) % Anoma + Anoma) % Anoma
     } else if (Type === 11) {
         FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaConst) % Anoma + Anoma) % Anoma
     }
@@ -168,7 +168,10 @@ export default (CalName, year) => {
         FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeConst) % Node + Node) % Node
     }
     const AccumPrint = '轉' + (OriginAccum % Anoma).toFixed(4) + (Node ? '交' + (OriginAccum % Node).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
-
+    OriginAccum = +OriginAccum.toFixed(5)
+    FirstAccum = +FirstAccum.toFixed(5)
+    FirstAnomaAccum = +FirstAnomaAccum.toFixed(5)
+    FirstNodeAccum = +FirstNodeAccum.toFixed(5)
     let LeapLimit = 0
     if (ZhangRange) {
         LeapLimit = ZhangRange - ZhangLeap
@@ -242,8 +245,8 @@ export default (CalName, year) => {
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + OriginDaySc) % 60) + 60) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
-            WinsolsDifRaw[i] = +(((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar).toFixed(5)
-            AnomaAccum[i] = +((FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(5) // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
+            WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
+            AnomaAccum[i] = (FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
             AnomaAccumNight[i] = ~~AnomaAccum[i]
             const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
             let Tcorr1 = 0
@@ -286,11 +289,13 @@ export default (CalName, year) => {
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
-                let Eclp2EquaDif = 0
-                if (Type === 11) { // 授時要黃轉赤
-                    Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
+                if ((EquaDegAccumList || []).length) {
+                    let Eclp2EquaDif = 0
+                    if (Type === 11) { // 授時要黃轉赤
+                        Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
+                    }
+                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
                 }
-                Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
                 TermAvgWinsolsDif[i] = (i + ZhengWinsolsDif - 1) * TermLeng
                 TermAvgRaw[i] = OriginAccum + TermAvgWinsolsDif[i]
                 const TermNum3 = 2 * (i + ZhengWinsolsDif - 1)
@@ -366,7 +371,7 @@ export default (CalName, year) => {
         LeapNumTerm = LeapNumAvgThis
     }
     let isLeapAdvan = 0
-    let isLeapPost = 0    
+    let isLeapPost = 0
     if (isLeapThis) {
         let Plus = 3.5
         if (isNewmPlus) { // 若不用進朔，需要改成3.5
