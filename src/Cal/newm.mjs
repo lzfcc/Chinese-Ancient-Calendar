@@ -375,7 +375,7 @@ export default (CalName, year) => {
     if (isLeapThis) {
         let Plus = 3.5
         if (isNewmPlus) { // 若不用進朔，需要改成3.5
-            Plus = 2.5
+            Plus = 2.75
             if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
                 Plus = 3
             }

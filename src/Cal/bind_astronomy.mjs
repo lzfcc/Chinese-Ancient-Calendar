@@ -496,7 +496,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
         }))
     return Print
 }
-console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
+// console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLati = (NodeAccum, CalName) => {
     const { Type, AutoPara
