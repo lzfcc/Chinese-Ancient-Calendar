@@ -371,6 +371,9 @@ export default (CalName, year) => {
         let Plus = 3.5
         if (isNewmPlus) { // 若不用進朔，需要改成3.5
             Plus = 2.5
+            if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
+                Plus = 3
+            }
         }
         while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + Plus)) {
             LeapNumTerm--

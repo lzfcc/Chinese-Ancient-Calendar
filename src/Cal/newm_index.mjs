@@ -114,9 +114,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
             if (isLeapTT) {
-                let Plus = 3.5
-                if (isNewmPlus) { // 若不用進朔，需要改成3.5
+                let Plus = 3.5 // 若不用進朔，需要改成3.5
+                if (isNewmPlus) {
                     Plus = 2.5
+                    if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
+                        Plus = 3
+                    }
                 }
                 while (LeapNumTermThis >= 2 && (TermAvgRaw[LeapNumTermThis] >= NewmInt[LeapNumTermThis + 1]) && (TermAvgRaw[LeapNumTermThis] < NewmInt[LeapNumTermThis + 1] + Plus)) {
                     LeapNumTermThis--
@@ -327,7 +330,6 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
             const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
             for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
-                // 入交定日似乎宋厤另有算法，授時直接就是用定朔加減差，奇怪。
                 let NoleapMon = i + 1
                 if (LeapNumTermThis > 0) {
                     if (i === LeapNumTermThis) {
