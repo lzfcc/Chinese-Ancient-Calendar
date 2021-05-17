@@ -13,6 +13,7 @@ import P2 from './para_2.mjs'
 export const Bind = CalName => {
     let Type = 0
     let isAcr = 0
+    let isNewmPlus = 0
     let AutoNewm = N2
     let AutoPara = P1
     if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
@@ -33,6 +34,7 @@ export const Bind = CalName => {
     } else {
         AutoPara = P2
         isAcr = 1
+        isNewmPlus = 1
         if (['Jiuzhi'].includes(CalName)) {
             Type = 5 // 天竺
         } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'Linde', 'Shenlong'].includes(CalName)) {
@@ -46,6 +48,7 @@ export const Bind = CalName => {
         } else if (['Daming2', 'Daming3', 'Yiwei', 'Gengwu'].includes(CalName)) {
             Type = 10 // 遼金元
         } else if (['Shoushi', 'Datong'].includes(CalName)) {
+            isNewmPlus = 0
             Type = 11 // 授時
         }
         // else if (['Huihui'].includes(CalName)) {
@@ -54,10 +57,11 @@ export const Bind = CalName => {
         //     Type = 12 // 回回
         // }
         else if (CalName === 'West') {
+            isNewmPlus = 0
             Type = 20
         }
     }
-    return { AutoNewm, AutoPara, Type, isAcr }
+    return { AutoNewm, AutoPara, Type, isAcr, isNewmPlus }
 }
 // console.log(Bind('Dayan').Type)
 
@@ -156,11 +160,10 @@ const CalRange = {
         [597, 618]
     ],
     WuyinA: [
-        [619, 645]
-        [646, 664]
+        [619, 644]
     ],
     WuyinB: [
-        [623, 625]
+        [645, 664]
     ],
     Linde: [
         [665, 728]

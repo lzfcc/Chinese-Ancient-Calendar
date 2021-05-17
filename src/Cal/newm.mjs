@@ -18,7 +18,7 @@ import {
 } from './bind_astronomy.mjs'
 
 export default (CalName, year) => {
-    const { Type, AutoPara, isAcr
+    const { Type, AutoPara, isAcr, isNewmPlus
     } = Bind(CalName)
     const {
         Sidereal, SolarNumer, LunarNumer, Denom, Anoma, AnomaOrigin, Node, YinyangOrigin, EcliOrigin,
@@ -257,9 +257,9 @@ export default (CalName, year) => {
             }
             AcrRaw[i] = AvgRaw[i] + Tcorr[i]
             if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) { // 定朔入轉同經朔，若定朔大餘有變化，則加減一整日。變的應該是夜半，而非加時
-                AnomaAccumNight[i] ++
+                AnomaAccumNight[i]++
             } else if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) {
-                AnomaAccumNight[i] --
+                AnomaAccumNight[i]--
             }
             AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
             AcrInt[i] = Math.floor(AcrRaw[i])
@@ -281,7 +281,7 @@ export default (CalName, year) => {
             let SyzygySub = 0
             let SyzygySubPrint = ''
             if (isNewm) {
-                if ((Type >= 7 || CalName === 'Linde') && Type <= 10) {
+                if (isAcr && isNewmPlus) {
                     const Func = AutoNewmPlus(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////進朔/////
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
@@ -312,13 +312,14 @@ export default (CalName, year) => {
             }
             Int[i] += NewmPlus + SyzygySub
             Raw[i] += NewmPlus + SyzygySub
+            AcrInt[i] += NewmPlus + SyzygySub
             AnomaAccumNight[i] += NewmPlus
             Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
             if (Node) {
                 NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
                 NodeAccumNight[i] = ~~NodeAccum[i]
             }
-            NodeAccumNight[i] += NewmPlus
+            NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以
         }
         return {
             AvgSc, Tcorr, AvgDecimal, Int, Raw, Sc, AcrInt, AcrRaw,
