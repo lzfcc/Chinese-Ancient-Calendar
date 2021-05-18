@@ -45,7 +45,7 @@ export const AutoMoonAvgV = CalName => {
 export const SunDifAccumTable = (WinsolsDif, CalName) => {
     const { Type, AutoPara
     } = Bind(CalName)
-    const { SunAcrAvgDifList, AcrTermList, TermRangeA, TermRangeS, SolarRaw
+    const { SunAcrAvgDifList, TermRangeA, TermRangeS, SolarRaw, AcrTermList,
     } = AutoPara[CalName]
     let { Denom, Solar
     } = AutoPara[CalName]
@@ -55,6 +55,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     if (Type >= 8 && CalName !== 'Qianyuan') { // 崇玄也是萬分母
         Denom = 10000
     }
+    // Solar = 365 + 416 / 1700
     const HalfTermLeng = Solar / 24
     // 求定氣要用下面的
     const SunAcrAvgDifListList = [] // 這個多此一舉的SunAcrAvgDifListList一定不能刪掉，否則多次運算就會越來越小
@@ -76,6 +77,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     // }
     // AcrTermList[0] = 0
     // AcrTermList[24] = +Solar.toFixed(6)
+    // AcrTermList[25] = +(AcrTermList[1] + Solar).toFixed(6)
     let SunDifAccum2 = 0
     if (Type === 7) {
         let TermNum = 0
@@ -108,7 +110,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     }
     return SunDifAccum2
 }
-// console.log(SunDifAccumTable(341, 'Dayan'))
+// console.log(SunDifAccumTable(341, 'Qianyuan'))
 
 // 計算朓朒積
 const SunTcorrTable = (WinsolsDif, CalName) => {
