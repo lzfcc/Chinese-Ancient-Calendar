@@ -56,8 +56,8 @@ export const CalNameList = { // 按照時間順序排列
     Qianxiang: '乾象', // 劉洪
     // Huangchu: '黃初(擬)', // 魏 韓詡
     Jingchu: '景初', // 楊偉
-    Liuzhi: '劉智(擬)', // 劉智正曆
-    Wangshuozhi: '王朔之(擬)', // 王朔之通曆
+    Liuzhi: '正曆(擬)', // 劉智正曆
+    Wangshuozhi: '通曆(擬)', // 王朔之通曆
     Sanji: '三紀', // 姜岌。擬
     Xuanshi: '玄始(擬)', // 趙𢾺，梁趙曆
     Yuanjia: '元嘉', // 何承天

@@ -92,7 +92,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
         const TermNum1 = ~~(WinsolsDif / HalfTermLeng)  // 朔望所在氣名
         const TermNum2 = (TermNum1 + 1) % 24
         const TermNewmDif = WinsolsDif - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
-        if (['LindeA','LindeB', 'Huangji', 'Shenlong'].includes(CalName)) {
+        if (['LindeA', 'LindeB', 'Huangji', 'Shenlong'].includes(CalName)) {
             if ((WinsolsDif < 6 * HalfTermLeng) || (WinsolsDif >= 18 * HalfTermLeng)) {
                 TermRange1 = TermRangeA // 秋分後
             } else {
@@ -139,7 +139,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
         SunTcorr1 = SunTcorrList[TermNum] + (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) * (WinsolsDif - AcrTermList[TermNum]) / TermRange
     } else {
         let TermRange = HalfTermLeng
-        if (['Huangji', 'LindeA','LindeB',].includes(CalName)) {
+        if (['Huangji', 'LindeA', 'LindeB',].includes(CalName)) {
             if ((WinsolsDif < 6 * HalfTermLeng) || (WinsolsDif >= 18 * HalfTermLeng)) {
                 TermRange = TermRangeA // 秋分後
             } else {
@@ -697,18 +697,11 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
 // console.log(MoonFormula(23, 'Shoushi').MoonAcrS)
 
 export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) => {
-    const {
-        AutoPara,
-        Type,
+    const { AutoPara, Type,
     } = Bind(CalName)
-    const {
-        SolarRaw,
-        XianConst,
-        Anoma,
-        NodeDenom
+    const { SolarRaw, XianConst, Anoma, NodeDenom
     } = AutoPara[CalName]
-    let {
-        Solar,
+    let { Solar
     } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     const WinsolsDif = WinsolsDifRaw % Solar
@@ -739,10 +732,10 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Yuanjia').Tcorr1
         } else if (CalName === 'Liangwu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Daming').Tcorr1
+        } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+            Tcorr1 = AutoTcorr(AnomaAccum, WinsolsDif, 'Daye').Tcorr1
         } else {
-            if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Huangji')
-            } else if (CalName === 'Shenlong') {
+            if (CalName === 'Shenlong') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'LindeA')
             } else if (CalName === 'Zhide') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Dayan')
@@ -912,7 +905,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Liangwu').MoonDifAccum
         } else {
             if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Huangji')
+                DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'Daye')
             } else if (CalName === 'Shenlong') {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, 'LindeA')
             } else if (CalName === 'Zhide') {
