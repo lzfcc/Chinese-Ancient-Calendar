@@ -93,6 +93,7 @@ export const CalNameList = { // 按照時間順序排列
     Zhidao1: '至道一(擬)', // 王睿
     Zhidao2: '至道二(擬)',
     Yitian: '儀天',
+    Qianxing: '乾興(擬)',
     Chongtian: '崇天', // 遠地點。宋行古。
     Mingtian: '明天', // 周琮。歷史背景見董煜宇《从《奉元历》改革看北宋天文管理的绩效》，《自然科學史研究》2008年2期
     Fengyuan: '奉元(擬)',

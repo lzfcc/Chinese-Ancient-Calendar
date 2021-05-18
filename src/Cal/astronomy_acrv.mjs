@@ -55,7 +55,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     if (Type >= 8 && CalName !== 'Qianyuan') { // 崇玄也是萬分母
         Denom = 10000
     }
-    // Solar = 365 + 416 / 1700
+    // Solar =365 + 1958 / 8008
     const HalfTermLeng = Solar / 24
     // 求定氣要用下面的
     const SunAcrAvgDifListList = [] // 這個多此一舉的SunAcrAvgDifListList一定不能刪掉，否則多次運算就會越來越小
@@ -110,7 +110,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     }
     return SunDifAccum2
 }
-// console.log(SunDifAccumTable(341, 'Qianyuan'))
+// console.log(SunDifAccumTable(341, 'Chongtian'))
 
 // 計算朓朒積
 const SunTcorrTable = (WinsolsDif, CalName) => {
@@ -721,7 +721,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
     let NodeAccumCorr2 = 0
     let SunDifAccum = 0
     let MoonDifAccum = 0
-    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Zhidao1', 'Zhidao2', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Zhidao1', 'Zhidao2', 'Qianxing', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
         if (CalName === 'Huangchu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Qianxiang').Tcorr1
         } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
@@ -745,6 +745,8 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Tsrengyuan') // 欽天近地點入轉
             } else if (['Zhidao1', 'Zhidao2'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Qianyuan')
+            } else if (['Qianxing'].includes(CalName)) {
+                TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Chongtian')
             } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Guantian')
             } else if (CalName === 'Daming2') {
