@@ -80,7 +80,7 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper) => {
         const c = OriginAccum % Anoma
         if (c > lower && c < upper) {
             if (Anoma > x - Range && Anoma < x + Range) {
-                result += Int + '+' + (FracInt + i * 0.0001).toFixed(4) + '/' + Denom + ' ≒ ' + (Int + (FracInt + i * 0.0001).toFixed(4) / Denom).toFixed(7) + ' 入日' + (OriginAccum % (Int + (FracInt + i * 0.0001) / Denom)).toFixed(4) + `\n`
+                result += Int + '+' + (FracInt + i * 0.0001).toFixed(4) + '/' + Denom + ' ≒ ' + (Int + (FracInt + i * 0.0001).toFixed(4) / Denom).toFixed(8) + ' 入日' + (OriginAccum % (Int + (FracInt + i * 0.0001) / Denom)).toFixed(4) + `\n`
             }
         }
     }

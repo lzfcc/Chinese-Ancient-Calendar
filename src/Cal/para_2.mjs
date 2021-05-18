@@ -17,7 +17,7 @@ export default {
         AcrTermList: [0, 14.68005, 29.437022, 44.270918, 59.104814, 73.861787, 88.541836, 104.298809, 119.978859, 135.581986, 151.185112, 166.865162, 182.622135, 198.379107, 214.059157, 229.662284, 245.26541, 260.94546, 276.702433, 291.382482, 306.139455, 320.973351, 335.807247, 350.564219, 365.244269], // 皇極日躔
         OriginAd: 576 - 25952, // 武平四年癸巳// 嚴敦傑573 - 876569
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2, // 建寅
         // OriginCorr: -0.379, // 不太對，所以加這個修正一下。
         MansionRaw: [8, 11], // 「日月五星并從斗十一起」
@@ -51,7 +51,7 @@ export default {
         OriginAd: 573 - 435089,
         // JdOrigin: 1930334.1174 - 435089 * (365 + 1966 / 8047),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2, // 建寅
         MansionRaw: [11, 8], // 距大衍曆議補
         MansionFractPosition: 11,
@@ -189,7 +189,7 @@ export default {
         CloseOriginAd: 705, // 神龍元年乙巳
         // JdOrigin: 1978545.8280 - 414360 * 365.2448,
         OriginYearSc: 42, // 上元乙巳。從上元可以推斷是戊寅曆系統的
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2, // 建寅
     },
     Dayan: { // 《中國古代曆法》第427頁。大衍宣明崇玄三個遠地點
@@ -451,7 +451,7 @@ export default {
         CloseOriginAd: 962, // 建隆三年壬戌
         // JdOrigin: 2072413.5084 - 4825558 * (365 + 2445 / 10002),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4], // 命起赤道虛宿四度分
         MansionFractPosition: 11, // 虛分
@@ -481,7 +481,7 @@ export default {
         CloseOriginAd: 981, // 太平興國六年辛巳
         // JdOrigin: 2079353.1327 - 30543977 * (365 + 72 / 294),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         WeekCorr: -2, // 5
         MansionCorr: -16,
         ZhengNum: 2,
@@ -499,6 +499,33 @@ export default {
         DialList: [12.71, 12.31, 11.21, 9.73, 8.21, 6.73, 5.43, 4.31, 3.3, 2.5, 1.93, 1.6, 1.47, 1.6, 1.95, 2.53, 3.3, 4.31, 5.43, 6.73, 8.21, 9.73, 11.21, 12.31, 12.71, 12.31],
         SunLatiList: [115.2, 114.58, 112.32, 108.67, 103.81, 97.93, 91.31, 84.67, 78.79, 73.92, 70.27, 68.02, 67.39, 68.02, 70.27, 73.92, 78.79, 84.67, 91.31, 97.93, 103.81, 108.67, 112.32, 114.58, 115.2, 114.58], // 應天
     },
+    Zhidao1: { // 曲安京《曆法》頁115
+        Solar: 365 + 2591 / 10590,
+        Sidereal: 365 + 2715.1604 / 10590,
+        Lunar: 29 + 5619 / 10590,
+        Denom: 10590,
+        Anoma: 27 + 5873.4551 / 10590,
+        Node: 27 + 2247.0008 / 10590,
+        MansionRaw: [11, 4],
+        MansionFractPosition: 11,
+        OriginMonNum: 0,
+        ZhengNum: 2,
+        OriginAd: 995 - 16515091,
+    },
+    Zhidao2: {
+        Solar: 365 + 416 / 1700,
+        Sidereal: 365 + 435.9823 / 1700,
+        Lunar: 29 + 902 / 1700,
+        Denom: 1700,
+        Anoma: 27 + 942.9302 / 1700,
+        Node: 27 + 360.7942 / 1700,
+        OriginDaySc: 30, // 甲午
+        MansionRaw: [11, 4],
+        MansionFractPosition: 11,
+        OriginMonNum: 0,
+        ZhengNum: 2,
+        OriginAd: 995 - 3981151,
+    },
     Yitian: { // 宋志
         Solar: 365 + 2470 / 10100, // 365.2445。歲餘52970，餘2470
         SolarNumer: 368897, // 歲週
@@ -514,7 +541,7 @@ export default {
         CloseOriginAd: 1001, // 咸平四年辛丑
         // JdOrigin: 2086658.0337 - 716497 * (365 + 2470 / 10100), // 
         OriginYearSc: 1, // 上元土星甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 2], // 命起虛宿二度
         MansionFractPosition: 11,
@@ -575,7 +602,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         WeekCorr: 3,
         MansionCorr: -4,
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 6], // 命起赤道虛宿六度去之
         MansionFractPosition: 11,
@@ -593,7 +620,7 @@ export default {
         CloseOriginAd: 1074, // 熙寧七年甲寅
         // WeekCorr: 0, // 奉元都不用改星期！
         // JdOrigin: 2113320.3781 - 83185070 * (365 + 5773 / 23700),
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4], // 酌情
         MansionFractPosition: 11,
@@ -615,7 +642,7 @@ export default {
         MansionCorr: -8,
         // JdOrigin: 2119894.6929 - 5944808 * (365 + 293 / 1203),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4], //命起赤道虛宿四度外去之
         MansionFractPosition: 11,
@@ -687,7 +714,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         WeekCorr: 3,
         MansionCorr: -4,
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 7], // 法同前曆，此不載
         MansionFractPosition: 11,
@@ -743,7 +770,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         WeekCorr: 2,
         MansionCorr: -12,
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 7],
         MansionFractPosition: 11,
@@ -767,7 +794,7 @@ export default {
         CloseOriginAd: 1191, // 紹熙二年辛亥
         // JdOrigin: 2156053.8293 - 25494767 * (365 + 9432 / 38700),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         WeekCorr: 2,
         MansionCorr: -12,
         ZhengNum: 2,
@@ -799,7 +826,7 @@ export default {
         AnomaCorr: -188800 / 12000, // 轉差
         NodeCorr: 80298 / 12000, // 交差
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         WeekCorr: -2, // 5
         MansionCorr: -16,
         ZhengNum: 2,
@@ -891,7 +918,7 @@ export default {
         CloseOriginAd: 1271, // 咸淳七年辛未
         // JdOrigin: 2185273.1478 - 71758147 * (365 + 1801 / 7420),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         WeekCorr: -2, // 5
         MansionCorr: -16,
         ZhengNum: 2,
@@ -961,7 +988,7 @@ export default {
         CloseOriginAd: 1180, // 大定二十年庚子
         // JdOrigin: 2152036.1489 - 88639656 * (365 + 1274 / 5230),
         OriginYearSc: 1, // 上元甲子
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 7], // 命起赤道虛宿七度外去之
         MansionFractPosition: 11,
@@ -1009,7 +1036,7 @@ export default {
         // JdOrigin: 2166645.9237 - 20275270 * (365 + 1274 / 5230),
         OriginYearSc: 7, // 上元庚午
         OriginDaySc: 58, // 只是經朔少了1700。推上元庚午歲天正十一月壬戌朔
-        OriginMonNum: 0, // 
+        OriginMonNum: 0,
         WeekCorr: 2,
         MansionCorr: 2,
         ZhengNum: 2,

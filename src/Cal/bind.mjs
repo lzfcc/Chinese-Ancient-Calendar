@@ -46,7 +46,7 @@ export const Bind = CalName => {
             isNewmPlus = 1
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
             Type = 7 // 唐五代
-        } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
+        } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Zhidao1', 'Zhidao2', 'Yitian', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
             Type = 8 // 北宋
         } else if (['Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Bentian'].includes(CalName)) {
             Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
