@@ -295,7 +295,7 @@ export const AutoCal = year => {
     }
     return Cals
 }
-// console.log(AutoCal(1002))
+// console.log(AutoCal(1127))
 
 export const OverlapCalendars = (start, end) => {
     const result = {}
@@ -312,4 +312,4 @@ export const OverlapCalendars = (start, end) => {
     }
     return result
 }
-console.log(OverlapCalendars(900, 1000))
+// console.log(OverlapCalendars(900, 1000))

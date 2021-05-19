@@ -223,8 +223,8 @@ const PrintDay = result => {
  */
 export const outputFile = (mode, start, end, auto, list) => {
     const printData = []
-    start = parseInt(start)
-    end = parseInt(end)
+    start = ~~start
+    end = ~~end
     if (mode === 1) { // 朔望氣
         list.forEach((CalName) => {
             let Year = start
@@ -281,17 +281,14 @@ export const outputFile = (mode, start, end, auto, list) => {
  */
 export const outputData = (start, end, isAuto, list) => {
     const outputData = []
-    start = parseInt(start)
-    end = parseInt(end)
+    start = ~~start
+    end = ~~end
     list.forEach(CalName => {
         let Year = start
         CalNewm(CalName, start, end).forEach((result, index) => {
             Year = start + index
-            if (!outputData[index]) {
-                outputData[index] = []
-            }
-            // 给每个item一个唯一id在前端正确缓存高度
-            result.id = CalName + Year
+            outputData[index] = outputData[index] || []       
+            result.id = CalName + Year // 给每个item一个唯一id在前端正确缓存高度
             outputData[index].push(result)
         })
     })
@@ -300,7 +297,7 @@ export const outputData = (start, end, isAuto, list) => {
         Object.entries(overlaps).forEach(([CalName, ranges]) => {
             for (const range of ranges) {
                 for (let Year = range[0]; Year <= range[1]; Year++) {
-                    const index = Year - start                    
+                    const index = Year - start
                     outputData[index] = outputData[index] || []
                     result.id = CalName + Year
                     outputData[index].push(CalNewm(CalName, Year))
@@ -310,7 +307,6 @@ export const outputData = (start, end, isAuto, list) => {
     }
     return outputData
 }
-
 
 /**
  * 将 CalDay 输出转换成以月日维度的输出。寫了整整一個下午
