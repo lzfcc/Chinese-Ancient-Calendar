@@ -122,7 +122,7 @@ export default (CalName, year) => {
         LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
         LeapSurAvgPrev = (OriginYear - 1) * ZhangMon % ZhangRange
         LeapSurAvgNext = (OriginYear + 1) * ZhangMon % ZhangRange
-    } else if (Type === 6 || Type === 7) {
+    } else if (Type < 8) {
         LeapSurAvgThis = OriginYear * SolarNumer % LunarNumer // OriginYear * SolarNumer爲期總
         LeapSurAvgPrev = (OriginYear - 1) * SolarNumer % LunarNumer
         LeapSurAvgNext = (OriginYear + 1) * SolarNumer % LunarNumer
@@ -148,9 +148,9 @@ export default (CalName, year) => {
     let FirstAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
-    } else if (Type === 6 || Type === 7) {
+    } else if (Type < 8) {
         FirstAccum = OriginAccum - LeapSurAvgThis / Denom - LunarChangeAccum
-    } else if (Type >= 8) {
+    } else {
         FirstAccum = OriginAccum - LeapSurAvgThis - LunarChangeAccum
     }
     let FirstAnomaAccum = 0
@@ -327,8 +327,8 @@ export default (CalName, year) => {
                 NodeAccumNight[i] = ~~NodeAccum[i]
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以
-            Decimal1[i] = Decimal1[i].toFixed(4).slice(2, 6)
-        }        
+            Decimal1[i] = Decimal1[i] ? Decimal1[i].toFixed(4).slice(2, 6) : 0
+        }
         return {
             AvgSc, Tcorr, AvgDecimal, Int, Raw, Sc, AcrInt, AcrRaw,
             Decimal, Decimal1, Decimal2, Decimal3,
@@ -420,7 +420,7 @@ export default (CalName, year) => {
         LeapLimit, OriginYear, JiYear, JiScOrder, OriginAccum, AccumPrint,
         NewmAvgSc, NewmAvgDecimal,
         NewmSc, NewmInt, NewmRaw, NewmAcrRaw, NewmAcrInt, NewmDecimal1, NewmDecimal2, NewmDecimal3,
-        SyzygySc, SyzygyDecimal,
+        SyzygySc,
         TermAvgRaw, TermAcrRaw,
         LeapSurAvgThis, LeapSurAcrThis, LeapNumTerm, isAdvance, isLeapAdvan, isLeapPost, isLeapThis, isLeapPrev, isLeapNext,
         NewmStart, NewmEnd, TermStart, TermEnd,

@@ -277,7 +277,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         }
         const NewmEquaPrint = NewmSlice(NewmEqua)
         const SyzygyScPrint = NewmSlice(ThisYear.SyzygySc)
-        const SyzygyDecimalPrint = NewmSlice(ThisYear.SyzygyDecimal)
+        let NewmDecimalPrint = NewmSlice(ThisYear.NewmDecimal)
+        let SyzygyDecimalPrint = NewmSlice(ThisYear.SyzygyDecimal)
         let TermNamePrint = []
         let TermScPrint = []
         let TermDecimalPrint = []
@@ -388,8 +389,11 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         }
                     }
                 }
-                SyzygyDecimalPrint[i] = SyzygyDecimalPrint[i].toFixed(4).slice(2, 6)
             }
+        }
+        for (let i = 0; i < NewmDecimalPrint.length; i++) {
+            NewmDecimalPrint[i] = NewmDecimalPrint[i].toFixed(4).slice(2, 6)
+            SyzygyDecimalPrint[i] = SyzygyDecimalPrint[i].toFixed(4).slice(2, 6)
         }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year

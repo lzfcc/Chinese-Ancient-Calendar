@@ -739,13 +739,13 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         } else {
             if (CalName === 'Shenlong') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'LindeA')
-            } else if (CalName === 'Zhide') {
+            } else if (['Zhide', 'TaiyiKaiyuan'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Dayan')
             } else if (CalName === 'Qintian') {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Tsrengyuan') // 欽天近地點入轉
             } else if (['Zhidao1', 'Zhidao2'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Qianyuan')
-            } else if (['Qianxing'].includes(CalName)) {
+            } else if (['Qianxing', 'TaiyiJingyou'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Chongtian')
             } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, WinsolsDif, 'Guantian')

@@ -384,6 +384,8 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Longi2Lati = Longi2LatiTable1(Longi1, CalName)
     } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, 'Huangji')
+    } else if (CalName === 'Shenlong') {
+        Longi2Lati = Longi2LatiTable2(Longi1, 'LindeA')
     } else if (Type === 6) {
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {

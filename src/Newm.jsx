@@ -35,6 +35,7 @@ export default class Newm extends React.Component {
       calendars: [],
       YearStart: '',
       YearEnd: '',
+      isAuto: 0,
       // YearMode: '0',
       output: '',
       // loading: false,
@@ -188,13 +189,16 @@ export default class Newm extends React.Component {
     if (YearStart > YearEnd) {
       [YearStart, YearEnd] = [YearEnd, YearStart]
     }
+    const isAuto = this.isAuto
+    console.log('isAuto=' + isAuto)
     const callWorker = eventName => {
       this.setState({ loading: true });
       this.worker.postMessage({
         eventName,
         ...this.state,
         YearStart,
-        YearEnd
+        YearEnd,
+        isAuto
       })
     }
     if (this.downloadRef && this.downloadRef.checked) {
@@ -220,10 +224,22 @@ export default class Newm extends React.Component {
   renderDownload() {
     return (
       <span className='save-file'>
-        <input type='checkbox' name='download-file' ref={(ref) => {
+        <input type='checkbox' name='download-file' ref={ref => {
           this.downloadRef = ref
         }} />
         <label>保存爲.md文件</label>
+      </span>
+    )
+  }
+
+  renderAutoCal() {
+    return (
+      <span className='save-file'>
+        <input type='checkbox' name='isAuto' ref={ref => {
+          this.isAuto = ref
+        }}
+        />
+        <label>自動長曆</label>
       </span>
     )
   }
@@ -301,6 +317,7 @@ export default class Newm extends React.Component {
         {this.renderCalendar()}
         {this.renderInput()}
         <button onClick={this.handleRetrieve} className='button1'>天霝〻地霝〻</button>
+        {/* {this.renderAutoCal()} */}
         {this.renderDownload()}
         {this.renderTableList()}
         <hr />

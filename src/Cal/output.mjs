@@ -3,30 +3,15 @@ import {
     CalDay
 } from './day.mjs'
 import {
-    OverlapCalendars
+    OverlapCalendars,
+    AutoCal
 } from './bind.mjs'
 
 const PrintNewm = result => {
-    const {
-        YearInfo,
-        MonthPrint,
-        NewmAvgScPrint,
-        NewmScPrint,
-        NewmAvgDecimalPrint,
-        NewmDecimal3Print,
-        NewmDecimal2Print,
-        NewmDecimal1Print,
-        // NewmMmddPrint,
-        NewmEquaPrint,
-        SyzygyScPrint,
-        SyzygyDecimalPrint,
-        TermNamePrint,
-        TermAcrScPrint,
-        TermAcrDecimalPrint,
-        TermScPrint,
-        TermDecimalPrint,
-        TermEquaPrint,
-        TermMidstarPrint,
+    const { YearInfo, MonthPrint,
+        NewmAvgScPrint, NewmScPrint, NewmAvgDecimalPrint, NewmDecimal3Print, NewmDecimal2Print, NewmDecimal1Print, NewmEquaPrint,
+        SyzygyScPrint, SyzygyDecimalPrint, TermNamePrint,
+        TermAcrScPrint, TermAcrDecimalPrint, TermScPrint, TermDecimalPrint, TermEquaPrint, TermMidstarPrint,
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
@@ -61,31 +46,8 @@ const PrintNewm = result => {
 }
 
 const PrintDay = result => {
-    const {
-        Era,
-        YearGod,
-        YearColor,
-        MonInfo,
-        MonColor,
-        DayAccum,
-        MonName,
-        Sc,
-        Jd,
-        Nayin,
-        Week,
-        Equa,
-        Eclp,
-        Lati,
-        Sunrise,
-        Midstar,
-        Dial,
-        MoonEclp,
-        MoonEclpLati,
-        HouName,
-        FiveName,
-        HexagramName,
-        ManGod,
-        Luck,
+    const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Eclp,
+        Lati, Sunrise, Midstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
     } = result
     let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
     Print += '\n**干支**\n'
@@ -218,49 +180,53 @@ const PrintDay = result => {
  * 格式化字符串，用于输入文件
  * @param {*} start
  * @param {*} end
- * @param {*} auto
+ * @param {*} isAuto
  * @param {*} list
  */
-export const outputFile = (mode, start, end, auto, list) => {
+export const outputFile = (mode, start, end, isAuto, list) => {
     const printData = []
     start = ~~start
     end = ~~end
     if (mode === 1) { // 朔望氣
-        list.forEach((CalName) => {
-            let Year = start
+        list.forEach(CalName => {
+            // let Year = start
             CalNewm(CalName, start, end).forEach((result, index) => {
-                Year = start + index
+                // Year = start + index
                 const Era = result.Era
-                if (!printData[index]) {
-                    printData[index] = [Era]
-                }
+                printData[index] = printData[index] || [Era]
                 printData[index].push(PrintNewm(result))
             })
         })
-        if (auto) {
-            const overlaps = OverlapCalendars(start, end)
-            Object.entries(overlaps).forEach(([CalName, ranges]) => {
-                for (const range of ranges) {
-                    for (let year = range[0]; year <= range[1]; year++) {
-                        const index = year - start
-                        if (printData[index][CalName]) {
-                            continue
-                        }
-                        const result = CalNewm(CalName, year)
-                        const Era = result.Era
-                        if (!printData[index]) {
-                            printData[index] = [Era]
-                        }
-                        printData[index].push(PrintNewm(result))
-                    }
-                }
-            })
+        if (isAuto) {
+            // const overlaps = OverlapCalendars(start, end)
+            // Object.entries(overlaps).forEach(([CalName, ranges]) => {
+            //     for (const range of ranges) {
+            //         for (let year = range[0]; year <= range[1]; year++) {
+            //             const index = year - start
+            //             if (printData[index][CalName]) {
+            //                 continue
+            //             }
+            //             const result = CalNewm(CalName, year)
+            //             const Era = result.Era
+            //             printData[index] = printData[index] || [Era]
+            //             printData[index].push(PrintNewm(result))
+            //         }
+            //     }
+            // })
+            for (let Year = start; Year <= end; Year++) {
+                const AutoCals = AutoCal(Year)
+                AutoCals.forEach(CalName => {
+                    const index = Year - start
+                    printData[index] = printData[index] || []
+                    printData[index].push(CalNewm(CalName, Year))
+                })
+            }
         }
-    } else if (mode === 2) {
-        list.forEach((CalName) => {
-            let Year = start
+    } else {
+        list.forEach(CalName => {
+            // let Year = start
             CalDay(CalName, start, end).forEach((result, index) => {
-                Year = start + index
+                // Year = start + index
                 // const Era = result.Era
                 if (!printData[index]) {
                     printData[index] = []
@@ -287,23 +253,29 @@ export const outputData = (start, end, isAuto, list) => {
         let Year = start
         CalNewm(CalName, start, end).forEach((result, index) => {
             Year = start + index
-            outputData[index] = outputData[index] || []       
+            outputData[index] = outputData[index] || []
             result.id = CalName + Year // 给每个item一个唯一id在前端正确缓存高度
             outputData[index].push(result)
         })
     })
     if (isAuto) {
-        const overlaps = OverlapCalendars(start, end)
-        Object.entries(overlaps).forEach(([CalName, ranges]) => {
-            for (const range of ranges) {
-                for (let Year = range[0]; Year <= range[1]; Year++) {
-                    const index = Year - start
-                    outputData[index] = outputData[index] || []
-                    result.id = CalName + Year
-                    outputData[index].push(CalNewm(CalName, Year))
-                }
-            }
-        })
+        // const overlaps = OverlapCalendars(start, end)
+        // Object.entries(overlaps).forEach(([CalName, ranges]) => {
+        //     for (const range of ranges) {
+        //         for (let Year = range[0]; Year <= range[1]; Year++) {
+        //             const index = Year - start
+        //             outputData[index] = outputData[index] || []
+        //             result.id = CalName + Year
+        //             outputData[index].push(CalNewm(CalName, Year))
+        //         }
+        //     }
+        // })
+        for (let Year = start; Year <= end; Year++) {
+            const AutoCals = AutoCal(Year)
+            AutoCals.forEach(CalName => {
+                outputData[index].push(CalNewm(CalName, Year))
+            })
+        }
     }
     return outputData
 }
