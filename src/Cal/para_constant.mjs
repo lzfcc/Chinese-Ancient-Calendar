@@ -49,9 +49,11 @@ export const CalNameList = { // 按照時間順序排列
     ZhuanxuF: '顓頊(退餘25)',
     Zhou: '周',
     Huangdi: '黃帝',
+    TaiyiJiayin: '甲寅太乙',
     Shiji: '曆術甲子篇(擬)',
     Taichu: '太初(三統)', // 太初中氣在朔若二日，則前月閏(斯琴畢力格等《太初曆特殊置閏問題》，《內師大學報》2007年第6期，頁748—753)但這條規則貫徹得並不徹底
     Qianzaodu: '乾鑿度',
+    Yuanmingbao: '元命苞',
     Easthan: '後漢四分',
     Qianxiang: '乾象', // 劉洪
     // Huangchu: '黃初(擬)', // 魏 韓詡
@@ -81,6 +83,7 @@ export const CalNameList = { // 按照時間順序排列
     LindeB: '麟德(進朔)', // 李淳風。麟德在708-716、721-728開元九-十六年用進朔法(黃一農《中國史曆表朔閏訂正舉隅———以唐〈麟德曆〉行用時期爲例》，頁291—296)
     // Jiuzhi: '九執(擬)', // 顯慶年間印度曆法
     Dayan: '大衍', // 一行
+    TaiyiKaiyuan: '開元太乙',
     // Zhide: '至德(擬)', //
     Wuji: '五紀', // 寶應五紀曆。肅宗最後一個年號。郭獻之，綜合大衍、麟德
     Tsrengyuan: '正元', // 德宗時期徐承嗣、楊景風綜合麟德、大衍
@@ -95,6 +98,7 @@ export const CalNameList = { // 按照時間順序排列
     Yitian: '儀天',
     Qianxing: '乾興(擬)',
     Chongtian: '崇天', // 遠地點。宋行古。
+    TaiyiJingyou: '景祐太乙',
     Mingtian: '明天', // 周琮。歷史背景見董煜宇《从《奉元历》改革看北宋天文管理的绩效》，《自然科學史研究》2008年2期
     Fengyuan: '奉元(擬)',
     Guantian: '觀天',

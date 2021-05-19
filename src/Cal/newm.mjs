@@ -246,38 +246,40 @@ export default (CalName, year) => {
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + OriginDaySc) % 60) + 60) % 60]
             AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
             WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
-            AnomaAccum[i] = (FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
-            AnomaAccumNight[i] = ~~AnomaAccum[i]
-            const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
             let Tcorr1 = 0
-            if (Type <= 4) {
-                Tcorr[i] = TcorrBindFunc.Tcorr1
-            } else if (Type < 11) {
-                Tcorr[i] = TcorrBindFunc.Tcorr2
-                Tcorr1 = TcorrBindFunc.Tcorr1
-            } else if (Type === 11) {
-                Tcorr[i] = TcorrBindFunc.Tcorr2
-            }
-            AcrRaw[i] = AvgRaw[i] + Tcorr[i]
-            if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) { // 定朔入轉同經朔，若定朔大餘有變化，則加減一整日。變的應該是夜半，而非加時
-                AnomaAccumNight[i]++
-            } else if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) {
-                AnomaAccumNight[i]--
-            }
-            AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
-            AcrInt[i] = Math.floor(AcrRaw[i])
-            if (Type <= 4) {
-                Decimal[i] = AcrRaw[i] - AcrInt[i]
-                Decimal1[i] = Decimal[i].toFixed(4).slice(2, 6)
-            } else if (Type < 11) {
-                Decimal[i] = AcrRaw[i] - AcrInt[i]
-                Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
-                if (Tcorr1) {
-                    Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
+            if (Anoma) {
+                AnomaAccum[i] = (FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
+                AnomaAccumNight[i] = ~~AnomaAccum[i]
+                const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
+                if (Type <= 4) {
+                    Tcorr[i] = TcorrBindFunc.Tcorr1
+                } else if (Type < 11) {
+                    Tcorr[i] = TcorrBindFunc.Tcorr2
+                    Tcorr1 = TcorrBindFunc.Tcorr1
+                } else if (Type === 11) {
+                    Tcorr[i] = TcorrBindFunc.Tcorr2
                 }
-            } else if (Type === 11) {
-                Decimal[i] = AcrRaw[i] - AcrInt[i]
-                Decimal3[i] = Decimal[i].toFixed(4).slice(2, 6)
+                AcrRaw[i] = AvgRaw[i] + Tcorr[i]
+                if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) { // 定朔入轉同經朔，若定朔大餘有變化，則加減一整日。變的應該是夜半，而非加時
+                    AnomaAccumNight[i]++
+                } else if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) {
+                    AnomaAccumNight[i]--
+                }
+                AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
+                AcrInt[i] = Math.floor(AcrRaw[i])
+                if (Type <= 4) {
+                    Decimal[i] = AcrRaw[i] - AcrInt[i]
+                    Decimal1[i] = Decimal[i].toFixed(4).slice(2, 6)
+                } else if (Type < 11) {
+                    Decimal[i] = AcrRaw[i] - AcrInt[i]
+                    Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
+                    if (Tcorr1) {
+                        Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
+                    }
+                } else if (Type === 11) {
+                    Decimal[i] = AcrRaw[i] - AcrInt[i]
+                    Decimal3[i] = Decimal[i].toFixed(4).slice(2, 6)
+                }
             }
             let NewmPlus = 0
             let NewmPlusPrint = ''

@@ -33,7 +33,7 @@ export default function CalQuar(CalName, year) {
         JiRange = YuanRange
         BuRange = TongRange
     }
-    const BuSkip = CalName === 'Qianzaodu' ? 365.25 * BuRange % 60 : Solar * BuRange % 60
+    const BuSkip = ['Qianzaodu', 'Yuanmingbao'].includes(CalName) ? 365.25 * BuRange % 60 : Solar * BuRange % 60
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const ZhengWinsolsDif = ZhengNum - OriginMonNum // 年首和正月的差
     let OriginYear = year - OriginAd // 上元積年（算上）

@@ -4,7 +4,7 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, auto,
+const printData = outputFile(1, 1100, 1100, 0, [ // mode, YearStart, YearEnd, auto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -24,9 +24,11 @@ const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, au
     // 'ZhuanxuD',
     // 'ZhuanxuE',
     // 'ZhuanxuF',
+    // 'TaiyiJiayin',
     // 'Shiji',
     // 'Taichu',
     // 'Qianzaodu',
+    // 'Yuanmingbao',
     // 'Easthan', // 上四分系
     // 'Qianxiang',
     // 'Huangchu',
@@ -56,7 +58,8 @@ const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, au
     // 'Huangji',
     // 'LindeA', 
     // 'LindeA',// 上隋、初唐系
-    // 'Dayan', // 大衍入轉日感覺少了0.5
+    // 'Dayan', 
+    // 'TaiyiKaiyuan',
     // 'Wuji',
     // 'Tsrengyuan',
     // 'Xuanming',
@@ -68,7 +71,8 @@ const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, au
     // 'Zhidao2',
     // 'Yitian', 
     // 'Qianxing',
-    // 'Chongtian',
+    'Chongtian',
+    'TaiyiJingyou',
     // 'Mingtian',
     // 'Fengyuan',
     // 'Guantian',
@@ -82,7 +86,7 @@ const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, au
     // 'Kaixi',
     // 'Chunyou',
     // 'Huitian',
-    'Chengtian',
+    // 'Chengtian',
     // 'Bentian',
     // 'Daming1' // 賈俊大明
     // 'Daming2', 
@@ -92,7 +96,9 @@ const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, au
     // 'Shoushi',
     // 'Datong', 
     // 'West', // 上授時系
-    // 'Huihui', 
+    // 'Huihui',     
+    // 'Taiyi',
+    // 'Taiyi',
 ]) // 注意，-1000年爲公元前1001年，因爲沒有公元0年
 
 const FilePath = 'output.md'

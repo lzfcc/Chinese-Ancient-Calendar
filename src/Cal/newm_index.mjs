@@ -15,7 +15,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
     const { Type, AutoNewm, AutoPara, isNewmPlus
     } = Bind(CalName)
     const isExcl = Type >= 4 ? 1 : 0
-    const { OriginAd, ZhangRange, ZhengNum, Denom, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
+    const { OriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
     } = AutoPara[CalName]
     let { OriginDaySc
     } = AutoPara[CalName]
@@ -320,7 +320,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let NewmNodeAccumNightPrint = []
         let NewmAnomaAccumPrint = []
         let NewmAnomaAccumNightPrint = []
-        if (Type > 1) {
+        if (Type > 1 && Node) {
             NewmNodeAccumPrint = NewmSlice(ThisYear.NewmNodeAccum)
             NewmNodeAccumNightPrint = NewmSlice(ThisYear.NewmNodeAccumNight)
             NewmAnomaAccumPrint = NewmSlice(ThisYear.NewmAnomaAccum)

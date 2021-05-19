@@ -16,14 +16,14 @@ export const Bind = CalName => {
     let isNewmPlus = 0 // 是否進朔
     let AutoNewm = N2
     let AutoPara = P1
-    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
+    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'TaiyiJiayin', 'Shiji', 'Taichu', 'Qianzaodu', 'Yuanmingbao', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB', 'TaiyiKaiyuan'].includes(CalName)) {
         isAcr = 0
-        if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'Shiji', 'Taichu', 'Qianzaodu', 'Easthan'].includes(CalName)) {
+        if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'TaiyiJiayin', 'Shiji', 'Taichu', 'Qianzaodu', 'Yuanmingbao', 'Easthan'].includes(CalName)) {
             AutoNewm = N1
             Type = 1 // 四分
         } else if (['Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
             Type = 2 // 魏晉
-        } else if (['Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang'].includes(CalName)) {
+        } else if (['Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'TaiyiKaiyuan'].includes(CalName)) {
             Type = 3 // 北朝
         } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
             Type = 4 // 南朝
@@ -46,7 +46,7 @@ export const Bind = CalName => {
             isNewmPlus = 1
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian'].includes(CalName)) {
             Type = 7 // 唐五代
-        } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Zhidao1', 'Zhidao2', 'Yitian', 'Qianxing', 'Chongtian', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
+        } else if (['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Zhidao1', 'Zhidao2', 'Yitian', 'Qianxing', 'Chongtian', 'TaiyiJingyou', 'Mingtian', 'Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
             Type = 8 // 北宋
         } else if (['Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Bentian'].includes(CalName)) {
             Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
