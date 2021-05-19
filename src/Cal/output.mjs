@@ -276,10 +276,10 @@ export const outputFile = (mode, start, end, auto, list) => {
  * 格式化对象，用于前端解析
  * @param {*} start
  * @param {*} end
- * @param {*} auto
+ * @param {*} isAuto
  * @param {*} list
  */
-export const outputData = (start, end, auto, list) => {
+export const outputData = (start, end, isAuto, list) => {
     const outputData = []
     start = parseInt(start)
     end = parseInt(end)
@@ -295,18 +295,13 @@ export const outputData = (start, end, auto, list) => {
             outputData[index].push(result)
         })
     })
-    if (auto) {
+    if (isAuto) {
         const overlaps = OverlapCalendars(start, end)
         Object.entries(overlaps).forEach(([CalName, ranges]) => {
             for (const range of ranges) {
                 for (let Year = range[0]; Year <= range[1]; Year++) {
-                    const index = Year - start
-                    if (outputData[index][CalName]) {
-                        continue
-                    }
-                    if (!outputData[index]) {
-                        outputData[index] = []
-                    }
+                    const index = Year - start                    
+                    outputData[index] = outputData[index] || []
                     result.id = CalName + Year
                     outputData[index].push(CalNewm(CalName, Year))
                 }

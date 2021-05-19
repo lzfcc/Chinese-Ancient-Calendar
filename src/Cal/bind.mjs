@@ -192,8 +192,7 @@ const CalRange = {
         [807, 821] // 觀象曆
     ],
     Xuanming: [
-        [822, 892],
-        [994, 1136]
+        [822, 892]
     ],
     Chongxuan: [
         [893, 955]
@@ -296,6 +295,7 @@ export const AutoCal = year => {
     }
     return Cals
 }
+// console.log(AutoCal(1002))
 
 export const OverlapCalendars = (start, end) => {
     const result = {}
@@ -312,3 +312,4 @@ export const OverlapCalendars = (start, end) => {
     }
     return result
 }
+console.log(OverlapCalendars(900, 1000))
