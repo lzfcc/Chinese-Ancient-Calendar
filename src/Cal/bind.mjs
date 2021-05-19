@@ -252,7 +252,7 @@ const CalRange = {
         [1191, 1198]
     ],
     Tongtian: [
-        [1199, 1250] // 開禧期間與統天並推
+        [1199, 1251] // 開禧期間與統天並推
     ],
     Kaixi: [
         [1208, 1251]
@@ -294,7 +294,7 @@ export const AutoCal = year => {
 }
 // console.log(AutoCal(1127))
 
-export const OverlapCalendars = (start, end) => {
+const OverlapCalendars = (start, end) => {
     const result = {}
     for (const [Cal, ranges] of Object.entries(CalRange)) {
         for (const range of ranges) {

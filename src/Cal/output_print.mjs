@@ -4,7 +4,7 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 936, 1136, 1, [ // mode, YearStart, YearEnd, isAuto,
+const printData = outputFile(1, 936, 1136, true, [ // mode, YearStart, YearEnd, isAuto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -21,7 +21,7 @@ const printData = outputFile(1, 936, 1136, 1, [ // mode, YearStart, YearEnd, isA
     // 'ZhuanxuA',
     // 'ZhuanxuB',
     // 'ZhuanxuC',
-    'ZhuanxuD',
+    // 'ZhuanxuD',
     // 'ZhuanxuE',
     // 'ZhuanxuF',
     // 'TaiyiJiayin',

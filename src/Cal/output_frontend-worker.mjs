@@ -1,5 +1,5 @@
 import {
-    outputData, outputFile, outputDayData
+    outputNewmWeb, outputFile, outputDayWeb
 } from './output.mjs'
 
 export default addEventListener('message', event => {
@@ -11,11 +11,11 @@ export default addEventListener('message', event => {
         postMessage(new Blob([data]))
     }
     if (eventName === 'display') {
-        data = outputData(YearStart, YearEnd, isAuto, calendars)
+        const data = outputNewmWeb(YearStart, YearEnd, isAuto, calendars)
         postMessage(data)
     }
     if (eventName === 'Day') {
-        data = outputDayData(YearStart, calendars[0])
+        data = outputDayWeb(YearStart, calendars[0])
         postMessage(data)
     }
 })

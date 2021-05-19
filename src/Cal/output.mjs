@@ -3,7 +3,6 @@ import {
     CalDay
 } from './day.mjs'
 import {
-    OverlapCalendars,
     AutoCal
 } from './bind.mjs'
 
@@ -228,7 +227,7 @@ const PrintDay = result => {
 //     return printData
 // }
 export const outputFile = (mode, start, end, isAuto, list) => {
-    let printData = []
+    const printData = []
     start = ~~start
     end = ~~end
     if (mode === 1) { // 朔望氣
@@ -239,7 +238,7 @@ export const outputFile = (mode, start, end, isAuto, list) => {
             let index = Year - start
             for (let i = 0; i < list.length; i++) {
                 const result = CalNewm(list[i], Year)
-                const Era = result[0].Era                
+                const Era = result[0].Era
                 printData[index] = printData[index] || [Era]
                 printData[index].push(PrintNewm(result[0]))
                 index++
@@ -266,41 +265,54 @@ export const outputFile = (mode, start, end, isAuto, list) => {
  * @param {*} isAuto
  * @param {*} list
  */
-export const outputData = (start, end, isAuto, list) => {
-    const outputData = []
+// export const outputNewmWeb = (start, end, isAuto, list) => {
+//     const outputNewmWeb = []
+//     start = ~~start
+//     end = ~~end
+//     list.forEach(CalName => {
+//         let Year = start
+//         CalNewm(CalName, start, end).forEach((result, index) => {
+//             Year = start + index
+//             outputNewmWeb[index] = outputNewmWeb[index] || []
+//             result.id = CalName + Year // 给每个item一个唯一id在前端正确缓存高度
+//             outputNewmWeb[index].push(result)
+//         })
+//     })
+//     if (isAuto) {
+//         for (let Year = start; Year <= end; Year++) {
+//             const AutoCals = AutoCal(Year)
+//             AutoCals.forEach(CalName => {
+//                 outputNewmWeb[index].push(CalNewm(CalName, Year))
+//             })
+//         }
+//     }
+//     return outputNewmWeb
+// }
+export const outputNewmWeb = (start, end, isAuto, list) => {
+    const data = []
     start = ~~start
     end = ~~end
-    list.forEach(CalName => {
-        let Year = start
-        CalNewm(CalName, start, end).forEach((result, index) => {
-            Year = start + index
-            outputData[index] = outputData[index] || []
-            result.id = CalName + Year // 给每个item一个唯一id在前端正确缓存高度
-            outputData[index].push(result)
-        })
-    })
-    if (isAuto) {
-        // const overlaps = OverlapCalendars(start, end)
-        // Object.entries(overlaps).forEach(([CalName, ranges]) => {
-        //     for (const range of ranges) {
-        //         for (let Year = range[0]; Year <= range[1]; Year++) {
-        //             const index = Year - start
-        //             outputData[index] = outputData[index] || []
-        //             result.id = CalName + Year
-        //             outputData[index].push(CalNewm(CalName, Year))
-        //         }
-        //     }
-        // })
-        for (let Year = start; Year <= end; Year++) {
-            const AutoCals = AutoCal(Year)
-            AutoCals.forEach(CalName => {
-                outputData[index].push(CalNewm(CalName, Year))
-            })
+    if (Array.isArray(list) === false) {
+        list = [list]
+    }
+    list = list.filter(i => i && i.trim()) // 去除空字符串
+    for (let Year = start; Year <= end; Year++) {
+        const AutoCals = isAuto ? AutoCal(Year) : []
+        list = list.concat(AutoCals)
+        list = Array.from(new Set(list)) // 合併重複內容
+        let index = Year - start
+        for (let i = 0; i < list.length; i++) {
+            const result = CalNewm(list[i], Year)[0]
+            result.id = list[i] + Year // 给每个item一个唯一id在前端正确缓存高度
+            data[index] = data[index] || []
+            data[index].push(result)
+            index++
         }
     }
-    return outputData
+    data.push(list.length)
+    return data
 }
-
+// console.log(outputNewmWeb(1002, 1003, false, ['Yitian']))
 /**
  * 将 CalDay 输出转换成以月日维度的输出。寫了整整一個下午
  * CalDay：{
@@ -329,18 +341,14 @@ const DayView = CalInfo => {
     const Day = []
     Object.entries(CalInfo).forEach(([key, monthValue]) => {
         for (let i = 1; i < CalInfo.Sc.length; i++) {
-            if (!Day[i]) {
-                Day[i] = []
-            }
-            if (Array.isArray(monthValue) && Array.isArray(monthValue[i]) && monthValue[i].length > 0) {
+            Day[i] = Day[i] || []
+            if (Array.isArray(monthValue) && Array.isArray(monthValue[i]) && monthValue[i].length) {
                 const MonthList = monthValue[i]
                 MonthList.forEach((dayValue, j) => {
                     if (!dayValue) {
                         return
                     }
-                    if (!Day[i][j]) {
-                        Day[i][j] = {}
-                    }
+                    Day[i][j] = Day[i][j] || {}
                     Day[i][j][key] = dayValue
                 })
             }
@@ -348,26 +356,13 @@ const DayView = CalInfo => {
     })
     return Day
 }
-export const outputDayData = (year, CalName) => {
+export const outputDayWeb = (year, CalName) => {
     const [result] = CalDay(CalName, year)
-    const {
-        Era,
-        YearColor,
-        DayAccum,
-        YearGod,
-        MonName,
-        MonInfo,
-        MonColor,
+    const { Era, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
         ...OtherResult
     } = result
     return {
-        Era,
-        YearColor,
-        DayAccum,
-        YearGod,
-        MonName,
-        MonInfo,
-        MonColor,
+        Era, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
         DayData: DayView(OtherResult)
     }
 }

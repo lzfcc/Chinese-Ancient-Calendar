@@ -35,7 +35,6 @@ export default class Newm extends React.Component {
       calendars: [],
       YearStart: '',
       YearEnd: '',
-      isAuto: 0,
       // YearMode: '0',
       output: '',
       // loading: false,
@@ -65,7 +64,9 @@ export default class Newm extends React.Component {
         this.setState({ output: data });
       }
       this.setState({ loading: false });
+      // return data[data.length - 1]
     })
+    // return this.props.addEventListener() // 最後一項儲存了曆法數量
   }
 
   componentWillUnmount() {
@@ -150,7 +151,8 @@ export default class Newm extends React.Component {
   }
 
   handleRetrieve() {
-    if (this.state.calendars.length === 0) {
+    const isAuto = (this.isAuto && this.isAuto.checked) || false
+    if (this.state.calendars.length === 0 && isAuto === false) {
       alert('Please choose a calendar');
       return;
     }
@@ -168,15 +170,6 @@ export default class Newm extends React.Component {
       alert('illegal input!');
       return;
     }
-    if (Number.isNaN(YearStart)) {
-      if (this.state.YearStart.length === 0) {
-        YearStart = YearEnd;
-        this.setState({ YearStart })
-      } else {
-        alert('illegal start year!');
-        return;
-      }
-    }
     if (Number.isNaN(YearEnd)) {
       if (this.state.YearEnd.length === 0) {
         YearEnd = YearStart;
@@ -185,20 +178,26 @@ export default class Newm extends React.Component {
         alert('illegal end year!');
         return;
       }
+    } else if (Number.isNaN(YearStart)) {
+      if (this.state.YearStart.length === 0) {
+        YearStart = YearEnd;
+        this.setState({ YearStart })
+      } else {
+        alert('illegal start year!');
+        return;
+      }
     }
-    if (YearStart > YearEnd) {
-      [YearStart, YearEnd] = [YearEnd, YearStart]
-    }
-    const isAuto = this.isAuto
-    console.log('isAuto=' + isAuto)
+    // if (YearStart > YearEnd) {
+    //   [YearStart, YearEnd] = [YearEnd, YearStart]
+    // }    
     const callWorker = eventName => {
       this.setState({ loading: true });
       this.worker.postMessage({
         eventName,
-        ...this.state,
         YearStart,
         YearEnd,
-        isAuto
+        isAuto,
+        ...this.state
       })
     }
     if (this.downloadRef && this.downloadRef.checked) {
@@ -250,7 +249,7 @@ export default class Newm extends React.Component {
     if (list.length === 0) {
       return null
     }
-    let calCount = this.state.calendars.length
+    // let calCount = this.state.calendars.length
     return (
       <section className='main-render'>
         <DynamicList
@@ -261,7 +260,9 @@ export default class Newm extends React.Component {
           overscanCount={5}
         >
           {({ index, style }) => {
+            // const calCount = this.componentDidMount()            
             const CalInfo = list[index]
+            const calCount = list[list.length - 1]
             return (
               <div className="single-cal" style={style}>
                 {index % calCount === 0 ? <h3>{CalInfo.Era}</h3> : null}
@@ -303,7 +304,7 @@ export default class Newm extends React.Component {
     return Object.entries(CalInfo).map(([key, value]) => {
       if (Array.isArray(value) && value.length > 0 && TableRowNameMap[key]) {
         return <tr className={key}>{
-          [<th>{TableRowNameMap[key]}</th>].concat(value.map((x) => (<td dangerouslySetInnerHTML={{ __html: x }}></td>)))
+          [<th>{TableRowNameMap[key]}</th>].concat(value.map(x => (<td dangerouslySetInnerHTML={{ __html: x }}></td>)))
         }</tr>
       }
       return null
@@ -317,7 +318,7 @@ export default class Newm extends React.Component {
         {this.renderCalendar()}
         {this.renderInput()}
         <button onClick={this.handleRetrieve} className='button1'>天霝〻地霝〻</button>
-        {/* {this.renderAutoCal()} */}
+        {this.renderAutoCal()}
         {this.renderDownload()}
         {this.renderTableList()}
         <hr />
