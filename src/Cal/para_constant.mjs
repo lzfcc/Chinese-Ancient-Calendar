@@ -113,7 +113,7 @@ export const CalNameList = { // 按照時間順序排列
     // Daming1: '賈俊大明(擬)',
     Daming2: '楊級大明(擬)',
     Daming3: '重修大明',
-    Yiwei: '乙未(廢)',
+    Yiwei: '乙未(擬)',
     Gengwu: '庚午',
     Shoushi: '授時',
     Datong: '大統',

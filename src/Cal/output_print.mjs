@@ -4,7 +4,7 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 1021, 1023, 0, [ // mode, YearStart, YearEnd, auto,
+const printData = outputFile(1, 1180, 1180, 0, [ // mode, YearStart, YearEnd, auto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -67,8 +67,8 @@ const printData = outputFile(1, 1021, 1023, 0, [ // mode, YearStart, YearEnd, au
     // 'Zhidao1',
     // 'Zhidao2',
     // 'Yitian', 
-    'Qianxing',
-    'Chongtian',
+    // 'Qianxing',
+    // 'Chongtian',
     // 'Mingtian',
     // 'Fengyuan',
     // 'Guantian',
@@ -86,8 +86,8 @@ const printData = outputFile(1, 1021, 1023, 0, [ // mode, YearStart, YearEnd, au
     // 'Bentian',
     // 'Daming1' // 賈俊大明
     // 'Daming2', 
-    // 'Daming3', // 上宋金系
-    // 'Yiwei',
+    'Daming3', // 上宋金系
+    'Yiwei',
     // 'Gengwu', 
     // 'Shoushi',
     // 'Datong', 
