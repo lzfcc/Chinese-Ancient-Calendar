@@ -10,7 +10,8 @@ export default class Exhau extends React.Component {
       xx: 27.21222,
       range: 0.01,
       lower: 23.578,
-      upper: 23.581
+      upper: 23.581,
+      step: 0.0001
     };
     this.handle = this.handle.bind(this)
   }
@@ -69,13 +70,20 @@ export default class Exhau extends React.Component {
           }}
         />
         <span>)</span>
+        <span> 步長</span>
+        <input
+          value={this.state.step}
+          onChange={e => {
+            this.setState({ step: e.currentTarget.value });
+          }}
+        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = ExhauConst(this.state.SolarNumer, this.state.Denom, this.state.year, this.state.xx, this.state.range, this.state.lower, this.state.upper);
+      const Print = ExhauConst(this.state.SolarNumer, this.state.Denom, this.state.year, this.state.xx, this.state.range, this.state.lower, this.state.upper, this.state.step);
       this.setState({ output: Print });
     } catch (e) {
       alert(e.message);

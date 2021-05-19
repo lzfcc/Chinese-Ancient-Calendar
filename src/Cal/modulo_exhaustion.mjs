@@ -60,7 +60,7 @@ export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUppe
     return '該年積年 ' + year + '歲實 365+' + SolarNumer + '/' + Denom
 }
 
-export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper) => {
+export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper, step) => {
     SolarNumer = +SolarNumer
     Denom = parseInt(Denom)
     year = parseInt(year)
@@ -74,13 +74,14 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper) => {
     Range = +Range
     lower = +lower
     upper = +upper
+    step = +step
     let result = ''
     for (let i = 1; i <= 20000; i++) {
-        const Anoma = Int + (FracInt + i * 0.0001) / Denom
+        const Anoma = Int + (FracInt + i * step) / Denom
         const c = OriginAccum % Anoma
         if (c > lower && c < upper) {
             if (Anoma > x - Range && Anoma < x + Range) {
-                result += Int + '+' + (FracInt + i * 0.0001).toFixed(4) + '/' + Denom + ' ≒ ' + (Int + (FracInt + i * 0.0001).toFixed(4) / Denom).toFixed(8) + ' 入日' + (OriginAccum % (Int + (FracInt + i * 0.0001) / Denom)).toFixed(4) + `\n`
+                result += Int + '+' + (FracInt + i * step).toFixed(4) + '/' + Denom + ' ≒ ' + (Int + (FracInt + i * step).toFixed(4) / Denom).toFixed(8) + ' 入日' + (OriginAccum % (Int + (FracInt + i * step) / Denom)).toFixed(4) + `\n`
             }
         }
     }

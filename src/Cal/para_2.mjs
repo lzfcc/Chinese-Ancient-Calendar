@@ -28,16 +28,10 @@ export default {
         JiRange: 8047, // 紀法
         ZhangRange: 619, // 章歲
         ZhangLeap: 228, // 章閏
-        // Solar: 365 + 5898 / 24141, 
-        // SolarNumer: 8817363, // 與隋志的結果不符，悲傷⋯⋯後天半日
-        // SolarDenom: 24141, // 度法
         Solar: 365 + 1966 / 8047, // 歲餘1966
         SolarNumer: 2939121, //
         Sidereal: 365 + 6407 / 24141, // 虛分6407.差分509.
-        SiderealNumer: 8817872, // 
-        // Lunar: 29 + 607 / 1144, // 朔策=紀日/紀月
-        // LunarNumer: 33783, // 月法
-        // Denom: 1144, // 日法 
+        SiderealNumer: 8817872, 
         Lunar: 29 + 17603 / 33176, // 朔策=紀日/紀月 // 《古代曆法計算法》第615頁
         LunarNumer: 979707, // 月法
         Denom: 33176,
@@ -53,7 +47,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         ZhengNum: 2, // 建寅
-        MansionRaw: [11, 8], // 距大衍曆議補
+        MansionRaw: [11, 7], // 先是9，後來改成7
         MansionFractPosition: 11,
     },
     Huangji: {
