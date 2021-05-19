@@ -57,7 +57,7 @@ const printData = outputFile(1, 1100, 1100, 0, [ // mode, YearStart, YearEnd, au
     // 'Liuxiaosun',
     // 'Huangji',
     // 'LindeA', 
-    // 'LindeA',// 上隋、初唐系
+    'LindeB',// 上隋、初唐系
     // 'Dayan', 
     // 'TaiyiKaiyuan',
     // 'Wuji',
@@ -71,8 +71,8 @@ const printData = outputFile(1, 1100, 1100, 0, [ // mode, YearStart, YearEnd, au
     // 'Zhidao2',
     // 'Yitian', 
     // 'Qianxing',
-    'Chongtian',
-    'TaiyiJingyou',
+    // 'Chongtian',
+    // 'TaiyiJingyou',
     // 'Mingtian',
     // 'Fengyuan',
     // 'Guantian',

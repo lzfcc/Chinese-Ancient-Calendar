@@ -116,7 +116,8 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
     const { Solar } = AutoPara[CalName]
     const QuarSolar = Solar / 4
     const SpringequinoxSunrise = AutoLongi2Lati(QuarSolar, WinsolsDecimal, CalName).Sunrise / 100
-    const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
+    let { Sunrise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
+    Sunrise = (Sunrise1 || Sunrise) / 100
     const LightRange = AutoLightRange(CalName)
     let standard = 0.75
     let portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多
@@ -142,7 +143,7 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
     }
     return { NewmPlus, Print }
 }
-// console.log( AutoNewmPlus (0.75, 191, 0.9, 'Chongxuan') )
+// console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
 export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => {
     const { Type

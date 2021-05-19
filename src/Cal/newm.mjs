@@ -269,12 +269,12 @@ export default (CalName, year) => {
                 AcrInt[i] = Math.floor(AcrRaw[i])
                 if (Type <= 4) {
                     Decimal[i] = AcrRaw[i] - AcrInt[i]
-                    Decimal1[i] = Decimal[i].toFixed(4).slice(2, 6)
+                    Decimal1[i] = Decimal[i]
                 } else if (Type < 11) {
                     Decimal[i] = AcrRaw[i] - AcrInt[i]
                     Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
                     if (Tcorr1) {
-                        Decimal1[i] = (AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)).toFixed(4).slice(2, 6)
+                        Decimal1[i] = AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)
                     }
                 } else if (Type === 11) {
                     Decimal[i] = AcrRaw[i] - AcrInt[i]
@@ -287,7 +287,7 @@ export default (CalName, year) => {
             let SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
-                    const Func = AutoNewmPlus(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////進朔/////
+                    const Func = AutoNewmPlus((Decimal1[i] || Decimal[i]), WinsolsDifRaw[i], WinsolsDecimal, CalName) /////進朔/////
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
@@ -317,7 +317,7 @@ export default (CalName, year) => {
                 Int[i] = AvgInt[i]
                 Raw[i] = AvgRaw[i]
             }
-            Int[i] += NewmPlus + SyzygySub
+            Int[i] += NewmPlus + SyzygySub // 這裏int是二次內差的結果，但線性與二次分屬兩日的極端情況太少了，暫且不論
             Raw[i] += NewmPlus + SyzygySub
             AcrInt[i] += NewmPlus + SyzygySub
             AnomaAccumNight[i] += NewmPlus
@@ -327,7 +327,8 @@ export default (CalName, year) => {
                 NodeAccumNight[i] = ~~NodeAccum[i]
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以
-        }
+            Decimal1[i] = Decimal1[i].toFixed(4).slice(2, 6)
+        }        
         return {
             AvgSc, Tcorr, AvgDecimal, Int, Raw, Sc, AcrInt, AcrRaw,
             Decimal, Decimal1, Decimal2, Decimal3,
