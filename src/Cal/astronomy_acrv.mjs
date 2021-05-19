@@ -55,7 +55,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     if (Type >= 8 && CalName !== 'Qianyuan') { // 崇玄也是萬分母
         Denom = 10000
     }
-    // Solar =365 + 5040 / 20690
+    // Solar =365 + 2366 / 9740
     const HalfTermLeng = Solar / 24
     // 求定氣要用下面的
     const SunAcrAvgDifListList = [] // 這個多此一舉的SunAcrAvgDifListList一定不能刪掉，否則多次運算就會越來越小
@@ -110,7 +110,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     }
     return SunDifAccum2
 }
-// console.log(SunDifAccumTable(341, 'Daming3'))
+// console.log(SunDifAccumTable(341, 'Chengtian'))
 
 // 計算朓朒積
 const SunTcorrTable = (WinsolsDif, CalName) => {
