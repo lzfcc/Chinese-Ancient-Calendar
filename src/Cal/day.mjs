@@ -28,7 +28,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
     const Day = (CalName, year) => {
         const { Type, AutoPara,
         } = Bind(CalName)
-        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionCorr
+        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionCorr, OriginDaySc
         } = AutoPara[CalName]
         let { Solar, Sidereal, Lunar,
         } = AutoPara[CalName]
@@ -42,7 +42,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const HalfTermLeng = Solar / 24
         let HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        const ZhengInt = NewmInt[0]
+        const ZhengInt = NewmInt[0] + (OriginDaySc || 0)
         const ZhengWinsolsDif = +(ZhengInt - OriginAccum).toFixed(5) // 正月夜半到冬至距離
         const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
         /////////// 預處理72候、五行、八卦列表//////////
@@ -304,7 +304,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         const MoonAcrSNight = AutoMoonAcrS(AnomaAccumNight, CalName).MoonAcrS
                         MoonEclpLongi = SunEclpLongiNewm + (MoonAcrSNight - MoonAcrSNewm + AnomaCycle) % AnomaCycle
                         MoonEclpLongiAccum = MoonEclpLongi + OriginAccum
-                    }                    
+                    }
                     if (Type < 11) {
                         MoonLongiLatiFunc = AutoMoonLati(NodeAccumNight, CalName)
                         MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'

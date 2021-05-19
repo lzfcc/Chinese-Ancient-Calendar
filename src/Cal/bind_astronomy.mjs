@@ -392,6 +392,10 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Longi2Lati = Longi2LatiTable2(Longi1, 'Xuanming')
     } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)
+    } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
+        Longi2LatiA = Longi2LatiFormula(Longi1, 'Guantian')
+        Longi2LatiB = Longi2DialFormula(Longi2, 'Guantian')
+        special = 1
     } else if (Type === 8) {
         Longi2LatiA = Longi2LatiFormula(Longi1, CalName)
         Longi2LatiB = Longi2DialFormula(Longi2, CalName)
@@ -523,7 +527,7 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
     } else if (['Chongtian', 'Guantian'].includes(CalName)) {
         MoonLati = MoonLatiFormula(NodeAccum, CalName)
-    } else if (CalName === 'Mingtian') {
+    } else if (['Mingtian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Guantian')
     } else if (Type === 9 || Type === 10) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Jiyuan')
@@ -581,7 +585,9 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Dayan')
     } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Yingtian')
-    } else if (['Chongtian', 'Mingtian', 'Guantian'].includes(CalName)) {
+    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
+        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Guantian')
+    } else if (['Chongtian', 'Mingtian'].includes(CalName)) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, CalName)
     } else if (Type === 9 || Type === 10) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Jiyuan')
