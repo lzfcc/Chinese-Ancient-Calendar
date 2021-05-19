@@ -881,7 +881,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         NodeAccumCorr2,
     }
 }
-// console.log(AutoTcorr(6, 9, 'Shoushi', 1997).MoonTcorr2)
+// console.log(AutoTcorr(6, 9, 'Qiandao', 1997).MoonTcorr2)
 
 export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
     const { AutoPara, Type,

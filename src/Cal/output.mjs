@@ -183,43 +183,66 @@ const PrintDay = result => {
  * @param {*} isAuto
  * @param {*} list
  */
+//  export const outputFile = (mode, start, end, isAuto, list) => {
+//     let printData = []
+//     start = ~~start
+//     end = ~~end
+//     if (mode === 1) { // 朔望氣
+//         list.forEach(CalName => {
+//             // let Year = start
+//             CalNewm(CalName, start, end).forEach((result, index) => {
+//                 // Year = start + index
+//                 const Era = result.Era
+//                 printData[index] = printData[index] || [Era]
+//                 printData[index].push(PrintNewm(result))
+//             })
+//         })
+//         if (isAuto) {
+//             const overlaps = OverlapCalendars(start, end)
+//             Object.entries(overlaps).forEach(([CalName, ranges]) => {
+//                 for (const range of ranges) {
+//                     for (let year = range[0]; year <= range[1]; year++) {
+//                         const index = year - start
+//                         if (printData[index][CalName]) {
+//                             continue
+//                         }
+//                         const result = CalNewm(CalName, year)
+//                         const Era = result.Era
+//                         printData[index] = printData[index] || [Era]
+//                         printData[index].push(PrintNewm(result))
+//                     }
+//                 }
+//             })
+//         }
+//     } else {
+//         list.forEach(CalName => {
+//             // let Year = start
+//             CalDay(CalName, start, end).forEach((result, index) => {
+//                 // Year = start + index
+//                 // const Era = result.Era
+//                 printData[index] = printData[index] || []
+//                 printData[index].push(PrintDay(result))
+//             })
+//         })
+//     }
+//     return printData
+// }
 export const outputFile = (mode, start, end, isAuto, list) => {
-    const printData = []
+    let printData = []
     start = ~~start
     end = ~~end
     if (mode === 1) { // 朔望氣
-        list.forEach(CalName => {
-            // let Year = start
-            CalNewm(CalName, start, end).forEach((result, index) => {
-                // Year = start + index
-                const Era = result.Era
+        for (let Year = start; Year <= end; Year++) {
+            const AutoCals = isAuto ? AutoCal(Year) : []
+            list = list.concat(AutoCals)
+            list = Array.from(new Set(list))
+            let index = Year - start
+            for (let i = 0; i < list.length; i++) {
+                const result = CalNewm(list[i], Year)
+                const Era = result[0].Era                
                 printData[index] = printData[index] || [Era]
-                printData[index].push(PrintNewm(result))
-            })
-        })
-        if (isAuto) {
-            // const overlaps = OverlapCalendars(start, end)
-            // Object.entries(overlaps).forEach(([CalName, ranges]) => {
-            //     for (const range of ranges) {
-            //         for (let year = range[0]; year <= range[1]; year++) {
-            //             const index = year - start
-            //             if (printData[index][CalName]) {
-            //                 continue
-            //             }
-            //             const result = CalNewm(CalName, year)
-            //             const Era = result.Era
-            //             printData[index] = printData[index] || [Era]
-            //             printData[index].push(PrintNewm(result))
-            //         }
-            //     }
-            // })
-            for (let Year = start; Year <= end; Year++) {
-                const AutoCals = AutoCal(Year)
-                AutoCals.forEach(CalName => {
-                    const index = Year - start
-                    printData[index] = printData[index] || []
-                    printData[index].push(CalNewm(CalName, Year))
-                })
+                printData[index].push(PrintNewm(result[0]))
+                index++
             }
         }
     } else {
@@ -228,9 +251,7 @@ export const outputFile = (mode, start, end, isAuto, list) => {
             CalDay(CalName, start, end).forEach((result, index) => {
                 // Year = start + index
                 // const Era = result.Era
-                if (!printData[index]) {
-                    printData[index] = []
-                }
+                printData[index] = printData[index] || []
                 printData[index].push(PrintDay(result))
             })
         })
