@@ -31,7 +31,7 @@ export const AutoMoonAvgV = CalName => {
         MoonAvgVDeg = 13 + 7 / 19
     } else if (CalName === 'Mingtian') {
         MoonAvgVDeg = 13.36875
-    } else if ((CalName === 'Guantian' || Type === 9 || Type === 10) && CalName !== 'Tongyuan') {
+    } else if ((['Guantian', 'Zhantian'].includes(CalName) || Type === 9 || Type === 10) && CalName !== 'Tongyuan') {
         MoonAvgVDeg = 13.37
     } else if (Type === 11) {
         MoonAvgVDeg = 13.3687
@@ -810,7 +810,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         } else if (Type <= 4) {
             MoonTcorr1 = MoonTcorrTable1(AnomaAccum, CalName).MoonTcorr1
             Tcorr1 = MoonTcorr1
-        } else if (['Yitian', 'Guantian'].includes(CalName)) {
+        } else if (['Yitian', 'Guantian', 'Zhantian'].includes(CalName)) {
             SunDifAccum = SunFormula(WinsolsDif, CalName)
             const moonFunc = MoonTcorrTable(AnomaAccum, CalName)
             MoonTcorr2 = -moonFunc.MoonTcorr2
