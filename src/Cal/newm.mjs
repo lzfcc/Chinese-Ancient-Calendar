@@ -167,7 +167,7 @@ export default (CalName, year) => {
     } else if (Type >= 11) {
         FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeConst) % Node + Node) % Node
     }
-    const AccumPrint = '轉' + (OriginAccum % Anoma).toFixed(4) + (Node ? '交' + (OriginAccum % Node).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
+    const AccumPrint = (Anoma ? '轉' + (OriginAccum % Anoma).toFixed(4) : '') + (Node ? '交' + (OriginAccum % Node).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
     OriginAccum = +OriginAccum.toFixed(5)
     FirstAccum = +FirstAccum.toFixed(5)
     FirstAnomaAccum = +FirstAnomaAccum.toFixed(5)
@@ -244,7 +244,7 @@ export default (CalName, year) => {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + OriginDaySc) % 60) + 60) % 60]
-            AvgDecimal[i] = (AvgRaw[i] - Math.floor(AvgRaw[i])).toFixed(4).slice(2, 6)
+            AvgDecimal[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
             WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
             let Tcorr1 = 0
             if (Anoma) {
@@ -280,6 +280,8 @@ export default (CalName, year) => {
                     Decimal[i] = AcrRaw[i] - AcrInt[i]
                     Decimal3[i] = Decimal[i].toFixed(4).slice(2, 6)
                 }
+            } else {
+                Decimal[i] = AvgDecimal[i]
             }
             let NewmPlus = 0
             let NewmPlusPrint = ''
@@ -321,13 +323,26 @@ export default (CalName, year) => {
             Raw[i] += NewmPlus + SyzygySub
             AcrInt[i] += NewmPlus + SyzygySub
             AnomaAccumNight[i] += NewmPlus
-            Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
+            if (isNewm) {
+                if (Tcorr[i]) {
+                    Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
+                }
+            } else {
+                if (Tcorr[i]) {
+                    Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
+                } else {
+                    Sc[i] = AvgSc[i]
+                }
+            }
             if (Node) {
                 NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
                 NodeAccumNight[i] = ~~NodeAccum[i]
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以
-            Decimal1[i] = Decimal1[i] ? Decimal1[i].toFixed(4).slice(2, 6) : 0
+            if (Tcorr1) {
+                Decimal1[i] = Decimal1[i].toFixed(4).slice(2, 6)
+            }
+            AvgDecimal[i] = AvgDecimal[i].toFixed(4).slice(2, 6)
         }
         return {
             AvgSc, Tcorr, AvgDecimal, Int, Raw, Sc, AcrInt, AcrRaw,

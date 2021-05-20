@@ -101,7 +101,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 TermName[i] = TermList[(i + ZhengWinsolsDif + OriginMonNum + 12) % 12]
                 TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
                 TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
-                if (TermAcrRaw) {
+                if (TermAcrRaw[i]) {
                     TermAcrMod = ((TermAcrRaw[i]) % 60 + 60) % 60
                     TermAcrOrderMod = Math.floor(TermAcrMod)
                     TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
@@ -128,7 +128,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     LeapNumTermThis++
                 }
                 TermName[LeapNumTermThis + 1] = '无'
-                if (TermAcrRaw) {
+                if (TermAcrRaw[0]) {
                     TermAcrSc[LeapNumTermThis + 1] = ''
                     TermAcrDecimal[LeapNumTermThis + 1] = ''
                 }
@@ -144,7 +144,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     TermName[i] = TermList[(i + ZhengWinsolsDif + OriginMonNum + 11) % 12]
                     TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
                     TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
-                    if (TermAcrRaw) {
+                    if (TermAcrRaw[i]) {
                         TermAcrMod = (TermAcrRaw[i - 1] % 60 + 60) % 60
                         TermAcrOrderMod = Math.floor(TermAcrMod)
                         TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
@@ -266,13 +266,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         let NewmDecimal1Print = []
         if (Type >= 2) {
             NewmScPrint = NewmSlice(ThisYear.NewmSc)
-            if (Type <= 10 && (ThisYear.NewmDecimal1 || []).length) {
+            if (Type <= 10 && ThisYear.NewmDecimal1) {
                 NewmDecimal1Print = NewmSlice(ThisYear.NewmDecimal1)
             } else if (Type === 11) {
                 NewmDecimal3Print = NewmSlice(ThisYear.NewmDecimal3)
             }
         }
-        if (Type >= 5 && Type <= 10) {
+        if (Type >= 5 && Type <= 10 && ThisYear.NewmDecimal2) {
             NewmDecimal2Print = NewmSlice(ThisYear.NewmDecimal2)
         }
         const NewmEquaPrint = NewmSlice(NewmEqua)

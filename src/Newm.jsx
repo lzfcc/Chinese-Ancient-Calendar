@@ -160,8 +160,13 @@ export default class Newm extends React.Component {
     }
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
-    if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
-      alert('year range: -3807 to 9999');
+    if (isAuto) {
+      if (YearStart < -721 || YearStart > 1662 || YearEnd < -721 || YearEnd > 1662) {
+        alert('Year range of AutoChoose mode: -721 to 1662');
+        return;
+      }
+    } else if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
+      alert('Year range: -3807 to 9999');
       return;
     }
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
@@ -185,9 +190,9 @@ export default class Newm extends React.Component {
         return;
       }
     }
-    // if (YearStart > YearEnd) {
-    //   [YearStart, YearEnd] = [YearEnd, YearStart]
-    // }    
+    if (YearStart > YearEnd) {
+      [YearStart, YearEnd] = [YearEnd, YearStart]
+    }
     const callWorker = eventName => {
       this.setState({ loading: true });
       this.worker.postMessage({
@@ -246,7 +251,6 @@ export default class Newm extends React.Component {
     if (list.length === 0) {
       return null
     }
-    // let calCount = this.state.calendars.length
     return (
       <section className='main-render'>
         <DynamicList
