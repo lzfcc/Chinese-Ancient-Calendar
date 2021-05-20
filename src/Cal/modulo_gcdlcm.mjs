@@ -23,7 +23,7 @@ export const GcdLcm = (a, b) => {
     }
 }
 // console.log(GcdLcm(62244,7521150))
-export const GcdLcmGroup = () => {
+export const GcdLcmGroup = function () {
     let InputRaw = ((arguments[0]).split(/;|,|，|。|；|｜| /))
     if (InputRaw[InputRaw.length - 1] === '') { // 避免最後一個是符號
         InputRaw = InputRaw.slice(0, -1)
@@ -55,7 +55,7 @@ export const GcdLcmGroup = () => {
 // console.log(GcdLcmGroup('2.156,5.196,9.16,4.89162556').Print) // 這個超過精度範圍
 
 // 分數最小公倍數。先通分，然后求分子的最小公倍数，再跟分母约分。
-export const FracLcm1 = () => {
+export const FracLcm1 = function () { // 不能改成箭頭函數
     let Input = ((arguments[0]).split(/;|,|，|。|；|｜| /))
     if (Input[Input.length - 1] === '') {
         Input = Input.slice(0, -1)

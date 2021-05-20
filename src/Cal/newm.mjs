@@ -353,10 +353,7 @@ export default (CalName, year) => {
         Decimal2: NewmDecimal2,
         Decimal3: NewmDecimal3,
         Equa: NewmEqua,
-        TermAvgRaw: TermAvgRaw,
-        TermAcrRaw: TermAcrRaw,
-        TermAcrWinsolsDif: TermAcrWinsolsDif,
-        TermAvgWinsolsDif: TermAvgWinsolsDif
+        TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif
     } = Newm
     const {
         Sc: SyzygySc,

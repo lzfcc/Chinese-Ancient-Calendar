@@ -16,7 +16,7 @@ import {
 // x ≡ b1 (mod m1)
 // x ≡ b2 (mod m2)
 // x ≡ b3 (mod m3)
-export const Sunzi = () => {
+export const Sunzi = function () {
     let InputRaw = (arguments[0]).split(/;|,|，|。|；|｜| /)
     if (InputRaw[InputRaw.length - 1] === '') {
         InputRaw = InputRaw.slice(0, -1)

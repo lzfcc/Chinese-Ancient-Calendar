@@ -64,9 +64,7 @@ export default class Newm extends React.Component {
         this.setState({ output: data });
       }
       this.setState({ loading: false });
-      // return data[data.length - 1]
     })
-    // return this.props.addEventListener() // 最後一項儲存了曆法數量
   }
 
   componentWillUnmount() {
@@ -114,14 +112,14 @@ export default class Newm extends React.Component {
   renderCalendar() {
     const cals = CalNameList
     return (
-      <div className='calendar-select'>
+      <span>
         <MenuSelect
           calMap={cals}
           onSelect={selected => {
             this.setState({ calendars: selected })
           }}
         />
-      </div>
+      </span>
     );
   }
 
@@ -238,14 +236,13 @@ export default class Newm extends React.Component {
           this.isAuto = ref
         }}
         />
-        <label>自動長曆</label>
+        <label>自動選擇當年曆法</label>
       </span>
     )
   }
 
   renderTableList() {
-    // 二维数组拍扁成一维，每个表格平均高度 350
-    const list = (this.state.output || []).flat();
+    const list = (this.state.output || []).flat(); // 二维数组拍扁成一维，每个表格平均高度 350
     if (list.length === 0) {
       return null
     }
@@ -260,15 +257,14 @@ export default class Newm extends React.Component {
           overscanCount={5}
         >
           {({ index, style }) => {
-            // const calCount = this.componentDidMount()            
-            const CalInfo = list[index]
-            const calCount = list[list.length - 1]
+            const calInfo = list[index]
+            const calCount = calInfo.Count
             return (
               <div className="single-cal" style={style}>
-                {index % calCount === 0 ? <h3>{CalInfo.Era}</h3> : null}
-                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: CalInfo.YearInfo }}></p>
+                {index % calCount === 0 ? <h3>{calInfo.Era}</h3> : null}
+                <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: calInfo.YearInfo }}></p>
                 <table>
-                  <tr>{this.RenderTableContent(CalInfo)}</tr>
+                  <tr>{this.RenderTableContent(calInfo)}</tr>
                 </table>
               </div>
             )
@@ -282,13 +278,13 @@ export default class Newm extends React.Component {
     return (
       <div>
         {(this.state.output || []).map(CalData => {
-          const yearGroup = CalData.map(CalInfo => {
+          const yearGroup = CalData.map(calInfo => {
             return (
               <div className='single-cal'>
-                <p>{CalInfo.YearInfo}</p>
+                <p>{calInfo.YearInfo}</p>
                 <table>
                   <tr>
-                    {this.RenderTableContent(CalInfo)}
+                    {this.RenderTableContent(calInfo)}
                   </tr>
                 </table>
               </div>)
@@ -300,8 +296,8 @@ export default class Newm extends React.Component {
     );
   }
 
-  RenderTableContent(CalInfo) {
-    return Object.entries(CalInfo).map(([key, value]) => {
+  RenderTableContent(calInfo) {
+    return Object.entries(calInfo).map(([key, value]) => {
       if (Array.isArray(value) && value.length > 0 && TableRowNameMap[key]) {
         return <tr className={key}>{
           [<th>{TableRowNameMap[key]}</th>].concat(value.map(x => (<td dangerouslySetInnerHTML={{ __html: x }}></td>)))
@@ -315,10 +311,12 @@ export default class Newm extends React.Component {
     const { md } = this.state
     return (
       <>
-        {this.renderCalendar()}
+        <div className='calendar-select'>
+          {this.renderCalendar()}
+          {this.renderAutoCal()}
+        </div>
         {this.renderInput()}
         <button onClick={this.handleRetrieve} className='button1'>天霝〻地霝〻</button>
-        {this.renderAutoCal()}
         {this.renderDownload()}
         {this.renderTableList()}
         <hr />

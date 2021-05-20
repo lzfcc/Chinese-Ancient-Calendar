@@ -102,7 +102,7 @@ export const RoundC2LHPrint = cRaw => {
     // const cReal = c / portion2
     // let lWest = RoundC2LWest(rReal / portion4, c / portion4) * portion4
     // const hWest = (rReal / portion4 - Math.sqrt((rReal / portion4) ** 2 - cReal ** 2))// / portion2
-    lWest *= 2
+    // lWest *= 2
     let Print = [{
         title: '會圓術',
         // data: [l.toFixed(6), (l - lWest).toFixed(4), h.toFixed(6), (h - hWest).toFixed(4)]

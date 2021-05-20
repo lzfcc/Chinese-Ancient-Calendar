@@ -226,7 +226,7 @@ const PrintDay = result => {
 //     }
 //     return printData
 // }
-export const outputFile = (mode, start, end, isAuto, list) => {
+export const outputFile = (mode, start, end, isAuto, listRaw) => {
     const printData = []
     start = ~~start
     end = ~~end
@@ -234,8 +234,8 @@ export const outputFile = (mode, start, end, isAuto, list) => {
         let k = 0
         for (let Year = start; Year <= end; Year++) {
             const AutoCals = isAuto ? AutoCal(Year) : []
-            list = list.concat(AutoCals)
-            list = Array.from(new Set(list))            
+            let list = listRaw.concat(AutoCals)
+            list = Array.from(new Set(list))
             for (let i = 0; i < list.length; i++) {
                 const result = CalNewm(list[i], Year)
                 const Era = result[0].Era
@@ -245,7 +245,7 @@ export const outputFile = (mode, start, end, isAuto, list) => {
             }
         }
     } else {
-        list.forEach(CalName => {
+        listRaw.forEach(CalName => {
             // let Year = start
             CalDay(CalName, start, end).forEach((result, k) => {
                 // Year = start + k
@@ -288,31 +288,31 @@ export const outputFile = (mode, start, end, isAuto, list) => {
 //     }
 //     return outputNewmWeb
 // }
-export const outputNewmWeb = (start, end, isAuto, list) => {
+export const outputNewmWeb = (start, end, isAuto, listRaw) => {
     const data = []
     start = ~~start
     end = ~~end
-    if (Array.isArray(list) === false) {
-        list = [list]
+    if (Array.isArray(listRaw) === false) {
+        listRaw = [listRaw]
     }
-    list = list.filter(i => i && i.trim()) // 去除空字符串
+    listRaw = listRaw.filter(i => i && i.trim()) // 去除空字符串
     let k = 0
     for (let Year = start; Year <= end; Year++) {
         const AutoCals = isAuto ? AutoCal(Year) : []
-        list = list.concat(AutoCals)
+        let list = listRaw.concat(AutoCals)
         list = Array.from(new Set(list)) // 合併重複內容        
         for (let i = 0; i < list.length; i++) {
             const result = CalNewm(list[i], Year)[0]
             result.id = list[i] + Year // 给每个item一个唯一id在前端正确缓存高度
+            result.Count = list.length
             data[k] = data[k] || []
-            data[k].push(result)
+            data[k].push(result)            
             k++
         }
     }
-    data.push(list.length)
     return data
 }
-console.log(outputNewmWeb(333, 335, false, ['Liuzhi', 'Wangshuozhi', 'Sanji']))
+// console.log(outputNewmWeb(982, 984, true, []))
 /**
  * 将 CalDay 输出转换成以月日维度的输出。寫了整整一個下午
  * CalDay：{

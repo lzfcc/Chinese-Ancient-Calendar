@@ -64,7 +64,7 @@ Fraction.prototype.sub = function (frac) {
     frac = this._validateArgument(frac)
     return this.add(new Fraction(-frac.x, frac.y))
 }
-Fraction.prototype.mul = frac => {
+Fraction.prototype.mul = function (frac) {
     frac = this._validateArgument(frac)
     frac.reduce()
     this.x = this.x * frac.x
@@ -72,7 +72,7 @@ Fraction.prototype.mul = frac => {
     this.reduce()
     return this
 }
-Fraction.prototype.div = frac => {
+Fraction.prototype.div = function (frac) {
     frac = this._validateArgument(frac)
     if (!frac.x) {
         throw (Error('除0錯誤'))
@@ -80,8 +80,8 @@ Fraction.prototype.div = frac => {
     return this.mul(frac.inverse())
 }
 
-const BigFloat = s => {
-    if (!/^?((\d+[.]\d+)|\d+)$/.test(s)) { // if (!/^\-?((\d+[.]\d+)|\d+)$/.test(s)) {
+const BigFloat = function (s) {
+    if (!/^\-?((\d+[.]\d+)|\d+)$/.test(s)) {
         throw Error(`"${s}" is invalid!`)
     }
     s = String(s)
