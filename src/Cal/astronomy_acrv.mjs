@@ -30,7 +30,7 @@ export const AutoMoonAvgV = CalName => {
     } else if (CalName === 'Chongxuan') {
         MoonAvgVDeg = 13 + 7 / 19
     } else if (CalName === 'Mingtian') {
-        MoonAvgVDeg = 13.36875
+        MoonAvgVDeg = 13.36875 // 約分。13+29913000/81120000
     } else if ((['Guantian', 'Zhantian'].includes(CalName) || Type === 9 || Type === 10) && CalName !== 'Tongyuan') {
         MoonAvgVDeg = 13.37
     } else if (Type === 11) {
