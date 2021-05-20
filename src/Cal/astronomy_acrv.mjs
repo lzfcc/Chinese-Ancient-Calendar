@@ -366,7 +366,7 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
             if (AnomaAccumHalfInt <= 12) {
                 MoonTcorr1 = (MoonTcorrListA[AnomaAccumHalfInt] + AnomaAccumHalfFrac * (MoonTcorrListA[AnomaAccumHalfInt + 1] - MoonTcorrListA[AnomaAccumHalfInt]))
             } else {
-                MoonTcorr1 = (MoonTcorrListA[AnomaAccumHalfInt] - (AnomaAccumHalfFrac / (Anoma - 27)) * MoonTcorrListA[AnomaAccumHalfInt])
+                MoonTcorr1 = (MoonTcorrListA[AnomaAccumHalfInt] - (AnomaAccumHalfFrac / (HalfAnoma - 13)) * MoonTcorrListA[AnomaAccumHalfInt])
             }
         } else {
             if (AnomaAccumHalfInt <= 11) {
@@ -379,7 +379,7 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
             if (AnomaAccumHalfInt <= 12) {
                 MoonTcorr1 = (MoonTcorrListB[AnomaAccumHalfInt] + AnomaAccumHalfFrac * (MoonTcorrListB[AnomaAccumHalfInt + 1] - MoonTcorrListB[AnomaAccumHalfInt]))
             } else {
-                MoonTcorr1 = (MoonTcorrListB[AnomaAccumHalfInt] - (AnomaAccumHalfFrac / (Anoma - 27)) * MoonTcorrListB[AnomaAccumHalfInt])
+                MoonTcorr1 = (MoonTcorrListB[AnomaAccumHalfInt] - (AnomaAccumHalfFrac / (HalfAnoma - 13)) * MoonTcorrListB[AnomaAccumHalfInt])
             }
         }
     } else {
