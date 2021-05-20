@@ -50,8 +50,8 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>赤</th>
-            <th>黃</th>
+            <th>赤道</th>
+            <th>黃道</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

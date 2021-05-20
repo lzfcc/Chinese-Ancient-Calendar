@@ -372,7 +372,7 @@ export const EcliWest = (NodeAccum, AnomaAccum, Decimal, WinsolsDif, f, year) =>
     // }
     const h = zAcrFunc.v // 時角radius
     const e = d2r(ConstWestFunc.obliquity) // 黃赤交角degree
-    const H0 = big(57).div(60) // 假設是月亮地平視差57'
+    const H0 = big(0.9507) // 假設是月亮地平視差57' // 月亮地平視差曲安京《數》頁413
     Longi = d2r(big(Longi).mul(360).div(Solar)).add(pi.mul(1.5)).mod(pi.mul(2)) //.toNumber()
     // const tanC = Longi.cos().mul(e.tan()).pow(-1) //.toNumber() // C星位角與赤經圈夾角
     // const sinC1 = h.sin().mul(f.cos()).mul(zAcr.div(90).asin()) //.toNumber() // C1星位角與黃道夾角

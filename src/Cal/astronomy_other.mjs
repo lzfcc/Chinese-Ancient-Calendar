@@ -21,15 +21,9 @@ const AutoLightRange = CalName => {
     return LightRange
 }
 
-export const Deg2Mansion = (Deg, DegAccumList, CalName) => {
-    const { AutoPara
-    } = Bind(CalName)
-    const { SolarRaw,
-    } = AutoPara[CalName]
-    let { Sidereal, Solar } = AutoPara[CalName]
-    Sidereal = Sidereal || (Solar || SolarRaw)
+export const Deg2Mansion = (MansionAccum, DegAccumList) => {
     let MansionOrder = 0
-    const MansionAccum = (Deg % Sidereal + Sidereal + 1e-12) % Sidereal
+    MansionAccum = +MansionAccum + 1e-12
     for (let j = 1; j <= 28; j++) {
         if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
             MansionOrder = j
@@ -37,21 +31,11 @@ export const Deg2Mansion = (Deg, DegAccumList, CalName) => {
         }
     }
     const MansionName = MansionNameList[MansionOrder]
-    const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(3)
+    const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(4)
     return MansionName + MansionDeg
 }
 
-export const Mansion2Deg = (Mansion, DegAccumList, CalName) => {
-    const { AutoPara
-    } = Bind(CalName)
-    const { SolarRaw,
-    } = AutoPara[CalName]
-    let { Sidereal, Solar } = AutoPara[CalName]
-    Sidereal = Sidereal || (Solar || SolarRaw)
-    const Name = MansionNameList.indexOf(Mansion.slice(0, 1))
-    const Frac = +(Mansion.slice(1))
-    return DegAccumList[Name] + Frac
-}
+export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
 export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分

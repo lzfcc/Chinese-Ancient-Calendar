@@ -282,7 +282,7 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
 export const BindDeg2Mansion = (Deg, CalName) => {
     const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
     const EquaAccumListHuangji = []
-    const EquaAccumListLinde = []
+    const EquaAccumListLindeA = []
     const EquaAccumListDayan = AutoDegAccumList(CalName, 729)
     const EquaAccumListYingtian = []
     const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
@@ -291,7 +291,7 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
     const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
     const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
-    const EclpAccumListLinde = AutoDegAccumList(CalName, 665, 1) // 麟德
+    const EclpAccumListLindeA = AutoDegAccumList(CalName, 665, 1) // 麟德
     const EclpAccumListDayan = AutoDegAccumList(CalName, 729, 1) // 大衍
     const EclpAccumListYingtian = AutoDegAccumList(CalName, 964) // 應天
     const EclpAccumListMingtian = AutoDegAccumList(CalName, 1065, 1) // 明天
@@ -313,12 +313,12 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     })
     return Print
 }
-// console.log(BindDeg2Mansion(334, 'Qianxiang'))
+// console.log(BindDeg2Mansion(334.1511, 'Qianxiang'))
 
 export const BindMansion2Deg = (Mansion, CalName) => {
     const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
     const EquaAccumListHuangji = []
-    const EquaAccumListLinde = []
+    const EquaAccumListLindeA = []
     const EquaAccumListDayan = AutoDegAccumList(CalName, 729)
     const EquaAccumListYingtian = []
     const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
@@ -327,7 +327,7 @@ export const BindMansion2Deg = (Mansion, CalName) => {
     const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
     const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
     const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
-    const EclpAccumListLinde = AutoDegAccumList(CalName, 665, 1) // 麟德
+    const EclpAccumListLindeA = AutoDegAccumList(CalName, 665, 1) // 麟德
     const EclpAccumListDayan = AutoDegAccumList(CalName, 729, 1) // 大衍
     const EclpAccumListYingtian = AutoDegAccumList(CalName, 964) // 應天
     const EclpAccumListMingtian = AutoDegAccumList(CalName, 1065, 1) // 明天

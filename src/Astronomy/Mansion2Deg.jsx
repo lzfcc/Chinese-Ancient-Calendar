@@ -5,7 +5,7 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: '氐5.912',
+      a: '張5.9142',
       b: 'Shoushi',
     }
     this.handle = this.handle.bind(this)
@@ -50,8 +50,8 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>赤</th>
-            <th>黃</th>
+            <th>赤道</th>
+            <th>黃道</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

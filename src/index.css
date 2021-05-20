@@ -127,7 +127,7 @@ b {
 }
 
 v {
-  border-bottom: .1em dashed var(--gray);
+  border-bottom: .15em dashed var(--shallowgray);
   margin: 0 .2em
 }
 
@@ -159,7 +159,7 @@ n {
 }
 
 u {
-  border-bottom: .15em solid var(--shallowgray);
+  border-bottom: .15em solid var(--shallowgray1);
   text-decoration: none;
   margin: 0 .1em
 }
