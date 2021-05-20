@@ -21,10 +21,10 @@ export default (CalName, year) => {
     const { Type, AutoPara, isAcr, isNewmPlus
     } = Bind(CalName)
     const {
-        Sidereal, SolarNumer, LunarNumer, Denom, Anoma, AnomaOrigin, Node, YinyangOrigin, EcliOrigin,
+        Sidereal, SolarNumer, LunarNumer, Denom, Anoma, AnomaCorr, Node, YinyangOrigin, EcliOrigin,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
-        FirstCorr, AnomaCorr, OriginCorr, WinsolsConst, LeapConst, AnomaConst, NodeConst,
+        FirstCorr, AnomaCorr, NodeCorr, OriginCorr, WinsolsConst, LeapConst, AnomaConst, NodeConst,
         AcrTermList
     } = AutoPara[CalName]
     let {
@@ -71,12 +71,12 @@ export default (CalName, year) => {
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
-    let NodeOrigin = 0
+    let NodeCorr = NodeCorr || 0
     if (EcliOrigin) {
         if (CalName === 'Yuanjia') {
-            NodeOrigin = Node * EcliOrigin
+            NodeCorr = Node * EcliOrigin
         } else {
-            NodeOrigin = (Node / 2) * EcliOrigin
+            NodeCorr = (Node / 2) * EcliOrigin
         }
     }
     const SynodicAnomaDif = Lunar - Anoma
@@ -109,7 +109,7 @@ export default (CalName, year) => {
     // const JiNode = ((EcliOrigin + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
     // const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangOrigin : -YinyangOrigin
     // const AnomaJiDif = (JiMon * LunarNumer) % AnomaNumer
-    // const JiAnoma = ((AnomaOrigin + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
+    // const JiAnoma = ((AnomaCorr + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
     let OriginAccum = 0
     if (Type < 11) {
         OriginAccum = OriginYear * SolarRaw + (OriginCorr || 0) - SolarChangeAccum
@@ -157,17 +157,17 @@ export default (CalName, year) => {
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
-        FirstAnomaAccum = ((FirstAccum + (AnomaOrigin / Denom || 0) + (CalName === 'Shenlong' ? Anoma / 2 : 0) + (AnomaCorr || 0)) % Anoma + Anoma) % Anoma
+        FirstAnomaAccum = ((FirstAccum + (AnomaCorr / Denom || 0) + (CalName === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
     } else if (Type === 11) {
         FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaConst) % Anoma + Anoma) % Anoma
     }
     let FirstNodeAccum = 0
     if (Node && Type < 11) {
-        FirstNodeAccum = (FirstAccum + NodeOrigin + (YinyangOrigin === -1 ? Node / 2 : 0)) % Node
+        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangOrigin === -1 ? Node / 2 : 0)) % Node
     } else if (Type >= 11) {
         FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeConst) % Node + Node) % Node
     }
-    const AccumPrint = (Anoma ? '轉' + (OriginAccum % Anoma).toFixed(4) : '') + (Node ? '交' + (OriginAccum % Node).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
+    const AccumPrint = (Anoma ? '轉' + (OriginAccum % Anoma + (AnomaCorr / Denom || 0)).toFixed(4) : '') + (Node ? '交' + (OriginAccum % Node + (NodeCorr || 0)).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
     OriginAccum = +OriginAccum.toFixed(5)
     FirstAccum = +FirstAccum.toFixed(5)
     FirstAnomaAccum = +FirstAnomaAccum.toFixed(5)
