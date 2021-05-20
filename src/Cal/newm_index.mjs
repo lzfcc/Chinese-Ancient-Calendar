@@ -17,9 +17,9 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
     const isExcl = Type >= 4 ? 1 : 0
     const { OriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
     } = AutoPara[CalName]
-    let { OriginDaySc
+    let { ScCorr
     } = AutoPara[CalName]
-    OriginDaySc = OriginDaySc || 0
+    ScCorr = ScCorr || 0
     const YearMemo = []
     const calculate = year => {
         const [PrevYear, ThisYear, NextYear] = YearMemo
@@ -99,12 +99,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
                 TermOrderMod[i] = Math.floor(TermAvgMod[i])
                 TermName[i] = TermList[(i + ZhengWinsolsDif + OriginMonNum + 12) % 12]
-                TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
+                TermSc[i] = ScList[(TermOrderMod[i] + isExcl + ScCorr) % 60]
                 TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
                 if (TermAcrRaw[i]) {
                     TermAcrMod = ((TermAcrRaw[i]) % 60 + 60) % 60
                     TermAcrOrderMod = Math.floor(TermAcrMod)
-                    TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
+                    TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + ScCorr) % 60]
                     TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                 }
                 if (MansionRaw) {
@@ -142,12 +142,12 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     TermAvgMod[i] = ((TermAvgRaw[i - 1]) % 60 + 60) % 60
                     TermOrderMod[i] = Math.floor(TermAvgMod[i])
                     TermName[i] = TermList[(i + ZhengWinsolsDif + OriginMonNum + 11) % 12]
-                    TermSc[i] = ScList[(TermOrderMod[i] + isExcl + OriginDaySc) % 60]
+                    TermSc[i] = ScList[(TermOrderMod[i] + isExcl + ScCorr) % 60]
                     TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
                     if (TermAcrRaw[i]) {
                         TermAcrMod = (TermAcrRaw[i - 1] % 60 + 60) % 60
                         TermAcrOrderMod = Math.floor(TermAcrMod)
-                        TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + OriginDaySc) % 60]
+                        TermAcrSc[i] = ScList[(TermAcrOrderMod + isExcl + ScCorr) % 60]
                         TermAcrDecimal[i] = ((TermAcrMod - TermAcrOrderMod).toFixed(4)).slice(2, 6)
                     }
                     if (MansionRaw) {

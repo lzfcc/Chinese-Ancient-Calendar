@@ -28,7 +28,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
     const Day = (CalName, year) => {
         const { Type, AutoPara,
         } = Bind(CalName)
-        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionCorr, OriginDaySc
+        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionDayCorr, ScCorr
         } = AutoPara[CalName]
         let { Solar, Sidereal, Lunar,
         } = AutoPara[CalName]
@@ -42,7 +42,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const HalfTermLeng = Solar / 24
         let HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        const ZhengInt = NewmInt[0] + (OriginDaySc || 0)
+        const ZhengInt = NewmInt[0] + (ScCorr || 0)
         const ZhengWinsolsDif = +(ZhengInt - OriginAccum).toFixed(5) // 正月夜半到冬至距離
         const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
         /////////// 預處理72候、五行、八卦列表//////////
@@ -342,7 +342,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 const JieDifInt = ~~((WinsolsDifNight - (JieNum * 2 + 1) * HalfTermLeng + WinsolsDecimal + Solar) % Solar)
                 if (Type >= 6) {
                     const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekCorr || 0)) % 7.1)
-                    const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionCorr || 0)) + 28) % 28.1)
+                    const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionDayCorr || 0)) + 28) % 28.1)
                     Week[i][k] = WeekList[WeekOrder] + NumList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
                 }
                 for (let j = HouOrder; j < 90; j++) { // 氣候 

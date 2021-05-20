@@ -73,7 +73,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 539 / 940,
+        WinsolsCorr: 539 / 940,
     },
     LuB: { // 宣二-606，成四-586
         Denom: 940,
@@ -89,7 +89,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 469 / 940,
+        WinsolsCorr: 469 / 940,
     },
     LuC: { // 成五-585，襄六-566
         Denom: 940,
@@ -105,7 +105,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 403 / 940,
+        WinsolsCorr: 403 / 940,
     },
     LuD: { // 襄七-565，襄廿五-547
         Denom: 940,
@@ -121,7 +121,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 348 / 940,
+        WinsolsCorr: 348 / 940,
     },
     LuE: { // 襄廿六-546，昭十二-529
         Denom: 940,
@@ -137,7 +137,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 280 / 940,
+        WinsolsCorr: 280 / 940,
     },
     LuF: { // 昭十三-528，定元-508
         Denom: 940,
@@ -153,7 +153,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 213 / 940,
+        WinsolsCorr: 213 / 940,
     },
     LuG: { // -507，-466
         Denom: 940,
@@ -169,7 +169,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 147 / 940,
+        WinsolsCorr: 147 / 940,
     },
     XiaDong: { // 冬至曆元夏曆
         Denom: 940,
@@ -256,7 +256,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 3 / 4,
+        WinsolsCorr: 3 / 4,
     },
     ZhuanxuD: { // 高帝元年前206朔餘減少210分
         Denom: 940,
@@ -275,7 +275,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        OriginCorr: 3 / 4 - 210 / 940,
+        WinsolsCorr: 3 / 4 - 210 / 940,
     },
     ZhuanxuE: { // 前162年改變閏章（但我看他提供的資料，應該是前186-182之間變化），減朔餘25分。《顓頊日曆表》第544頁：出土資料的閏年：前251、208、205、202、199、197、191、186、180、164、153、151、134、129、110
         Denom: 940,
@@ -294,7 +294,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 1,
-        OriginCorr: 3 / 4 - 210 / 940,
+        WinsolsCorr: 3 / 4 - 210 / 940,
     },
     ZhuanxuF: {
         Denom: 940,
@@ -313,7 +313,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 1,
-        OriginCorr: 3 / 4 - 235 / 940,
+        WinsolsCorr: 3 / 4 - 235 / 940,
     },
     TaiyiJiayin: {
         Denom: 940, // 日法
@@ -345,7 +345,7 @@ export default {
         JiRange: 1520, // 紀
         BuRange: 76, // 蔀
         isTermLeap: 1, // 是否用無中氣置閏法
-        OriginCorr: -0.75, // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
+        WinsolsCorr: -0.75, // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
     },
     Taichu: {
         Denom: 81,
@@ -498,9 +498,9 @@ export default {
         AnomaCorr: 103947, // 甲子紀的遲疾差率，實測得出
         Ecli: 5 + 116960 / 134630, // 分母是朔實
         EcliNumer: 790110, // 會通
-        EcliOrigin: 412919 / 790110, // 甲子交會差率
+        EcliCorr: 412919 / 790110, // 甲子交會差率
         Node: 27.2122009856701,
-        YinyangOrigin: -1,
+        YinyangCorr: -1,
         MoonAcrVList: [280, 277, 274, 271, 267, 261, 254, 248, 244, 241, 239, 236, 233, 231, 233, 235, 237, 240, 243, 246, 250, 254, 259, 265, 271, 277, 278, 279 + 626 / 86621, 280],
         MoonDifAccumList: [0, 26, 49, 69, 86, 99, 106, 106, 100, 90, 77, 62, 44, 23, 0, -21, -40, -57, -71, -82, -90, -94, -94, -89, -78, -61, -38, -14, 11.0072268849],
         OriginAd: 237 - 4045, // 上元積年的公元
@@ -573,7 +573,7 @@ export default {
         AnomaNumer: 167063, // 通週
         AnomaCorr: 86178, // 本來是49178
         Ecli: 11045 / 1882, // 會月/會率。會率/2=朔望合數。893:會歲會月-朔望合數=11045-941=入交限
-        EcliOrigin: 12700 / 11045, // 原來是 9157 / 11045
+        EcliCorr: 12700 / 11045, // 原來是 9157 / 11045
         Node: 27.212199762772333,
         OriginAd: 384 - 83840, // 晉孝武太元九年甲申
         // JdOrigin: 1861305.400041 - 83840 * (365 + 605 / 2451),
@@ -602,7 +602,7 @@ export default {
         AnomaNumer: 2453784,
         AnomaCorr: 600000, // 「遲疾差600」紀差795624
         Ecli: 15433715 / 2629759, // 闕。交會週期=會通/週天。會數173+(89052-61333,度餘27719)/89052日一交=會通/日法。分子爲會餘。所以會通=15433715
-        EcliOrigin: -2300000 / 15433715, // 不知道怎麼補，瞎填一個 -2300000 / 15433715
+        EcliCorr: -2300000 / 15433715, // 不知道怎麼補，瞎填一個 -2300000 / 15433715
         Node: 27.212245523296843,
         OriginAd: 412 - 61438, // 玄始元年壬子
         // JdOrigin: 1871530.1447 - 61438 * (365 + 1759 / 7200),
@@ -787,7 +787,7 @@ export default {
         AnomaFract: 100859, // 週日餘、小大法
         AnomaNumer: 5012699, // 週通。週虛81061CycleDif = Denom - AnomaNumer 
         Ecli: 1297 / 221,
-        YinyangOrigin: -1,
+        YinyangCorr: -1,
         OriginAd: 584 - 4129000, // 開皇四年行用至開皇十六年
         // JdOrigin: 1934350.8011 - 4129000 * (365 + 25063 / 102960),
         OriginYearSc: 1, // 上元甲子
@@ -812,7 +812,7 @@ export default {
         AnomaNumer: 20721, // 通週。417:週日日餘。 Denom-週日日餘=335:週虛
         AnomaCorr: 625, // 原來是17663。2343比較合
         Ecli: 939 / 160, // 會月/會數。朔望合數=EcliDenom/2。
-        EcliOrigin: 877 / 939, //661 / 939
+        EcliCorr: 877 / 939, //661 / 939
         Node: 27.21218784582298,
         MoonAcrVList: [279, 277, 274, 270, 265, 260, 254, 249, 245, 242, 239, 236, 234, 232, 230, 232, 234, 237, 242, 248, 254, 259, 263, 267, 271, 274, 277, 278 + 103 / 417, 279],
         MoonDifAccumList: [0, 25, 48, 68, 84, 95, 101, 101, 96, 87, 75, 60, 42, 22, 0, -24, -46, -66, -83, -95, -101, -101, -96, -87, -74, -57, -37, -14, 10.2470023981],

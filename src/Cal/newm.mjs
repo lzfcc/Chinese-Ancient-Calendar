@@ -20,19 +20,21 @@ import {
 export default (CalName, year) => {
     const { Type, AutoPara, isAcr, isNewmPlus
     } = Bind(CalName)
-    const {
-        Sidereal, SolarNumer, LunarNumer, Denom, Anoma, AnomaCorr, Node, YinyangOrigin, EcliOrigin,
+    const { Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
-        FirstCorr, AnomaCorr, NodeCorr, OriginCorr, WinsolsConst, LeapConst, AnomaConst, NodeConst,
-        AcrTermList
+        YinyangCorr, EcliCorr
     } = AutoPara[CalName]
-    let {
-        Solar, SolarRaw, Lunar, LunarRaw, OriginDaySc,
+    let { Solar, SolarRaw, Lunar, LunarRaw, ScCorr, NodeCorr, FirstCorr, AnomaCorr, MansionCorr, WinsolsCorr
     } = AutoPara[CalName]
-    OriginDaySc = OriginDaySc || 0
+    ScCorr = ScCorr || 0
     SolarRaw = SolarRaw || Solar
     LunarRaw = LunarRaw || Lunar
+    FirstCorr = FirstCorr || 0
+    NodeCorr = NodeCorr || 0
+    AnomaCorr = Type === 11 ? AnomaCorr : (AnomaCorr / Denom || 0)
+    MansionCorr = MansionCorr || 0
+    WinsolsCorr = WinsolsCorr || 0
     const ZhangMon = Math.round(ZhangRange * (12 + ZhangLeap / ZhangRange))
     // const JiMon = JiRange * ZhangMon / ZhangRange
     const ZhengWinsolsDif = ZhengNum - OriginMonNum
@@ -71,12 +73,11 @@ export default (CalName, year) => {
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
-    let NodeCorr = NodeCorr || 0
-    if (EcliOrigin) {
+    if (EcliCorr) {
         if (CalName === 'Yuanjia') {
-            NodeCorr = Node * EcliOrigin
+            NodeCorr = Node * EcliCorr
         } else {
-            NodeCorr = (Node / 2) * EcliOrigin
+            NodeCorr = (Node / 2) * EcliCorr
         }
     }
     const SynodicAnomaDif = Lunar - Anoma
@@ -103,16 +104,16 @@ export default (CalName, year) => {
     // EcliLimit = EcliNumer - Shuowang // 入交限數 乾象先不管
 
     // const EcliJiDif = (JiMon * LunarNumer) % EcliNumer // 景初交會紀差
-    // const JiEcli = ((EcliOrigin + EcliJiDif * JiOrder) % EcliNumer + EcliNumer) % EcliNumer // 交會差率
-    // const JiYinyang = Math.floor((EcliOrigin + EcliJiDif * JiOrder) / EcliNumer) % 2 === 0 ? YinyangOrigin : -YinyangOrigin
+    // const JiEcli = ((EcliCorr + EcliJiDif * JiOrder) % EcliNumer + EcliNumer) % EcliNumer // 交會差率
+    // const JiYinyang = Math.floor((EcliCorr + EcliJiDif * JiOrder) / EcliNumer) % 2 === 0 ? YinyangCorr : -YinyangCorr
     // const NodeJiDif = (JiMon * LunarNumer) % NodeNumer
-    // const JiNode = ((EcliOrigin + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
-    // const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangOrigin : -YinyangOrigin
+    // const JiNode = ((EcliCorr + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
+    // const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangCorr : -YinyangCorr
     // const AnomaJiDif = (JiMon * LunarNumer) % AnomaNumer
     // const JiAnoma = ((AnomaCorr + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
     let OriginAccum = 0
     if (Type < 11) {
-        OriginAccum = OriginYear * SolarRaw + (OriginCorr || 0) - SolarChangeAccum
+        OriginAccum = OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum
     }
     let LeapSurAvgThis = 0
     let LeapSurAvgPrev = 0
@@ -127,19 +128,19 @@ export default (CalName, year) => {
         LeapSurAvgPrev = (OriginYear - 1) * SolarNumer % LunarNumer
         LeapSurAvgNext = (OriginYear + 1) * SolarNumer % LunarNumer
     } else if (Type < 11) {
-        const OriginAccumPrev = (OriginYear - 1) * SolarRaw + (OriginCorr || 0) - SolarChangeAccum
-        const OriginAccumNext = (OriginYear + 1) * SolarRaw + (OriginCorr || 0) - SolarChangeAccum
-        LeapSurAvgThis = ((OriginAccum + (FirstCorr || 0)) % LunarRaw + LunarRaw) % LunarRaw
-        LeapSurAvgPrev = ((OriginAccumPrev + (FirstCorr || 0)) % LunarRaw + LunarRaw) % LunarRaw
-        LeapSurAvgNext = ((OriginAccumNext + (FirstCorr || 0)) % LunarRaw + LunarRaw) % LunarRaw
+        const OriginAccumPrev = (OriginYear - 1) * SolarRaw + WinsolsCorr - SolarChangeAccum
+        const OriginAccumNext = (OriginYear + 1) * SolarRaw + WinsolsCorr - SolarChangeAccum
+        LeapSurAvgThis = ((OriginAccum + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
+        LeapSurAvgPrev = ((OriginAccumPrev + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
+        LeapSurAvgNext = ((OriginAccumNext + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
     } else if (Type === 11) {
         AccumZhongThis = OriginYear * SolarRaw // 中積
         const AccumZhongPrev = (OriginYear - 1) * SolarRaw
         const AccumZhongNext = (OriginYear + 1) * SolarRaw
-        OriginAccum = AccumZhongThis + WinsolsConst - SolarChangeAccum // 通積：該年冬至積日
-        const AccumLeapThis = AccumZhongThis + LeapConst // 閏積
-        const AccumLeapPrev = AccumZhongPrev + LeapConst
-        const AccumLeapNext = AccumZhongNext + LeapConst
+        OriginAccum = AccumZhongThis + WinsolsCorr - SolarChangeAccum // 通積：該年冬至積日
+        const AccumLeapThis = AccumZhongThis + FirstCorr // 閏積
+        const AccumLeapPrev = AccumZhongPrev + FirstCorr
+        const AccumLeapNext = AccumZhongNext + FirstCorr
         LeapSurAvgThis = parseFloat(((AccumLeapThis % Lunar + Lunar) % Lunar).toPrecision(14)) // 閏餘、冬至月齡
         LeapSurAvgPrev = parseFloat(((AccumLeapPrev % Lunar + Lunar) % Lunar).toPrecision(14))
         LeapSurAvgNext = parseFloat(((AccumLeapNext % Lunar + Lunar) % Lunar).toPrecision(14))
@@ -157,17 +158,19 @@ export default (CalName, year) => {
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
-        FirstAnomaAccum = ((FirstAccum + (AnomaCorr / Denom || 0) + (CalName === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
+        FirstAnomaAccum = ((FirstAccum + AnomaCorr + (CalName === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
     } else if (Type === 11) {
-        FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaConst) % Anoma + Anoma) % Anoma
+        FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaCorr) % Anoma + Anoma) % Anoma
     }
     let FirstNodeAccum = 0
     if (Node && Type < 11) {
-        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangOrigin === -1 ? Node / 2 : 0)) % Node
+        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node
     } else if (Type >= 11) {
-        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeConst) % Node + Node) % Node
+        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeCorr) % Node + Node) % Node
     }
-    const AccumPrint = (Anoma ? '轉' + (OriginAccum % Anoma + (AnomaCorr / Denom || 0)).toFixed(4) : '') + (Node ? '交' + (OriginAccum % Node + (NodeCorr || 0)).toFixed(4) : '') + (Sidereal ? '週' + (OriginAccum % Sidereal).toFixed(4) : '')
+    const AccumPrint = (Anoma ? '轉' + ((OriginAccum % Anoma + AnomaCorr + Anoma) % Anoma).toFixed(4) : '') +
+        (Node ? '交' + ((OriginAccum % Node + NodeCorr + Node) % Node).toFixed(4) : '') +
+        (Sidereal ? '週' + (((OriginAccum % Sidereal + MansionCorr) % Sidereal + Sidereal) % Sidereal).toFixed(4) : '')
     OriginAccum = +OriginAccum.toFixed(5)
     FirstAccum = +FirstAccum.toFixed(5)
     FirstAnomaAccum = +FirstAnomaAccum.toFixed(5)
@@ -243,7 +246,7 @@ export default (CalName, year) => {
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
             AvgInt[i] = Math.floor(AvgRaw[i])
-            AvgSc[i] = ScList[(((AvgInt[i] + 1 + OriginDaySc) % 60) + 60) % 60]
+            AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScCorr) % 60) + 60) % 60]
             AvgDecimal[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
             WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
             let Tcorr1 = 0
@@ -325,11 +328,11 @@ export default (CalName, year) => {
             AnomaAccumNight[i] += NewmPlus
             if (isNewm) {
                 if (Tcorr[i]) {
-                    Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
+                    Sc[i] = ScList[((AcrInt[i] + ScCorr + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
                 }
             } else {
                 if (Tcorr[i]) {
-                    Sc[i] = ScList[((AcrInt[i] + OriginDaySc + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
+                    Sc[i] = ScList[((AcrInt[i] + ScCorr + 1) % 60 + 60) % 60] + (NewmPlusPrint || '') + (SyzygySubPrint || '')
                 } else {
                     Sc[i] = AvgSc[i]
                 }

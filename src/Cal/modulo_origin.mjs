@@ -425,7 +425,7 @@ export const OriginModulo = (Denom, SolarFrac, OriginConstRaw, FirstConstRaw) =>
 // 明天歲差算法： 歲差dif*實測積度≡多少度之外就是上元積度 (mod Solar+歲差dif) 
 // Origin≡甲辰年(41-1) (mod 60)
 // SolarNumer*Origin≡OriginConst (mod 60*Denom)
-// SolarNumer*Origin≡LeapConst (mod  LunarFrac )
+// SolarNumer*Origin≡FirstCorr (mod  LunarFrac )
 // N1≡ R0(mod 60) // N0<10**8
 // TN0≡ R1(mod 60 À) // R1，R2誤差<=0.01 // 1刻
 // TN0≡ R2(mod B)

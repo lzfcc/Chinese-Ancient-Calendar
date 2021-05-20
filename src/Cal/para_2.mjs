@@ -19,7 +19,6 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         ZhengNum: 2, // 建寅
-        // OriginCorr: -0.379, // 不太對，所以加這個修正一下。
         MansionRaw: [8, 11], // 「日月五星并從斗十一起」
         MansionFractPosition: 8
     },
@@ -80,7 +79,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: 2,
-        MansionCorr: -12,
+        MansionDayCorr: -12,
         ZhengNum: 2, // 建寅
         MansionRaw: [11, 1], // 虛1度
         MansionFractPosition: 10, // 女末接虛謂之週分
@@ -118,7 +117,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2, // 建寅
         WeekCorr: 1,
-        MansionCorr: -20,
+        MansionDayCorr: -20,
         MansionRaw: [8, 12], // 斗12。這估計是黃道度，但是沒說赤道度，奇怪
         MansionFractPosition: 8, // 沒說
         // MoonAcrV: [985, 974, 962, 948, 933, 918, 902, 886, 870, 854, 839, 826, 815, 808, 810, 819, 832, 846, 861, 877, 893, 909, 925, 941, 955, 968, 979, 985], // 離程
@@ -152,7 +151,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2, // 建寅
         WeekCorr: 1,
-        MansionCorr: -20,
+        MansionDayCorr: -20,
         MansionRaw: [8, 12], // 斗12。這估計是黃道度，但是沒說赤道度，奇怪
         MansionFractPosition: 8, // 沒說
         // MoonAcrV: [985, 974, 962, 948, 933, 918, 902, 886, 870, 854, 839, 826, 815, 808, 810, 819, 832, 846, 861, 877, 893, 909, 925, 941, 955, 968, 979, 985], // 離程
@@ -209,7 +208,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2, // 建寅
         WeekCorr: -1,
-        MansionCorr: -8, // 這是二十八宿值日，跟宿度沒關係！
+        MansionDayCorr: -8, // 這是二十八宿值日，跟宿度沒關係！
         MansionRaw: [11, 9],
         MansionFractPosition: 11, // 命起赤道虛九，宿次去之，經虛去分，至不滿宿算外，得冬至加時日度。
         SunAcrT: [0, 173.3, 175.3, 177.1, 178.8, 180.3, 181.8, 183.5, 184.9, 186.5, 188.1, 189.9, 191.9, 191.9, 189.9, 188.1, 186.5, 184.9, 183.5, 181.8, 180.3, 178.8, 177.1, 175.3, 173.3], // 辰數與盈縮分只是單位不同
@@ -245,7 +244,7 @@ export default {
         ZhengNum: 2, // 建寅
         TermCorr: 2,
         WeekCorr: -1,
-        MansionCorr: -8,
+        MansionDayCorr: -8,
         MansionRaw: [11, 9],
         MansionFractPosition: 11,
     },
@@ -266,7 +265,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: 1,
-        MansionCorr: -20,
+        MansionDayCorr: -20,
         MansionRaw: [11, 4], // 上元七曜，起赤道虛四度。
         MansionFractPosition: 11, // 闕
         // MoonAcrV: [986, 974, 962, 948, 933, 918, 902, 886, 870, 855, 841, 828, 817, 810, 808, 819, 832, 846, 861, 877, 893, 909, 924, 939, 954, 968, 979, 985, 986], // 轉法67
@@ -293,7 +292,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: -2,
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         MansionRaw: [11, 4], // 上元七曜，起赤道虛四度。
         MansionFractPosition: 11, // 闕
         // MoonAcrV: [3222, 3184, 3144, 3099, 3050, 3001, 2948, 2896, 2844, 2795, 2746, 2700, 2670, 2648, 2641, 2677, 2720, 2765, 2814, 2867, 2919, 2971, 3020, 3069, 3118, 3164, 3200, 3220, 3222], // 轉法219
@@ -324,7 +323,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: -1,
-        MansionCorr: -8,
+        MansionDayCorr: -8,
         MansionRaw: [11, 9], // 上元七曜，起赤道虛九度。
         MansionFractPosition: 11, // 闕
         // SunAcrAvgDifList: [60, 50, 40, 30, 18, 6, -6, -18, -30, -40, -50, -60, -60, -50, -40, -30, -18, -6, 6, 18, 30, 40, 50, 60, 60], // 盈縮分
@@ -357,7 +356,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: -2,
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         MansionRaw: [11, 4],
         MansionFractPosition: 11, // 其上元七曜，起赤道虛四度。
         SunAcrAvgDifList: [7740, 6069, 4572, 3250, 1977, 660, -660, -1977, -3250, -4572, -6069, -7740, -7740, -6069, -4572, -3250, -1977, -660, 660, 1977, 3250, 4572, 6069, 7740, 7740],
@@ -385,7 +384,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: 2,
-        MansionCorr: -12,
+        MansionDayCorr: -12,
         MansionRaw: [11, 8],
         MansionFractPosition: 11, // 命赤道虛八算外
     },
@@ -410,7 +409,7 @@ export default {
         OriginYearSc: 54, // 657年丁巳
         OriginMonNum: 3, // 春分朔
         ZhengNum: 3, // 建卯
-        OriginCorr: 55,
+        WinsolsCorr: 55,
         FirstCorr: 32.5, //
         AnomaCorr: 15,
     },
@@ -426,7 +425,7 @@ export default {
         // JdOrigin:1962108.6259, // 冬至
         OriginMonNum: 2, // 雨水元
         ZhengNum: 2,
-        OriginCorr: 39, // 經朔癸卯朔旦雨水
+        WinsolsCorr: 39, // 經朔癸卯朔旦雨水
         FirstCorr: -9.4694,
         AnomaCorr: 18,
     },
@@ -481,7 +480,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: -2, // 5
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         ZhengNum: 2,
         MansionRaw: [11, 4],
         MansionFractPosition: 11,
@@ -518,7 +517,7 @@ export default {
         Denom: 1700,
         Anoma: 27 + 942.9302 / 1700,
         Node: 27 + 360.7942 / 1700,
-        OriginDaySc: 30, // 甲午
+        ScCorr: 30, // 甲午
         MansionRaw: [11, 4],
         MansionFractPosition: 11,
         OriginMonNum: 0,
@@ -539,7 +538,7 @@ export default {
         Node: 27 + 2143.2279 / 10100,
         SunLimit1: 3174, // 陽限
         SunLimit2: 7286, // 陰限
-        MoonLimit1: 2582, // 月食旣限。月食分法912.5
+        MoonLimitTotal: 2582, // 月食旣限。月食分法912.5
         OriginAd: 1001 - 716497,
         CloseOriginAd: 1001, // 咸平四年辛丑
         // JdOrigin: 2086658.0337 - 716497 * (365 + 2470 / 10100), // 
@@ -587,7 +586,7 @@ export default {
         // JdOrigin: 2095058.6586 - 97556340 * (365 + 2590 / 10590),
         OriginYearSc: 1, // 上元甲子
         WeekCorr: -3, // 4
-        MansionCorr: 4,
+        MansionDayCorr: 4,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 7], // 命以赤道虛宿七度外起算
@@ -618,7 +617,7 @@ export default {
         Anoma: 27 + 601471251 / 1084473000, // 轉度母81120000（日法2080倍）
         AnomaNumer: 29882242251, // 轉終分。朔差2142887000=26度餘33767000.轉法1084473000：一天的運行距離。會週32025129251=轉終分+朔差=朔望月*轉法.轉終368度餘382251.月平行13度餘29913000（王錦瑞《明天曆天文常數系統中的缺陷解析》，《咸陽師院學報》2020年4期）
         // 明天的交點月我根據崇天比例四捨五入的，實在不知道怎麼算
-        YinyangOrigin: -1,
+        YinyangCorr: -1,
         Node: 27 + 1324263 / 6240000, // 交度母6240000（日法的160倍）.朔差：9901159，1度餘3661159。週天分2279200447
         // 月行之餘2301000日行之餘1600447
         SunLimit: 1464, // 日食限
@@ -629,7 +628,7 @@ export default {
         // JdOrigin: 2109302.6923 - 711759 * (365 + 95 / 390),
         OriginYearSc: 1, // 上元甲子
         WeekCorr: 3,
-        MansionCorr: -4,
+        MansionDayCorr: -4,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 6], // 命起赤道虛宿六度去之
@@ -668,7 +667,7 @@ export default {
         OriginAd: 1092 - 5944808,
         CloseOriginAd: 1092, // 元祐七年壬申
         WeekCorr: -1, // 6
-        MansionCorr: -8,
+        MansionDayCorr: -8,
         // JdOrigin: 2119894.6929 - 5944808 * (365 + 293 / 1203),
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
@@ -693,7 +692,7 @@ export default {
         OriginAd: 1103 - 269190, // 1103 - 25501759,
         CloseOriginAd: 1103, // 崇寧二年癸未
         WeekCorr: 2,
-        MansionCorr: 16,
+        MansionDayCorr: 16,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4],
@@ -715,9 +714,9 @@ export default {
         OriginAd: 1100 - 28613460,
         CloseOriginAd: 1100, // 元符三年庚辰。自大觀元年頒用
         // JdOrigin: 2122816.6605 - 28613460 * (365 + 1776 / 7290),
-        OriginDaySc: 15, // 己卯算外
+        ScCorr: 15, // 己卯算外
         OriginYearSc: 17, // 上元上章執徐庚辰
-        MansionCorr: -21,
+        MansionDayCorr: -21,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 7], //  命起赤道虛宿七度外去之
@@ -746,7 +745,7 @@ export default {
         // JdOrigin: 2135600.1909 - 94251591 * (365 + 1688 / 6930),
         OriginYearSc: 1, // 上元甲子
         WeekCorr: 3,
-        MansionCorr: -4,
+        MansionDayCorr: -4,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4], // 法同前曆，此不載
@@ -777,7 +776,7 @@ export default {
         // JdOrigin: 2147287.9828 - 91645823 * (365 + 7308 / 30000),
         OriginYearSc: 1, // 上元甲子
         WeekCorr: -1, // 6
-        MansionCorr: -8,
+        MansionDayCorr: -8,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4],
@@ -808,7 +807,7 @@ export default {
         // JdOrigin: 2150575.1681 - 52421972 * (365 + 1374 / 5640),
         OriginYearSc: 1, // 上元甲子
         WeekCorr: 2,
-        MansionCorr: -12,
+        MansionDayCorr: -12,
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 8],
@@ -838,7 +837,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: 2,
-        MansionCorr: -12,
+        MansionDayCorr: -12,
         ZhengNum: 2,
         MansionRaw: [11, 4],
         MansionFractPosition: 11,
@@ -849,10 +848,10 @@ export default {
         MoonTcorrList: [0, 3763, 7150, 10131, 12592, 14445, 15574, 15921, 15400, 14097, 12100, 9523, 6426, 2953, -839, -4544, -7873, -10739, -13055, -14763, -15747, -15892, -15168, -13692, -11579, -8887, -5702, -2113],
     },
     Tongtian: { // 以下三個宋志十七。統天在氣朔、交食、五星計算上沒什麼創新，特色是消長、積年。積年僅僅是甲子日，其他什麼都不是——這就是授時的理論來源
-        SolarRaw: 365.2425, // 《統天曆的歲實消長與氣朔算法分析》歲餘 2910 / 12000
+        SolarRaw: 365.2425, // 《統天曆的歲實消長與氣朔算法分析》歲餘 2910 / 12000。斗分差127
         SolarNumer: 4382910, // 歲分
-        Sidereal: 365.2575,
-        SiderealNumer: 4383090, // 週天差338920
+        Sidereal: 365.2575, // 365 + 3090 / 12000
+        SiderealNumer: 4383090, // 週天分
         LunarRaw: 29 + 6368 / 12000, // 朔策
         LunarNumer: 354368, // 朔實
         Denom: 12000, // 策法
@@ -860,10 +859,11 @@ export default {
         AnomaNumer: 330655, // 轉實
         Node: 27.21225,
         NodeNumer: 326547, // 交實      
-        OriginCorr: -237811 / 12000, // 氣差
+        WinsolsCorr: -237811 / 12000, // 氣差
         FirstCorr: -21704 / 12000, // 閏差
         AnomaCorr: -188800, // 轉差
         NodeCorr: 80298 / 12000, // 交差
+        YinyangCorr: -1,
         OriginAd: 1194 - 3830,
         CloseOriginAd: 1194, // 紹熙五年甲寅
         SunLimit1: 5680,
@@ -871,10 +871,11 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: -2, // 5
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         ZhengNum: 2,
-        MansionRaw: [11, 7],
+        MansionRaw: [11, 7], // 上元命日所起虛宿七度
         MansionFractPosition: 11,
+        MansionCorr: 338920 / 12000, // 週天差
         SunAcrAvgDifList: [7000, 5840, 4630, 3370, 2060, 700, -700, -2060, -3370, -4630, -5840, -5840, -7000, -5840, -4630, -3370, -2060, -700, 700, 2060, 3370, 4630, 5840, 5840, 7000], // 盈縮分。乘法380，除法5783
         SunTcorrList: [0, 628, 1152, 1568, 1870, 2055, 2118, 2055, 1870, 1568, 1152, 628, 0, -628, -1152, -1568, -1870, -2055, -2118, -2055, -1870, -1568, -1152, -628, 0, 628],
         AcrTermList: [0, 14.518458, 29.152917, 43.908375, 58.789833, 73.802292, 88.95075, 104.239208, 119.663667, 135.219125, 150.900583, 166.703042, 182.5055, 198.423958, 214.226417, 229.907875, 245.463333, 260.887792, 276.17625, 291.324708, 306.337167, 321.218625, 335.974083, 350.608542, 365.243],
@@ -901,7 +902,7 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: -2, //5
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         ZhengNum: 2,
         MansionRaw: [11, 7],
         MansionFractPosition: 11,
@@ -911,7 +912,7 @@ export default {
         MoonAcrV: [1466, 1456, 1440, 1421, 1399, 1375, 1349, 1321, 1295, 1271, 1249, 1230, 1214, 1202, 1209, 1221, 1237, 1257, 1280, 1306, 1333, 1361, 1387, 1411, 1431, 1447, 1459, 1467, 1466],
         MoonTcorrList: [0, 1631, 3135, 4437, 5499, 6283, 6763, 6914, 6712, 6181, 5347, 4235, 2882, 1327, -379, -1997, -3463, -4727, -5738, -6459, -6851, -6902, -6599, -5967, -5031, -3843, -2452, -910],
     },
-    Chunyou: { // 《李氏遺書》
+    Chunyou: { // 《李氏遺書》、曲安京《曆法》
         Solar: 365 + 857 / 3530,
         Sidereal: 365 + 909.04 / 3530,
         Lunar: 29 + 1873 / 3530,
@@ -941,7 +942,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: -2,
-        MansionCorr: 12,
+        MansionDayCorr: -16,
         MansionRaw: [11, 7],
         MansionFractPosition: 11,
         AcrTermList: [0, 14.496955, 29.12691, 43.888564, 58.780619, 73.801774, 88.950729, 104.238684, 119.654439, 135.199293, 150.874548, 166.681503, 182.621458, 198.561413, 214.368368, 230.043622, 245.588477, 261.004232, 276.292187, 291.441142, 306.462297, 321.354351, 336.116006, 350.745961, 365.242916, 379.739871],
@@ -966,9 +967,9 @@ export default {
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: -2, // 5
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         ZhengNum: 2,
-        MansionRaw: [11, 7],
+        MansionRaw: [11, 8],
         MansionFractPosition: 11,
         SunAcrAvgDifList: [7215, 5885, 4568, 3264, 1973, 695, -695, -1973, -3264, -4568, -5885, -7215, -7215, -5885, -4568, -3264, -1973, -695, 695, 1973, 3264, 4568, 5885, 7215, 7215], // 乘法325除法4946
         SunTcorrList: [0, 400, 727, 981, 1162, 1271, 1310, 1271, 1162, 981, 727, 400, 0, -400, -727, -981, -1162, -1271, -1310, -1271, -1162, -981, -727, -400, 0, 400],
@@ -989,7 +990,7 @@ export default {
         OriginYearSc: 1,
         OriginMonNum: 0,
         WeekCorr: -2,
-        MansionCorr: -16,
+        MansionDayCorr: -16,
         ZhengNum: 2,
         MansionRaw: [11, 7],
         MansionFractPosition: 11,
@@ -1011,7 +1012,7 @@ export default {
         OriginMonNum: 0,
         ZhengNum: 2,
         WeekCorr: -3,
-        MansionCorr: 4,
+        MansionDayCorr: 4,
         MansionRaw: [11, 4],
         MansionFractPosition: 11,
     },
@@ -1056,7 +1057,7 @@ export default {
         OriginAd: 1180 - 40453025,
         CloseOriginAd: 1180,
         WeekCorr: 0,
-        OriginDaySc: 8, // 壬申日
+        ScCorr: 8, // 壬申日
         OriginMonNum: 0,
         ZhengNum: 2,
         MansionRaw: [11, 4],
@@ -1077,10 +1078,10 @@ export default {
         CloseOriginAd: 1220, // 太祖庚辰
         // JdOrigin: 2166645.9237 - 20275270 * (365 + 1274 / 5230),
         OriginYearSc: 7, // 上元庚午
-        OriginDaySc: 58, // 只是經朔少了1700。推上元庚午歲天正十一月壬戌朔
+        ScCorr: 58, // 只是經朔少了1700。推上元庚午歲天正十一月壬戌朔
         OriginMonNum: 0,
         WeekCorr: 2,
-        MansionCorr: 2,
+        MansionDayCorr: 2,
         ZhengNum: 2,
         MansionRaw: [11, 6], // 同會虛宿六度
         MansionFractPosition: 11,
@@ -1097,30 +1098,29 @@ export default {
         Sidereal: 365.2575,
         Lunar: 29.530593, // 朔策。秒單位100，分10000
         Node: 27.212224,
-        NodeDeg: 363.7934,
-        NodeConst: 26.0388,
+        NodeCorr: 26.0388,
+        SunLimit1: 6, // 陽曆限6度，定法60
+        SunLimit2: 8,
         Anoma: 27.5546, // 轉終：近點月
-        AnomaConst: 13.0205, // 轉應：曆元前冬至距月過近地點
-        WinsolsConst: 55.06, // 氣應：曆元前冬至日分
-        LeapConst: 20.205, // 閏應：曆元前冬至月齡
-        MoonAvgVDeg: 13.36875,
+        AnomaCorr: 13.0205, // 轉應：曆元前冬至距月過近地點
+        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
+        FirstCorr: 20.205, // 閏應：曆元前冬至月齡
         XianConst: 0.082, // 限法
-        // MoonAvgS : 13.36875 ,// 月平行度
-        ExpanDing: 513.32, // expansion盈曆定差
-        ExpanPing: 2.46, // 盈曆平差
-        ExpanLi: 0.0031, // 盈曆立差
-        ContracDing: 487.06, // contraction縮曆定差
-        ContracPing: 2.21, // 縮曆平差
-        ContracLi: 0.0027, // 縮曆立差
-        FaslowDing: 11.11, // 遲疾曆定差
-        FaslowPing: 0.0281, // 遲疾曆平差
-        FaslowLi: 0.000325, // 遲疾曆立差
+        DeltaSunA1: 513.32, // expansion盈曆定差
+        DeltaSunA2: 2.46, // 盈曆平差
+        DeltaSunA3: 0.0031, // 盈曆立差
+        DeltaSunB1: 487.06, // contraction縮曆定差
+        DeltaSunB2: 2.21, // 縮曆平差
+        DeltaSunB3: 0.0027, // 縮曆立差
+        DeltaMoon1: 11.11, // 遲疾曆定差
+        DeltaMoon2: 0.0281, // 遲疾曆平差
+        DeltaMoon3: 0.000325, // 遲疾曆立差
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,
         OriginMonNum: 0,
         WeekCorr: 2,
-        MansionCorr: -12,
-        MansionConst: 315.1075, // 週應。置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
+        MansionDayCorr: -12,
+        MansionCorr: 315.1075, // 週應。置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
         MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
         MansionFractPosition: 11,
     },
@@ -1132,27 +1132,29 @@ export default {
         Lunar: 29.530593, // 朔策
         Anoma: 27.5546, // 轉終：近點月
         Node: 27.212224,
-        NodeDeg: 363.7934,
-        WinsolsConst: 55.0375, // 氣應：曆元前冬至日分
-        LeapConst: 18.20708, // 閏應：曆元前冬至月齡18.217018
-        AnomaConst: 20.969, // 轉應：曆元前冬至距月過近地點
+        NodeCorr: -2.318369, // 交差
+        YinyangCorr: -1, // 沒有，但是似乎是這樣的
+        SunLimit1: 6, // 陽曆限6度，定法60
+        SunLimit2: 8,
+        WinsolsCorr: 55.0375, // 氣應：曆元前冬至日分
+        FirstCorr: 18.20708, // 閏應：曆元前冬至月齡18.217018
+        AnomaCorr: 20.969, // 轉應：曆元前冬至距月過近地點
         XianConst: 0.082, // 限法
-        // MoonAvgS : 13.36875 ,// 月平行度
-        ExpanDing: 513.32, // expansion盈曆定差
-        ExpanPing: 2.46, // 盈曆平差
-        ExpanLi: 0.0031, // 盈曆立差
-        ContracDing: 487.06, // contraction縮曆定差
-        ContracPing: 2.21, // 縮曆平差
-        ContracLi: 0.0027, // 縮曆立差
-        FaslowDing: 11.11, // 遲疾曆定差
-        FaslowPing: 0.0281, // 遲疾曆平差
-        FaslowLi: 0.000325, // 遲疾曆立差
+        DeltaSunA1: 513.32, // expansion盈曆定差
+        DeltaSunA2: 2.46, // 盈曆平差
+        DeltaSunA3: 0.0031, // 盈曆立差
+        DeltaSunB1: 487.06, // contraction縮曆定差
+        DeltaSunB2: 2.21, // 縮曆平差
+        DeltaSunB3: 0.0027, // 縮曆立差
+        DeltaMoon1: 11.11, // 遲疾曆定差
+        DeltaMoon2: 0.0281, // 遲疾曆平差
+        DeltaMoon3: 0.000325, // 遲疾曆立差
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,
         WeekCorr: 2,
-        MansionCorr: -12,
+        MansionDayCorr: -12,
         OriginMonNum: 0,
-        MansionConst: 313.5625, // 已據改：洪武甲子相距一百四年，歲差已退天一度五十四分五十秒，而周應仍用舊數，殆傳習之誤耳。
+        MansionCorr: 313.5625, // 已據改：洪武甲子相距一百四年，歲差已退天一度五十四分五十秒，而周應仍用舊數，殆傳習之誤耳。
         MansionRaw: [11, 6],
         MansionFractPosition: 11,
     },
@@ -1166,24 +1168,24 @@ export default {
         Anoma: 27.554551,
         EcliLimitA: 12.79,
         EcliLimitD: 4.27,
-        WinsolsConst: 55.08125,
-        LeapConst: 20.2,
-        AnomaConst: 13.17,
+        WinsolsCorr: 55.08125,
+        FirstCorr: 20.2,
+        AnomaCorr: 13.17,
         XianConst: 0.08200773809523809524,
         // MoonAvgS : 13.36875 ,
-        ExpanDing: 513.3822097763196114,
-        ExpanPing: 2.4553858564920306,
-        ExpanLi: 0.003142755330375,
-        ContracDing: 487.1014493604209278,
-        ContracPing: 2.2074819445045348,
-        ContracLi: 0.0027262800048672,
-        FaslowDing: 11.11,
-        FaslowPing: 0.0281,
-        FaslowLi: 0.000325,
+        DeltaSunA1: 513.3822097763196114,
+        DeltaSunA2: 2.4553858564920306,
+        DeltaSunA3: 0.003142755330375,
+        DeltaSunB1: 487.1014493604209278,
+        DeltaSunB2: 2.2074819445045348,
+        DeltaSunB3: 0.0027262800048672,
+        DeltaMoon1: 11.11,
+        DeltaMoon2: 0.0281,
+        DeltaMoon3: 0.000325,
         ZhengNum: 2,
         WeekCorr: 2,
         OriginMonNum: 0,
-        MansionConst: 315.1075, // 週應
+        MansionCorr: 315.1075, // 週應
         MansionRaw: [11, 6], //命起赤道虛宿六度外
         MansionFractPosition: 11,
     },

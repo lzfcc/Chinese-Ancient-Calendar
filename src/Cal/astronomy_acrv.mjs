@@ -8,12 +8,17 @@ import {
     Interpolate1, Interpolate3
 } from './equa_sn.mjs'
 
+const AutoNodeCycle = CalName => {
+    let NodeCycle = 363.7934 // 授時
+    return NodeCycle
+}
+
 export const AutoMoonAvgV = CalName => {
     const { AutoPara, Type } = Bind(CalName)
     const { Sidereal } = AutoPara[CalName]
     let { Solar, Lunar } = AutoPara[CalName]
     if (CalName === 'Tongtian') {
-        Solar = 365.243
+        Solar = 365.2425
         Lunar = 29.530592
     }
     let MoonAvgVDeg = 0
@@ -29,12 +34,10 @@ export const AutoMoonAvgV = CalName => {
         MoonAvgVDeg = parseFloat((Solar / Lunar + 1).toPrecision(14))
     } else if (CalName === 'Chongxuan') {
         MoonAvgVDeg = 13 + 7 / 19
-    } else if (CalName === 'Mingtian') {
+    } else if (CalName === 'Mingtian' || Type === 11) {
         MoonAvgVDeg = 13.36875 // 約分。13+29913000/81120000
     } else if ((['Guantian', 'Zhantian'].includes(CalName) || Type === 9 || Type === 10) && CalName !== 'Tongyuan') {
         MoonAvgVDeg = 13.37
-    } else if (Type === 11) {
-        MoonAvgVDeg = 13.3687
     } else {
         MoonAvgVDeg = parseFloat(((Sidereal || Solar) / Lunar + 1 + Plus).toPrecision(14))
     }
@@ -167,7 +170,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
 export const SunFormula = (WinsolsDif, CalName) => {
     const { AutoPara, Type
     } = Bind(CalName)
-    const { Denom, SolarRaw, ExpanDing, ExpanPing, ExpanLi, ContracDing, ContracPing, ContracLi,
+    const { Denom, SolarRaw, DeltaSunA1, DeltaSunA2, DeltaSunA3, DeltaSunB1, DeltaSunB2, DeltaSunB3,
     } = AutoPara[CalName]
     let { Solar } = AutoPara[CalName]
     if (!Solar) {
@@ -181,16 +184,16 @@ export const SunFormula = (WinsolsDif, CalName) => {
     if (Type === 11) {
         if (WinsolsDif <= 88.909225) {
             const ExconT = WinsolsDif
-            SunDifAccum = (ExpanDing * ExconT - ExpanPing * (ExconT ** 2) - ExpanLi * (ExconT ** 3)) / 10000 // 盈縮差
+            SunDifAccum = (DeltaSunA1 * ExconT - DeltaSunA2 * (ExconT ** 2) - DeltaSunA3 * (ExconT ** 3)) / 10000 // 盈縮差
         } else if (WinsolsDif <= HalfSolar) {
             const ExconT = HalfSolar - WinsolsDif
-            SunDifAccum = (ContracDing * ExconT - ContracPing * (ExconT ** 2) - ContracLi * (ExconT ** 3)) / 10000
+            SunDifAccum = (DeltaSunB1 * ExconT - DeltaSunB2 * (ExconT ** 2) - DeltaSunB3 * (ExconT ** 3)) / 10000
         } else if (WinsolsDif <= HalfSolar + 93.712025) {
             const ExconT = WinsolsDif - HalfSolar
-            SunDifAccum = -(ContracDing * ExconT - ContracPing * (ExconT ** 2) - ContracLi * (ExconT ** 3)) / 10000
+            SunDifAccum = -(DeltaSunB1 * ExconT - DeltaSunB2 * (ExconT ** 2) - DeltaSunB3 * (ExconT ** 3)) / 10000
         } else {
             const ExconT = Solar - WinsolsDif
-            SunDifAccum = -(ExpanDing * ExconT - ExpanPing * (ExconT ** 2) - ExpanLi * (ExconT ** 3)) / 10000
+            SunDifAccum = -(DeltaSunA1 * ExconT - DeltaSunA2 * (ExconT ** 2) - DeltaSunA3 * (ExconT ** 3)) / 10000
         }
     } else {
         if (CalName === 'Yitian') {
@@ -618,9 +621,9 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
     } = Bind(CalName)
     const {
         Anoma,
-        FaslowDing,
-        FaslowPing,
-        FaslowLi,
+        DeltaMoon1,
+        DeltaMoon2,
+        DeltaMoon3,
         XianConst,
     } = AutoPara[CalName]
     const HalfAnoma = +((Anoma / 2).toFixed(6)) // 轉中
@@ -642,7 +645,7 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
             FaslowT = (Anoma - AnomaAccumRaw) / XianConst
             signA = -1
         }
-        MoonDifAccum = signA * (FaslowDing * FaslowT - FaslowPing * FaslowT ** 2 - FaslowLi * FaslowT ** 3) / 100 // 遲疾差
+        MoonDifAccum = signA * (DeltaMoon1 * FaslowT - DeltaMoon2 * FaslowT ** 2 - DeltaMoon3 * FaslowT ** 3) / 100 // 遲疾差
         let signB = 1
         let AnomaXian = 0
         if (AnomaAccumRaw <= 6.642) {

@@ -15,7 +15,7 @@ export default function CalQuar(CalName, year) {
         OriginAd,
         OriginYearSc,
         OriginDayCorr,
-        OriginCorr,
+        WinsolsCorr,
         ZhengNum,
         OriginMonNum,
         YuanRange,
@@ -45,7 +45,7 @@ export default function CalQuar(CalName, year) {
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
     const BuOrder = ~~(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
     const BuScOrder = (1 + BuOrder * BuSkip + (OriginDayCorr || 0)) % 60 // 蔀（統）的干支序號
-    const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsWinsolsDif || 0) + (OriginCorr || 0) // 冬至積日
+    const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsWinsolsDif || 0) + (WinsolsCorr || 0) // 冬至積日
     const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
     const OriginAccum = WinsolsAccumRaw - (WinsolsWinsolsDif || 0) // 曆元積日
     const WinsolsDecimal = WinsolsAccumRaw - ~~WinsolsAccumRaw
@@ -118,7 +118,7 @@ export default function CalQuar(CalName, year) {
     let SyzygySc = []
     const SyzygyDecimal = []
     for (let i = 0; i <= 14; i++) { // 本來是1
-        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (OriginCorr || 0)).toPrecision(14))
+        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (WinsolsCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
         NewmInt[i] = ~~NewmAvgRaw[i]
         NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]
@@ -128,7 +128,7 @@ export default function CalQuar(CalName, year) {
             NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
         }
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdWinsols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
-        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + (OriginCorr || 0)).toPrecision(14)) + BuScOrder
+        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + (WinsolsCorr || 0)).toPrecision(14)) + BuScOrder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
         SyzygyOrderMod[i] = ~~SyzygyAvgMod[i]
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]
