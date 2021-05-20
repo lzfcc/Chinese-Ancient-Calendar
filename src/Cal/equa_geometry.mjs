@@ -1,4 +1,4 @@
-import { ConstWest } from './astronomy_west.mjs'
+// import { ConstWest } from './astronomy_west.mjs'
 import {
     big
 } from './para_constant.mjs'
@@ -12,7 +12,7 @@ const r2d = degree => big(degree).mul(180).div(pi)
 const d2r = degree => big(degree).mul(pi).div(180)
 const RoundL2HWest = (r, l) => big(r).mul(big(1).sub(d2r(l).cos())).toNumber() // 輸入半弧，輸出矢
 const RoundL2CWest = (r, l) => big(r).mul(d2r(l).sin()).toNumber() // 輸入半弧，輸出半弦
-const RoundH2LWest = (r, h) => r2d(big.acos((r - h) / r)).toNumber() // 輸入矢，輸出半弧
+// const RoundH2LWest = (r, h) => r2d(big.acos((r - h) / r)).toNumber() // 輸入矢，輸出半弧
 const RoundC2LWest = (r, c) => r2d(big(c).div(r).asin()).toNumber() // 輸入半弦，輸出半弧  // 圓心角l=arcsin(sqrt(2rh-h^2)/r) 
 // const RoundH2CWest、RoundC2HWest // 直接用勾股定理
 
@@ -91,16 +91,16 @@ export const RoundC2LHPrint = cRaw => {
     if (cRaw > 121.75) {
         throw (new Error('c <= 121.75'))
     }
-    const Sidereal = 365.25
+    // const Sidereal = 365.25
     // const r = 60.875
     // const portion2 = pi / 3
-    const portion4 = Sidereal / 360
+    // const portion4 = Sidereal / 360
     const Func = RoundC2HL(c)
     let l = Func.l
     let h = Func.h
-    const rReal = Sidereal / pi / 2
+    // const rReal = Sidereal / pi / 2
     // const cReal = c / portion2
-    let lWest = RoundC2LWest(rReal / portion4, c / portion4) * portion4
+    // let lWest = RoundC2LWest(rReal / portion4, c / portion4) * portion4
     // const hWest = (rReal / portion4 - Math.sqrt((rReal / portion4) ** 2 - cReal ** 2))// / portion2
     lWest *= 2
     let Print = [{

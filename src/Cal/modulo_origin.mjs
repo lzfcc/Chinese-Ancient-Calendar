@@ -5,14 +5,10 @@ import {
     CongruenceModulo,
 } from './modulo_qiuyi.mjs'
 import {
-    GcdLcm,
-    GcdLcmGroup,
-    FracLcm1
+    GcdLcm, GcdLcmGroup, FracLcm1
 } from './modulo_gcdlcm.mjs'
 import {
-    isSame,
-    Frac2FalseFrac,
-    Decimal2Int,
+    isSame, Frac2FalseFrac, Decimal2Int
 } from './equa_math.mjs'
 // const pi = big.acos(-1).toString()
 // console.log(pi)
@@ -20,7 +16,7 @@ import {
 // x ≡ b1 (mod m1)
 // x ≡ b2 (mod m2)
 // x ≡ b3 (mod m3)
-export const Sunzi = function () {
+export const Sunzi = () => {
     let InputRaw = (arguments[0]).split(/;|,|，|。|；|｜| /)
     if (InputRaw[InputRaw.length - 1] === '') {
         InputRaw = InputRaw.slice(0, -1)
@@ -32,7 +28,7 @@ export const Sunzi = function () {
     const portion = Decimal2Int(InputRaw[InputRaw.length - 1]).portion
     const i = Input.length
     if (i % 2 === 1) {
-        throw (new Error('【大衍總數】參數數量應爲偶數！' + Input[0] + ', ' + Input[1]))
+        throw (new Error('[大衍總數] 參數數量應爲偶數！' + Input[0] + ', ' + Input[1]))
     }
     let Yuan = [] // 從輸入中拆分出元數、餘數
     const rRaw = []
@@ -44,7 +40,7 @@ export const Sunzi = function () {
     const check = YuanCheck.sort() // 這會莫名其妙顛倒順序，所以來一個臨時變量
     for (let ci = 0; ci < check.length; ci++) {
         if (check[ci] === check[ci + 1]) {
-            throw (new Error('【大衍總數】元數 ' + check[ci] + ' 有重複，無解！'))
+            throw (new Error('[大衍總數] 元數 ' + check[ci] + ' 有重複，無解！'))
         }
     }
     // 暫且來檢查兩邊，以後再刪
@@ -143,18 +139,13 @@ export const Sunzi = function () {
     // S = parseFloat((S / portion).toPrecision(12))
     const x = big.mod(sum, S).div(portion).toString()
     S = big.div(S, portion).toString()
-    const Print = 'x = ' + x + ' + ' + S + 'n (n = 0, 1, 2 ...)'
+    const Print = `x = ${x} + ${S}n (n = 0, 1, 2 ...)`
     let DingPrint = '定母 ' + DingRaw
     const flag = isSame(Yuan, DingRaw)
     if (flag === true) {
         DingPrint = '定母 = 元數'
     }
-    return {
-        S,
-        Print,
-        DingPrint,
-        x
-    }
+    return { S, Print, DingPrint, x }
 }
 // console.log(Sunzi('60,130;30,120;20,110;30,100;30,60;30,50;5,25;10,20').Print) // 積尺尋源
 // console.log(Sunzi('10,12;0,11;0,10;4,9;6,8;0,7;4,6').Print) // 推庫額錢
@@ -162,9 +153,9 @@ export const Sunzi = function () {
 
 ///////// 解二元一次不定方程
 export const IndetermEqua1 = (a, b, z) => { // 二元一次不定方程
-    a = parseInt(a)
-    b = parseInt(b)
-    z = parseInt(z)
+    a = ~~a
+    b = ~~b
+    z = ~~z
     if (a < 0 && b < 0) {
         a = -a
         b = -b
@@ -197,20 +188,15 @@ export const IndetermEqua1 = (a, b, z) => { // 二元一次不定方程
     }
     const xPrint = (isExchange ? 'y = ' : 'x = ') + x[0] + (b > 0 ? ' + ' : ' - ') + Math.abs(b) + 'n'
     const yPrint = (isExchange ? 'x = ' : 'y = ') + y[0] + (a > 0 ? ' - ' : ' + ') + Math.abs(a) + 'n'
-    return {
-        x,
-        y,
-        xPrint,
-        yPrint,
-    }
+    return { x, y, xPrint, yPrint }
 }
 // console.log(IndetermEqua1(14,5,9))
 
 // 秦九韶調日法
 export const IndetermEqua = (a, b, z) => { // a彊母b弱母
-    a = parseInt(a)
-    b = parseInt(b)
-    z = parseInt(z)
+    a = ~~a
+    b = ~~b
+    z = ~~z
     if (a < 0 && b < 0) {
         a = -a
         b = -b
@@ -258,14 +244,7 @@ export const IndetermEqua = (a, b, z) => { // a彊母b弱母
     if (xSpecial1) {
         Decompose = '【朔餘A】' + LunarFrac1 + ' = ' + BigNumer + '×' + xSpecial1 + ' + ' + SmallNumer + '×' + ySpecial1 + (xSpecial2 ? '【朔餘B】' + LunarFrac2 + ' = ' + BigNumer + '×' + xSpecial2 + ' + ' + SmallNumer + '×' + ySpecial2 : '') + ' 【日法】' + z + ' = ' + a + '×' + xSpecial1 + ' + ' + b + '×' + ySpecial1
     }
-    return {
-        x,
-        y,
-        xPrint,
-        yPrint,
-        Decompose,
-        LunarFrac1
-    }
+    return { x, y, xPrint, yPrint, Decompose, LunarFrac1 }
 }
 
 // console.log(IndetermEqua1(1, 60, 40))
@@ -369,11 +348,7 @@ export const ZhangModulo = (SolarFrac, SolarDenom, LunarFrac, Denom) => {
     const YuanBuNum = big(YuanRange).div(BuRange)
     const BuZhangNum = big(BuRange).div(ZhangRange)
     const Print = '章法 ' + ZhangRange + '，章閏 ' + ZhangLeap + '，章月 ' + ZhangMon + `。\n蔀（紀）法 ` + BuRange + '，蔀（紀）月 ' + BuMon.toString() + `。\n元法 ` + YuanRange + '，元日 ' + YuanDay.toString() + `。\n1 元 = ` + YuanBuNum.toString() + ' 蔀，1 蔀 = ' + BuZhangNum.toString() + ' 章'
-    return {
-        ZhangRange,
-        YuanRange,
-        Print
-    }
+    return { ZhangRange, YuanRange, Print }
 }
 // console.log(ZhangModulo(1, 4, 499, 940).Print) // 四分
 // console.log(ZhangModulo(145, 589, 773, 1457).Print) // 乾象
@@ -406,9 +381,7 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
     const tmp = OriginComm + ',' + ScComm + ',' + LeapComm + ',' + LunarComm // 0 + ',' + SolarComm + ',' +
     const Result = (Sunzi(tmp).x) / SolarComm
     const Print = '入元 ' + Result + ' 年（算外）'
-    return {
-        Print
-    }
+    return { Print }
 }
 // console.log(OriginModulo2(1, 4, 499, 940, '34+3/4', '11+410/940').Print)
 // console.log(OriginModulo2(1, 4, 499, 940, '18+3/4', '11+410/940').Print)
@@ -438,11 +411,8 @@ export const OriginModulo = (Denom, SolarFrac, OriginConstRaw, FirstConstRaw) =>
     const YuanLeap = (YearLeap * YuanRange) % LunarNumer // 377873元閏
     const YuanAccum = IndetermEqua(YuanLeap, -LunarNumer, LeapContrac).x[0] // 元數
     const Origin = YuanRange * YuanAccum + YuanYear // YuanRange * n爲朔積年
-    const OriginPrint = '演紀上元距今 ' + Origin + ' 年 = ' + '元率 ' + YuanRange + ' × 元數 ' + YuanAccum + ' + 入元歲 ' + YuanYear + `。\n等數 ` + gcd + '，蔀率 ' + BuRange
-    return {
-        Origin,
-        OriginPrint
-    }
+    const OriginPrint = '演紀上元距今 ' + Origin + ' 年 = 元率 ' + YuanRange + ' × 元數 ' + YuanAccum + ' + 入元歲 ' + YuanYear + `。\n等數 ` + gcd + '，蔀率 ' + BuRange
+    return { Origin, OriginPrint }
 }
 // console.log(OriginModulo(16900, 4108, '12+7540/16900', '10+11671/16900').Origin) // 開禧 7848180
 // 那麼在未知實測的情況下，怎樣從上元解得實測？

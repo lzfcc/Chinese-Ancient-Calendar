@@ -87,7 +87,7 @@ export const Sn5 = (n, p) => {
     const tmp3 = Sn5Sub(3, p)
     const tmp4 = Sn5Sub(4, p)
     const tmp5 = 'n(n+1)...(n+p-1)/p!'
-    const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + ' +' + tmp4 + ' +' + '...+ ' + tmp5 + ' = ' + S
+    const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + ' +' + tmp4 + ' + ... ' + tmp5 + ' = ' + S
     return {
         Print,
         S: S.toString()

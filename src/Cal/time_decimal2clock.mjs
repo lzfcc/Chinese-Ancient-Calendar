@@ -66,7 +66,7 @@ const ClockTmp = (Decimal, Mode) => { // 我假設：每日96刻，子初夜半�
     const KeRaw = Decimal * portion1
     const ClockOrder = ~~(KeRaw / portion2)
     const QuarOrder = ~~(KeRaw - ClockOrder * portion2)
-    const MinOrder = ~~((KeRaw - ~~KeRaw) * 100)
+    // const MinOrder = ~~((KeRaw - ~~KeRaw) * 100)
     return BranchList[ClockOrder + 1] + '時' + QuarList[QuarOrder % 8] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 
@@ -109,7 +109,7 @@ const ClockSong = Decimal => { // 皇祐之後、元、明。（之前假設初�
     } else {
         QuarOrder = 4
     }
-    const MinOrder = ~~((KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6) + QuarOrder)) * 60)
+    // const MinOrder = ~~((KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6) + QuarOrder)) * 60)
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 

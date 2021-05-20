@@ -285,7 +285,7 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
 export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { // SunEclpLongi, NodeAccum,  // 該日距冬至黃道度，入交日。不知是否應該加上日躔
     const { AutoPara
     } = Bind(CalName)
-    const { Node, SolarRaw
+    const { SolarRaw
     } = AutoPara[CalName]
     let { Solar
     } = AutoPara[CalName]

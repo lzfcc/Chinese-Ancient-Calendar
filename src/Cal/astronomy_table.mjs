@@ -310,15 +310,11 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
-    const {
-        AutoPara
+    const { AutoPara
     } = Bind(CalName)
-    const {
-        Node,
-        Solar,
+    const { Solar,
     } = AutoPara[CalName]
-    let {
-        Sidereal
+    let { Sidereal
     } = AutoPara[CalName]
     const Quadrant = 90.94335
     const NodeAccum = NodeAccumRaw// % (Node / 2)

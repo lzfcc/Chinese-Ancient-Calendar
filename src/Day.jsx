@@ -136,7 +136,7 @@ export default class Day extends React.Component {
       <div>
         {
           Object.entries(info[day]).map(([key, value]) => {
-            if ({ key } == 'MonColor') { } else {
+            if ({ key } === 'MonColor') { } else {
               return (
                 /* {TableDayRowNameMap[key]}:  */
                 <p className={key} dangerouslySetInnerHTML={{ __html: value }}></p>

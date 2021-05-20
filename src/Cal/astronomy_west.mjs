@@ -46,7 +46,7 @@ export const ConstWest = year => {
     const Lunar = big(29.530588853).add(big(0.000000002162).mul(y)).toNumber()
     const Anoma = big(27.554549878).sub(big(0.00000001039).mul(y)).toNumber() // 近點月
     const Node = big(27.21222082).add(big(0.0000000038).mul(y)).toNumber()
-    const Print = '朔望月 ' + Lunar + ` 日\n` + '近點月 ' + Anoma + ` 日\n` + '交點月 ' + Node + ` 日\n回歸年 ` + Solar + ` 日\n` + '恆星年 ' + Sidereal + ` 日\n` + '黃赤交角 ' + obliquity + `°\n` + '黃道離心率 ' + eccentricity + `\n` + '近日點平黃經 ' + perihelion + '°'
+    const Print = '朔望月 ' + Lunar + ` 日\n近點月 ` + Anoma + ` 日\n交點月 ` + Node + ` 日\n回歸年 ` + Solar + ` 日\n恆星年 ` + Sidereal + ` 日\n黃赤交角 ` + obliquity + `°\n黃道離心率 ` + eccentricity + `\n近日點平黃經 ` + perihelion + '°'
     return {
         Print,
         obliquity,
@@ -274,7 +274,7 @@ const MoonLongiWest_BACKUP = (EclpRaw, year) => { // 統一360度
     const E = d2r(ConstWest(year).obliquity) // 授時黃赤大距23.9
     const cosE = big.cos(E) // 0.9
     const tank = big.tan(I).div(big.sin(E)) // tank 0.22
-    const k = tank.atan() // k正交極數 12.7
+    // const k = tank.atan() // k正交極數 12.7
     const tana0 = tank.mul(v0.sin()).div(tank.mul(cosE.mul(v0.cos())).add(1))
     const a0Raw = tana0.atan() // a0距差
     const a0 = r2d(a0Raw).abs().toNumber() // a0距差=赤經    

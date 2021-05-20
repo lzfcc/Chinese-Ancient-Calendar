@@ -23,7 +23,7 @@ export const GcdLcm = (a, b) => {
     }
 }
 // console.log(GcdLcm(62244,7521150))
-export const GcdLcmGroup = function () {
+export const GcdLcmGroup = () => {
     let InputRaw = ((arguments[0]).split(/;|,|，|。|；|｜| /))
     if (InputRaw[InputRaw.length - 1] === '') { // 避免最後一個是符號
         InputRaw = InputRaw.slice(0, -1)
@@ -42,9 +42,9 @@ export const GcdLcmGroup = function () {
     // gcd = parseFloat((gcd / portion).toPrecision(12))
     // lcm = parseFloat((lcm / portion).toPrecision(12))
     // let Print = 'gcd(' + InputRaw[InputRaw.length - 1] + ') = ' + gcd + ', lcm(' + InputRaw[InputRaw.length - 1] + ') = ' + lcm
-    let Print = 'gcd(' + InputRaw + ') = ' + gcd + `\n lcm(` + InputRaw + ') = ' + lcm
+    let Print = `gcd(${InputRaw}) = ${gcd}\n lcm(${InputRaw}) = ${lcm}`
     if (big(gcd).eq(1)) {
-        Print = '互質' + `\nlcm(` + InputRaw + ') = ' + lcm
+        Print = `互質\nlcm(${InputRaw}) = ${lcm}`
     }
     return {
         lcm,
@@ -55,7 +55,7 @@ export const GcdLcmGroup = function () {
 // console.log(GcdLcmGroup('2.156,5.196,9.16,4.89162556').Print) // 這個超過精度範圍
 
 // 分數最小公倍數。先通分，然后求分子的最小公倍数，再跟分母约分。
-export const FracLcm1 = function () {
+export const FracLcm1 = () => {
     let Input = ((arguments[0]).split(/;|,|，|。|；|｜| /))
     if (Input[Input.length - 1] === '') {
         Input = Input.slice(0, -1)
@@ -93,10 +93,7 @@ export const FracLcm1 = function () {
     S = big.div(S, gcdResult).toString()
     const lcmResult = big.div(lcmNumer, S).toString()
     const lcmFracPrint = 'lcm(' + InputPrint + ') = ' + big.floor(big.div(lcmNumer, S)) + (big.mod(lcmNumer, S).eq(0) ? '' : ' + ' + big.mod(lcmNumer, S) + ' / ' + S)
-    return {
-        lcmFracPrint,
-        lcmResult,
-    }
+    return { lcmFracPrint, lcmResult }
 }
 // console.log(FracLcm1('6172608,16900,499067,16900,60,1').lcmFracPrint) // 開禧
 // console.log(FracLcm1('13,145;114,7;14,57;9,13;8,10').lcmFracPrint) // 這個超過精度範圍

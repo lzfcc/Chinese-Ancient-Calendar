@@ -507,9 +507,9 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
 export const AutoMoonLati = (NodeAccum, CalName) => {
     const { Type, AutoPara
     } = Bind(CalName)
-    let { Solar, SolarRaw, Sidereal
+    let { Sidereal // Solar, SolarRaw,
     } = AutoPara[CalName]
-    Solar = Solar || SolarRaw
+    // Solar = Solar || SolarRaw
     let MoonLati = {}
     if (Type <= 3) {
         MoonLati = MoonLatiTable(NodeAccum, 'Qianxiang')
@@ -537,11 +537,7 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
     const MoonEquaLati = MoonLati.EquaLati || 0
     const MoonEclpLati = MoonLati.Lati || 0 // MoonEquaLati - AutoLongi2Lati(SunEclpLongi, 0.5, CalName).Lati
     const MoonEclpLati1 = MoonLati.Lati1 || Sidereal / 4 - MoonEclpLati
-    return {
-        MoonEclpLati,
-        MoonEclpLati1,
-        MoonEquaLati
-    }
+    return { MoonEclpLati, MoonEclpLati1, MoonEquaLati }
 }
 // console.log(AutoMoonLati(66, 2.41, 'Shoushi').EquaLongi)
 
@@ -608,14 +604,7 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     if (Type < 11) {
         WhiteLongi = MoonEclp + EclpWhiteDif
     }
-    return {
-        NodeEclp,
-        WhiteLongi,
-        EclpWhiteDif,
-        EquaWhiteDif,
-        EquaLongi,
-        EquaLati
-    }
+    return { NodeEclp, WhiteLongi, EclpWhiteDif, EquaWhiteDif, EquaLongi, EquaLati }
 }
 // console.log(AutoMoonLongi(234, 45, 4.11, 'Dayan'))
 

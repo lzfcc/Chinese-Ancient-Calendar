@@ -4,11 +4,11 @@ import {
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 1136, 1136, false, [ // mode, YearStart, YearEnd, isAuto,
+const printData = outputFile(1, 333, 335, false, [ // mode, YearStart, YearEnd, isAuto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
-    'Lu',
+    // 'Lu',
     // 'LuA',
     // 'LuB',
     // 'LuC',
@@ -34,8 +34,8 @@ const printData = outputFile(1, 1136, 1136, false, [ // mode, YearStart, YearEnd
     // 'Huangchu',
     // 'Jingchu',
     'Liuzhi',
-    // 'Wangshuozhi',
-    // 'Sanji', // 上魏晉系
+    'Wangshuozhi',
+    'Sanji', // 上魏晉系
     // 'Xuanshi',
     // 'Tsrengguang',
     // 'Xinghe',
