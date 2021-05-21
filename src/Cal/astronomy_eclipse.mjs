@@ -756,23 +756,12 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
 // 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
 // 紀元定朔入轉=經朔入轉+日月改正
-const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm, CalName) => { // 入交泛日，經朔入轉，定朔分，定朔距冬至——改成經朔距冬至
-    const {
-        Type,
-        AutoPara
+const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm, CalName) => { // 入交泛日，入轉，定朔分，定朔距冬至——改成經朔距冬至
+    const { Type, AutoPara
     } = Bind(CalName)
-    const {
-        Solar,
-        Lunar,
-        Node,
-        Denom,
-        XianConst,
+    const { Solar, Lunar, Node, Denom, XianConst,
     } = AutoPara[CalName]
-    let {
-        SunLimit1,
-        SunLimit2,
-        MoonLimit1,
-        MoonEcliDenom
+    let { SunLimit1, SunLimit2, MoonLimit1, MoonEcliDenom
     } = AutoPara[CalName]
     SunLimit1 /= Denom
     SunLimit2 /= Denom
@@ -806,39 +795,41 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
     }
     WinsolsDif += TcorrFunc.Tcorr2 + Tcorr0 // 不知道紀元月食加不加Tcorr0
     let Sunrise = Longi2LatiFormula(WinsolsDif, CalName).Sunrise
-    let K = (50 - Sunrise) / 100 // 日出沒辰刻距午正刻數/100
+    const K = (50 - Sunrise) / 100 // 日出沒辰刻距午正刻數/100
+    const R = Math.abs(0.5 - Decimal) // 午前後分。
     ////////// 以下時差改正
     Decimal += Tcorr0
-    let NewmDecimalRev = Decimal
-    if (Decimal > 0.5) {
-        NewmDecimalRev = 1 - Decimal
-    }
-    let Tcorr = 0
+    // let NewmDecimalRev = Decimal
+    // if (Decimal > 0.5) {
+    //     NewmDecimalRev = 1 - Decimal
+    // }
+    let Tcorr = 0 // 明天沒有時差！《數理》頁424
     if (isNewm) {
-        if (CalName === 'Xuanming') { // 夏至最大，冬至最小，夜半最大，午正最小。但實際上是夏至最小，冬至最大。午前- 午後+。實際上，時差取決於黃道南北，與午正無關，比例也不會不一樣
-            Tcorr = -(0.5 - NewmDecimalRev) * K / 1.47
-            if (Decimal > 0.5) {
-                Tcorr = -2 * Tcorr
+        if (CalName === 'Xuanming') { // 「以定朔日出入辰刻距午正刻數，約百四十七，為時差。視定朔小餘如半法已下，以減半法，為初率；已上，減去半法，餘為末率。以乘時差，如刻法而一，初率以減，末率倍之，以加定朔小餘，為蝕定餘。月蝕，以定望小餘為蝕定餘。」夏至最大，冬至最小，夜半最大，午正最小。但實際上是夏至最小，冬至最大。午前- 午後+。實際上，時差取決於黃道南北，與午正無關，比例也不會不一樣。《數理》頁421: 定朔0.25，1個小時，0.75：2小時。欽天、應天、乾元、儀天都是線性函數，不分陰陽
+            // Tcorr = -(0.5 - NewmDecimalRev) * K / 1.47
+            Tcorr = -R * K / 1.47
+            if (Decimal >= 0.5) {
+                Tcorr *= -2
             }
-        } else if (['Chongxuan', 'Chongtian', 'Guantian'].includes(CalName)) {
-            Tcorr = -(0.5 - NewmDecimalRev) * NewmDecimalRev / 3
-            if (Decimal > 0.5) {
+        } else if (['Chongxuan', 'Chongtian', 'Guantian'].includes(CalName)) { // 「定朔約餘距午前後分，與五千先相減後相乘，三萬除之；午前以減，午後倍之，以加約餘」
+            Tcorr = -R * (0.5 - R) / 3
+            if (Decimal >= 0.5) {
                 Tcorr = -2 * Tcorr
             }
         } else if (Type === 9) {
-            Tcorr = -(0.5 - NewmDecimalRev) * NewmDecimalRev / 1.5
-            if (Decimal > 0.5) {
+            Tcorr = -R * (0.5 - R) / 1.5
+            if (Decimal >= 0.5) {
                 Tcorr = -1.5 * Tcorr
             }
-        } else if (Type === 10) {
-            Tcorr = (1 - NewmDecimalRev) * (NewmDecimalRev - 0.5) / 2
-            if (Decimal < 0.5) {
+        } else if (Type === 10 || Type === 11) {
+            Tcorr = -R * (0.5 - R)
+            if (Decimal >= 0.5) { // 「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
                 Tcorr = -Tcorr
             }
-        } else if (Type === 11) { // 大統時差。中前以減，中後以加。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
-            Tcorr = (1 - NewmDecimalRev) * (NewmDecimalRev - 0.5) / 1.92
-            if (Decimal < 0.5) {
-                Tcorr = -Tcorr
+            if (Type === 10) {
+                Tcorr *= 1.046
+            } else {
+                Tcorr *= 100 / 96
             }
         }
     } else {
@@ -863,22 +854,20 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
             }
         }
     }
-    let WinsolsDifTrue = WinsolsDif + Tcorr // 食甚時刻
+    let WinsolsDifTotal = WinsolsDif + Tcorr // 食甚時刻
     if (Type === 9) { // 紀元食甚日行積度        
-        WinsolsDifTrue += AutoTcorr(AnomaAccum, WinsolsDifTrue, CalName).SunDifAccum // 感覺應該是先後數先加後減         
+        WinsolsDifTotal += AutoTcorr(AnomaAccum, WinsolsDifTotal, CalName).SunDifAccum // 感覺應該是先後數先加後減         
     }
-    Decimal += Tcorr
-    let NoonDif = Decimal - 0.5 // 食甚距午正刻數。注意，宣明NoonDif是食甚時刻，之前皇極等等大概應該是定朔
-    const WinsolsDifNoon = WinsolsDifTrue - NoonDif // + AutoTcorr(0, WinsolsDifTrue - NoonDif, CalName).SunDifAccum - AutoTcorr(0, WinsolsDifTrue, CalName).SunDifAccum // 算到正午這一小段時間的日躔，不算了，太浪費算力，誤差可以忽略
+    const NoonDif = R + Math.abs(Tcorr) // 「距午定分」應天「以差皆加午前後分，爲距中分」，授時「以中前後分各加時差，爲距午定分」。食甚距午正刻數。注意，宣明NoonDif是食甚時刻，之前皇極等等大概應該是定朔
+    const WinsolsDifNoon = WinsolsDifTotal - NoonDif // + AutoTcorr(0, WinsolsDifTotal - NoonDif, CalName).SunDifAccum - AutoTcorr(0, WinsolsDifTotal, CalName).SunDifAccum // 算到正午這一小段時間的日躔，不算了，太浪費算力，誤差可以忽略
     Sunrise = Longi2LatiFormula(WinsolsDifNoon, CalName).Sunrise
-    K = (50 - Sunrise) / 100 // 日出沒辰刻距午正刻數/100
     // 宣明曆創日食四差：【時差Tcorr】食甚時刻改正【氣差DcorrTerm刻差DcorrClock加差DcorrOther】食分改正 
     let DcorrTerm = 0
     let DcorrClock = 0
     let DcorrOther = 0 // 儀天加差全同宣明
     let Dcorr = 0
-    let WinsolsDifHalf = WinsolsDif % HalfSolar // 定朔
-    const WinsolsDifTrueHalf = WinsolsDifTrue % HalfSolar // 食甚
+    const WinsolsDifHalf = WinsolsDif % HalfSolar // 定朔。應天「置朔定積，如一百八十二日⋯⋯以下爲入盈日分；以上者去之，餘爲入縮日分」
+    const WinsolsDifTotalHalf = WinsolsDifTotal % HalfSolar // 食甚
     // 下爲食分改正
     // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作爲正負判斷依據，完全不對
     let sign1 = 1
@@ -924,15 +913,16 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
         }
     }
     let WinsolsDifHalfRev = WinsolsDifHalf
-    if (WinsolsDifHalfRev > QuarSolar) {
+    if (WinsolsDifHalfRev > QuarSolar) { // 以二分爲中心鏡面對稱
         WinsolsDifHalfRev = HalfSolar - WinsolsDifHalfRev
     }
-    let WinsolsDifTrueHalfRev = WinsolsDifTrueHalf
-    if (WinsolsDifTrueHalfRev > QuarSolar) {
-        WinsolsDifTrueHalfRev = HalfSolar - WinsolsDifTrueHalfRev
+    let WinsolsDifTotalHalfRev = WinsolsDifTotalHalf
+    if (WinsolsDifTotalHalfRev > QuarSolar) {
+        WinsolsDifTotalHalfRev = HalfSolar - WinsolsDifTotalHalfRev
     }
     if (CalName === 'Xuanming') {
-        DcorrTerm = (2350 - 25.73618 * WinsolsDifHalfRev) * (1 - Math.abs(NoonDif) / K)
+        DcorrTerm = (2350 - 26 * WinsolsDifHalfRev) * Math.abs(1 - NoonDif / K) // 25.73618
+        DcorrTerm = DcorrTerm < 0 ? 0 : DcorrTerm
         if (WinsolsDifHalf < HalfTermLeng * 3) {
             DcorrClock = 2.1 * ~~WinsolsDifHalfRev // 連續的話我改成2.06985
         } else if (WinsolsDifHalf < HalfTermLeng * 9) {
@@ -947,7 +937,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
             DcorrOther = (WinsolsDif - HalfTermLeng * 21) * 17 / HalfTermLeng
         }
     } else if (CalName === 'Yingtian') {
-        DcorrTerm = (364 - 4 * ~~WinsolsDifHalfRev) * (1 - Math.abs(NoonDif) / K) // 盈初縮末（應該是冬至前後）內減外加，縮初盈末內加外減
+        DcorrTerm = (364 - 4 * ~~WinsolsDifHalfRev) * Math.abs(1 - NoonDif / K) // 盈初縮末（應該是冬至前後）內減外加，縮初盈末內加外減
         if (WinsolsDifHalf > 45 && WinsolsDifHalf < 137) {
             DcorrClock = 15.08 * Math.abs(NoonDif) // NoonDif單位不同，宣明是刻數，這是日分。
         } else {
@@ -959,7 +949,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
             DcorrClock = (15.08 - 0.335 * ~~WinsolsDifHalf) * Math.abs(NoonDif)
         }
     } else if (CalName === 'Qianyuan') {
-        DcorrTerm = (819 - 9 * ~~WinsolsDifHalfRev) * (1 - Math.abs(NoonDif) / K) // 乾元是「二分後日加入氣日」，我先暫時統一處理成二至後。《中國古代曆法》頁96說二至前是二至後的10倍，想不通。
+        DcorrTerm = (819 - 9 * ~~WinsolsDifHalfRev) * Math.abs(1 - NoonDif / K) // 乾元是「二分後日加入氣日」，我先暫時統一處理成二至後。《中國古代曆法》頁96說二至前是二至後的10倍，想不通。
         if (WinsolsDifHalf > 45 && WinsolsDifHalf < 137) {
             DcorrClock = 33.3 * Math.abs(NoonDif) // NoonDif單位日分
         } else {
@@ -975,8 +965,8 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
         // if (WinsolsDif > QuarSolar && WinsolsDif < Solar * 0.75) {
         //     tmp1 = Math.abs(WinsolsDif - HalfSolar)
         // }
-        // DcorrTerm = (2826 - 30.15 * tmp1) * (1 - Math.abs(NoonDif) / K)
-        DcorrTerm = (2826 - 30.9491267 * WinsolsDifHalfRev) * (1 - Math.abs(NoonDif) / K) // NoonDif單位刻數
+        // DcorrTerm = (2826 - 30.15 * tmp1) * Math.abs(1 - NoonDif / K)
+        DcorrTerm = (2826 - 30.9491267 * WinsolsDifHalfRev) * Math.abs(1 - NoonDif / K) // NoonDif單位刻數
         if (WinsolsDif < HalfTermLeng * 3) {
             DcorrClock = 2.525 * ~~WinsolsDifHalf * Denom / 442384
         } else if (WinsolsDif < HalfTermLeng * 9) {
@@ -1023,26 +1013,26 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, Decimal, WinsolsDifRaw, isNewm
             }
         }
         if (WinsolsDif < 88.91 || WinsolsDif > HalfSolar + 93.71) {
-            DcorrTerm = (4010 - (100 / 197) * WinsolsDifHalf3 ** 2) * (1 - Math.abs(NoonDif) / K)
+            DcorrTerm = (4010 - (100 / 197) * WinsolsDifHalf3 ** 2) * Math.abs(1 - NoonDif / K)
         } else {
-            DcorrTerm = (4010 - (100 / 219) * WinsolsDifHalf3 ** 2) * (1 - Math.abs(NoonDif) / K)
+            DcorrTerm = (4010 - (100 / 219) * WinsolsDifHalf3 ** 2) * Math.abs(1 - NoonDif / K)
         }
         DcorrClock = (100 / 209) * (HalfSolar - WinsolsDifHalf3) * WinsolsDifHalf3
         DcorrClock *= Math.abs(NoonDif) / 3700.5 // 單位 午前後分
     } else if (CalName === 'Chongtian') {
-        DcorrTerm = (3533 - (100 / 236) * WinsolsDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K) // NoonDif「距午定分」
+        DcorrTerm = (3533 - (100 / 236) * WinsolsDifHalfRev ** 2) * Math.abs(1 - NoonDif / K) // NoonDif「距午定分」
         DcorrClock = (100 / 236) * (HalfSolar - WinsolsDifHalfRev) * WinsolsDifHalfRev
         DcorrClock *= Math.abs(NoonDif) * 4 / Denom
     } else if (Type === 9) { // 紀元南宋
-        DcorrTerm = (2430 - (100 / 343) * WinsolsDifTrueHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
-        DcorrClock = (100 / 343) * (HalfSolar - WinsolsDifTrueHalfRev) * WinsolsDifTrueHalfRev
+        DcorrTerm = (2430 - (100 / 343) * WinsolsDifTotalHalfRev ** 2) * Math.abs(1 - NoonDif / K)
+        DcorrClock = (100 / 343) * (HalfSolar - WinsolsDifTotalHalfRev) * WinsolsDifTotalHalfRev
         DcorrClock *= 4 * Math.abs(NoonDif)
     } else if (Type === 10) { // 以上三個等價
-        DcorrTerm = (1744 - (100 / 478) * WinsolsDifHalfRev ** 2) * (1 - Math.abs(NoonDif) / K)
+        DcorrTerm = (1744 - (100 / 478) * WinsolsDifHalfRev ** 2) * Math.abs(1 - NoonDif / K)
         DcorrClock = (100 / 478) * (HalfSolar - WinsolsDifHalfRev) * WinsolsDifHalfRev
         DcorrClock *= Math.abs(NoonDif) / 1307.5
     } else if (Type === 11) {
-        DcorrTerm = (4.46 - WinsolsDifHalfRev ** 2 / 1870) * (1 - Math.abs(NoonDif) / K)
+        DcorrTerm = (4.46 - WinsolsDifHalfRev ** 2 / 1870) * Math.abs(1 - NoonDif / K)
         DcorrClock = (HalfSolar - WinsolsDifHalfRev) * WinsolsDifHalfRev / 1870
         DcorrClock *= Math.abs(NoonDif) / 2500
     }

@@ -8,40 +8,89 @@ import {
     Interpolate1, Interpolate3
 } from './equa_sn.mjs'
 
-const AutoNodeCycle = CalName => {
-    let NodeCycle = 363.7934 // 授時
-    return NodeCycle
+export const AutoSolar = CalName => {
+    let Solar = 0
+    if (CalName === 'Chongxuan') {
+        Solar = 365.2445
+    } else if (CalName === 'Yitian') {
+        Solar = 365.24455
+    } else if (CalName === 'Chongtian') { // 崇天用了24 28兩個値
+        Solar = 365.24
+    } else if (CalName === 'Mingtian') {
+        Solar = 365.24
+    } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
+        Solar = 365.2436
+    }
+    return Solar
 }
 
-export const AutoMoonAvgV = CalName => {
-    const { AutoPara, Type } = Bind(CalName)
-    const { Sidereal } = AutoPara[CalName]
-    let { Solar, Lunar } = AutoPara[CalName]
-    if (CalName === 'Tongtian') {
-        Solar = 365.2425
-        Lunar = 29.530592
+export const AutoSidereal = CalName => {
+    let Sidereal = 0
+    if (CalName === 'Chongxuan') {
+        Sidereal = 365.2548
+    } else if (['Dayan', 'Chongtian'].includes(CalName)) { // 崇天用了365.25 .27兩個値
+        Sidereal = 365.25
+    } else if (CalName === 'Mingtian') {
+        Sidereal = 365.24
+    } else if (['Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(CalName)) {
+        Sidereal = 365.2436
     }
+    return Sidereal
+}
+
+export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
+    const { AutoPara, Type
+    } = Bind(CalName)
     let MoonAvgVDeg = 0
-    let Plus = 0
-    if (CalName === 'Daye') { // 陳美東《月離表初探》
-        Plus = -0.00036322096
-    } else if (CalName === 'Huangji') { // 皇極平行速695。皇極、宣明更好的方法是Math.floor，但是爲了保持統一，這裏還是麻煩一下
-        Plus = -0.00295858
+    if (CalName === 'Daye') {
+        MoonAvgVDeg = 548.101486 / 41
+    } else if (['WuyinA', 'WuyinB'].includes(CalName)) {
+        MoonAvgVDeg = 13.36834319526627 // parseFloat((Solar / Lunar + 1).toPrecision(14))
+    } else if (CalName === 'Huangji') {
+        MoonAvgVDeg = 695 / 52
     } else if (CalName === 'Xuanming') {
-        Plus = 0.000301739405
-    }
-    if (['WuyinA', 'WuyinB'].includes(CalName)) {
-        MoonAvgVDeg = parseFloat((Solar / Lunar + 1).toPrecision(14))
+        MoonAvgVDeg = 1123 / 84
     } else if (CalName === 'Chongxuan') {
         MoonAvgVDeg = 13 + 7 / 19
     } else if (CalName === 'Mingtian' || Type === 11) {
         MoonAvgVDeg = 13.36875 // 約分。13+29913000/81120000
-    } else if ((['Guantian', 'Zhantian'].includes(CalName) || Type === 9 || Type === 10) && CalName !== 'Tongyuan') {
+    } else if (Type >= 8 && Type <= 10 && !['Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Tongyuan'].includes(CalName)) {
         MoonAvgVDeg = 13.37
     } else {
-        MoonAvgVDeg = parseFloat(((Sidereal || Solar) / Lunar + 1 + Plus).toPrecision(14))
+        const { Sidereal, Solar, Lunar
+        } = AutoPara[CalName]
+        MoonAvgVDeg = parseFloat(((Sidereal || Solar) / Lunar + 1).toPrecision(14))
     }
     return MoonAvgVDeg
+}
+
+export const AutoNodeCycle = CalName => {
+    let NodeCycle = 363.7934 // 授時
+    if (CalName === 'Yingtian') { // 乾元儀天沒說
+        NodeCycle = 363.828307
+    } else if (['Chongtian', 'Guantian', 'Tongyuan', 'Chunxi'].includes(CalName)) {
+        NodeCycle = 363.76
+    } else if (CalName === 'Mingtian') {
+        NodeCycle = 365.2564 // sidereal約餘
+    } else if (['Jiyuan', 'Kaixi'].includes(CalName)) {
+        NodeCycle = 363.7944
+    } else if (CalName === 'Qiandao') {
+        NodeCycle = 363.7940
+    } else if (CalName === 'Huiyuan') {
+        NodeCycle = 363.7644
+    } else if (CalName === 'Tongtian') {
+        NodeCycle = 363.7924
+    } else if (CalName === 'Chengtian') {
+        NodeCycle = 363.7946
+    } else { // 其他的不知道了
+        const { AutoPara
+        } = Bind(CalName)
+        const { Node
+        } = AutoPara[CalName]
+        const MoonAvgVDeg = AutoMoonAvgV(CalName)
+        NodeCycle = MoonAvgVDeg * Node
+    }
+    return NodeCycle
 }
 
 // 大衍用不等間距二次內插，宣明也是。崇玄暫且用平氣。計算盈縮積

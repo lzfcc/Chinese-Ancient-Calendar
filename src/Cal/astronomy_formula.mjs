@@ -1,4 +1,6 @@
-import { AutoMoonAvgV, AutoTcorr } from './astronomy_acrv.mjs'
+import {
+    AutoMoonAvgV, AutoTcorr
+} from './astronomy_acrv.mjs'
 import {
     AutoEqua2Eclp
 } from './bind_astronomy.mjs'
@@ -6,20 +8,14 @@ import {
     big
 } from './para_constant.mjs'
 import {
-    Bind,
+    Bind
 } from './bind.mjs'
+import {
+    AutoNodeCycle, AutoSolar, AutoSidereal
+} from './astronomy_acrv.mjs'
 
 export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週天度就用自己的
-    let Solar = 0
-    if (CalName === 'Chongxuan') {
-        Solar = 365.2548
-    } else if (['Dayan', 'Chongtian'].includes(CalName)) { // 崇天用了365.25 .27兩個値
-        Solar = 365.25
-    } else if (CalName === 'Mingtian') {
-        Solar = 365.24
-    } else if (['Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(CalName)) {
-        Solar = 365.2436
-    }
+    const Solar = AutoSidereal(CalName)
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
     const EighthSolar = Solar / 8
@@ -86,18 +82,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
 // 魏晉的黃道去極，是根據節氣來的，日書就不調用了。崇玄內外度是「昏後夜半日數」，紀元「午中日行積度」
 // 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致。又說：魏晉南北、皇極、戊寅、應天、乾元、儀天自變量用的平氣，麟德大衍宣明崇玄之後用的定氣。
 export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆法》頁128。漏刻頁135
-    let Solar = 0
-    if (CalName === 'Chongxuan') {
-        Solar = 365.2548
-    } else if (CalName === 'Yitian') {
-        Solar = 365.24455
-    } else if (CalName === 'Chongtian') { // 崇天用了兩個値，我折衷統一
-        Solar = 365.26
-    } else if (CalName === 'Mingtian') {
-        Solar = 365.24
-    } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
-        Solar = 365.2436
-    }
+    const Solar = AutoSidereal(CalName)
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
     let Longi = LongiRaw % HalfSolar
@@ -196,22 +181,10 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
 
 // 崇玄赤轉黃，用的「赤道日度」，赤轉赤緯，「昏後夜半日數」，晷長：「日中入二至加時以來日數」
 export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿用大衍：正午與二至時刻的距離加上日躔。陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因爲整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。崇玄、崇天的節接銜接不理想。
-    let Solar = 0
-    if (CalName === 'Chongxuan') {
-        Solar = 365.2445
-    } else if (CalName === 'Yitian') {
-        Solar = 365.24455
-    } else if (CalName === 'Chongtian') { // 崇天用了24 28兩個値
-        Solar = 365.24
-    } else if (CalName === 'Mingtian') {
-        Solar = 365.24
-    } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
-        Solar = 365.2436
-    }
+    const Solar = AutoSolar(CalName)
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
     let Deg = parseFloat((DegRaw % HalfSolar).toPrecision(14))
-
     let Dial = 0
     if (CalName === 'Chongxuan') {
         if ((DegRaw >= HalfSolar && Deg > 123.62225) || (DegRaw < HalfSolar && Deg > 59)) {
@@ -283,17 +256,9 @@ export const Longi2DialFormula = (DegRaw, CalName) => { // 崇玄的NodeAccum沿
 
 // 《數》頁361 白道度是以黃道度、正交黃經的二元函數
 export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { // SunEclpLongi, NodeAccum,  // 該日距冬至黃道度，入交日。不知是否應該加上日躔
-    const { AutoPara
-    } = Bind(CalName)
-    const { SolarRaw
-    } = AutoPara[CalName]
-    let { Solar
-    } = AutoPara[CalName]
-    Solar = Solar || SolarRaw
-    let Quadrant = 90
-    if (CalName === 'Jiyuan') {
-        Quadrant = 90.9486
-    }
+    const Solar = AutoSolar(CalName)
+    const NodeCycle = AutoNodeCycle(CalName)
+    const Quadrant = NodeCycle / 4
     const QuarSolar = Solar / 4
     const HalfSolar = Solar / 2
     // const HalfNode = Node / 2
@@ -339,12 +304,10 @@ export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) =
     } = Bind(CalName)
     const { Node
     } = AutoPara[CalName]
-    let Cycle = 363.8
+    const Cycle = AutoNodeCycle(CalName)
     let MoonAvgVDeg = AutoMoonAvgV(CalName) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
     if (CalName === 'Qintian') {
         MoonAvgVDeg = 1
-    } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
-        Cycle = 363.7944
     }
     const HalfCycle = Cycle / 2
     const QuarCycle = Cycle / 4
