@@ -81,20 +81,20 @@ const printData = outputFile(1, 1111, 1112, false, [ // mode, YearStart, YearEnd
     // 'Tongyuan',
     // 'Qiandao', 
     // 'Chunxi', 
-    'Huiyuan',
-    'Tongtian',
-    'Kaixi',
+    // 'Huiyuan',
+    // 'Tongtian',
+    // 'Kaixi',
     // 'Chunyou',
     // 'Huitian',
-    'Chengtian',
+    // 'Chengtian',
     // 'Bentian',
     // 'Daming1' // 賈俊大明
     // 'Daming2', 
     // 'Daming3', // 上宋金系
     // 'Yiwei',
     // 'Gengwu', 
-    'Shoushi',
-    'Datong', 
+    // 'Shoushi',
+    // 'Datong', 
     // 'West', // 上授時系
     // 'Huihui',     
 ]) // 注意，-1000年爲公元前1001年，因爲沒有公元0年

@@ -10,15 +10,9 @@ import Intro from './Intro'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['簡介', '朔閏表', '曆書', '同餘', '招差', '天文', '時間']
+    this.tabTitles = ['朔閏表', '曆書', '同餘', '招差', '天文', '時間', '簡介']
     this.state = {
-      calendars: [],
-      YearStart: '',
-      YearEnd: '',
-      // YearMode: '0',
-      AutoMode: 0,
-      output: '',
-      activeTab: 0,
+      activeTab: 6,
     };
   }
 
@@ -28,13 +22,8 @@ export default class App extends React.Component {
         if (this.state.activeTab === index) {
           return
         }
-        // if (index === 2) {
-        //   alert('[五星] 預計2023年推出，敬請期待～')
-        //   return
-        // }
         this.setState({
           activeTab: index,
-          // AutoMode: 0,
           output: '',
           loading: false,
         })
@@ -45,31 +34,31 @@ export default class App extends React.Component {
   renderTabContent() {
     if (this.state.activeTab === 0) {
       return (
-        <Intro />
+        <Newm />
       )
     } else if (this.state.activeTab === 1) {
       return (
-        <Newm />
+        <Day />
       )
     } else if (this.state.activeTab === 2) {
       return (
-        <Day />
+        <Modulo />
       )
     } else if (this.state.activeTab === 3) {
       return (
-        <Modulo />
+        <Equation />
       )
     } else if (this.state.activeTab === 4) {
       return (
-        <Equation />
+        <Astronomy />
       )
     } else if (this.state.activeTab === 5) {
       return (
-        <Astronomy />
+        <Time />
       )
     } else if (this.state.activeTab === 6) {
       return (
-        <Time />
+        <Intro />
       )
     }
   }

@@ -7,37 +7,6 @@ import {
  * 把儒略日轉換成儒略曆或格里高利曆 ported from https://ytliu0.github.io/ChineseCalendar/Julian.js by 廖育棟
  * @param {array} Jd 儒略日
  */
-// const Jd2Date = Jd => {
-//     if (!Array.isArray(Jd)) {
-//         Jd = [Jd]
-//     }
-//     return Jd.map((a) => {
-//         let b = 0
-//         let c = 0
-//         let d = 0
-//         let e = 0
-//         let f = 0
-//         if (a < 2299161) { // Julian calendar
-//             b = 0
-//             c = a + 1524
-//         } else { // Gregorian calendar
-//             b = Math.floor((a - 1867216.25) / 36524.25)
-//             c = a + b - Math.floor(0.25 * b) + 1525
-//         }
-//         d = Math.floor((c - 122.1) / 365.25)
-//         if (d < 0) {
-//             d++
-//         }
-//         e = 365 * d + Math.floor(0.25 * d)
-//         f = Math.floor((c - e) / 30.6000001)
-//         if (f < 0) {
-//             f++
-//         }
-//         const dd = c - e - Math.floor(30.6000001 * f)
-//         const mm = f - 1 - 12 * Math.floor(f / 14 + 0.0000001)
-//         return `${mm}-${dd}`
-//     })
-// }
 
 export const Jd2Date1 = Jd => {
     Jd = big(Jd)

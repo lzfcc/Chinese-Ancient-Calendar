@@ -275,6 +275,21 @@ const CalRange = {
     Datong: [
         [1368, 1662]
     ],
+    // Huihui: [
+    //     [1368, 1662]
+    // ],
+    // Shixian1: [ // 西洋新法曆書
+    //     [1645, 1679]
+    // ],
+    // Shixian2: [ // 康熙永年曆法
+    //     [1680, 1726]
+    // ],
+    // Shixian3: [ // 曆象考成
+    //     [1727, 1733]
+    // ],
+    // Shixian4: [ // 曆象考成後編
+    //     [1734, 1913]
+    // ]
 }
 
 export const AutoCal = year => {
@@ -294,19 +309,19 @@ export const AutoCal = year => {
 }
 // console.log(AutoCal(1127))
 
-const OverlapCalendars = (start, end) => {
-    const result = {}
-    for (const [Cal, ranges] of Object.entries(CalRange)) {
-        for (const range of ranges) {
-            const [left, right] = [Math.max(start, range[0]), Math.min(end, range[1])]
-            if (!result[Cal]) {
-                result[Cal] = []
-            }
-            if (left < right) {
-                result[Cal].push([left, right])
-            }
-        }
-    }
-    return result
-}
+// const OverlapCalendars = (start, end) => {
+//     const result = {}
+//     for (const [Cal, ranges] of Object.entries(CalRange)) {
+//         for (const range of ranges) {
+//             const [left, right] = [Math.max(start, range[0]), Math.min(end, range[1])]
+//             if (!result[Cal]) {
+//                 result[Cal] = []
+//             }
+//             if (left < right) {
+//                 result[Cal].push([left, right])
+//             }
+//         }
+//     }
+//     return result
+// }
 // console.log(OverlapCalendars(900, 1000))
