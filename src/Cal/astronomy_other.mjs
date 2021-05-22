@@ -65,12 +65,12 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     let MidstarResult = 0
     const LightRange = AutoLightRange(CalName)
     if (WinsolsDecimal >= 0) { // 一個小坑，四分曆存在WinsolsDecimal===0的情況，所以要加上>=0，只保留undefined
-        const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
+        const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Rise / 100
         let MidstarRaw = 0
         if (CalName === 'Dayan') { // 大衍只考慮了昬時距午度
-            MidstarRaw = (MansionAccum + (0.5 - Sunrise + LightRange) * Sidereal) % Sidereal
+            MidstarRaw = (MansionAccum + (0.5 - Rise + LightRange) * Sidereal) % Sidereal
         } else {
-            MidstarRaw = (MansionAccum + (0.5 + LightRange - Sunrise) * Sidereal - Sunrise + 1) % Sidereal
+            MidstarRaw = (MansionAccum + (0.5 + LightRange - Rise) * Sidereal - Rise + 1) % Sidereal
         }
         for (let k = 1; k <= 28; k++) {
             if (DegAccumList[k] < MidstarRaw && MidstarRaw < DegAccumList[k + 1]) {
@@ -99,9 +99,9 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
     } = Bind(CalName)
     const { Solar } = AutoPara[CalName]
     const QuarSolar = Solar / 4
-    const SpringequinoxSunrise = AutoLongi2Lati(QuarSolar, WinsolsDecimal, CalName).Sunrise / 100
-    let { Sunrise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
-    Sunrise = (Sunrise1 || Sunrise) / 100
+    const SpringequinoxSunrise = AutoLongi2Lati(QuarSolar, WinsolsDecimal, CalName).Rise / 100
+    let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
+    Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(CalName)
     let standard = 0.75
     let portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
@@ -111,13 +111,13 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
         portion = 2 // 夏至0.726
     }
     if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
-        standard = 1 - Sunrise + LightRange + 0.1
+        standard = 1 - Rise + LightRange // + 0.1
     } else if (CalName === 'Chongxuan') {
-        standard = Math.max(0.725, 1 - Sunrise + LightRange)
+        standard = Math.max(0.725, 1 - Rise + LightRange)
     } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
-        standard = 1 - Sunrise // 冬至0.7，夏至0.8
+        standard = 1 - Rise // 冬至0.7，夏至0.8
     } else if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
-        standard = 0.75 + (Sunrise - SpringequinoxSunrise) / portion
+        standard = 0.75 + (Rise - SpringequinoxSunrise) / portion
     }
     let NewmPlus = 0
     let Print = ''
@@ -133,10 +133,10 @@ export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =
     const { Type
     } = Bind(CalName)
     const LightRange = AutoLightRange(CalName)
-    const Sunrise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Sunrise / 100
-    let standard = Sunrise - LightRange
+    const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Rise / 100
+    let standard = Rise - LightRange
     if (Type >= 8 || CalName === 'Qintian') {
-        standard = Sunrise
+        standard = Rise
     }
     let SyzygySub = 0
     let Print = ''

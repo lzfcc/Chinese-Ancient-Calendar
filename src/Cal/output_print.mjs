@@ -51,7 +51,7 @@ const printData = outputFile(1, 1111, 1112, false, [ // mode, YearStart, YearEnd
     // 'WuyinA',
     // 'WuyinB', // 上南朝系
     // 'Jiuzhi',
-    // 'Shenlong',
+    'Shenlong',
     // 'Futian', // 上印度系
     // 'Zhangmengbin',
     // 'Liuxiaosun',

@@ -52,7 +52,7 @@ export default class Day extends React.Component {
     return (
       <section className='day-render' style={{ whiteSpace: "pre-wrap" }}>
         <div className='daytitle-wrap'>
-          <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />{CalNameDayList[this.state.calendars]}萬年天文具注曆</h2>
+          <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />{CalNameDayList[this.state.calendars]}萬年天文具注曆日</h2>
           <p className='DayAccum'>{this.state.output.DayAccum}</p>
           <p>{this.state.output.YearGod}</p>
           <div className='YearColor'>
@@ -215,7 +215,7 @@ export default class Day extends React.Component {
         {this.renderInput()}
         <button onClick={this.handleRetrieve} className='button2'>㤂〻如勑令</button>
         <article><ul>
-          <li><span className='Jd'>灰色：儒略日、儒略曆或格利高里曆曆日期</span></li>
+          <li><span className='Jd'>灰色：儒略日、儒略曆或格利高里曆日期</span></li>
           <li><span className='Nayin'>黑色：納音、建除、黃道黑道；七曜值日、星期幾、二十八宿值日、二十八禽值日</span></li>
           <li><span className='Equa'>紅色：太陽赤道宿度</span></li>
           <li><span className='Eclp'>黃色：太陽黃道宿度</span></li>

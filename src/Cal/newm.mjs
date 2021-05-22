@@ -256,6 +256,7 @@ export default (CalName, year) => {
                 const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
                 if (Type <= 4) {
                     Tcorr[i] = TcorrBindFunc.Tcorr1
+                    Tcorr1 = Tcorr[i]
                 } else if (Type < 11) {
                     Tcorr[i] = TcorrBindFunc.Tcorr2
                     Tcorr1 = TcorrBindFunc.Tcorr1

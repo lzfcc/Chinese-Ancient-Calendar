@@ -161,12 +161,12 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
     const WinsolsDif = WinsolsDifRaw % Solar
     const TermNum = ~~(WinsolsDif / HalfTermLeng) // 每日所在氣名
     const TermDif = WinsolsDif - TermNum * HalfTermLeng
-    const Sunrise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
+    const Rise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
     const Dial = (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
     const Lati1 = (SunLatiList[TermNum] + (TermDif / HalfTermLeng) * (SunLatiList[TermNum + 1] - SunLatiList[TermNum]))
     const Lati = Solar / 4 - Lati1
     return {
-        Sunrise,
+        Rise,
         Dial,
         Lati1,
         Lati
@@ -190,7 +190,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
     let Dial = 0
     let Lati = 0
     let Lati1 = 0
-    let Sunrise = 0
+    let Rise = 0
     let Sunrise1 = 0
     if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(CalName)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
         let TermNum = 0
@@ -212,7 +212,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDecimalDif[TermNum]
         const Initial1 = t1 + ',' + NightList[TermNum] + ';' + t2 + ',' + NightList[TermNum + 1] + ';' + t3 + ',' + NightList[TermNum + 2]
         const Initial2 = t1 + ',' + SunLatiList[TermNum] + ';' + t2 + ',' + SunLatiList[TermNum + 1] + ';' + t3 + ',' + SunLatiList[TermNum + 2]
-        Sunrise = DawnRange + Interpolate3(WinsolsDif, Initial1)
+        Rise = DawnRange + Interpolate3(WinsolsDif, Initial1)
         Sunrise1 = DawnRange + NightList[TermNum] + ((WinsolsDif - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
         Lati1 = Interpolate3(WinsolsDif, Initial2)
         Lati = 91.31 - Lati1
@@ -240,10 +240,10 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2]
         const Initial4 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2] + ',' + NightList[TermNum + 3]
         if (Type === 10) { // 重修大明的日出分是三次內插
-            Sunrise = 100 * (Interpolate1(nAvg, Initial4) / Denom)
+            Rise = 100 * (Interpolate1(nAvg, Initial4) / Denom)
             Sunrise1 = 100 * (NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])) / Denom
         } else {
-            Sunrise = DawnRange + Interpolate1(nAvg, Initial3)
+            Rise = DawnRange + Interpolate1(nAvg, Initial3)
             Sunrise1 = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])
         }
         if (Type === 6) {
@@ -251,7 +251,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
             Dial = Interpolate1(nAvg, Initial1)
         }
         if (Type === 10) {
-            Lati = -(Sunrise - 25) / (10896 / 52300)
+            Lati = -(Rise - 25) / (10896 / 52300)
             Lati1 = Sidereal / 4 - Lati
         } else {
             const Initial2 = SunLatiList[TermNum] + ',' + SunLatiList[TermNum + 1] + ',' + SunLatiList[TermNum + 2]
@@ -304,7 +304,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         Dial /= 10000
     }
     // 夜半漏計算直接用招差術了，不勝其煩。
-    return { Lati, Lati1, Dial, Sunrise, Sunrise1 }
+    return { Lati, Lati1, Dial, Rise, Sunrise1 }
 }
 // console.log(Longi2LatiTable2(90, 'LindeB').Sunrise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 

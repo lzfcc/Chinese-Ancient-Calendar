@@ -170,11 +170,11 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
     } else {
         Night = 22.5 - Lati / 4.8
     }
-    const Sunrise = Night + 2.5
+    const Rise = Night + 2.5
     return {
         Lati,
         Lati1,
-        Sunrise
+        Rise
     }
 }
 // console.log(Longi2LatiFormula(31.816049, 'Jiyuan').Lati)

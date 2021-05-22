@@ -28,6 +28,8 @@ export const AutoSidereal = CalName => {
     let Sidereal = 0
     if (CalName === 'Chongxuan') {
         Sidereal = 365.2548
+    } else if (CalName === 'Yitian') {
+        Sidereal = 365.24455
     } else if (['Dayan', 'Chongtian'].includes(CalName)) { // 崇天用了365.25 .27兩個値
         Sidereal = 365.25
     } else if (CalName === 'Mingtian') {

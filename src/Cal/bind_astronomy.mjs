@@ -415,23 +415,23 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
     }
     let Lati = 0
     let Lati1 = 0
-    let Sunrise = 0
+    let Rise = 0
     let Dial = 0
     if (special) {
         Lati = Longi2LatiA.Lati
         Lati1 = Longi2LatiA.Lati1
-        Sunrise = Longi2LatiA.Sunrise
+        Rise = Longi2LatiA.Rise
         Dial = Longi2LatiB.Dial
     } else {
         Lati = Longi2Lati.Lati
         Lati1 = Longi2Lati.Lati1
-        Sunrise = Longi2Lati.Sunrise
+        Rise = Longi2Lati.Rise
         Dial = Longi2Lati.Dial || 0
     }
     return {
         Lati,
         Lati1,
-        Sunrise,
+        Rise,
         Dial
     }
 }
@@ -477,7 +477,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
             const {
                 Lati1,
                 Lati,
-                Sunrise,
+                Rise,
                 Dial
             } = AutoLongi2Lati(LongiRaw, WinsolsDecimal, title)
             if (Lati1) {
@@ -485,10 +485,10 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
                 LatiPrint = Lati.toFixed(4)
                 LatiInacPrint = (Lati - WestB).toFixed(4)
             }
-            if (Sunrise) {
-                SunrisePrint = Sunrise.toFixed(4)
-                SunriseInacPrint1 = (Sunrise - WestC).toFixed(4)
-                SunriseInacPrint2 = (Sunrise - WestC1).toFixed(4)
+            if (Rise) {
+                SunrisePrint = Rise.toFixed(4)
+                SunriseInacPrint1 = (Rise - WestC).toFixed(4)
+                SunriseInacPrint2 = (Rise - WestC1).toFixed(4)
             }
             if (Dial) {
                 DialPrint = Dial.toFixed(4)

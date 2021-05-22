@@ -46,7 +46,7 @@ const PrintNewm = result => {
 
 const PrintDay = result => {
     const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Eclp,
-        Lati, Sunrise, Midstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
+        Lati, Rise, Midstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
     } = result
     let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
     Print += '\n**干支**\n'
@@ -98,9 +98,9 @@ const PrintDay = result => {
     }
     // }
     Print += '\n**日出**\n'
-    for (let i = 1; i < Sunrise.length; i++) {
+    for (let i = 1; i < Rise.length; i++) {
         Print += MonName[i] + `\n`
-        Print += Sunrise[i].slice(1).join(' ')
+        Print += Rise[i].slice(1).join(' ')
         Print += `\n`
     }
     if (Midstar) {
