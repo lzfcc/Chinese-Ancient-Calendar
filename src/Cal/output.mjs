@@ -45,7 +45,7 @@ const PrintNewm = result => {
 }
 
 const PrintDay = result => {
-    const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Eclp,
+    const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Equa, Eclp,
         Lati, Rise, Midstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
     } = result
     let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
@@ -246,10 +246,7 @@ export const outputFile = (mode, start, end, isAuto, listRaw) => {
         }
     } else {
         listRaw.forEach(CalName => {
-            // let Year = start
             CalDay(CalName, start, end).forEach((result, k) => {
-                // Year = start + k
-                // const Era = result.Era
                 printData[k] = printData[k] || []
                 printData[k].push(PrintDay(result))
             })
@@ -306,7 +303,7 @@ export const outputNewmWeb = (start, end, isAuto, listRaw) => {
             result.id = list[i] + Year // 给每个item一个唯一id在前端正确缓存高度
             result.Count = list.length
             data[k] = data[k] || []
-            data[k].push(result)            
+            data[k].push(result)
             k++
         }
     }

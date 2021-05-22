@@ -20,6 +20,10 @@ export const AutoSolar = CalName => {
         Solar = 365.24
     } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
         Solar = 365.2436
+    } else {
+        const { AutoPara
+        } = Bind(CalName)
+        Solar = +(AutoPara[CalName].Solar).toFixed(4)
     }
     return Solar
 }
@@ -36,9 +40,14 @@ export const AutoSidereal = CalName => {
         Sidereal = 365.24
     } else if (['Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(CalName)) {
         Sidereal = 365.2436
+    } else {
+        const { AutoPara
+        } = Bind(CalName)
+        Sidereal = +(AutoPara[CalName].Sidereal).toFixed(4)
     }
     return Sidereal
 }
+// console.log(AutoSidereal('Xuanming'))
 
 export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
     const { AutoPara, Type
@@ -90,7 +99,7 @@ export const AutoNodeCycle = CalName => {
         const { Node
         } = AutoPara[CalName]
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        NodeCycle = MoonAvgVDeg * Node
+        NodeCycle = +(MoonAvgVDeg * Node).toFixed(4)
     }
     return NodeCycle
 }

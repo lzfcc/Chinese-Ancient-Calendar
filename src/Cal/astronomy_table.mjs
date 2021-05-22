@@ -313,7 +313,7 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     let Range = []
     if (CalName === 'Huangji') { // 麟德沒有
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2.94, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》頁60
-    } else if (['Dayan', 'Qintian', 'Yingtian'].includes(CalName)) {
+    } else if (['Dayan', 'Xuanming', 'Qintian', 'Yingtian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0.94, 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
@@ -323,7 +323,7 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     if (CalName === 'Huangji') {
         LongiDifDifInitial = 11 / 45 // ⋯⋯四度爲限，初十一，每限損一，以終於一
         LongiDifDifChange = -1 / 45
-    } else if (CalName === 'Dayan') {
+    } else if (['Dayan', 'Xuanming'].includes(CalName)) {
         LongiDifDifInitial = 12 / 24
         LongiDifDifChange = -1 / 24
     } else if (CalName === 'Qintian') {
@@ -370,7 +370,7 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
         EclpWhiteDif /= 2
     }
     let EquaWhiteDif = 0
-    if (CalName === 'Dayan') {
+    if (['Dayan', 'Xuanming'].includes(CalName)) {
         EquaWhiteDif = WinsolsDifHalf / (Solar / 72) / 18
     } else if (CalName === 'Qintian') {
         const OriginXian = Math.abs(WinsolsDifHalf - Solar / 4) / Smallquadrant // 限數
@@ -392,27 +392,18 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     WhiteLongi = EclpLongi + EclpWhiteDif
     EquaLongi = EquaWhiteDif ? WhiteLongi + EquaWhiteDif : 0
     return {
-        EclpLongi,
-        WhiteLongi,
-        EquaLongi,
-        EclpWhiteDif,
-        EquaWhiteDif
+        EclpLongi, WhiteLongi, EquaLongi, EclpWhiteDif, EquaWhiteDif
     }
 }
 // console.log(MoonLongiTable(55.25, 11.22, 'Qianxiang').EclpLongi)
 // console.log(MoonLongiTable(45, 3, 'Qintian'))
 
 export const MoonLatiTable = (NodeAccum, CalName) => {
-    const {
-        Type,
-        AutoPara,
+    const { Type, AutoPara
     } = Bind(CalName)
-    const {
-        MoonLatiDifList,
+    const { MoonLatiDifList
     } = AutoPara[CalName]
-    let {
-        Node,
-        MoonLatiAccumList
+    let { Node, MoonLatiAccumList
     } = AutoPara[CalName]
     ///////預處理陰陽曆////////
     let portion = 10

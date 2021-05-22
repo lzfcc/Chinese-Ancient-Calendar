@@ -446,30 +446,9 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         }
         DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + Yuan
         return {
-            Era,
-            DayAccum,
-            YearGod,
-            YearColor,
-            MonName,
-            MonInfo,
-            MonColor,
-            Sc,
-            Jd,
-            Nayin,
-            Week,
-            Equa,
-            Eclp,
-            Lati,
-            Rise,
-            Midstar,
-            Dial,
-            MoonEclp,
-            MoonEclpLati,
-            HouName,
-            HexagramName,
-            FiveName,
-            ManGod,
-            Luck
+            Era, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
+            Sc, Jd, Nayin, Week, Equa, Eclp, Lati, Rise, Midstar, Dial, MoonEclp, MoonEclpLati,
+            HouName, HexagramName, FiveName, ManGod, Luck
         }
     }
     const result = []

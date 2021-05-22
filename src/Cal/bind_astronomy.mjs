@@ -23,6 +23,7 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
+import { AutoNodeCycle } from './astronomy_acrv.mjs'
 // import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
@@ -544,12 +545,7 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
-    let Quadrant = 90
-    if (CalName === 'Jiyuan') {
-        Quadrant = 90.9486
-    } else if (Type === 11) {
-        Quadrant = Sidereal / 4
-    }
+    const Quadrant = Type === 11 ? Sidereal / 4 : AutoNodeCycle(CalName) / 4
     // 正交月黃經。《數》頁351
     // const tmp2 = Node - NewmNodeAccumPrint[i - 1] // 平交入朔
     // const NodeAnomaAccum = (AnomaAccumNight + tmp2) % Anoma // 每日夜半平交入轉
