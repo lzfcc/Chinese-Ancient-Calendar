@@ -145,14 +145,9 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
 export const AutoEqua2Eclp = (LongiRaw, CalName) => {
-    const {
-        Type,
-        AutoPara
+    const { Type, AutoPara
     } = Bind(CalName)
-    const {
-        Sidereal,
-        Solar,
-        SolarRaw
+    const { Sidereal, Solar, SolarRaw
     } = AutoPara[CalName]
     LongiRaw %= (Sidereal || (Solar || SolarRaw))
     let Equa2Eclp = 0

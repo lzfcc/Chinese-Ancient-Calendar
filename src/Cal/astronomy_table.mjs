@@ -1,12 +1,6 @@
-import { AutoMoonAvgV } from './astronomy_acrv.mjs'
-import {
-    Bind,
-} from './bind.mjs'
-import {
-    Interpolate1,
-    Interpolate2,
-    Interpolate3
-} from './equa_sn.mjs'
+import { AutoMoonAvgV, AutoNodeCycle } from './astronomy_acrv.mjs'
+import { Bind } from './bind.mjs'
+import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 
 // /////乾象魏晉黃赤轉換//////
 // const Equa2EclpTable1 = (LongiRaw, Sidereal) => {
@@ -48,17 +42,11 @@ import {
 // }
 
 export const Equa2EclpTable = (LongiRaw, CalName) => {
-    const {
-        AutoPara,
-        Type
+    const { AutoPara, Type
     } = Bind(CalName)
-    let {
-        Sidereal,
-        Solar
+    let { Sidereal, Solar
     } = AutoPara[CalName]
-    if (!Sidereal) {
-        Sidereal = Solar
-    }
+    Sidereal = Sidereal || Solar
     let Longi = LongiRaw % (Sidereal / 4)
     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
         Longi = Sidereal / 4 - Longi
@@ -69,7 +57,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
         Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
     } else if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
-    } else if (['Dayan', 'Zhide', 'Tsrengyuan', 'Wuji', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + Sidereal / 4 - ~~(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
@@ -77,7 +65,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) { // 爲何皇極增速先慢後快，大衍先快後慢？
         LongiDifDifInitial = 97 / 450 // ⋯⋯四度爲限。初數九十七，每限增一，以終百七
         LongiDifDifChange = 1 / 450
-    } else if (['Dayan', 'Zhide', 'Tsrengyuan', 'Wuji'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(CalName)) {
         LongiDifDifInitial = 12 / 24
         LongiDifDifChange = -1 / 24
     } else if (CalName === 'Qintian') {
@@ -141,10 +129,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     }
     Equa2EclpDif *= sign1
     Equa2Eclp = LongiRaw + Equa2EclpDif
-    return {
-        Equa2Eclp,
-        Equa2EclpDif
-    }
+    return { Equa2Eclp, Equa2EclpDif }
 }
 // console.log(Equa2EclpTable(23,''))
 
@@ -165,12 +150,7 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
     const Dial = (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
     const Lati1 = (SunLatiList[TermNum] + (TermDif / HalfTermLeng) * (SunLatiList[TermNum + 1] - SunLatiList[TermNum]))
     const Lati = Solar / 4 - Lati1
-    return {
-        Rise,
-        Dial,
-        Lati1,
-        Lati
-    }
+    return { Rise, Dial, Lati1, Lati }
 }
 
 export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
@@ -316,7 +296,7 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     } = AutoPara[CalName]
     let { Sidereal
     } = AutoPara[CalName]
-    const Quadrant = 90.94335
+    const Quadrant = AutoNodeCycle(CalName) / 4
     const NodeAccum = NodeAccumRaw// % (Node / 2)
     // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
 
