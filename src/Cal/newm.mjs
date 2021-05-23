@@ -266,7 +266,7 @@ export default (CalName, year) => {
                 AcrRaw[i] = AvgRaw[i] + Tcorr[i]
                 if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) { // 定朔入轉同經朔，若定朔大餘有變化，則加減一整日。變的應該是夜半，而非加時
                     AnomaAccumNight[i]++
-                } else if (Math.floor(AcrRaw[i]) > Math.floor(AvgRaw[i])) {
+                } else if (Math.floor(AcrRaw[i]) < Math.floor(AvgRaw[i])) {
                     AnomaAccumNight[i]--
                 }
                 AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60

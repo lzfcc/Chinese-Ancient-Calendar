@@ -65,9 +65,13 @@ export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
         MoonAvgVDeg = 13 + 7 / 19
     } else if (CalName === 'Mingtian' || Type === 11) {
         MoonAvgVDeg = 13.36875 // 約分。13+29913000/81120000
-    } else if (Type >= 8 && Type <= 10 && !['Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Tongyuan'].includes(CalName)) {
+    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName) || Type === 10) {
         MoonAvgVDeg = 13.37
-    } else {
+    } else if (CalName === 'Chongtian') {
+        MoonAvgVDeg = 909 / 68
+    } else if (CalName === 'Jiyuan') {
+        MoonAvgVDeg = 7290 / 545.3
+    } else { // 崇天909/68=13.3676470588 紀元：7290/545.3=13.3687878232，按照公式=13.3687753161
         const { Sidereal, Solar, Lunar
         } = AutoPara[CalName]
         MoonAvgVDeg = parseFloat(((Sidereal || Solar) / Lunar + 1).toPrecision(14))
@@ -404,6 +408,10 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
     } = Bind(CalName)
     const { MoonTcorrList, MoonTcorrListA, MoonTcorrListB, Anoma, Denom
     } = AutoPara[CalName]
+    const a = []
+    for (let i = 0; i <= 26; i++) {
+        a[i] = -(MoonTcorrList[i + 1] - MoonTcorrList[i])
+    }
     AnomaAccum %= Anoma
     const HalfAnoma = Anoma / 2
     const AnomaAccumHalf = AnomaAccum % HalfAnoma
@@ -460,8 +468,12 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
     MoonTcorr2 /= Denom
     return { MoonTcorr2, MoonTcorr1 }
 }
-// console.log(MoonTcorrTable(7.266, 'Jiyuan'))
+console.log(MoonTcorrTable(7.266, 'Chengtian'))
 // console.log(MoonTcorrTable(7.266, 'Xuanming'))
+
+const MoonTcorrDifTable = (AnomaAccum, CalName) => { // 南宋損益率
+
+}
 
 const MoonDifAccumTable = (AnomaAccum, CalName) => {
     const { AutoPara, Type
@@ -932,16 +944,8 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         MoonTcorr = MoonTcorr1
     }
     return {
-        SunTcorr,
-        MoonTcorr,
-        SunTcorr2,
-        SunTcorr1,
-        MoonTcorr2,
-        MoonTcorr1,
-        Tcorr2,
-        Tcorr1,
-        NodeAccumCorr,
-        NodeAccumCorr2,
+        SunTcorr, MoonTcorr, SunTcorr2, SunTcorr1, MoonTcorr2, MoonTcorr1, Tcorr2, Tcorr1,
+        NodeAccumCorr, NodeAccumCorr2,
     }
 }
 // console.log(AutoTcorr(6, 9, 'Qiandao', 1997).MoonTcorr2)
