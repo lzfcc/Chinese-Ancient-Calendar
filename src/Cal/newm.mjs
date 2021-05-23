@@ -11,7 +11,7 @@ import {
     ConstWest
 } from './astronomy_west.mjs'
 import {
-    Accum2Mansion, AutoNewmPlus, AutoSyzygySub
+    Accum2Mansion, AutoNewmPlus, AutoSyzygySub, LeapAdjust
 } from './astronomy_other.mjs'
 import {
     AutoEqua2Eclp
@@ -385,26 +385,11 @@ export default (CalName, year) => {
         LeapSurAcrThis = LeapSurAvgThis - NewmTcorr[1] // * Denom
     }
     // 中氣
-    let LeapNumTerm = 0
-    if (LeapNumAvgThis) {
-        LeapNumTerm = LeapNumAvgThis
-    }
+    let LeapNumTerm = LeapNumAvgThis > 0 ? LeapNumAvgThis : 0
     let isLeapAdvan = 0
     let isLeapPost = 0
     if (isLeapThis) {
-        let Plus = 3.5
-        if (isNewmPlus) { // 若不用進朔，需要改成3.5
-            Plus = 2.75
-            if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
-                Plus = 3
-            }
-        }
-        while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + Plus)) {
-            LeapNumTerm--
-        }
-        while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - Plus)) {
-            LeapNumTerm++
-        }
+        LeapNumTerm = LeapAdjust(LeapNumTerm, TermAvgRaw, NewmInt, CalName)
         if (LeapNumTerm < 1) {
             isLeapAdvan = 1
             isLeapPrev = 1

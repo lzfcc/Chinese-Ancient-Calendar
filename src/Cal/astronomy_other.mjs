@@ -94,6 +94,24 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
 
+export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
+    const isNewmPlus = Bind(CalName)
+    let Plus = 3.5 // 若不用進朔，需要改成3.5
+    if (isNewmPlus) {
+        Plus = 2.75
+        if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
+            Plus = 3
+        }
+    }
+    while (LeapNumTerm >= 2 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + Plus)) {
+        LeapNumTerm--
+    }
+    while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - Plus)) {
+        LeapNumTerm++
+    }
+    return LeapNumTerm
+}
+
 export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => { // 朔小分
     const { AutoPara
     } = Bind(CalName)

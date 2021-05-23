@@ -21,7 +21,6 @@ export default class Day extends React.Component {
       md: ''
     };
   }
-
   componentWillMount() {
     fetch(md1)
       .then(res => res.text())
@@ -51,6 +50,7 @@ export default class Day extends React.Component {
     })
     return (
       <section className='day-render' style={{ whiteSpace: "pre-wrap" }}>
+
         <div className='daytitle-wrap'>
           <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />{CalNameDayList[this.state.calendars]}萬年天文具注曆日</h2>
           <p className='DayAccum'>{this.state.output.DayAccum}</p>
@@ -70,30 +70,30 @@ export default class Day extends React.Component {
           </div>
         </div>
         <hr />
-        {list.map((info, index) => {
-          return (
-            <div className="single-cal">
-              <h3>{MonName[index + 1]}</h3>
-              <p dangerouslySetInnerHTML={{ __html: MonInfo[index + 1] }}></p>
-              <span className='YearColor'>
-                <table>
-                  {(MonColor[index + 1] || []).map(row => {
-                    return (
-                      <tr>
-                        {row.map(d => {
-                          return <td dangerouslySetInnerHTML={{ __html: d }}></td>
-                        })}
-                      </tr>
-                    );
-                  })}
-                </table>
-              </span>
-              <div>
-                {this.RenderDayTableContent(index + 1, info)}
+          {list.map((info, index) => {
+            return (
+              <div className="single-cal">
+                <h3>{MonName[index + 1]}</h3>
+                <p dangerouslySetInnerHTML={{ __html: MonInfo[index + 1] }}></p>
+                <span className='YearColor'>
+                  <table>
+                    {(MonColor[index + 1] || []).map(row => {
+                      return (
+                        <tr>
+                          {row.map(d => {
+                            return <td dangerouslySetInnerHTML={{ __html: d }}></td>
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </table>
+                </span>
+                <div>
+                  {this.RenderDayTableContent(index + 1, info)}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </section>
     );
   }

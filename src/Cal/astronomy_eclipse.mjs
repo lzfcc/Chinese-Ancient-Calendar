@@ -886,9 +886,12 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, NewmDecimal, WinsolsDifRaw, is
     }
     let sign2 = 1 // 紀元刻差符號「冬至後食甚在午前，夏至後食甚在午後，交初以加，交中以減」
     let special = 0
+    let TheDecimal = NewmDecimal
+    if (Type === 9) {
+        TheDecimal = TotalDecimal
+    }
     if (WinsolsDif < HalfSolar) {
-        // if (WinsolsDif < QuarSolar || WinsolsDif > Solar * 0.75) {
-        if (TotalDecimal < 0.5) {
+        if (TheDecimal < 0.5) { // 紀元是TotalDecimal，其他是不是NewmDecimal有待確定
             special = 1
             if (NodeAccum >= HalfNode) {
                 sign2 = -1
@@ -899,7 +902,7 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, NewmDecimal, WinsolsDifRaw, is
             }
         }
     } else {
-        if (TotalDecimal < 0.5) {
+        if (TheDecimal < 0.5) {
             if (NodeAccum < HalfNode) {
                 sign2 = -1
             }
@@ -1055,12 +1058,12 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, NewmDecimal, WinsolsDifRaw, is
             DcorrClock *= NoonDifNewm * 4
         }
     }
-    let k0 = 0
-    if (Type === 9) {
-        if (NodeAccum > QuarNode && NodeAccum < Node * 0.75) { // 交初加三千一百，交中減三千
+    let k0 = 0 // 視白道比眞白道低，所以陽曆：視月亮距交大於眞月亮，陰曆：小於。
+    if (Type === 9) { // 紀元「置朔入交常日⋯⋯以氣刻差定數各加減之，交初加三千一百，交中減三千，爲朔入交定日」
+        if (NodeAccum > HalfNode) { // 交初加三千一百，交中減三千
             k0 = -3000
         } else {
-            k0 = 3100
+            k0 = 3100 // 5.685度
         }
     }
     Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther + k0) / (Type === 11 ? 1 : Denom)

@@ -8,11 +8,11 @@ import {
     AutoEclipse
 } from './astronomy_eclipse.mjs'
 import {
-    Accum2Mansion
+    Accum2Mansion, LeapAdjust
 } from './astronomy_other.mjs'
 
 export default (CalName, YearStart, YearEnd) => { // CalNewm
-    const { Type, AutoNewm, AutoPara, isNewmPlus
+    const { Type, AutoNewm, AutoPara
     } = Bind(CalName)
     const isExcl = Type >= 4 ? 1 : 0
     const { OriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
@@ -26,13 +26,10 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const ZhengWinsolsDif = ZhengNum - OriginMonNum
         const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
         const isLeapPvPt = PrevYear.isLeapPost
-        const { isLeapAdvan: isLeapTA,
-            JiScOrder: JiScOrder,
+        const { isLeapAdvan: isLeapTA, JiScOrder: JiScOrder,
             OriginAccum, NewmEqua, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgWinsolsDif, TermAcrWinsolsDif, AccumPrint, LeapLimit
         } = ThisYear
-        let { LeapNumTerm: LeapNumTermThis,
-            isLeapPrev: isLeapTPv,
-            isLeapThis: isLeapTT,
+        let { LeapNumTerm: LeapNumTermThis, isLeapPrev: isLeapTPv, isLeapThis: isLeapTT,
             NewmInt, NewmStart, NewmEnd, TermStart, TermEnd,
         } = ThisYear
         const WinsolsDecimal = +(OriginAccum - Math.floor(OriginAccum)).toFixed(5)
@@ -114,19 +111,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 }
             }
             if (isLeapTT) {
-                let Plus = 3.5 // 若不用進朔，需要改成3.5
-                if (isNewmPlus) {
-                    Plus = 2.75
-                    if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
-                        Plus = 3
-                    }
-                }
-                while (LeapNumTermThis >= 2 && (TermAvgRaw[LeapNumTermThis] >= NewmInt[LeapNumTermThis + 1]) && (TermAvgRaw[LeapNumTermThis] < NewmInt[LeapNumTermThis + 1] + Plus)) {
-                    LeapNumTermThis--
-                }
-                while (LeapNumTermThis <= 11 && (TermAvgRaw[LeapNumTermThis + 1] < NewmInt[LeapNumTermThis + 2]) && (TermAvgRaw[LeapNumTermThis + 1] >= NewmInt[LeapNumTermThis + 2] - Plus)) {
-                    LeapNumTermThis++
-                }
+                LeapNumTermThis = LeapAdjust(LeapNumTermThis, TermAvgRaw, NewmInt, CalName)
                 TermName[LeapNumTermThis + 1] = '无'
                 if (TermAcrRaw[0]) {
                     TermAcrSc[LeapNumTermThis + 1] = ''
@@ -346,14 +331,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
                         const Newmstatus = NewmEcliFunc.status
                         let NewmMagni = 0
-                        let NewmStartDecimal = 0 // 初虧
-                        let NewmTotalDecimal = 0 // 食甚
-                        if (NewmEcliFunc.StartDecimal) {
-                            NewmStartDecimal = NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
-                        }
-                        if (NewmEcliFunc.Decimal) {
-                            NewmTotalDecimal = NewmEcliFunc.Decimal.toFixed(4).slice(2, 6)
-                        }
+                        const NewmStartDecimal = NewmEcliFunc.StartDecimal ? NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6) : 0
+                        const NewmTotalDecimal = NewmEcliFunc.Decimal ? NewmEcliFunc.Decimal.toFixed(4).slice(2, 6) : 0
                         if (Newmstatus) {
                             NewmMagni = NewmEcliFunc.Magni.toFixed(2)
                             NewmEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
@@ -371,12 +350,8 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
                         const Syzygystatus = SyzygyEcliFunc.status
                         let SyzygyMagni = 0
-                        let SyzygyStartDecimal = 0
-                        let SyzygyTotalDecimal = 0
-                        if (SyzygyEcliFunc.StartDecimal) {
-                            SyzygyStartDecimal = SyzygyEcliFunc.StartDecimal.toFixed(4).slice(2, 6)
-                            SyzygyTotalDecimal = SyzygyEcliFunc.Decimal.toFixed(4).slice(2, 6)
-                        }
+                        const SyzygyStartDecimal = SyzygyEcliFunc.StartDecimal ? SyzygyEcliFunc.StartDecimal.toFixed(4).slice(2, 6) : 0
+                        const SyzygyTotalDecimal = SyzygyEcliFunc.Decimal ? SyzygyEcliFunc.Decimal.toFixed(4).slice(2, 6) : 0
                         if (Syzygystatus) {
                             SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
                             SyzygyEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
@@ -400,18 +375,13 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year
         if (year > 0) {
-            Era = '公元 ' + year + ' 年 ' + YearSc
+            Era = `公元 ${year} 年 ${YearSc}`
         } else {
-            Era = '公元前 ' + (1 - year) + ' 年 ' + YearSc
+            Era = `公元前 ${1 - year} 年 ${YearSc}`
         }
         let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元${year - OriginAd} `
         if (Type === 1) {
-            let LeapSur = 0
-            if (!isTermLeap) {
-                LeapSur = ThisYear.LeapSurAvgFix
-            } else {
-                LeapSur = ThisYear.LeapSurAvgThis
-            }
+            const LeapSur = isTermLeap ? ThisYear.LeapSurAvgThis : ThisYear.LeapSurAvgFix
             if (CalName === 'Taichu') {
                 YearInfo += `${ScList[ThisYear.BuScOrder]}統${ThisYear.BuYear}${ThisYear.JupiterSc}`
             } else {
@@ -423,7 +393,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
             } else if (WinsolsWinsolsDif === -60.875) {
                 YearInfo += `雨水${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
-            YearInfo += `  閏餘${(LeapSur.toFixed(4))}`
+            YearInfo += `  閏餘${LeapSur.toFixed(4)}`
             if (ThisYear.LeapNumOriginLeapSur) {
                 YearInfo += `閏${ThisYear.LeapNumOriginLeapSur - NewmStart}`
             }

@@ -82,6 +82,10 @@ article h4 {
   font-size: 1.3em;
 }
 
+article h5 {
+  font-size: 1.1em;
+}
+
 pre {
   background: var(--bgblue);
   border-radius: 1.2em;

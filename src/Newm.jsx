@@ -161,8 +161,8 @@ export default class Newm extends React.Component {
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
     if (isAuto) {
-      if (YearStart < -721 || YearStart > 1662 || YearEnd < -721 || YearEnd > 1662) {
-        alert('Year range of AutoChoose mode: -721 to 1662');
+      if (YearStart < -721 || YearStart > 1662 || YearEnd < -721 || YearEnd > 1683) {
+        alert('Year range of AutoChoose mode: -721 to 1683');
         return;
       }
     } else if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
@@ -248,7 +248,7 @@ export default class Newm extends React.Component {
 
   renderTableList() {
     const list = (this.state.output || []).flat(); // 二维数组拍扁成一维，每个表格平均高度 350
-    if (list.length === 0) {
+    if (!list.length) {
       return null
     }
     return (
