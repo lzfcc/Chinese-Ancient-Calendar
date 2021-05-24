@@ -1,18 +1,8 @@
-import {
-    AutoMoonAvgV, AutoTcorr
-} from './astronomy_acrv.mjs'
-import {
-    AutoEqua2Eclp
-} from './bind_astronomy.mjs'
-import {
-    big
-} from './para_constant.mjs'
-import {
-    Bind
-} from './bind.mjs'
-import {
-    AutoNodeCycle, AutoSolar, AutoSidereal
-} from './astronomy_acrv.mjs'
+import { AutoTcorr } from './astronomy_acrv.mjs'
+import { AutoEqua2Eclp } from './bind_astronomy.mjs'
+import { big } from './para_constant.mjs'
+import { Bind } from './bind.mjs'
+import { AutoMoonAvgV, AutoNodeCycle, AutoSolar, AutoSidereal } from './para_auto-constant.mjs'
 
 export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週天度就用自己的
     const Solar = AutoSidereal(CalName)

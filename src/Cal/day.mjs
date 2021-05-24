@@ -1,6 +1,4 @@
-import {
-    Bind,
-} from './bind.mjs'
+import { Bind } from './bind.mjs'
 import {
     ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
     WeekList, MansionNameList, MansionAnimalNameList,
@@ -15,13 +13,10 @@ import CalNewm from './newm_index.mjs'
 import {
     AutoEqua2Eclp, AutoLongi2Lati, AutoMoonLongi, AutoMoonLati
 } from './bind_astronomy.mjs'
-import {
-    AutoTcorr, AutoDifAccum, AutoMoonAvgV, AutoMoonAcrS
-} from './astronomy_acrv.mjs'
+import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
 import { Accum2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
-import {
-    Jd2Date1
-} from './time_jd2date.mjs'
+import { Jd2Date1 } from './time_jd2date.mjs'
+import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
 export const CalDay = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart

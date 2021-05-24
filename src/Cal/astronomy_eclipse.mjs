@@ -1,17 +1,8 @@
-import {
-    Bind
-} from './bind.mjs'
-import {
-    AutoTcorr,
-    AutoDifAccum
-} from './astronomy_acrv.mjs'
-import {
-    Interpolate3
-} from './equa_sn.mjs'
-import {
-    Longi2LatiFormula
-} from './astronomy_formula.mjs'
-import { AutoMoonAvgV } from './astronomy_acrv.mjs'
+import { Bind } from './bind.mjs'
+import { AutoTcorr } from './astronomy_acrv.mjs'
+import { Interpolate3 } from './equa_sn.mjs'
+import { Longi2LatiFormula } from './astronomy_formula.mjs'
+import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
 const NodeAccumHalf2NodeDif = (NodeAccumHalf, Node25, Node50) => {// 去交分 NodeDif
     let NodeDif = NodeAccumHalf

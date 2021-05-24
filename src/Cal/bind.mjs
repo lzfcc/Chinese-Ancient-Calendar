@@ -302,7 +302,7 @@ export const AutoCal = year => {
             }
         }
     }
-    if (Cals.length === 0) {
+    if (!Cals.length) {
         console.log('年份範圍 -721 至 1662')
     }
     return Cals

@@ -1,5 +1,5 @@
-import { AutoMoonAvgV, AutoNodeCycle } from './astronomy_acrv.mjs'
 import { Bind } from './bind.mjs'
+import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
 import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 
 // /////乾象魏晉黃赤轉換//////

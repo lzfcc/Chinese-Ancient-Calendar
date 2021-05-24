@@ -1,25 +1,7 @@
-import {
-    AutoLongi2Lati
-} from './bind_astronomy.mjs'
-import {
-    MansionNameList
-} from './para_constant.mjs' // 賦值解構
-import {
-    AutoMoonAvgV
-} from './astronomy_acrv.mjs'
-import {
-    Bind
-} from './bind.mjs'
-
-const AutoLightRange = CalName => {
-    let LightRange = 0.025 // 宣明不能確定，各個節氣都不一樣
-    if (CalName === 'Huangji') {
-        LightRange = 0.02365
-    } else if (['LindeA', 'LindeB'].includes(CalName)) {
-        LightRange = 0.0228
-    }
-    return LightRange
-}
+import { AutoLongi2Lati } from './bind_astronomy.mjs'
+import { MansionNameList } from './para_constant.mjs' // 賦值解構
+import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
+import { Bind } from './bind.mjs'
 
 export const Deg2Mansion = (MansionAccum, DegAccumList) => {
     let MansionOrder = 0

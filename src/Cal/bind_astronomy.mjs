@@ -1,6 +1,4 @@
-import {
-    Bind,
-} from './bind.mjs'
+import { Bind } from './bind.mjs'
 import {
     Equa2EclpTable, Longi2LatiTable1, Longi2LatiTable2, MoonLatiTable
 } from './astronomy_table.mjs'
@@ -14,16 +12,12 @@ import {
     Equa2EclpWest, Longi2LatiWest, Longi2SunriseWest, Longi2DialWest, SunAcrVWest,    // MoonAcrVWest
 } from './astronomy_west.mjs'
 import {
-    AutoTcorr, AutoDifAccum, AutoMoonAvgV, AutoMoonAcrS
+    AutoTcorr, AutoDifAccum, AutoMoonAcrS
 } from './astronomy_acrv.mjs'
-import {
-    CalNameList, AutoDegAccumList
-} from './para_constant.mjs'
-import {
-    AutoEclipse
-} from './astronomy_eclipse.mjs'
+import { CalNameList, AutoDegAccumList } from './para_constant.mjs'
+import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
-import { AutoNodeCycle } from './astronomy_acrv.mjs'
+import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
 // import { AutoMoonAvgV } from './astronomy_acrv.mjs'
 
 export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
