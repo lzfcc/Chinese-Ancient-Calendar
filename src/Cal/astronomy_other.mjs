@@ -116,8 +116,8 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
     const { AutoPara
     } = Bind(CalName)
     const { Solar } = AutoPara[CalName]
-    const QuarSolar = Solar / 4
-    const SpringequinoxSunrise = AutoLongi2Lati(QuarSolar, WinsolsDecimal, CalName).Rise / 100
+    const Solar25 = Solar / 4
+    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDecimal, CalName).Rise / 100
     let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
     Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(CalName)
@@ -134,7 +134,7 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
         standard = Math.max(0.725, 1 - Rise + LightRange)
     } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
         standard = 1 - Rise // 冬至0.7，夏至0.8
-    } else if (WinsolsDifRaw > QuarSolar && WinsolsDifRaw < Solar * 0.75) {
+    } else if (WinsolsDifRaw > Solar25 && WinsolsDifRaw < Solar * 0.75) {
         standard = 0.75 + (Rise - SpringequinoxSunrise) / portion
     }
     let NewmPlus = 0
@@ -174,48 +174,48 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行�
     } = AutoPara[CalName]
     Lunar = Lunar || LunarRaw
     Solar = Solar || SolarRaw
-    const HalfNode = Node / 2
+    const Node50 = Node / 2
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
     const WinsolsDif = WinsolsDifRaw + (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
     let Print = ''
     if (Type <= 6) {
-        if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
+        if ((NodeAccum > Node50 - HalfSynodicNodeDif && NodeAccum < Node50) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > Node50 && NodeAccum < Node50 + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
             Print = `<span class='lati-yellow'>黃</span>`
-        } else if (NodeAccum < HalfNode) {
+        } else if (NodeAccum < Node50) {
             Print = `<span class='lati-yang'>陽</span>`
         } else {
             Print = `<span class='lati-yin'>陰</span>`
         }
     } else if (Type >= 7 && Type <= 10) { // 月行九道
         if (WinsolsDif < 3 * HalfTermLeng || WinsolsDif >= 21 * HalfTermLeng) { // 冬
-            if (NodeAccum < HalfNode) {
+            if (NodeAccum < Node50) {
                 Print = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`
             } else {
                 Print = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
             }
         } else if (WinsolsDif >= 3 * HalfTermLeng && WinsolsDif < 9 * HalfTermLeng) {
-            if (NodeAccum < HalfNode) {
+            if (NodeAccum < Node50) {
                 Print = `<span class='lati-red'>朱</span><span class='lati-yang'>陽</span>`
             } else {
                 Print = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
             }
         } else if (WinsolsDif >= 9 * HalfTermLeng && WinsolsDif < 15 * HalfTermLeng) {
-            if (NodeAccum < HalfNode) {
+            if (NodeAccum < Node50) {
                 Print = `<span class='lati-green'>靑</span><span class='lati-yang'>陽</span>`
             } else {
                 Print = `<span class='lati-white'>白</span><span class='lati-yin'>陰</span>`
             }
         } else {
-            if (NodeAccum < HalfNode) {
+            if (NodeAccum < Node50) {
                 Print = `<span class='lati-black'>黑</span><span class='lati-yang'>陽</span>`
             } else {
                 Print = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
             }
         }
-        if ((NodeAccum > HalfNode - HalfSynodicNodeDif && NodeAccum < HalfNode) || NodeAccum < HalfSynodicNodeDif) {
+        if ((NodeAccum > Node50 - HalfSynodicNodeDif && NodeAccum < Node50) || NodeAccum < HalfSynodicNodeDif) {
             Print = `<span class='lati-yellow'>黃</span><span class='lati-yang'>陽</span>`
-        } else if ((NodeAccum > HalfNode && NodeAccum < HalfNode + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
+        } else if ((NodeAccum > Node50 && NodeAccum < Node50 + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
             Print = `<span class='lati-yellow'>黃</span><span class='lati-yin'>陰</span>`
         }
     }

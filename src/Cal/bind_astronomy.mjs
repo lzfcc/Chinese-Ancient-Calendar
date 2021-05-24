@@ -61,14 +61,9 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     let MoonTcorrInac = 0
     Print1 = Print1.concat(
         List1.map(title => {
-            const {
-                SunDifAccum,
-                MoonDifAccum,
+            const { SunDifAccum, MoonDifAccum,
             } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
-            const {
-                SunTcorr,
-                MoonTcorr,
-                NodeAccumCorr
+            const { SunTcorr, MoonTcorr, NodeAccumCorr
             } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             let SunTcorrPrint = '-'
@@ -111,14 +106,9 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     }]
     Print2 = Print2.concat(
         List2.map(title => {
-            const {
-                SunDifAccum,
-                MoonDifAccum,
+            const { SunDifAccum, MoonDifAccum,
             } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
-            const {
-                SunTcorr,
-                MoonTcorr,
-                NodeAccumCorr
+            const { SunTcorr, MoonTcorr, NodeAccumCorr
             } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             const SunDifAccumPrint = SunDifAccum.toFixed(5)
@@ -133,7 +123,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
             SunTcorrInac = SunTcorr - WestSunTcorr
             const SunTcorrInacPrint = SunTcorrInac.toFixed(4)
             const MoonTcorrPrint = MoonTcorr.toFixed(5)
-            MoonTcorrInac = MoonTcorr - WestMoonTcorr
+            MoonTcorrInac = MoonTcorr - WestMoonTcorrB
             const MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
             const Tcorr = +MoonTcorrPrint + +SunTcorrPrint
             return {
