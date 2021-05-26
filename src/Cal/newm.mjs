@@ -242,6 +242,7 @@ export default (CalName, year) => {
         const Decimal3 = [] // 三次內插
         const Decimal = []
         const WinsolsDifRaw = []
+        const AcrWinsolsDifRaw = []
         const Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
@@ -346,14 +347,14 @@ export default (CalName, year) => {
             if (Tcorr1) {
                 Decimal1[i] = Decimal1[i].toFixed(4).slice(2, 6)
             }
-            AvgDecimal[i] = AvgDecimal[i].toFixed(4).slice(2, 6)
-        }
+            AcrWinsolsDifRaw[i] = WinsolsDifRaw[i] + Tcorr[i]
+        }        
         return {
             AvgSc, Tcorr, AvgDecimal, Int, Raw, Sc, AcrInt, AcrRaw,
             Decimal, Decimal1, Decimal2, Decimal3,
             Equa, TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif,
             /// 交食用到
-            NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, WinsolsDifRaw,
+            NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, WinsolsDifRaw, AcrWinsolsDifRaw
         }
     }
     const Newm = AutoNewmSyzygy(1)
@@ -376,7 +377,8 @@ export default (CalName, year) => {
     } = Newm
     const {
         Sc: SyzygySc,
-        Decimal: SyzygyDecimal
+        Decimal: SyzygyDecimal,
+        AvgDecimal: SyzygyAvgDecimal,
     } = Syzygy
     let LeapSurAcrThis = 0
     if (ZhangRange) {
@@ -433,9 +435,11 @@ export default (CalName, year) => {
         NewmAnomaAccumNight: Newm.AnomaAccumNight,
         NewmDecimal,
         NewmWinsolsDifRaw: Newm.WinsolsDifRaw,
+        NewmAcrWinsolsDifRaw: Newm.AcrWinsolsDifRaw,
         SyzygyNodeAccum: Syzygy.NodeAccum,
         SyzygyAnomaAccum: Syzygy.AnomaAccum,
-        SyzygyDecimal,
+        SyzygyDecimal, SyzygyAvgDecimal,
         SyzygyWinsolsDifRaw: Syzygy.WinsolsDifRaw,
+        SyzygyAcrWinsolsDifRaw: Syzygy.AcrWinsolsDifRaw,
     }
 }

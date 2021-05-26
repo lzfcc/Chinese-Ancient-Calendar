@@ -235,8 +235,9 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
         ////////////下爲調整輸出////////////
         const NewmWinsolsDifRawPrint = ThisYear.NewmWinsolsDifRaw ? NewmSlice(ThisYear.NewmWinsolsDifRaw) : []
+        const NewmAcrWinsolsDifRawPrint = ThisYear.NewmAcrWinsolsDifRaw ? NewmSlice(ThisYear.NewmAcrWinsolsDifRaw) : []
         const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
-        const NewmAvgDecimalPrint = NewmSlice(ThisYear.NewmAvgDecimal)
+        let NewmAvgDecimalPrint = []
         NewmInt = NewmInt.slice(1 + NewmStart)
         let ZhengGreatSur = 0
         let ZhengSmallSur = 0
@@ -309,7 +310,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         if (Type > 1) {
             NewmDecimalPrint = NewmSlice(ThisYear.NewmDecimal)
             NewmAvgDecimalPrint = NewmSlice(ThisYear.NewmAvgDecimal)
-            SyzygyAvgDecimalPrint = NewmSlice(ThisYear.SyzygyAvgDecimal)
+            const SyzygyAvgDecimalPrint = NewmSlice(ThisYear.SyzygyAvgDecimal)
             if (Node) {
                 NewmNodeAccumPrint = NewmSlice(ThisYear.NewmNodeAccum)
                 NewmNodeAccumNightPrint = NewmSlice(ThisYear.NewmNodeAccumNight)
@@ -318,6 +319,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                 const SyzygyNodeAccumPrint = NewmSlice(ThisYear.SyzygyNodeAccum)
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
                 const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
+                const SyzygyAcrWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyAcrWinsolsDifRaw)
                 for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTermThis > 0) {
@@ -330,7 +332,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     let NewmEcliFunc = {}
                     let SyzygyEcliFunc = {}
                     if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 25.86) {
-                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmAvgDecimalPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
+                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmAvgDecimalPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
                         const Newmstatus = NewmEcliFunc.status
                         let NewmMagni = 0
                         const NewmStartDecimal = NewmEcliFunc.StartDecimal ? NewmEcliFunc.StartDecimal.toFixed(4).slice(2, 6) : 0
@@ -349,7 +351,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         }
                     }
                     if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 25.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyAvgDecimalPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
+                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDecimalPrint[i], SyzygyAvgDecimalPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
                         const Syzygystatus = SyzygyEcliFunc.status
                         let SyzygyMagni = 0
                         const SyzygyStartDecimal = SyzygyEcliFunc.StartDecimal ? SyzygyEcliFunc.StartDecimal.toFixed(4).slice(2, 6) : 0
@@ -372,7 +374,9 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
         }
         for (let i = 0; i < NewmDecimalPrint.length; i++) {
             NewmDecimalPrint[i] = NewmDecimalPrint[i].toFixed(4).slice(2, 6)
+            NewmAvgDecimalPrint[i] = NewmAvgDecimalPrint[i] ? NewmAvgDecimalPrint[i].toFixed(4).slice(2, 6) : 0
             SyzygyDecimalPrint[i] = SyzygyDecimalPrint[i].toFixed(4).slice(2, 6)
+
         }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year

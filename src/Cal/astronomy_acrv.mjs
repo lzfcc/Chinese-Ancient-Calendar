@@ -65,7 +65,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
     // AcrTermList[25] = +(AcrTermList[1] + Solar).toFixed(6)
     return SunDifAccum2
 }
-console.log(SunDifAccumTable(9.25, 'Chongtian'))
+// console.log(SunDifAccumTable(9.25, 'Chongtian'))
 
 // 計算朓朒積
 const SunTcorrTable = (WinsolsDif, CalName) => {

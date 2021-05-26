@@ -724,7 +724,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
 // 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
 // 紀元定朔入轉=經朔入轉+日月改正
-const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName) => { // 入交泛日，定朔入轉，定朔分，定朔距冬至——改成經朔距冬至
+const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWinsolsDif, WinsolsDif, isNewm, CalName) => { // 入交泛日，定朔入轉，定朔分，定朔距冬至——改成經朔距冬至
     const { Type, AutoPara
     } = Bind(CalName)
     const { Solar, Lunar, Node, Denom, XianConst,
@@ -843,17 +843,18 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWin
     if (TotalDecimal < Rise) {
         NoonDifTotal = 0.5 - NoonDifTotal
     }
-    let WinsolsDif = AcrWinsolsDif
     if (CalName === 'Chongxuan') { // 「距天正中氣積度」
         WinsolsDif += AutoTcorr(0, WinsolsDif, CalName).SunTcorr
     } else if (Type === 9) {
-        AvgWinsolsDif + Tcorr0 + Tcorr + AutoTcorr(0, AvgWinsolsDif + Tcorr0 + Tcorr, CalName).SunTcorr // 紀元食甚日行積度，其他大概是定朔距冬至日
+        WinsolsDif = WinsolsDif + Tcorr0 + Tcorr + AutoTcorr(0, WinsolsDif + Tcorr0 + Tcorr, CalName).SunTcorr // 紀元食甚日行積度，其他大概是定朔距冬至日
     }
     const WinsolsDifHalf = WinsolsDif % Solar50 // 應天「置朔定積，如一百八十二日⋯⋯以下爲入盈日分；以上者去之，餘爲入縮日分」
     let WinsolsDifHalfRev = WinsolsDifHalf
     if (WinsolsDifHalfRev > Solar25) { // 以二分爲中心鏡面對稱
         WinsolsDifHalfRev = Solar50 - WinsolsDifHalfRev
     }
+    let WinsolsDifTotal = WinsolsDifHalfRev //////////////////////////////這要改！！！
+    let WinsolsDifTotalHalfRev = WinsolsDifHalfRev
     const NoonDifDenom = NoonDifTotal * Denom
     const WinsolsDifNoon = WinsolsDifTotal - NoonDifTotal // + AutoTcorr(0, WinsolsDifTotal - NoonDifTotal, CalName).SunDifAccum - AutoTcorr(0, WinsolsDifTotal, CalName).SunDifAccum // 算到正午這一小段時間的日躔，不算了，太浪費算力，誤差可以忽略
     Rise = Longi2LatiFormula(WinsolsDifNoon, CalName).Rise
@@ -951,6 +952,8 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWin
         TotalDecimal *= 1350
         NodeAccum *= 1350 // 去交度分到底是什麼？我不知道
         const tmp4 = Math.min(Math.abs(TotalDecimal - R), Math.abs(TotalDecimal - L)) // 限內外分
+        let Std1 = 0
+        let Std2 = 0
         if (L < R) { // 內
             DcorrTerm = 630 - tmp4 * tmp4 / 179 // +-335.812以內爲正，極值630
             DcorrClock = (500 - tmp4) * tmp4 / 313.5 // 陽曆蝕差
@@ -1168,9 +1171,8 @@ const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWin
 // console.log(EclipseFormula(14.1834249657, 11.1268587106, 0.45531, 31.9780521262, 1, 'Jiyuan').StartDecimal)
 // 藤豔輝論文從1開始索引，我從0開始索引，結果相差不大，都在辰正。
 
-export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, WinsolsDifRaw, isNewm, CalName, i, Leap) => {
-    const { Type, AutoPara } = Bind(CalName)
-    const { Solar } = AutoPara[CalName]
+export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, AcrWinsolsDifRaw, AvgWinsolsDifRaw, isNewm, CalName, i, Leap) => {
+    const { Type } = Bind(CalName)
     let Eclipse = {}
     // 入交定日=去交定日=定朔望時刻日月距離黃白交點的時間（黃經差）。紀元、授時：求定朔望加時入交，先假設平朔望黃白交點不動，算出定朔望時刻月亮運動到交點的時間，與定朔算法一致，在算了氣差刻差之後，纔考慮交點退行。
     // 由於日月速度不同，月亮從正交運動到平朔望時刻的時間與太陽不同。月亮去交泛日=(Vs-Vn)/(Vm-Vn) * rs。Vn：交點退行速度，rs：入交日，(Vs-Vn)/(Vm-Vn)=交率/交數=交點月/交點年
@@ -1178,13 +1180,13 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, Winso
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = EclipseTable1(NodeAccum, CalName)
     } else {
-        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw % Solar, CalName, NodeAccum).NodeAccumCorr  // 定交分 
+        NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDifRaw, CalName, NodeAccum).NodeAccumCorr  // 定交分 
         if (Type <= 6) {
-            Eclipse = EclipseTable2(NodeAccum, AnomaAccum, AcrDecimal, WinsolsDifRaw, isNewm, CalName, i, Leap)
+            Eclipse = EclipseTable2(NodeAccum, AnomaAccum, AcrDecimal, AvgWinsolsDifRaw, isNewm, CalName, i, Leap)
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
-            Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDecimal, WinsolsDifRaw, isNewm, CalName)
+            Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDecimal, AvgWinsolsDifRaw, isNewm, CalName)
         } else if (Type <= 11) {
-            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, WinsolsDifRaw, isNewm, CalName)
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, AcrWinsolsDifRaw, AvgWinsolsDifRaw, isNewm, CalName)
         }
     }
     return Eclipse
