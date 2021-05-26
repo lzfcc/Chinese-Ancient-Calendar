@@ -25,9 +25,7 @@ const ClockWest = Decimal => {
     return Print
 }
 const ClockWeijin = (Decimal, CalName) => {
-    const {
-        Type,
-    } = Bind(CalName)
+    const { Type } = Bind(CalName)
     Decimal = big(Decimal)
     const portion = big.div(100, 12)
     if (CalName === 'Easthan' || Type >= 5) {
@@ -51,8 +49,7 @@ const ClockWeijin = (Decimal, CalName) => {
 }
 
 const ClockTmp = (Decimal, Mode) => { // 我假設：每日96刻，子初夜半，每刻100分
-    let portion1 = 0
-    let portion2 = 0
+    let portion1, portion2 = 0
     if (Mode === 96) {
         portion1 = 0.96
         portion2 = 8
@@ -125,9 +122,7 @@ const ClockQing = Decimal => { // 清代96刻
 }
 
 export const AutoClock = (Decimal, CalName) => {
-    const {
-        Type,
-    } = Bind(CalName)
+    const { Type } = Bind(CalName)
     let Print = ''
     if (Type <= 6 && !['LindeA', 'LindeB'].includes(CalName)) {
         Print = ClockWeijin(Decimal, CalName)

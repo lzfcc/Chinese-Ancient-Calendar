@@ -41,8 +41,7 @@ export default (CalName, year) => {
     const OriginYear = year - OriginAd // 上元積年（算上）
     // const CloseWinsolsDif = CloseOriginAd - OriginAd // 距算
     const CloseOriginYear = year - CloseOriginAd // 距差    
-    let SolarChangeAccum = 0
-    let LunarChangeAccum = 0
+    let SolarChangeAccum, LunarChangeAccum, OriginAccum, JiSkip, JiOrder, JiYear, JiScOrder, LeapSurAvgThis, LeapSurAvgPrev, LeapSurAvgNext, AccumZhongThis, FirstAccum, FirstAnomaAccum, FirstNodeAccum, LeapLimit, LeapNumAvgThis, LeapNumAvgNext, isAdvance = 0
     let signX = 1
     if (CalName === 'Tongtian') { // 《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長
         if (year < 1194) {
@@ -82,10 +81,6 @@ export default (CalName, year) => {
     }
     const SynodicAnomaDif = Lunar - Anoma
     const HalfSynodicNodeDif = (Lunar - Node) / 2
-    let JiSkip = 0
-    let JiOrder = 0
-    let JiYear = 0
-    let JiScOrder = 0
     if (JiRange) {
         JiSkip = Math.round(Solar * JiRange % 60)
         JiOrder = ~~(OriginYear % YuanRange / JiRange) // 入第幾紀
@@ -111,14 +106,9 @@ export default (CalName, year) => {
     // const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangCorr : -YinyangCorr
     // const AnomaJiDif = (JiMon * LunarNumer) % AnomaNumer
     // const JiAnoma = ((AnomaCorr + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
-    let OriginAccum = 0
     if (Type < 11) {
         OriginAccum = OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum
     }
-    let LeapSurAvgThis = 0
-    let LeapSurAvgPrev = 0
-    let LeapSurAvgNext = 0
-    let AccumZhongThis = 0
     if (ZhangRange) {
         LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
         LeapSurAvgPrev = (OriginYear - 1) * ZhangMon % ZhangRange
@@ -146,7 +136,6 @@ export default (CalName, year) => {
         LeapSurAvgNext = parseFloat(((AccumLeapNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
     const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
-    let FirstAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
     } else if (Type < 8) {
@@ -154,7 +143,6 @@ export default (CalName, year) => {
     } else {
         FirstAccum = OriginAccum - LeapSurAvgThis - LunarChangeAccum
     }
-    let FirstAnomaAccum = 0
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
@@ -162,7 +150,6 @@ export default (CalName, year) => {
     } else if (Type === 11) {
         FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaCorr) % Anoma + Anoma) % Anoma
     }
-    let FirstNodeAccum = 0
     if (Node && Type < 11) {
         FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node
     } else if (Type >= 11) {
@@ -175,7 +162,6 @@ export default (CalName, year) => {
     FirstAccum = +FirstAccum.toFixed(5)
     FirstAnomaAccum = +FirstAnomaAccum.toFixed(5)
     FirstNodeAccum = +FirstNodeAccum.toFixed(5)
-    let LeapLimit = 0
     if (ZhangRange) {
         LeapLimit = ZhangRange - ZhangLeap
     } else if (Type <= 7) {
@@ -186,8 +172,6 @@ export default (CalName, year) => {
     let isLeapThis = LeapSurAvgThis >= LeapLimit ? 1 : 0 // 是否有閏月
     let isLeapPrev = LeapSurAvgPrev >= LeapLimit ? 1 : 0
     let isLeapNext = LeapSurAvgNext >= LeapLimit ? 1 : 0
-    let LeapNumAvgThis = 0
-    let LeapNumAvgNext = 0
     if (ZhangRange) {
         LeapNumAvgThis = isLeapThis ? Math.ceil(parseFloat(((ZhangRange - LeapSurAvgThis) * 12 / ZhangLeap).toPrecision(14))) : 0
         LeapNumAvgNext = isLeapNext ? Math.ceil(parseFloat(((ZhangRange - LeapSurAvgNext) * 12 / ZhangLeap).toPrecision(14))) : 0
@@ -198,7 +182,6 @@ export default (CalName, year) => {
         LeapNumAvgThis = isLeapThis ? Math.ceil((Lunar - LeapSurAvgThis) / MonLeap) : 0
         LeapNumAvgNext = isLeapThis ? Math.ceil((Lunar - LeapSurAvgNext) / MonLeap) : 0
     }
-    let isAdvance = 0
     if (LeapNumAvgNext) {
         LeapNumAvgNext -= ZhengWinsolsDif
         if (LeapNumAvgNext <= 0) {
@@ -218,31 +201,7 @@ export default (CalName, year) => {
     }
     const EquaDegAccumList = AutoDegAccumList(CalName, year)
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = []
-        const AvgInt = []
-        const AvgSc = []
-        const AvgDecimal = []
-        const TermAvgRaw = []
-        const TermAcrRaw = []
-        const TermAcrWinsolsDif = []
-        const TermAvgWinsolsDif = []
-        const AnomaAccum = []
-        const AnomaAccumNight = []
-        const NodeAccum = []
-        const NodeAccumNight = []
-        const AcrInt = []
-        const Int = []
-        const Raw = []
-        const Tcorr = []
-        const AcrRaw = []
-        const AcrMod = []
-        const Sc = []
-        const Decimal1 = [] // 線性內插
-        const Decimal2 = [] // 二次內插
-        const Decimal3 = [] // 三次內插
-        const Decimal = []
-        const WinsolsDifRaw = []
-        const Equa = []
+        const WinsolsDifRaw, AvgRaw, AvgInt, AvgSc, AvgDecimal, TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif, AnomaAccum, AnomaAccumNight, NodeAccum, NodeAccumNight, AcrInt, Raw, Int, Tcorr, AcrRaw, AcrMod, Sc, Decimal1, Decimal2, Decimal3, Decimal, Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
             AvgInt[i] = Math.floor(AvgRaw[i])
@@ -287,10 +246,8 @@ export default (CalName, year) => {
             } else {
                 Decimal[i] = AvgDecimal[i]
             }
-            let NewmPlus = 0
-            let NewmPlusPrint = ''
-            let SyzygySub = 0
-            let SyzygySubPrint = ''
+            let NewmPlus, SyzygySub = 0
+            let NewmPlusPrint, SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
                     const Func = AutoNewmPlus((Decimal1[i] || Decimal[i]), WinsolsDifRaw[i], WinsolsDecimal, CalName) /////進朔/////
@@ -378,7 +335,7 @@ export default (CalName, year) => {
         Sc: SyzygySc,
         Decimal: SyzygyDecimal
     } = Syzygy
-    let LeapSurAcrThis = 0
+    let LeapSurAcrThis, isLeapAdvan, isLeapPost, NewmStart, NewmEnd = 0
     if (ZhangRange) {
         LeapSurAcrThis = (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange
     } else {
@@ -386,8 +343,6 @@ export default (CalName, year) => {
     }
     // 中氣
     let LeapNumTerm = LeapNumAvgThis > 0 ? LeapNumAvgThis : 0
-    let isLeapAdvan = 0
-    let isLeapPost = 0
     if (isLeapThis) {
         LeapNumTerm = LeapAdjust(LeapNumTerm, TermAvgRaw, NewmInt, CalName)
         if (LeapNumTerm < 1) {
@@ -399,8 +354,6 @@ export default (CalName, year) => {
         }
     }
     // 最後是積月、月數
-    let NewmStart = 0
-    let NewmEnd = 0
     if (isAdvance && isLeapPrev) {
         NewmStart = 1
     }
