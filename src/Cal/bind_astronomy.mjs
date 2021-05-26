@@ -643,10 +643,10 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
 
-export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw) => {
+export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDecimal, WinsolsDifRaw) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
-    NewmDecimal = +('0.' + NewmDecimal)
+    AvgDecimal = +('0.' + AvgDecimal)
     WinsolsDifRaw = +WinsolsDifRaw
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
@@ -670,18 +670,17 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw
     let Print = []
     Print = Print.concat(
         ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Jiyuan'].map(title => {
-            const {
-                Magni,
-                Last,
-                Decimal
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw, 1, title, i + 1, 0)
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            const AcrDecimal = (AvgDecimal + (Tcorr2 || Tcorr1) + 1) % 1
+            const { Magni, Last, Decimal
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, WinsolsDifRaw, 1, title, i + 1, 0)
             let LastPrint = '-'
             if (Last) {
                 LastPrint = Last.toFixed(4)
             }
             let DecimalPrint = '-'
             if (Decimal) {
-                DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定朔' : (Decimal * 100).toFixed(4)
+                DecimalPrint = parseFloat((Decimal).toPrecision(12)) === AvgDecimal ? '定朔' : (Decimal * 100).toFixed(4)
             }
             return {
                 title: CalNameList[title],
@@ -692,10 +691,10 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw
 }
 // console.log(BindSunEclipse(0.1, 14, 1355, 14))
 
-export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw) => {
+export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDecimal, WinsolsDifRaw) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
-    NewmDecimal = +('0.' + NewmDecimal)
+    AvgDecimal = +('0.' + AvgDecimal)
     WinsolsDifRaw = +WinsolsDifRaw
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
@@ -719,18 +718,17 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRa
     let Print = []
     Print = Print.concat(
         ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Jiyuan'].map(title => {
-            const {
-                Magni,
-                Last,
-                Decimal
-            } = AutoEclipse(NodeAccum, AnomaAccum, NewmDecimal, WinsolsDifRaw, 0, title, i + 1, 0)
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            const AcrDecimal = (AvgDecimal + (Tcorr2 || Tcorr1) + 1) % 1
+            const { Magni, Last, Decimal
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, WinsolsDifRaw, 0, title, i + 1, 0)
             let LastPrint = '-'
             if (Last) {
                 LastPrint = Last.toFixed(4)
             }
             let DecimalPrint = '-'
             if (Decimal) {
-                DecimalPrint = parseFloat((Decimal).toPrecision(12)) === NewmDecimal ? '定望' : (Decimal * 100).toFixed(4)
+                DecimalPrint = parseFloat((Decimal).toPrecision(12)) === AvgDecimal ? '定望' : (Decimal * 100).toFixed(4)
             }
             return {
                 title: CalNameList[title],
