@@ -1,6 +1,4 @@
-import {
-    big,
-} from './para_constant.mjs'
+import { big } from './para_constant.mjs'
 
 // const a = input => {
 //     input.toNumber()
@@ -47,7 +45,7 @@ export const Sn2 = (n, p) => {
     const tmp1 = Sn2Sub(1, p)
     const tmp2 = Sn2Sub(2, p)
     const tmp3 = Sn2Sub(3, p)
-    const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + '+...+ n^' + p + ' = ' + S
+    const Print = `${tmp1} + ${tmp2} + ${tmp3}+...+ n^${p} = ${S}`
     return {
         Print
     }

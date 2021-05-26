@@ -10,15 +10,11 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     const Solar50 = Solar / 2
     const Solar125 = Solar / 8
     const Solar75 = Solar * 0.75
-    let Equa2Eclp = 0
-    let Eclp2Equa = 0
+    let Equa2Eclp, Eclp2Equa, h, Eclp2EquaDif, Equa2EclpDif = 0
     let Longi = LongiRaw % Solar125
     if ((LongiRaw > Solar125 && LongiRaw <= Solar25) || (LongiRaw > 3 * Solar125 && LongiRaw <= Solar50) || (LongiRaw > 5 * Solar125 && LongiRaw <= 3 * Solar25) || (LongiRaw > 7 * Solar125)) {
         Longi = Solar125 - Longi
     }
-    let h = 0
-    let Eclp2EquaDif = 0
-    let Equa2EclpDif = 0
     // 這些函數並不是以91度或者45度對稱，而是將近60度左右
     if (CalName === 'Chongxuan') {
         Equa2EclpDif = ((1315 - 14.4 * Longi) * Longi - Longi * (4566 - Longi) / 1696) / 10000
@@ -50,8 +46,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     }
     // 《古代曆法》頁123    沒明白。曲安京《中国古代的二次求根公式与反函数》，西北大学学报(自然科学版). 1997(01)。曆法中二次反函數僅有的例子是大衍行星行度、紀元。赤道度爲Solar/8，黃道度就是43.1287。兩篇公式不一樣，最後畫圖才想明白。我把其他幾個曆法補出來了
     Eclp2EquaDif = Math.abs(Longi - h)
-    let sign1 = 1
-    let sign2 = 1
+    let sign1, sign2 = 1
     if (LongiRaw < Solar25 || (LongiRaw >= Solar50 && LongiRaw < Solar75)) {
         sign1 = -1
     } else {
@@ -61,12 +56,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     Eclp2EquaDif *= sign2
     Equa2Eclp = LongiRaw + Equa2EclpDif
     Eclp2Equa = LongiRaw + Eclp2EquaDif
-    return {
-        Equa2Eclp,
-        Equa2EclpDif,
-        Eclp2Equa,
-        Eclp2EquaDif
-    }
+    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif }
 }
 // console.log(Equa2EclpFormula(91, 'Chongxuan'))
 
@@ -81,8 +71,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
     if (Longi > Solar25) {
         Longi = Solar50 - Longi
     }
-    let Lati = 0
-    let g = 0
+    let Lati, g, Night = 0
     if (CalName === 'Chongxuan') { // x=195.838,y=0. x=138.478,y=35.267極值。x=91.3, y=23.996
         // g = (184 / 50025) * Longi ** 2 - (16 / (50025 * 3335)) * Longi ** 4
         g = big(184).div(50025).mul(big(Longi).pow(2)).sub(big(16).div(big.mul(50025, 3335)).mul(big(Longi).pow(4))).toNumber()
@@ -147,7 +136,6 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
         }
     }
     const Lati1 = Solar25 - Lati
-    let Night = 0
     if (CalName === 'Yitian') {
         if (LongiRaw < Solar25) {
             Night = 22.53 - Lati / 4.76
@@ -284,10 +272,8 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
 // console.log(MoonLongiFormula(91, 92, 'Jiyuan').EclpWhiteDif)
 
 export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
-    const { AutoPara
-    } = Bind(CalName)
-    const { Node
-    } = AutoPara[CalName]
+    const { AutoPara } = Bind(CalName)
+    const { Node } = AutoPara[CalName]
     const Cycle = AutoNodeCycle(CalName)
     let MoonAvgVDeg = AutoMoonAvgV(CalName) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
     if (CalName === 'Qintian') {
@@ -348,9 +334,6 @@ export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) =
         Lati = -Lati
     }
     const Lati1 = 91.311 - Lati
-    return {
-        Lati,
-        Lati1
-    }
+    return { Lati, Lati1 }
 }
 // console.log(MoonLatiFormula(15, 'Jiyuan'))

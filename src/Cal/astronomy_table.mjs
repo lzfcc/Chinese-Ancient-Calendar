@@ -42,8 +42,7 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 // }
 
 export const Equa2EclpTable = (LongiRaw, CalName) => {
-    const { AutoPara, Type
-    } = Bind(CalName)
+    const { AutoPara, Type } = Bind(CalName)
     let { Sidereal, Solar
     } = AutoPara[CalName]
     Sidereal = Sidereal || Solar
@@ -134,10 +133,8 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
 // console.log(Equa2EclpTable(23,''))
 
 export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
-    const { AutoPara,
-    } = Bind(CalName)
-    const { Solar, NightList, DialList, SunLatiList,
-    } = AutoPara[CalName]
+    const { AutoPara } = Bind(CalName)
+    const { Solar, NightList, DialList, SunLatiList } = AutoPara[CalName]
     let DawnRange = 0
     if (CalName !== 'Daye') {
         DawnRange = 2.5
@@ -154,8 +151,7 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
 }
 
 export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
-    const { Type, AutoPara,
-    } = Bind(CalName)
+    const { Type, AutoPara } = Bind(CalName)
     const { Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
     } = AutoPara[CalName]
     const WinsolsDif = WinsolsDifRaw % Solar
@@ -167,11 +163,11 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
     }
     const f = 34.475 // 大衍地理緯度
     const HalfTermLeng = Solar / 24
-    let Dial = 0
-    let Lati = 0
+    let Dial, Lati, Lati1, Rise = 0
+    let = 0
     let Lati1 = 0
-    let Rise = 0
-    let Sunrise1 = 0
+    let = 0
+    let Rise1 = 0
     if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(CalName)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
@@ -193,7 +189,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const Initial1 = t1 + ',' + NightList[TermNum] + ';' + t2 + ',' + NightList[TermNum + 1] + ';' + t3 + ',' + NightList[TermNum + 2]
         const Initial2 = t1 + ',' + SunLatiList[TermNum] + ';' + t2 + ',' + SunLatiList[TermNum + 1] + ';' + t3 + ',' + SunLatiList[TermNum + 2]
         Rise = DawnRange + Interpolate3(WinsolsDif, Initial1)
-        Sunrise1 = DawnRange + NightList[TermNum] + ((WinsolsDif - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
+        Rise1 = DawnRange + NightList[TermNum] + ((WinsolsDif - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
         Lati1 = Interpolate3(WinsolsDif, Initial2)
         Lati = 91.31 - Lati1
     } else {
@@ -221,10 +217,10 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const Initial4 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2] + ',' + NightList[TermNum + 3]
         if (Type === 10) { // 重修大明的日出分是三次內插
             Rise = 100 * (Interpolate1(nAvg, Initial4) / Denom)
-            Sunrise1 = 100 * (NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])) / Denom
+            Rise1 = 100 * (NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])) / Denom
         } else {
             Rise = DawnRange + Interpolate1(nAvg, Initial3)
-            Sunrise1 = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])
+            Rise1 = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])
         }
         if (Type === 6) {
             const Initial1 = DialList[TermNum] + ',' + DialList[TermNum + 1] + ',' + DialList[TermNum + 2]
@@ -284,22 +280,18 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         Dial /= 10000
     }
     // 夜半漏計算直接用招差術了，不勝其煩。
-    return { Lati, Lati1, Dial, Rise, Sunrise1 }
+    return { Lati, Lati1, Dial, Rise, Rise1 }
 }
-// console.log(Longi2LatiTable2(90, 'LindeB').Sunrise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
+// console.log(Longi2LatiTable2(90, 'LindeB').Rise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
-    const { AutoPara
-    } = Bind(CalName)
-    const { Solar,
-    } = AutoPara[CalName]
-    let { Sidereal
-    } = AutoPara[CalName]
+    const { AutoPara } = Bind(CalName)
+    const { Solar } = AutoPara[CalName]
+    let { Sidereal } = AutoPara[CalName]
     const Quadrant = AutoNodeCycle(CalName) / 4
     const NodeAccum = NodeAccumRaw// % (Node / 2)
     // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
-
     const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
     let Longi = LongiRaw % Quadrant
     if ((LongiRaw >= Quadrant && LongiRaw < Quadrant * 2) || (LongiRaw >= Quadrant * 3)) { // (LongiRaw >= Quadrant)
@@ -316,9 +308,7 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     } else if (['Dayan', 'Xuanming', 'Qintian', 'Yingtian'].includes(CalName)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0.94, 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
-    let LongiDifDifInitial = 0
-    let LongiDifDifChange = 0
-    let EclpWhiteDif = 0
+    let LongiDifDifInitial, LongiDifDifChange, EclpWhiteDif, EquaWhiteDif = 0
     const Smallquadrant = 5.07 // Solar / 72// 欽天8節72限
     if (CalName === 'Huangji') {
         LongiDifDifInitial = 11 / 45 // ⋯⋯四度爲限，初十一，每限損一，以終於一
@@ -369,7 +359,6 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     if (CalName !== 'Huangji') {
         EclpWhiteDif /= 2
     }
-    let EquaWhiteDif = 0
     if (['Dayan', 'Xuanming'].includes(CalName)) {
         EquaWhiteDif = WinsolsDifHalf / (Solar / 72) / 18
     } else if (CalName === 'Qintian') {
@@ -391,20 +380,15 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     EquaWhiteDif *= sign
     WhiteLongi = EclpLongi + EclpWhiteDif
     EquaLongi = EquaWhiteDif ? WhiteLongi + EquaWhiteDif : 0
-    return {
-        EclpLongi, WhiteLongi, EquaLongi, EclpWhiteDif, EquaWhiteDif
-    }
+    return { EclpLongi, WhiteLongi, EquaLongi, EclpWhiteDif, EquaWhiteDif }
 }
 // console.log(MoonLongiTable(55.25, 11.22, 'Qianxiang').EclpLongi)
 // console.log(MoonLongiTable(45, 3, 'Qintian'))
 
 export const MoonLatiTable = (NodeAccum, CalName) => {
-    const { Type, AutoPara
-    } = Bind(CalName)
-    const { MoonLatiDifList
-    } = AutoPara[CalName]
-    let { Node, MoonLatiAccumList
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    const { MoonLatiDifList } = AutoPara[CalName]
+    let { Node, MoonLatiAccumList } = AutoPara[CalName]
     ///////預處理陰陽曆////////
     let portion = 10
     if (Type <= 4) {
@@ -455,10 +439,7 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
         Lati = Yinyang * Interpolate1(n, Initial) / portion
     }
     const Lati1 = 91.31 - Lati
-    return {
-        Lati,
-        Lati1
-    }
+    return { Lati, Lati1 }
 }
 // 大衍：《中國古代曆法》頁530
 // console.log(MoonLatiTable(13.61, 'Daming'))

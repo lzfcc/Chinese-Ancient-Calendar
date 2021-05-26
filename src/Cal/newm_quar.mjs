@@ -7,28 +7,9 @@ import AutoPara from './para_1.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
 export default function CalQuar(CalName, year) {
-    const {
-        Lunar,
-        Solar,
-        WinsolsWinsolsDif,
-        WinsolsOriginMon,
-        OriginAd,
-        OriginYearSc,
-        OriginDayCorr,
-        WinsolsCorr,
-        ZhengNum,
-        OriginMonNum,
-        YuanRange,
-        TongRange,
-        isTermLeap,
-        Ecli,
-        EcliRange,
-        MansionRaw
+    const { Lunar, Solar, WinsolsWinsolsDif, WinsolsOriginMon, OriginAd, OriginYearSc, OriginDayCorr, WinsolsCorr, ZhengNum, OriginMonNum, YuanRange, TongRange, isTermLeap, Ecli, EcliRange, MansionRaw
     } = AutoPara[CalName]
-    let {
-        JiRange,
-        BuRange,
-    } = AutoPara[CalName]
+    let { JiRange, BuRange } = AutoPara[CalName]
     if (CalName === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange
@@ -59,15 +40,12 @@ export default function CalQuar(CalName, year) {
     let LeapNumAvgPrev = isLeapAvgPrev ? ~~(parseFloat(((1 - LeapSurAvgPrev) * 228 / 7).toPrecision(12))) : 0
     let LeapNumAvgNext = isLeapAvgNext ? ~~(parseFloat(((1 - LeapSurAvgNext) * 228 / 7).toPrecision(12))) : 0
     // 固定冬至法
-    let LeapSurAvgFix = 0
-    let isLeapAvgFix = 0
+    let LeapSurAvgFix, isLeapAvgFix, isAdvance, isPost, LeapNumOriginLeapSur = 0
     if (!isTermLeap) {
         LeapSurAvgFix = ZhengNum > 0 ? LeapSurAvgNext : LeapSurAvgThis
         isLeapAvgFix = ZhengNum > 0 ? isLeapAvgNext : isLeapAvgThis
     }
     // 上面的Fix將參數固定下來，接下來要修改這些參數了。考慮了建正之後的閏月數：
-    let isAdvance = 0
-    let isPost = 0
     if (LeapNumAvgNext) {
         LeapNumAvgNext -= ZhengNum
         if (LeapNumAvgNext <= 0) {
@@ -99,24 +77,13 @@ export default function CalQuar(CalName, year) {
         }
     }
     // 閏餘法閏月
-    let LeapNumOriginLeapSur = 0
     if (LeapNumAvgThis) {
         LeapNumOriginLeapSur = Math.round(((LeapNumAvgThis + ZhengWinsolsDif + 12) % 12 + 12) % 12.1)
     }
     const EquaDegAccumList = MansionRaw ? AutoDegAccumList(CalName, year) : []
     // 朔望
-    const NewmAvgBare = []
-    const NewmAvgRaw = []
-    const NewmInt = []
-    const NewmAvgSc = []
-    const NewmWinsolsDifRaw = [] // 朔距冬至日數
-    const NewmAvgDecimal = []
-    const NewmEqua = []
-    const SyzygyAvgRaw = []
-    const SyzygyAvgMod = []
-    const SyzygyOrderMod = []
+    const NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmWinsolsDifRaw, NewmAvgDecimal, NewmEqua, SyzygyAvgRaw, SyzygyAvgMod, SyzygyOrderMod, SyzygyDecimal = []
     let SyzygySc = []
-    const SyzygyDecimal = []
     for (let i = 0; i <= 14; i++) { // 本來是1
         NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (WinsolsCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
@@ -146,15 +113,7 @@ export default function CalQuar(CalName, year) {
     // const NewmMmdd = Jd2Date(NewmJd)
     // 中氣
     let LeapNumTerm = LeapNumAvgThis
-    const TermAvgBare = []
-    const TermAvgRaw = []
-    const TermAvgMod = []
-    const TermOrderMod = []
-    const TermSc = []
-    const TermName = []
-    const TermDecimal = []
-    const TermEqua = []
-    const TermMidstar = []
+    const TermAvgBare, TermAvgRaw, TermAvgMod, TermOrderMod, TermSc, TermName, TermDecimal, TermEqua, TermMidstar = []
     // const TermJd = []
     if ((isTermLeap && !LeapNumTerm) || (!isTermLeap && ((!isLeapAvgThis && !isLeapAvgNext) || (!isLeapAvgThis && !isAdvance) || (!isLeapAvgThis && isAdvance)))) {
         for (let i = 1; i <= 13; i++) {
@@ -219,8 +178,7 @@ export default function CalQuar(CalName, year) {
         }
     }
     // 最後是積月、月數
-    let NewmStart = 0
-    let NewmEnd = 0
+    let NewmStart, NewmEnd = 0
     if ((isAdvance && isLeapAvgPrev) || (!isTermLeap && ZhengNum > 0 && !isAdvance && isLeapAvgThis)) {
         NewmStart = 1
     }
