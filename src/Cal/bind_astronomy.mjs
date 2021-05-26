@@ -51,13 +51,21 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian']
     List1 = CalName ? [CalName] : List1 // 這行用來給誤差分析程序
     List2 = CalName ? [CalName] : List2
-    let SunTcorrInac, MoonTcorrInac = 0
+    let SunTcorrInac = 0
+    let MoonTcorrInac = 0
     Print1 = Print1.concat(
         List1.map(title => {
-            const { SunDifAccum, MoonDifAccum } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
-            const { SunTcorr, MoonTcorr, NodeAccumCorr } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            const { SunDifAccum, MoonDifAccum,
+            } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
+            const { SunTcorr, MoonTcorr, NodeAccumCorr
+            } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
-            let SunTcorrPrint, SunTcorrInacPrint, MoonAcrSPrint, MoonTcorrPrint, MoonTcorrInacPrint, NodeAccumCorrPrint = '-'
+            let SunTcorrPrint = '-'
+            let SunTcorrInacPrint = '-'
+            let MoonAcrSPrint = '-'
+            let MoonTcorrPrint = '-'
+            let MoonTcorrInacPrint = '-'
+            let NodeAccumCorrPrint = '-'
             const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
             const SunDifAccumInac = SunDifAccum ? SunDifAccum - WestSun : 0
             const SunDifAccumInacPrint = SunDifAccumInac ? SunDifAccumInac.toFixed(4) : '-'
@@ -122,10 +130,16 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
 export const AutoEqua2Eclp = (LongiRaw, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    const { Sidereal, Solar, SolarRaw } = AutoPara[CalName]
+    const { Type, AutoPara
+    } = Bind(CalName)
+    const { Sidereal, Solar, SolarRaw
+    } = AutoPara[CalName]
     LongiRaw %= (Sidereal || (Solar || SolarRaw))
-    let Equa2Eclp, Eclp2Equa, Equa2EclpDif, Eclp2EquaDif, Eclp2EquaLati = 0
+    let Equa2Eclp = 0
+    let Eclp2Equa = 0
+    let Equa2EclpDif = 0
+    let Eclp2EquaDif = 0
+    let Eclp2EquaLati = 0
     if (CalName === 'Dayan') {
         const Func = Equa2EclpFormula(LongiRaw, CalName)
         Equa2Eclp = Func.Equa2Eclp
@@ -157,7 +171,13 @@ export const AutoEqua2Eclp = (LongiRaw, CalName) => {
         Eclp2EquaLati = Func.Lati
     }
     Eclp2EquaDif = Eclp2Equa ? (Eclp2EquaDif || Eclp2Equa - LongiRaw) : 0
-    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif, Eclp2EquaLati }
+    return {
+        Equa2Eclp,
+        Equa2EclpDif,
+        Eclp2Equa,
+        Eclp2EquaDif,
+        Eclp2EquaLati
+    }
 }
 
 export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
@@ -193,9 +213,19 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
     const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
         List1.map(title => {
-            let EclpLongiPrint, EclpLongiInacPrint, EquaLongiPrint, EquaLongiInacPrint, Equa2EclpDifPrint, Eclp2EquaDifPrint, Eclp2EquaLatiPrint, Eclp2EquaLatiInacPrint = '-'
+            let EclpLongiPrint = '-'
+            let EclpLongiInacPrint = '-'
+            let EquaLongiPrint = '-'
+            let EquaLongiInacPrint = '-'
+            let Equa2EclpDifPrint = '-'
+            let Eclp2EquaDifPrint = '-'
+            let Eclp2EquaLatiPrint = '-'
+            let Eclp2EquaLatiInacPrint = '-'
             const Func = AutoEqua2Eclp(LongiRaw, title, Sidereal, year)
-            const { Equa2Eclp, Eclp2Equa, Equa2EclpDif, Eclp2EquaDif } = Func
+            const Equa2Eclp = Func.Equa2Eclp
+            const Eclp2Equa = Func.Eclp2Equa
+            const Equa2EclpDif = Func.Equa2EclpDif
+            const Eclp2EquaDif = Func.Eclp2EquaDif
             let Eclp2EquaLati = 0
             if (title === 'Shoushi') {
                 Eclp2EquaLati = Func.Eclp2EquaLati
@@ -222,7 +252,10 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
                 data: [EclpLongiPrint, Equa2EclpDifPrint, EclpLongiInacPrint, EquaLongiPrint, Eclp2EquaDifPrint, EquaLongiInacPrint, Eclp2EquaLatiPrint, Eclp2EquaLatiInacPrint]
             }
         }))
-    return { Range, Print }
+    return {
+        Range,
+        Print
+    }
 }
 // console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
@@ -298,13 +331,23 @@ export const BindMansion2Deg = (Mansion, CalName) => {
 }
 
 export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
-    const { Type, AutoPara } = Bind(CalName)
-    const { Solar, SolarRaw } = AutoPara[CalName]
+    const {
+        Type,
+        AutoPara
+    } = Bind(CalName)
+    const {
+        Solar,
+        SolarRaw
+    } = AutoPara[CalName]
     LongiRaw %= (Solar || SolarRaw)
     LongiRaw += WinsolsDecimal - 0.5 // 以正午爲準
-    let Longi2Lati, Longi2LatiA, Longi2LatiB = {}
+    let Longi2Lati = {}
+    let Longi2LatiA = {}
+    let Longi2LatiB = {}
+    let special = 0
     // 公式曆法加上日躔
-    let special, Plus1, Plus2 = 0
+    let Plus1 = 0
+    let Plus2 = 0
     if ((!isBare) && ['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].includes(CalName)) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔
         Plus1 = AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
     }
@@ -350,7 +393,10 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
     } else if (Type === 11) {
         Longi2Lati = Hushigeyuan(Longi1)
     }
-    let Lati, Lati1, Rise, Dial = 0
+    let Lati = 0
+    let Lati1 = 0
+    let Rise = 0
+    let Dial = 0
     if (special) {
         Lati = Longi2LatiA.Lati
         Lati1 = Longi2LatiA.Lati1
@@ -362,7 +408,12 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Rise = Longi2Lati.Rise
         Dial = Longi2Lati.Dial || 0
     }
-    return { Lati, Lati1, Rise, Dial }
+    return {
+        Lati,
+        Lati1,
+        Rise,
+        Dial
+    }
 }
 // console.log (AutoLongi2Lati (53.6, 0, 'Chongxuan'))
 
@@ -394,8 +445,21 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
     }]
     Print = Print.concat(
         ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
-            let Lati1Print, LatiPrint, LatiInacPrint, SunrisePrint, SunriseInacPrint1, SunriseInacPrint2, DialPrint, DialInacPrint1, DialInacPrint2 = '-'
-            const { Lati1, Lati, Rise, Dial } = AutoLongi2Lati(LongiRaw, WinsolsDecimal, title)
+            let Lati1Print = '-'
+            let LatiPrint = '-'
+            let LatiInacPrint = '-'
+            let SunrisePrint = '-'
+            let SunriseInacPrint1 = '-'
+            let SunriseInacPrint2 = '-'
+            let DialPrint = '-'
+            let DialInacPrint1 = '-'
+            let DialInacPrint2 = '-'
+            const {
+                Lati1,
+                Lati,
+                Rise,
+                Dial
+            } = AutoLongi2Lati(LongiRaw, WinsolsDecimal, title)
             if (Lati1) {
                 Lati1Print = Lati1.toFixed(4)
                 LatiPrint = Lati.toFixed(4)
@@ -421,7 +485,8 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
 // console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLati = (NodeAccum, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
+    const { Type, AutoPara
+    } = Bind(CalName)
     let { Sidereal // Solar, SolarRaw,
     } = AutoPara[CalName]
     // Solar = Solar || SolarRaw
@@ -457,8 +522,10 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
 // console.log(AutoMoonLati(66, 2.41, 'Shoushi').EquaLongi)
 
 export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    let { Solar, SolarRaw, Sidereal, Node } = AutoPara[CalName]
+    const { Type, AutoPara
+    } = Bind(CalName)
+    let { Solar, SolarRaw, Sidereal, Node
+    } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
@@ -478,7 +545,11 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     if (MoonNodeDifRev > Quadrant / 2) {
         MoonNodeDifRev = Quadrant - MoonNodeDifRev
     }
-    let EclpWhiteDif, EquaWhiteDif, EquaLati, EquaLongi, WhiteLongi = 0
+    let EclpWhiteDif = 0
+    let EquaWhiteDif = 0
+    let EquaLati = 0
+    let EquaLongi = 0
+    let WhiteLongi = 0
     if (Type === 6) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Huangji')
     } else if (CalName === 'Qintian') {
@@ -533,9 +604,18 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
             let Lati1Print = '-'
             let LatiPrint = '-'
             let EquaLatiPrint = '-'
-            const { NodeEclp, EquaLongi, EclpWhiteDif, EquaWhiteDif, WhiteLongi, EquaLati
+            const {
+                NodeEclp,
+                EquaLongi,
+                EclpWhiteDif,
+                EquaWhiteDif,
+                WhiteLongi,
+                EquaLati
             } = AutoMoonLongi(NodeAccum, MoonEclp, title)
-            const { MoonEclpLati1, MoonEclpLati } = AutoMoonLati(NodeAccum, title)
+            const {
+                MoonEclpLati1,
+                MoonEclpLati,
+            } = AutoMoonLati(NodeAccum, title)
             if (NodeEclp) {
                 NodeWinsolsDifDegPrint = NodeEclp.toFixed(4)
             }
@@ -594,10 +674,11 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDecimal, WinsolsDifRaw)
             const AcrDecimal = (AvgDecimal + (Tcorr2 || Tcorr1) + 1) % 1
             const { Magni, Last, Decimal
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, WinsolsDifRaw, 1, title, i + 1, 0)
-            let LastPrint, DecimalPrint = '-'
+            let LastPrint = '-'
             if (Last) {
                 LastPrint = Last.toFixed(4)
             }
+            let DecimalPrint = '-'
             if (Decimal) {
                 DecimalPrint = parseFloat((Decimal).toPrecision(12)) === AvgDecimal ? '定朔' : (Decimal * 100).toFixed(4)
             }
@@ -641,10 +722,11 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDecimal, WinsolsDifRaw
             const AcrDecimal = (AvgDecimal + (Tcorr2 || Tcorr1) + 1) % 1
             const { Magni, Last, Decimal
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDecimal, AvgDecimal, WinsolsDifRaw, 0, title, i + 1, 0)
-            let LastPrint, DecimalPrint = '-'
+            let LastPrint = '-'
             if (Last) {
                 LastPrint = Last.toFixed(4)
             }
+            let DecimalPrint = '-'
             if (Decimal) {
                 DecimalPrint = parseFloat((Decimal).toPrecision(12)) === AvgDecimal ? '定望' : (Decimal * 100).toFixed(4)
             }

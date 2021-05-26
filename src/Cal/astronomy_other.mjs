@@ -21,13 +21,16 @@ export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameL
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
 export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
-    const { AutoPara, Type } = Bind(CalName)
-    const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = AutoPara[CalName]
+    const { AutoPara, Type
+    } = Bind(CalName)
+    const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw
+    } = AutoPara[CalName]
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? WinsolsCorr : 0
-    let MansionOrder, MidstarOrder = 0
+    let MansionOrder = 0
+    let MidstarOrder = 0
     const MansionAccum = ((Mansion + (MansionCorr || 0) + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
     for (let j = 1; j <= 28; j++) {
         if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
@@ -61,7 +64,11 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
         const MidstarDeg = (MidstarRaw - DegAccumList[MidstarOrder]).toFixed(3)
         MidstarResult = MidstarName + MidstarDeg
     }
-    return { MansionOrder, MansionResult, MidstarResult }
+    return {
+        MansionOrder,
+        MansionResult,
+        MidstarResult
+    }
 }
 // console.log(Accum2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
 
@@ -88,12 +95,13 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
 }
 
 export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => { // 朔小分
-    const { AutoPara } = Bind(CalName)
+    const { AutoPara
+    } = Bind(CalName)
     const { Solar } = AutoPara[CalName]
     const Solar25 = Solar / 4
     const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDecimal, CalName).Rise / 100
-    let { Rise, Rise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
-    Rise = (Rise1 || Rise) / 100
+    let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
+    Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(CalName)
     let standard = 0.75
     let portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
@@ -122,7 +130,8 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
 // console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
 export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => {
-    const { Type } = Bind(CalName)
+    const { Type
+    } = Bind(CalName)
     const LightRange = AutoLightRange(CalName)
     const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Rise / 100
     let standard = Rise - LightRange
@@ -139,9 +148,12 @@ export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =
 }
 
 export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行九道法
-    const { Type, AutoPara } = Bind(CalName)
-    const { SolarRaw, Node, LunarRaw } = AutoPara[CalName]
-    let { Solar, Lunar } = AutoPara[CalName]
+    const { Type, AutoPara,
+    } = Bind(CalName)
+    const { SolarRaw, Node, LunarRaw
+    } = AutoPara[CalName]
+    let { Solar, Lunar
+    } = AutoPara[CalName]
     Lunar = Lunar || LunarRaw
     Solar = Solar || SolarRaw
     const Node50 = Node / 2
