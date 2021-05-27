@@ -724,7 +724,7 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Decimal, WinsolsDifRaw, isNewm, Ca
 // 紀元步驟：1、入交泛日 2、時差，食甚時刻 3、入交定日 4、食分。入交定日到底要不要加上時差？
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
 // 紀元定朔入轉=經朔入轉+日月改正
-const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName) => { // 入交泛日，定朔入轉，定朔分，定朔距冬至——改成經朔距冬至
+const EclipseFormula = (NodeAccum, AnomaAccumRaw, AcrDecimal, AvgDecimal, AcrWinsolsDif, WinsolsDif, isNewm, CalName) => { // 入交泛日，定朔入轉，定朔分，定朔距冬至——改成經朔距冬至
     const { Type, AutoPara
     } = Bind(CalName)
     const { Solar, Lunar, Node, Denom, XianConst,
