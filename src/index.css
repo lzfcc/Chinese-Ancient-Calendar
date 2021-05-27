@@ -257,7 +257,7 @@ h2 {
   padding: 2em 1em;
   background: var(--bggray);
   border-radius: 1em;
-  max-height: 98vh;
+  max-height: 90vh;
   overflow: scroll;
 }
 
