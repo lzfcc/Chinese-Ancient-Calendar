@@ -408,12 +408,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { /
         Rise = Longi2Lati.Rise
         Dial = Longi2Lati.Dial || 0
     }
-    return {
-        Lati,
-        Lati1,
-        Rise,
-        Dial
-    }
+    return { Lati, Lati1, Rise, Dial }
 }
 // console.log (AutoLongi2Lati (53.6, 0, 'Chongxuan'))
 
@@ -454,11 +449,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
             let DialPrint = '-'
             let DialInacPrint1 = '-'
             let DialInacPrint2 = '-'
-            const {
-                Lati1,
-                Lati,
-                Rise,
-                Dial
+            const { Lati1, Lati, Rise, Dial
             } = AutoLongi2Lati(LongiRaw, WinsolsDecimal, title)
             if (Lati1) {
                 Lati1Print = Lati1.toFixed(4)
@@ -485,10 +476,8 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDecimal, f, Sidereal, year) => {
 // console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLati = (NodeAccum, CalName) => {
-    const { Type, AutoPara
-    } = Bind(CalName)
-    let { Sidereal // Solar, SolarRaw,
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    let { Sidereal } = AutoPara[CalName]
     // Solar = Solar || SolarRaw
     let MoonLati = {}
     if (Type <= 3) {
@@ -499,17 +488,15 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
         MoonLati = MoonLatiTable(NodeAccum, 'Daming')
     } else if (Type === 6) {
         MoonLati = MoonLatiTable(NodeAccum, 'Huangji')
-    } else if (CalName === 'Qintian') {
+    } else if (['Qintian', 'Xuanming', 'Zhide', 'Dayan'].includes(CalName)) {
         MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
     } else if (Type === 7) {
-        MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
-    } else if (CalName === 'Chongxuan') {
+        MoonLati = MoonLatiTable(NodeAccum, CalName)
+    } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
-    } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
-    } else if (['Chongtian', 'Guantian'].includes(CalName)) {
+    } else if (['Chongtian'].includes(CalName)) {
         MoonLati = MoonLatiFormula(NodeAccum, CalName)
-    } else if (['Mingtian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
+    } else if (['Guantian', 'Mingtian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Guantian')
     } else if (Type === 9 || Type === 10) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Jiyuan')
@@ -519,13 +506,11 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
     const MoonEclpLati1 = MoonLati.Lati1 || Sidereal / 4 - MoonEclpLati
     return { MoonEclpLati, MoonEclpLati1, MoonEquaLati }
 }
-// console.log(AutoMoonLati(66, 2.41, 'Shoushi').EquaLongi)
+// console.log(AutoMoonLati(2, 'Tsrengyuan').MoonEclpLati)
 
 export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
-    const { Type, AutoPara
-    } = Bind(CalName)
-    let { Solar, SolarRaw, Sidereal, Node
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    let { Solar, SolarRaw, Sidereal, Node } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
@@ -594,7 +579,7 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
     }
     let Print = []
     Print = Print.concat(
-        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
+        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
             let NodeWinsolsDifDegPrint = '-'
             let WhiteLongiPrint = '-'
             let EquaLongiPrint = '-'
@@ -604,17 +589,9 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
             let Lati1Print = '-'
             let LatiPrint = '-'
             let EquaLatiPrint = '-'
-            const {
-                NodeEclp,
-                EquaLongi,
-                EclpWhiteDif,
-                EquaWhiteDif,
-                WhiteLongi,
-                EquaLati
+            const { NodeEclp, EquaLongi, EclpWhiteDif, EquaWhiteDif, WhiteLongi, EquaLati
             } = AutoMoonLongi(NodeAccum, MoonEclp, title)
-            const {
-                MoonEclpLati1,
-                MoonEclpLati,
+            const { MoonEclpLati1, MoonEclpLati,
             } = AutoMoonLati(NodeAccum, title)
             if (NodeEclp) {
                 NodeWinsolsDifDegPrint = NodeEclp.toFixed(4)

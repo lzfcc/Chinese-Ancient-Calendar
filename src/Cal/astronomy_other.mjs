@@ -114,7 +114,7 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
         standard = 1 - Rise + LightRange // + 0.1
     } else if (CalName === 'Chongxuan') {
         standard = Math.max(0.725, 1 - Rise + LightRange)
-    } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) {
+    } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) { // 欽天日入後則進一日
         standard = 1 - Rise // 冬至0.7，夏至0.8
     } else if (WinsolsDifRaw > Solar25 && WinsolsDifRaw < Solar * 0.75) {
         standard = 0.75 + (Rise - SpringequinoxSunrise) / portion

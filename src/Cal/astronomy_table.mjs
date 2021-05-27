@@ -399,32 +399,20 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
 // console.log(MoonLongiTable(45, 3, 'Qintian'))
 
 export const MoonLatiTable = (NodeAccum, CalName) => {
-    const { Type, AutoPara
-    } = Bind(CalName)
-    const { MoonLatiDifList
-    } = AutoPara[CalName]
-    let { Node, MoonLatiAccumList
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    const { Node, MoonLatiAccumList } = AutoPara[CalName]
+    let { MoonLatiDifList } = AutoPara[CalName]
     ///////預處理陰陽曆////////
     let portion = 10
     if (Type <= 4) {
         portion = 12
-    } else if (Type === 7) {
+    } else if (CalName === 'Dayan') {
         portion = 120
+    } else if (CalName === 'Wuji') { // 五紀正元找不到比例，瞎填
+        portion = 50 / 3
+    } else if (CalName === 'Tsrengyuan') {
+        portion = 219 / 4
     }
-    const MoonLatiDif = []
-    for (let i = 0; i <= 13; i++) {
-        MoonLatiDif[i] = MoonLatiDifList[i] / portion
-    }
-    // if (!MoonLatiAccumList) {
-    //     MoonLatiAccumList = MoonLatiDif.slice()
-    //     for (let i = 1; i <= 14; i++) {
-    //         MoonLatiAccumList[i] += MoonLatiAccumList[i - 1]
-    //         MoonLatiAccumList[i] = +MoonLatiAccumList[i].toFixed(13)
-    //     }
-    // }
-    // MoonLatiAccumList = MoonLatiAccumList.slice(-1).concat(MoonLatiAccumList.slice(0, -1))
-    // MoonLatiAccumList[0] = 0
     const NodeAccumHalf = NodeAccum % (Node / 2)
     const NodeAccumHalfInt = ~~NodeAccumHalf
     let Yinyang = -1
@@ -433,8 +421,8 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     }
     let Lati = 0
     if (Type < 6) {
-        Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDif[NodeAccumHalfInt])
-    } else if (Type === 6) { // 二次
+        Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDifList[NodeAccumHalfInt] / portion)
+    } else if (Type === 6 || ['Wuji', 'Tsrengyuan'].includes(CalName)) { // 二次
         let Initial = MoonLatiAccumList[NodeAccumHalfInt] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 2]
         let n = 1 + NodeAccumHalf - NodeAccumHalfInt
         if (NodeAccumHalf >= 12) {
@@ -442,23 +430,37 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
             n = 3 + NodeAccumHalf - NodeAccumHalfInt
         }
         Lati = Yinyang * Interpolate1(n, Initial) / portion
-    } else if (Type === 7) { // 大衍的入交度數另有算式，我直接用月平行速來算
+    } else if (CalName === 'Dayan') { // 大衍的入交度數另有算式，我直接用月平行速來算 // 三次差：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8// 曲安京《曆法》頁251
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const LongiRaw = NodeAccumHalf * MoonAvgVDeg
-        const Cycle = Node * MoonAvgVDeg
-        const Smallquadrant = Cycle / 24
-        const SmallquadrantAccum = LongiRaw / Smallquadrant
-        const SmallquadrantAccumInt = ~~SmallquadrantAccum
-        // 三次：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8
-        const Initial = MoonLatiAccumList[SmallquadrantAccumInt] + ',' + MoonLatiAccumList[SmallquadrantAccumInt + 1] + ',' + MoonLatiAccumList[SmallquadrantAccumInt + 2] + ',' + MoonLatiAccumList[SmallquadrantAccumInt + 3]
-        const n = 1 + SmallquadrantAccum - SmallquadrantAccumInt
-        Lati = Yinyang * Interpolate1(n, Initial) / portion
+        const Cycle = AutoNodeCycle(CalName)
+        const l = 15 // Cycle / 24 // 一象限15度
+        const Longi = LongiRaw * 360 / Cycle
+        const k = ~~(Longi / l) // 本爻
+        const Frac = Longi - k * l
+        // const D1 = MoonLatiDifList[k + 1] - MoonLatiDifList[k] // 前差
+        // const D2 = MoonLatiDifList[k + 2] - MoonLatiDifList[k + 1] // 後差
+        // const Dif1 = D2 - D1 // 中差
+        let End = (3 * MoonLatiDifList[k] + MoonLatiDifList[k + 2]) / (4 * l) // 本爻末率、後爻初率
+        let Start = (3 * MoonLatiDifList[k - 1] + MoonLatiDifList[k + 1]) / (4 * l) // 本爻初率
+        if (!Start) { // 其四象初爻無初率，上爻無末率，皆倍本爻加減率，十五而一。所得，各以初、末率減之，皆互得其率
+            // 但問題是，即便如此，上爻依然不行，因為沒有MoonLatiDifList[11 + 1]，我暫且只好補一個上去
+            Start = MoonLatiDifList[k] * 2 / l - End
+        } else if (!End) {
+            End = MoonLatiDifList[k] * 2 / l - Start
+        }
+        let sign = 1
+        if (Longi < 90) {
+            sign = -1
+        }
+        const D = sign * Math.abs((End - Start) / l) // 度差
+        const G1 = Start + D / 2 // 定初率。「以加減初率（少象減之，老象加之）」
+        const Gn = G1 + (Frac - 1) * D // 「以度差累加減之（少象以差減，老象以差加）」
+        const G = (G1 + Gn) * Frac / 2
+        Lati = Yinyang * (MoonLatiAccumList[k] + G) / portion
     }
     const Lati1 = 91.31 - Lati
-    return {
-        Lati,
-        Lati1
-    }
+    return { Lati, Lati1 }
 }
 // 大衍：《中國古代曆法》頁530
-// console.log(MoonLatiTable(13.61, 'Daming'))
+// console.log(MoonLatiTable(10, 'Dayan'))
