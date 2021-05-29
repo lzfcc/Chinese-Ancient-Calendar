@@ -331,7 +331,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                     let NewmEcliFunc = {}
                     let SyzygyEcliFunc = {}
-                    if (NewmNodeAccumPrint[i] < 1.35 || (NewmNodeAccumPrint[i] > 12.25 && NewmNodeAccumPrint[i] < 14.96) || NewmNodeAccumPrint[i] > 25.86) {
+                    if (NewmNodeAccumPrint[i] < 1.3 || (NewmNodeAccumPrint[i] > 12.3 && NewmNodeAccumPrint[i] < 14.9) || NewmNodeAccumPrint[i] > 25.92) { // 望差1.159，1.3綽綽有餘了，能篩掉4/5多
                         NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDecimalPrint[i], NewmAvgDecimalPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
                         const Newmstatus = NewmEcliFunc.status
                         let NewmMagni = 0

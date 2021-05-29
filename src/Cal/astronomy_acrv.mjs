@@ -580,26 +580,26 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
 const MoonFormula = (AnomaAccumRaw, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
     const { Anoma, DeltaMoon1, DeltaMoon2, DeltaMoon3, XianConst } = AutoPara[CalName]
-    const Anoma50 = +((Anoma / 2).toFixed(6)) // 轉中
+    const Anoma50 = Anoma / 2 // 轉中
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
     let MoonDifAccum = 0
     let MoonAcrV = 0
     let signB = 1
     if (Type === 11) {
         let signA = 1
-        let FaslowT = 0
+        let T = 0
         if (AnomaAccumRaw <= Anoma / 4) {
-            FaslowT = AnomaAccumRaw / XianConst
+            T = AnomaAccumRaw / XianConst
         } else if (AnomaAccumRaw <= Anoma / 2) {
-            FaslowT = (Anoma50 - AnomaAccumRaw) / XianConst
+            T = (Anoma50 - AnomaAccumRaw) / XianConst
         } else if (AnomaAccumRaw <= Anoma * 3 / 4) {
-            FaslowT = (AnomaAccumRaw - Anoma50) / XianConst
+            T = (AnomaAccumRaw - Anoma50) / XianConst
             signA = -1
         } else {
-            FaslowT = (Anoma - AnomaAccumRaw) / XianConst
+            T = (Anoma - AnomaAccumRaw) / XianConst
             signA = -1
         }
-        MoonDifAccum = signA * (DeltaMoon1 * FaslowT - DeltaMoon2 * FaslowT ** 2 - DeltaMoon3 * FaslowT ** 3) / 100 // 遲疾差
+        MoonDifAccum = signA * (DeltaMoon1 * T - DeltaMoon2 * T ** 2 - DeltaMoon3 * T ** 3) / 100 // 遲疾差
         let signB = 1
         let AnomaXian = 0
         if (AnomaAccumRaw <= 6.642) {
@@ -624,23 +624,25 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
             // AnomaAccum = big.div(OriginAccum, Lunar).add(i - 1 + ZhengWinsolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
             // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengWinsolsDif) * 2142887000 % AnomaNumer) / 81120000
             const AnomaAccum = AnomaAccumRaw * MoonAvgVDeg
-            // AnomaAccum %= 368.3708364275
-            // 13.36875 是我算的轉法轉度母之比——後來看到現成的了
-            let FaslowT = 0
+            let T = 0
+            let sign3 = 1
             if (AnomaAccum <= 92.0927) {
-                FaslowT = AnomaAccum
+                T = AnomaAccum
             } else if (AnomaAccum <= 184.1854) {
-                FaslowT = 184.1854 - AnomaAccum
+                T = 184.1854 - AnomaAccum
+                sign3 = -1
             } else if (AnomaAccum <= 92.0927 * 3) {
                 signB = -1
-                FaslowT = AnomaAccum - 184.1854
+                sign3 = -1
+                T = AnomaAccum - 184.1854
             } else {
                 signB = -1
-                FaslowT = 184.1854 * 2 - AnomaAccum
+                T = 184.1854 * 2 - AnomaAccum
             }
-            MoonDifAccum = signB * (FaslowT * (210.09 - FaslowT)) / 1976 // 遲疾差度//+ FaslowT * (MoonAvgVDeg - Sidereal / Anoma) / MoonAvgVDeg // 《中國古代曆法》頁110莫名其妙說要加上後面這個，但不加纔跟其他曆相合
-            // MoonDifAccum = signB * (FaslowT * (210.09 - FaslowT)) * 10000 / 6773.5
-            // MoonAcrVDeg = 13.36875 + signB * (1.27 - 10 * FaslowT / 729) // 藤豔輝《宋代朔閏⋯⋯》頁68            
+            const tmp = signB * (T * (210.09 - T)) // 積數
+            MoonDifAccum = tmp / 1976 // 遲疾差度 //+ T * (MoonAvgVDeg - Sidereal / Anoma) / MoonAvgVDeg // 《中國古代曆法》頁110莫名其妙說要加上後面這個，但不加纔跟其他曆相合
+            // MoonTcorr2 = tmp / 0.67735 / Denom // 遲疾定差 13.36875*1976/0.67735=39000
+            MoonAcrV = 13.36875 + sign3 * (1.27 - T / 72.5) // 原文739
         } else if (CalName === 'Futian') {
             let AnomaAccum = AnomaAccumRaw
             if (AnomaAccumRaw > Anoma / 2) {
@@ -653,7 +655,7 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
     const MoonAcrS = AnomaAccumRaw * MoonAvgVDeg + MoonDifAccum
     return { MoonDifAccum, MoonAcrV, MoonAcrS }
 }
-// console.log(MoonFormula(23, 'Shoushi').MoonAcrS)
+// console.log(MoonFormula(1, 'Mingtian').MoonTcorr2)
 
 export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) => {
     const { AutoPara, Type } = Bind(CalName)
@@ -671,12 +673,13 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
     let MoonTcorr1 = 0
     let Tcorr2 = 0 // 二次或三次內插
     let Tcorr1 = 0 // 線性內插
-    let NodeAccumCorr = 0
-    let NodeAccumCorr2 = 0
+    let NodeTcorr = 0
+    let NodeAccumCorrB = 0
     let SunDifAccum = 0
     let MoonDifAccum = 0
     let SunTcorr = 0 // 默認選項
     let MoonTcorr = 0
+    let MoonAcrV = 0
     if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Shenlong', 'Zhide', 'Qintian', 'Zhidao1', 'Zhidao2', 'Qianxing', 'Fengyuan', 'Zhantian', 'Daming2', 'Chunyou', 'Huitian', 'Bentian', 'Yiwei', 'Gengwu'].includes(CalName)) {
         if (CalName === 'Huangchu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Qianxiang').Tcorr1
@@ -729,37 +732,37 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             const TermNum = ~~(WinsolsDif / HalfTermLeng)
             if (CalName === 'Daye') {
                 if (TermNum <= 4) {
-                    NodeAccumCorr = Math.abs(WinsolsDif - HalfTermLeng) * 1380 / NodeDenom
+                    NodeTcorr = Math.abs(WinsolsDif - HalfTermLeng) * 1380 / NodeDenom
                 } else if (TermNum <= 8) {
-                    NodeAccumCorr = 63600 / NodeDenom
+                    NodeTcorr = 63600 / NodeDenom
                 } else if (TermNum <= 11) {
-                    NodeAccumCorr = Math.abs(WinsolsDif - 11 * HalfTermLeng) * 1380 / NodeDenom
+                    NodeTcorr = Math.abs(WinsolsDif - 11 * HalfTermLeng) * 1380 / NodeDenom
                 } else if (TermNum <= 16) {
-                    NodeAccumCorr = -Math.abs(WinsolsDif - 13 * HalfTermLeng) * 900 / NodeDenom
+                    NodeTcorr = -Math.abs(WinsolsDif - 13 * HalfTermLeng) * 900 / NodeDenom
                 } else if (TermNum <= 20) {
-                    NodeAccumCorr = -55000 / NodeDenom
+                    NodeTcorr = -55000 / NodeDenom
                 } else {
-                    NodeAccumCorr = -Math.abs(WinsolsDif - 23 * HalfTermLeng) * 1770 / NodeDenom
+                    NodeTcorr = -Math.abs(WinsolsDif - 23 * HalfTermLeng) * 1770 / NodeDenom
                 }
             } else {
                 if (TermNum >= 2 && TermNum <= 3) {
-                    NodeAccumCorr = Math.abs(WinsolsDif - HalfTermLeng) * 1650 / NodeDenom
+                    NodeTcorr = Math.abs(WinsolsDif - HalfTermLeng) * 1650 / NodeDenom
                 } else if (TermNum <= 7) {
-                    NodeAccumCorr = 76100 / NodeDenom
+                    NodeTcorr = 76100 / NodeDenom
                 } else if (TermNum <= 10) {
-                    NodeAccumCorr = 76100 / NodeDenom - Math.abs(WinsolsDif - 8 * HalfTermLeng) * 1650 / NodeDenom
+                    NodeTcorr = 76100 / NodeDenom - Math.abs(WinsolsDif - 8 * HalfTermLeng) * 1650 / NodeDenom
                 } else if (TermNum <= 12) { } else if (TermNum <= 16) {
-                    NodeAccumCorr = -Math.abs(WinsolsDif - 13 * HalfTermLeng) * 1200 / NodeDenom
+                    NodeTcorr = -Math.abs(WinsolsDif - 13 * HalfTermLeng) * 1200 / NodeDenom
                 } else if (TermNum <= 20) {
-                    NodeAccumCorr = -95825 / NodeDenom
+                    NodeTcorr = -95825 / NodeDenom
                 } else {
-                    NodeAccumCorr = -63300 / NodeDenom + Math.abs(WinsolsDif - 21 * HalfTermLeng) * 2110 / NodeDenom
+                    NodeTcorr = -63300 / NodeDenom + Math.abs(WinsolsDif - 21 * HalfTermLeng) * 2110 / NodeDenom
                 }
                 if ((TermNum >= 2 && TermNum <= 3) || (TermNum === 9)) { // 後兩種修正與五星有關，暫時沒法加
                     if (NodeAccum <= 1 / 6) {
-                        NodeAccumCorr /= 2
+                        NodeTcorr /= 2
                     } else {
-                        NodeAccumCorr = 0
+                        NodeTcorr = 0
                     }
                 }
             }
@@ -773,7 +776,9 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             Tcorr2 = SunTcorr2 + MoonTcorr1
         } else if (['Futian', 'Mingtian'].includes(CalName)) {
             SunDifAccum = SunDifAccumFormula(WinsolsDif, CalName)
-            MoonDifAccum = MoonFormula(AnomaAccum, CalName).MoonDifAccum
+            const MoonFunc = MoonFormula(AnomaAccum, CalName)
+            MoonDifAccum = MoonFunc.MoonDifAccum
+            MoonAcrV = MoonFunc.MoonAcrV
             SunTcorr2 = SunDifAccum / MoonAvgVDeg
             MoonTcorr2 = -MoonDifAccum / MoonAvgVDeg
             Tcorr2 = SunTcorr2 + MoonTcorr2
@@ -798,7 +803,6 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             SunTcorr2 = SunDifAccum * XianConst / moonFunc.MoonAcrV
             MoonTcorr2 = -MoonDifAccum * XianConst / moonFunc.MoonAcrV
             Tcorr2 = SunTcorr2 + MoonTcorr2
-            NodeAccumCorr = Tcorr2
         } else if (Type === 20) {
             sunFunc = SunAcrVWest(WinsolsDif, year)
             moonFunc = MoonAcrVWest(AnomaAccum, year)
@@ -816,14 +820,15 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         MoonTcorr = MoonTcorr2 || MoonTcorr1
         if (Type >= 5 && Type <= 10) { // 其他曆法都是這樣，不懂授時爲何就是定朔加減差
             const portion = AutoNodePortion(CalName)
-            NodeAccumCorr = SunTcorr + portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟德61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
+            NodeTcorr = SunTcorr + portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟德61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
             // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
-            NodeAccumCorr2 = portion * SunTcorr + MoonTcorr // 太陽入交定日，上面是月亮入交定日
+            NodeAccumCorrB = portion * SunTcorr + MoonTcorr // 太陽入交定日，上面是月亮入交定日
         }
     }
     return {
-        SunTcorr, MoonTcorr, SunTcorr2, SunTcorr1, MoonTcorr2, MoonTcorr1, Tcorr2, Tcorr1,
-        NodeAccumCorr, NodeAccumCorr2,
+        SunTcorr, SunTcorr2, SunTcorr1, MoonTcorr, MoonTcorr2, MoonTcorr1, MoonAcrV,
+        Tcorr2, Tcorr1,
+        NodeTcorr, NodeAccumCorrB,
     }
 }
 // console.log(AutoTcorr(6, 9, 'Qiandao', 1997).MoonTcorr)
@@ -892,10 +897,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
             MoonDifAccum = MoonAcrVWest(AnomaAccum, year).MoonDifAccum
         }
     }
-    return {
-        SunDifAccum,
-        MoonDifAccum,
-    }
+    return { SunDifAccum, MoonDifAccum }
 }
 // console.log(AutoDifAccum(9, 9, 'Shoushi', 1997).MoonDifAccum)
 
@@ -955,7 +957,10 @@ export const AutoMoonAcrS = (AnomaAccum, CalName) => {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, CalName)
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, CalName)
         } else {
-            if (['Futian', 'Mingtian', 'Shoushi', 'Datong'].includes(CalName)) {
+            if (CalName === 'Mingtian') {
+                MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
+                AnomaCycle = 368.3708
+            } else if (['Futian', 'Shoushi', 'Datong'].includes(CalName)) {
                 MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
                 AnomaCycle = MoonFormula(Anoma - 1e-13, CalName).MoonAcrS
             } else {

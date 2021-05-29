@@ -58,11 +58,10 @@ export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
         MoonAvgVDeg = 13.37
     } else if (CalName === 'Chongtian') {
         MoonAvgVDeg = 909 / 68 // 13.3676470588
-    } else if (CalName === 'Jiyuan') { // 7290/545.3=13.3687878232，按照公式=13.3687753161
-        MoonAvgVDeg = 7290 / 545.3
+    } else if (Type === 9) { // 7290/545.3=13.3687878232，按照公式=13.3687753161
+        MoonAvgVDeg = 7290 / 545.3 // 紀元
     } else {
-        const { Sidereal, Solar, Lunar, LunarRaw
-        } = AutoPara[CalName]
+        const { Sidereal, Solar, Lunar, LunarRaw } = AutoPara[CalName]
         MoonAvgVDeg = parseFloat(((Sidereal || Solar) / (Lunar || LunarRaw) + 1).toPrecision(14))
     }
     return MoonAvgVDeg
@@ -75,7 +74,7 @@ export const AutoNodeCycle = CalName => {
     } else if (['Chongtian', 'Guantian', 'Tongyuan', 'Chunxi'].includes(CalName)) {
         NodeCycle = 363.76
     } else if (CalName === 'Mingtian') {
-        NodeCycle = 365.2564 // sidereal約餘
+        NodeCycle = 2270076578 / 6240000 // 363.7943 // 藤豔輝《宋代》頁96
     } else if (['Jiyuan', 'Kaixi'].includes(CalName)) {
         NodeCycle = 363.7944
     } else if (CalName === 'Qiandao') {
@@ -148,7 +147,7 @@ export const AutoLightRange = CalName => { // 昏明
     return LightRange
 }
 
-export const AutoMoonTcorrDif = (AnomaAccum, CalName) => { // 唐宋曆損益率
+export const AutoMoonTcorrDif = (AnomaAccum, CalName) => { // 唐宋月離損益率
     const { AutoPara } = Bind(CalName)
     const { MoonTcorrDifList, Anoma } = AutoPara[CalName]
     const AnomaAccumInt = ~~AnomaAccum

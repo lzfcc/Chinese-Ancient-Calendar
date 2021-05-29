@@ -256,7 +256,7 @@ h2 {
   margin: 1.5em auto;
   padding: 2em 1em;
   background: var(--bggray);
-  border-radius: 1em;
+  border-radius: 1.8em;
   max-height: 90vh;
   overflow: scroll;
 }

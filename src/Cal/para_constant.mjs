@@ -325,7 +325,6 @@ export const MonNumList = ['', '正', '二', '三', '四', '五', '六', '七', 
 export const ColorList = ' 白黑碧綠黃白赤白紫' // 九宮
 export const ClassColorList = ['', 'color-white', 'color-black', 'color-cyan', 'color-green', 'color-yellow', 'color-white', 'color-red', 'color-white', 'color-purple']
 export const Hexagram8List = ' 乾兌離震巽坎艮坤' // 震 正東;兌 正西;離 正南;坎 正北;坤 西南;艮 東北;巽 東南;乾 西北
-export const GongList = ['娵訾', '降婁', '大梁', '實沈', '鶉首', '鶉火', '鶉尾', '壽星', '大火', '析木', '星紀', '玄枵'] // 十二次
 export const FourauspiciousList = ['甲丙庚壬', '艮巽坤乾', '癸乙丁辛'] // 四大吉時，和十二次一一對應
 // 日遊神癸巳30—己酉46在內。癸巳30——丁酉34在內太微宮，戊戌35——壬寅39在內紫微宮。癸卯40在內太廟宮，甲辰41——己酉46在內御女宮
 // 會天曆：癸巳30-丁酉34房內北，戊戌35—己亥36房內中，庚子37—壬寅39房內南，癸卯40房內西，甲辰41—丁未44房內東，戊申45房內中，己酉46房內出。零散的在房內中：戊辰己巳5、6，戊寅己卯15、16，戊子己丑25、26，戊午己未55、56，
@@ -422,7 +421,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是
     return DegAccumList
 }
 // console.log(AutoDegAccumList('Daming', 543))
-
+export const GongList = ['娵訾', '降婁', '大梁', '實沈', '鶉首', '鶉火', '鶉尾', '壽星', '大火', '析木', '星紀', '玄枵'] // 十二次
 export const WestGongNameList = ['白羊', '金牛', '陰陽', '巨蟹', '獅子', '雙女', '天秤', '天蝎', '人馬', '磨羯', '寶瓶', '雙魚'] // 回回曆法
 export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30] // 已上十二宮，所謂不動之月，凡三百六十五日，乃歲周之日也。若遇宮分有閏之年，於雙魚宮加一日，凡三百六十六日
 
