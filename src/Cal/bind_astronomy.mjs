@@ -331,14 +331,8 @@ export const BindMansion2Deg = (Mansion, CalName) => {
 }
 
 export const AutoLongi2Lati = (LongiRaw, WinsolsDecimal, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
-    const {
-        Type,
-        AutoPara
-    } = Bind(CalName)
-    const {
-        Solar,
-        SolarRaw
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    const { Solar, SolarRaw } = AutoPara[CalName]
     LongiRaw %= (Solar || SolarRaw)
     LongiRaw += WinsolsDecimal - 0.5 // 以正午爲準
     let Longi2Lati = {}

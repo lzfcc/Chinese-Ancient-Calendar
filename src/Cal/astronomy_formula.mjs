@@ -61,12 +61,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     Eclp2EquaDif *= sign2
     Equa2Eclp = LongiRaw + Equa2EclpDif
     Eclp2Equa = LongiRaw + Eclp2EquaDif
-    return {
-        Equa2Eclp,
-        Equa2EclpDif,
-        Eclp2Equa,
-        Eclp2EquaDif
-    }
+    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif }
 }
 // console.log(Equa2EclpFormula(91, 'Chongxuan'))
 
@@ -77,7 +72,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
     let Longi = LongiRaw % Solar50
-    let Longi1 = LongiRaw % Solar50
+    let Longi1 = Longi
     if (Longi > Solar25) {
         Longi = Solar50 - Longi
     }

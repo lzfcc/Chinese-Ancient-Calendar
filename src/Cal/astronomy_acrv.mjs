@@ -432,7 +432,7 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
 
 const MoonDifAccumTable = (AnomaAccum, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
-    const { Anoma, MoonAcrV, Denom } = AutoPara[CalName]
+    const { Anoma, MoonAcrVList, Denom } = AutoPara[CalName]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
     const Anoma75 = Anoma * 0.75
@@ -459,7 +459,7 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => {
     }
     const MoonAcrVDeg = []
     for (let i = 0; i <= 27; i++) {
-        MoonAcrVDeg[i] = MoonAcrV[i] / MoonDegDenom
+        MoonAcrVDeg[i] = MoonAcrVList[i] / MoonDegDenom
     }
     for (let i = 0; i <= 27; i++) {
         MoonAcrAvgDifList[i] = parseFloat((MoonAcrVDeg[i] - MoonAvgVDeg).toPrecision(7))
@@ -518,7 +518,7 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => {
 
 const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
-    const { Anoma, MoonAcrV, Denom } = AutoPara[CalName]
+    const { Anoma, MoonAcrVList, Denom } = AutoPara[CalName]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
     const Anoma75 = Anoma * 0.75
@@ -540,7 +540,7 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     }
     const MoonAcrVDeg = []
     for (let i = 0; i <= 27; i++) {
-        MoonAcrVDeg[i] = MoonAcrV[i] / MoonDegDenom
+        MoonAcrVDeg[i] = MoonAcrVList[i] / MoonDegDenom
     }
     const MoonAcrSList = MoonAcrVDeg.slice()
     for (let i = 1; i <= 27; i++) {
