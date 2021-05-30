@@ -5,10 +5,10 @@ import {
     BranchList, HalfList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, ClockNameList, big, nzh
 } from './para_constant.mjs'
 
-const ClockWest = Decimal => {
-    let h = ~~(Decimal * 24)
-    let m = ~~((Decimal - h / 24) * 24 * 60)
-    let s = ~~((Decimal - h / 24 - m / 24 / 60) * 86400)
+const ClockWest = Deci => {
+    let h = ~~(Deci * 24)
+    let m = ~~((Deci - h / 24) * 24 * 60)
+    let s = ~~((Deci - h / 24 - m / 24 / 60) * 86400)
     h = h.toString()
     m = m.toString()
     s = s.toString()
@@ -24,17 +24,17 @@ const ClockWest = Decimal => {
     const Print = h + 'h ' + m + 'm ' + s + 's'
     return Print
 }
-const ClockWeijin = (Decimal, CalName) => {
+const ClockWeijin = (Deci, CalName) => {
     const {
         Type,
     } = Bind(CalName)
-    Decimal = big(Decimal)
+    Deci = big(Deci)
     const portion = big.div(100, 12)
     if (CalName === 'Easthan' || Type >= 5) {
-        Decimal = Decimal.add(100 / 24).mod(100)
+        Deci = Deci.add(100 / 24).mod(100)
     }
-    let ClockOrder = (Decimal.div(portion)).floor().toNumber()
-    const ClockFrac = Decimal.sub(big(ClockOrder).mul(portion))
+    let ClockOrder = (Deci.div(portion)).floor().toNumber()
+    const ClockFrac = Deci.sub(big(ClockOrder).mul(portion))
     const Twelve = ((big.div(ClockFrac, portion)).mul(12)).floor().toNumber()
     if (Twelve === 11 && CalName !== 'WuyinA') {
         ClockOrder++
@@ -50,7 +50,7 @@ const ClockWeijin = (Decimal, CalName) => {
     return BranchList[ClockOrder + 1] + '時' + TwelveName
 }
 
-const ClockTmp = (Decimal, Mode) => { // 我假設：每日96刻，子初夜半，每刻100分
+const ClockTmp = (Deci, Mode) => { // 我假設：每日96刻，子初夜半，每刻100分
     let portion1 = 0
     let portion2 = 0
     if (Mode === 96) {
@@ -63,17 +63,17 @@ const ClockTmp = (Decimal, Mode) => { // 我假設：每日96刻，子初夜半�
         portion1 = 1.2
         portion2 = 10
     }
-    const KeRaw = Decimal * portion1
+    const KeRaw = Deci * portion1
     const ClockOrder = ~~(KeRaw / portion2)
     const QuarOrder = ~~(KeRaw - ClockOrder * portion2)
     // const MinOrder = ~~((KeRaw - ~~KeRaw) * 100)
     return BranchList[ClockOrder + 1] + '時' + QuarList[QuarOrder % 8] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 
-const Clock24 = Decimal => {
+const Clock24 = Deci => {
     const portion = 100 / 24
-    let ClockOrder = ~~(Decimal / portion)
-    const ClockFrac = Decimal - ClockOrder * portion
+    let ClockOrder = ~~(Deci / portion)
+    const ClockFrac = Deci - ClockOrder * portion
     const Twelve = ~~(ClockFrac / portion * 12)
     if (Twelve === 11) {
         ClockOrder++
@@ -81,8 +81,8 @@ const Clock24 = Decimal => {
     return TwentyfourList[ClockOrder] + '時' + TwelveList[Twelve]
 }
 
-const ClockTang = Decimal => { // 唐、宋皇祐之前。1/3刻放在時辰最後，可能是初或正兩種情況
-    const KeRaw = (Decimal + 100 / 24) % 100 // 夜半子半 
+const ClockTang = Deci => { // 唐、宋皇祐之前。1/3刻放在時辰最後，可能是初或正兩種情況
+    const KeRaw = (Deci + 100 / 24) % 100 // 夜半子半 
     let ClockOrder = ~~(KeRaw / (100 / 12))
     const HalfRaw = KeRaw - (ClockOrder * (100 / 12))
     let QuarOrder = 0
@@ -94,8 +94,8 @@ const ClockTang = Decimal => { // 唐、宋皇祐之前。1/3刻放在時辰最�
     return BranchList[ClockOrder + 1] + '時' + QuarList[QuarOrder] + '刻'
 }
 
-const ClockSong = Decimal => { // 皇祐之後、元、明。（之前假設初刻是1/6，也就是2.4分鐘。）四刻是1/6。 1刻60分，1分=14.4s
-    const KeRaw = (Decimal + 100 / 24) % 100 // 夜半子半 
+const ClockSong = Deci => { // 皇祐之後、元、明。（之前假設初刻是1/6，也就是2.4分鐘。）四刻是1/6。 1刻60分，1分=14.4s
+    const KeRaw = (Deci + 100 / 24) % 100 // 夜半子半 
     let ClockOrder = ~~(KeRaw / (100 / 12))
     const HalfOrder = ~~((KeRaw - ClockOrder * (100 / 12)) / (4 + 1 / 6))
     let HalfRaw = KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6))
@@ -113,9 +113,9 @@ const ClockSong = Decimal => { // 皇祐之後、元、明。（之前假設初�
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 
-const ClockQing = Decimal => { // 清代96刻
-    Decimal += 100 / 24 // 夜半子半
-    const KeRaw = Decimal * 0.96
+const ClockQing = Deci => { // 清代96刻
+    Deci += 100 / 24 // 夜半子半
+    const KeRaw = Deci * 0.96
     const KeOrder = ~~KeRaw
     const ClockOrder = ~~(KeRaw / 8)
     const HalfOrder = ~~((KeOrder - ClockOrder * 8) / 4)
@@ -124,54 +124,54 @@ const ClockQing = Decimal => { // 清代96刻
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
 }
 
-export const AutoClock = (Decimal, CalName) => {
+export const AutoClock = (Deci, CalName) => {
     const {
         Type,
     } = Bind(CalName)
     let Print = ''
     if (Type <= 6 && !['LindeA', 'LindeB'].includes(CalName)) {
-        Print = ClockWeijin(Decimal, CalName)
+        Print = ClockWeijin(Deci, CalName)
     } else if (Type === 7 || ['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian'].includes(CalName)) { // 因為宋志皇祐渾儀排在明天之後觀天之前
-        Print = ClockTang(Decimal)
+        Print = ClockTang(Deci)
     } else if (Type >= 8) {
-        Print = ClockSong(Decimal)
+        Print = ClockSong(Deci)
     }
     return Print
 }
 
-export const BindClock1 = Decimal => {
-    Decimal = +('0.' + Decimal)
+export const BindClock1 = Deci => {
+    Deci = +('0.' + Deci)
     let Print = [{
         title: '現代',
-        data: ClockWest(Decimal)
+        data: ClockWest(Deci)
     }]
-    Decimal *= 100 + 1e-12
+    Deci *= 100 + 1e-12
     Print = Print.concat(
         ['Easthan', 'Yuanjia', 'WuyinA', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
             return {
                 title: ClockNameList[title],
-                data: AutoClock(Decimal, title)
+                data: AutoClock(Deci, title)
             }
         }))
     Print = Print.concat({
         title: '清',
-        data: ClockQing(Decimal)
+        data: ClockQing(Deci)
     })
     Print = Print.concat({
         title: '24小時',
-        data: Clock24(Decimal)
+        data: Clock24(Deci)
     })
     Print = Print.concat({
         title: '96刻',
-        data: ClockTmp(Decimal, 96)
+        data: ClockTmp(Deci, 96)
     })
     Print = Print.concat({
         title: '108刻',
-        data: ClockTmp(Decimal, 108)
+        data: ClockTmp(Deci, 108)
     })
     Print = Print.concat({
         title: '120刻',
-        data: ClockTmp(Decimal, 120)
+        data: ClockTmp(Deci, 120)
     })
     return Print
 }

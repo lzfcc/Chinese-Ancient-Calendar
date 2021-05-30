@@ -181,15 +181,15 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
             }
         }
         //////定氣/////
-        const TermAcrNoonDecimalDif = [] // 中前後分。「冬至後，中前以差減，中後以差加⋯⋯冬至一日有減無加，夏至一日有加無減。」
+        const TermAcrNoonDeciDif = [] // 中前後分。「冬至後，中前以差減，中後以差加⋯⋯冬至一日有減無加，夏至一日有加無減。」
         for (let i = 0; i <= 23; i++) {
             const TermAcrRaw = AcrTermList[i]
-            const TermAcrDecimal = TermAcrRaw - ~~TermAcrRaw
-            TermAcrNoonDecimalDif[i] = TermAcrDecimal - 0.5 // 定氣與正午的距離
+            const TermAcrDeci = TermAcrRaw - ~~TermAcrRaw
+            TermAcrNoonDeciDif[i] = TermAcrDeci - 0.5 // 定氣與正午的距離
         }
-        const t1 = AcrTermList[TermNum] - TermAcrNoonDecimalDif[TermNum]
-        const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDecimalDif[TermNum]
-        const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDecimalDif[TermNum]
+        const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
+        const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDeciDif[TermNum]
+        const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDeciDif[TermNum]
         const Initial1 = t1 + ',' + NightList[TermNum] + ';' + t2 + ',' + NightList[TermNum + 1] + ';' + t3 + ',' + NightList[TermNum + 2]
         const Initial2 = t1 + ',' + SunLatiList[TermNum] + ';' + t2 + ',' + SunLatiList[TermNum + 1] + ';' + t3 + ',' + SunLatiList[TermNum + 2]
         Rise = DawnRange + Interpolate3(WinsolsDif, Initial1)
@@ -210,13 +210,13 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         } else {
             TermRange = HalfTermLeng
         }
-        const TermAvgNoonDecimalDif = []
+        const TermAvgNoonDeciDif = []
         for (let i = 0; i <= 23; i++) {
             const TermAvgRaw = i * HalfTermLeng
-            const TermAvgDecimal = TermAvgRaw - ~~TermAvgRaw // 各平氣小數點
-            TermAvgNoonDecimalDif[i] = TermAvgDecimal - 0.5 // 平氣與正午的距離
+            const TermAvgDeci = TermAvgRaw - ~~TermAvgRaw // 各平氣小數點
+            TermAvgNoonDeciDif[i] = TermAvgDeci - 0.5 // 平氣與正午的距離
         }
-        const nAvg = 1 + (TermDif + TermAvgNoonDecimalDif[TermNum]) / TermRange
+        const nAvg = 1 + (TermDif + TermAvgNoonDeciDif[TermNum]) / TermRange
         const Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2]
         const Initial4 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2] + ',' + NightList[TermNum + 3]
         if (Type === 10) { // 重修大明的日出分是三次內插
@@ -255,7 +255,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         // const delta3 = delta1 + delta2 // 泛初率
         // const delta4 = (delta2 / TermRange) / 2 // 限差。不/2是別差
         // const Corr = delta3 + delta4 // 定差
-        // const TermAcrDial = DialList[TermNum] - (TermAvgDecimal[TermNumRaw] - 0.5) * Corr // 恆氣日中定影
+        // const TermAcrDial = DialList[TermNum] - (TermAvgDeci[TermNumRaw] - 0.5) * Corr // 恆氣日中定影
         // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式              
     }
     // 唐系、應天、乾元。本來寫了個去極度差分表，太麻煩，還不如直接用招差

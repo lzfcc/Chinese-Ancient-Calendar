@@ -39,7 +39,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const ZhengInt = NewmInt[0] + (ScCorr || 0)
         const ZhengWinsolsDif = +(ZhengInt - OriginAccum).toFixed(5) // 正月夜半到冬至距離
-        const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
+        const WinsolsDeci = OriginAccum - Math.floor(OriginAccum)
         /////////// 預處理72候、五行、八卦列表//////////
         let HouList = []
         if (Type < 7) {
@@ -305,11 +305,11 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                     }
                 }
-                const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDecimal)
+                const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDeci)
                 Equa[i][k] = EquaFunc.MansionResult
                 Midstar[i][k] = EquaFunc.MidstarResult
                 Eclp[i][k] = Accum2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
-                const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, WinsolsDecimal, CalName)
+                const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, WinsolsDeci, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Rise[i][k] = Longi2LatiFunc.Rise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
@@ -334,7 +334,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 const Branch = BranchList.indexOf(Sc[i][k][1])
                 const JieNum = Math.round((Math.ceil(~~(WinsolsDifNight / HalfTermLeng) / 2) + 11) % 12.1)
                 // 順序不一樣！立春1，驚蟄2，清明3，立夏4，芒種5，小暑6，立秋7，白露8，寒露9，立冬10，大雪11，小寒12
-                const JieDifInt = ~~((WinsolsDifNight - (JieNum * 2 + 1) * HalfTermLeng + WinsolsDecimal + Solar) % Solar)
+                const JieDifInt = ~~((WinsolsDifNight - (JieNum * 2 + 1) * HalfTermLeng + WinsolsDeci + Solar) % Solar)
                 if (Type >= 6) {
                     const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekCorr || 0)) % 7.1)
                     const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionDayCorr || 0)) + 28) % 28.1)
@@ -410,8 +410,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 for (let l = 0; l < 10; l++) { // 8個五行
                     if (WinsolsDifNight >= FiveAccumList[l] && WinsolsDifNight < FiveAccumList[l] + 1) {
                         FiveOrder = l % 8
-                        const FiveDecimal = (WinsolsDifNight - FiveAccumList[l]).toFixed(4).slice(2, 6)
-                        FiveName[i][k] = `<span class='FiveNameSymbol'>` + FiveList2[FiveOrder] + `</span>` + FiveDecimal
+                        const FiveDeci = (WinsolsDifNight - FiveAccumList[l]).toFixed(4).slice(2, 6)
+                        FiveName[i][k] = `<span class='FiveNameSymbol'>` + FiveList2[FiveOrder] + `</span>` + FiveDeci
                         break
                     }
                 }
@@ -419,8 +419,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     for (let m = HexagramOrder; m < 80; m++) {
                         if (WinsolsDifNight >= HexagramAccumList[m] && WinsolsDifNight < HexagramAccumList[m] + 1) {
                             HexagramOrder = m % (Hexagram64List === Hexagram64ListA ? 64 : 60)
-                            const HexagramDecimal = (WinsolsDifNight - HexagramAccumList[m]).toFixed(4).slice(2, 6)
-                            HexagramName[i][k] = Hexagram64List[HexagramOrder] + `<span class='HexagramSymbol'>` + HexagramSymbolList[HexagramOrder] + `</span>` + HexagramDecimal
+                            const HexagramDeci = (WinsolsDifNight - HexagramAccumList[m]).toFixed(4).slice(2, 6)
+                            HexagramName[i][k] = Hexagram64List[HexagramOrder] + `<span class='HexagramSymbol'>` + HexagramSymbolList[HexagramOrder] + `</span>` + HexagramDeci
                             break
                         } else {
                             HexagramName[i][k] = ''

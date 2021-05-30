@@ -76,7 +76,7 @@ export default class Converter extends React.Component {
       <div>
         <h3>月極黃經 ⇒ 極白經、赤經、黃緯</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-8'>月行九道</button><span className='decimal64'>？</span>
+        <button onClick={this.handle} className='button4-8'>月行九道</button><span className='Deci64'>？</span>
         {this.result()}
       </div>
     )

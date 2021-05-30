@@ -71,9 +71,9 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
         a /= gcd
         b /= gcd
     }
-    const Decimal = (M1_1, M2_1) => (BigNumer * M1_1 + SmallNumer * M2_1) / (BigDenom * M1_1 + SmallDenom * M2_1)
+    const Deci = (M1_1, M2_1) => (BigNumer * M1_1 + SmallNumer * M2_1) / (BigDenom * M1_1 + SmallDenom * M2_1)
     while (b1_1 < b) {
-        if (Decimal(M1_1, M2_1) < parseFloat((a / b).toPrecision(14))) { // 棄左行
+        if (Deci(M1_1, M2_1) < parseFloat((a / b).toPrecision(14))) { // 棄左行
             L1 = M1_1
             L2 = M2_1
         } else { // 棄右行

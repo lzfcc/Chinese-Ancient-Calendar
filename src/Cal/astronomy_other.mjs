@@ -20,7 +20,7 @@ export const Deg2Mansion = (MansionAccum, DegAccumList) => {
 export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
-export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDecimal) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
+export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
     const { AutoPara, Type
     } = Bind(CalName)
     const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw
@@ -46,8 +46,8 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
     let MidstarResult = 0
     const LightRange = AutoLightRange(CalName)
-    if (WinsolsDecimal >= 0) { // 一個小坑，四分曆存在WinsolsDecimal===0的情況，所以要加上>=0，只保留undefined
-        const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Rise / 100
+    if (WinsolsDeci >= 0) { // 一個小坑，四分曆存在WinsolsDeci===0的情況，所以要加上>=0，只保留undefined
+        const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
         let MidstarRaw = 0
         if (CalName === 'Dayan') { // 大衍只考慮了昬時距午度
             MidstarRaw = (MansionAccum + (0.5 - Rise + LightRange) * Sidereal) % Sidereal
@@ -94,13 +94,13 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
     return LeapNumTerm
 }
 
-export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => { // 朔小分
+export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 朔小分
     const { AutoPara
     } = Bind(CalName)
     const { Solar } = AutoPara[CalName]
     const Solar25 = Solar / 4
-    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDecimal, CalName).Rise / 100
-    let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName)
+    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDeci, CalName).Rise / 100
+    let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName)
     Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(CalName)
     let standard = 0.75
@@ -121,7 +121,7 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
     }
     let NewmPlus = 0
     let Print = ''
-    if (Decimal >= standard) {
+    if (Deci >= standard) {
         NewmPlus = 1
         Print = `<span class='NewmPlus'>+</span>`
     }
@@ -129,18 +129,18 @@ export const AutoNewmPlus = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) =>
 }
 // console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
-export const AutoSyzygySub = (Decimal, WinsolsDifRaw, WinsolsDecimal, CalName) => {
+export const AutoSyzygySub = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => {
     const { Type
     } = Bind(CalName)
     const LightRange = AutoLightRange(CalName)
-    const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDecimal, CalName).Rise / 100
+    const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
     let standard = Rise - LightRange
     if (Type >= 8 || CalName === 'Qintian') {
         standard = Rise
     }
     let SyzygySub = 0
     let Print = ''
-    if (Decimal < standard) { // 晨前刻、晨初餘數
+    if (Deci < standard) { // 晨前刻、晨初餘數
         SyzygySub = -1
         Print = `<span class='NewmPlus'>-</span>`
     }

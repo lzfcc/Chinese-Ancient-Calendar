@@ -156,7 +156,7 @@ export const Interpolate1_big = (n, Initial) => {
 // console.log(Interpolate1_big(4.000001, 4, '27,64,125,216,343').Print)
 // console.log(Interpolate1_big(4.000001, 3, '25791，27341，28910，30499，32109').Print)
 // 算出來差分之後，求y。爲了節省算力。delta由低次到高次。
-export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用decimal.js
+export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用Deci.js
     delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length
     const tmp = []
@@ -194,7 +194,7 @@ export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一�
 // 關鍵：tmp
 // y=Σ(n,1) yiLi
 // Li=Π(n,j=1,j≠i) (x-xj)/(xi-xj)
-export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用decimal.js
+export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用Deci.js
     Initial = Initial.split(/;|,|，|。|；|｜| /)
     const x = []
     const y = []

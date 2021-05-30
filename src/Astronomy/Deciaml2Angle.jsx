@@ -122,7 +122,7 @@ export default class Converter extends React.Component {
       <div>
         <h3>任意時刻太陽高度、方位角、晷長</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-1'>太強了</button><span className='decimal64'>.64</span>
+        <button onClick={this.handle} className='button4-1'>太強了</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     )

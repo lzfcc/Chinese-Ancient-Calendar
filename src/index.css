@@ -455,7 +455,7 @@ tr.SyzygyScPrint {
   border-top: 2px solid var(--gray);
 }
 
-tr.SyzygyDecimalPrint {
+tr.SyzygyDeciPrint {
   border-bottom: 2px solid var(--gray);
 }
 
@@ -782,7 +782,7 @@ hr {
   background: var(--black)
 }
 
-.decimal64 {
+.Deci64 {
   margin: 0 .75em;
   padding: .2em .3em;
   border-radius: .5em;

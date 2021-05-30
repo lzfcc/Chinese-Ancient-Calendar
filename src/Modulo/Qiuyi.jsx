@@ -61,7 +61,7 @@ export default class a extends React.Component {
         {this.input()}
         <button onClick={this.handle} className="button4-2">
           秦九韶再世
-        </button><span className="decimal64">.64</span>
+        </button><span className="Deci64">.64</span>
         {this.result()}
       </div>
     );

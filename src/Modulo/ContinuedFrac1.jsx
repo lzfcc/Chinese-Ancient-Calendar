@@ -14,9 +14,9 @@ export default class a extends React.Component {
       <span className='year-select width4'>
         <span>小數</span>
         <input
-          value={this.state.Decimal}
+          value={this.state.Deci}
           onChange={e => {
-            this.setState({ Decimal: e.currentTarget.value });
+            this.setState({ Deci: e.currentTarget.value });
           }}
         />
       </span>
@@ -25,7 +25,7 @@ export default class a extends React.Component {
 
   handle() {
     try {
-      const { ans, step, ansPrint } = ContinuedFrac1(this.state.Decimal)
+      const { ans, step, ansPrint } = ContinuedFrac1(this.state.Deci)
       this.setState({ output1: ansPrint, output2: step, outputContinuedFrac13: ans })
     } catch (e) {
       alert(e.message)

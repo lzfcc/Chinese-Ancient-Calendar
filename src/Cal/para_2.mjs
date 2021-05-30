@@ -595,7 +595,7 @@ export default {
         Node: 27 + 2247.4277 / 10590,
         SunLimitYang: 4200, // 陽曆食限
         SunLimitYin: 7000, // 陰曆食限
-        MoonLimit1:3200,
+        MoonLimit1: 3200,
         OriginAd: 1024 - 97556340,
         CloseOriginAd: 1024, // 天聖二年甲子
         // JdOrigin: 2095058.6586 - 97556340 * (365 + 2590 / 10590),
@@ -681,6 +681,7 @@ export default {
         // Node: 27 + 2551.9944 / 12030, // 交終分327361.9944 朔差日2+3831.0056/12030。從各方面來看，這個數字都沒錯，爲何入交日差了那麼多？？     
         SunLimitYang: 4900,  // 定法490
         SunLimitYin: 7900, // 定法790
+        MoonLimit1: 3700,
         OriginAd: 1092 - 5944808,
         CloseOriginAd: 1092, // 元祐七年壬申
         WeekCorr: -1, // 6
@@ -729,7 +730,7 @@ export default {
         Node: 27 + 1547.0880 / 7290, // 27.21222
         SunLimitYang: 3400,
         SunLimitYin: 4300, // 定法430
-        MoonLimit1:2400, // 月全食限
+        MoonLimit1: 2400, // 月全食限
         MoonLimit2: 6800, // 月食限，定法440 
         OriginAd: 1100 - 28613460,
         CloseOriginAd: 1100, // 元符三年庚辰。自大觀元年頒用

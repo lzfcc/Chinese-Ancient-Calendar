@@ -48,7 +48,7 @@ export default function CalQuar(CalName, year) {
     const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsWinsolsDif || 0) + (WinsolsCorr || 0) // 冬至積日
     const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
     const OriginAccum = WinsolsAccumRaw - (WinsolsWinsolsDif || 0) // 曆元積日
-    const WinsolsDecimal = WinsolsAccumRaw - ~~WinsolsAccumRaw
+    const WinsolsDeci = WinsolsAccumRaw - ~~WinsolsAccumRaw
     const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
     const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
     const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - ~~(BuYear * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
@@ -110,19 +110,19 @@ export default function CalQuar(CalName, year) {
     const NewmInt = []
     const NewmAvgSc = []
     const NewmWinsolsDifRaw = [] // 朔距冬至日數
-    const NewmAvgDecimal = []
+    const NewmAvgDeci = []
     const NewmEqua = []
     const SyzygyAvgRaw = []
     const SyzygyAvgMod = []
     const SyzygyOrderMod = []
     let SyzygySc = []
-    const SyzygyDecimal = []
+    const SyzygyDeci = []
     for (let i = 0; i <= 14; i++) { // 本來是1
         NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + (WinsolsCorr || 0)).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
         NewmInt[i] = ~~NewmAvgRaw[i]
         NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]
-        NewmAvgDecimal[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
+        NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmWinsolsDifRaw[i] = NewmAvgBare[i] - WinsolsAccumRaw
         if (MansionRaw) {
             NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
@@ -132,7 +132,7 @@ export default function CalQuar(CalName, year) {
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
         SyzygyOrderMod[i] = ~~SyzygyAvgMod[i]
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]
-        SyzygyDecimal[i] = (SyzygyAvgMod[i] - SyzygyOrderMod[i]).toFixed(4).slice(2, 6)
+        SyzygyDeci[i] = (SyzygyAvgMod[i] - SyzygyOrderMod[i]).toFixed(4).slice(2, 6)
     }
     // 月食
     let EcliAccum = 0
@@ -152,7 +152,7 @@ export default function CalQuar(CalName, year) {
     const TermOrderMod = []
     const TermSc = []
     const TermName = []
-    const TermDecimal = []
+    const TermDeci = []
     const TermEqua = []
     const TermMidstar = []
     // const TermJd = []
@@ -164,10 +164,10 @@ export default function CalQuar(CalName, year) {
             TermOrderMod[i] = ~~TermAvgMod[i]
             TermName[i] = TermList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
+            TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermMidstar[i] = Func.MidstarResult
             }
@@ -180,10 +180,10 @@ export default function CalQuar(CalName, year) {
             TermOrderMod[i] = ~~TermAvgMod[i]
             TermName[i] = TermList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
+            TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermMidstar[i] = Func.MidstarResult
             }
@@ -196,7 +196,7 @@ export default function CalQuar(CalName, year) {
         }
         TermName[LeapNumTerm + 1] = '无'
         TermSc[LeapNumTerm + 1] = ''
-        TermDecimal[LeapNumTerm + 1] = ''
+        TermDeci[LeapNumTerm + 1] = ''
         if (MansionRaw) {
             TermEqua[LeapNumTerm + 1] = ''
             TermMidstar[LeapNumTerm + 1] = ''
@@ -209,10 +209,10 @@ export default function CalQuar(CalName, year) {
             TermOrderMod[i] = ~~TermAvgMod[i]
             TermName[i] = TermList[(i - 1 + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
-            TermDecimal[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
+            TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDecimal)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermMidstar[i] = Func.MidstarResult
             }
@@ -240,9 +240,9 @@ export default function CalQuar(CalName, year) {
     return {
         OriginYear, JiOrder, BuYear, BuScOrder, JupiterSc,
         WinsolsAccumMod, OriginAccum,
-        NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmAvgDecimal,
-        SyzygySc, SyzygyDecimal,
-        TermAvgBare, TermName, TermSc, TermDecimal,
+        NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmAvgDeci,
+        SyzygySc, SyzygyDeci,
+        TermAvgBare, TermName, TermSc, TermDeci,
         LeapSurAvgFix, LeapSurAvgThis, LeapNumOriginLeapSur, LeapNumTerm,
         isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext, NewmStart, NewmEnd, TermStart, TermEnd,
         NewmEqua, TermEqua, TermMidstar

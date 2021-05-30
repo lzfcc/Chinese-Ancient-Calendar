@@ -1,5 +1,5 @@
 import React from "react"
-import { BindClock1 } from "../Cal/time_decimal2clock"
+import { BindClock1 } from "../Cal/time_Deci2clock"
 export default class a extends React.Component {
   constructor(props) {
     super(props)
@@ -57,7 +57,7 @@ export default class a extends React.Component {
         <h3>日分、時刻 ⇒ 辰刻加時</h3>
         {this.input()}
         <button onClick={this.handle} className="button4-1">
-          decimal2clock
+          Deci2clock
         </button>
         {this.result()}
       </div>

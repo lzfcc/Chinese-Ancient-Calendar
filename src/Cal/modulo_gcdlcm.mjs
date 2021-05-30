@@ -31,8 +31,8 @@ export const GcdLcmGroup = function () {
     // for (let m = 1; m < InputRaw.length; m++) { // 處理成一個字符串傳給轉整數函數
     //     InputRaw[m] = InputRaw[m - 1] + ',' + InputRaw[m]
     // }
-    // const Input = Decimal2Int(InputRaw[InputRaw.length - 1]).Int
-    // const portion = Decimal2Int(InputRaw[InputRaw.length - 1]).portion
+    // const Input = Deci2Int(InputRaw[InputRaw.length - 1]).Int
+    // const portion = Deci2Int(InputRaw[InputRaw.length - 1]).portion
     let lcm = big(InputRaw[0])
     let gcd = big(InputRaw[0])
     for (let k = 0; k < InputRaw.length - 1; k++) {

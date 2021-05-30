@@ -8,34 +8,34 @@ import {
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDecimalPrint, NewmDecimal3Print, NewmDecimal2Print, NewmDecimal1Print, NewmEquaPrint,
-        SyzygyScPrint, SyzygyDecimalPrint, TermNamePrint,
-        TermAcrScPrint, TermAcrDecimalPrint, TermScPrint, TermDecimalPrint, TermEquaPrint, TermMidstarPrint,
+        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint,
+        SyzygyScPrint, SyzygyDeciPrint, TermNamePrint,
+        TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermMidstarPrint,
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
     if (NewmScPrint.length > 0) {
         Print += '**定朔** ' + NewmScPrint.join(' ') + `\n`
-        if (NewmDecimal3Print.length > 0) {
-            Print += '**三次** ' + NewmDecimal3Print.join(' ') + `\n`
+        if (NewmDeci3Print.length > 0) {
+            Print += '**三次** ' + NewmDeci3Print.join(' ') + `\n`
         }
-        if (NewmDecimal2Print.length > 0) {
-            Print += '**二次** ' + NewmDecimal2Print.join(' ') + `\n`
+        if (NewmDeci2Print.length > 0) {
+            Print += '**二次** ' + NewmDeci2Print.join(' ') + `\n`
         }
-        if (NewmDecimal1Print.length > 0) {
-            Print += '**線性** ' + NewmDecimal1Print.join(' ') + `\n`
+        if (NewmDeci1Print.length > 0) {
+            Print += '**線性** ' + NewmDeci1Print.join(' ') + `\n`
         }
-        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + `\n`
+        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDeciPrint.join(' ') + `\n`
     } else {
-        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDecimalPrint.join(' ') + `\n`
+        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDeciPrint.join(' ') + `\n`
     }
     if ((NewmEquaPrint || []).length > 0) {
         Print += '**赤度** ' + NewmEquaPrint.join(' ') + `\n`
     }
-    Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDecimalPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
-    Print += '**平氣** ' + TermScPrint.join(' ') + '\n**分** ' + TermDecimalPrint.join(' ') + `\n`
+    Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDeciPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
+    Print += '**平氣** ' + TermScPrint.join(' ') + '\n**分** ' + TermDeciPrint.join(' ') + `\n`
     if (TermAcrScPrint.length > 0) {
-        Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDecimalPrint.join(' ') + `\n`
+        Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDeciPrint.join(' ') + `\n`
     }
     if ((TermMidstarPrint || []).length > 0) {
         Print += '**氣赤**' + TermEquaPrint.join(' ') + `\n`

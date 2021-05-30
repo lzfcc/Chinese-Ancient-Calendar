@@ -60,7 +60,7 @@ export default class Equa extends React.Component {
       <div>
         <h3>隙積術　芻童垛</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>沈括</button><span className='decimal64'>.64</span>
+        <button onClick={this.handle} className='button4-3'>沈括</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     );

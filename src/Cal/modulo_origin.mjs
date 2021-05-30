@@ -8,7 +8,7 @@ import {
     GcdLcm, GcdLcmGroup, FracLcm1
 } from './modulo_gcdlcm.mjs'
 import {
-    isSame, Frac2FalseFrac, Decimal2Int
+    isSame, Frac2FalseFrac, Deci2Int
 } from './equa_math.mjs'
 // const pi = big.acos(-1).toString()
 // console.log(pi)
@@ -24,8 +24,8 @@ export const Sunzi = function () {
     for (let m = 1; m < InputRaw.length; m++) { // 處理成一個字符串傳給轉整數函數
         InputRaw[m] = InputRaw[m - 1] + ',' + InputRaw[m]
     }
-    const Input = Decimal2Int(InputRaw[InputRaw.length - 1]).Int
-    const portion = Decimal2Int(InputRaw[InputRaw.length - 1]).portion
+    const Input = Deci2Int(InputRaw[InputRaw.length - 1]).Int
+    const portion = Deci2Int(InputRaw[InputRaw.length - 1]).portion
     const i = Input.length
     if (i % 2 === 1) {
         throw (new Error('[大衍總數] 參數數量應爲偶數！' + Input[0] + ', ' + Input[1]))

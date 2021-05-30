@@ -129,7 +129,7 @@ export default class Equa extends React.Component {
       <div>
         <h3>二分迭代法</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-6'>解</button><span className='decimal64'>.64</span>
+        <button onClick={this.handle} className='button4-6'>解</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     );

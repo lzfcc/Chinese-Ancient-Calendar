@@ -205,8 +205,8 @@ const Refraction = h => {
 }
 
 // 求眞太陽高度角、天頂距
-const zAcrConvert = (Decimal, Lati, f) => { // 日分，赤緯radius，緯度radius
-    const v = d2r(big(big(Decimal).sub(0.5)).mul(360)) // 時角radius
+const zAcrConvert = (Deci, Lati, f) => { // 日分，赤緯radius，緯度radius
+    const v = d2r(big(big(Deci).sub(0.5)).mul(360)) // 時角radius
     let a = f.sin().mul(Lati.sin()).add(f.cos().mul(Lati.cos()).mul(v.cos())).asin() // 太陽高度角radius
     const zAcr = big(pi.div(2)).sub(a) // 眞天頂距radius
     return {
@@ -220,13 +220,13 @@ export const Deciaml2Angle = (f, h1, m1, s1, WinsolsDifInt, h, m, s, year, heigh
     WinsolsDifInt = parseInt(WinsolsDifInt) // 距年前冬至整數日數，冬至當日爲0
     year = Number(year) // 那一年
     const Solar = ConstWest(year).Solar
-    const Decimal1 = big(h1).div(24).add(big(m1).div(1440)).add(big(s1).div(86400)).toNumber() // 冬至
-    const Decimal = big(h).div(24).add(big(m).div(1440)).add(big(s).div(86400)).toNumber() // 所求
-    WinsolsDifInt += Decimal - Decimal1
+    const Deci1 = big(h1).div(24).add(big(m1).div(1440)).add(big(s1).div(86400)).toNumber() // 冬至
+    const Deci = big(h).div(24).add(big(m).div(1440)).add(big(s).div(86400)).toNumber() // 所求
+    WinsolsDifInt += Deci - Deci1
     const Longi = big(WinsolsDifInt).add(SunAcrVWest(WinsolsDifInt, year).SunDifAccum).mul(360).div(Solar) // 黃經
     const Lati = d2r(big(Longi2LatiWest(Longi, Solar, year).Lati).mul(360).div(Solar))
     // 假設正午時角是0，向西爲正，向東爲負
-    const zAcrFunc = zAcrConvert(Decimal, Lati, f)
+    const zAcrFunc = zAcrConvert(Deci, Lati, f)
     const v = zAcrFunc.v // 時角
     let a = zAcrFunc.a // 太陽高度角
     let b = r2d(Lati.cos().mul(v.sin()).div(a.cos()).asin()) // 太陽方位角
@@ -354,7 +354,7 @@ const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
 // console.log(MoonLatiWest(6, 0, 360, 1000))
 
 // 下面這個加上了日躔。藤豔輝《宋代朔閏與交食研究》頁90,106
-export const EcliWest = (NodeAccum, AnomaAccum, Decimal, WinsolsDif, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
+export const EcliWest = (NodeAccum, AnomaAccum, Deci, WinsolsDif, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
     const ConstWestFunc = ConstWest(year)
     const Solar = ConstWestFunc.Solar
     f = d2r(f)
@@ -365,7 +365,7 @@ export const EcliWest = (NodeAccum, AnomaAccum, Decimal, WinsolsDif, f, year) =>
     SunV *= 360 / Solar
     MoonV *= 360 / Solar
     const d = Longi2LatiWest(Longi, Solar, year).d // 赤緯radius
-    const zAcrFunc = zAcrConvert(Decimal, big(d), f)
+    const zAcrFunc = zAcrConvert(Deci, big(d), f)
     // const zAcr = r2d(zAcrFunc.zAcr)
     // if (zAcr.gt(90)) { // 太陽落山
     //     return 0

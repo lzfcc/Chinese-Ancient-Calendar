@@ -145,7 +145,7 @@ export default (CalName, year) => {
         LeapSurAvgPrev = parseFloat(((AccumLeapPrev % Lunar + Lunar) % Lunar).toPrecision(14))
         LeapSurAvgNext = parseFloat(((AccumLeapNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
-    const WinsolsDecimal = OriginAccum - Math.floor(OriginAccum)
+    const WinsolsDeci = OriginAccum - Math.floor(OriginAccum)
     let FirstAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
@@ -221,7 +221,7 @@ export default (CalName, year) => {
         const AvgRaw = []
         const AvgInt = []
         const AvgSc = []
-        const AvgDecimal = []
+        const AvgDeci = []
         const TermAvgRaw = []
         const TermAcrRaw = []
         const TermAcrWinsolsDif = []
@@ -237,10 +237,10 @@ export default (CalName, year) => {
         const AcrRaw = []
         const AcrMod = []
         const Sc = []
-        const Decimal1 = [] // 線性內插
-        const Decimal2 = [] // 二次內插
-        const Decimal3 = [] // 三次內插
-        const Decimal = []
+        const Deci1 = [] // 線性內插
+        const Deci2 = [] // 二次內插
+        const Deci3 = [] // 三次內插
+        const Deci = []
         const WinsolsDifRaw = []
         const AcrWinsolsDifRaw = []
         const Equa = []
@@ -248,7 +248,7 @@ export default (CalName, year) => {
             AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScCorr) % 60) + 60) % 60]
-            AvgDecimal[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
+            AvgDeci[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
             WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
             let Tcorr1 = 0
             if (Anoma) {
@@ -273,20 +273,20 @@ export default (CalName, year) => {
                 AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
                 AcrInt[i] = Math.floor(AcrRaw[i])
                 if (Type <= 4) {
-                    Decimal[i] = AcrRaw[i] - AcrInt[i]
-                    Decimal1[i] = Decimal[i]
+                    Deci[i] = AcrRaw[i] - AcrInt[i]
+                    Deci1[i] = Deci[i]
                 } else if (Type < 11) {
-                    Decimal[i] = AcrRaw[i] - AcrInt[i]
-                    Decimal2[i] = Decimal[i].toFixed(4).slice(2, 6)
+                    Deci[i] = AcrRaw[i] - AcrInt[i]
+                    Deci2[i] = Deci[i].toFixed(4).slice(2, 6)
                     if (Tcorr1) {
-                        Decimal1[i] = AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)
+                        Deci1[i] = AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)
                     }
                 } else if (Type === 11) {
-                    Decimal[i] = AcrRaw[i] - AcrInt[i]
-                    Decimal3[i] = Decimal[i].toFixed(4).slice(2, 6)
+                    Deci[i] = AcrRaw[i] - AcrInt[i]
+                    Deci3[i] = Deci[i].toFixed(4).slice(2, 6)
                 }
             } else {
-                Decimal[i] = AvgDecimal[i]
+                Deci[i] = AvgDeci[i]
             }
             let NewmPlus = 0
             let NewmPlusPrint = ''
@@ -294,7 +294,7 @@ export default (CalName, year) => {
             let SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
-                    const Func = AutoNewmPlus((Decimal1[i] || Decimal[i]), WinsolsDifRaw[i], WinsolsDecimal, CalName) /////進朔/////
+                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), WinsolsDifRaw[i], WinsolsDeci, CalName) /////進朔/////
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
@@ -313,7 +313,7 @@ export default (CalName, year) => {
                     TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif[i]
                 }
             } else {
-                const Func = AutoSyzygySub(Decimal[i], WinsolsDifRaw[i], WinsolsDecimal, CalName) /////退望/////       
+                const Func = AutoSyzygySub(Deci[i], WinsolsDifRaw[i], WinsolsDeci, CalName) /////退望/////       
                 SyzygySub = Func.SyzygySub
                 SyzygySubPrint = Func.Print
             }
@@ -345,13 +345,13 @@ export default (CalName, year) => {
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以
             if (Tcorr1) {
-                Decimal1[i] = Decimal1[i].toFixed(4).slice(2, 6)
+                Deci1[i] = Deci1[i].toFixed(4).slice(2, 6)
             }
             AcrWinsolsDifRaw[i] = WinsolsDifRaw[i] + Tcorr[i]
         }        
         return {
-            AvgSc, Tcorr, AvgDecimal, Int, Raw, Sc, AcrInt, AcrRaw,
-            Decimal, Decimal1, Decimal2, Decimal3,
+            AvgSc, Tcorr, AvgDeci, Int, Raw, Sc, AcrInt, AcrRaw,
+            Deci, Deci1, Deci2, Deci3,
             Equa, TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif,
             /// 交食用到
             NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, WinsolsDifRaw, AcrWinsolsDifRaw
@@ -362,23 +362,23 @@ export default (CalName, year) => {
     const {
         Tcorr: NewmTcorr,
         AvgSc: NewmAvgSc,
-        AvgDecimal: NewmAvgDecimal,
+        AvgDeci: NewmAvgDeci,
         Int: NewmInt,
         Raw: NewmRaw,
         AcrInt: NewmAcrInt,
         AcrRaw: NewmAcrRaw,
         Sc: NewmSc,
-        Decimal: NewmDecimal,
-        Decimal1: NewmDecimal1,
-        Decimal2: NewmDecimal2,
-        Decimal3: NewmDecimal3,
+        Deci: NewmDeci,
+        Deci1: NewmDeci1,
+        Deci2: NewmDeci2,
+        Deci3: NewmDeci3,
         Equa: NewmEqua,
         TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif
     } = Newm
     const {
         Sc: SyzygySc,
-        Decimal: SyzygyDecimal,
-        AvgDecimal: SyzygyAvgDecimal,
+        Deci: SyzygyDeci,
+        AvgDeci: SyzygyAvgDeci,
     } = Syzygy
     let LeapSurAcrThis = 0
     if (ZhangRange) {
@@ -421,8 +421,8 @@ export default (CalName, year) => {
     }
     return {
         LeapLimit, OriginYear, JiYear, JiScOrder, OriginAccum, AccumPrint,
-        NewmAvgSc, NewmAvgDecimal,
-        NewmSc, NewmInt, NewmRaw, NewmAcrRaw, NewmAcrInt, NewmDecimal1, NewmDecimal2, NewmDecimal3,
+        NewmAvgSc, NewmAvgDeci,
+        NewmSc, NewmInt, NewmRaw, NewmAcrRaw, NewmAcrInt, NewmDeci1, NewmDeci2, NewmDeci3,
         SyzygySc,
         TermAvgRaw, TermAcrRaw,
         LeapSurAvgThis, LeapSurAcrThis, LeapNumTerm, isAdvance, isLeapAdvan, isLeapPost, isLeapThis, isLeapPrev, isLeapNext,
@@ -433,12 +433,12 @@ export default (CalName, year) => {
         NewmNodeAccumNight: Newm.NodeAccumNight,
         NewmAnomaAccum: Newm.AnomaAccum,
         NewmAnomaAccumNight: Newm.AnomaAccumNight,
-        NewmDecimal,
+        NewmDeci,
         NewmWinsolsDifRaw: Newm.WinsolsDifRaw,
         NewmAcrWinsolsDifRaw: Newm.AcrWinsolsDifRaw,
         SyzygyNodeAccum: Syzygy.NodeAccum,
         SyzygyAnomaAccum: Syzygy.AnomaAccum,
-        SyzygyDecimal, SyzygyAvgDecimal,
+        SyzygyDeci, SyzygyAvgDeci,
         SyzygyWinsolsDifRaw: Syzygy.WinsolsDifRaw,
         SyzygyAcrWinsolsDifRaw: Syzygy.AcrWinsolsDifRaw,
     }

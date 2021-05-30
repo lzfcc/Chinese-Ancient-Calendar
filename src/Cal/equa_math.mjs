@@ -34,7 +34,7 @@ export const Frac2FalseFrac = FracRaw => {
 }
 // console.log(Frac2FalseFrac('888'))
 
-export const Decimal2Int = function () { // 輸入字符串
+export const Deci2Int = function () { // 輸入字符串
     const Raw = arguments[0].split(/;|,|，|。|；|｜| /)
     let portion = 1
     let Int = []
@@ -59,7 +59,7 @@ export const Decimal2Int = function () { // 輸入字符串
         portion
     }
 }
-// console.log(Decimal2Int('1.1,2.23,3.4,5.555').Int)
+// console.log(Deci2Int('1.1,2.23,3.4,5.555').Int)
 
 // 把一個數字按照幾位分割
 export const SliceNum = (Input, num) => { // a：小數點前，b：小數點後，c：并之
