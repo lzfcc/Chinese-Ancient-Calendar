@@ -325,6 +325,7 @@ export default {
         SunLimitYang: 2640, // 陽曆食限
         SunLimitYin: 6060,
         MoonLimit1: 2147, // 月全食限
+        MoonLimitDenom: 506,
         OriginAd: 822 - 7070138, // 長慶二年壬寅
         // JdOrigin: 2021279.2607 - 7070138 * (365 + 2055 / 8400),
         OriginYearSc: 1, // 上元甲子
@@ -449,9 +450,13 @@ export default {
         Anoma: 27 + 5546.6210 / 10002, // 
         AnomaNumer: 55120.1242, // 離總，5倍！
         Node: 27 + 2122.6995 / 10002, // 我自己湊出來的，正好。校勘記「以應天元法乘正交三百六十三度，加小餘八千二百八十三，得三百六十三萬九千九，以五除之，得七十二萬七千八百一，餘四分；再以四分化爲四百秒，加秒七，得四百七秒，以五除之，得秒八十一又十分之四秒。此處“七十一萬七千八百一”應作“七十二萬七千八百一”。」
+        SunLimitYang: 420,
+        SunLimitYin: 960,
+        MoonLimit1: 340,
+        MoonLimit2: 1550, // 不偏食限1550，必偏食限900
         // NodeNumer:727801.82, // 交總
         // 初準16641中準18191末準1550
-        OriginAd: 962 - 4825558, //
+        OriginAd: 962 - 4825558,
         CloseOriginAd: 962, // 建隆三年壬戌
         // JdOrigin: 2072413.5084 - 4825558 * (365 + 2445 / 10002),
         OriginYearSc: 1, // 上元甲子
@@ -462,7 +467,7 @@ export default {
         SunAcrAvgDifList: [7142, 5951, 4762, 3571, 2143, 714, -714, -2143, -3571, -4762, -5951, -7142, -7142, -5951, -4762, -3571, -2143, -714, 714, 2143, 3571, 4762, 5951, 7142, 7142],
         SunTcorrList: [-20, 529, 975, 1335, 1606, 1771, 1819, 1780, 1605, 1350, 995, 541, 5, -549, -985, -1346, -1611, -1780, -1831, -1786, -1621, -1357, -988, -550, -20, 529], // 先後積=盈縮準-常數
         AcrTermList: [0, 14.504515, 29.128006, 43.870521, 58.73205, 73.736303, 88.883475, 104.1732, 119.6061, 135.181515, 150.8763, 166.689721, 182.62235, 198.554903, 214.368318, 230.062909, 245.6386, 261.071025, 276.361206, 291.508321, 306.512612, 321.374103, 336.116418, 350.740109, 365.2445, 365 + 2445 / 10002 + 14.504515], // 原來是336.166418我改了
-        MoonAcrVList: [1210, 1227, 1245, 1262, 1281, 1301, 1321, 1345, 1369, 1390, 1415, 1435, 1456, 1470, 1470, 1453, 1432, 1406, 1380, 1358, 1337, 1325, 1294, 1274, 1256, 1240, 1225, 1210], // 離分.度母10000
+        MoonAcrVList: [1210, 1227, 1245, 1262, 1281, 1301, 1321, 1345, 1369, 1390, 1415, 1435, 1456, 1470, 1470, 1453, 1432, 1406, 1380, 1358, 1337, 1325, 1294, 1274, 1256, 1240, 1225, 1210], // 28個。離分.度母10000
         MoonTcorrList: [0, -988, -1852, -2574, -3135, -3526, -3776, -3831, -3732, -3465, -3300, -2424, -1659, -769, 0, 988, 1852, 2564, 3116, 3508, 3740, 3795, 3697, 3429, 2993, 2397, 1649, 769], // 先後積
         // MoonTcorrDifListA: [988, 864, 722, 561, 391, 250, 55, -99, -267, -165, -876, -765, -890],
         // MoonTcorrDifListB: [-988, -864, -712, -552, -392, -232, -55, 98, 268, 436, 596, 748, 880],
@@ -488,6 +493,10 @@ export default {
         Node: 27 + 623.9455 / 2940,
         // 初限36594中限40002末限3408
         YinyangCorr: -1,
+        SunLimitYang: 940,
+        SunLimitYin: 2130,
+        MoonLimit1: 752,
+        MoonLimit2: 3408,
         OriginAd: 981 - 30543977,
         CloseOriginAd: 981, // 太平興國六年辛巳
         // JdOrigin: 2079353.1327 - 30543977 * (365 + 72 / 294),
@@ -553,7 +562,8 @@ export default {
         Node: 27 + 2143.2279 / 10100,
         SunLimitYang: 3174, // 陽限
         SunLimitYin: 7286, // 陰限
-        MoonLimitTotal: 2582, // 月食旣限。月食分法912.5
+        MoonLimit1: 2582, // 月食旣限。月食分法912.5
+        MoonLimit2: 11707,
         OriginAd: 1001 - 716497,
         CloseOriginAd: 1001, // 咸平四年辛丑
         // JdOrigin: 2086658.0337 - 716497 * (365 + 2470 / 10100), // 
@@ -596,6 +606,8 @@ export default {
         SunLimitYang: 4200, // 陽曆食限
         SunLimitYin: 7000, // 陰曆食限
         MoonLimit1: 3200,
+        MoonLimit2: 10200,
+        MoonLimitDenom: 700,
         OriginAd: 1024 - 97556340,
         CloseOriginAd: 1024, // 天聖二年甲子
         // JdOrigin: 2095058.6586 - 97556340 * (365 + 2590 / 10590),
@@ -682,6 +694,8 @@ export default {
         SunLimitYang: 4900,  // 定法490
         SunLimitYin: 7900, // 定法790
         MoonLimit1: 3700,
+        MoonLimit2: 11700,
+        MoonLimitDenom: 800,
         OriginAd: 1092 - 5944808,
         CloseOriginAd: 1092, // 元祐七年壬申
         WeekCorr: -1, // 6
@@ -731,7 +745,8 @@ export default {
         SunLimitYang: 3400,
         SunLimitYin: 4300, // 定法430
         MoonLimit1: 2400, // 月全食限
-        MoonLimit2: 6800, // 月食限，定法440 
+        MoonLimit2: 6800, // 月食限
+        MoonLimitDenom: 440,
         OriginAd: 1100 - 28613460,
         CloseOriginAd: 1100, // 元符三年庚辰。自大觀元年頒用
         // JdOrigin: 2122816.6605 - 28613460 * (365 + 1776 / 7290),
@@ -763,7 +778,7 @@ export default {
         SolarNumer: 2531138, // 歲週
         Sidereal: 365 + 1776.87 / 6930, // 約分365.2564，三曆同
         SiderealNumer: 2531226.87, // 週天分。歲差88.87
-        Lunar: 29 + 3677 / 6930, // 
+        Lunar: 29 + 3677 / 6930,
         LunarNumer: 204647, // 朔實
         Denom: 6930, // 元法
         Anoma: 27 + 3843.2563 / 6930, // 轉週日
@@ -771,6 +786,8 @@ export default {
         Node: 27 + 1470.6457 / 6930,
         SunLimitYang: 2745, // 這三曆定法都是1/10
         SunLimitYin: 4585,
+        MoonLimit1: 2300, // 統元月食限我自己補的
+        MoonLimit2: 6500,
         OriginAd: 1135 - 94251591,
         CloseOriginAd: 1135, // 紹興五年乙卯
         // JdOrigin: 2135600.1909 - 94251591 * (365 + 1688 / 6930),
@@ -802,8 +819,9 @@ export default {
         Node: 27 + 6366.6034 / 30000,
         SunLimitYang: 14400,
         SunLimitYin: 18000,
-        MoonLimit2: 29100, // 乾道又有月食限
-        MoonLimitTotal: 11100, // 月食旣限
+        MoonLimit1: 11100, // 月食旣限
+        MoonLimit2: 29100, // 「乾道又有月食限」
+        MoonLimitDenom: 1800,
         OriginAd: 1167 - 91645823,
         CloseOriginAd: 1167, // 乾道三年丁亥
         // JdOrigin: 2147287.9828 - 91645823 * (365 + 7308 / 30000),
@@ -835,8 +853,9 @@ export default {
         Node: 27 + 1196.9543 / 5640,
         SunLimitYang: 2630,
         SunLimitYin: 3240,
+        MoonLimit1: 1900,
         MoonLimit2: 5460,
-        MoonLimitTotal: 1900,
+        MoonLimitDenom: 356,
         OriginAd: 1176 - 52421972,
         CloseOriginAd: 1176, // 淳熙三年丙申
         // JdOrigin: 2150575.1681 - 52421972 * (365 + 1374 / 5640),
@@ -867,6 +886,7 @@ export default {
         Node: 27 + 8213.2140 / 38700,
         SunLimitYang: 18000,
         SunLimitYin: 22500,
+        MoonLimit1: 12700, // 月食旣限闕
         MoonLimit2: 36000,
         OriginAd: 1191 - 25494767,
         CloseOriginAd: 1191, // 紹熙二年辛亥
@@ -907,6 +927,9 @@ export default {
         CloseOriginAd: 1194, // 紹熙五年甲寅
         SunLimitYang: 5680,
         SunLimitYin: 7100,
+        MoonLimit1: 3900,
+        MoonLimit2: 11200,
+        MoonLimitDenom: 730,
         OriginYearSc: 1, // 上元甲子
         OriginMonNum: 0,
         WeekCorr: -2, // 5
@@ -937,6 +960,9 @@ export default {
         NodeNumer: 459886.4825,
         SunLimitYang: 7890,
         SunLimitYin: 9740,
+        MoonLimit1: 5530, // 闕旣限
+        MoonLimit2: 15780,
+        MoonLimitDenom: 1052,
         OriginAd: 1207 - 7848183,
         CloseOriginAd: 1207, // 開禧三年丁卯
         // JdOrigin: 2161897.6754 - 7848183 * (365 + 4108 / 16900),
@@ -962,6 +988,10 @@ export default {
         Denom: 3530,
         Anoma: 27 + 1957.7538 / 3530,
         Node: 27 + 749.1341 / 3530,
+        SunLimitYang: 1670, // 這四個食限都是補的
+        SunLimitYin: 2090,
+        MoonLimit1: 1150,
+        MoonLimit2: 3300,
         OriginAd: 1250 - 120267646,
         CloseOriginAd: 1250, // 淳祐十年庚戌造，行二年，那就是1251開始
         WeekCorr: 0,
@@ -980,6 +1010,10 @@ export default {
         Denom: 9740,
         Anoma: 27 + 5401.8662 / 9740,
         Node: 27 + 2067.1124 / 9740,
+        SunLimitYang: 4500, // 這四個食限都是補的
+        SunLimitYin: 5800,
+        MoonLimit1: 3300,
+        MoonLimit2: 9200,
         OriginAd: 1250 - 11356126,
         CloseOriginAd: 1253, // 寶祐元年造
         OriginMonNum: 0,
@@ -1004,6 +1038,9 @@ export default {
         NodeNumer: 201914.7051, // 交終分
         SunLimitYang: 3470,
         SunLimitYin: 4280,
+        MoonLimit1: 2440, // 原文4630
+        MoonLimit2: 6940,
+        MoonLimitDenom: 463,
         OriginAd: 1271 - 71758147,
         CloseOriginAd: 1271, // 咸淳七年辛未
         // JdOrigin: 2185273.1478 - 71758147 * (365 + 1801 / 7420),
@@ -1029,6 +1066,10 @@ export default {
         Denom: 7060,
         Anoma: 27 + 3915.4202 / 7060,
         Node: 27 + 1498.0961 / 7060,
+        SunLimitYang: 3250, // 這四個食限都是補的
+        SunLimitYin: 4200,
+        MoonLimit1: 2400,
+        MoonLimit2: 6660,
         AcrTermList: [0, 14.496949, 29.126898, 43.888547, 58.780596, 73.801745, 88.950694, 104.238643, 119.654392, 135.199241, 150.87449, 166.681439, 182.621388, 198.561337, 214.368286, 230.043535, 245.588384, 261.004133, 276.292082, 291.441031, 306.46218, 321.354229, 336.115878, 350.745827, 365.242776],
         OriginAd: -73145880,
         CloseOriginAd: 1277,

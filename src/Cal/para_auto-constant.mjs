@@ -1,5 +1,26 @@
 import { Bind } from './bind.mjs'
 
+export const AutoQuar = CalName => { // 盈縮限
+    let QuarA = 0
+    let QuarB = 0
+    if (CalName === 'Yitian') {
+        QuarA = 897699.5 / 10100
+        QuarB = 946785.5 / 10100
+    } else if (['Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
+        QuarA = 88 + 10958 / 12030
+        QuarB = 93 + 8552 / 12030
+    } else if (['Shoushi', 'Datong'].includes(CalName)) {
+        QuarA = 88.909225
+        QuarB = 93.712025
+    } else {
+        const { AutoPara } = Bind(CalName)
+        const { Solar, SolarRaw, AcrTermList } = AutoPara[CalName]
+        QuarA = AcrTermList[6]
+        QuarB = (Solar || SolarRaw) / 2 - QuarA
+    }
+    return { QuarA, QuarB }
+}
+
 export const AutoSolar = CalName => {
     let Solar = 0
     if (CalName === 'Chongxuan') {

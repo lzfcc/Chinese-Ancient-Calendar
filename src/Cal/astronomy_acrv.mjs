@@ -1,7 +1,7 @@
 import { Bind } from './bind.mjs'
 import { SunAcrVWest, MoonAcrVWest } from './astronomy_west.mjs'
 import { Interpolate1, Interpolate3 } from './equa_sn.mjs'
-import { AutoMoonAvgV, AutoMoonTcorrDif, AutoNodePortion } from './para_auto-constant.mjs'
+import { AutoMoonAvgV, AutoMoonTcorrDif, AutoNodePortion, AutoQuar } from './para_auto-constant.mjs'
 
 // 大衍用不等間距二次內插，宣明也是。崇玄暫且用平氣。計算盈縮積
 export const SunDifAccumTable = (WinsolsDif, CalName) => {
@@ -145,14 +145,15 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
     let Quadrant = 0
     let T = 0
     const Solar50 = Solar / 2
+    const { QuarA, QuarB } = AutoQuar(CalName)
     if (Type === 11) {
-        if (WinsolsDif <= 88.909225) {
+        if (WinsolsDif <= QuarA) {
             const T = WinsolsDif
             SunDifAccum = (DeltaSunA1 * T - DeltaSunA2 * (T ** 2) - DeltaSunA3 * (T ** 3)) / 10000 // 盈縮差
         } else if (WinsolsDif <= Solar50) {
             const T = Solar50 - WinsolsDif
             SunDifAccum = (DeltaSunB1 * T - DeltaSunB2 * (T ** 2) - DeltaSunB3 * (T ** 3)) / 10000
-        } else if (WinsolsDif <= Solar50 + 93.712025) {
+        } else if (WinsolsDif <= Solar50 + QuarB) {
             const T = WinsolsDif - Solar50
             SunDifAccum = -(DeltaSunB1 * T - DeltaSunB2 * (T ** 2) - DeltaSunB3 * (T ** 3)) / 10000
         } else {
@@ -162,26 +163,24 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
     } else { // 王榮彬《中國古代曆法的中心差算式之造術原理》
         // const Solar50 = +((Solar / 2).toFixed(4))
         if (['Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
-            let SunDenom = 0
-            const QuadrantA = 88 + 10958 / 12030
-            const QuadrantB = 93 + 8552 / 12030
+            let SunDenom = 0            
             const SunDenomA = 3294
             const SunDenomB = 3659
-            if (WinsolsDif <= QuadrantA) {
-                Quadrant = QuadrantA
+            if (WinsolsDif <= QuarA) {
+                Quadrant = QuarA
                 SunDenom = SunDenomA
                 T = WinsolsDif
             } else if (WinsolsDif <= Solar50) {
-                Quadrant = QuadrantB
+                Quadrant = QuarB
                 SunDenom = SunDenomB
                 T = Solar50 - WinsolsDif
-            } else if (WinsolsDif <= Solar50 + QuadrantB) {
-                Quadrant = QuadrantB
+            } else if (WinsolsDif <= Solar50 + QuarB) {
+                Quadrant = QuarB
                 SunDenom = SunDenomB
                 sign = -1
                 T = WinsolsDif - Solar50
             } else {
-                Quadrant = QuadrantA
+                Quadrant = QuarA
                 SunDenom = SunDenomA
                 sign = -1
                 T = Solar - WinsolsDif
@@ -209,17 +208,15 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
             SunDifAccum = sign * WinsolsDif * (Solar50 - WinsolsDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得爲立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000爲分母。
         } else if (CalName === 'Yitian') {
             const Delta = 24543 / Denom // 盈縮積 // 946785.5=897699.5+24543*2
-            const QuadrantA = 897699.5 / Denom // 限分
-            const QuadrantB = 946785.5 / Denom // 陳美東《崇玄儀天崇天三曆晷長計算法》改正該値
-            Quadrant = QuadrantA
+            Quadrant = QuarA
             T = WinsolsDif
-            if (WinsolsDif <= QuadrantA) {
+            if (WinsolsDif <= QuarA) {
             } else if (WinsolsDif <= Solar50) {
-                Quadrant = QuadrantB
+                Quadrant = QuarB
                 T = Solar50 - WinsolsDif
-            } else if (WinsolsDif <= Solar50 + QuadrantB) {
+            } else if (WinsolsDif <= Solar50 + QuarB) {
                 sign = -1
-                Quadrant = QuadrantB
+                Quadrant = QuarB
                 T = WinsolsDif - Solar50
             } else {
                 sign = -1
@@ -238,28 +235,26 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
 
 const SunTcorrFormula = (WinsolsDif, CalName) => { // 一定程度上適用於崇玄以後
     const { AutoPara } = Bind(CalName)
-    const { SolarRaw, Denom, AcrTermList, SunTcorrList } = AutoPara[CalName]
+    const { SolarRaw, Denom, SunTcorrList } = AutoPara[CalName]
     let { Solar } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     let SunTcorr = 0
     if (SunTcorrList) {
         const Solar50 = Solar / 2
         const Solar25 = Solar / 4
-        const QuadrantA = Solar25
-        const QuadrantB = Solar25
-        // const QuadrantA = AcrTermList[6]
-        // const QuadrantB = Solar50 - QuadrantA
+        const QuarA = Solar25
+        const QuarB = Solar25
         const Delta = SunTcorrList[6] / Denom
-        let Quadrant = QuadrantA
+        let Quadrant = QuarA
         let T = WinsolsDif
         let sign = 1
-        if (WinsolsDif <= QuadrantA) {
+        if (WinsolsDif <= QuarA) {
         } else if (WinsolsDif <= Solar50) {
-            Quadrant = QuadrantB
+            Quadrant = QuarB
             T = Solar50 - WinsolsDif
-        } else if (WinsolsDif <= Solar50 + QuadrantB) {
+        } else if (WinsolsDif <= Solar50 + QuarB) {
             sign = -1
-            Quadrant = QuadrantB
+            Quadrant = QuarB
             T = WinsolsDif - Solar50
         } else {
             sign = -1
