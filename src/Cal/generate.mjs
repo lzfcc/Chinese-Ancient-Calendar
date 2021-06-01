@@ -60,23 +60,41 @@ const b1 = a1 => a1 * (700 / 10200 + 800 / 11700 + 440 / 6800 + 356 / 5460 + 730
 
 const GenAcrV = () => { // 生成殘曆的躔離
     const { AutoPara } = Bind('Tongtian')
-    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Tongtian']
-    const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = AutoPara['Kaixi']
-    const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = AutoPara['Chengtian']
-    const { Denom: Denom4 } = AutoPara['Chunyou']
-    const { Denom: Denom5 } = AutoPara['Huitian']
+    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Qianyuan']
+    // const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = AutoPara['Kaixi']
+    // const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = AutoPara['Chengtian']
+    const { Denom: Denom4 } = AutoPara['Zhidao1']
+    const { Denom: Denom5 } = AutoPara['Zhidao2']
     const SunAcrAvgDif = []
     const SunTcorr = []
-    for (let i = 0; i <= 24; i++) {
-        SunAcrAvgDif[i] = Math.round((SunAcrAvgDifList1[i] + SunAcrAvgDifList2[i] + SunAcrAvgDifList3[i]) / 3)
-    }
-    for (let i = 0; i <= 25; i++) {
-        SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1 + SunTcorrList2[i] / Denom2 + SunTcorrList3[i] / Denom3) / 3) * Denom5)
+    const MoonAcrV = []
+    const MoonTcorr = []
+    const MoonTcorrDif = []
+    // for (let i = 0; i <= 24; i++) {
+    //     // SunAcrAvgDif[i] = Math.round((SunAcrAvgDifList1[i] + SunAcrAvgDifList2[i] + SunAcrAvgDifList3[i]) / 3)
+    //     SunAcrAvgDif[i] = Math.round(10000 * (SunAcrAvgDifList1[i]) / Denom1)
+    // }
+    // for (let i = 0; i <= 25; i++) {
+    //     // SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1 + SunTcorrList2[i] / Denom2 + SunTcorrList3[i] / Denom3) / 3) * Denom5)
+    //     SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1)) * Denom4)
+    // }
+    // for (let i = 0; i <= 28; i++) {
+    //     // MoonAcrV[i] = Math.round((MoonAcrVList1[i] + MoonAcrVList2[i] + MoonAcrVList3[i]) / 3)
+    //     MoonAcrV[i] = Math.round(10000 * MoonAcrVList1[i] / Denom1)
+    // }
+    // for (let i = 0; i <= 27; i++) {
+    //     // MoonTcorr[i] = Math.round(((MoonTcorrList1[i] / Denom1 + MoonTcorrList2[i] / Denom2 + MoonTcorrList3[i] / Denom3) / 3) * Denom5)
+    //     MoonTcorr[i] = Math.round((MoonTcorrList1[i] / Denom1 ) * Denom4)
+    // }
+    for (let i = 0; i <= 29; i++) {
+        // MoonTcorrDif[i] = Math.round(((MoonTcorrDifList1[i] / Denom1 + MoonTcorrDifList2[i] / Denom2 + MoonTcorrDifList3[i] / Denom3) / 3) * Denom4)
+        MoonTcorrDif[i] = Math.round((MoonTcorrDifList1[i] / Denom1) * Denom5)
     }
     return
 }
-const GenMoon248 = (CalName) => { // 欽天月離表
-    const { AutoPara } = Bind(CalName)
+console.log(GenAcrV())
+const GenMoon248 = () => { // 欽天月離表
+    const { AutoPara } = Bind('Chongxuan')
     const { MoonTcorrList: MoonTcorrList1, Denom: Denom1, MoonAcrVList: MoonAcrVList1 } = AutoPara['Wuji']
     const { MoonTcorrList: MoonTcorrList2, Denom: Denom2, MoonAcrVList: MoonAcrVList2 } = AutoPara['Jiyuan']
     let list = []
@@ -117,6 +135,6 @@ const GenMoon248 = (CalName) => { // 欽天月離表
     list2 = list2.flat()
     return
 }
-console.log(GenMoon248('Chongxuan'))
+// console.log(GenMoon248())
 
 

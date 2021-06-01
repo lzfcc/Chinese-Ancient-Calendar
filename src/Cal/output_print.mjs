@@ -64,9 +64,9 @@ const printData = outputFile(1, 1111, 1111, false, [ // mode, YearStart, YearEnd
     // 'Tsrengyuan',
     // 'Xuanming',
     // 'Chongxuan',
-    'Qintian', // 上唐五代系
+    // 'Qintian', // 上唐五代系
     // 'Yingtian',
-    // 'Qianyuan', 
+    'Qianyuan', 
     // 'Zhidao1',
     // 'Zhidao2',
     // 'Yitian', 
@@ -77,7 +77,7 @@ const printData = outputFile(1, 1111, 1111, false, [ // mode, YearStart, YearEnd
     // 'Fengyuan',
     // 'Guantian',
     // 'Zhantian', 
-    'Jiyuan', 
+    // 'Jiyuan', 
     // 'Tongyuan',
     // 'Qiandao', 
     // 'Chunxi', 
