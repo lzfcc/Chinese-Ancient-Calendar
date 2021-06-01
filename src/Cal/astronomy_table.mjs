@@ -42,10 +42,8 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 // }
 
 export const Equa2EclpTable = (LongiRaw, CalName) => {
-    const { AutoPara, Type
-    } = Bind(CalName)
-    let { Sidereal, Solar
-    } = AutoPara[CalName]
+    const { AutoPara, Type } = Bind(CalName)
+    let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || Solar
     let Longi = LongiRaw % (Sidereal / 4)
     if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {

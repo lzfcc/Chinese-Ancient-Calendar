@@ -732,7 +732,6 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     const Solar25 = Solar / 4
     const Solar75 = Solar * 0.75
     const HalfTermLeng = Solar / 24
-    const MoonAvgVDeg = AutoMoonAvgV(CalName)
     const { Tcorr2: AvgTcorr, SunTcorr, MoonTcorr: AvgMoonTcorr, MoonAcrV, NodeTcorr: AvgNodeTcorr
     } = AutoTcorr(AvgAnomaAccum, AvgWinsolsDif, CalName) // 經朔修正    
     const AcrAnomaAccum = (AvgAnomaAccum + AvgTcorr) % Anoma // 定朔入轉
@@ -1106,7 +1105,9 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         TheNodeAccum = AcrNodeAccum // 月食朔入交定日
     }
     let TheNodeDif = NodeAccumHalf2NodeDif(TheNodeAccum % Node50, Node25, Node50) // 交前後分
+    let MoonAvgVDeg = 13.37
     if (CalName === 'Yingtian') { // 應天「分即百除，度即百通」藤豔輝頁117:900合9度，那我這麼算應該沒錯
+        MoonAvgVDeg = AutoMoonAvgV(CalName)
         TheNodeDif = TheNodeDif * MoonAvgVDeg * 100
     } else {
         TheNodeDif *= Denom
@@ -1119,7 +1120,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         if (CalName === 'Yingtian') { // 藤豔輝《宋代》頁116
             if (TheNodeAccum < Node50) {
             } else {
-                let tmp = (0.75 - TotalDeci) * Denom / 5
+                let tmp = (0.75 - TotalDeci) * MoonAvgVDeg * 20
                 if (TotalDeci > 0.5) {
                     tmp /= 4
                 }
@@ -1326,7 +1327,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     return { Magni, status, Last, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
-// console.log(EclipseFormula(13.234249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 1, 'Yingtian'))
+// console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 1, 'Chongtian'))
 
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDifRaw, AvgWinsolsDifRaw, isNewm, CalName, i, Leap) => {
     const { Type } = Bind(CalName)

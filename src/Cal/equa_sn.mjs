@@ -143,13 +143,7 @@ export const Interpolate1_big = (n, Initial) => {
     delta = delta.reverse()
     const delta1 = delta[0] // 一階
     const Print = `Δ = ` + delta + `\nsum (` + n + `) = ` + S.toFixed(10) + (n1 === Number(n) ? `` : `\nsum (` + n1 + `) = ` + S1) + `\nf (` + n + `) = ` + y.toFixed(10) + (n1 === Number(n) ? `` : `\nf (` + n1 + `) = ` + y1)
-    return {
-        Print,
-        S,
-        delta,
-        delta1,
-        y
-    }
+    return { Print, S, delta, delta1, y }
 }
 // console.log(Interpolate1_big(2.115, '27,64,125,216,343').y)
 // console.log(Interpolate1(2.115, '27,64,125,216,343'))
