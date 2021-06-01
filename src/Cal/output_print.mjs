@@ -66,11 +66,11 @@ const printData = outputFile(1, 1111, 1111, false, [ // mode, YearStart, YearEnd
     // 'Chongxuan',
     // 'Qintian', // 上唐五代系
     // 'Yingtian',
-    'Qianyuan', 
+    // 'Qianyuan', 
     // 'Zhidao1',
     // 'Zhidao2',
     // 'Yitian', 
-    // 'Qianxing',
+    'Qianxing',
     // 'Chongtian',
     // 'TaiyiJingyou',
     // 'Mingtian',

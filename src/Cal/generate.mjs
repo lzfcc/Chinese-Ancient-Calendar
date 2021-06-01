@@ -60,35 +60,35 @@ const b1 = a1 => a1 * (700 / 10200 + 800 / 11700 + 440 / 6800 + 356 / 5460 + 730
 
 const GenAcrV = () => { // 生成殘曆的躔離
     const { AutoPara } = Bind('Tongtian')
-    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Qianyuan']
-    // const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = AutoPara['Kaixi']
-    // const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = AutoPara['Chengtian']
-    const { Denom: Denom4 } = AutoPara['Zhidao1']
-    const { Denom: Denom5 } = AutoPara['Zhidao2']
+    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Chongtian']
+    const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = AutoPara['Guantian']
+    const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = AutoPara['Jiyuan']
+    const { Denom: Denom4 } = AutoPara['Fengyuan']
+    const { Denom: Denom5 } = AutoPara['Zhantian']
     const SunAcrAvgDif = []
     const SunTcorr = []
     const MoonAcrV = []
     const MoonTcorr = []
     const MoonTcorrDif = []
-    // for (let i = 0; i <= 24; i++) {
-    //     // SunAcrAvgDif[i] = Math.round((SunAcrAvgDifList1[i] + SunAcrAvgDifList2[i] + SunAcrAvgDifList3[i]) / 3)
-    //     SunAcrAvgDif[i] = Math.round(10000 * (SunAcrAvgDifList1[i]) / Denom1)
-    // }
-    // for (let i = 0; i <= 25; i++) {
-    //     // SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1 + SunTcorrList2[i] / Denom2 + SunTcorrList3[i] / Denom3) / 3) * Denom5)
-    //     SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1)) * Denom4)
-    // }
-    // for (let i = 0; i <= 28; i++) {
-    //     // MoonAcrV[i] = Math.round((MoonAcrVList1[i] + MoonAcrVList2[i] + MoonAcrVList3[i]) / 3)
-    //     MoonAcrV[i] = Math.round(10000 * MoonAcrVList1[i] / Denom1)
-    // }
-    // for (let i = 0; i <= 27; i++) {
-    //     // MoonTcorr[i] = Math.round(((MoonTcorrList1[i] / Denom1 + MoonTcorrList2[i] / Denom2 + MoonTcorrList3[i] / Denom3) / 3) * Denom5)
-    //     MoonTcorr[i] = Math.round((MoonTcorrList1[i] / Denom1 ) * Denom4)
-    // }
+    for (let i = 0; i <= 24; i++) {
+        SunAcrAvgDif[i] = Math.round((SunAcrAvgDifList1[i] + SunAcrAvgDifList3[i]) / 2)
+        // SunAcrAvgDif[i] = Math.round(10000 * (SunAcrAvgDifList1[i]) / Denom1)
+    }
+    for (let i = 0; i <= 25; i++) {
+        SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1 + SunTcorrList3[i] / Denom3) / 2) * Denom4)
+        // SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1)) * Denom4)
+    }
+    for (let i = 0; i <= 28; i++) {
+        MoonAcrV[i] = Math.round((MoonAcrVList1[i] + MoonAcrVList2[i]) / 2)
+        // MoonAcrV[i] = Math.round(10000 * MoonAcrVList1[i] / Denom1)
+    }
+    for (let i = 0; i <= 27; i++) {
+        MoonTcorr[i] = Math.round(((MoonTcorrList1[i] / Denom1 + MoonTcorrList2[i] / Denom2) / 2) * Denom5)
+        // MoonTcorr[i] = Math.round((MoonTcorrList1[i] / Denom1) * Denom4)
+    }
     for (let i = 0; i <= 29; i++) {
-        // MoonTcorrDif[i] = Math.round(((MoonTcorrDifList1[i] / Denom1 + MoonTcorrDifList2[i] / Denom2 + MoonTcorrDifList3[i] / Denom3) / 3) * Denom4)
-        MoonTcorrDif[i] = Math.round((MoonTcorrDifList1[i] / Denom1) * Denom5)
+        MoonTcorrDif[i] = Math.round(((MoonTcorrDifList1[i] / Denom1 + MoonTcorrDifList2[i] / Denom2) / 2) * Denom5)
+        // MoonTcorrDif[i] = Math.round((MoonTcorrDifList1[i] / Denom1) * Denom4)
     }
     return
 }
