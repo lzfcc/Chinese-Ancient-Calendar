@@ -70,8 +70,9 @@ const EclipseTable1 = (NodeAccum, CalName) => {
     if (['Daming', 'Kaihuang'].includes(CalName)) {
         Limit = MoonAvgVDeg * (Lunar - Node) / 2
     }
+    let Magni = 0
     if (NodeDif * MoonAvgVDeg < Limit) {
-        let Magni = 15 - NodeDif * MoonAvgVDeg
+        Magni = 15 - NodeDif * MoonAvgVDeg
         const Func = ExMagni(Magni, Type)
         Magni = Func.Magni
         status = Func.status
@@ -532,7 +533,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalNa
 // console.log(EclipseTable2(14.7, 24, 0.3, 15, 2, 0, 1, 'Huangji').Deci)
 
 const EclipseTable3 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalName) => { // 入交定日，入轉日，定朔分，距冬至日數，月份，閏月序數，朔望，名字。用月份判斷很奇怪，但是沒有證據說是用節氣判斷，皇極有兩條「閏四月內」，那肯定就是月份
-    const { AutoPara } = Bind(CalName)
+    const { AutoPara, Type } = Bind(CalName)
     const { Node, Anoma, Lunar, Solar, Denom, AcrTermList, MoonTcorrList } = AutoPara[CalName]
     let { SunLimitYang, SunLimitYin, MoonLimit2 } = AutoPara[CalName]
     if (SunLimitYang) {

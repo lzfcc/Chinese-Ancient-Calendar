@@ -60,10 +60,10 @@ const b1 = a1 => a1 * (700 / 10200 + 800 / 11700 + 440 / 6800 + 356 / 5460 + 730
 
 const GenAcrV = () => { // 生成殘曆的躔離
     const { AutoPara } = Bind('Tongtian')
-    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Chongtian']
+    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Chongxuan']
     const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = AutoPara['Guantian']
     const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = AutoPara['Jiyuan']
-    const { Denom: Denom4 } = AutoPara['Fengyuan']
+    const { Denom: Denom4 } = AutoPara['Qintian']
     const { Denom: Denom5 } = AutoPara['Zhantian']
     const SunAcrAvgDif = []
     const SunTcorr = []
@@ -75,8 +75,8 @@ const GenAcrV = () => { // 生成殘曆的躔離
         // SunAcrAvgDif[i] = Math.round(10000 * (SunAcrAvgDifList1[i]) / Denom1)
     }
     for (let i = 0; i <= 25; i++) {
-        SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1 + SunTcorrList3[i] / Denom3) / 2) * Denom4)
-        // SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1)) * Denom4)
+        // SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1 + SunTcorrList3[i] / Denom3) / 2) * Denom4)
+        SunTcorr[i] = Math.round(((SunTcorrList1[i] / Denom1)) * Denom4)
     }
     for (let i = 0; i <= 28; i++) {
         MoonAcrV[i] = Math.round((MoonAcrVList1[i] + MoonAcrVList2[i]) / 2)
@@ -92,7 +92,7 @@ const GenAcrV = () => { // 生成殘曆的躔離
     }
     return
 }
-console.log(GenAcrV())
+// console.log(GenAcrV())
 const GenMoon248 = () => { // 欽天月離表
     const { AutoPara } = Bind('Chongxuan')
     const { MoonTcorrList: MoonTcorrList1, Denom: Denom1, MoonAcrVList: MoonAcrVList1 } = AutoPara['Wuji']
