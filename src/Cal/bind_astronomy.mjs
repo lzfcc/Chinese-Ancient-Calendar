@@ -172,13 +172,7 @@ export const AutoEqua2Eclp = (LongiRaw, CalName) => {
         Eclp2EquaLati = Func.Lati
     }
     Eclp2EquaDif = Eclp2Equa ? (Eclp2EquaDif || Eclp2Equa - LongiRaw) : 0
-    return {
-        Equa2Eclp,
-        Equa2EclpDif,
-        Eclp2Equa,
-        Eclp2EquaDif,
-        Eclp2EquaLati
-    }
+    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif, Eclp2EquaLati }
 }
 
 export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
@@ -253,10 +247,7 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
                 data: [EclpLongiPrint, Equa2EclpDifPrint, EclpLongiInacPrint, EquaLongiPrint, Eclp2EquaDifPrint, EquaLongiInacPrint, Eclp2EquaLatiPrint, Eclp2EquaLatiInacPrint]
             }
         }))
-    return {
-        Range,
-        Print
-    }
+    return { Range, Print }
 }
 // console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
@@ -365,8 +356,11 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // å
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, 'Dayan')
-    } else if (['Xuanming', 'Qintian'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, 'Xuanming')
+    } else if (CalName === 'Xuanming') {
+        Longi2Lati = Longi2LatiTable2(Longi1, CalName)
+    } else if (CalName === 'Qintian') {
+        Longi2LatiA = Longi2LatiFormula(Longi1, 'Chongxuan')
+        Longi2LatiB = Longi2DialFormula(Longi2, 'Chongxuan')
     } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)
     } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
@@ -468,7 +462,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDeci, f, Sidereal, year) => {
         }))
     return Print
 }
-// console.log(BindLongi2Lati(88, 0.45, 34.4, 365.2445, 1000))
+// console.log(BindLongi2Lati(330, 0.45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLati = (NodeAccum, CalName) => {
     const { Type, AutoPara } = Bind(CalName)
@@ -636,7 +630,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
     }
     let Print = []
     Print = Print.concat(
-        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan'].map(title => {
+        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -682,7 +676,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
     }
     let Print = []
     Print = Print.concat(
-        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan'].map(title => {
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)

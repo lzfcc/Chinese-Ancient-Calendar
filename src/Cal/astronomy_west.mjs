@@ -465,7 +465,7 @@ const MingtianNode = () => {
     // Node = Sidereal / (v + 1 + Sidereal / Lunar)
     const Node = Sidereal.div(v.add(1).add(Sidereal.div(Lunar))).toString() //.toFraction(true) 
     // const Node = Solar.div(v.add(1).add(Solar.div(Lunar))).toFraction(true)
-    return MoonAvgV
+    // return MoonAvgV
 }
 // console.log(MingtianNode())
 
