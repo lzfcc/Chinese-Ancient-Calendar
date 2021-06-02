@@ -722,9 +722,10 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalNa
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
 const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName) => {
     const { Type, AutoPara } = Bind(CalName)
-    const { Solar, Lunar, Node, Anoma, MoonAcrVList, Denom, XianConst, SunLimitYang, SunLimitYin, MoonLimit1, MoonLimit2
+    const { SolarRaw, Lunar, Node, Anoma, MoonAcrVList, Denom, XianConst, SunLimitYang, SunLimitYin, MoonLimit1, MoonLimit2
     } = AutoPara[CalName]
-    let { MoonLimitDenom } = AutoPara[CalName]
+    let { Solar, MoonLimitDenom } = AutoPara[CalName]
+    Solar = Solar || SolarRaw
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const Node50 = Node / 2
     const Node25 = Node / 4
@@ -740,6 +741,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     const AcrNodeAccum = AvgNodeAccum + AvgNodeTcorr // 紀元之外的朔入交定日
     const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr // 定朔入交泛日
     const NewmNoonDif = Math.abs(0.5 - AcrDeci) // 應天乾元儀天崇天午前後分
+    AcrWinsolsDif %= Solar
+    AvgWinsolsDif %= Solar
     const Rise = Longi2LatiFormula(AcrWinsolsDif, CalName).Rise / 100 // 照理說，只要冬至時刻確定，那不管WinsolsDif在一天中如何變化，日出都是固定的，不知道程序算出來是不是這樣    
     // let NodeAccumHalf = AvgNodeAccum % Node50 // 用來判斷交前交後
     // let sign = 1
@@ -789,8 +792,6 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             if (AcrDeci >= 0.5) {
                 Tcorr = -2 * Tcorr
             }
-        } else if (CalName === 'Mingtian') {
-            TotalDeci = (AvgDeci + AvgMoonTcorr) * 13.37 / MoonAcrV + SunTcorr
         } else if (Type === 9) {
             Tcorr = -AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) / 1.5
             if (AvgTotalDeci >= 0.5) {
@@ -808,10 +809,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             }
         }
     } else {
-        let AvgTotalDeciHalfRev = AvgTotalDeci % 0.5
-        if (AvgTotalDeciHalfRev > 0.25) {
-            AvgTotalDeciHalfRev = 0.5 - AvgTotalDeciHalfRev
-        }
+        const AvgTotalDeciHalf = AvgTotalDeci % 0.5
+        const AvgTotalDeciHalfRev = 0.25 - Math.abs(AvgTotalDeciHalf - 0.25)
         if (Type === 9) {
             if (AvgTotalDeci > 0.5) {
                 Tcorr = -(AvgTotalDeciHalfRev ** 2) / 3
@@ -833,7 +832,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     if (Type === 9) {
         TotalDeci = AvgTotalDeci + Tcorr
     } else if (CalName === 'Mingtian') {
-        TotalDeci = 0 ///////////////////
+        TotalDeci = (AvgDeci + AvgMoonTcorr) * 13.37 / MoonAcrV + SunTcorr
     } else {
         TotalDeci = AcrDeci + Tcorr
     }
@@ -846,28 +845,15 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     const k = 1 - TheTotalNoonDif / RiseNoonDif // 如果k<0，卽TheTotalNoonDif在日出前日落後，符號相反，所以把原來的Math.abs(k)直接改成k
     let TheWinsolsDif = 0
-    let TheWinsolsDifHalf = 0
     let TheWinsolsDifHalfRev = 0
     if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(CalName)) { // 崇玄「距天正中氣積度」
         TheWinsolsDif = AcrWinsolsDif
-        TheWinsolsDifHalf = TheWinsolsDif % Solar50 // 應天「置朔定積，如一百八十二日⋯⋯以下爲入盈日分；以上者去之，餘爲入縮日分」
-        TheWinsolsDifHalfRev = TheWinsolsDifHalf
-        if (TheWinsolsDifHalfRev > Solar25) { // 以二分爲中心鏡面對稱
-            TheWinsolsDifHalfRev = Solar50 - TheWinsolsDifHalfRev
-        }
     } else if (CalName === 'Mingtian' || Type === 9) {
-        if (CalName === 'Mingtian') {
-            TheWinsolsDif = AcrWinsolsDif + Tcorr
-        } else if (Type === 9) {
-            TheWinsolsDif = AvgWinsolsDif + Tcorr0 + Tcorr
-        }
+        TheWinsolsDif = AvgWinsolsDif + (TotalDeci - AvgDeci + 1) % 1
         TheWinsolsDif += AutoDifAccum(0, TheWinsolsDif, CalName).SunDifAccum // 紀元食甚日行積度
-        TheWinsolsDifHalf = TheWinsolsDif % Solar50
-        TheWinsolsDifHalfRev = TheWinsolsDifHalf
-        if (TheWinsolsDifHalfRev > Solar25) {
-            TheWinsolsDifHalfRev = Solar50 - TheWinsolsDifHalfRev
-        }
     }
+    const TheWinsolsDifHalf = TheWinsolsDif % Solar50 // 應天「置朔定積，如一百八十二日⋯⋯以下爲入盈日分；以上者去之，餘爲入縮日分」
+    const TheWinsolsDifHalfRev = Solar25 - Math.abs(TheWinsolsDifHalf - Solar25) // 反減
     // 宣明曆創日食四差：【時差Tcorr】食甚時刻改正【氣差DcorrTerm刻差DcorrClock加差DcorrOther】食分改正 
     let DcorrTerm = 0
     let DcorrClock = 0
@@ -918,11 +904,11 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         DcorrTerm = (2350 - 26 * TheWinsolsDifHalfRev) * k // 25.73618
         DcorrTerm = DcorrTerm < 0 ? 0 : DcorrTerm // 因為26不連續，最後剩了一天<0
         if (TheWinsolsDifHalf < HalfTermLeng * 3) {
-            DcorrClock = 2.1 * ~~TheWinsolsDifHalfRev // 連續的話我改成2.06985
+            DcorrClock = 2.1 * TheWinsolsDifHalfRev // 連續的話我改成2.06985
         } else if (TheWinsolsDifHalf < HalfTermLeng * 9) {
             DcorrClock = 94.5
         } else {
-            DcorrClock = 94.5 - 2.1 * (~~TheWinsolsDifHalfRev - HalfTermLeng * 9)
+            DcorrClock = 94.5 - 2.1 * (TheWinsolsDifHalfRev - HalfTermLeng * 9)
         }
         DcorrClock = DcorrClock < 0 ? 0 : DcorrClock * TheTotalNoonDif // 應該不用*100
         if (TheWinsolsDif < HalfTermLeng * 3) {
@@ -1330,23 +1316,20 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
 }
 // console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 1, 'Chongtian'))
 
-export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDifRaw, AvgWinsolsDifRaw, isNewm, CalName, i, Leap) => {
+export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)
     let Eclipse = {}
-    // 入交定日=去交定日=定朔望時刻日月距離黃白交點的時間（黃經差）。紀元、授時：求定朔望加時入交，先假設平朔望黃白交點不動，算出定朔望時刻月亮運動到交點的時間，與定朔算法一致，在算了氣差刻差之後，纔考慮交點退行。
-    // 由於日月速度不同，月亮從正交運動到平朔望時刻的時間與太陽不同。月亮去交泛日=(Vs-Vn)/(Vm-Vn) * rs。Vn：交點退行速度，rs：入交日，(Vs-Vn)/(Vm-Vn)=交率/交數=交點月/交點年
-    // NodeAccum 是太陽入交泛日，那麼月亮入交泛日是0.0785077 * NodeAccum。太陽入交定日=NodeAccum+NodeAccumCorr，月亮入交定日=0.0785077 * NodeAccum+NodeAccumCorr2
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = EclipseTable1(NodeAccum, CalName)
     } else {
         if (Type <= 6) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDifRaw, CalName, NodeAccum).NodeTcorr  // 定交分 
-            Eclipse = EclipseTable2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDifRaw, isNewm, CalName, i, Leap)
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
+            Eclipse = EclipseTable2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDifRaw, CalName, NodeAccum).NodeTcorr  // 定交分 
-            Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDifRaw, isNewm, CalName)
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
+            Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName)
         } else if (Type <= 11) {
-            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDifRaw, AvgWinsolsDifRaw, isNewm, CalName)
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName)
         }
     }
     return Eclipse

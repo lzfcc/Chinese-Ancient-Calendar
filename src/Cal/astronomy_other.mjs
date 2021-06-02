@@ -21,10 +21,8 @@ export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameL
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
 export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
-    const { AutoPara, Type
-    } = Bind(CalName)
-    const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw
-    } = AutoPara[CalName]
+    const { AutoPara, Type } = Bind(CalName)
+    const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = AutoPara[CalName]
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度

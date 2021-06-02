@@ -45,10 +45,10 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || Solar
-    let Longi = LongiRaw % (Sidereal / 4)
-    if ((LongiRaw > Sidereal / 4 && LongiRaw <= Sidereal / 2) || (LongiRaw >= Sidereal * 0.75 && LongiRaw < Sidereal)) {
-        Longi = Sidereal / 4 - Longi
-    }
+    const Sidereal50 = Sidereal
+    const Sidereal25 = Sidereal / 4
+    const LongiHalf = LongiRaw % Sidereal25
+    const Longi = Solar25 - Math.abs(LongiHalf - Solar25)
     let Equa2Eclp = 0
     let Range = []
     if (Type <= 4) {
@@ -132,10 +132,8 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
 // console.log(Equa2EclpTable(23,''))
 
 export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
-    const { AutoPara,
-    } = Bind(CalName)
-    const { Solar, NightList, DialList, SunLatiList,
-    } = AutoPara[CalName]
+    const { AutoPara } = Bind(CalName)
+    const { Solar, NightList, DialList, SunLatiList } = AutoPara[CalName]
     let DawnRange = 0
     if (CalName !== 'Daye') {
         DawnRange = 2.5
@@ -152,8 +150,7 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
 }
 
 export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
-    const { Type, AutoPara,
-    } = Bind(CalName)
+    const { Type, AutoPara } = Bind(CalName)
     const { Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
     } = AutoPara[CalName]
     const WinsolsDif = WinsolsDifRaw % Solar
@@ -288,16 +285,12 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
-    const { AutoPara
-    } = Bind(CalName)
-    const { Solar,
-    } = AutoPara[CalName]
-    let { Sidereal
-    } = AutoPara[CalName]
+    const { AutoPara } = Bind(CalName)
+    const { Solar } = AutoPara[CalName]
+    let { Sidereal } = AutoPara[CalName]
     const Quadrant = AutoNodeCycle(CalName) / 4
     const NodeAccum = NodeAccumRaw// % (Node / 2)
     // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
-
     const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
     let Longi = LongiRaw % Quadrant
     if ((LongiRaw >= Quadrant && LongiRaw < Quadrant * 2) || (LongiRaw >= Quadrant * 3)) { // (LongiRaw >= Quadrant)

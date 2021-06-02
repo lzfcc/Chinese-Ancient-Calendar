@@ -699,13 +699,13 @@ input {
 }
 
 .comment {
-  width: 850px;
+  width: 900px;
   padding-top: 4em;
   padding-bottom: 4em;
   margin: 0 auto;
   color: var(--black);
   font-size: .9em;
-  line-height: 1.6;
+  line-height: 1.8;
   font-family: var(--sans)
 }
 
@@ -777,7 +777,7 @@ hr {
   margin: 5em auto 3em;
   max-width: 6.7em;
   height: .3em;
-  border-radius: 1rem;
+  border-radius: 99em;
   border: none;
   background: var(--black)
 }

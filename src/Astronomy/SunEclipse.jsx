@@ -27,14 +27,14 @@ export default class Converter extends React.Component {
             this.setState({ b: e.currentTarget.value });
           }}
         />
-        <span> 分0.</span>
+        <span> 小餘0.</span>
         <input
           value={this.state.c}
           onChange={e => {
             this.setState({ c: e.currentTarget.value });
           }}
         />
-        <span> 距冬至</span>
+        <span> 距冬至日</span>
         <input
           value={this.state.d}
           onChange={e => {
@@ -64,8 +64,9 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th>食分</th>
-            <th>食延刻數</th>
-            <th>食甚時刻</th>
+            <th>虧初刻數</th>
+            <th>食甚</th>
+            <th>復末</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

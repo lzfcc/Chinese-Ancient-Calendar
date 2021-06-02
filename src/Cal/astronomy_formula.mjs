@@ -12,10 +12,8 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     const Solar75 = Solar * 0.75
     let Equa2Eclp = 0
     let Eclp2Equa = 0
-    let Longi = LongiRaw % Solar125
-    if ((LongiRaw > Solar125 && LongiRaw <= Solar25) || (LongiRaw > 3 * Solar125 && LongiRaw <= Solar50) || (LongiRaw > 5 * Solar125 && LongiRaw <= 3 * Solar25) || (LongiRaw > 7 * Solar125)) {
-        Longi = Solar125 - Longi
-    }
+    const LongiQuar = LongiRaw % Solar25
+    const Longi = Solar125 - Math.abs(LongiQuar - Solar125)
     let h = 0
     let Eclp2EquaDif = 0
     let Equa2EclpDif = 0
@@ -45,7 +43,7 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
         h = Math.sqrt(202050.25 + 1000 * Longi) - 449.5
         // }
         //  else {
-        //     h = -Math.sqrt(303050.25 - 1000 * Longi1) + 550.5 // 這兩個公式是一樣的，只是對稱而已
+        //     h = -Math.sqrt(303050.25 - 1000 * LongiHalf) + 550.5 // 這兩個公式是一樣的，只是對稱而已
         // }
     }
     // 《古代曆法》頁123    沒明白。曲安京《中国古代的二次求根公式与反函数》，西北大学学报(自然科学版). 1997(01)。曆法中二次反函數僅有的例子是大衍行星行度、紀元。赤道度爲Solar/8，黃道度就是43.1287。兩篇公式不一樣，最後畫圖才想明白。我把其他幾個曆法補出來了
@@ -71,11 +69,8 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
     const Solar = AutoSidereal(CalName)
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
-    let Longi = LongiRaw % Solar50
-    let Longi1 = Longi
-    if (Longi > Solar25) {
-        Longi = Solar50 - Longi
-    }
+    const LongiHalf = LongiRaw % Solar50
+    const Longi = Solar25 - Math.abs(Longi - Solar25)
     let Lati = 0
     let g = 0
     if (CalName === 'Chongxuan') { // x=195.838,y=0. x=138.478,y=35.267極值。x=91.3, y=23.996
@@ -88,17 +83,17 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
         }
     } else if (CalName === 'Yitian') { // 儀天的自變量是距二至的日數
         if (LongiRaw >= Solar25 && LongiRaw < 3 * Solar25) { // 冬至後次象
-            if (Longi1 > 93.7412) {
-                Longi1 = Solar50 - Longi1
+            if (LongiHalf > 93.7412) {
+                LongiHalf = Solar50 - LongiHalf
             }
-            // g = (1261875 / 20126347) * Longi1 ** 2 - (6250000 / (20126347 * 522009)) * Longi1 ** 4
-            g = big.div(1261875, 20126347).mul(big(Longi1).pow(2)).sub(big(6250000).div(big.mul(20126347, 522009)).mul(big(Longi1).pow(4)))
+            // g = (1261875 / 20126347) * LongiHalf ** 2 - (6250000 / (20126347 * 522009)) * LongiHalf ** 4
+            g = big.div(1261875, 20126347).mul(big(LongiHalf).pow(2)).sub(big(6250000).div(big.mul(20126347, 522009)).mul(big(LongiHalf).pow(4)))
         } else { // 冬至後初象
-            if (Longi1 > 88.8811) {
-                Longi1 = Solar50 - Longi1
+            if (LongiHalf > 88.8811) {
+                LongiHalf = Solar50 - LongiHalf
             }
-            // g = (167750 / 2229099) * Longi1 ** 2 - (125000 / (2229099 * 39107)) * Longi1 ** 4
-            g = big.div(167750, 2229099).mul(big(Longi1).pow(2)).sub(big(125000).div(big.mul(2229099, 39107)).mul(big(Longi1).pow(4)))
+            // g = (167750 / 2229099) * LongiHalf ** 2 - (125000 / (2229099 * 39107)) * LongiHalf ** 4
+            g = big.div(167750, 2229099).mul(big(LongiHalf).pow(2)).sub(big(125000).div(big.mul(2229099, 39107)).mul(big(LongiHalf).pow(4)))
         }
         if (LongiRaw >= Solar25 && LongiRaw < 3 * Solar25) {
             Lati = big(23.9296).sub(g.mul(big.div(50, 1052))).toNumber()
@@ -241,11 +236,9 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
     // const Node50 = Node / 2
-    let NodeEclpLongiRev = NodeEclpLongi % Solar50
     // const NodeEclpLongiRev = Math.abs(NodeEclpLongi % Solar50 - Solar / 4) // 去二分度。黃白差在二分爲0
-    if (NodeEclpLongiRev > Solar25) { // 去二至度
-        NodeEclpLongiRev = Solar50 - NodeEclpLongiRev
-    }
+    const NodeEclpLongiHalf = NodeEclpLongi % Solar50
+    const NodeEclpLongiRev = Solar25 - Math.abs(NodeEclpLongiHalf - Solar25) // 去二至度
     // if (['Chongtian', 'Mingtian', 'Guantian'].includes(CalName)) {
     //     if (CalName === 'Chongtian') { // 半交後正交前-，正交後半交前+
     //         EclpWhiteDif = MoonEclpLongiRev * (125 - MoonEclpLongiRev) / 2400
@@ -279,10 +272,8 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
 // console.log(MoonLongiFormula(91, 92, 'Jiyuan').EclpWhiteDif)
 
 export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
-    const { AutoPara
-    } = Bind(CalName)
-    const { Node
-    } = AutoPara[CalName]
+    const { AutoPara } = Bind(CalName)
+    const { Node } = AutoPara[CalName]
     const Cycle = AutoNodeCycle(CalName)
     let MoonAvgVDeg = AutoMoonAvgV(CalName) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
     if (CalName === 'Qintian') {
@@ -293,14 +284,7 @@ export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) =
     const Cycle125 = Cycle / 8
     const Longi = NodeAccum * MoonAvgVDeg
     const LongiHalf = Longi % Cycle50
-    let LongiHalfRev = LongiHalf
-    if (LongiHalfRev > Cycle25) {
-        LongiHalfRev = Cycle50 - LongiHalfRev
-    }
-    // let LongiQuarRev = LongiHalf % Cycle25
-    // if (LongiQuarRev > Cycle25) {
-    //     LongiQuarRev = Cycle25 - LongiQuarRev
-    // }
+    const LongiHalfRev = Cycle25 - Math.abs(LongiHalf - Cycle25)
     let Lati = 0
     // 崇玄「以四百一乘朔望加時入交常日⋯⋯得定朔望入交定積度分」，也就是說應該不用加入NodeAccumCorr
     // 崇玄崇天是反減半交，觀天紀元是反減交中度。但經過試驗，全部都是反減交中度
@@ -343,9 +327,6 @@ export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) =
         Lati = -Lati
     }
     const Lati1 = 91.311 - Lati
-    return {
-        Lati,
-        Lati1
-    }
+    return { Lati, Lati1 }
 }
 // console.log(MoonLatiFormula(15, 'Jiyuan'))

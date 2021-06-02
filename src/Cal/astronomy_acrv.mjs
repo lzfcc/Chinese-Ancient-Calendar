@@ -143,25 +143,22 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
     let SunDifAccum = 0
     let sign = 1
     let Quadrant = 0
-    let T = 0
     const Solar50 = Solar / 2
+    const Solar25 = Solar / 4
+    const WinsolsDifHalf = WinsolsDif % Solar50
+    const T = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
     const { QuarA, QuarB } = AutoQuar(CalName)
     if (Type === 11) {
         if (WinsolsDif <= QuarA) {
-            const T = WinsolsDif
             SunDifAccum = (DeltaSunA1 * T - DeltaSunA2 * (T ** 2) - DeltaSunA3 * (T ** 3)) / 10000 // 盈縮差
         } else if (WinsolsDif <= Solar50) {
-            const T = Solar50 - WinsolsDif
             SunDifAccum = (DeltaSunB1 * T - DeltaSunB2 * (T ** 2) - DeltaSunB3 * (T ** 3)) / 10000
         } else if (WinsolsDif <= Solar50 + QuarB) {
-            const T = WinsolsDif - Solar50
             SunDifAccum = -(DeltaSunB1 * T - DeltaSunB2 * (T ** 2) - DeltaSunB3 * (T ** 3)) / 10000
         } else {
-            const T = Solar - WinsolsDif
             SunDifAccum = -(DeltaSunA1 * T - DeltaSunA2 * (T ** 2) - DeltaSunA3 * (T ** 3)) / 10000
         }
     } else { // 王榮彬《中國古代曆法的中心差算式之造術原理》
-        // const Solar50 = +((Solar / 2).toFixed(4))
         if (CalName === 'Guantian') {
             let SunDenom = 0
             const SunDenomA = 3294
@@ -169,58 +166,41 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
             if (WinsolsDif <= QuarA) {
                 Quadrant = QuarA
                 SunDenom = SunDenomA
-                T = WinsolsDif
             } else if (WinsolsDif <= Solar50) {
                 Quadrant = QuarB
                 SunDenom = SunDenomB
-                T = Solar50 - WinsolsDif
             } else if (WinsolsDif <= Solar50 + QuarB) {
                 Quadrant = QuarB
                 SunDenom = SunDenomB
                 sign = -1
-                T = WinsolsDif - Solar50
             } else {
                 Quadrant = QuarA
                 SunDenom = SunDenomA
                 sign = -1
-                T = Solar - WinsolsDif
             }
             SunDifAccum = sign * (T / SunDenom) * (2 * Quadrant - T) // 盈縮差度分。極值2.37
         } else if (CalName === 'Mingtian') {
-            if (WinsolsDif <= Solar / 4) {
-                T = WinsolsDif
-            } else if (WinsolsDif <= Solar50) {
-                T = Solar50 - WinsolsDif
-            } else if (WinsolsDif <= Solar * 0.75) {
+            if (WinsolsDif > Solar50) {
                 sign = -1
-                T = WinsolsDif - Solar50
-            } else {
-                sign = -1
-                T = Solar - WinsolsDif
             }
             SunDifAccum = sign * T * (200 - T) / 4135 // 盈縮差度分。極值2.4
             // SunTcorr = sign * T * (200 - T) * 400 / 567/Denom 按照月速13.36875算出來，和上面的算式沒有區別，很好
         } else if (CalName === 'Futian') {
             if (WinsolsDif > Solar50) {
-                WinsolsDif -= Solar50
                 sign = -1
             }
-            SunDifAccum = sign * WinsolsDif * (Solar50 - WinsolsDif) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得爲立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000爲分母。
+            SunDifAccum = sign * WinsolsDifHalf * (Solar50 - WinsolsDifHalf) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得爲立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000爲分母。
         } else if (CalName === 'Yitian') {
             const Delta = 24543 / Denom // 盈縮積 // 946785.5=897699.5+24543*2
             Quadrant = QuarA
-            T = WinsolsDif
             if (WinsolsDif <= QuarA) {
             } else if (WinsolsDif <= Solar50) {
                 Quadrant = QuarB
-                T = Solar50 - WinsolsDif
             } else if (WinsolsDif <= Solar50 + QuarB) {
                 sign = -1
                 Quadrant = QuarB
-                T = WinsolsDif - Solar50
             } else {
                 sign = -1
-                T = Solar - WinsolsDif
             }
             // const E = 2 * Delta / Quadrant // 初末限平率=2限率分=2盈縮積/限日
             // const F = E / Quadrant // 日差=限差/限日=2限率分/限日，限率分=盈縮積/限日
@@ -246,19 +226,17 @@ const SunTcorrFormula = (WinsolsDif, CalName) => { // 一定程度上適用於�
         const QuarB = Solar25
         const Delta = SunTcorrList[6] / Denom
         let Quadrant = QuarA
-        let T = WinsolsDif
+        const WinsolsDifHalf = WinsolsDif % Solar50
+        const T = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
         let sign = 1
         if (WinsolsDif <= QuarA) {
         } else if (WinsolsDif <= Solar50) {
             Quadrant = QuarB
-            T = Solar50 - WinsolsDif
         } else if (WinsolsDif <= Solar50 + QuarB) {
             sign = -1
             Quadrant = QuarB
-            T = WinsolsDif - Solar50
         } else {
             sign = -1
-            T = Solar - WinsolsDif
         }
         let Plus = 0
         if (['LindeA', 'LindeB', 'Yingtian', 'Qianyuan'].includes(CalName)) { // 這幾部初定率沒有考慮半日差Delta/Quadrant**2，最後合併同類項多了一個1
