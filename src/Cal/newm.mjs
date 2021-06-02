@@ -92,25 +92,6 @@ export default (CalName, year) => {
         JiYear = OriginYear % YuanRange % JiRange + 1 // 入紀年
         JiScOrder = (1 + JiOrder * JiSkip) % 60
     }
-    // const EcliRange = EcliNumer / (Solar / Lunar) // 乾象會歲
-    // const ZhangEcliRange = EcliRange / ZhangRange // 乾象會數
-    // const ShuoHeFen = (Solar * JiRange * EcliDenom / 2) / EcliNumer // 乾象朔合分
-    // let Shuowang = 0 // 朔望合數
-    // if (CalName === 'Jingchu') {
-    //     Shuowang = LunarNumer / 2
-    // } else if (CalName === 'Yuanjia') {
-    //     Shuowang = EcliDenom / 2 // 元嘉朔望合數：會數/2
-    // }
-    // EcliLimit = EcliNumer - Shuowang // 入交限數 乾象先不管
-
-    // const EcliJiDif = (JiMon * LunarNumer) % EcliNumer // 景初交會紀差
-    // const JiEcli = ((EcliCorr + EcliJiDif * JiOrder) % EcliNumer + EcliNumer) % EcliNumer // 交會差率
-    // const JiYinyang = Math.floor((EcliCorr + EcliJiDif * JiOrder) / EcliNumer) % 2 === 0 ? YinyangCorr : -YinyangCorr
-    // const NodeJiDif = (JiMon * LunarNumer) % NodeNumer
-    // const JiNode = ((EcliCorr + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
-    // const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangCorr : -YinyangCorr
-    // const AnomaJiDif = (JiMon * LunarNumer) % AnomaNumer
-    // const JiAnoma = ((AnomaCorr + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
     let OriginAccum = 0
     if (Type < 11) {
         OriginAccum = OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum

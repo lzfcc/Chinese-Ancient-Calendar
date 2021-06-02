@@ -10,7 +10,8 @@ import Deciaml2Angle from './Deciaml2Angle'
 import SunEclipse from './SunEclipse'
 import MoonEclipse from './MoonEclipse'
 import Node2Cycle from './Node'
-import Cycle2Node from './EcliCycle'
+import Cycle2Node from './EcliRange'
+import Regression from './Regression'
 import Round from './Round'
 import Round1 from './Round1'
 import Round2 from './Round2'
@@ -37,7 +38,7 @@ export default class Astronomy extends React.Component {
     return (
       <>
         <section className='modulo'>
-          <h2>躔離之什</h2>
+          <h2>躔離朓朒</h2>
           <BindTcorr />
           <h2>日度之什</h2>
           <Deg2Mansion />
@@ -60,6 +61,7 @@ export default class Astronomy extends React.Component {
           <MoonEclipse />
           <Cycle2Node />
           <Node2Cycle />
+          <Regression />
           <h2>現代天文計算</h2>
           <Deciaml2Angle />
           <Const />

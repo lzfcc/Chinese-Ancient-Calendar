@@ -1,34 +1,13 @@
-import {
-    ScList,
-    TermList,
-    AutoDegAccumList
-} from './para_constant.mjs'
+import { ScList, TermList, AutoDegAccumList } from './para_constant.mjs'
 import AutoPara from './para_1.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
 export default function CalQuar(CalName, year) {
-    const {
-        Lunar,
-        Solar,
-        WinsolsWinsolsDif,
-        WinsolsOriginMon,
-        OriginAd,
-        OriginYearSc,
-        OriginDayCorr,
-        WinsolsCorr,
-        ZhengNum,
-        OriginMonNum,
-        YuanRange,
-        TongRange,
-        isTermLeap,
-        Ecli,
-        EcliRange,
-        MansionRaw
+    const { Lunar, Solar, WinsolsWinsolsDif, WinsolsOriginMon,
+        OriginAd, OriginYearSc, OriginDayCorr, WinsolsCorr, ZhengNum, OriginMonNum,
+        YuanRange, TongRange, isTermLeap, EcliRange, EcliNumer, MansionRaw
     } = AutoPara[CalName]
-    let {
-        JiRange,
-        BuRange,
-    } = AutoPara[CalName]
+    let { JiRange, BuRange } = AutoPara[CalName]
     if (CalName === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange
@@ -136,14 +115,13 @@ export default function CalQuar(CalName, year) {
     }
     // 月食
     let EcliAccum = 0
-    if (Ecli) {
-        EcliAccum = Ecli * ((OriginYear % EcliRange) * (Solar / Lunar) / Ecli - ~~((OriginYear % EcliRange) * (Solar / Lunar) / Ecli))
+    if (EcliNumer) {
+        EcliAccum = EcliRange * ((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange - ~~((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange))
         for (let k = 1; k <= 3; k++) {
-            const a = ~~(Ecli * k - EcliAccum)
+            const a = ~~(EcliRange * k - EcliAccum)
             SyzygySc[a] += `<span class='eclipse-symbol'>◐</span>`
         } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
     }
-    // const NewmMmdd = Jd2Date(NewmJd)
     // 中氣
     let LeapNumTerm = LeapNumAvgThis
     const TermAvgBare = []

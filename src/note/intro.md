@@ -500,9 +500,11 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 核心计算程序在 `/src/Cal` 目录下，有 9 个板块，各文件功能说明：
 
 - `para_` 参数
-    - `para_constant` 常量参数
+    - `para_constant` 全局常量参数
     - `para_1` 四分魏晋南北系历法参数
     - `para_2` 隋唐宋元历法参数
+    - `para_auto-constant` 根据历法自动选择相应常量
+    - `para_generate` 生成参数的临时文件
 - `newm_` 朔闰表模块
     - `newm` 朔闰计算
     - `newm_quar` 四分历朔闰计算

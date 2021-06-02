@@ -332,15 +332,16 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     let NewmEcliFunc = {}
                     let SyzygyEcliFunc = {}
                     if (NewmNodeAccumPrint[i] < 1.3 || (NewmNodeAccumPrint[i] > 12.3 && NewmNodeAccumPrint[i] < 14.9) || NewmNodeAccumPrint[i] > 25.92) { // 望差1.159，1.3綽綽有餘了，能篩掉4/5多
-                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis)
+                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
                         const Newmstatus = NewmEcliFunc.status
                         let NewmMagni = 0
                         const NewmStartDeci = NewmEcliFunc.StartDeci ? NewmEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
-                        const NewmTotalDeci = NewmEcliFunc.Deci ? NewmEcliFunc.Deci.toFixed(4).slice(2, 6) : 0
+                        const NewmTotalDeci = NewmEcliFunc.TotalDeci ? NewmEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
+                        const NewmEndDeci = NewmEcliFunc.EndDeci ? NewmEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
                         if (Newmstatus) {
                             NewmMagni = NewmEcliFunc.Magni.toFixed(2)
                             NewmEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                            NewmEcli[i] += '分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '')
+                            NewmEcli[i] += '分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '')
                             if (Newmstatus === 1) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
                             } else if (Newmstatus === 2) {
@@ -351,15 +352,16 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                         }
                     }
                     if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 25.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis)
+                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
                         const Syzygystatus = SyzygyEcliFunc.status
                         let SyzygyMagni = 0
                         const SyzygyStartDeci = SyzygyEcliFunc.StartDeci ? SyzygyEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
-                        const SyzygyTotalDeci = SyzygyEcliFunc.Deci ? SyzygyEcliFunc.Deci.toFixed(4).slice(2, 6) : 0
+                        const SyzygyTotalDeci = SyzygyEcliFunc.TotalDeci ? SyzygyEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
+                        const SyzygyEndDeci = SyzygyEcliFunc.EndDeci ? SyzygyEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
                         if (Syzygystatus) {
                             SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
                             SyzygyEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                            SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '')
+                            SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '')
                             if (Syzygystatus === 1) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
                             } else if (Syzygystatus === 2) {

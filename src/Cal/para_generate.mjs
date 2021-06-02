@@ -138,3 +138,59 @@ const GenMoon248 = () => { // 欽天月離表
 // console.log(GenMoon248())
 
 
+////// 下面的放在newm文件
+
+    // const EcliRange = EcliNumer / (Solar / Lunar) // 乾象會歲
+    // const ZhangEcliRange = EcliRange / ZhangRange // 乾象會數
+    // const ShuoHeFen = (Solar * JiRange * EcliDenom / 2) / EcliNumer // 乾象朔合分
+    // let Shuowang = 0 // 朔望合數
+    // if (CalName === 'Jingchu') {
+    //     Shuowang = LunarNumer / 2
+    // } else if (CalName === 'Yuanjia') {
+    //     Shuowang = EcliDenom / 2 // 元嘉朔望合數：會數/2
+    // }
+    // EcliLimit = EcliNumer - Shuowang // 入交限數 乾象先不管
+
+    // const EcliJiDif = (JiMon * LunarNumer) % EcliNumer // 景初交會紀差
+    // const JiEcli = ((EcliCorr + EcliJiDif * JiOrder) % EcliNumer + EcliNumer) % EcliNumer // 交會差率
+    // const JiYinyang = Math.floor((EcliCorr + EcliJiDif * JiOrder) / EcliNumer) % 2 === 0 ? YinyangCorr : -YinyangCorr
+    // const NodeJiDif = (JiMon * LunarNumer) % NodeNumer
+    // const JiNode = ((EcliCorr + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
+    // const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangCorr : -YinyangCorr
+    // const AnomaJiDif = (JiMon * LunarNumer) % AnomaNumer
+    // const JiAnoma = ((AnomaCorr + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
+
+    // 下面的放在交食文件
+    // 下景初方位
+// const Ecli1c = (isEcliNewm, isEcliSyzygy, NewmYinyang) => {
+//     const NewmEcliDirc = []
+//     const SyzygyEcliDirc = []
+//     for (let i = 1; i <= 14; i++) {
+//         if (NewmYinyang === 1) {
+//             if (isEcliSyzygy[i - 1] && isEcliNewm[i]) {
+//                 NewmEcliDirc = '起西南'
+//             } else if (isEcliSyzygy[i] && isEcliNewm[i + 1]) {
+//                 SyzygyEcliDirc = '起東北'
+//             } else if (isEcliNewm[i] && isEcliSyzygy[i]) {
+//                 NewmEcliDirc = '起東南'
+//                 SyzygyEcliDirc = '起西北'
+//             }
+//         } else {
+//             if (isEcliSyzygy[i - 1] && isEcliNewm[i]) {
+//                 NewmEcliDirc = '起西北'
+//             } else if (isEcliSyzygy[i] && isEcliNewm[i + 1]) {
+//                 SyzygyEcliDirc = '起東南'
+//             } else if (isEcliNewm[i] && isEcliSyzygy[i]) {
+//                 NewmEcliDirc = '起東北'
+//                 SyzygyEcliDirc = '起西南'
+//             }
+//         }
+//     }
+//     return {
+//         NewmEcliDirc,
+//         SyzygyEcliDirc
+//     }
+// }
+//////// 乾象入陰陽曆
+// const a = (~~(OriginYear / Lunar) + i - (isNewm ? 1 : 0.5)) / EcliNumer - ~~((~~(OriginYear / Lunar) + i - (isNewm ? 1 : 0.5)) / EcliNumer)
+// const b = a * EcliNumer * ShuoHeFen

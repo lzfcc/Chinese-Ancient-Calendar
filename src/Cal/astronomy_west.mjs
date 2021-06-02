@@ -450,6 +450,13 @@ export const Cycle2Node = (Cycle, Lunar) => {
 }
 // console.log(Cycle2Node('404/465', '659/1242'))
 
+export const Regression = (Sidereal, Node, Lunar) => {
+    Sidereal = +('365.' + Sidereal)
+    Node = +('27.' + Node)
+    Lunar = +('29.' + Lunar)
+    return (Sidereal / Node - Sidereal / Lunar - 1).toFixed(8) + ' 度/日'
+}
+
 // const test1 = (year, Solar, Lunar) => {
 //     const accum = frc(Solar).mul(year).mod(Lunar)
 //     return accum.toFraction(true)

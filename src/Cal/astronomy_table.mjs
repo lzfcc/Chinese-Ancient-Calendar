@@ -47,8 +47,8 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     Sidereal = Sidereal || Solar
     const Sidereal50 = Sidereal
     const Sidereal25 = Sidereal / 4
-    const LongiHalf = LongiRaw % Sidereal25
-    const Longi = Solar25 - Math.abs(LongiHalf - Solar25)
+    const LongiHalf = LongiRaw % Sidereal50
+    const Longi = Sidereal25 - Math.abs(LongiHalf - Sidereal25)
     let Equa2Eclp = 0
     let Range = []
     if (Type <= 4) {

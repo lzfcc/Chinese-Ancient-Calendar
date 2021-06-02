@@ -720,12 +720,14 @@ const EclipseTable3 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalNa
 // console.log(EclipseTable3(14.300434, 8.411596, 0.825769, 235.059, 0, 'Dayan').Deci) 
 
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
-const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName) => {
+const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName) => {
     const { Type, AutoPara } = Bind(CalName)
     const { SolarRaw, Lunar, Node, Anoma, MoonAcrVList, Denom, XianConst, SunLimitYang, SunLimitYin, MoonLimit1, MoonLimit2
     } = AutoPara[CalName]
     let { Solar, MoonLimitDenom } = AutoPara[CalName]
     Solar = Solar || SolarRaw
+    AcrWinsolsDif %= Solar
+    AvgWinsolsDif %= Solar
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
     const Node50 = Node / 2
     const Node25 = Node / 4
@@ -740,15 +742,13 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 朔入交常日    
     const AcrNodeAccum = AvgNodeAccum + AvgNodeTcorr // 紀元之外的朔入交定日
     const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr // 定朔入交泛日
-    const NewmNoonDif = Math.abs(0.5 - AcrDeci) // 應天乾元儀天崇天午前後分
-    AcrWinsolsDif %= Solar
-    AvgWinsolsDif %= Solar
+    const NewmNoonDif = Math.abs(0.5 - AcrDeci) // 應天乾元儀天崇天午前後分    
     const Rise = Longi2LatiFormula(AcrWinsolsDif, CalName).Rise / 100 // 照理說，只要冬至時刻確定，那不管WinsolsDif在一天中如何變化，日出都是固定的，不知道程序算出來是不是這樣    
-    // let NodeAccumHalf = AvgNodeAccum % Node50 // 用來判斷交前交後
-    // let sign = 1
-    // if (NodeAccumHalf > Node25) { // 交前、先交。按照《紀元曆日食算法及精度分析》頁147提到交前。看了下，紀元並沒有提到交前交後的區分
-    //     sign = -1
-    // }
+    let MonAccum = 0
+    if (CalName === 'Mingtian') {
+        const TheDif = 9901159 / 6240000 // 朔差
+        MonAccum = Math.floor((AvgWinsolsDif + OriginAccum) / Lunar) // 積月
+    }
     let isDescend = true // 交初前後皆爲交初
     if (AvgNodeAccum > 12 && AvgNodeAccum < 15) { // 交中前後皆為交中
         isDescend = false
@@ -845,7 +845,6 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     const k = 1 - TheTotalNoonDif / RiseNoonDif // 如果k<0，卽TheTotalNoonDif在日出前日落後，符號相反，所以把原來的Math.abs(k)直接改成k
     let TheWinsolsDif = 0
-    let TheWinsolsDifHalfRev = 0
     if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(CalName)) { // 崇玄「距天正中氣積度」
         TheWinsolsDif = AcrWinsolsDif
     } else if (CalName === 'Mingtian' || Type === 9) {
@@ -863,41 +862,63 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     let Magni = 0
     let Last = 0
     // 下爲食分改正 // 三差與月亮天頂距有關，與午正前後無關，古曆卻將此作爲正負判斷依據，完全不對
-    let sign1 = 1 // 應天赤道差「盈初縮末（冬至前後）內減外加，縮初盈末內加外減」乾元離差「春分後陰加陽減，秋分後陰減陽加」紀元氣差「在冬至後末限、夏至後初限，〔交初以減，交中以加。〕夏至後末限、冬至後初限，〔交初以加，交中以減。〕」崇天「春分後，交初以減，交中以加」
-    if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        if (AcrNewmNodeAccum >= Node50) {
-            sign1 = -1
-        }
-    } else if (isDescend) {
-        sign1 = -1
-    }
-    if (TheWinsolsDif >= Solar25 && TheWinsolsDif < Solar75) {
-    } else {
-        sign1 = -sign1
-    }
-    let sign2 = 1 // 黃道差符號「入盈，以定分午前內減外加」儀天黃道差「冬至後，甚在午正東，陰減陽加；甚在午正西，陰加陽減；夏至後即返此」紀元刻差符號「冬至後食甚在午前，夏至後食甚在午後，交初以加，交中以減」崇天「冬至後食甚在午前，夏至後食甚在午後。交初以加，交中以減」
-    if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        if (AcrNewmNodeAccum >= Node50) {
-            sign1 = -1
-        }
-    } else if (!isDescend) {
-        sign2 = -1
-    }
-    if (TotalDeci < 0.5) {
-    } else {
-        sign2 = -sign2
-    }
-    if (TheWinsolsDif < Solar50) { } else {
-        sign2 = -sign2
-    }
+    let sign1 = 1 // 氣差。應天赤道差「盈初縮末（冬至前後）內減外加，縮初盈末內加外減」乾元離差「春分後陰加陽減，秋分後陰減陽加」紀元氣差「在冬至後末限、夏至後初限，〔交初以減，交中以加。〕夏至後末限、冬至後初限，〔交初以加，交中以減。〕」崇天「春分後，交初以減，交中以加」
+    let sign2 = 1 // 刻差。黃道差符號「入盈，以定分午前內減外加」儀天黃道差「冬至後，甚在午正東，陰減陽加；甚在午正西，陰加陽減；夏至後即返此」紀元刻差符號「冬至後食甚在午前，夏至後食甚在午後，交初以加，交中以減」崇天「冬至後食甚在午前，夏至後食甚在午後。交初以加，交中以減」
     let sign3 = 1
-    if (TotalDeci > 0.5) {
-        if (!isDescend) {
-            sign3 = -1
+    let sign1b = 1 // 南北差
+    let sign2b = 1 // 東西差
+    if (CalName === 'Mingtian') {
+        if (AcrNewmNodeAccum >= Node50) {
+            sign1b = -1
+        }
+        if (TheTotalNoonDif >= 0.25) {
+            sign1b = -sign1b
+        }
+        if (AcrNewmNodeAccum >= Node50) {
+            sign2b = -1
+        }
+        if (TotalDeci >= 0.5) {
+            sign2b = -sign2b
+        }
+        if (TheWinsolsDif < Solar25 || TheWinsolsDif >= Solar75) { // 盈初縮末 
+        } else {
+            sign1b = -sign1b
+            sign2b = -sign2b
         }
     } else {
-        if (isDescend) {
-            sign3 = -1
+        if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+            if (AcrNewmNodeAccum >= Node50) {
+                sign1 = -1
+            }
+        } else if (isDescend) {
+            sign1 = -1
+        }
+        if (TheWinsolsDif >= Solar25 && TheWinsolsDif < Solar75) { // 縮初盈末
+        } else {
+            sign1 = -sign1
+        }
+        if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+            if (AcrNewmNodeAccum >= Node50) {
+                sign2 = -1
+            }
+        } else if (!isDescend) {
+            sign2 = -1
+        }
+        if (TotalDeci < 0.5) {
+        } else {
+            sign2 = -sign2
+        }
+        if (TheWinsolsDif < Solar50) { } else {
+            sign2 = -sign2
+        }        
+        if (TotalDeci > 0.5) {
+            if (!isDescend) {
+                sign3 = -1
+            }
+        } else {
+            if (isDescend) {
+                sign3 = -1
+            }
         }
     }
     if (CalName === 'Xuanming') {
@@ -1025,14 +1046,22 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
                 DcorrOther = TheWinsolsDif * 20.44 / HalfTermLeng
             }
         }
-    } else if (CalName === 'Mingtian') {
-        if (TheWinsolsDifHalf > Solar / 6) {
-            TheWinsolsDifHalf = Solar50 - TheWinsolsDifHalf
+    } else if (CalName === 'Mingtian') { // 藤豔輝頁103 兩個食差最大值均為508=9.12小時 // 明天的日躔盈縮度是平分的，不像儀天是定氣，同樣需要反減
+        const QuarA = 60.875 // 交食的盈初縮末
+        const QuarB = 121.75 // 縮初盈末
+        let TheRev = TheWinsolsDifHalf
+        if (TheRev > QuarA) {
+            TheRev = Solar50 - TheRev
         }
-        DcorrTerm = 508 - (106 / 3093) * (243.5 - TheWinsolsDifHalf) * TheWinsolsDifHalf // 以121.75對稱，f(0)=508，也就是solar=365.25 // 但問題是solar/6前後跨度也太大了？？
-        DcorrClock = (106 / 3093) * (243.5 - TheWinsolsDifHalf) * TheWinsolsDifHalf
-        DcorrTerm *= TheTotalNoonDif * 4 // 這個數字跟日法39000比起來也太小了啊
-        DcorrClock *= TheTotalNoonDif * 4 // NoonDifDenom / 9750
+        let portion12 = 1
+        if (TheWinsolsDifHalf < QuarA || TheWinsolsDifHalf >= Solar50 + QuarB) { // 不太明白這樣前後一拉一申有什麼區別
+            portion12 = 2
+        }
+        DcorrClock = (106 / 3093) * (243.5 - portion12 * TheWinsolsDifHalfRev) * portion12 * TheWinsolsDifHalfRev // 東西差
+        DcorrTerm = 508 - DcorrClock // 南北差
+        DcorrTerm *= Math.abs(0.25 - TheTotalNoonDif) * 4
+        const TheTotalNoonDifRev = 0.25 - Math.abs(TheTotalNoonDif - 0.25)
+        DcorrClock *= TheTotalNoonDifRev * 4
     } else if (CalName === 'Guantian') {
         if (TheWinsolsDif < Solar50) {
             if (TheWinsolsDifHalf > 88 + 10958 / 12030) {
@@ -1078,7 +1107,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             k0 = -3000 // 5.685度
         }
     }
-    Dcorr = (sign1 * DcorrTerm + sign2 * DcorrClock + sign3 * DcorrOther + k0 + (['Chongtian', 'Guantian'].includes(CalName) ? Tcorr : 0)) / (Type === 11 ? 1 : Denom)
+    Dcorr = (sign1 * sign1b * DcorrTerm + sign2 * sign2b * DcorrClock + sign3 * DcorrOther + k0 + (['Chongtian', 'Guantian'].includes(CalName) ? Tcorr : 0)) / (Type === 11 ? 1 : Denom)
     let TheNodeAccum = 0 // 入交定日
     if (isNewm) {
         if (Type === 9) {
@@ -1316,7 +1345,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
 }
 // console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 1, 'Chongtian'))
 
-export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap) => { // 這就不用%solar了，後面都模了的
+export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)
     let Eclipse = {}
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
@@ -1329,42 +1358,8 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsD
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
             Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName)
         } else if (Type <= 11) {
-            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName)
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
         }
     }
     return Eclipse
 }
-
-// 下景初方位
-// const Ecli1c = (isEcliNewm, isEcliSyzygy, NewmYinyang) => {
-//     const NewmEcliDirc = []
-//     const SyzygyEcliDirc = []
-//     for (let i = 1; i <= 14; i++) {
-//         if (NewmYinyang === 1) {
-//             if (isEcliSyzygy[i - 1] && isEcliNewm[i]) {
-//                 NewmEcliDirc = '起西南'
-//             } else if (isEcliSyzygy[i] && isEcliNewm[i + 1]) {
-//                 SyzygyEcliDirc = '起東北'
-//             } else if (isEcliNewm[i] && isEcliSyzygy[i]) {
-//                 NewmEcliDirc = '起東南'
-//                 SyzygyEcliDirc = '起西北'
-//             }
-//         } else {
-//             if (isEcliSyzygy[i - 1] && isEcliNewm[i]) {
-//                 NewmEcliDirc = '起西北'
-//             } else if (isEcliSyzygy[i] && isEcliNewm[i + 1]) {
-//                 SyzygyEcliDirc = '起東南'
-//             } else if (isEcliNewm[i] && isEcliSyzygy[i]) {
-//                 NewmEcliDirc = '起東北'
-//                 SyzygyEcliDirc = '起西南'
-//             }
-//         }
-//     }
-//     return {
-//         NewmEcliDirc,
-//         SyzygyEcliDirc
-//     }
-// }
-//////// 乾象入陰陽曆
-// const a = (~~(OriginYear / Lunar) + i - (isNewm ? 1 : 0.5)) / EcliNumer - ~~((~~(OriginYear / Lunar) + i - (isNewm ? 1 : 0.5)) / EcliNumer)
-// const b = a * EcliNumer * ShuoHeFen
