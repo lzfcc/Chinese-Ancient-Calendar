@@ -772,8 +772,12 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             Tcorr1 = SunTcorr2 + MoonTcorr1
         } else if (Type < 11) {
             sunFunc = SunTcorrTable(WinsolsDif, CalName)
-            moonFunc = MoonTcorrTable(AnomaAccum, CalName)
             SunTcorr2 = sunFunc.SunTcorr2
+            if (CalName === 'Qintian') {
+                moonFunc = MoonTcorrTable(AnomaAccum + SunTcorr2, CalName)
+            } else {
+                moonFunc = MoonTcorrTable(AnomaAccum, CalName)
+            }
             MoonTcorr1 = -moonFunc.MoonTcorr1
             Tcorr2 = SunTcorr2 + MoonTcorr1
         } else if (Type === 11) {

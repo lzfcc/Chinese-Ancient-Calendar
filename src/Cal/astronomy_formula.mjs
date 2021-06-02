@@ -70,7 +70,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
     const LongiHalf = LongiRaw % Solar50
-    const Longi = Solar25 - Math.abs(Longi - Solar25)
+    const Longi = Solar25 - Math.abs(LongiHalf - Solar25)
     let Lati = 0
     let g = 0
     if (CalName === 'Chongxuan') { // x=195.838,y=0. x=138.478,y=35.267極值。x=91.3, y=23.996

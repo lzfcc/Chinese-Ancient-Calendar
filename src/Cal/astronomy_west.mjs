@@ -457,6 +457,18 @@ export const Regression = (Sidereal, Node, Lunar) => {
     return (Sidereal / Node - Sidereal / Lunar - 1).toFixed(8) + ' 度/日'
 }
 
+const MingtianNode = () => {
+    const v = frc('9901159/6240000').div('1151693/39000') // 9901159/184270880交點退行速度
+    const Sidereal = frc('365 1600447/6240000')
+    const Solar = frc('365 9500/39000')
+    const Lunar = frc('29 20693/39000')
+    // Node = Sidereal / (v + 1 + Sidereal / Lunar)
+    const Node = Sidereal.div(v.add(1).add(Sidereal.div(Lunar))).toString() //.toFraction(true) 
+    // const Node = Solar.div(v.add(1).add(Solar.div(Lunar))).toFraction(true)
+    return MoonAvgV
+}
+// console.log(MingtianNode())
+
 // const test1 = (year, Solar, Lunar) => {
 //     const accum = frc(Solar).mul(year).mod(Lunar)
 //     return accum.toFraction(true)
