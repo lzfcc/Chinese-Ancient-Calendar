@@ -29,13 +29,13 @@ const ClockWeijin = (Deci, CalName) => {
         Type,
     } = Bind(CalName)
     Deci = big(Deci)
-    const portion = big.div(100, 12)
+    const Portion = big.div(100, 12)
     if (CalName === 'Easthan' || Type >= 5) {
         Deci = Deci.add(100 / 24).mod(100)
     }
-    let ClockOrder = (Deci.div(portion)).floor().toNumber()
-    const ClockFrac = Deci.sub(big(ClockOrder).mul(portion))
-    const Twelve = ((big.div(ClockFrac, portion)).mul(12)).floor().toNumber()
+    let ClockOrder = (Deci.div(Portion)).floor().toNumber()
+    const ClockFrac = Deci.sub(big(ClockOrder).mul(Portion))
+    const Twelve = ((big.div(ClockFrac, Portion)).mul(12)).floor().toNumber()
     if (Twelve === 11 && CalName !== 'WuyinA') {
         ClockOrder++
     }
@@ -51,30 +51,30 @@ const ClockWeijin = (Deci, CalName) => {
 }
 
 const ClockTmp = (Deci, Mode) => { // 我假設：每日96刻，子初夜半，每刻100分
-    let portion1 = 0
-    let portion2 = 0
+    let Portion1 = 0
+    let Portion2 = 0
     if (Mode === 96) {
-        portion1 = 0.96
-        portion2 = 8
+        Portion1 = 0.96
+        Portion2 = 8
     } else if (Mode === 108) {
-        portion1 = 1.08
-        portion2 = 9
+        Portion1 = 1.08
+        Portion2 = 9
     } else if (Mode === 120) {
-        portion1 = 1.2
-        portion2 = 10
+        Portion1 = 1.2
+        Portion2 = 10
     }
-    const KeRaw = Deci * portion1
-    const ClockOrder = ~~(KeRaw / portion2)
-    const QuarOrder = ~~(KeRaw - ClockOrder * portion2)
+    const KeRaw = Deci * Portion1
+    const ClockOrder = ~~(KeRaw / Portion2)
+    const QuarOrder = ~~(KeRaw - ClockOrder * Portion2)
     // const MinOrder = ~~((KeRaw - ~~KeRaw) * 100)
     return BranchList[ClockOrder + 1] + '時' + QuarList[QuarOrder % 8] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 
 const Clock24 = Deci => {
-    const portion = 100 / 24
-    let ClockOrder = ~~(Deci / portion)
-    const ClockFrac = Deci - ClockOrder * portion
-    const Twelve = ~~(ClockFrac / portion * 12)
+    const Portion = 100 / 24
+    let ClockOrder = ~~(Deci / Portion)
+    const ClockFrac = Deci - ClockOrder * Portion
+    const Twelve = ~~(ClockFrac / Portion * 12)
     if (Twelve === 11) {
         ClockOrder++
     }

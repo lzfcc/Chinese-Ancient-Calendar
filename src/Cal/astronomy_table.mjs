@@ -394,15 +394,15 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     const { Node, MoonLatiAccumList } = AutoPara[CalName]
     let { MoonLatiDifList } = AutoPara[CalName]
     ///////預處理陰陽曆////////
-    let portion = 10
+    let Portion = 10
     if (Type <= 4) {
-        portion = 12
+        Portion = 12
     } else if (CalName === 'Dayan') {
-        portion = 120
+        Portion = 120
     } else if (CalName === 'Wuji') { // 五紀正元找不到比例，瞎填
-        portion = 50 / 3
+        Portion = 50 / 3
     } else if (CalName === 'Tsrengyuan') {
-        portion = 219 / 4
+        Portion = 219 / 4
     }
     const NodeAccumHalf = NodeAccum % (Node / 2)
     const NodeAccumHalfInt = ~~NodeAccumHalf
@@ -412,7 +412,7 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     }
     let Lati = 0
     if (Type < 6) {
-        Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDifList[NodeAccumHalfInt] / portion)
+        Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDifList[NodeAccumHalfInt] / Portion)
     } else if (Type === 6 || ['Wuji', 'Tsrengyuan'].includes(CalName)) { // 二次
         let Initial = MoonLatiAccumList[NodeAccumHalfInt] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 2]
         let n = 1 + NodeAccumHalf - NodeAccumHalfInt
@@ -420,7 +420,7 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
             Initial = MoonLatiAccumList[NodeAccumHalfInt - 2] + ',' + MoonLatiAccumList[NodeAccumHalfInt - 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt]
             n = 3 + NodeAccumHalf - NodeAccumHalfInt
         }
-        Lati = Yinyang * Interpolate1(n, Initial) / portion
+        Lati = Yinyang * Interpolate1(n, Initial) / Portion
     } else if (CalName === 'Dayan') { // 大衍的入交度數另有算式，我直接用月平行速來算 // 三次差：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8// 曲安京《曆法》頁251
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const LongiRaw = NodeAccumHalf * MoonAvgVDeg
@@ -448,7 +448,7 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
         const G1 = Start + D / 2 // 定初率。「以加減初率（少象減之，老象加之）」
         const Gn = G1 + (Frac - 1) * D // 「以度差累加減之（少象以差減，老象以差加）」
         const G = (G1 + Gn) * Frac / 2
-        Lati = Yinyang * (MoonLatiAccumList[k] + G) / portion
+        Lati = Yinyang * (MoonLatiAccumList[k] + G) / Portion
     }
     const Lati1 = 91.31 - Lati
     return { Lati, Lati1 }

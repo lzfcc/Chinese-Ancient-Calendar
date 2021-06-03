@@ -102,11 +102,11 @@ export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 
     Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(CalName)
     let standard = 0.75
-    let portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
+    let Portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
     if (CalName === 'Xuanming') {
-        portion = 5 // 夏至0.7405
+        Portion = 5 // 夏至0.7405
     } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        portion = 2 // 夏至0.726
+        Portion = 2 // 夏至0.726
     }
     if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
         standard = 1 - Rise + LightRange // + 0.1
@@ -115,7 +115,7 @@ export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 
     } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) { // 欽天日入後則進一日
         standard = 1 - Rise // 冬至0.7，夏至0.8
     } else if (WinsolsDifRaw > Solar25 && WinsolsDifRaw < Solar * 0.75) {
-        standard = 0.75 + (Rise - SpringequinoxSunrise) / portion
+        standard = 0.75 + (Rise - SpringequinoxSunrise) / Portion
     }
     let NewmPlus = 0
     let Print = ''

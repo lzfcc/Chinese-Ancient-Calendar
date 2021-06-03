@@ -58,7 +58,7 @@ export default class Converter extends React.Component {
       <div>
         <p className='note'></p>
         {this.input()}
-        <button onClick={this.handle} className='button4-7'>node2cycle</button>
+        <button onClick={this.handle} className='button4-7'>node2cycle</button><span className="Deci64">n/d</span><span className="Deci64">.64</span>
         {this.result()}
       </div>
     )

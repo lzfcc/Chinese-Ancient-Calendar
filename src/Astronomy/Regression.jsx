@@ -5,9 +5,9 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: '2563758263',
-      b: '2122216903',
-      c: '5305949008'
+      a: '1875.2125/7290',
+      b: '1547.0880/7290',
+      c: '3868/7290'
     }
     this.handle = this.handle.bind(this)
   }
@@ -15,21 +15,21 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>週天都 365.</span>
-        <input className='width3'
+        <span>週天度 365.</span>
+        <input className='width4'
           value={this.state.a}
           onChange={e => {
             this.setState({ a: e.currentTarget.value });
           }}
         />
-        <span>交點月 27.</span>
-        <input className='width3'
+        <span> 交點月 27.</span>
+        <input className='width4'
           value={this.state.b}
           onChange={e => {
             this.setState({ b: e.currentTarget.value });
           }}
         />
-        <span>朔望月 29.</span>
+        <span> 朔望月 29.</span>
         <input className='width3'
           value={this.state.c}
           onChange={e => {
@@ -54,7 +54,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans'>
+      <div className='ans' style={{ whiteSpace: "pre-wrap" }}>
         <p>{this.state.output}</p>
       </div>
     )
@@ -63,9 +63,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>交點退行速度</h3>
+        <h3>交點退行、交率交數</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-7'>regression</button>
+        <button onClick={this.handle} className='button4-7'>regression</button><span className="Deci64">n/d</span>
         {this.result()}
       </div>
     )

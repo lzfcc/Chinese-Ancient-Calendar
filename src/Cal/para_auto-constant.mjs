@@ -62,32 +62,32 @@ export const AutoSidereal = CalName => {
 
 export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
     const { AutoPara, Type } = Bind(CalName)
-    let MoonAvgVDeg = 0
+    let V = 0
     if (CalName === 'Daye') {
-        MoonAvgVDeg = 548.101486 / 41
+        V = 548.101486 / 41
     } else if (['WuyinA', 'WuyinB'].includes(CalName)) {
-        MoonAvgVDeg = 13.36834319526627 // parseFloat((Solar / Lunar + 1).toPrecision(14))
+        V = 13.36834319526627 // parseFloat((Solar / Lunar + 1).toPrecision(14))
     } else if (CalName === 'Huangji') {
-        MoonAvgVDeg = 695 / 52
+        V = 695 / 52
     } else if (CalName === 'Xuanming') {
-        MoonAvgVDeg = 1123 / 84
+        V = 1123 / 84
     } else if (['Chongxuan', 'Qintian'].includes(CalName)) {
-        MoonAvgVDeg = 13 + 7 / 19
+        V = 13 + 7 / 19
     } else if (CalName === 'Mingtian' || Type === 11) {
-        MoonAvgVDeg = 13.36875 // 約分後的精確值。13+29913000/81120000。但是明天又提到用1337
+        V = 13.36875 // 約分後的精確值。13+29913000/81120000。但是明天又提到用1337
     } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName) || Type === 10) {
-        MoonAvgVDeg = 13.37
+        V = 13.37
     } else if (CalName === 'Chongtian') {
-        MoonAvgVDeg = 909 / 68 // 13.3676470588
+        V = 909 / 68 // 13.3676470588
     } else if (Type === 9) { // 7290/545.3=13.3687878232，按照公式=13.3687753161
-        MoonAvgVDeg = 7290 / 545.3 // 紀元
+        V = 7290 / 545.3 // 紀元
     } else if (CalName === 'Gengwu') {
-        MoonAvgVDeg = 5230 / 391.21 // 13.3687789
+        V = 5230 / 391.21 // 13.3687789
     } else {
         const { Sidereal, Solar, Lunar, LunarRaw } = AutoPara[CalName]
-        MoonAvgVDeg = parseFloat(((Sidereal || Solar) / (Lunar || LunarRaw) + 1).toPrecision(14))
+        V = parseFloat(((Sidereal || Solar) / (Lunar || LunarRaw) + 1).toPrecision(14))
     }
-    return MoonAvgVDeg
+    return V
 }
 
 export const AutoNodeCycle = CalName => {

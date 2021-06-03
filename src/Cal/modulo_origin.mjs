@@ -25,7 +25,7 @@ export const Sunzi = function () {
         InputRaw[m] = InputRaw[m - 1] + ',' + InputRaw[m]
     }
     const Input = Deci2Int(InputRaw[InputRaw.length - 1]).Int
-    const portion = Deci2Int(InputRaw[InputRaw.length - 1]).portion
+    const Portion = Deci2Int(InputRaw[InputRaw.length - 1]).Portion
     const i = Input.length
     if (i % 2 === 1) {
         throw (new Error('[大衍總數] 參數數量應爲偶數！' + Input[0] + ', ' + Input[1]))
@@ -135,10 +135,10 @@ export const Sunzi = function () {
     for (let k = 0; k < Ding.length; k++) {
         sum = big.add(sum, big.mul(Yong[k], r[k]))
     }
-    // const x = parseFloat(((sum % S) / portion).toPrecision(12))
-    // S = parseFloat((S / portion).toPrecision(12))
-    const x = big.mod(sum, S).div(portion).toString()
-    S = big.div(S, portion).toString()
+    // const x = parseFloat(((sum % S) / Portion).toPrecision(12))
+    // S = parseFloat((S / Portion).toPrecision(12))
+    const x = big.mod(sum, S).div(Portion).toString()
+    S = big.div(S, Portion).toString()
     const Print = `x = ${x} + ${S}n (n = 0, 1, 2 ...)`
     let DingPrint = '定母 ' + DingRaw
     const flag = isSame(Yuan, DingRaw)
@@ -371,13 +371,13 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
     const FirstConstNumer = Frac2FalseFrac(FirstConstRaw).Numer
     const SolarNumer = SolarDenom * 365 + SolarFrac
     const LunarNumer = Denom * 29 + LunarFrac
-    const portion = SolarDenom * Denom
+    const Portion = SolarDenom * Denom
     const OriginComm = OriginConstNumer * Denom
     const FirstComm = FirstConstNumer * SolarDenom
     const LeapComm = OriginComm - FirstComm
     const SolarComm = SolarNumer * Denom
     const LunarComm = LunarNumer * SolarDenom
-    const ScComm = 60 * portion
+    const ScComm = 60 * Portion
     const tmp = OriginComm + ',' + ScComm + ',' + LeapComm + ',' + LunarComm // 0 + ',' + SolarComm + ',' +
     const Result = (Sunzi(tmp).x) / SolarComm
     const Print = '入元 ' + Result + ' 年（算外）'

@@ -569,30 +569,22 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
     const { Anoma, DeltaMoon1, DeltaMoon2, DeltaMoon3, XianConst } = AutoPara[CalName]
     const Anoma50 = Anoma / 2 // 轉中
+    const Anoma25 = Anoma / 4
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
     let MoonDifAccum = 0
     let MoonAcrV = 0
     let signB = 1
     if (Type === 11) {
         let signA = 1
-        let T = 0
-        if (AnomaAccumRaw <= Anoma / 4) {
-            T = AnomaAccumRaw / XianConst
-        } else if (AnomaAccumRaw <= Anoma / 2) {
-            T = (Anoma50 - AnomaAccumRaw) / XianConst
-        } else if (AnomaAccumRaw <= Anoma * 3 / 4) {
-            T = (AnomaAccumRaw - Anoma50) / XianConst
-            signA = -1
-        } else {
-            T = (Anoma - AnomaAccumRaw) / XianConst
+        const T = (Anoma25 - Math.abs(AnomaAccumRaw % Anoma50 - Anoma25)) / XianConst
+        if (AnomaAccumRaw >= Anoma50) {
             signA = -1
         }
         MoonDifAccum = signA * (DeltaMoon1 * T - DeltaMoon2 * T ** 2 - DeltaMoon3 * T ** 3) / 100 // 遲疾差
         let signB = 1
         let AnomaXian = 0
         if (AnomaAccumRaw <= 6.642) {
-            AnomaXian = AnomaAccumRaw / XianConst
-            signB = 1
+            AnomaXian = AnomaAccumRaw / XianConst            
         } else if (AnomaAccumRaw <= 7.052) {
             AnomaXian = AnomaAccumRaw / XianConst
             signB = 0
@@ -604,7 +596,6 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
             signB = 0
         } else {
             AnomaXian = (Anoma - AnomaAccumRaw) / XianConst
-            signB = 1
         }
         MoonAcrV = 1.0962 + signB * (0.11081575 - 0.0005815 * AnomaXian - 0.00000975 * AnomaXian * (AnomaXian - 1)) // 遲疾限下行度
     } else {
@@ -612,22 +603,18 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
             // AnomaAccum = big.div(OriginAccum, Lunar).add(i - 1 + ZhengWinsolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
             // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengWinsolsDif) * 2142887000 % AnomaNumer) / 81120000
             const AnomaAccum = AnomaAccumRaw * MoonAvgVDeg
-            let T = 0
+            const T = (92.0927 - Math.abs(AnomaAccumRaw % Anoma50 - 92.0927)) / XianConst            
             let sign3 = 1
-            if (AnomaAccum <= 92.0927) {
-                T = AnomaAccum
-            } else if (AnomaAccum <= 184.1854) {
-                T = 184.1854 - AnomaAccum
+            if (AnomaAccum <= 92.0927) {                
+            } else if (AnomaAccum <= 184.1854) {                
                 sign3 = -1
             } else if (AnomaAccum <= 92.0927 * 3) {
                 signB = -1
-                sign3 = -1
-                T = AnomaAccum - 184.1854
+                sign3 = -1                
             } else {
-                signB = -1
-                T = 184.1854 * 2 - AnomaAccum
+                signB = -1                
             }
-            const tmp = signB * (T * (210.09 - T)) // 積數
+            const tmp = signB * T * (210.09 - T) // 積數
             MoonDifAccum = tmp / 1976 // 遲疾差度 //+ T * (MoonAvgVDeg - Sidereal / Anoma) / MoonAvgVDeg // 《中國古代曆法》頁110莫名其妙說要加上後面這個，但不加纔跟其他曆相合
             // MoonTcorr2 = tmp / 0.67735 / Denom // 遲疾定差 13.36875*1976/0.67735=39000
             MoonAcrV = 13.36875 + sign3 * (1.27 - T / 72.5) // 原文739
@@ -800,9 +787,9 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         }
         MoonTcorr = MoonTcorr2 || MoonTcorr1
         if (Type >= 5 && Type <= 10) {
-            const portion = AutoNodePortion(CalName)
-            NodeTcorr = SunTcorr + portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。 const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。 // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
-            NodeAccumCorrB = portion * SunTcorr + MoonTcorr // 太陽入交定日，上面是月亮入交定日
+            const Portion = AutoNodePortion(CalName)
+            NodeTcorr = SunTcorr + Portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。 const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。 // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
+            NodeAccumCorrB = Portion * SunTcorr + MoonTcorr // 太陽入交定日，上面是月亮入交定日
         }
     }
     return {

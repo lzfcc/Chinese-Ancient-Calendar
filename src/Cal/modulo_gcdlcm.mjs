@@ -32,15 +32,15 @@ export const GcdLcmGroup = function () {
     //     InputRaw[m] = InputRaw[m - 1] + ',' + InputRaw[m]
     // }
     // const Input = Deci2Int(InputRaw[InputRaw.length - 1]).Int
-    // const portion = Deci2Int(InputRaw[InputRaw.length - 1]).portion
+    // const Portion = Deci2Int(InputRaw[InputRaw.length - 1]).Portion
     let lcm = big(InputRaw[0])
     let gcd = big(InputRaw[0])
     for (let k = 0; k < InputRaw.length - 1; k++) {
         lcm = GcdLcm(lcm, big(InputRaw[k + 1])).lcm
         gcd = GcdLcm(gcd, big(InputRaw[k + 1])).gcd
     }
-    // gcd = parseFloat((gcd / portion).toPrecision(12))
-    // lcm = parseFloat((lcm / portion).toPrecision(12))
+    // gcd = parseFloat((gcd / Portion).toPrecision(12))
+    // lcm = parseFloat((lcm / Portion).toPrecision(12))
     // let Print = 'gcd(' + InputRaw[InputRaw.length - 1] + ') = ' + gcd + ', lcm(' + InputRaw[InputRaw.length - 1] + ') = ' + lcm
     let Print = `gcd(${InputRaw}) = ${gcd}\n lcm(${InputRaw}) = ${lcm}`
     if (big(gcd).eq(1)) {
@@ -80,8 +80,8 @@ export const FracLcm1 = function () { // 不能改成箭頭函數
     }
     let NumerComm = []
     for (let k = 0; k < Denom.length; k++) {
-        const portion = big.div(S, Denom[k])
-        NumerComm[k] = big.mul(Numer[k], portion).toString()
+        const Portion = big.div(S, Denom[k])
+        NumerComm[k] = big.mul(Numer[k], Portion).toString()
     }
     let lcmNumer = NumerComm[0]
     for (let k = 0; k < Denom.length - 1; k++) {

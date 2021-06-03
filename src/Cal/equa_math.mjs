@@ -18,48 +18,53 @@ export const Frac2FalseFrac = FracRaw => {
     let Numer = 0
     let Denom = 0
     if (Frac.length === 3) {
-        Numer = Number(Frac[0] - 1) * Number(Frac[2]) + Number(Frac[1]) // 干支數-1
-        Denom = Number(Frac[2])
+        Numer = +(Frac[0] - 1) * +Frac[2] + +Frac[1] // 干支數-1
+        Denom = +Frac[2]
     } else if (Frac.length === 2) {
-        Numer = Number(Frac[0])
-        Denom = Number(Frac[1])
+        Numer = +Frac[0]
+        Denom = +Frac[1]
     } else {
-        Numer = Number(Frac[0])
+        Numer = +Frac[0]
         Denom = 1
     }
-    return {
-        Numer,
-        Denom
-    }
+    return { Numer, Denom }
 }
-// console.log(Frac2FalseFrac('888'))
+// console.log(Frac2FalseFrac('888+3/2'))
 
 export const Deci2Int = function () { // 輸入字符串
     const Raw = arguments[0].split(/;|,|，|。|；|｜| /)
-    let portion = 1
+    let Portion = 1
     let Int = []
     for (let j = 0; j < Raw.length; j++) {
-        Int[j] = Number(Raw[j])
+        Int[j] = +Raw[j]
         let i = 0
         while (i < 11) {
             if (parseFloat((Int[j] * 10 ** i).toPrecision(12)) === Math.floor(Int[j] * 10 ** i)) {
-                portion = Math.max(10 ** i, portion)
+                Portion = Math.max(10 ** i, Portion)
                 break
             }
             i++
         }
     }
-    if (portion !== 1) {
+    if (Portion !== 1) {
         for (let j = 0; j < Int.length; j++) {
-            Int[j] = parseFloat((Int[j] * portion).toPrecision(12))
+            Int[j] = parseFloat((Int[j] * Portion).toPrecision(12))
         }
     }
-    return {
-        Int,
-        portion
-    }
+    return { Int, Portion }
 }
 // console.log(Deci2Int('1.1,2.23,3.4,5.555').Int)
+
+export const DeciFrac2Frac = Deci => { // 把有小數點的分數轉換為整數分數
+    const Raw = Deci.split('/')
+    let n = Raw[0]
+    let d = Raw[1]
+    const L = Math.max((n.split('.')[1] || '').length, (d.split('.')[1] || '').length)
+    n = Math.round(+n * 10 ** L)
+    d = Math.round(+d * 10 ** L)
+    return n + '/' + d
+}
+// console.log(DeciFrac2Frac('2553.0026/12030'))
 
 // 把一個數字按照幾位分割
 export const SliceNum = (Input, num) => { // a：小數點前，b：小數點後，c：并之
@@ -93,8 +98,5 @@ export const SliceNum = (Input, num) => { // a：小數點前，b：小數點後
         b[i] = parseInt(bString[i])
     }
     const cString = aString.concat(bString)
-    return {
-        a,
-        cString
-    }
+    return { a, cString }
 }

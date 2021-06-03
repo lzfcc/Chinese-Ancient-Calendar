@@ -65,14 +65,14 @@ export const RoundH2LPrint = h => {
     const Sidereal = 365.25
     const pi = 3.141592653589793
     const r = 60.875 // 會圓術系數3，不是pi
-    const portion2 = pi / 3
-    const portion4 = Sidereal / 360
+    const Portion2 = pi / 3
+    const Portion4 = Sidereal / 360
     const l = RoundH2LC(h).l
     const c = Math.sqrt(h * (2 * r - h)) * 2
     const rReal = Sidereal / pi / 2 // 365.25、60.875對應的直徑：116.26268592862955
-    const hReal = h / portion2
+    const hReal = h / Portion2
     let cWest = Math.sqrt(hReal * (2 * rReal - hReal))
-    const lWest = RoundC2LWest(rReal / portion4, cWest / portion4) * portion4 * 2
+    const lWest = RoundC2LWest(rReal / Portion4, cWest / Portion4) * Portion4 * 2
     cWest *= 2
     let Print = [{
         title: '會圓術',
@@ -93,15 +93,15 @@ export const RoundC2LHPrint = cRaw => {
     }
     // const Sidereal = 365.25
     // const r = 60.875
-    // const portion2 = pi / 3
-    // const portion4 = Sidereal / 360
+    // const Portion2 = pi / 3
+    // const Portion4 = Sidereal / 360
     const Func = RoundC2HL(c)
     let l = Func.l
     let h = Func.h
     // const rReal = Sidereal / pi / 2
-    // const cReal = c / portion2
-    // let lWest = RoundC2LWest(rReal / portion4, c / portion4) * portion4
-    // const hWest = (rReal / portion4 - Math.sqrt((rReal / portion4) ** 2 - cReal ** 2))// / portion2
+    // const cReal = c / Portion2
+    // let lWest = RoundC2LWest(rReal / Portion4, c / Portion4) * Portion4
+    // const hWest = (rReal / Portion4 - Math.sqrt((rReal / Portion4) ** 2 - cReal ** 2))// / Portion2
     // lWest *= 2
     let Print = [{
         title: '會圓術',
@@ -125,14 +125,14 @@ export const RoundL2HPrint = lRaw => {
         h = 0
     }
     let c = lRaw - h ** 2 / r
-    const portion2 = pi / 3
-    const portion4 = Sidereal / 360
+    const Portion2 = pi / 3
+    const Portion4 = Sidereal / 360
     const rReal = Sidereal / pi / 2
     // const lReal=
-    let hWest = RoundL2HWest(rReal / portion4, l / portion4)
-    hWest *= portion2
-    const cWest = RoundH2LC(hWest).c / portion2 * portion4
-    hWest *= portion4
+    let hWest = RoundL2HWest(rReal / Portion4, l / Portion4)
+    hWest *= Portion2
+    const cWest = RoundH2LC(hWest).c / Portion2 * Portion4
+    hWest *= Portion4
     let Print = [{
         title: '會圓術',
         data: [h.toFixed(6), (h - hWest).toFixed(4), c.toFixed(6), (c - cWest).toFixed(4)]
@@ -240,8 +240,8 @@ const HushigeyuanWest = (LongiRaw, Sidereal, DE) => { // DE黃赤交角。變量
         Longi = Sidereal25 - Longi
     }
     ////轉換爲360度////
-    const portion4 = Sidereal / 360
-    Longi /= portion4
+    const Portion4 = Sidereal / 360
+    Longi /= Portion4
     const r = 360 / pi / 2
     const p = RoundL2CWest(r, DE) // DK
     const v = RoundL2HWest(r, DE) // KE
@@ -273,9 +273,9 @@ const HushigeyuanWest = (LongiRaw, Sidereal, DE) => { // DE黃赤交角。變量
     const BL = PC * BN / PQ
     const BD = RoundC2LWest(r, BL)
     //////轉換爲365.25度//////
-    let Eclp2EquaDif = (EquaLongi - Longi) * portion4
-    let Equa2EclpDif = (Longi - BD) * portion4
-    Lati *= portion4
+    let Eclp2EquaDif = (EquaLongi - Longi) * Portion4
+    let Equa2EclpDif = (Longi - BD) * Portion4
+    Lati *= Portion4
     let sign1 = 1
     let sign2 = 1
     let Eclp2Equa = 0

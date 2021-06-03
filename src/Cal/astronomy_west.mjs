@@ -1,10 +1,5 @@
-import {
-    big,
-    frc
-} from './para_constant.mjs'
-import {
-    Frac2FalseFrac
-} from './equa_math.mjs'
+import { big, frc } from './para_constant.mjs'
+import { Frac2FalseFrac, DeciFrac2Frac } from './equa_math.mjs'
 const pi = big.acos(-1)
 const d2r = degree => big(degree).mul(pi).div(180)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -28,9 +23,8 @@ const r2d = degree => big(degree).mul(180).div(pi)
 //     return SunDifAccum.toString()
 // }
 
-export const ConstWest = year => {
-    // 儒略世紀：36525日。我下面索性將100年作爲儒略世紀，要不然太麻煩
-    year = Number(year)
+export const ConstWest = year => { // 儒略世紀：36525日。我下面索性將100年作爲儒略世紀，要不然太麻煩
+    year = +year
     // 黃赤交角
     // ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3   // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
     const t = big.sub(year, 2000).div(100)
@@ -47,16 +41,7 @@ export const ConstWest = year => {
     const Anoma = big(27.554549878).sub(big(0.00000001039).mul(y)).toNumber() // 近點月
     const Node = big(27.21222082).add(big(0.0000000038).mul(y)).toNumber()
     const Print = '朔望月 ' + Lunar + ` 日\n近點月 ` + Anoma + ` 日\n交點月 ` + Node + ` 日\n回歸年 ` + Solar + ` 日\n恆星年 ` + Sidereal + ` 日\n黃赤交角 ` + obliquity + `°\n黃道離心率 ` + eccentricity + `\n近日點平黃經 ` + perihelion + '°'
-    return {
-        Print,
-        obliquity,
-        perihelion,
-        eccentricity,
-        Anoma,
-        Solar,
-        Sidereal,
-        Lunar
-    }
+    return { Print, obliquity, perihelion, eccentricity, Anoma, Solar, Sidereal, Lunar }
 }
 // console.log(ConstWest(501).perihelion)
 
@@ -78,7 +63,6 @@ export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數�
         MoonAcrV: MoonAcrV.toNumber()
     }
 }
-
 // console.log(MoonAcrVWest(7, 900))
 
 // 《數》頁135
@@ -89,8 +73,8 @@ const SunWest_BACKUP = (WinsolsDifRaw, year) => {
     const e = ConstFunc.eccentricity
     const perihelion = ConstFunc.perihelion
     const Solar = ConstFunc.Solar
-    const portion = 360 / Solar
-    WinsolsDifRaw *= portion
+    const Portion = 360 / Solar
+    WinsolsDifRaw *= Portion
     const E = 3.1415926 * (((WinsolsDifRaw + 270 - perihelion) + 360) % 360) / 360 // 以冬至起算
     return big(2).mul(big.atan(big.sqrt((1 + e) / (1 - e)).mul(big.tan(E / 2)))).sub(E).add(big(e).mul(big.sin(E))).toNumber()
 }
@@ -100,21 +84,20 @@ export const SunAcrVWest = (WinsolsDifRaw, year) => { // 武家璧《大衍曆�
     const e = ConstFunc.eccentricity // 黃道離心率
     const perihelion = ConstFunc.perihelion // 近日點
     const Solar = ConstFunc.Solar
-    const portion = 360 / Solar
-    WinsolsDifRaw = ((WinsolsDifRaw - (perihelion - 270) / portion) + 360) % 360
-    const M = d2r(WinsolsDifRaw * portion) // 距離冬至日數轉換成平黃經
-    const M1 = d2r((WinsolsDifRaw - 1) * portion)
+    const Portion = 360 / Solar
+    WinsolsDifRaw = ((WinsolsDifRaw - (perihelion - 270) / Portion) + 360) % 360
+    const M = d2r(WinsolsDifRaw * Portion) // 距離冬至日數轉換成平黃經
+    const M1 = d2r((WinsolsDifRaw - 1) * Portion)
     let SunDifAccum = big(e).mul(2).mul(M.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M.mul(2)))) // 中心差=真-平近點角
-    SunDifAccum = SunDifAccum.mul(3437.747 / 60).div(portion) // 化爲角分乘3437.747，不知道怎么来的
+    SunDifAccum = SunDifAccum.mul(3437.747 / 60).div(Portion) // 化爲角分乘3437.747，不知道怎么来的
     let SunDifAccum1 = big(e).mul(2).mul(M1.sin()).add(big(1.25).mul(big(e).pow(2)).mul(big.sin(M1.mul(2))))
-    SunDifAccum1 = SunDifAccum1.mul(3437.747 / 60).div(portion)
+    SunDifAccum1 = SunDifAccum1.mul(3437.747 / 60).div(Portion)
     const SunAcrV = SunDifAccum.sub(SunDifAccum1).add(1)
     const Longi = SunDifAccum.add(WinsolsDifRaw).toNumber() // 黃經。這是日數度，不是360度
     SunDifAccum = SunDifAccum.toNumber()
     return {
-        SunDifAccum,
-        SunAcrV: SunAcrV.toNumber(),
-        Longi
+        SunDifAccum, Longi,
+        SunAcrV: SunAcrV.toNumber()
     }
 }
 // console.log(SunAcrVWest(91, 4500))
@@ -144,32 +127,23 @@ export const Equa2EclpWest = (LongiRaw, Sidereal, year, E) => { // 《中國古�
     Eclp2EquaDif *= sign2
     Equa2Eclp = LongiRaw + Equa2EclpDif
     Eclp2Equa = LongiRaw + Eclp2EquaDif
-    return {
-        Eclp2Equa,
-        Equa2Eclp,
-        Equa2EclpDif,
-        Eclp2EquaDif,
-    }
+    return { Eclp2Equa, Equa2Eclp, Equa2EclpDif, Eclp2EquaDif }
 }
 
 // sinδ=sinλsinε :λ黃，ε：黃赤交角。黃度轉赤緯 
 // 一天之内太阳高度角的变化速率如何计算？ - Pjer https://www.zhihu.com/question/25909220/answer/1026387602 一年中太阳直射点在地球上的移动速度是多少？ - 黄诚赟的回答 https://www.zhihu.com/question/335690936/answer/754032487「太阳直射点的纬度变化不是匀速的，春分秋分最大，夏至冬至最小。」
 // https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE
 export const Longi2LatiWest = (lRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630    
-    const portion = Sidereal / 360
-    lRaw /= portion
+    const Portion = Sidereal / 360
+    lRaw /= Portion
     lRaw += 270
     const Angle = d2r(lRaw) // 角度轉換爲定義域
     E = E || ConstWest(year).obliquity // 化爲定義域
     E = d2r(E)
     const d = r2d(Angle.sin().mul(E.sin()).asin()).toNumber() //.toPrecision(60) //.toSD(60)
-    const Lati = d * portion
+    const Lati = d * Portion
     const Lati1 = Sidereal / 4 - Lati // 去極度
-    return {
-        d,
-        Lati,
-        Lati1,
-    }
+    return { d, Lati, Lati1 }
 }
 
 // https://zh.wikipedia.org/zh-hk/%E6%97%A5%E5%87%BA%E6%96%B9%E7%A8%8B%E5%BC%8F
@@ -185,10 +159,7 @@ export const Longi2SunriseWest = (lRaw, f, Sidereal, year) => {
     let v = big.sin(d2r(-0.51)).sub(big.sin(f).mul(big.sin(d))).div(big.cos(f).mul(big.cos(d)))
     v1 = big(50).sub(v1.acos().mul(big.div(50, pi))).toNumber() // 換算成百刻
     v = big(50).sub(v.acos().mul(big.div(50, pi))).toNumber()
-    return {
-        v1,
-        v
-    }
+    return { v1, v }
 }
 // console.log(Longi2SunriseWest(180, 39, 360, 2021))
 // console.log(Longi2LatiWest(182.625, 365.25, 2000).Lati)
@@ -209,11 +180,7 @@ const zAcrConvert = (Deci, Lati, f) => { // 日分，赤緯radius，緯度radius
     const v = d2r(big(big(Deci).sub(0.5)).mul(360)) // 時角radius
     let a = f.sin().mul(Lati.sin()).add(f.cos().mul(Lati.cos()).mul(v.cos())).asin() // 太陽高度角radius
     const zAcr = big(pi.div(2)).sub(a) // 眞天頂距radius
-    return {
-        v,
-        a,
-        zAcr
-    }
+    return { v, a, zAcr }
 }
 export const Deciaml2Angle = (f, h1, m1, s1, WinsolsDifInt, h, m, s, year, height) => { // 丁豔、袁隆基、趙培濤、仝軍令《太陽視日軌跡跟蹤算法研究》
     f = d2r(f) // 地理緯度
@@ -290,8 +257,7 @@ const MoonLongiWest_BACKUP = (EclpRaw, year) => { // 統一360度
     const u = r2d(sinu.asin())
     const l = r2d(a0Raw.sin().div(a0Raw.sin().pow(2).sub(I.sin().pow(2).mul(v0.sin().pow(2))).sqrt()).atan()) // WhiteLongi
     return {
-        EquaLongi,
-        a0,
+        EquaLongi, a0,
         u: u.toNumber(),
         l: l.toNumber(),
     }
@@ -318,9 +284,7 @@ const MoonLatiWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
     const cosT = T.cos()
     const sinT = T.sin()
     const Node = big(27.212220817).add(big(0.000000003833).mul(year - 2000))
-    if (!NodeAvgV) {
-        NodeAvgV = big(Sidereal).div(Node)
-    }
+    NodeAvgV = NodeAvgV || big(Sidereal).div(Node)
     const E = d2r(ConstWest(year).obliquity)
     const sinE = E.sin()
     const cosE = E.cos()
@@ -451,11 +415,29 @@ export const Cycle2Node = (Cycle, Lunar) => {
 // console.log(Cycle2Node('404/465', '659/1242'))
 
 export const Regression = (Sidereal, Node, Lunar) => {
-    Sidereal = +('365.' + Sidereal)
-    Node = +('27.' + Node)
-    Lunar = +('29.' + Lunar)
-    return (Sidereal / Node - Sidereal / Lunar - 1).toFixed(8) + ' 度/日'
+    let Regression = 0
+    let Portion = 0
+    if (Sidereal.includes('/') && Node.includes('/') && Lunar.includes('/')) {
+        Sidereal = frc('365 ' + DeciFrac2Frac(Sidereal))
+        Node = frc('27 ' + DeciFrac2Frac(Node))
+        Lunar = frc('29 ' + DeciFrac2Frac(Lunar))       
+        Regression = Sidereal.div(Node).sub(Sidereal.div(Lunar)).sub(1)
+        Portion = Regression.add(1).div(Sidereal.div(Lunar).add(1).add(Regression))
+        Regression = Regression.toFraction() + ' = ' + Regression.toString()
+        Portion = Portion.toFraction() + ' = ' + Portion.toString()
+    } else if (!Sidereal.includes('/') && !Node.includes('/') && !Lunar.includes('/')) {
+        Sidereal = +('365.' + Sidereal)
+        Node = +('27.' + Node)
+        Lunar = +('29.' + Lunar)
+        Regression = (Sidereal / Node - Sidereal / Lunar - 1).toFixed(8)
+        Portion = ((1 + Regression) / (Sidereal / Lunar + 1 + Regression)).toFixed(8)
+    } else {
+        throw (new Error('請同時輸入小數或分數'))
+    }
+    return `交點退行速度 ${Regression} 度/日\n交率/交數 ${Portion}`
 }
+// console.log(Regression('1875.2125/7290', '1547.0880/7290', '3868/7290'))
+// console.log(Regression('3084.57/12030', '2553.0026/12030', '6383/12030'))
 
 const MingtianNode = () => {
     const v = frc('9901159/6240000').div('1151693/39000') // 9901159/184270880交點退行速度
@@ -481,4 +463,4 @@ const MingtianNode = () => {
 // }
 // console.log(test2(91341235, 365.24362139917695474, 29.5305898491083676))  // 紀元15.03210011886921
 // console.log(1776 / 7290)
-// 也就是說，積年九千萬年，能保持小數點後4位精度，只能說剛好勉強夠用
+// 也就是說，積年九千萬年，能保持小數點後5位精度，只能說剛好勉強夠用
