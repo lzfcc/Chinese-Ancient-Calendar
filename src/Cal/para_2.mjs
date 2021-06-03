@@ -1163,8 +1163,11 @@ export default {
         AnomaNumer: 144110.6066, // 轉終分
         Node: 27 + 1109.9368 / 5230,
         NodeNumer: 142319.9368, // 交終分
-        EcliLimitA: 12.97,
-        EcliLimitD: 4.32,
+        SunLimitYang: 2400, // 定法248。分秒母皆100
+        SunLimitYin: 3100, // 定法320
+        SunLimitNone: 5500,
+        MoonLimit1: 1700, // 定法340
+        MoonLimitNone: 5100,
         OriginAd: 1180 - 88639656,
         CloseOriginAd: 1180, // 大定二十年庚子
         // JdOrigin: 2152036.1489 - 88639656 * (365 + 1274 / 5230),

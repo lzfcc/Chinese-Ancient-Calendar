@@ -44,7 +44,7 @@ const ExMagni = (Magni, Type, CalName) => {
     return { Magni, status }
 }
 
-const EclipseTable1 = (NodeAccum, CalName) => {
+const Eclipse1 = (NodeAccum, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
     const { Node, Lunar } = AutoPara[CalName]
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
@@ -68,7 +68,7 @@ const EclipseTable1 = (NodeAccum, CalName) => {
 }
 
 // 春夏秋冬各三月，那麼閏月怎麼辦呢，所以輸入的時候應該用day的noleapmon，閏月還是上一個月
-const EclipseTable2 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalName, i, Leap) => {
+const Eclipse2 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalName, i, Leap) => {
     const { AutoPara, Type } = Bind(CalName)
     const { Node, Lunar, Anoma, Solar, Denom, NodeDenom } = AutoPara[CalName]
     const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
@@ -516,7 +516,7 @@ const EclipseTable2 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalNa
     const StartDeci = Last ? Deci - Last * portion / 200 : 0
     return { Magni, status, Deci, StartDeci, Last }
 }
-// console.log(EclipseTable2(14.7, 24, 0.3, 15, 2, 0, 1, 'Huangji').Deci)
+// console.log(Eclipse2(14.7, 24, 0.3, 15, 2, 0, 1, 'Huangji').Deci)
 
 const EclipseTable3 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalName) => { // 入交定日，入轉日，定朔分，距冬至日數，月份，閏月序數，朔望，名字。用月份判斷很奇怪，但是沒有證據說是用節氣判斷，皇極有兩條「閏四月內」，那肯定就是月份
     const { AutoPara, Type } = Bind(CalName)
@@ -789,7 +789,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             if (AvgTotalDeci >= 0.5) {
                 Tcorr = -1.5 * Tcorr
             }
-        } else if (CalName === 'Gengwu') {
+        } else if (Type === 10) {
             Tcorr = -2 * AvgTotalNoonDif * (0.5 - AvgTotalNoonDif)
             if (AvgTotalDeci >= 0.5) {
                 Tcorr = -Tcorr
@@ -818,8 +818,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
                 const tmp = 2 * (Rise - AvgTotalDeci)
                 Tcorr = ((4 / 3) * Rise - tmp) * tmp / 1.5
             }
-        } else if (CalName === 'Gengwu') {
-            Tcorr = 0.4 * AvgTotalDeciHalfRev ** 2 // 四因退位
+        } else if (Type === 10) {
+            Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4  // 四因退位
         } else if (Type === 10) {
             Tcorr = AvgTotalDeciHalfRev ** 2 / 5
         } else if (CalName === 'Shoushi') { // 大統取消授時的月食時差改正
@@ -889,7 +889,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             sign2b = -sign2b
         }
     } else {
-        if (['Yingtian', 'Qianyuan', 'Yitian', 'Gengwu'].includes(CalName)) { // 庚午「春分後陽曆減陰曆加」
+        if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName) || Type === 10) { // 庚午「春分後陽曆減陰曆加」
             if (isYin) {
                 sign1 = -1
             }
@@ -899,7 +899,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         if (TheWinsolsDif < Solar25 || TheWinsolsDif >= Solar75) {
             sign1 = -sign1
         }
-        if (['Yingtian', 'Qianyuan', 'Yitian', 'Gengwu'].includes(CalName)) { // 庚午「冬至後午前陽加陰減」
+        if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName) || Type === 10) { // 庚午「冬至後午前陽加陰減」
             if (isYin) {
                 sign2 = -1
             }
@@ -1169,7 +1169,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     let status = 0
     let Magni = 0
-    let MagniTotal = 0
+    let MagniTotal = 0 // 月食旣內分
     let Last = 0
     let TheNotEcli = 0
     if (isNewm) {
@@ -1450,7 +1450,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             }
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif((AvgAnomaAccum + (TotalDeci - AvgDeci + 1) % 1) % Anoma, CalName) // 食甚加時入轉算外損益率。應朒者依其損益，應朏者益減損加其副
             Last += Last * MoonTcorrDif / TheDenom / Denom
-        } else if (CalName === 'Gengwu') {
+        } else if (Type === 10) {
             if (isNewm) {
                 Last = Magni * (30 - Magni) * 2450 / MoonAcrVList[~~AcrAnomaAccum]
             } else {
@@ -1463,18 +1463,18 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     return { Magni, status, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
-// console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Yitian'))
-console.log(EclipseFormula(15, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Qianyuan'))
+// console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Jiyuan'))
+// console.log(EclipseFormula(15, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Qianyuan'))
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)
     let Eclipse = {}
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
-        Eclipse = EclipseTable1(NodeAccum, CalName)
+        Eclipse = Eclipse1(NodeAccum, CalName)
     } else {
         if (Type <= 6) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
-            Eclipse = EclipseTable2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
             Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName)
