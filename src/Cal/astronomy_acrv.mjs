@@ -703,7 +703,6 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             MoonTcorr1 = TcorrFunc.MoonTcorr1
         }
     } else {
-        const MoonAvgVDeg = AutoMoonAvgV(CalName)
         if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
             SunTcorr1 = SunTcorrTable(WinsolsDif, CalName).SunTcorr1
             MoonTcorr1 = MoonTcorrTable1(AnomaAccum, CalName).MoonTcorr1
@@ -750,11 +749,13 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             MoonTcorr1 = MoonTcorrTable1(AnomaAccum, CalName).MoonTcorr1
             Tcorr1 = MoonTcorr1
         } else if (['Yitian', 'Guantian'].includes(CalName)) {
+            const MoonAvgVDeg = AutoMoonAvgV(CalName)
             SunDifAccum = SunDifAccumFormula(WinsolsDif, CalName)
             MoonTcorr1 = -(MoonTcorrTable(AnomaAccum, CalName).MoonTcorr1)
             SunTcorr2 = SunDifAccum / MoonAvgVDeg
             Tcorr2 = SunTcorr2 + MoonTcorr1
         } else if (['Futian', 'Mingtian'].includes(CalName)) {
+            const MoonAvgVDeg = AutoMoonAvgV(CalName)
             SunDifAccum = SunDifAccumFormula(WinsolsDif, CalName)
             const MoonFunc = MoonFormula(AnomaAccum, CalName)
             MoonDifAccum = MoonFunc.MoonDifAccum
@@ -773,11 +774,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
         } else if (Type < 11) {
             sunFunc = SunTcorrTable(WinsolsDif, CalName)
             SunTcorr2 = sunFunc.SunTcorr2
-            if (CalName === 'Qintian') {
-                moonFunc = MoonTcorrTable(AnomaAccum + SunTcorr2, CalName)
-            } else {
-                moonFunc = MoonTcorrTable(AnomaAccum, CalName)
-            }
+            moonFunc = MoonTcorrTable(AnomaAccum + (CalName === 'Qintian' ? SunTcorr2 : 0), CalName)
             MoonTcorr1 = -moonFunc.MoonTcorr1
             Tcorr2 = SunTcorr2 + MoonTcorr1
         } else if (Type === 11) {
@@ -802,10 +799,9 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             SunTcorr = SunTcorr1
         }
         MoonTcorr = MoonTcorr2 || MoonTcorr1
-        if (Type >= 5 && Type <= 10) { // 其他曆法都是這樣，不懂授時爲何就是定朔加減差
+        if (Type >= 5 && Type <= 10) {
             const portion = AutoNodePortion(CalName)
-            NodeTcorr = SunTcorr + portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。  // 定交分=泛交分+太陽改正+(61/777)*月亮改正。61/777是27.2122/346.62的漸進分數！恆星月日數/恆星年日數= s/m ，交率（卽交點月）/交數（卽交點年日數）= (s-n)/(m-n)=27.2122/346.608=1/12.737=0.0785 皇極 465/5923，麟德61/777，大衍343/4369，崇天141/1796，都是0.0785。const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。
-            // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
+            NodeTcorr = SunTcorr + portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。 const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。 // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
             NodeAccumCorrB = portion * SunTcorr + MoonTcorr // 太陽入交定日，上面是月亮入交定日
         }
     }
