@@ -331,7 +331,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                     }
                     let NewmEcliFunc = {}
                     let SyzygyEcliFunc = {}
-                    if (NewmNodeAccumPrint[i] < 1.2 || (NewmNodeAccumPrint[i] > 12.1 && NewmNodeAccumPrint[i] < 15) || NewmNodeAccumPrint[i] > 25.8) { // 望差1.159，1.5綽綽有餘了，能篩掉4/5
+                    if (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) { // 這些數字根據大統，再放寬0.3
                         NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
                         const Newmstatus = NewmEcliFunc.status
                         let NewmMagni = 0
@@ -351,7 +351,7 @@ export default (CalName, YearStart, YearEnd) => { // CalNewm
                             }
                         }
                     }
-                    if (SyzygyNodeAccumPrint[i] < 1.35 || (SyzygyNodeAccumPrint[i] > 12.25 && SyzygyNodeAccumPrint[i] < 14.96) || SyzygyNodeAccumPrint[i] > 25.86) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
+                    if (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
                         SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
                         const Syzygystatus = SyzygyEcliFunc.status
                         let SyzygyMagni = 0

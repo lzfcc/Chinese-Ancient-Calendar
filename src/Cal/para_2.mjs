@@ -462,6 +462,7 @@ export default {
         Node: 27 + 2122.6995 / 10002, // 我自己湊出來的，正好。校勘記「以應天元法乘正交三百六十三度，加小餘八千二百八十三，得三百六十三萬九千九，以五除之，得七十二萬七千八百一，餘四分；再以四分化爲四百秒，加秒七，得四百七秒，以五除之，得秒八十一又十分之四秒。此處“七十一萬七千八百一”應作“七十二萬七千八百一”。」
         SunLimitYang: 420, // 應天是分，/100是度
         SunLimitYin: 960,
+        SunLimitNone: 1380,
         MoonLimit1: 340,
         MoonLimit2: 900,
         MoonLimitNone: 1550,
@@ -506,7 +507,8 @@ export default {
         YinyangCorr: -1,
         SunLimitYang: 920, // 920更接近4.2度，940的話太多了
         SunLimitYin: 2130,
-        MoonLimit1: 752,
+        SunLimitNone: 3050,
+        MoonLimit1: 768, // 原文752,但是3408-752=2656，不等於264*10
         MoonLimitNone: 3408,
         OriginAd: 981 - 30543977,
         CloseOriginAd: 981, // 太平興國六年辛巳
@@ -583,6 +585,7 @@ export default {
         Node: 27 + 2143.2279 / 10100,
         SunLimitYang: 3174, // 陽限
         SunLimitYin: 7286, // 陰限
+        SunLimitNone: 10460,
         MoonLimit1: 2582, // 月食旣限。月食分法912.5
         MoonLimitNone: 11707,
         OriginAd: 1001 - 716497,
@@ -783,6 +786,7 @@ export default {
         Node: 27 + 1547.0880 / 7290, // 27.21222
         SunLimitYang: 3400,
         SunLimitYin: 4300, // 定法430
+        SunLimitNone: 7700,
         MoonLimit1: 2400, // 月全食限
         MoonLimitNone: 6800, // 月食限，不偏食限12.47度，這是古代最佳
         MoonLimitDenom: 440,
@@ -1133,7 +1137,7 @@ export default {
 
     //////////////////////////////// 下金
 
-    Daming2: { // 楊級。授時曆議有積年1127 - 383768503、日法。《金志上》「然其所本，不能詳究，或曰因宋紀元曆而增損之也。」《元至一》「衡等以爲金雖改曆，止以宋紀元曆微加增益，實未嘗測驗於天」
+    Daming2: { // 楊級。授時曆議有積年1127 - 383768503、日法。《金志上》「然其所本，不能詳究，或曰因宋紀元曆而增損之也。」《元志一》「衡等以爲金雖改曆，止以宋紀元曆微加增益，實未嘗測驗於天」
         Solar: 365 + 1274 / 5230,
         Sidereal: 365 + 1342.957 / 5230,
         Lunar: 29 + 2775 / 5230,
@@ -1235,6 +1239,7 @@ export default {
 
     Shoushi: {
         OriginAd: 1281,
+        Denom: 1,
         // JdOrigin: 2188925.56,
         SolarRaw: 365.2425, // 曆元歲實
         Sidereal: 365.2575,
@@ -1243,20 +1248,13 @@ export default {
         NodeCorr: 26.0388,
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
+        MoonLimitNone: 13.5,
+        MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
         AnomaCorr: 13.0205, // 轉應：曆元前冬至距月過近地點
         WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
         FirstCorr: 20.205, // 閏應：曆元前冬至月齡
-        XianConst: 0.082, // 限法
-        DeltaSunA1: 513.32, // expansion盈曆定差
-        DeltaSunA2: 2.46, // 盈曆平差
-        DeltaSunA3: 0.0031, // 盈曆立差
-        DeltaSunB1: 487.06, // contraction縮曆定差
-        DeltaSunB2: 2.21, // 縮曆平差
-        DeltaSunB3: 0.0027, // 縮曆立差
-        DeltaMoon1: 11.11, // 遲疾曆定差
-        DeltaMoon2: 0.0281, // 遲疾曆平差
-        DeltaMoon3: 0.000325, // 遲疾曆立差
+        PartRange: 0.082, // 限法
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,
         OriginMonNum: 0,
@@ -1265,9 +1263,20 @@ export default {
         MansionCorr: 315.1075, // 週應。置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
         MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
         MansionFractPosition: 11,
+        // 定平立三差精確值：
+        // DeltaSunA1: 513.3822097763196114,
+        // DeltaSunA2: 2.4553858564920306,
+        // DeltaSunA3: 0.003142755330375,
+        // DeltaSunB1: 487.1014493604209278,
+        // DeltaSunB2: 2.2074819445045348,
+        // DeltaSunB3: 0.0027262800048672,
+        // DeltaMoon1: 11.11,
+        // DeltaMoon2: 0.0281,
+        // DeltaMoon3: 0.000325,
     },
     Datong: {
         OriginAd: 1384,
+        Denom: 1,
         // JdOrigin: 2226545.5375,
         Solar: 365.2425, // 曆元歲實
         Sidereal: 365.2575,
@@ -1278,19 +1287,12 @@ export default {
         YinyangCorr: -1, // 沒有，但是似乎是這樣的
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
+        MoonLimitNone: 13.5,
+        MoonLimitDenom: 87,
         WinsolsCorr: 55.0375, // 氣應：曆元前冬至日分
         FirstCorr: 18.20708, // 閏應：曆元前冬至月齡18.217018
         AnomaCorr: 20.969, // 轉應：曆元前冬至距月過近地點
-        XianConst: 0.082, // 限法
-        DeltaSunA1: 513.32, // expansion盈曆定差
-        DeltaSunA2: 2.46, // 盈曆平差
-        DeltaSunA3: 0.0031, // 盈曆立差
-        DeltaSunB1: 487.06, // contraction縮曆定差
-        DeltaSunB2: 2.21, // 縮曆平差
-        DeltaSunB3: 0.0027, // 縮曆立差
-        DeltaMoon1: 11.11, // 遲疾曆定差
-        DeltaMoon2: 0.0281, // 遲疾曆平差
-        DeltaMoon3: 0.000325, // 遲疾曆立差
+        PartRange: 0.082, // 限法
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,
         WeekCorr: 2,
@@ -1308,22 +1310,9 @@ export default {
         Sidereal: 365.25636042,
         LunarRaw: 29.53058885, // 29.53058885+0.0000000022*(year-2000)
         Anoma: 27.554551,
-        EcliLimitA: 12.79,
-        EcliLimitD: 4.27,
         WinsolsCorr: 55.08125,
         FirstCorr: 20.2,
         AnomaCorr: 13.17,
-        XianConst: 0.08200773809523809524,
-        // MoonAvgS : 13.36875 ,
-        DeltaSunA1: 513.3822097763196114,
-        DeltaSunA2: 2.4553858564920306,
-        DeltaSunA3: 0.003142755330375,
-        DeltaSunB1: 487.1014493604209278,
-        DeltaSunB2: 2.2074819445045348,
-        DeltaSunB3: 0.0027262800048672,
-        DeltaMoon1: 11.11,
-        DeltaMoon2: 0.0281,
-        DeltaMoon3: 0.000325,
         ZhengNum: 2,
         WeekCorr: 2,
         OriginMonNum: 0,
@@ -1345,7 +1334,6 @@ export default {
         OriginAd: 599,
         // JdOrigin: 1948439.5, // 622年7月16日紀年元年一月一日。暫且取夜半  
         OriginYearSc: 56, // 己未
-
         Saturn: 378.0930028,
         Jupiter: 398.884523,
         Mars: 779.9356461,

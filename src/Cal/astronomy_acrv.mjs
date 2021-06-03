@@ -136,8 +136,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
 
 const SunDifAccumFormula = (WinsolsDif, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
-    const { Denom, SolarRaw, DeltaSunA1, DeltaSunA2, DeltaSunA3, DeltaSunB1, DeltaSunB2, DeltaSunB3
-    } = AutoPara[CalName]
+    const { Denom, SolarRaw } = AutoPara[CalName]
     let { Solar } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     let SunDifAccum = 0
@@ -149,15 +148,16 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
     const T = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
     const { QuarA, QuarB } = AutoQuar(CalName)
     if (Type === 11) {
-        if (WinsolsDif <= QuarA) {
-            SunDifAccum = (DeltaSunA1 * T - DeltaSunA2 * (T ** 2) - DeltaSunA3 * (T ** 3)) / 10000 // 盈縮差
-        } else if (WinsolsDif <= Solar50) {
-            SunDifAccum = (DeltaSunB1 * T - DeltaSunB2 * (T ** 2) - DeltaSunB3 * (T ** 3)) / 10000
-        } else if (WinsolsDif <= Solar50 + QuarB) {
-            SunDifAccum = -(DeltaSunB1 * T - DeltaSunB2 * (T ** 2) - DeltaSunB3 * (T ** 3)) / 10000
-        } else {
-            SunDifAccum = -(DeltaSunA1 * T - DeltaSunA2 * (T ** 2) - DeltaSunA3 * (T ** 3)) / 10000
+        let sign = 1
+        if (WinsolsDif >= Solar50) {
+            sign = -1
         }
+        if (WinsolsDif >= QuarA && WinsolsDif < Solar50 + QuarB) {
+            SunDifAccum = 487.06 * T - 2.21 * T ** 2 - 0.0027 * T ** 3
+        } else {
+            SunDifAccum = 513.32 * T - 2.46 * T ** 2 - 0.0031 * T ** 3 // 盈縮差
+        }
+        SunDifAccum *= sign / 10000
     } else { // 王榮彬《中國古代曆法的中心差算式之造術原理》
         if (CalName === 'Guantian') {
             let SunDenom = 0
@@ -329,9 +329,9 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
     let MoonTcorr1 = 0
     let MoonTcorr2 = 0
     if (CalName === 'Qintian') {
-        const XianRange = Anoma / 248
-        const XianNum = ~~(AnomaAccum / XianRange)
-        const XianFrac = AnomaAccum / XianRange - XianNum // 占一限的百分比，而非一日。
+        const PartRange = Anoma / 248
+        const XianNum = ~~(AnomaAccum / PartRange)
+        const XianFrac = AnomaAccum / PartRange - XianNum // 占一限的百分比，而非一日。
         MoonTcorr1 = MoonTcorrList[XianNum] + XianFrac * (MoonTcorrList[XianNum + 1] - MoonTcorrList[XianNum])
     } else {
         const { MoonTcorrDifPos: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AnomaAccum, CalName)
@@ -529,9 +529,9 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     let Plus = 0
     let MoonAcrS = 0
     if (CalName === 'Qintian') {
-        const XianRange = Anoma / 248
-        const XianNum = ~~(AnomaAccum / XianRange)
-        const XianFrac = AnomaAccum / XianRange - XianNum // 占一限的百分比，而非一日。
+        const PartRange = Anoma / 248
+        const XianNum = ~~(AnomaAccum / PartRange)
+        const XianFrac = AnomaAccum / PartRange - XianNum // 占一限的百分比，而非一日。
         MoonAcrS = MoonAcrSList[XianNum] + XianFrac * (MoonAcrSList[XianNum + 1] - MoonAcrSList[XianNum])
     } else {
         if (CalName === 'Yitian') {
@@ -565,9 +565,9 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
 // console.log(MoonAcrSTable2(27.5, 'Jiyuan'))
 // console.log(MoonAcrSTable2(27.5, 'Qintian'))
 
-const MoonFormula = (AnomaAccumRaw, CalName) => {
+export const MoonFormula = (AnomaAccumRaw, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
-    const { Anoma, DeltaMoon1, DeltaMoon2, DeltaMoon3, XianConst } = AutoPara[CalName]
+    const { Anoma, PartRange } = AutoPara[CalName]
     const Anoma50 = Anoma / 2 // 轉中
     const Anoma25 = Anoma / 4
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
@@ -576,26 +576,26 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
     let signB = 1
     if (Type === 11) {
         let signA = 1
-        const T = (Anoma25 - Math.abs(AnomaAccumRaw % Anoma50 - Anoma25)) / XianConst
+        const T = (Anoma25 - Math.abs(AnomaAccumRaw % Anoma50 - Anoma25)) / PartRange
         if (AnomaAccumRaw >= Anoma50) {
             signA = -1
         }
-        MoonDifAccum = signA * (DeltaMoon1 * T - DeltaMoon2 * T ** 2 - DeltaMoon3 * T ** 3) / 100 // 遲疾差
+        MoonDifAccum = signA * (11.11 * T - 0.0281 * T ** 2 - 0.000325 * T ** 3) / 100 // 遲疾差。三個常數是遲疾定平立三差
         let signB = 1
         let AnomaXian = 0
         if (AnomaAccumRaw <= 6.642) {
-            AnomaXian = AnomaAccumRaw / XianConst            
+            AnomaXian = AnomaAccumRaw / PartRange
         } else if (AnomaAccumRaw <= 7.052) {
-            AnomaXian = AnomaAccumRaw / XianConst
+            AnomaXian = AnomaAccumRaw / PartRange
             signB = 0
         } else if (AnomaAccumRaw <= 20.4193) {
-            AnomaXian = Math.abs(Anoma50 - AnomaAccumRaw) / XianConst
+            AnomaXian = Math.abs(Anoma50 - AnomaAccumRaw) / PartRange
             signB = -1
         } else if (AnomaAccumRaw <= 20.8293) {
-            AnomaXian = Math.abs(Anoma50 - AnomaAccumRaw) / XianConst
+            AnomaXian = Math.abs(Anoma50 - AnomaAccumRaw) / PartRange
             signB = 0
         } else {
-            AnomaXian = (Anoma - AnomaAccumRaw) / XianConst
+            AnomaXian = (Anoma - AnomaAccumRaw) / PartRange
         }
         MoonAcrV = 1.0962 + signB * (0.11081575 - 0.0005815 * AnomaXian - 0.00000975 * AnomaXian * (AnomaXian - 1)) // 遲疾限下行度
     } else {
@@ -603,16 +603,16 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
             // AnomaAccum = big.div(OriginAccum, Lunar).add(i - 1 + ZhengWinsolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
             // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengWinsolsDif) * 2142887000 % AnomaNumer) / 81120000
             const AnomaAccum = AnomaAccumRaw * MoonAvgVDeg
-            const T = (92.0927 - Math.abs(AnomaAccumRaw % Anoma50 - 92.0927)) / XianConst            
+            const T = (92.0927 - Math.abs(AnomaAccumRaw % Anoma50 - 92.0927)) / PartRange
             let sign3 = 1
-            if (AnomaAccum <= 92.0927) {                
-            } else if (AnomaAccum <= 184.1854) {                
+            if (AnomaAccum <= 92.0927) {
+            } else if (AnomaAccum <= 184.1854) {
                 sign3 = -1
             } else if (AnomaAccum <= 92.0927 * 3) {
                 signB = -1
-                sign3 = -1                
+                sign3 = -1
             } else {
-                signB = -1                
+                signB = -1
             }
             const tmp = signB * T * (210.09 - T) // 積數
             MoonDifAccum = tmp / 1976 // 遲疾差度 //+ T * (MoonAvgVDeg - Sidereal / Anoma) / MoonAvgVDeg // 《中國古代曆法》頁110莫名其妙說要加上後面這個，但不加纔跟其他曆相合
@@ -634,7 +634,7 @@ const MoonFormula = (AnomaAccumRaw, CalName) => {
 
 export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) => {
     const { AutoPara, Type } = Bind(CalName)
-    const { SolarRaw, XianConst, Anoma, NodeDenom } = AutoPara[CalName]
+    const { SolarRaw, PartRange, Anoma, NodeDenom } = AutoPara[CalName]
     let { Solar } = AutoPara[CalName]
     Solar = Solar || SolarRaw
     const WinsolsDif = WinsolsDifRaw % Solar
@@ -768,8 +768,9 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             SunDifAccum = SunDifAccumFormula(WinsolsDif, CalName)
             moonFunc = MoonFormula(AnomaAccum, CalName)
             MoonDifAccum = moonFunc.MoonDifAccum
-            SunTcorr2 = SunDifAccum * XianConst / moonFunc.MoonAcrV
-            MoonTcorr2 = -MoonDifAccum * XianConst / moonFunc.MoonAcrV
+            MoonAcrV = moonFunc.MoonAcrV
+            SunTcorr2 = SunDifAccum * PartRange / MoonAcrV
+            MoonTcorr2 = -MoonDifAccum * PartRange / MoonAcrV
             Tcorr2 = SunTcorr2 + MoonTcorr2
         } else if (Type === 20) {
             sunFunc = SunAcrVWest(WinsolsDif, year)
@@ -780,11 +781,7 @@ export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) =
             MoonTcorr2 = -MoonDifAccum / (moonFunc.MoonAcrV - sunFunc.SunAcrV)
             Tcorr2 = SunTcorr2 + MoonTcorr2
         }
-        if (SunTcorr2) {
-            SunTcorr = SunTcorr2
-        } else if (SunTcorr1) {
-            SunTcorr = SunTcorr1
-        }
+        SunTcorr = SunTcorr2 || (SunTcorr1 || 0)
         MoonTcorr = MoonTcorr2 || MoonTcorr1
         if (Type >= 5 && Type <= 10) {
             const Portion = AutoNodePortion(CalName)

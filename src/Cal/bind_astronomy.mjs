@@ -625,7 +625,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
     }
     let Print = []
     Print = Print.concat(
-        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan'].map(title => {
+        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -671,7 +671,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
     }
     let Print = []
     Print = Print.concat(
-        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan'].map(title => {
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
