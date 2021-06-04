@@ -1,25 +1,12 @@
-import {
-    ScList, AutoDegAccumList
-} from './para_constant.mjs'
-import {
-    Bind
-} from './bind.mjs'
-import {
-    AutoTcorr
-} from './astronomy_acrv.mjs'
-import {
-    ConstWest
-} from './astronomy_west.mjs'
-import {
-    Accum2Mansion, AutoNewmPlus, AutoSyzygySub, LeapAdjust
-} from './astronomy_other.mjs'
-import {
-    AutoEqua2Eclp
-} from './bind_astronomy.mjs'
+import { ScList, AutoDegAccumList } from './para_constant.mjs'
+import { Bind } from './bind.mjs'
+import { AutoTcorr } from './astronomy_acrv.mjs'
+import { ConstWest } from './astronomy_west.mjs'
+import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub, LeapAdjust } from './astronomy_other.mjs'
+import { AutoEqua2Eclp } from './bind_astronomy.mjs'
 
 export default (CalName, year) => {
-    const { Type, AutoPara, isAcr, isNewmPlus
-    } = Bind(CalName)
+    const { Type, AutoPara, isAcr, isNewmPlus } = Bind(CalName)
     const { Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
@@ -67,8 +54,10 @@ export default (CalName, year) => {
             SolarChangeAccum = signX * ((year - 2000) ** 2) * 0.000000003 // (首項+末項)/2            
             LunarChangeAccum = -signX * ((year - 2000) ** 2) * 0.000000001
         } else {
-            Solar = SolarRaw - OriginYear / 1000000 // 授時歲實消長高了16倍
-            SolarChangeAccum = signX * (OriginYear ** 2) / 2000000
+            Solar = SolarRaw - OriginYear / 15000000 // 授時歲實消長高了16倍
+            SolarChangeAccum = signX * (OriginYear ** 2) / 30000000
+            // Solar = SolarRaw - OriginYear / 1000000 // 授時歲實消長高了16倍
+            // SolarChangeAccum = signX * (OriginYear ** 2) / 2000000
         }
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
@@ -147,15 +136,22 @@ export default (CalName, year) => {
     if (Node && Type < 11) {
         FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node
     } else if (Type >= 11) {
-        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeCorr) % Node + Node) % Node
+        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node + Node) % Node
     }
     const AccumPrint = (Anoma ? '轉' + ((OriginAccum % Anoma + AnomaCorr + Anoma) % Anoma).toFixed(4) : '') +
         (Node ? '交' + ((OriginAccum % Node + NodeCorr + Node) % Node).toFixed(4) : '') +
         (Sidereal ? '週' + (((OriginAccum % Sidereal + MansionCorr) % Sidereal + Sidereal) % Sidereal).toFixed(4) : '')
-    OriginAccum = +OriginAccum.toFixed(5)
-    FirstAccum = +FirstAccum.toFixed(5)
-    FirstAnomaAccum = +FirstAnomaAccum.toFixed(5)
-    FirstNodeAccum = +FirstNodeAccum.toFixed(5)
+    let fixed = 5 // 試出來的OriginAccum能保留幾位小數
+    if (OriginYear > 85000000) {
+    } else if (OriginYear > 8500000) {
+        fixed = 6
+    } else {
+        fixed = 7
+    }
+    OriginAccum = +OriginAccum.toFixed(fixed)
+    FirstAccum = +FirstAccum.toFixed(fixed - 1)
+    FirstAnomaAccum = +FirstAnomaAccum.toFixed(fixed - 1)
+    FirstNodeAccum = +FirstNodeAccum.toFixed(fixed - 1)
     let LeapLimit = 0
     if (ZhangRange) {
         LeapLimit = ZhangRange - ZhangLeap
@@ -329,7 +325,7 @@ export default (CalName, year) => {
                 Deci1[i] = Deci1[i].toFixed(4).slice(2, 6)
             }
             AcrWinsolsDifRaw[i] = WinsolsDifRaw[i] + Tcorr[i]
-        }        
+        }
         return {
             AvgSc, Tcorr, AvgDeci, Int, Raw, Sc, AcrInt, AcrRaw,
             Deci, Deci1, Deci2, Deci3,

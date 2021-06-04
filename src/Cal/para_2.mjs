@@ -1288,7 +1288,7 @@ export default {
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
         MoonLimitNone: 13.5,
-        MoonLimitDenom: 87,
+        MoonLimitDenom: 0.87,
         WinsolsCorr: 55.0375, // 氣應：曆元前冬至日分
         FirstCorr: 18.20708, // 閏應：曆元前冬至月齡18.217018
         AnomaCorr: 20.969, // 轉應：曆元前冬至距月過近地點

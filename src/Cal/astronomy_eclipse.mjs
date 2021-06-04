@@ -719,6 +719,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     let Node50 = Node / 2
     const Node25 = Node / 4
     const Anoma50 = Anoma / 2
+    const Sidereal25 = Sidereal / 4
+    const Sidereal50 = Sidereal / 2
     const Solar50 = Solar / 2
     const Solar25 = Solar / 4
     const Solar75 = Solar * 0.75
@@ -797,7 +799,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             }
         } else if (Type === 11) {
             Tcorr = -NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 0.96 //「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
-            if (AvgTotalDeci >= 0.5) {
+            if (AcrDeci >= 0.5) {
                 Tcorr = -Tcorr
             }
         }
@@ -1115,18 +1117,18 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         }
     }
     let k0 = 0 // 視白道比眞白道低，所以陽曆：視月亮距交大於眞月亮，陰曆：小於。
-    if (Type === 9) { // 紀元「置朔入交常日⋯⋯以氣刻差定數各加減之，交初加三千一百，交中減三千，爲朔入交定日」
-        k0 = isDescend ? 3100 : -3000 // 5.685度        
-    } else if (Type === 11) { // 符號要跟紀元相反，因為下面Dcorr整體符號相反
-        k0 = isDescend ? 6.15335 : -6.15335
+    if (isNewm) {
+        if (Type === 9) { // 紀元「置朔入交常日⋯⋯以氣刻差定數各加減之，交初加三千一百，交中減三千，爲朔入交定日」
+            k0 = isDescend ? 3100 : -3000 // 5.685度        
+        } else if (Type === 11) { // 符號要跟紀元相反，因為下面Dcorr整體符號相反
+            k0 = isDescend ? 6.15335 : -6.15335
+        }
     }
     let TheNodeAccum = 0 // 入交定日
     let NodeDeg = 0
     let TheNodeDif = 0
     let MoonAvgVDeg = 13.37
     if (CalName === 'Mingtian') {
-        const Sidereal25 = Sidereal / 4
-        const Sidereal50 = Sidereal / 2
         Dcorr = isNewm ? (sign1b * DcorrTerm + sign2b * DcorrClock) / 100 : 0
         let position = AcrWinsolsDif + TotalDeci - AvgDeci + Dcorr
         const TheDif = frc('9901159/184270880') // 每日交點退行
@@ -1170,13 +1172,13 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     // let MagniTotal = 0 // 月食旣內分
     let Last = 0
     let TheNotEcli = 0
+    let Portion = 10
+    if (CalName === 'Xuanming') {
+        Portion = 15 // 宣明日食定法爲限的1/15，崇天爲1/10
+    } else if (Type === 10) {
+        Portion = 9.682
+    }
     if (isNewm) {
-        let Portion = 10
-        if (CalName === 'Xuanming') {
-            Portion = 15 // 宣明日食定法爲限的1/15，崇天爲1/10
-        } else if (Type === 10) {
-            Portion = 9.682
-        }
         if (CalName === 'Xuanming' && TheNodeAccum > Node50) {
             if (TheNodeDif < SunLimitYang) { // 去交真定分小於陽曆食限，爲陽曆食
                 Magni = Portion * TheNodeDif / SunLimitYang
@@ -1298,7 +1300,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             }
         } else if (['Qintian', 'Chongtian', 'Guantian'].includes(CalName) || (Type >= 9 && Type <= 11)) {
             MoonLimitDenom = MoonLimitDenom || (MoonLimitNone * 0.0662) // 這個比例根據7部曆平均而來
-            if (TheNodeDif < MoonLimit1) {
+            if (TheNodeDif < MoonLimit1) { // 授時似乎沒有全食限
                 Magni = 10
                 // MagniTotal = (MoonLimit1 - TheNodeDif) / MoonLimitDenom // 旣內之大分，庚午最大5。授時另有算法
             } else {
@@ -1440,7 +1442,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     return { Magni, status, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
-// console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Shoushi'))
+// console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 0, 'Shoushi').Magni)
+// console.log(EclipseFormula(12.85874, 0.3524, 0.83546, 0.79093, 156.3253, 156.2809, 0, 0, 'Datong').Magni) // 2021年四月望
 // console.log(EclipseFormula(15, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Qianyuan'))
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
