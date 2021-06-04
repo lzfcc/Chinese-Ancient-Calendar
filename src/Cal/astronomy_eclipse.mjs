@@ -165,11 +165,11 @@ const Eclipse2 = (NodeAccum, AnomaAccum, Deci, WinsolsDifRaw, isNewm, CalName, i
                 sign1 = 1
             }
             if (WinsolsDif < HalfTermLeng * 5) { } else if (WinsolsDif < HalfTermLeng * 7) { } else if (WinsolsDif < HalfTermLeng * 17) { //若用定氣，有2986 / 1340的盈縮積，但肯定應該是平氣。                
-                const k = ~~(SummsolsDif / HalfTermLeng) // 距離夏至節氣數。皇極是距寒露驚蟄氣數。這樣完全相反，到底是那個
-                Tcorr = sign1 * (2 * k + NodeDif * 4) / 100 + Dif // 劉洪濤的理解和《中國古代曆法》不一樣，我暫且用劉洪濤的
+                const dd = ~~(SummsolsDif / HalfTermLeng) // 距離夏至節氣數。皇極是距寒露驚蟄氣數。這樣完全相反，到底是那個
+                Tcorr = sign1 * (2 * dd + NodeDif * 4) / 100 + Dif // 劉洪濤的理解和《中國古代曆法》不一樣，我暫且用劉洪濤的
             } else if (WinsolsDif < HalfTermLeng * 19) { } else {
-                const k = ~~((WinsolsDif % Solar) / HalfTermLeng) // 距離冬至節氣數
-                Tcorr = -sign1 * (2 * k + NodeDif * 4) / 100 + Dif
+                const dd = ~~((WinsolsDif % Solar) / HalfTermLeng) // 距離冬至節氣數
+                Tcorr = -sign1 * (2 * dd + NodeDif * 4) / 100 + Dif
             }
             Deci += sign2 * Tcorr
         } else {
@@ -732,7 +732,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 朔入交常日    
     const AcrNodeAccum = AvgNodeAccum + AvgNodeTcorr // 紀元之外的朔入交定日
     const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr // 定朔入交泛日
-    const NewmNoonDif = Math.abs(0.5 - AcrDeci) // 應天乾元儀天崇天午前後分
+    const NewmNoonDif = AcrDeci - 0.5 // 應天乾元儀天崇天午前後分
+    const NewmNoonDifAbs = Math.abs(NewmNoonDif)
     const Rise = Longi2LatiFormula(AcrWinsolsDif, CalName).Rise / 100 // 照理說，只要冬至時刻確定，那不管WinsolsDif在一天中如何變化，日出都是固定的
     let isDescend = true // 交初前後皆爲交初
     if (AvgNodeAccum > 12 && AvgNodeAccum < 15) { // 交中前後皆為交中
@@ -755,37 +756,34 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         AvgTotalDeci = (AcrDeci + Tcorr0 + 1) % 1 // 紀元食甚泛餘 // 注意小數點加上修正變成負的情況，比如0.1退成了0.9
         AvgTotalNoonDif = Math.abs(0.5 - AvgTotalDeci)
     }
-    const RiseNoonDif = 0.5 - Rise // 日出沒辰刻距午正刻數/100    
+    const RiseNoonDif = 0.5 - Rise // 日出沒辰刻距午正刻數/100，卽半晝分
     ////////// 以下時差
     let TotalDeci = 0 // 食甚定餘
     let Tcorr = 0 // 明天沒有時差！《數理》頁424
     if (isNewm) {
         if (CalName === 'Xuanming') { // 「以定朔日出入辰刻距午正刻數，約百四十七，為時差。視定朔小餘如半法已下，以減半法，為初率；已上，減去半法，餘為末率。以乘時差，如刻法而一，初率以減，末率倍之，以加定朔小餘，為蝕定餘。月蝕，以定望小餘為蝕定餘。」夏至最大，冬至最小，夜半最大，午正最小。但實際上是夏至最小，冬至最大。午前- 午後+。實際上，時差取決於黃道南北，與午正無關，比例也不會不一樣。《數理》頁421: 定朔0.25，1個小時，0.75：2小時。欽天、應天、乾元、儀天都是線性函數，不分陰陽
-            Tcorr = -NewmNoonDif * RiseNoonDif / 1.47
+            Tcorr = NewmNoonDif * RiseNoonDif / 1.47
             if (AcrDeci >= 0.5) {
-                Tcorr *= -2
+                Tcorr *= 2
             }
         } else if (CalName === 'Qintian') {
             Tcorr = NewmNoonDif * 1100 / Denom
-        } else if (CalName === 'Yitian') { // 「以其日晝刻，其（瀚案：根據宣明，應該指的是約）三百五十四為時差，乃視食甚餘，如半法以下，返減半法，餘為初率；半法以上者，半法去之，餘為末率；滿一百一收之，為初率；以減末率，倍之，以加食甚餘，為食定餘；亦加減初、末率，為距午退分」儀天有點殘破，應該根據宣明來補，這兩個比例差不多
-            Tcorr = -NewmNoonDif * RiseNoonDif / (1.77 * 84 / 101)
+        } else if (CalName === 'Yingtian') { // 以午前後分「乘三百，如半晝分而一，為差；〔午後加之，午前半而減之〕。加減定朔分，為食定餘；以差皆加午前、後分，為距中分。其望定分，便為食定餘」
+            Tcorr = (150 / Denom) * NewmNoonDif / RiseNoonDif
             if (AcrDeci >= 0.5) {
-                Tcorr *= -2
+                Tcorr *= 2
             }
         } else if (CalName === 'Qianyuan') { // 「以半晝刻約刻法為時差，乃視定朔小餘，在半法以下為用減半法為午前分；以上者去之，為午後分；以時差乘，五因之，如刻法而一，午前減，午後加」
-            Tcorr = -NewmNoonDif * RiseNoonDif
+            Tcorr = NewmNoonDif * RiseNoonDif
+        } else if (CalName === 'Yitian') { // 「以其日晝刻，其（瀚案：根據宣明，應該指的是約）三百五十四為時差，乃視食甚餘，如半法以下，返減半法，餘為初率；半法以上者，半法去之，餘為末率；滿一百一收之，為初率；以減末率，倍之，以加食甚餘，為食定餘；亦加減初、末率，為距午退分」儀天有點殘破，應該根據宣明來補，這兩個比例差不多
+            Tcorr = NewmNoonDif * RiseNoonDif / (1.77 * 84 / 101)
             if (AcrDeci >= 0.5) {
-                Tcorr = -Tcorr
-            }
-        } else if (CalName === 'Yingtian') { // 以午前後分「乘三百，如半晝分而一，為差；〔午後加之，午前半而減之〕。加減定朔分，為食定餘；以差皆加午前、後分，為距中分。其望定分，便為食定餘」
-            Tcorr = -(150 / Denom) * NewmNoonDif / RiseNoonDif
-            if (AcrDeci >= 0.5) {
-                Tcorr *= -2
+                Tcorr *= 2
             }
         } else if (['Chongxuan', 'Chongtian', 'Guantian'].includes(CalName)) { // 「定朔約餘距午前後分，與五千先相減後相乘，三萬除之；午前以減，午後倍之，以加約餘」崇天「午後以一萬三千八百八十五除之」，應該改成一萬五千八百八十五
-            Tcorr = -NewmNoonDif * (0.5 - NewmNoonDif) / 3 // 午前，0-0.5<0, f(0.25)=-0.0208
+            Tcorr = -NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 3 // 午前，0-0.5<0, f(0.25)=-0.0208
             if (AcrDeci >= 0.5) {
-                Tcorr = -2 * Tcorr
+                Tcorr *= -2
             }
         } else if (Type === 9) {
             Tcorr = -AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) / 1.5
@@ -798,8 +796,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
                 Tcorr = -Tcorr
             }
         } else if (Type === 11) {
-            Tcorr = -NewmNoonDif * (0.5 - NewmNoonDif) / 0.96
-            if (AcrDeci >= 0.5) { // 「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
+            Tcorr = -NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 0.96 //「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
+            if (AvgTotalDeci >= 0.5) {
                 Tcorr = -Tcorr
             }
         }
@@ -819,6 +817,9 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
                 }
             } else {
                 Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4 // 四因退位
+                if (AvgTotalDeci > 0.5) {
+                    Tcorr = -Tcorr
+                }
             }
         } else if (CalName === 'Shoushi') { // 大統取消授時的月食時差改正
             const AcrDeciHalfRev = 0.25 - Math.abs(AcrDeci % 0.5 - 0.25)
@@ -829,11 +830,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         }
     }
     if (CalName === 'Qintian' && isNewm) {
-        if (AcrDeci < 0.5) {
-            TotalDeci = 0.5 - Tcorr
-        } else {
-            TotalDeci = AcrDeci + Tcorr
-        }
+        TotalDeci = AcrDeci < 0.5 ? 0.5 + Tcorr : AcrDeci + Tcorr
     } else if (CalName === 'Mingtian') {
         TotalDeci = (AvgDeci + AvgMoonTcorr) * 13.37 / MoonAcrV + SunTcorr
     } else if (Type === 9 || Type === 10) {
@@ -843,12 +840,14 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     TotalDeci = (TotalDeci + 1) % 1
     let TheTotalNoonDif = 0
-    if (Type === 9 || Type === 10 || ['Mingtian', 'Guantian'].includes(CalName)) {
-        TheTotalNoonDif = Math.abs(0.5 - TotalDeci) // 觀天紀元午前後分
+    if (CalName === 'Qintian') {
+        TheTotalNoonDif = NewmNoonDifAbs
+    } else if (Type === 9 || Type === 10 || ['Mingtian', 'Guantian'].includes(CalName)) {
+        TheTotalNoonDif = Math.abs(TotalDeci - 0.5) // 觀天紀元午前後分
     } else { // 包括授時。大統「但加不減」
-        TheTotalNoonDif = NewmNoonDif + Math.abs(Tcorr) // 距午分，崇天午前後定分
+        TheTotalNoonDif = NewmNoonDifAbs + Math.abs(Tcorr) // 距午分，崇天午前後定分
     }
-    const k = 1 - TheTotalNoonDif / RiseNoonDif // 如果k<0，卽TheTotalNoonDif在日出前日落後，符號相反，所以把原來的Math.abs(k)直接改成k
+    const dd = 1 - TheTotalNoonDif / RiseNoonDif // 如果k<0，卽TheTotalNoonDif在日出前日落後，符號相反，所以把原來的Math.abs(dd)直接改成k
     let TheWinsolsDif = 0
     if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(CalName)) { // 崇玄「距天正中氣積度」
         TheWinsolsDif = AcrWinsolsDif
@@ -869,7 +868,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     let sign3 = 1
     let sign1b = 1 // 南北差
     let sign2b = 1 // 東西差
-    let Dingzhun = 0
+    let AcrStandard = 0
     if (CalName === 'Mingtian') {
         if (isYin) {
             sign1b = -1
@@ -922,7 +921,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         }
     }
     if (CalName === 'Xuanming') {
-        DcorrTerm = (2350 - 26 * TheWinsolsDifHalfRev) * k // 25.73618
+        DcorrTerm = (2350 - 26 * TheWinsolsDifHalfRev) * dd // 25.73618
         DcorrTerm = DcorrTerm < 0 ? 0 : DcorrTerm // 因為26不連續，最後剩了一天<0
         if (TheWinsolsDifHalf < HalfTermLeng * 3) {
             DcorrClock = 2.1 * TheWinsolsDifHalfRev // 連續的話我改成2.06985
@@ -979,20 +978,20 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         }
     } else if (CalName === 'Qintian') {
         const Lati = Math.abs(Longi2LatiFormula(AcrWinsolsDif, 'Chongxuan').Lati)
-        DcorrTerm = MoonLimit1 * Lati * Denom / 251300
-        let Changzhun = DcorrTerm * (1 - NewmNoonDif / RiseNoonDif)
-        Changzhun = MoonLimit1 + (isYin ? -1 : 1) * Changzhun // 假設lati的單位是經法72，那麼常準在430-2322
+        DcorrTerm = MoonLimit1 * Lati * Denom / 251300 // 黃道出入食差
+        let AvgStandard = DcorrTerm * dd
+        AvgStandard = MoonLimit1 + (isYin ? -1 : 1) * AvgStandard // 假設lati的單位是經法72，那麼常準在430-2322
         const tmp = Math.abs(AvgWinsolsDif % Solar25 - Solar / 8) * 24 // 「置日躔入曆⋯⋯」那就是經朔距冬至日，定朔距冬至日叫「定朔加時入曆」
         let signtmp = 1
         if (AvgWinsolsDif % Solar50 < Solar / 8 || AvgWinsolsDif % Solar50 >= Solar * 0.375) {
             signtmp = -1
         }
         DcorrClock = 2772 + signtmp * tmp // 黃道斜正食差。範圍1692-3852
-        Dingzhun = Changzhun + DcorrClock * NewmNoonDif / RiseNoonDif
-        SunLimitYin = 4780 + Dingzhun
-        SunLimitYang = Math.abs(4780 - Dingzhun) // 「不足減者，反減之，爲限外分」
+        AcrStandard = AvgStandard + DcorrClock * TheTotalNoonDif / RiseNoonDif
+        SunLimitYin = 4780 + AcrStandard // 「以定準加中限，爲陰道定準」
+        SunLimitYang = Math.abs(4780 - AcrStandard) // 「減中限，爲陽道定限。不足減者，反減之，爲限外分」
     } else if (CalName === 'Yingtian') {
-        DcorrTerm = (374 - 4 * TheWinsolsDifHalfRev) * k // 藤豔輝頁101：最大值52.41分鐘
+        DcorrTerm = (374 - 4 * TheWinsolsDifHalfRev) * dd // 藤豔輝頁101：最大值52.41分鐘
         if (TheWinsolsDifHalf > 45 && TheWinsolsDifHalf < 137) { // 最大值0.075日
             DcorrClock = 1500 * TheTotalNoonDif
         } else {
@@ -1011,8 +1010,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             TheWinsolsDifHalf -= 90
             DcorrTerm = (819 - 9.1 * TheWinsolsDifHalf)  // 《中國古代曆法》頁96說二至前是二至後的10倍，寫錯了吧？ // 藤豔輝頁101說乾元刻差極值15.2小時，沒對吧
         }
-        if (k > 0) {
-            DcorrTerm *= k
+        if (dd > 0) {
+            DcorrTerm *= dd
         }
         if (TheWinsolsDifHalf >= 45 && TheWinsolsDifHalf < 137) {
             DcorrClock = 333 // 單位是刻分。極值0.11日
@@ -1033,8 +1032,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             DcorrTerm = 2826 / QuarA * TheWinsolsDifHalfRev
         }
         DcorrTerm = (2826 - 30.15 * TheWinsolsDifHalfRev)
-        if (k > 0) {
-            DcorrTerm *= k
+        if (dd > 0) {
+            DcorrTerm *= dd
         }
         if (TheWinsolsDif < HalfTermLeng * 3) {
             DcorrClock = 100 * TheWinsolsDif * Denom / 442384 // 藤豔輝頁100說二至前後205日分，其餘13.5小時，這也太扯淡，我這樣處理一下，能夠大致連續，但跟原文差得有點多
@@ -1086,14 +1085,14 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             }
         }
         if (TheWinsolsDif < 88 + 10958 / 12030 || TheWinsolsDif > Solar50 + 93 + 8552 / 12030) {
-            DcorrTerm = (4010 - TheWinsolsDifHalf ** 2 / 1.97) * k
+            DcorrTerm = (4010 - TheWinsolsDifHalf ** 2 / 1.97) * dd
         } else {
-            DcorrTerm = (4010 - TheWinsolsDifHalf ** 2 / 2.19) * k
+            DcorrTerm = (4010 - TheWinsolsDifHalf ** 2 / 2.19) * dd
         }
         DcorrClock = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / 2.09
         DcorrClock *= TheTotalNoonDif * Denom / 3700.5 // 單位 午前後分
     } else if (Type === 11) {
-        DcorrTerm = (4.46 - TheWinsolsDifHalfRev ** 2 / 1870) * k // 南北差。在91.325達到0
+        DcorrTerm = (4.46 - TheWinsolsDifHalfRev ** 2 / 1870) * dd // 南北差。在91.325達到0
         const DcorrClockAvg = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / 1870
         DcorrClock = DcorrClockAvg * NewmNoonDif * 4
         if (DcorrClock > DcorrClockAvg) { // 「若在泛差以上者，倍泛差減之，餘爲定差」，卽定朔在日出前日落後
@@ -1103,11 +1102,11 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         const Portion = +(3.43 * 7290 / Denom).toFixed(2) // 3*Solar25**2 ，以紀元爲準。紀元3.43，崇天2.36，大明庚午4.78
         const DcorrTermMax = Math.round(91.31 ** 2 / (Portion + 0.0005)) // 崇天3533，紀元2430，大明庚午1744
         if (CalName === 'Chongtian' || Type === 10) {
-            DcorrTerm = (DcorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) * k // NoonDif「以乘距午定分」「如不及減者，覆減爲定數，應加者減之⋯⋯」那就什麼都不用處理
+            DcorrTerm = (DcorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) * dd // NoonDif「以乘距午定分」「如不及減者，覆減爲定數，應加者減之⋯⋯」那就什麼都不用處理
             DcorrClock = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / Portion // 「置其朔中積，滿二至限去之，餘，列二至限於下，以上減下，餘以乘上」
             DcorrClock *= TheTotalNoonDif * 4 // 大明NoonDifDenom / 1307.5，授時 NoonDifDenom / 2500
         } else if (Type === 9) { // 紀元
-            DcorrTerm = (DcorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) * k // 置日食甚日行積度。紀元是午前後分，崇天是距午定分。紀元最後有「如半晝分而一，所得，在氣差已上者，即以氣差覆減之，余應加者為減，減者為加。」卽食甚在日出前日落後符號相反，但是其他曆沒有這個規定，照理說也應該是這樣
+            DcorrTerm = (DcorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) * dd // 置日食甚日行積度。紀元是午前後分，崇天是距午定分。紀元最後有「如半晝分而一，所得，在氣差已上者，即以氣差覆減之，余應加者為減，減者為加。」卽食甚在日出前日落後符號相反，但是其他曆沒有這個規定，照理說也應該是這樣
             const DcorrClockRaw = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / Portion
             DcorrClock = DcorrClockRaw * TheTotalNoonDif * 4
             if (DcorrClock > DcorrClockRaw) { // 紀元「以午前後分乘而倍之，如半法而一」後面又來一句「⋯⋯如半法而一，所得，在刻差已上者，卽倍刻差，以所得之數減之，餘爲刻差定數，依其加減」  
@@ -1195,21 +1194,17 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         } else if (CalName === 'Qintian' && ((isYin && TheNodeDif < SunLimitNoneYin) || (!isYin && TheNodeDif < SunLimitNoneYang))) { // 這裏我改了很多，原文不是這樣
             if (isYin) {
                 if (TheNodeDif < SunLimitYang) { // 雖曰陰道，亦爲陽道食
-                    TheNotEcli = TheNodeDif - SunLimitYang
-                } else if (TheNodeDif < SunLimitYin) { // 陰道食
+                    TheNotEcli = SunLimitYang + TheNodeDif
+                } else { // 陰道食。上面已經有條件了，這裏不用再寫
                     TheNotEcli = SunLimitYin - TheNodeDif // 距食分
                 }
-                if (4780 - Dingzhun < 0) { // 其有限外分者，卽減去限外分，爲距食分
+                if (4780 - AcrStandard < 0) { // 其有限外分者，卽減去限外分，爲距食分
                     TheNotEcli -= SunLimitYang
                 }
             } else {
-                if (TheNodeDif < SunLimitYang) { // 「定限以下爲入定食限」
-                    TheNotEcli = SunLimitYang - TheNodeDif
-                }
+                TheNotEcli = SunLimitYang - TheNodeDif // 「定限以下爲入定食限」                
             }
-            if (TheNotEcli > 0) {
-                Magni = TheNotEcli / 478
-            }
+            Magni = TheNotEcli / 478
         } else if (CalName === 'Yingtian' && TheNodeAccum > Node50) { // 藤豔輝《宋代》頁116。以下是我自己寫的
             let tmp = (0.75 - TotalDeci) * Denom / 10
             if (TotalDeci > 0.5) {
@@ -1286,12 +1281,6 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
                 Magni = (HalfSynodicNodeDif - TheNodeDif) / MoonLimitDenom
             } else {
             }
-        } else if (CalName === 'Qintian') {
-            if (TheNodeDif < MoonLimit1) {
-                Magni = 10
-            } else {
-                Magni = (MoonLimit2 - TheNodeDif) / MoonLimitDenom
-            }
         } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) { // 儀天月食分計算方法不同「在旣限以下食旣以上，以去交分減之以月食法除之爲大分」，但表述不清，只能暫時用應天
             if (TheNodeDif < MoonLimit1) {
                 Magni = 10
@@ -1307,7 +1296,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             } else {
                 TheNodeDif = (MoonLimitNone - TheNodeDif) / 89.2 // 「以上者，覆減食限，餘爲陰曆食分」
             }
-        } else if (['Chongtian', 'Guantian'].includes(CalName) || (Type >= 9 && Type <= 11)) {
+        } else if (['Qintian', 'Chongtian', 'Guantian'].includes(CalName) || (Type >= 9 && Type <= 11)) {
             MoonLimitDenom = MoonLimitDenom || (MoonLimitNone * 0.0662) // 這個比例根據7部曆平均而來
             if (TheNodeDif < MoonLimit1) {
                 Magni = 10
@@ -1451,7 +1440,7 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     }
     return { Magni, status, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
-console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Shoushi'))
+// console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Shoushi'))
 // console.log(EclipseFormula(15, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Qianyuan'))
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
