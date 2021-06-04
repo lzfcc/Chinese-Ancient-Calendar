@@ -469,6 +469,7 @@ export default {
         MoonLimit1: 340,
         MoonLimit2: 900, // 「其前後分，以九百以上入或食或不食之限」
         MoonLimitNone: 1550,
+        MoonLimitDenom: 121, // 應天乾元儀天的月食定法根據(MoonLimitNone - MoonLimit1) / MagniPortion自己算出來
         // NodeNumer:727801.82, // 交總
         // 初準16641中準18191末準1550
         OriginAd: 962 - 4825558,
@@ -513,6 +514,7 @@ export default {
         SunLimitNone: 3050,
         MoonLimit1: 768, // 原文752,但是3408-752=2656，不等於264*10
         MoonLimitNone: 3408,
+        MoonLimitDenom: 264,
         OriginAd: 981 - 30543977,
         CloseOriginAd: 981, // 太平興國六年辛巳
         // JdOrigin: 2079353.1327 - 30543977 * (365 + 72 / 294),
@@ -591,6 +593,7 @@ export default {
         SunLimitNone: 10460,
         MoonLimit1: 2582, // 月食旣限。月食分法912.5
         MoonLimitNone: 11707,
+        MoonLimitDenom: 912.5,
         OriginAd: 1001 - 716497,
         CloseOriginAd: 1001, // 咸平四年辛丑
         // JdOrigin: 2086658.0337 - 716497 * (365 + 2470 / 10100), // 
@@ -685,6 +688,7 @@ export default {
         MoonLimit1: 446, // 全食限
         MoonLimit2: 892, // 必偏食限
         MoonLimitNone: 1338, // 「月食限」卽不偏食限
+        MoonLimitDenom: 89.2,
         AcrTermList: [0, 14.538412, 29.188844, 43.951296, 58.825769, 73.812263, 88.910777, 104.249229, 119.699701, 135.262194, 150.936707, 166.723241, 182.621795, 198.520349, 214.306883, 229.981396, 245.543889, 260.994361, 276.332813, 291.431327, 306.41782, 321.292293, 336.054746, 350.705178, 365.24359],
         OriginAd: 1063 - 711759, // 天正冬至辛酉大餘57，小餘17000，假分数2240000。天正經朔大餘34小餘30010，假分數1357000。
         CloseOriginAd: 1063, // 治平元年甲辰年前冬至
