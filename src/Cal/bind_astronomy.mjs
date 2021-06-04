@@ -356,6 +356,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // å
     } else if (CalName === 'Qintian') {
         Longi2LatiA = Longi2LatiFormula(Longi1, 'Chongxuan')
         Longi2LatiB = Longi2DialFormula(Longi2, 'Chongxuan')
+        special = 1
     } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)
     } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {

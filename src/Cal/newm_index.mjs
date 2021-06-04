@@ -1,24 +1,13 @@
-import {
-    Bind
-} from './bind.mjs'
-import {
-    TermList, ScList, ThreeList, CalNameList, MonNumList
-} from './para_constant.mjs'
-import {
-    AutoEclipse
-} from './astronomy_eclipse.mjs'
-import {
-    Accum2Mansion, LeapAdjust
-} from './astronomy_other.mjs'
+import { Bind } from './bind.mjs'
+import { TermList, ScList, ThreeList, CalNameList, MonNumList } from './para_constant.mjs'
+import { AutoEclipse } from './astronomy_eclipse.mjs'
+import { Accum2Mansion, LeapAdjust } from './astronomy_other.mjs'
 
-export default (CalName, YearStart, YearEnd) => { // CalNewm
-    const { Type, AutoNewm, AutoPara
-    } = Bind(CalName)
+export default (CalName, YearStart, YearEnd) => {
+    const { Type, AutoNewm, AutoPara } = Bind(CalName)
     const isExcl = Type >= 4 ? 1 : 0
-    const { OriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw
-    } = AutoPara[CalName]
-    let { ScCorr
-    } = AutoPara[CalName]
+    const { OriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw } = AutoPara[CalName]
+    let { ScCorr } = AutoPara[CalName]
     ScCorr = ScCorr || 0
     const YearMemo = []
     const calculate = year => {

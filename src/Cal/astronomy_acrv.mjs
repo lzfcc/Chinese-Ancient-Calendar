@@ -90,7 +90,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
     const n = t / TermRange
     let SunTcorr1 = 0
     let SunTcorr2 = 0
-    if (Type === 7) { // 拉格朗日內插
+    if (Type === 7 && CalName !== 'Qintian') { // 拉格朗日內插
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
             if (WinsolsDif >= AcrTermList[j] && WinsolsDif < AcrTermList[j + 1]) {
