@@ -165,7 +165,7 @@ $ npm run build
 - Corr 修正改正 correction
 - Tcorr 日月速度改正，或交食食甚時刻改正
 - DifAccum 日盈縮積、月遲疾積
-- Dcorr 食分修正
+- Mcorr 食分修正
 - Avg 平均的 average
 - Acr  精確的 accurate
 - Deg 度數 degree

@@ -350,11 +350,11 @@ export const EcliWest = (NodeAccum, AnomaAccum, Deci, WinsolsDif, f, year) => { 
     const k1 = H0.div(I.sin()).mul(f.sin()).mul(e.cos()) // 一個常數
     const k2 = H0.mul(f.cos()).mul(e.sin()).div(I.sin()) //.toNumber()
     const tmp1 = h.sin().mul(Longi.cos()).neg().sub(h.cos().mul(Longi.sin())) // 我這符號取了個負，要不然對不上
-    const Dcorr = k1.add(k2.mul(tmp1))
+    const Mcorr = k1.add(k2.mul(tmp1))
     return {
         Tcorr: Tcorr.toNumber(),
         Tcorr0: Tcorr0.toNumber(),
-        Dcorr: Dcorr.toNumber()
+        Mcorr: Mcorr.toNumber()
     }
 }
 // console.log(EcliWest(0.5, 360, 8, 35, 1000))

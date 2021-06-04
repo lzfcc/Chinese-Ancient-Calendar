@@ -71,17 +71,19 @@ export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
         V = 695 / 52
     } else if (CalName === 'Xuanming') {
         V = 1123 / 84
-    } else if (['Chongxuan', 'Qintian'].includes(CalName)) {
+    } else if (CalName === 'Chongxuan') {
+        V = 401 / 30
+    } else if (CalName === 'Qintian') {
         V = 13 + 7 / 19
     } else if (CalName === 'Mingtian' || Type === 11) {
         V = 13.36875 // 約分後的精確值。13+29913000/81120000。但是明天又提到用1337
-    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName) || Type === 10) {
+    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
         V = 13.37
     } else if (CalName === 'Chongtian') {
         V = 909 / 68 // 13.3676470588
     } else if (Type === 9) { // 7290/545.3=13.3687878232，按照公式=13.3687753161
         V = 7290 / 545.3 // 紀元
-    } else if (CalName === 'Gengwu') {
+    } else if (Type === 10) {
         V = 5230 / 391.21 // 13.3687789
     } else {
         const { Sidereal, Solar, Lunar, LunarRaw } = AutoPara[CalName]

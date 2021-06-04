@@ -324,7 +324,9 @@ export default {
         Node: 27 + 1782.6512 / 8400, // 終日
         SunLimitYang: 2640, // 陽曆食限定法176
         SunLimitYin: 6060, // 定法404
+        SunLimitNone: 8700,
         MoonLimit1: 2147, // 月全食限
+        MoonLimitNone: 9737.1744, // 後準=望差
         MoonLimitDenom: 506,
         OriginAd: 822 - 7070138, // 長慶二年壬寅
         // JdOrigin: 2021279.2607 - 7070138 * (365 + 2055 / 8400),
@@ -357,6 +359,7 @@ export default {
         Denom: 13500, // 通法
         Anoma: 27 + 7486.97 / 13500, // 轉終
         AnomaNumer: 371986.97, //  轉週分
+        AnomaCycle: 374.28, // 轉終度。不知道是什麼，照理說應該是368.37
         Node: 27 + 2864.9673 / 13500,
         OriginAd: 892 - 53947308, // 景福元年壬子
         // JdOrigin: 2046846.3302 - 53947308 * (365 + 3301 / 13500),
@@ -464,7 +467,7 @@ export default {
         SunLimitYin: 960,
         SunLimitNone: 1380,
         MoonLimit1: 340,
-        MoonLimit2: 900,
+        MoonLimit2: 900, // 「其前後分，以九百以上入或食或不食之限」
         MoonLimitNone: 1550,
         // NodeNumer:727801.82, // 交總
         // 初準16641中準18191末準1550

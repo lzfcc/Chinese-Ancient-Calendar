@@ -54,7 +54,7 @@ export default (CalName, year) => {
             SolarChangeAccum = signX * ((year - 2000) ** 2) * 0.000000003 // (首項+末項)/2            
             LunarChangeAccum = -signX * ((year - 2000) ** 2) * 0.000000001
         } else {
-            Solar = SolarRaw - OriginYear / 15000000 // 授時歲實消長高了16倍
+            Solar = SolarRaw - OriginYear / 15000000 // 這個是實際値
             SolarChangeAccum = signX * (OriginYear ** 2) / 30000000
             // Solar = SolarRaw - OriginYear / 1000000 // 授時歲實消長高了16倍
             // SolarChangeAccum = signX * (OriginYear ** 2) / 2000000

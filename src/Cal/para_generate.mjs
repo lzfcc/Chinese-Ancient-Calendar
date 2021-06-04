@@ -194,3 +194,23 @@ const GenMoon248 = () => { // 欽天月離表
 //////// 乾象入陰陽曆
 // const a = (~~(OriginYear / Lunar) + i - (isNewm ? 1 : 0.5)) / EcliNumer - ~~((~~(OriginYear / Lunar) + i - (isNewm ? 1 : 0.5)) / EcliNumer)
 // const b = a * EcliNumer * ShuoHeFen
+
+// 應天日食食分算法廢：
+            // let tmp = (0.75 - TotalDeci) * MoonAvgVDeg * 20
+            // if (TotalDeci > 0.5) {
+            //     tmp /= 4
+            // const TheDif = Math.abs(Portion * (TheNodeDif - tmp))
+            // if (TheNodeDif < SunLimitYang) { // 類同陽曆分
+            //     if (TheNodeDif >= tmp) {
+            //         Magni = TheDif / SunLimitYang
+            //     } else {
+            //         Magni = Portion * (TheNodeDif + TheDif) / SunLimitYang
+            //     }
+            // } else if (TheNodeDif < SunLimitYin) {
+            //     TheNodeDif -= SunLimitYang // 陰曆分
+            //     if (TheNodeDif >= tmp) {
+            //         Magni = TheDif / SunLimitYin
+            //     } else {
+            //         Magni = Portion * (TheNodeDif + TheDif) / SunLimitYin
+            //     }
+            // }
