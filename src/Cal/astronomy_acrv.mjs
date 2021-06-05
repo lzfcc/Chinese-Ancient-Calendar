@@ -428,7 +428,7 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
     let MoonDegDenom = Denom
     if (CalName === 'Qintian' || Type >= 8) {
         MoonDegDenom = 100
-        if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+        if (['Yingtian', 'Yitian'].includes(CalName)) {
             MoonDegDenom = Denom / 100
         }
     }
@@ -509,7 +509,7 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     let MoonDegDenom = Denom
     if (CalName === 'Qintian' || Type >= 8) {
         MoonDegDenom = 100
-        if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+        if (['Yingtian', 'Yitian'].includes(CalName)) {
             MoonDegDenom = Denom / 100
         }
     }
