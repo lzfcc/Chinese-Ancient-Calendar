@@ -39,7 +39,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 
     let Print1 = [{
         title: '現代近似',
-        data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
+        data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
     }]
     let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Fengyuan', 'Guantian', 'Zhantian']
@@ -92,7 +92,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         }))
     let Print2 = [{
         title: '現代近似',
-        data: [WestSun.toFixed(5), 0, '-', WestMoonB.toFixed(5), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorrB.toFixed(5), 0, (WestSunTcorr + WestMoonTcorrB).toFixed(4), WestNodeCorrB.toFixed(4)]
+        data: [WestSun.toFixed(5), 0, '-', WestMoonB.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorrB.toFixed(5), 0, (WestSunTcorr + WestMoonTcorrB).toFixed(4), WestNodeCorrB.toFixed(4)]
     }]
     Print2 = Print2.concat(
         List2.map(title => {
@@ -765,7 +765,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
         }))
     return { Print1, Print2 }
 }
-// console.log(BindMoonEclipse(14.2, 4, 12, 141))
+// console.log(BindMoonEclipse(1.1, 22, 22, 22))
 
 const InacPrintAnaly_SunTcorr = (CalName, AnomaAccum, year) => {
     let SunTcorrInac = []

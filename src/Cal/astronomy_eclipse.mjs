@@ -777,10 +777,11 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         if (Type === 9) { // 紀元食甚泛餘，藤豔輝《紀元曆日食算法及精度分析》說卽定朔到眞食甚的改正，我覺得不是。最後《中》說加上經朔，藤豔輝說加上定朔，藤豔輝錯了
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AcrAnomaAccum, CalName) // 這個損益率應該是與定朔改正相反
             Tcorr0 = AvgTcorr * MoonTcorrDif / TheDenom / Denom
+            AvgTotalDeci = (AcrDeci + Tcorr0 + 1) % 1 // 紀元食甚泛餘 // 注意小數點加上修正變成負的情況，比如0.1退成了0.9
         } else if (Type === 10) {
             Tcorr0 = AvgTcorr * 1337 / MoonAcrVList[~~AcrAnomaAccum]
-        }
-        AvgTotalDeci = (AcrDeci + Tcorr0 + 1) % 1 // 紀元食甚泛餘 // 注意小數點加上修正變成負的情況，比如0.1退成了0.9
+            AvgTotalDeci = (AvgDeci + Tcorr0 + 1) % 1 // 大明是加經朔
+        }        
         AvgTotalNoonDif = Math.abs(0.5 - AvgTotalDeci)
     }
     const RiseNoonDif = 0.5 - Rise // 日出沒辰刻距午正刻數/100，卽半晝分
@@ -1446,7 +1447,8 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
 }
 // console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 0, 'Mingtian'))
 // console.log(EclipseFormula(12.85874, 0.3524, 0.83546, 0.79093, 156.3253, 156.2809, 0, 0, 'Datong').Magni) // 2021年四月望
-// console.log(EclipseFormula(14.5, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 1, 'Chongxuan'))
+// console.log(EclipseFormula(1.1, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 0, 'Datong')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
+// console.log(EclipseFormula(0.4, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 0, 'Daming3'))
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)
