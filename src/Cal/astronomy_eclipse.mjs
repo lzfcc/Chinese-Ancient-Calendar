@@ -1454,15 +1454,28 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsD
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = Eclipse1(NodeAccum, CalName)
     } else {
-        if (Type <= 6) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
+        if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'Daye', NodeAccum).NodeTcorr
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'Daye', i, Leap)
+        } else if (CalName === 'Shenlong') {
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'LindeA', NodeAccum).NodeTcorr
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'LindeA', i, Leap)
+        } else if (Type <= 6) {
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
         } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr  // 定交分 
             Eclipse = EclipseTable3(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName)
+        } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Guantian')
+        } else if (['Chunyou', 'Huitian'].includes(CalName)) {
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Chengtian')
+        } else if (['Daming1', 'Daming2', 'Yiwei'].includes(CalName)) {
+            Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Daming3')
         } else if (Type <= 11) {
             Eclipse = EclipseFormula(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
         }
     }
     return Eclipse
 }
+// console.log(AutoEclipse(14.2, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 1, 'Huangji', 4, 2, 8194819414.14))
