@@ -67,6 +67,7 @@ export default class Converter extends React.Component {
             <th>程度</th>
             <th>食分</th>
             <th>虧初刻數</th>
+            <th>定朔</th>
             <th>食甚</th>
             <th>復末</th>
           </tr>
@@ -88,6 +89,7 @@ export default class Converter extends React.Component {
             <th>程度</th>
             <th>食分</th>
             <th>虧初刻數</th>
+            <th>定朔</th>
             <th>食甚</th>
             <th>復末</th>
           </tr>

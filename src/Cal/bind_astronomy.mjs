@@ -624,7 +624,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
     }
     let Print1 = []
     Print1 = Print1.concat(
-        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
+        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -633,6 +633,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
+            const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
             if (StartDeci && TotalDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
@@ -648,7 +649,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
@@ -662,6 +663,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
+            const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
             if (StartDeci && TotalDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
@@ -677,7 +679,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }
@@ -707,7 +709,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
     }
     let Print1 = []
     Print1 = Print1.concat(
-        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -716,6 +718,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
+            const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
             if (StartDeci && TotalDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
@@ -731,7 +734,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
@@ -745,6 +748,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
+            const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
             if (StartDeci && TotalDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
@@ -760,7 +764,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }

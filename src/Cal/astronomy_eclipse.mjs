@@ -774,14 +774,14 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
     let AvgTotalDeci = 0
     let AvgTotalNoonDif = 0 // 紀元中前後分
     if (Type === 9 || Type === 10) {
-        if (Type === 9) { // 紀元食甚泛餘，藤豔輝《紀元曆日食算法及精度分析》說卽定朔到眞食甚的改正，我覺得不是。最後《中》說加上經朔，藤豔輝說加上定朔，藤豔輝錯了
+        if (Type === 9) { // 紀元食甚泛餘，藤豔輝《紀元曆日食算法及精度分析》說卽定朔到眞食甚的改正，我覺得不是。最後《中》說加上經朔，藤豔輝說加上定朔
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AcrAnomaAccum, CalName) // 這個損益率應該是與定朔改正相反
             Tcorr0 = AvgTcorr * MoonTcorrDif / TheDenom / Denom
-            AvgTotalDeci = (AcrDeci + Tcorr0 + 1) % 1 // 紀元食甚泛餘 // 注意小數點加上修正變成負的情況，比如0.1退成了0.9
+            AvgTotalDeci = (AvgDeci + AvgTcorr + Tcorr0 + 1) % 1 // 紀元食甚泛餘 // 注意小數點加上修正變成負的情況，比如0.1退成了0.9
         } else if (Type === 10) {
             Tcorr0 = AvgTcorr * 1337 / MoonAcrVList[~~AcrAnomaAccum]
             AvgTotalDeci = (AvgDeci + Tcorr0 + 1) % 1 // 大明是加經朔
-        }        
+        }
         AvgTotalNoonDif = Math.abs(0.5 - AvgTotalDeci)
     }
     const RiseNoonDif = 0.5 - Rise // 日出沒辰刻距午正刻數/100，卽半晝分
@@ -833,17 +833,19 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
         if (CalName === 'Qintian') {
             Tcorr = (1 - Math.abs(Rise - 0.25) * Denom / 313) * 245 / Denom
         } else if (Type === 9 || Type === 10) {
-            const AvgTotalDeciHalfRev = 0.25 - Math.abs(AvgTotalDeci % 0.5 - 0.25)  // 庚午卯酉前後分，距離0、0.5、1的値
+            const AvgTotalDeciHalfRev = 0.25 - Math.abs(AvgTotalDeci % 0.5 - 0.25)// 庚午卯酉前後分，距離0、0.5、1的値
             if (Type === 9) {
                 if (AvgTotalDeci > 0.5) {
-                    Tcorr = -(AvgTotalDeciHalfRev ** 2) / 3
-                } else if (AvgTotalDeci < (2 / 3) * Rise) {
-                    Tcorr = ((4 / 3) * Rise - AvgTotalDeci) * AvgTotalDeci / 1.5
+                    Tcorr = -(AvgTotalDeciHalfRev ** 2) / 30000
+                } else if (AvgTotalDeci < (2 / 3) * Rise) { // 「如泛餘不滿半法，在日出分三分之二已下，列於上位，已上者，用減日出分，餘倍之，亦列於上位，乃四因三約日出分，列之於下，以上減下，餘以乘上，如一萬五千而一，所得，以加泛餘，為食甚定餘。」涉及正負，不好辦，只能暫時加個絕對值
+                    Tcorr = ((4 / 3) * Rise - AvgTotalDeci) * AvgTotalDeci / 15000
                 } else {
-                    const tmp = 2 * (Rise - AvgTotalDeci)
-                    Tcorr = ((4 / 3) * Rise - tmp) * tmp / 1.5
+                    const tmp = Math.abs(2 * (Rise - AvgTotalDeci))
+                    Tcorr = Math.abs(((4 / 3) * Rise - tmp) * tmp / 15000)
                 }
+                Tcorr *= Denom
             } else {
+
                 Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4 // 四因退位
                 if (AvgTotalDeci > 0.5) {
                     Tcorr = -Tcorr
@@ -1441,14 +1443,14 @@ const EclipseFormula = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsol
             }
         }
         StartDeci = (TotalDeci - Last / (CalName === 'Chongxuan' ? 1 : Denom) + 1) % 1 // 授時已經把Denom設置爲1
-        EndDeci = (TotalDeci + Last / (CalName === 'Chongxuan' ? 1 : Denom)) % 1
+        EndDeci = (TotalDeci + Last / (CalName === 'Chongxuan' ? 1 : Denom) + 1) % 1
     }
     return { Magni, status, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
 // console.log(EclipseFormula(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 0, 'Mingtian'))
 // console.log(EclipseFormula(12.85874, 0.3524, 0.83546, 0.79093, 156.3253, 156.2809, 0, 0, 'Datong').Magni) // 2021年四月望
 // console.log(EclipseFormula(1.1, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 0, 'Datong')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
-// console.log(EclipseFormula(0.4, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 0, 'Daming3'))
+console.log(EclipseFormula(0.9, 22, 0.39375, 0.12, 222.27375, 222, 8194819414.14, 0, 'Jiyuan'))
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)
