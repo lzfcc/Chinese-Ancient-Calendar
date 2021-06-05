@@ -45,7 +45,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     const { AutoPara, Type } = Bind(CalName)
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || Solar
-    const Sidereal50 = Sidereal
+    const Sidereal50 = Sidereal / 2
     const Sidereal25 = Sidereal / 4
     const LongiHalf = LongiRaw % Sidereal50
     const Longi = Sidereal25 - Math.abs(LongiHalf - Sidereal25)
@@ -129,7 +129,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     Equa2Eclp = LongiRaw + Equa2EclpDif
     return { Equa2Eclp, Equa2EclpDif }
 }
-// console.log(Equa2EclpTable(23,''))
+// console.log(Equa2EclpTable(23, 'Yitian'))
 
 export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
     const { AutoPara } = Bind(CalName)

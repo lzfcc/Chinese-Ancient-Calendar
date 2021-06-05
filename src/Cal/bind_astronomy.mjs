@@ -74,7 +74,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
                 SunTcorrInacPrint = SunTcorrInac.toFixed(4)
             }
             if (MoonAcrS) {
-                MoonAcrSPrint = MoonAcrS.toFixed(2)
+                MoonAcrSPrint = MoonAcrS.toFixed(3)
             }
             if (MoonTcorr) {
                 MoonTcorrPrint = MoonTcorr.toFixed(5)
@@ -105,7 +105,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
             const SunDifAccumInacPrint = (SunDifAccum - WestSun).toFixed(4)
             let MoonAcrSPrint = '-'
             if (MoonAcrS) {
-                MoonAcrSPrint = MoonAcrS.toFixed(2)
+                MoonAcrSPrint = MoonAcrS.toFixed(3)
             }
             const MoonDifAccumPrint = MoonDifAccum.toFixed(4)
             const MoonDifAccumInacPrint = (MoonDifAccum - WestMoonB).toFixed(4)
@@ -126,10 +126,8 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
 export const AutoEqua2Eclp = (LongiRaw, CalName) => {
-    const { Type, AutoPara
-    } = Bind(CalName)
-    const { Sidereal, Solar, SolarRaw
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    const { Sidereal, Solar, SolarRaw } = AutoPara[CalName]
     LongiRaw %= (Sidereal || (Solar || SolarRaw))
     let Equa2Eclp = 0
     let Eclp2Equa = 0
@@ -624,9 +622,9 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
         }
         break
     }
-    let Print = []
-    Print = Print.concat(
-        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
+    let Print1 = []
+    Print1 = Print1.concat(
+        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -645,7 +643,28 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
                 data: [Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
-    return Print
+    let Print2 = []
+    Print2 = Print2.concat(
+        ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
+            const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
+            const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
+            const { Magni, StartDeci, TotalDeci, EndDeci
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0)
+            let StartDeciPrint = '-'
+            let TotalDeciPrint = '-'
+            let EndDeciPrint = '-'
+            if (StartDeci && TotalDeci) {
+                StartDeciPrint = (StartDeci * 100).toFixed(3)
+                TotalDeciPrint = (TotalDeci * 100).toFixed(3)
+                EndDeciPrint = (EndDeci * 100).toFixed(3)
+            }
+            return {
+                title: CalNameList[title],
+                data: [Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
+            }
+        }))
+    return { Print1, Print2 }
 }
 // console.log(BindSunEclipse(0.1, 14, 1355, 14))
 
@@ -670,9 +689,9 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
         }
         break
     }
-    let Print = []
-    Print = Print.concat(
-        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
+    let Print1 = []
+    Print1 = Print1.concat(
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -691,9 +710,30 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
                 data: [Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
-    return Print
+    let Print2 = []
+    Print2 = Print2.concat(
+        ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
+            const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
+            const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
+            const { Magni, StartDeci, TotalDeci, EndDeci
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0)
+            let StartDeciPrint = '-'
+            let TotalDeciPrint = '-'
+            let EndDeciPrint = '-'
+            if (StartDeci && TotalDeci) {
+                StartDeciPrint = (StartDeci * 100).toFixed(3)
+                TotalDeciPrint = (TotalDeci * 100).toFixed(3)
+                EndDeciPrint = (EndDeci * 100).toFixed(3)
+            }
+            return {
+                title: CalNameList[title],
+                data: [Magni.toFixed(3), StartDeciPrint, TotalDeciPrint, EndDeciPrint]
+            }
+        }))
+    return { Print1, Print2 }
 }
-// console.log(BindMoonEclipse(14.2, 4, 0.12, 141))
+// console.log(BindMoonEclipse(14.2, 4, 12, 141))
 
 const InacPrintAnaly_SunTcorr = (CalName, AnomaAccum, year) => {
     let SunTcorrInac = []

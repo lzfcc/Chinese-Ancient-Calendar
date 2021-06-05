@@ -426,7 +426,7 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
     const MoonAcrAvgDifList = [] // 損益率。速差。消減息加，前消後息。加減數（限）。《古代曆法計算法》第515-518頁。《中國古代曆法》第453頁說劉洪濤誤會爲實平行差。麟德爲增減率
     let MoonDifAccumList = []
     let MoonDegDenom = Denom
-    if (Type >= 8 && CalName !== 'Chongxuan') {
+    if (CalName === 'Qintian' || Type >= 8) {
         MoonDegDenom = 100
         if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
             MoonDegDenom = Denom / 100
@@ -857,7 +857,7 @@ export const AutoDifAccum = (AnomaAccum, WinsolsDif, CalName, year) => {
     }
     return { SunDifAccum, MoonDifAccum }
 }
-// console.log(AutoDifAccum(9, 9, 'Shoushi', 1997).MoonDifAccum)
+// console.log(AutoDifAccum(9, 9, 'Chongxuan').MoonDifAccum)
 
 export const AutoMoonAcrS = (AnomaAccum, CalName) => {
     const { Type, AutoPara } = Bind(CalName)

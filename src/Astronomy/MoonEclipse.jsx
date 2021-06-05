@@ -47,8 +47,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = BindMoonEclipse(this.state.a, this.state.b, this.state.c, this.state.d)
-      this.setState({ output: Print })
+      const { Print1, Print2 } = BindMoonEclipse(this.state.a, this.state.b, this.state.c, this.state.d)
+      this.setState({ output1: Print1, output2: Print2 })
     } catch (e) {
       alert(e.message)
     }
@@ -68,7 +68,26 @@ export default class Converter extends React.Component {
             <th>食甚</th>
             <th>復末</th>
           </tr>
-          {(this.state.output || []).map(row => {
+          {(this.state.output1 || []).map(row => {
+            return (
+              <tr>
+                <td className='RowTitle'>{row.title}</td>
+                {row.data.map(d => {
+                  return (<td>{d}</td>)
+                })}
+              </tr>
+            )
+          })}
+        </table>
+        <table>
+          <tr>
+            <th></th>
+            <th>食分</th>
+            <th>虧初刻數</th>
+            <th>食甚</th>
+            <th>復末</th>
+          </tr>
+          {(this.state.output2 || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
