@@ -55,14 +55,16 @@ export default class Converter extends React.Component {
   }
 
   result() {
-    if (!this.state.output) {
+    if (!this.state.output1) {
       return null
     }
     return (
       <div className='ans table2 right'>
+        <h3>近地點入轉</h3>
         <table>
           <tr>
             <th></th>
+            <th>程度</th>
             <th>食分</th>
             <th>虧初刻數</th>
             <th>食甚</th>
@@ -79,9 +81,11 @@ export default class Converter extends React.Component {
             )
           })}
         </table>
+        <h3>遠地點入轉</h3>
         <table>
           <tr>
             <th></th>
+            <th>程度</th>
             <th>食分</th>
             <th>虧初刻數</th>
             <th>食甚</th>
