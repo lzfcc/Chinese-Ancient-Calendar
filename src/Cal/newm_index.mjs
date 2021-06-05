@@ -318,10 +318,11 @@ export default (CalName, YearStart, YearEnd) => {
                             NoleapMon = i
                         }
                     }
+                    const Rise = AutoLongi2Lati(NewmAcrWinsolsDifRawPrint[i], WinsolsDeci, CalName).Rise / 100
                     let NewmEcliFunc = {}
                     let SyzygyEcliFunc = {}
-                    let NewmCondition = NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3
-                    let SyzygyCondition = SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7
+                    let NewmCondition = NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3 && (NewmDeciPrint[i] > Rise - 0.06 && NewmDeciPrint[i] < 1 - Rise + 0.06) // 大統日食二十分，可能漏了，不知道，瞎寫一個
+                    let SyzygyCondition = SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7 && (SyzygyDeciPrint[i] < Rise + 0.082 || SyzygyDeciPrint[i] > 1 - Rise - 0.082) // 大統月食八刻二十分
                     if (CalName === 'Mingtian') {
                         NewmCondition = 1
                         SyzygyCondition = 1

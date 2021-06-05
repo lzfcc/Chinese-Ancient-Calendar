@@ -21,15 +21,10 @@ import { AutoMoonAvgV } from './para_auto-constant.mjs'
 export const CalDay = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, year) => {
-        const { Type, AutoPara,
-        } = Bind(CalName)
-        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionDayCorr, ScCorr
-        } = AutoPara[CalName]
-        let { Solar, Sidereal, Lunar,
-        } = AutoPara[CalName]
-        const { LeapNumTermThis, OriginAccum,
-            NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint
-        } = CalNewm(CalName, year)[0]
+        const { Type, AutoPara } = Bind(CalName)
+        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionDayCorr, ScCorr } = AutoPara[CalName]
+        let { Solar, Sidereal, Lunar } = AutoPara[CalName]
+        const { LeapNumTermThis, OriginAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
         Lunar = Lunar || LunarRaw

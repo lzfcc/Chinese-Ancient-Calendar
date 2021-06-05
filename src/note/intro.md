@@ -467,7 +467,7 @@
 
 ## 开发者说明
 
-### 1
+### 1. 技术特征
 
 - 计算程序采用 JavaScript 编写
 - 前端框架采用 React
@@ -495,7 +495,7 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 3. $ npm run build
 
-### 2
+### 2. 文件功能
 
 核心计算程序在 `/src/Cal` 目录下，有 9 个板块，各文件功能说明：
 
@@ -543,6 +543,78 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
     - `output` 输出准备
     - `output_print` 本地打印入口。`const printData = outputFile(2, 1255, 1255, 0` 第一个数字为模式，`1` 为朔闰表，`2` 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持
     - `output_frontend-worker` Web Worker，朔闰表、历书两个模块的前端调用入口
+
+### 3. 命名規範
+
+#### 天文參數 Astronomy constants
+
+- Solar 回歸年 solar year
+- Sidereal 恆星年 sidereal year
+- Lunar 朔望月 Synodic month
+- Anoma 近點月 anoma month
+- Node 交點月 node month
+- SunLimit 日食食限。SunLimitYang 陽曆食限，SunLimitYin 陰曆食限，SunLimitNone 不偏食限
+- MoonLimit 月食食限。MoonLimit1 月全食限，MoonLimit2 必偏食限，MoonLimitNone 不偏食限
+- LeapLimit 閏限 The limit for arranging a leap
+- Equa 赤道 equator
+- Eclp 黃道 ecliptic
+- Ecli 交食 eclipse
+- Longi 經度 longitude
+- Lati 緯度 latitude
+
+#### 變量 Variables
+
+- Origin 上元以來的
+- Winsols 冬至 winter solstice
+- Newm 朔 new moon
+- Syzygy 望 syzygy
+- First 天正月，卽冬至所在月 The month in which the winter solstice falls
+- Zheng 正月，建正
+- LeapSur 閏餘 leap surplus
+- GreatSur 大餘，干支的整數部分
+- SmallSur 小餘，干支的小數部分
+- LeapNumTerm 無中氣置閏法的閏月
+- Midstar 昬中星
+- Accum 積日。OriginAccum 上元至年前冬至積日 AnomaAccum 入轉日 NodeAccum 入交日
+
+#### 常量 Constants
+
+- Sc 干支 sexagenary cycle 
+- Stem 天干
+- Branch 地支
+- CalName 曆法名 calendar name
+- Hexagram 八卦
+- Mansion 宿
+- MoonGod 月神
+- ManGod 人神
+
+#### 時間長度
+
+- Leng 長度 length
+- Range 長度
+- Term 十二中氣 HalfTerm 二十四節氣
+- Hou 七十二候
+- Zhang 章
+- Bu 蔀
+- Ji 紀
+- Tong 統
+- Yuan 元
+
+#### 其他
+
+- Raw 未經某種處理的變量 Variables before processing in some way 
+- V 速度 velocity
+- Corr 修正改正 correction。Tcorr 在躔離計算中爲日月速度改正，在交食計算中位食甚時刻改正。Mcorr 食分修正
+- DifAccum 日盈縮積、月遲疾積
+- Avg 平均的 average
+- Acr  精確的 accurate
+- Deg 度數 degree
+- Dif 兩個常數之差 The difference between constants A and B. WinsolsDif 某日距離年前冬至的積日
+- xxx50 某常量的 50%，xxx125 某常量的 12.5%
+- xxxHalf 某變量的一半 Half of a variable
+- Numer 分子 numerator
+- Denom 分母 denominator。單獨出現的 Denom 爲日法 LunarDenom 的簡寫
+- Num 序號 number
 
 ## 更新日誌
 
@@ -644,7 +716,7 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 **核心** 根據曲安京《曆法》頁 251 重寫大衍月緯算法，此前用的三次招差術。但是其中符號還不太敢確定。
 
-#### 6-04 `1.00`
+#### 6-06 `1.00`
 
 **正式版發布！！** 
 
@@ -663,7 +735,7 @@ if (aRev > 0.25) {
 
 3、生成欽天、至道、乾興、奉元、占天、淳祐、會天躔離。
 
-4、修復月實行積度的疏忽。
+4、修復月實行積度的疏忽。修復崇玄月遲疾積。修復黃赤轉換小問題。
 
 5、把生成參數的單獨抽出來一個文件。
 
