@@ -294,6 +294,9 @@ const CalRange = {
 }
 
 export const AutoCal = year => {
+    if (year > 1683 || year < -721) {
+        throw (new Error('年份範圍 -721 至 1683'))
+    }
     const Cals = []
     for (const [Cal, ranges] of Object.entries(CalRange)) {
         for (const [start, end] of ranges) {
@@ -302,9 +305,6 @@ export const AutoCal = year => {
                 break
             }
         }
-    }
-    if (!Cals.length) {
-        console.log('年份範圍 -721 至 1662')
     }
     return Cals
 }

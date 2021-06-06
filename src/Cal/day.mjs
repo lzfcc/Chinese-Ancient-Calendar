@@ -30,7 +30,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         Lunar = Lunar || LunarRaw
         const HouLeng = Solar / 72
         const HalfTermLeng = Solar / 24
-        let HexagramLeng = Solar / 60
+        const HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const ZhengInt = NewmInt[0] + (ScCorr || 0)
         const ZhengWinsolsDif = +(ZhengInt - OriginAccum).toFixed(5) // 正月夜半到冬至距離
@@ -71,8 +71,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             FiveAccumList[i] += FiveAccumList[i - 1]
             FiveAccumList[i] = parseFloat((FiveAccumList[i]).toPrecision(13))
         }
-        FiveAccumList = FiveAccumList.slice(-1).concat(FiveAccumList.slice(0, -1))
-        FiveAccumList[0] = 0
+        FiveAccumList = [0, ...FiveAccumList]
         if (['Qianxiang', 'Jingchu'].includes(CalName)) { // 乾象景初用京房，後來都用孟喜
             const HexagramRangeA = 7 - HexagramLeng
             const HexagramRangeB = HexagramLeng - HexagramRangeA
@@ -90,8 +89,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 HexagramAccumList[i] += HexagramAccumList[i - 1]
                 HexagramAccumList[i] = parseFloat((HexagramAccumList[i]).toPrecision(13))
             }
-            HexagramAccumList = HexagramAccumList.slice(-1).concat(HexagramAccumList.slice(0, -1))
-            HexagramAccumList[0] = 0
+            HexagramAccumList = [0, ...HexagramAccumList]
             for (let i = 64; i <= 80; i++) {
                 HexagramAccumList[i] = HexagramAccumList[i - 64] + Solar
                 HexagramAccumList[i] = parseFloat((HexagramAccumList[i]).toPrecision(13))

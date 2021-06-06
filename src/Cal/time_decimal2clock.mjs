@@ -2,7 +2,7 @@ import {
     Bind,
 } from './bind.mjs'
 import {
-    BranchList, HalfList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, ClockNameList, big, nzh
+    BranchList, HalfList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, big, nzh
 } from './para_constant.mjs'
 
 const ClockWest = Deci => {
@@ -137,6 +137,15 @@ export const AutoClock = (Deci, CalName) => {
         Print = ClockSong(Deci)
     }
     return Print
+}
+
+const ClockNameList = {
+    Easthan: '後漢四分',
+    Yuanjia: '魏晉南北',
+    WuyinA: '戊寅曆',
+    Huangji: '皇極曆',
+    Dayan: '唐北宋前期',
+    Mingtian: '南宋元明'
 }
 
 export const BindClock1 = Deci => {

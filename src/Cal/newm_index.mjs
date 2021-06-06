@@ -318,11 +318,12 @@ export default (CalName, YearStart, YearEnd) => {
                             NoleapMon = i
                         }
                     }
-                    const Rise = AutoLongi2Lati(NewmAcrWinsolsDifRawPrint[i], WinsolsDeci, CalName).Rise / 100
+                    let Rise = AutoLongi2Lati(NewmAcrWinsolsDifRawPrint[i], WinsolsDeci, CalName).Rise / 100
                     let NewmEcliFunc = {}
                     let SyzygyEcliFunc = {}
-                    let NewmCondition = NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3 && (NewmDeciPrint[i] > Rise - 0.06 && NewmDeciPrint[i] < 1 - Rise + 0.06) // 大統日食二十分，可能漏了，不知道，瞎寫一個
+                    let NewmCondition = NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3 && (NewmDeciPrint[i] > Rise - 0.002 && NewmDeciPrint[i] < 1 - Rise + 0.002)
                     let SyzygyCondition = SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7 && (SyzygyDeciPrint[i] < Rise + 0.082 || SyzygyDeciPrint[i] > 1 - Rise - 0.082) // 大統月食八刻二十分
+                    Rise = Rise.toFixed(4).slice(2, 6)
                     if (CalName === 'Mingtian') {
                         NewmCondition = 1
                         SyzygyCondition = 1
@@ -337,7 +338,7 @@ export default (CalName, YearStart, YearEnd) => {
                         if (Newmstatus) {
                             NewmMagni = NewmEcliFunc.Magni.toFixed(2)
                             NewmEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                            NewmEcli[i] += '分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '')
+                            NewmEcli[i] += '出' + Rise + '分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '')
                             if (Newmstatus === 1) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
                             } else if (Newmstatus === 2) {
@@ -357,7 +358,7 @@ export default (CalName, YearStart, YearEnd) => {
                         if (Syzygystatus) {
                             SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
                             SyzygyEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                            SyzygyEcli[i] += '分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '')
+                            SyzygyEcli[i] += '日出' + Rise + '分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '')
                             if (Syzygystatus === 1) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
                             } else if (Syzygystatus === 2) {

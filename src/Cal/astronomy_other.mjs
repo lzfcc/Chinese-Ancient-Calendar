@@ -47,7 +47,7 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     if (WinsolsDeci >= 0) { // 一個小坑，四分曆存在WinsolsDeci===0的情況，所以要加上>=0，只保留undefined
         const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
         let MidstarRaw = 0
-        if (CalName === 'Dayan') { // 大衍只考慮了昬時距午度
+        if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(CalName)) { // 大衍只考慮了昬時距午度
             MidstarRaw = (MansionAccum + (0.5 - Rise + LightRange) * Sidereal) % Sidereal
         } else {
             MidstarRaw = (MansionAccum + (0.5 + LightRange - Rise) * Sidereal - Rise + 1) % Sidereal
@@ -62,11 +62,7 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
         const MidstarDeg = (MidstarRaw - DegAccumList[MidstarOrder]).toFixed(3)
         MidstarResult = MidstarName + MidstarDeg
     }
-    return {
-        MansionOrder,
-        MansionResult,
-        MidstarResult
-    }
+    return { MansionOrder, MansionResult, MidstarResult }
 }
 // console.log(Accum2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
 
@@ -93,8 +89,7 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
 }
 
 export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 朔小分
-    const { AutoPara
-    } = Bind(CalName)
+    const { AutoPara } = Bind(CalName)
     const { Solar } = AutoPara[CalName]
     const Solar25 = Solar / 4
     const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDeci, CalName).Rise / 100
@@ -109,7 +104,7 @@ export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 
         Portion = 2 // 夏至0.726
     }
     if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
-        standard = 1 - Rise + LightRange // + 0.1
+        standard = 1.1 - Rise + LightRange
     } else if (CalName === 'Chongxuan') {
         standard = Math.max(0.725, 1 - Rise + LightRange)
     } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) { // 欽天日入後則進一日
@@ -128,8 +123,7 @@ export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 
 // console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
 export const AutoSyzygySub = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => {
-    const { Type
-    } = Bind(CalName)
+    const { Type } = Bind(CalName)
     const LightRange = AutoLightRange(CalName)
     const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
     let standard = Rise - LightRange
@@ -146,10 +140,8 @@ export const AutoSyzygySub = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => {
 }
 
 export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行九道法
-    const { Type, AutoPara,
-    } = Bind(CalName)
-    const { SolarRaw, Node, LunarRaw
-    } = AutoPara[CalName]
+    const { Type, AutoPara } = Bind(CalName)
+    const { SolarRaw, Node, LunarRaw } = AutoPara[CalName]
     let { Solar, Lunar
     } = AutoPara[CalName]
     Lunar = Lunar || LunarRaw

@@ -1,5 +1,7 @@
 import { Bind } from './bind.mjs'
 import { Interpolate1 } from './equa_sn.mjs'
+import { CalNameList } from './para_constant.mjs'
+
 // import { Interpolate2 } from './equa_sn.mjs'
 // import { Interpolate1_big } from './equa_sn.mjs'
 // console.log(5^4)// console.log(new Date(...[2021, 5, 23, 13, 00, 1]))// console.log([...'34,fs'])
@@ -137,7 +139,38 @@ const GenMoon248 = () => { // 欽天月離表
 }
 // console.log(GenMoon248())
 
+const GenSolar = () => {
+    const CalList = Object.keys(CalNameList)
+    const SolarList = []
+    const Change = []
+    CalList.forEach(name => {
+        const { AutoPara } = Bind(name)
+        let { Solar, SolarRaw, CloseOriginAd } = AutoPara[name]
+        Solar = Solar || SolarRaw
+        if (CloseOriginAd) {
+            const Frac = Solar - ~~Solar
+            if (Frac < 0.2425 - 1e-12 || Frac > 0.2425 + 1e-12) {
+                Change.push((0.2425 - Frac) / ((1281 - CloseOriginAd) / 100))
+                SolarList.push([CloseOriginAd, Frac, CalNameList[name]])
+            }
+        }
+    })
+    let sum = 0
+    for (let i = 0; i < Change.length; i++) {
+        sum += Change[i]
 
+    }
+    sum /= Change.length
+    // SolarList.forEach()
+    return SolarList
+}
+// console.log(GenSolar())
+
+// const test = a => a > 2
+// const test2 = a => a *= 2 - 0.1
+// const test3 = a => a *= a > 3 ? 4 : 3
+// console.log(test2(2)) // 3.8
+// console.log(test3(4)) // 16
 ////// 下面的放在newm文件
 
     // const EcliRange = EcliNumer / (Solar / Lunar) // 乾象會歲

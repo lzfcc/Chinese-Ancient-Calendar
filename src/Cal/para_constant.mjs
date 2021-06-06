@@ -183,14 +183,6 @@ export const TwelveList = ['', '彊', '少弱', '少', '少彊', '半弱', '半'
 export const TwelveListHuangji = ['', '彊', '小少', '小', '小太', '半少', '半', '半太', '大少', '大', '大太', '弱', '']
 export const TwelveListWuyin = ['初', '初彊', '少弱', '少', '少彊', '半弱', '半', '半彊 ', '太弱 ', '太', '太彊', '末', '初']
 export const TwentyfourList = '子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥壬'
-export const ClockNameList = {
-    Easthan: '後漢四分',
-    Yuanjia: '魏晉南北',
-    WuyinA: '戊寅曆',
-    Huangji: '皇極曆',
-    Dayan: '唐北宋前期',
-    Mingtian: '南宋元明'
-}
 export const TermList = ['小雪', '冬至', '大寒', '雨水', '春分', '穀雨', '小滿', '夏至', '大暑', '處暑', '秋分', '霜降', '小雪'] // 用於朔閏表顯示中氣名
 export const HalfTermList = ['冬至', '小寒', '大寒', '立春', '雨水', '驚蟄', '春分', '清明', '穀雨', '立夏', '小滿', '芒種', '夏至', '小暑', '大暑', '立秋', '處暑', '白露', '秋分', '寒露', '霜降', '立冬', '小雪', '大雪']
 export const HouListA = [ // 皇極
@@ -244,7 +236,7 @@ export const HouListB = [
     '始冰', '地始凍', '雉入爲蜃', // 十月21立冬64
     '虹藏', '天氣地氣', '閉塞成冬', // 22小雪
     '鶡鴠', '虎始交', '荔挺生', // 十一月23大雪70
-] // 這是大衍的。爲了不將候與五行混淆，把「土潤溽暑」改「地」，「水澤腹堅」改冰，「草木萌動「草木黄落」」刪木，「水泉動」「水始涸」「雀入水爲蛤」「雉入水爲蜃」「水始冰」刪水。儘量減少字數
+] // 大衍的。爲了不將候與五行混淆，把「土潤溽暑」改「地」，「水澤腹堅」改冰，「草木萌動「草木黄落」」刪木，「水泉動」「水始涸」「雀入水爲蛤」「雉入水爲蜃」「水始冰」刪水。儘量減少字數
 export const Hexagram64ListA = ['伯坎',
     '公中孚', '辟復', '侯屯', '大夫謙', '卿睽',
     '公升', '辟臨', '侯小過', '大夫蒙', '卿益',
@@ -408,8 +400,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是
             DegAccumList[i] += DegAccumList[i - 1]
             DegAccumList[i] = parseFloat((DegAccumList[i]).toPrecision(13))
         }
-        DegAccumList = DegAccumList.slice(-1).concat(DegAccumList.slice(0, -1))
-        DegAccumList[0] = 0
+        DegAccumList = [0, ...DegAccumList]
         DegAccumList[29] = Sidereal
     }
     return DegAccumList

@@ -22,9 +22,10 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
         SunDifAccumList[i] += SunDifAccumList[i - 1]
         SunDifAccumList[i] = +(SunDifAccumList[i].toFixed(6))
     }
-    SunDifAccumList = SunDifAccumList.slice(-1).concat(SunDifAccumList.slice(0, -1))
-    SunDifAccumList[0] = 0
-    SunDifAccumList[24] = 0
+    //  SunDifAccumList.slice(-1).concat(SunDifAccumList.slice(0, -1))
+    // SunDifAccumList[0] = 0
+    // SunDifAccumList[24] = 0
+    SunDifAccumList = [0, ...SunDifAccumList]
     SunDifAccumList[25] = SunDifAccumList[1]
     let SunDifAccum2 = 0
     if (Type === 7 && CalName !== 'Qintian') {
@@ -148,6 +149,16 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
     const T = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
     const { QuarA, QuarB } = AutoQuar(CalName)
     if (Type === 11) {
+        // 定平立三差精確值、曆取値。f(88.5)精確值2.40247，曆取値2.40127 f(45)精確值1.78437，曆取值1.78354
+        // DeltaSunA1: 513.3822097763196114, // 513.32
+        // DeltaSunA2: 2.4553858564920306, // 2.46
+        // DeltaSunA3: 0.003142755330375, // 0.0031
+        // DeltaSunB1: 487.1014493604209278, //  487.06 
+        // DeltaSunB2: 2.2074819445045348, // 2.21 
+        // DeltaSunB3: 0.0027262800048672, // 0.0027 
+        // DeltaMoon1: 11.11,
+        // DeltaMoon2: 0.0281,
+        // DeltaMoon3: 0.000325,
         let sign = 1
         if (WinsolsDif >= Solar50) {
             sign = -1
@@ -444,8 +455,7 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
         MoonDifAccumList[i] += MoonDifAccumList[i - 1]
         MoonDifAccumList[i] = parseFloat((MoonDifAccumList[i]).toPrecision(7))
     }
-    MoonDifAccumList = MoonDifAccumList.slice(-1).concat(MoonDifAccumList.slice(0, -1))
-    MoonDifAccumList[0] = 0
+    MoonDifAccumList = [0, ...MoonDifAccumList]
     let Plus = 0
     if (CalName === 'Yitian') {
         AnomaAccumInt = AnomaAccumQuarInt
@@ -524,8 +534,7 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
         MoonAcrSList[i] += MoonAcrSList[i - 1]
         MoonAcrSList[i] = +MoonAcrSList[i].toFixed(4)
     }
-    MoonAcrSList = MoonAcrSList.slice(-1).concat(MoonAcrSList.slice(0, -1))
-    MoonAcrSList[0] = 0
+    MoonAcrSList = [0, ...MoonAcrSList]
     let Plus = 0
     let MoonAcrS = 0
     if (CalName === 'Qintian') {
