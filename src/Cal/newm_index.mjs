@@ -377,7 +377,6 @@ export default (CalName, YearStart, YearEnd) => {
             NewmDeciPrint[i] = NewmDeciPrint[i].toFixed(4).slice(2, 6)
             NewmAvgDeciPrint[i] = NewmAvgDeciPrint[i] ? NewmAvgDeciPrint[i].toFixed(4).slice(2, 6) : 0
             SyzygyDeciPrint[i] = SyzygyDeciPrint[i].toFixed(4).slice(2, 6)
-
         }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year

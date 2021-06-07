@@ -675,6 +675,15 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
             McorrB = Interpolate3(TheWinsolsDif, Initial) // 當日差積                
             McorrB *= isYin ? -1 : 1
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
+        } else if (CalName === 'Qintian') {
+            const Lati = Math.abs(Longi2LatiFormula(TheWinsolsDif, 'Chongxuan').Lati)
+            McorrA = MoonLimit1 * Lati * Denom / 251300 // 黃道出入食差
+            YinYangBorder = McorrA * dd
+            YinYangBorder = MoonLimit1 + (isYin ? -1 : 1) * YinYangBorder // 假設lati的單位是經法72，那麼常準在430-2322
+            const tmp = Math.abs(AvgWinsolsDif % Solar25 - Solar125) * 24 // 「置日躔入曆⋯⋯」那就是經朔距冬至日，定朔距冬至日叫「定朔加時入曆」
+            const signtmp = AvgWinsolsDif % Solar50 < Solar125 || AvgWinsolsDif % Solar50 >= Solar * 0.375 ? -1 : 1
+            McorrB = 2772 + signtmp * tmp // 黃道斜正食差。範圍1692-3852
+            YinYangBorder += McorrB * TheTotalNoonDif / RiseNoonDif
         } else if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
             const isBefore = TheNodeAccumHalf > Node25
             const Max = CalName === 'Wuji' ? 457 : 373
@@ -703,16 +712,6 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
                     McorrA -= Denom / 12
                 }
             }
-
-        } else if (CalName === 'Qintian') {
-            const Lati = Math.abs(Longi2LatiFormula(TheWinsolsDif, 'Chongxuan').Lati)
-            McorrA = MoonLimit1 * Lati * Denom / 251300 // 黃道出入食差
-            let YinYangBorderRaw = McorrA * dd
-            YinYangBorderRaw = MoonLimit1 + (isYin ? -1 : 1) * YinYangBorderRaw // 假設lati的單位是經法72，那麼常準在430-2322
-            const tmp = Math.abs(AvgWinsolsDif % Solar25 - Solar125) * 24 // 「置日躔入曆⋯⋯」那就是經朔距冬至日，定朔距冬至日叫「定朔加時入曆」
-            const signtmp = AvgWinsolsDif % Solar50 < Solar125 || AvgWinsolsDif % Solar50 >= Solar * 0.375 ? -1 : 1
-            McorrB = 2772 + signtmp * tmp // 黃道斜正食差。範圍1692-3852
-            YinYangBorder = YinYangBorderRaw + McorrB * TheTotalNoonDif / RiseNoonDif
         } else if (CalName === 'Xuanming') {
             McorrTerm = (2350 - 26 * TheWinsolsDifHalfRev) * dd
             McorrTerm = McorrTerm < 0 ? 0 : McorrTerm // 因為26不連續，最後剩了一天<0。連續：25.73618
@@ -886,7 +885,7 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
         if (CalName === 'Mingtian') {
             Mcorr = (sign1b * McorrTerm + sign2b * McorrClock) / 100
         } else {
-            Mcorr = (sign1 * McorrTerm + sign2 * McorrClock + sign3 * McorrOther + Mcorr0 + (['Chongtian', 'Guantian'].includes(CalName) ? Tcorr : 0)) / (Type === 11 ? 1 : Denom)
+            Mcorr = (sign1 * McorrTerm + sign2 * McorrClock + sign3 * McorrOther + Mcorr0 + (['Chongtian', 'Guantian'].includes(CalName) ? Tcorr * Denom : 0)) / (Type === 11 ? 1 : Denom)
         }
     } else {
         if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
@@ -939,8 +938,9 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
         } else {
             TheNodeAccum = AcrNodeAccum // 月食朔入交定日
         }
+        Mcorr *= Denom
         TheNodeDif = Node25 - Math.abs(TheNodeAccum % Node50 - Node25) // 交前後分        
-        TheNodeDif *= CalName === 'Yingtian' ? 1337 : Denom// 應天「分即百除，度即百通」藤豔輝頁117:900合9度，那我這麼算應該沒錯        
+        TheNodeDif *= CalName === 'Yingtian' ? 1337 : Denom // 應天「分即百除，度即百通」藤豔輝頁117:900合9度，那我這麼算應該沒錯        
     }
     return { TheNodeAccum, TheNodeDif, Std1, Std2, statusRaw, YinYangBorder, McorrA, McorrB }
 }
@@ -981,7 +981,7 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
                             TheNodeDif /= 152
                         }
                         Magni = MagniMax - TheNodeDif
-                    }                    
+                    }
                 }
             } else { // 陽曆
                 // if (['Wuji', 'Tsrengyuan'].includes(CalName)) { // 這個應該是初步判斷陰陽曆的時候用的
@@ -1046,7 +1046,8 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
             if (TheNodeDif < SunLimitYang) {
                 Magni = (TheNodeDif - (CalName === 'Yitian' ? 317 : 0)) / (SunLimitYang / MagniPortion)
             } else { // 「置入交前後分，如陽曆食限以下者為陽曆食定分；已上者，覆減一萬一千二百，餘為陰曆食定分；不足減者，不食」奇怪的是陰曆限並沒有參與計算。乾元加了一個if (TheNodeDif < SunLimitYin) 
-                Magni = (SunLimitNone - TheNodeDif) / (SunLimitYin / MagniPortion)
+                TheNodeDif = SunLimitNone - TheNodeDif
+                Magni = TheNodeDif / (SunLimitYin / MagniPortion)
             }
         } else if (CalName === 'Yingtian' && isYin) { // 藤豔輝《宋代》頁116。以下是我自己寫的
             let tmp = (0.75 - TotalDeci) * Denom / 10
@@ -1100,10 +1101,10 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
     const MagniFunc = ExMagni(Magni, Type, CalName, isNewm)
     Magni = MagniFunc.Magni
     const status = MagniFunc.status
-    return { Magni, status, Last, TheNotEcli }
+    return { Magni, status, Last, TheNotEcli, TheNodeDif }
 }
 
-const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, SunLimitYang, YinYangBorder) => {
+const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, SunLimitYang, SunLimitYin, YinYangBorder) => {
     let StartDeci = 0
     let EndDeci = 0
     if (Magni) {
@@ -1113,32 +1114,19 @@ const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
                     Last = Magni + 2
                     if (isYin) {
                         if (TheNodeDif > YinYangBorder) {
-                            if (TheNodeDif <= YinYangBorder + 70) { // 校勘記說改成七十已上，不能改。
-                                Last += 0.5 // 「又增」，我補上一個半
-                            } else if (TheNodeDif <= YinYangBorder + 35) {
-                                Last += 0.5
-                            }
+                            Last += TheNodeDif <= YinYangBorder + 70 ? 0.5 : 0 // 校勘記說改成七十已上，不能改。「又增」，我補上一個半                                
+                            Last += TheNodeDif <= YinYangBorder + 35 ? 0.5 : 0
                         } else {
-                            if (TheNodeDif >= YinYangBorder - 20) {
-                                Last += 0.5
-                            } else if (TheNodeDif >= YinYangBorder - 4) {
-                                Last += 0.5
-                            }
+                            Last += TheNodeDif >= YinYangBorder - 20 ? 0.5 : 0
+                            Last += TheNodeDif >= YinYangBorder - 4 ? 0.5 : 0
                         }
                     }
                 } else {
-                    if (Magni < 6) {
-                        Last = Magni + 3
-                    } else if (Magni < 11) {
-                        Last = Magni + 4
-                    } else {
-                        Last = Magni + 5
-                    }
-                    if (TheNodeDif <= 520) {
-                        Last += 0.5
-                    } else if (TheNodeDif <= 260) {
-                        Last += 0.5
-                    }
+                    Last = Magni + 3
+                    Last += Magni >= 6 ? 1 : 0
+                    Last += Magni >= 11 ? 1 : 0
+                    Last += TheNodeDif <= 520 ? 0.5 : 0
+                    Last += TheNodeDif <= 260 ? 0.5 : 0
                 }
             } else { // 宣明沒有食延，暫用五紀            
                 Last = Magni * (isNewm ? 6 / 5 : 4 / 3)
@@ -1185,73 +1173,26 @@ const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
                 }
             }
         } else if (CalName === 'Qianyuan') {
-            if (isNewm) {
-                Last = 26.46 * Magni
-            } else {
-                Last = 29.4 * Magni
-            }
+            Last = (isNewm ? 26.46 : 29.4) * Magni
         } else if (CalName === 'Yitian') {
-            if (isNewm) {
-                Last = 54.54 * Magni
-            } else {
-                Last = 60.6 * Magni
-            }
+            Last = (isNewm ? 54.54 : 60.6) * Magni
             if (TheNodeDif < 1726) {
-                Last += 0.005 * Denom
-                if (TheNodeDif < 856) {
-                    Last += 0.005 * Denom
-                }
+                Last += 0.005 * Denom + TheNodeDif < 856 ? 0.005 * Denom : 0
                 Last *= 1350 * 12 / Denom
             }
-        } else if (CalName === 'Chongtian') { // 崇天觀天食分完全一樣
-            if (isNewm) {
-                if (TheNodeDif < SunLimitYang) {
-                    Last = (84 - TheNodeDif / 100) * (TheNodeDif / 100) / 1.85 // f(4200)達到極值953.5
-                } else {
-                    Last = (140 - TheNodeDif / 100) * (TheNodeDif / 100) / 5.14
-                }
-            } else {
-                Last = TheNodeDif ** 2 / 100
-                if (isDescend) {
-                    Last = 1112 - Last / 935
-                } else {
-                    Last = 900 - Last / 1156
-                }
-            }
-            Last *= 1337 / MoonAcrVList[~~AcrAnomaAccum]
         } else if (CalName === 'Mingtian') {
             if (isNewm) {
                 Last = (1952 - TheNodeDif) * TheNodeDif / 271 // f(976)達到極值3515
             } else {
-                if (isDescend) {
-                    Last = 3900 - TheNodeDif ** 2 / 459 // 1338降到0
-                } else {
-                    Last = 3315 - TheNodeDif ** 2 / 540
-                }
+                Last = isDescend ? 3900 - TheNodeDif ** 2 / 459 : 3315 - TheNodeDif ** 2 / 540 // 1338降到0
             }
-        } else if (CalName === 'Guantian') {
-            if (isNewm) {
-                if (TheNodeDif < SunLimitYang) {
-                    Last = (98 - TheNodeDif / 100) * (TheNodeDif / 100) / 2.5 // 觀天只說250而一，沒說進二位
-                } else {
-                    Last = (140 - TheNodeDif / 100) * (TheNodeDif / 100) / 6.5
-                }
-            } else {
-                Last = TheNodeDif ** 2 / 100
-                if (isDescend) {
-                    Last = 1203 - Last / 1138
-                } else {
-                    Last = 1083 - Last / 1264
-                }
-            }
-            Last = Last * 1337 / MoonAcrVList[~~AcrAnomaAccum] // 這個計算還是很粗疏，都沒有算一日之中的具體速度，平行速也很粗疏
+        }
+        else if (['Chongtian', 'Guantian'].includes(CalName)) { // 藤豔輝《崇天曆的日食推步術》
+            const tmp = TheNodeDif / (TheNodeDif < SunLimitYang ? SunLimitYang : SunLimitYin)
+            Last = 0.09 * Denom * tmp * (2 - tmp) * 1337 / MoonAcrVList[~~AcrAnomaAccum]
         } else if (Type === 9) {
             if (isNewm) {
-                if (isYin) {
-                    Last = 583 - TheNodeDif ** 2 / 19800
-                } else {
-                    Last = 583 - TheNodeDif ** 2 / 31700
-                }
+                Last = isYin ? 583 - TheNodeDif ** 2 / 19800 : 583 - TheNodeDif ** 2 / 31700
             } else {
                 Last = 656 - TheNodeDif ** 2 / 70400
             }
@@ -1264,10 +1205,8 @@ const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
                 Last = Magni * (35 - Magni) * 2100 / MoonAcrVList[~~AcrAnomaAccum]
             }
         } else if (Type === 11) {
-            Last = Math.sqrt(((isNewm ? 20 : 30) - Magni) * Magni) * 0.00574 / MoonFormula(AcrAnomaAccum, CalName).MoonAcrV // 「如入定限行度而一」我猜是這樣
-            if (CalName === 'Datong' && !isNewm) {
-                Last *= 6 / 7
-            }
+            Last = Math.sqrt(((isNewm ? 20 : 30) - Magni) * Magni) * 0.00574 / MoonFormula(AcrAnomaAccum, CalName).MoonAcrV // 「如入定限行度而一」我猜是這樣            
+            Last *= CalName === 'Datong' && !isNewm ? 6 / 7 : 1
         }
         if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
             let Portion = 0.5
@@ -1349,20 +1288,20 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     const NodeDif = Type === 7 ? Denom * (Node25 - Math.abs(AcrNodeAccum % Node50 - Node25)) : 0
     const { Tcorr, TotalDeci, TheTotalNoonDif, dd } = EcliTcorr(isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrV, SunTcorr, NodeDif, AcrWinsolsDif)
     ////////////////////// 食差
-    const { TheNodeAccum, TheNodeDif, Std1, Std2, statusRaw, YinYangBorder, McorrA, McorrB } = EcliMcorr(CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidereal50, Sidereal, Solar125, Solar25, Solar375, Solar50, Solar75, Solar875, Solar, NodeCycle25, NodeCycle50, MoonLimit1, Denom, AcrTermList,
+    const { TheNodeAccum, TheNodeDif: TheNodeDifRaw, Std1, Std2, statusRaw, YinYangBorder, McorrA, McorrB } = EcliMcorr(CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidereal50, Sidereal, Solar125, Solar25, Solar375, Solar50, Solar75, Solar875, Solar, NodeCycle25, NodeCycle50, MoonLimit1, Denom, AcrTermList,
         isNewm, isYin, isDescend, AcrWinsolsDif, AvgWinsolsDif, dd, TotalDeci, TheTotalNoonDif, NewmNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgAnomaAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, AvgDeci, Tcorr, OriginAccum)
     isYin = TheNodeAccum > Node50
     ////////////////////// 食分
-    let { Magni, status, Last, TheNotEcli } = EcliMagni(CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, NodeCycle50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
-        TheNodeAccum, TheNodeDif, TotalDeci, AcrAnomaAccum, statusRaw, Std1, Std2, YinYangBorder, McorrA, McorrB)
+    let { Magni, status, Last, TheNotEcli, TheNodeDif } = EcliMagni(CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, NodeCycle50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
+        TheNodeAccum, TheNodeDifRaw, TotalDeci, AcrAnomaAccum, statusRaw, Std1, Std2, YinYangBorder, McorrA, McorrB)
     //////////////////////  食延
-    const { StartDeci, EndDeci } = EcliLast2(CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, SunLimitYang, YinYangBorder)
+    const { StartDeci, EndDeci } = EcliLast2(CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, SunLimitYang, SunLimitYin, YinYangBorder)
     return { Magni, status, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
 // console.log(Eclipse3(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 0, 'Mingtian'))
 // console.log(Eclipse3(12.85874, 0.3524, 0.83546, 0.79093, 156.3253, 156.2809, 0, 0, 'Datong').Magni) // 2021年四月望
 // console.log(Eclipse3(13.81, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 1, 'Chongxuan')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
-// console.log(Eclipse3(14.3, 22, 0.39375, 0.12, 222.27375, 222, 8194819414.14, 1, 'Dayan'))
+console.log(Eclipse3(26 + 5644.4277 / 10590, 22.052297, 0.4495401228, 0.8172804533, 175.6583788196 + 0.02675303116, 175.6583788196, 0, 1, 'Chongtian')) // 1024年崇天曆日食，藤豔輝論文
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)

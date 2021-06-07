@@ -247,3 +247,24 @@ const GenSolar = () => {
             //         Magni = Portion * (TheNodeDif + TheDif) / SunLimitYin
             //     }
             // }
+
+
+// 這是崇天觀天原來的食延算法
+// else if (CalName === 'Chongtian') { // 崇天觀天食分完全一樣
+//     // 84、140是陽陰曆食限的0.02
+//     if (isNewm) {
+//         Last = TheNodeDif < SunLimitYang ? (84 - TheNodeDif / 100) * (TheNodeDif / 100) / 1.85 : (140 - TheNodeDif / 100) * (TheNodeDif / 100) / 5.14 // f(4200)達到極值953.5                
+//     } else {
+//         Last = TheNodeDif ** 2 / 100
+//         Last = isDescend ? 1112 - Last / 935 : 900 - Last / 1156
+//     }
+//     Last *= 1337 / MoonAcrVList[~~AcrAnomaAccum]
+// } else if (CalName === 'Guantian') {
+//     if (isNewm) {
+//         Last = TheNodeDif < SunLimitYang ? (98 - TheNodeDif / 100) * (TheNodeDif / 100) / 2.5 : (140 - TheNodeDif / 100) * (TheNodeDif / 100) / 6.5 // 觀天只說250而一，沒說進二位                
+//     } else {
+//         Last = TheNodeDif ** 2 / 100
+//         Last = isDescend ? 1203 - Last / 1138 : 1083 - Last / 1264
+//     }
+//     Last *= 1337 / MoonAcrVList[~~AcrAnomaAccum] // 這個計算還是很粗疏，都沒有算一日之中的具體速度，平行速也很粗疏
+// }
