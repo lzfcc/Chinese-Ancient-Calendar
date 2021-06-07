@@ -28,7 +28,6 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? WinsolsCorr : 0
     let MansionOrder = 0
-    let MidstarOrder = 0
     const MansionAccum = ((Mansion + (MansionCorr || 0) + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
     for (let j = 1; j <= 28; j++) {
         if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
@@ -42,27 +41,34 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     /////////昏中星/////////               
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
-    let MidstarResult = 0
+    let DuskstarResult = ''
     const LightRange = AutoLightRange(CalName)
     if (WinsolsDeci >= 0) { // 一個小坑，四分曆存在WinsolsDeci===0的情況，所以要加上>=0，只保留undefined
+        let DuskstarOrder = 0
+        let MorningstarOrder = 0
         const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
-        let MidstarRaw = 0
-        if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(CalName)) { // 大衍只考慮了昬時距午度
-            MidstarRaw = (MansionAccum + (0.5 - Rise + LightRange) * Sidereal) % Sidereal
-        } else {
-            MidstarRaw = (MansionAccum + (0.5 + LightRange - Rise) * Sidereal - Rise + 1) % Sidereal
-        }
+        const DuskstarRaw = (MansionAccum + (0.5 + LightRange - Rise) * Sidereal + (Type === 7 ? 0 : 1 - Rise)) % Sidereal // 大衍只考慮了昬時距午度
+        const MorningstarRaw = (MansionAccum - (0.5 + LightRange - Rise) * Sidereal + (Type === 7 ? 0 : Rise) + Sidereal) % Sidereal
         for (let k = 1; k <= 28; k++) {
-            if (DegAccumList[k] < MidstarRaw && MidstarRaw < DegAccumList[k + 1]) {
-                MidstarOrder = k
+            if (DegAccumList[k] < DuskstarRaw && DuskstarRaw < DegAccumList[k + 1]) {
+                DuskstarOrder = k
                 break
             }
         }
-        const MidstarName = MansionNameList[MidstarOrder]
-        const MidstarDeg = (MidstarRaw - DegAccumList[MidstarOrder]).toFixed(3)
-        MidstarResult = MidstarName + MidstarDeg
+        for (let k = 1; k <= 28; k++) {
+            if (DegAccumList[k] < MorningstarRaw && MorningstarRaw < DegAccumList[k + 1]) {
+                MorningstarOrder = k
+                break
+            }
+        }
+        const DuskstarName = MansionNameList[DuskstarOrder]
+        const DuskstarDeg = (DuskstarRaw - DegAccumList[DuskstarOrder]).toFixed(3)
+        const MorningstarName = MansionNameList[MorningstarOrder]
+        const MorningstarDeg = (MorningstarRaw - DegAccumList[MorningstarOrder]).toFixed(3)
+        DuskstarResult = `${MorningstarName}${MorningstarDeg}
+${DuskstarName}${DuskstarDeg}`
     }
-    return { MansionOrder, MansionResult, MidstarResult }
+    return { MansionOrder, MansionResult, DuskstarResult }
 }
 // console.log(Accum2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
 
@@ -202,9 +208,9 @@ const Exhaustion = () => { // 大同歲實365.2469 設在0.015-0.018之間。365
         const Solar = 365 + 9681 / 39616
         const Accum = Solar * 1025699
         const MansionAccum = (121.2599 + Accum) % Sidereal
-        // const MidstarRaw = (MansionAccum + 0.225 * Sidereal + 0.7) % Sidereal
+        // const DuskstarRaw = (MansionAccum + 0.225 * Sidereal + 0.7) % Sidereal
         if (MansionAccum >= 87 && MansionAccum < 87.9) {
-            // if (MidstarRaw >= 183.2599 && MidstarRaw < 184.2499) {
+            // if (DuskstarRaw >= 183.2599 && DuskstarRaw < 184.2499) {
             Print += ',' + Sidereal // + ':' + MansionAccum}
             // }
         }

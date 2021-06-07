@@ -215,7 +215,7 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     const SunHundred = 6 * ON + 1 // 日行百刻度
     const Banhubei = p2Another * 19.9614 / pAnother // 19.9614：二至出入差半弧背
     const Rise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
-    //  const MidStar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
+    //  const Duskstar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
     return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati, Lati1, Rise }
 }
 const Hushigeyuan_Ex = (LongiRaw, e) => { // 度數，黃赤交角

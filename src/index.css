@@ -442,7 +442,7 @@ tr.TermAcrScPrint {
   color: var(--gray);
 } */
 
-tr.TermMidstarPrint {
+tr.TermDuskstarPrint {
   color: var(--gray);
   font-size: .8em;
 }
@@ -888,7 +888,7 @@ hr {
   color: var(--lettergreen);
 }
 
-.Midstar {
+.Duskstar {
   color: var(--lettergreen);
 }
 

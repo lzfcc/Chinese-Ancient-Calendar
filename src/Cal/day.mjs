@@ -155,7 +155,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const Week = []
         const Equa = [] // 夜半太陽黃道度
         const Eclp = []
-        const Midstar = []
+        const Duskstar = []
         const MoonEclp = []
         const MoonEclpLati = []
         const Rise = [] // 日出時刻
@@ -235,7 +235,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             Lati[i] = []
             Equa[i] = []
             Eclp[i] = []
-            Midstar[i] = []
+            Duskstar[i] = []
             MoonEclp[i] = []
             MoonEclpLati[i] = []
             HouName[i] = []
@@ -300,7 +300,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 }
                 const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDeci)
                 Equa[i][k] = EquaFunc.MansionResult
-                Midstar[i][k] = EquaFunc.MidstarResult
+                Duskstar[i][k] = EquaFunc.DuskstarResult
                 Eclp[i][k] = Accum2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
                 const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, WinsolsDeci, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
@@ -435,7 +435,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + Yuan
         return {
             Era, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
-            Sc, Jd, Nayin, Week, Equa, Eclp, Lati, Rise, Midstar, Dial, MoonEclp, MoonEclpLati,
+            Sc, Jd, Nayin, Week, Equa, Eclp, Lati, Rise, Dial, Duskstar, MoonEclp, MoonEclpLati,
             HouName, HexagramName, FiveName, ManGod, Luck
         }
     }

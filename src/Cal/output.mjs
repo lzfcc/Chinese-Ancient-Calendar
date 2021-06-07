@@ -10,7 +10,7 @@ const PrintNewm = result => {
     const { YearInfo, MonthPrint,
         NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint,
         SyzygyScPrint, SyzygyDeciPrint, TermNamePrint,
-        TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermMidstarPrint,
+        TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermDuskstarPrint,
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
@@ -37,16 +37,16 @@ const PrintNewm = result => {
     if (TermAcrScPrint.length > 0) {
         Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDeciPrint.join(' ') + `\n`
     }
-    if ((TermMidstarPrint || []).length > 0) {
+    if ((TermDuskstarPrint || []).length > 0) {
         Print += '**氣赤**' + TermEquaPrint.join(' ') + `\n`
-        Print += '**昏中** ' + TermMidstarPrint.join(' ') + `\n`
+        Print += '**昏中** ' + TermDuskstarPrint.join(' ') + `\n`
     }
     return Print + `\n`
 }
 
 const PrintDay = result => {
     const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Equa, Eclp,
-        Lati, Rise, Midstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
+        Lati, Rise, Duskstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
     } = result
     let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
     Print += '\n**干支**\n'
@@ -103,11 +103,11 @@ const PrintDay = result => {
         Print += Rise[i].slice(1).join(' ')
         Print += `\n`
     }
-    if (Midstar) {
+    if (Duskstar) {
         Print += '\n**昏中星**\n'
-        for (let i = 1; i < Midstar.length; i++) {
+        for (let i = 1; i < Duskstar.length; i++) {
             Print += MonName[i] + `\n`
-            Print += Midstar[i].slice(1).join(' ') // 一定注意，這是兩個坑
+            Print += Duskstar[i].slice(1).join(' ') // 一定注意，這是兩個坑
             Print += `\n`
         }
     }
@@ -314,18 +314,18 @@ export const outputNewmWeb = (start, end, isAuto, listRaw) => {
  * 将 CalDay 输出转换成以月日维度的输出。寫了整整一個下午
  * CalDay：{
         Equa: [Array(31), Array(30),...] (length = 13)
-        Midstar: [Array(31), Array(30),...] (length = 13)
+        Duskstar: [Array(31), Array(30),...] (length = 13)
     }
     =>
     Day: [
         [
-            { Equa: ..., Midstar: ..., ... }, (1 月 1 日)
-            { Equa: ..., Midstar: ..., ... }, (1 月 2 日)
+            { Equa: ..., Duskstar: ..., ... }, (1 月 1 日)
+            { Equa: ..., Duskstar: ..., ... }, (1 月 2 日)
             ...
         ],
         [
-            { Equa: ..., Midstar: ..., ... }, (2 月 1 日)
-            { Equa: ..., Midstar: ..., ... }, (2 月 2 日)
+            { Equa: ..., Duskstar: ..., ... }, (2 月 1 日)
+            { Equa: ..., Duskstar: ..., ... }, (2 月 2 日)
             ...
         ],
         ...,

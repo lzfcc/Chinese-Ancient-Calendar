@@ -81,10 +81,18 @@ export default (CalName, year) => {
         JiYear = OriginYear % YuanRange % JiRange + 1 // 入紀年
         JiScOrder = (1 + JiOrder * JiSkip) % 60
     }
+    let fixed = 4 // 試出來的OriginAccum能保留幾位小數
+    if (OriginYear > 85000000) {
+    } else if (OriginYear > 8500000) {
+        fixed = 5
+    } else {
+        fixed = 6
+    }
     let OriginAccum = 0
     if (Type < 11) {
         OriginAccum = OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum
     }
+    OriginAccum = +OriginAccum.toFixed(fixed)
     let LeapSurAvgThis = 0
     let LeapSurAvgPrev = 0
     let LeapSurAvgNext = 0
@@ -141,17 +149,9 @@ export default (CalName, year) => {
     const AccumPrint = (Anoma ? '轉' + ((OriginAccum % Anoma + AnomaCorr + Anoma) % Anoma).toFixed(4) : '') +
         (Node ? '交' + ((OriginAccum % Node + NodeCorr + Node) % Node).toFixed(4) : '') +
         (Sidereal ? '週' + (((OriginAccum % Sidereal + MansionCorr) % Sidereal + Sidereal) % Sidereal).toFixed(4) : '')
-    let fixed = 5 // 試出來的OriginAccum能保留幾位小數
-    if (OriginYear > 85000000) {
-    } else if (OriginYear > 8500000) {
-        fixed = 6
-    } else {
-        fixed = 7
-    }
-    OriginAccum = +OriginAccum.toFixed(fixed)
-    FirstAccum = +FirstAccum.toFixed(fixed - 1)
-    FirstAnomaAccum = +FirstAnomaAccum.toFixed(fixed - 1)
-    FirstNodeAccum = +FirstNodeAccum.toFixed(fixed - 1)
+    FirstAccum = +FirstAccum.toFixed(fixed)
+    FirstAnomaAccum = +FirstAnomaAccum.toFixed(fixed)
+    FirstNodeAccum = +FirstNodeAccum.toFixed(fixed)
     let LeapLimit = 0
     if (ZhangRange) {
         LeapLimit = ZhangRange - ZhangLeap
@@ -222,14 +222,14 @@ export default (CalName, year) => {
         const AcrWinsolsDifRaw = []
         const Equa = []
         for (let i = 0; i <= 14; i++) {
-            AvgRaw[i] = FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar
+            AvgRaw[i] = +(FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScCorr) % 60) + 60) % 60]
             AvgDeci[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
             WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - OriginAccum + Solar) % Solar
             let Tcorr1 = 0
             if (Anoma) {
-                AnomaAccum[i] = (FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
+                AnomaAccum[i] = +((FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(fixed) // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
                 AnomaAccumNight[i] = ~~AnomaAccum[i]
                 const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
                 if (Type <= 4) {
@@ -317,7 +317,7 @@ export default (CalName, year) => {
                 }
             }
             if (Node) {
-                NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(5)
+                NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(fixed)
                 NodeAccumNight[i] = ~~NodeAccum[i]
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以

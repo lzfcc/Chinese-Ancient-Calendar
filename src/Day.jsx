@@ -219,7 +219,7 @@ export default class Day extends React.Component {
           <li><span className='Nayin'>黑色：納音、建除、黃道黑道；七曜值日、星期幾、二十八宿值日、二十八禽值日</span></li>
           <li><span className='Equa'>紅色：太陽赤道宿度</span></li>
           <li><span className='Eclp'>黃色：太陽黃道宿度</span></li>
-          <li><span className='Lati'>綠色：太陽赤緯、日出刻度、正午晷長、昏中星</span></li>
+          <li><span className='Lati'>綠色：太陽赤緯、日出刻度、正午晷長、旦中星、昏中星</span></li>
           <li><span className='MoonEclp'>藍色：月行九道、月黃緯、月道度所入黃道宿度</span></li>
           <li><span className='HouName'>黑色：沒滅、二十四節氣、七十二候、卦用事、土王用事</span></li>
           <li><span className='ManGod'>灰色：人神、血支血忌、日遊神</span></li>

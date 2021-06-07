@@ -512,13 +512,14 @@ const Eclipse2 = (NodeAccum, AnomaAccum, TotalDeci, WinsolsDifRaw, isNewm, CalNa
 const EcliTcorr = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrV, SunTcorr, NodeDif, AcrWinsolsDif) => {
     let Tcorr = 0
     const isSunYin = AcrWinsolsDif > Solar25 && AcrWinsolsDif < Solar75
+    if (['Dayan', 'Wuji', 'Tsrengyuan'].includes(CalName)) { // 大衍日月食的時差一樣的
+        Tcorr = NodeDif * AutoNodePortion(CalName) / 20 / Denom // 同名（同在表）相加，異名（同在裏）相減。頁540算例方向跟這不一樣            
+        if ((!isYin && isSunYin) || (isYin && !isSunYin)) { // 日在赤道北
+            Tcorr = -Tcorr
+        }
+    }
     if (isNewm) {
-        if (['Dayan', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
-            Tcorr = NodeDif * AutoNodePortion(CalName) / 20 / Denom // 同名（同在表）相加，異名（同在裏）相減。頁540算例方向跟這不一樣            
-            if ((!isYin && isSunYin) || (isYin && !isSunYin)) { // 日在赤道北
-                Tcorr = -Tcorr
-            }
-        } else if (CalName === 'Xuanming') { // 「以定朔日出入辰刻距午正刻數，約百四十七，為時差。視定朔小餘如半法已下，以減半法，為初率；已上，減去半法，餘為末率。以乘時差，如刻法而一，初率以減，末率倍之，以加定朔小餘，為蝕定餘。月蝕，以定望小餘為蝕定餘。」夏至最大，冬至最小，夜半最大，午正最小。但實際上是夏至最小，冬至最大。午前- 午後+。《數理》頁421: 定朔0.25，1個小時，0.75：2小時。
+        if (CalName === 'Xuanming') { // 「以定朔日出入辰刻距午正刻數，約百四十七，為時差。視定朔小餘如半法已下，以減半法，為初率；已上，減去半法，餘為末率。以乘時差，如刻法而一，初率以減，末率倍之，以加定朔小餘，為蝕定餘。月蝕，以定望小餘為蝕定餘。」夏至最大，冬至最小，夜半最大，午正最小。但實際上是夏至最小，冬至最大。午前- 午後+。《數理》頁421: 定朔0.25，1個小時，0.75：2小時。
             Tcorr = NewmNoonDif * RiseNoonDif / 1.47
             Tcorr *= AcrDeci >= 0.5 ? 2 : 1
         } else if (CalName === 'Qintian') {
@@ -644,14 +645,14 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
             } else {
                 sign1 = isDescend ? 1 : -1
             }
-            sign1 = isSunYin ? -sign1 : sign1
+            sign1 *= isSunYin ? -1 : 1
             if (['Xuanming', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName) || Type === 10) {
                 sign2 = isYin ? -1 : 1
             } else {
                 sign2 = isDescend ? 1 : -1
             }
-            sign2 = TotalDeci >= 0.5 ? -sign2 : sign2 // 定朔還是食甚都沒影響，因為時差加減方向是相合的
-            sign2 = TheWinsolsDif >= Solar50 ? -sign2 : sign2
+            sign2 *= TotalDeci >= 0.5 ? -1 : 1 // 定朔還是食甚都沒影響，因為時差加減方向是相合的
+            sign2 *= TheWinsolsDif >= Solar50 ? -1 : 1
             if (TotalDeci > 0.5) {
                 sign3 = isYin ? -1 : 1
             } else {
@@ -1301,7 +1302,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
 // console.log(Eclipse3(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 0, 'Mingtian'))
 // console.log(Eclipse3(12.85874, 0.3524, 0.83546, 0.79093, 156.3253, 156.2809, 0, 0, 'Datong').Magni) // 2021年四月望
 // console.log(Eclipse3(13.81, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 1, 'Chongxuan')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
-console.log(Eclipse3(26 + 5644.4277 / 10590, 22.052297, 0.4495401228, 0.8172804533, 175.6583788196 + 0.02675303116, 175.6583788196, 0, 1, 'Chongtian')) // 1024年崇天曆日食，藤豔輝論文
+// console.log(Eclipse3(26 + 5644.4277 / 10590, 22.052297, 0.4495401228, 0.8172804533, 175.6583788196 + 0.02675303116, 175.6583788196, 0, 1, 'Chongtian')) // 1024年崇天曆日食，藤豔輝論文
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
 export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)

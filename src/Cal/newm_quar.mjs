@@ -132,7 +132,7 @@ export default function CalQuar(CalName, year) {
     const TermName = []
     const TermDeci = []
     const TermEqua = []
-    const TermMidstar = []
+    const TermDuskstar = []
     // const TermJd = []
     if ((isTermLeap && !LeapNumTerm) || (!isTermLeap && ((!isLeapAvgThis && !isLeapAvgNext) || (!isLeapAvgThis && !isAdvance) || (!isLeapAvgThis && isAdvance)))) {
         for (let i = 1; i <= 13; i++) {
@@ -147,7 +147,7 @@ export default function CalQuar(CalName, year) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
                 const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
-                TermMidstar[i] = Func.MidstarResult
+                TermDuskstar[i] = Func.DuskstarResult
             }
         }
     } else {
@@ -163,7 +163,7 @@ export default function CalQuar(CalName, year) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
                 const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
-                TermMidstar[i] = Func.MidstarResult
+                TermDuskstar[i] = Func.DuskstarResult
             }
         }
         while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2)) {
@@ -177,7 +177,7 @@ export default function CalQuar(CalName, year) {
         TermDeci[LeapNumTerm + 1] = ''
         if (MansionRaw) {
             TermEqua[LeapNumTerm + 1] = ''
-            TermMidstar[LeapNumTerm + 1] = ''
+            TermDuskstar[LeapNumTerm + 1] = ''
         }
         // TermJd[LeapNumTerm + 1] = ''
         for (let i = LeapNumTerm + 2; i <= 13; i++) {
@@ -192,7 +192,7 @@ export default function CalQuar(CalName, year) {
                 const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
                 const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
-                TermMidstar[i] = Func.MidstarResult
+                TermDuskstar[i] = Func.DuskstarResult
             }
         }
     }
@@ -223,6 +223,6 @@ export default function CalQuar(CalName, year) {
         TermAvgBare, TermName, TermSc, TermDeci,
         LeapSurAvgFix, LeapSurAvgThis, LeapNumOriginLeapSur, LeapNumTerm,
         isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext, NewmStart, NewmEnd, TermStart, TermEnd,
-        NewmEqua, TermEqua, TermMidstar
+        NewmEqua, TermEqua, TermDuskstar
     }
 }
