@@ -879,7 +879,9 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
             }
         }
         if (Type === 9) { // 紀元「置朔入交常日⋯⋯以氣刻差定數各加減之，交初加三千一百，交中減三千，爲朔入交定日」
-            Mcorr0 = isDescend ? 3100 : -3000 // 5.685度        
+            const Mcorr0Descend = Math.round(Denom * (3100 / 7290))
+            const Mcorr0Ascend = Math.round(Denom * (3000 / 7290))
+            Mcorr0 = isDescend ? Mcorr0Descend : -Mcorr0Ascend // 5.685度        
         } else if (Type === 11) {
             Mcorr0 = isDescend ? 6.15335 : -6.15335
         }
@@ -1044,22 +1046,29 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
             }
         } else if ((['Xuanming', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(CalName) || Type === 10) && isYin) {
             TheNodeDif -= CalName === 'Yitian' ? 728 : 0
-            if (TheNodeDif < SunLimitYang) {
+            if (TheNodeDif < SunLimitYang) { // 崇天：如陽曆食限以下者爲陽曆食定分
                 Magni = (TheNodeDif - (CalName === 'Yitian' ? 317 : 0)) / (SunLimitYang / MagniPortion)
             } else { // 「置入交前後分，如陽曆食限以下者為陽曆食定分；已上者，覆減一萬一千二百，餘為陰曆食定分；不足減者，不食」奇怪的是陰曆限並沒有參與計算。乾元加了一個if (TheNodeDif < SunLimitYin) 
-                TheNodeDif = SunLimitNone - TheNodeDif
+                TheNodeDif = SunLimitNone - TheNodeDif // 崇天陰曆食定分
                 Magni = TheNodeDif / (SunLimitYin / MagniPortion)
             }
-        } else if (CalName === 'Yingtian' && isYin) { // 藤豔輝《宋代》頁116。以下是我自己寫的
-            let tmp = (0.75 - TotalDeci) * Denom / 10
-            tmp *= TotalDeci > 0.5 ? 0.5 : 2
-            Magni = TheNodeDif - tmp
-            Magni = Magni < 0 ? TheNodeDif - 10 * Magni : Magni
-            if (TheNodeDif < SunLimitYang) {
+        } else if (CalName === 'Yingtian' && isYin) { // 藤豔輝《宋代》頁116。以下是我自己寫的            
+            let TheNodeDifYin = 0
+            let isYin = false
+            if (TheNodeDif < SunLimitYang) { // 類同陽曆                
                 Magni /= (SunLimitYang / MagniPortion)
             } else if (TheNodeDif < SunLimitYin) {
-                Magni = (SunLimitYin - Magni) / (SunLimitYin / MagniPortion)
+                isYin = true
+                TheNodeDif -= SunLimitYang // 以上者去之                
+                TheNodeDifYin = TheNodeDif
             }
+            // let tmp = (0.75 - TotalDeci) * Denom / 100 // 極值應該有5001。本來是退一等，感覺太大了吧
+            // tmp *= TotalDeci > 0.5 ? 0.5 : 2
+            // let Dingfen = Math.abs(TheNodeDif - tmp) // 食定分
+            // if (TheNodeDif - tmp < 0) {
+            //     Dingfen = 10 * Dingfen + TheNodeDifYin
+            // }
+            Magni = TheNodeDif / ((isYin ? SunLimitYin : SunLimitYang) / MagniPortion)//  Dingfen / ((isYin ? SunLimitYin : SunLimitYang) / MagniPortion)
         } else if (CalName === 'Mingtian' && TheNodeAccum > Sidereal50) { // 到底是Sidereal50還是Cycle50，按術文是sidereal
             if (TheNodeDif < SunLimitYang) {
                 TheNodeDif *= 2 // 類同陽曆分
@@ -1069,9 +1078,9 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
             Magni = TheNodeDif / 97.6
         } else if (Type === 9 || Type === 11) {
             Node50 = Type === 9 ? Node50 : NodeCycle50
-            if (isYin && TheNodeDif < SunLimitYang) {
+            if (!isYin && TheNodeDif < SunLimitYang) {
                 Magni = (SunLimitYang - TheNodeDif) / (SunLimitYang / MagniPortion)
-            } else if (TheNodeAccum >= Node50 && TheNodeDif < SunLimitYin) {
+            } else if (isYin && TheNodeDif < SunLimitYin) {
                 Magni = (SunLimitYin - TheNodeDif) / (SunLimitYin / MagniPortion)
             }
         }
@@ -1092,7 +1101,7 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
                     Magni = MagniMax + MagniTotal
                 }
             } else {
-                Magni = (MoonLimitNone - TheNodeDif) / MoonLimitDenom
+                Magni = (MoonLimitNone - TheNodeDif) / MoonLimitDenom // 崇天沒提到月食分需要，紀元日月食都沒說要TheNodeDif=MoonLimitNone - TheNodeDif
             }
             if (CalName === 'Yingtian' && Magni < 5 && (TotalDeci > 1 - 0.08 || TotalDeci < 0.08)) { // 「其食五分以下，在子正前後八刻內，以二百四十二除為食之大分，命十為限」
                 Magni /= 2
@@ -1105,7 +1114,7 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
     return { Magni, status, Last, TheNotEcli, TheNodeDif }
 }
 
-const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, SunLimitYang, SunLimitYin, YinYangBorder) => {
+const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, MoonLimitNone, SunLimitYang, SunLimitYin, YinYangBorder) => {
     let StartDeci = 0
     let EndDeci = 0
     if (Magni) {
@@ -1192,10 +1201,15 @@ const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
             const tmp = TheNodeDif / (TheNodeDif < SunLimitYang ? SunLimitYang : SunLimitYin)
             Last = 0.09 * Denom * tmp * (2 - tmp) * 1337 / MoonAcrVList[~~AcrAnomaAccum]
         } else if (Type === 9) {
+            const LastMaxSun = Math.round(Denom * 583 / 7290)
+            const LastDenomSunYin = ~~((SunLimitYin ** 2 / LastMaxSun) / 100) * 100 // 紀元算出來是31715.268，要00結尾
+            const LastDenomSunYang = ~~((SunLimitYang ** 2 / LastMaxSun) / 100) * 100
+            const LastMaxMoon = Math.round(Denom * 656 / 7290)
+            const LastDenomMoon = ~~((MoonLimitNone ** 2 / LastMaxMoon) / 100) * 100
             if (isNewm) {
-                Last = isYin ? 583 - TheNodeDif ** 2 / 19800 : 583 - TheNodeDif ** 2 / 31700
+                Last = isYin ? LastMaxSun - TheNodeDif ** 2 / LastDenomSunYin : LastMaxSun - TheNodeDif ** 2 / LastDenomSunYang
             } else {
-                Last = 656 - TheNodeDif ** 2 / 70400
+                Last = LastMaxMoon - TheNodeDif ** 2 / LastDenomMoon
             }
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif((AvgAnomaAccum + (TotalDeci - AvgDeci + 1) % 1) % Anoma, CalName) // 食甚加時入轉算外損益率。應朒者依其損益，應朏者益減損加其副
             Last += Last * MoonTcorrDif / TheDenom / Denom
@@ -1278,7 +1292,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AcrAnomaAccum, CalName) // 這個損益率應該是與定朔改正相反
             Tcorr0 = AvgTcorr * MoonTcorrDif / TheDenom / Denom
             AvgTotalDeci = (AvgDeci + AvgTcorr + Tcorr0 + 1) % 1 // 紀元食甚泛餘 // 注意小數點加上修正變成負的情況，比如0.1退成了0.9
-        } else if (Type === 10) {
+        } else {
             Tcorr0 = AvgTcorr * 1337 / MoonAcrVList[~~AcrAnomaAccum]
             AvgTotalDeci = (AvgDeci + Tcorr0 + 1) % 1 // 大明是加經朔
         }
@@ -1296,7 +1310,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     let { Magni, status, Last, TheNotEcli, TheNodeDif } = EcliMagni(CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, NodeCycle50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
         TheNodeAccum, TheNodeDifRaw, TotalDeci, AcrAnomaAccum, statusRaw, Std1, Std2, YinYangBorder, McorrA, McorrB)
     //////////////////////  食延
-    const { StartDeci, EndDeci } = EcliLast2(CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, SunLimitYang, SunLimitYin, YinYangBorder)
+    const { StartDeci, EndDeci } = EcliLast2(CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, MoonLimitNone, SunLimitYang, SunLimitYin, YinYangBorder)
     return { Magni, status, StartDeci, TotalDeci, EndDeci } // start初虧，total食甚
 }
 // console.log(Eclipse3(14.034249657, 11.1268587106, 0.45531, 0.44531, 31.9880521262, 31.9780521262, 8194819414.14, 0, 'Mingtian'))

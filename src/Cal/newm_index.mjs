@@ -310,7 +310,7 @@ export default (CalName, YearStart, YearEnd) => {
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
                 const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
                 const SyzygyAcrWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyAcrWinsolsDifRaw)
-                for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+                for (let i = 9; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTermThis > 0) {
                         if (i === LeapNumTermThis) {
@@ -330,7 +330,7 @@ export default (CalName, YearStart, YearEnd) => {
                     }
                     let rangeSyzygy = 0
                     if (Type <= 6) {
-                        rangeSyzygy = 0.125
+                        rangeSyzygy = 0.125 // 戊寅麟德
                     } else if (Type === 11) {
                         rangeSyzygy = 0.082 // 大統是20分
                     } else {
