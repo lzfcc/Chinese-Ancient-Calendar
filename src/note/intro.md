@@ -39,6 +39,10 @@
 - [NASA Eclipse](https://eclipse.gsfc.nasa.gov/)
 - [Astronomy and numerical software source codes](http://www.moshier.net/#Cephes)
 
+### 博客
+
+- [治曆者言](https://tambingblog.wordpress.com/) 譚冰的曆法及術數文章彙編 似乎是港中文的畢業生？出版有《古今曆術考》（香港：三聯書店，2013）。
+
 ## 曆法更迭一覽
 
 ### 1、
@@ -77,7 +81,7 @@
    2. 祖沖之<v>大明</v><n>梁武帝天監九年 510—陳亡 589</n>。經過<u>祖沖之</u>之子<u>祖暅</u>力爭，得以行用。
 
 9. **北朝**<n>參考 [廖育棟](https://ytliu0.github.io/ChineseCalendar/NorthSouth_Calendars_chinese.html)</n>
-   1. **後秦** <n>384—417</n><u>姜岌</u><v>三紀甲子元</v>。
+   1. **後秦** <n>384—417</n><u>姜岌</u><v>三紀甲子元</v>。[姜岌《三紀甲子元曆》行用年份考](https://tambingblog.wordpress.com/2013/10/10/姜岌《三紀甲子元曆》行用年份考/)
    2. **北涼** <n>397—439</n><u>趙𢾺</u><v>玄始</v><n>玄始元年 412—北涼亡</n>。
    3. **北魏** <n>386—534</n>
       1. <v>景初</v><n>建都平城 398—451</n>。
@@ -610,7 +614,9 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 - Avg 平均的 average
 - Acr  精確的 accurate
 - Deg 度數 degree
-- Dif 兩個常數之差 The difference between constants A and B. WinsolsDif 某日距離年前冬至的積日
+- Dif 兩個數之差 The difference between constants A and B. 
+- WinsolsDif 某日距離年前冬至的日數
+- ZoneDif 《庚午元曆》里差（地理經度時差）
 - xxx50 某常量的 50%，xxx125 某常量的 12.5%
 - xxxHalf 某變量的一半 Half of a variable
 - Numer 分子 numerator
@@ -717,9 +723,9 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 **核心** 根據曲安京<v>曆法</v>頁 251 重寫大衍月緯算法，此前用的三次招差術。但是其中符號還不太敢確定。
 
-#### 6-06 `1.00`
+#### 6-07 `0.995`
 
-**正式版發布！！** 
+正式版前的最後一個版本！！
 
 1、增加唐宋、授時交食。太複雜了，斷斷續續兩個月了。
 
@@ -787,7 +793,7 @@ a = [0, ...a]
 ##### 核心
 
 - 日月食計算剛剛寫成，多少有一些問題。應天尚不可用。紀元南宋的交食有一半都有問題。
-- 大部分曆法宿度從斗起算，我統一從角起算，不知道有沒有問題
+- 大部分曆法宿度從斗起算，我統一從角起算，應該沒有問題
 - <v>觀天</v>入交。重新擬了一個交點月，暫時解決，以後再研究
 - <v>五紀</v>、<v>正元</v>月緯的比例沒找到，只能先暫時瞎填一個湊數
 

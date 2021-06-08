@@ -28,8 +28,7 @@ export default (CalName, year) => {
     const OriginYear = year - OriginAd // 上元積年（算上）
     // const CloseWinsolsDif = CloseOriginAd - OriginAd // 距算
     const CloseOriginYear = year - CloseOriginAd // 距差    
-    let SolarChangeAccum = 0
-    let LunarChangeAccum = 0
+    let SolarChangeAccum = 0, LunarChangeAccum = 0
     let signX = 1
     if (CalName === 'Tongtian') { // 《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長
         if (year < 1194) {
@@ -51,30 +50,23 @@ export default (CalName, year) => {
             const Func = ConstWest(year)
             Solar = Func.Solar
             Lunar = Func.Lunar
-            SolarChangeAccum = signX * ((year - 2000) ** 2) * 0.000000003 // (首項+末項)/2            
-            LunarChangeAccum = -signX * ((year - 2000) ** 2) * 0.000000001
+            SolarChangeAccum = signX * ((year - 2000) ** 2) * 3 * 1e-9 // (首項+末項)/2            
+            LunarChangeAccum = -signX * ((year - 2000) ** 2) * 1e-9
         } else {
-            Solar = SolarRaw - OriginYear / 15000000 // 這個是實際値
-            SolarChangeAccum = signX * (OriginYear ** 2) / 30000000
-            // Solar = SolarRaw - OriginYear / 1000000 // 授時歲實消長高了16倍
-            // SolarChangeAccum = signX * (OriginYear ** 2) / 2000000
+            // Solar = SolarRaw - OriginYear / 15000000 // 這個是實際値
+            // SolarChangeAccum = signX * (OriginYear ** 2) / 30000000
+            Solar = SolarRaw - OriginYear / 1000000 // 授時歲實消長高了16倍
+            SolarChangeAccum = signX * (OriginYear ** 2) / 2000000
         }
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
     if (EcliCorr) {
-        if (CalName === 'Yuanjia') {
-            NodeCorr = Node * EcliCorr
-        } else {
-            NodeCorr = (Node / 2) * EcliCorr
-        }
+        NodeCorr = CalName === 'Yuanjia' ? Node * EcliCorr : (Node / 2) * EcliCorr
     }
     const SynodicAnomaDif = Lunar - Anoma
     const HalfSynodicNodeDif = (Lunar - Node) / 2
-    let JiSkip = 0
-    let JiOrder = 0
-    let JiYear = 0
-    let JiScOrder = 0
+    let JiSkip = 0, JiOrder = 0, JiYear = 0, JiScOrder = 0
     if (JiRange) {
         JiSkip = Math.round(Solar * JiRange % 60)
         JiOrder = ~~(OriginYear % YuanRange / JiRange) // 入第幾紀
@@ -88,15 +80,10 @@ export default (CalName, year) => {
     } else {
         fixed = 6
     }
-    let OriginAccum = 0
-    if (Type < 11) {
-        OriginAccum = OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum
-    }
+    let OriginAccum = Type < 11 ? OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum : 0
     OriginAccum = +OriginAccum.toFixed(fixed)
-    let LeapSurAvgThis = 0
-    let LeapSurAvgPrev = 0
-    let LeapSurAvgNext = 0
-    let AccumZhongThis = 0
+    const ZondeDif = CalName === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
+    let LeapSurAvgThis = 0, LeapSurAvgPrev = 0, LeapSurAvgNext = 0, AccumZhongThis = 0
     if (ZhangRange) {
         LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
         LeapSurAvgPrev = (OriginYear - 1) * ZhangMon % ZhangRange
@@ -163,8 +150,7 @@ export default (CalName, year) => {
     let isLeapThis = LeapSurAvgThis >= LeapLimit ? 1 : 0 // 是否有閏月
     let isLeapPrev = LeapSurAvgPrev >= LeapLimit ? 1 : 0
     let isLeapNext = LeapSurAvgNext >= LeapLimit ? 1 : 0
-    let LeapNumAvgThis = 0
-    let LeapNumAvgNext = 0
+    let LeapNumAvgThis = 0, LeapNumAvgNext = 0, isAdvance = 0
     if (ZhangRange) {
         LeapNumAvgThis = isLeapThis ? Math.ceil(parseFloat(((ZhangRange - LeapSurAvgThis) * 12 / ZhangLeap).toPrecision(14))) : 0
         LeapNumAvgNext = isLeapNext ? Math.ceil(parseFloat(((ZhangRange - LeapSurAvgNext) * 12 / ZhangLeap).toPrecision(14))) : 0
@@ -175,7 +161,6 @@ export default (CalName, year) => {
         LeapNumAvgThis = isLeapThis ? Math.ceil((Lunar - LeapSurAvgThis) / MonLeap) : 0
         LeapNumAvgNext = isLeapThis ? Math.ceil((Lunar - LeapSurAvgNext) / MonLeap) : 0
     }
-    let isAdvance = 0
     if (LeapNumAvgNext) {
         LeapNumAvgNext -= ZhengWinsolsDif
         if (LeapNumAvgNext <= 0) {
@@ -195,32 +180,7 @@ export default (CalName, year) => {
     }
     const EquaDegAccumList = AutoDegAccumList(CalName, year)
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = []
-        const AvgInt = []
-        const AvgSc = []
-        const AvgDeci = []
-        const TermAvgRaw = []
-        const TermAcrRaw = []
-        const TermAcrWinsolsDif = []
-        const TermAvgWinsolsDif = []
-        const AnomaAccum = []
-        const AnomaAccumNight = []
-        const NodeAccum = []
-        const NodeAccumNight = []
-        const AcrInt = []
-        const Int = []
-        const Raw = []
-        const Tcorr = []
-        const AcrRaw = []
-        const AcrMod = []
-        const Sc = []
-        const Deci1 = [] // 線性內插
-        const Deci2 = [] // 二次內插
-        const Deci3 = [] // 三次內插
-        const Deci = []
-        const WinsolsDifRaw = []
-        const AcrWinsolsDifRaw = []
-        const Equa = []
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDifRaw = [], AcrWinsolsDifRaw = [], Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
@@ -265,10 +225,7 @@ export default (CalName, year) => {
             } else {
                 Deci[i] = AvgDeci[i]
             }
-            let NewmPlus = 0
-            let NewmPlusPrint = ''
-            let SyzygySub = 0
-            let SyzygySubPrint = ''
+            let NewmPlus = 0, SyzygySub = 0, NewmPlusPrint = '', SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
                     const Func = AutoNewmPlus((Deci1[i] || Deci[i]), WinsolsDifRaw[i], WinsolsDeci, CalName) /////進朔/////
@@ -290,11 +247,11 @@ export default (CalName, year) => {
                     TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif[i]
                 }
             } else {
-                const Func = AutoSyzygySub(Deci[i], WinsolsDifRaw[i], WinsolsDeci, CalName) /////退望/////       
+                const Func = AutoSyzygySub(Deci[i], WinsolsDifRaw[i], WinsolsDeci, CalName) // 退望
                 SyzygySub = Func.SyzygySub
                 SyzygySubPrint = Func.Print
             }
-            if (isAcr) { // 麟德以後用定朔注曆
+            if (isAcr) {
                 Int[i] = AcrInt[i]
                 Raw[i] = AcrRaw[i]
             } else {

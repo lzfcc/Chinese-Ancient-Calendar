@@ -25,9 +25,7 @@ const ClockWest = Deci => {
     return Print
 }
 const ClockWeijin = (Deci, CalName) => {
-    const {
-        Type,
-    } = Bind(CalName)
+    const { Type } = Bind(CalName)
     Deci = big(Deci)
     const Portion = big.div(100, 12)
     if (CalName === 'Easthan' || Type >= 5) {

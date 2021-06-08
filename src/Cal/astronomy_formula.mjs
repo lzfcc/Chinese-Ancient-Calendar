@@ -10,13 +10,10 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     const Solar50 = Solar / 2
     const Solar125 = Solar / 8
     const Solar75 = Solar * 0.75
-    let Equa2Eclp = 0
-    let Eclp2Equa = 0
+    let Equa2Eclp = 0, Eclp2Equa = 0
     const LongiQuar = LongiRaw % Solar25
     const Longi = Solar125 - Math.abs(LongiQuar - Solar125)
-    let h = 0
-    let Eclp2EquaDif = 0
-    let Equa2EclpDif = 0
+    let h = 0, Eclp2EquaDif = 0, Equa2EclpDif = 0
     // 這些函數並不是以91度或者45度對稱，而是將近60度左右
     if (CalName === 'Chongxuan') {
         Equa2EclpDif = ((1315 - 14.4 * Longi) * Longi - Longi * (4566 - Longi) / 1696) / 10000
@@ -71,8 +68,7 @@ export const Longi2LatiFormula = (LongiRaw, CalName) => { // 《中國古代曆�
     const Solar50 = Solar / 2
     let LongiHalf = LongiRaw % Solar50
     const Longi = Solar25 - Math.abs(LongiHalf - Solar25)
-    let Lati = 0
-    let g = 0
+    let Lati = 0, g = 0
     if (CalName === 'Chongxuan') { // x=195.838,y=0. x=138.478,y=35.267極值。x=91.3, y=23.996
         // g = (184 / 50025) * Longi ** 2 - (16 / (50025 * 3335)) * Longi ** 4
         g = big(184).div(50025).mul(big(Longi).pow(2)).sub(big(16).div(big.mul(50025, 3335)).mul(big(Longi).pow(4))).toNumber()

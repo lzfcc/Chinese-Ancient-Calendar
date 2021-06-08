@@ -166,6 +166,12 @@ const GenSolar = () => {
 }
 // console.log(GenSolar())
 
+// const test4 = () => {
+//     let a=[] ,b=[], c=[]
+//     b[0] = 1
+//     return b
+// }
+// console.log(test4())
 // const test = a => a > 2
 // const test2 = a => a *= 2 - 0.1
 // const test3 = a => a *= a > 3 ? 4 : 3

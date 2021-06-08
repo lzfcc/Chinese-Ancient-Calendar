@@ -1,6 +1,4 @@
-import {
-    outputFile
-} from './output.mjs'
+import { outputFile } from './output.mjs'
 import fs from 'fs'
 
 // const date = new Date()
@@ -71,13 +69,13 @@ const printData = outputFile(1, 1110, 1111, false, [ // mode, YearStart, YearEnd
     // 'Zhidao2',
     // 'Yitian', 
     // 'Qianxing',
-    // 'Chongtian',
+    'Chongtian',
     // 'TaiyiJingyou',
     // 'Mingtian',
     // 'Fengyuan',
     // 'Guantian',
-    // 'Zhantian', 
-    'Jiyuan', 
+    'Zhantian',
+    // 'Jiyuan', 
     // 'Tongyuan',
     // 'Qiandao', 
     // 'Chunxi', 

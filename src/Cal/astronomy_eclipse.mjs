@@ -128,10 +128,7 @@ const Eclipse2 = (NodeAccum, AnomaAccum, TotalDeci, WinsolsDifRaw, isNewm, CalNa
     const isYin = NodeAccum > Node50
     const isBefore = NodeAccumHalf > Node25 // 交後，在交點之後    
     const isFast = AnomaAccum < Anoma / 2 // AnomaAccum > Anoma * 0.25 && AnomaAccum <= Anoma75    
-    let status = 0
-    let Tcorr = 0
-    let Tcorr1 = 0 // 食甚時刻修正一
-    let Tcorr2 = 0 // 日食食甚時刻修正二
+    let status = 0, Tcorr = 0, Tcorr1 = 0, Tcorr2 = 0 // 食甚時刻修正一 // 日食食甚時刻修正二
     if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName) && isNewm) {
         //  下戊寅食甚時刻修正（大業月食食甚無修正）。當然要先算出是否食，再來修正。戊寅時法6503：半日法，時餘：不足半辰的日分數的12倍。離交點越遠，修正值越大
         if (CalName === 'Daye') {
@@ -608,14 +605,9 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
     const TheWinsolsDifHalfRev = Solar25 - Math.abs(TheWinsolsDifHalf - Solar25) // 反減
     const isSunYin = TheWinsolsDif > Solar25 && TheWinsolsDif < Solar75
     // 宣明曆創日食三差：【時差Tcorr】食甚時刻改正【氣差McorrTerm刻差McorrClock加差McorrOther】食分改正 
-    let Mcorr = 0
-    let YinYangBorder = 0 // 這是欽天的
-    let isInside = true // 這五個是崇玄的
-    let Std1 = 0
-    let Std2 = 0
-    let statusRaw = 0
-    let TheNodeAccum = 0 // 入交定日
-    let TheNodeDif = 0
+    let Mcorr = 0, YinYangBorder = 0
+    let isInside = true, Std1 = 0, Std2 = 0, statusRaw = 0 // 這五個是崇玄的
+    let TheNodeAccum = 0, TheNodeDif = 0 // 入交定日
     if (['Dayan', 'Wuji', 'Tsrengyuan'].includes(CalName)) { // 這裡的去交分是給幾部唐曆用的。宋曆在最後算加上了食差的去交分
         TheNodeAccum = AcrNodeAccum
         TheNodeDif = Denom * (Node25 - Math.abs(AcrNodeAccum % Node50 - Node25))
@@ -624,14 +616,10 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
         TheNodeDif = 100 * (NodeCycle25 - Math.abs(TheNodeAccum % NodeCycle50 - NodeCycle25))
     }
     const TheNodeAccumHalf = TheNodeAccum % Node50
-    let McorrA = 0 // 這兩個大衍、五紀、欽天的
-    let McorrB = 0
+    let McorrA = 0, McorrB = 0 // 這兩個大衍、五紀、欽天的
     if (isNewm) {
-        let sign1 = 1
-        let sign2 = 1
-        let sign3 = 1
-        let sign1b = 1 // 明天南北差
-        let sign2b = 1 // 明天東西差
+        let sign1 = 1, sign2 = 1, sign3 = 1
+        let sign1b = 1, sign2b = 1 // 明天南北差 // 明天東西差
         if (CalName === 'Mingtian') {
             sign1b = isYin ? -1 : 1
             sign2b = isYin ? -1 : 1
@@ -659,9 +647,7 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
                 sign3 = 0
             }
         }
-        let McorrTerm = 0
-        let McorrClock = 0
-        let McorrOther = 0
+        let McorrTerm = 0, McorrClock = 0, McorrOther = 0
         let Mcorr0 = 0 // 這個是紀元、授時的。視白道比眞白道低，所以陽曆：視月亮距交大於眞月亮，陰曆：小於        
         if (CalName === 'Dayan') {
             let TermNum = 0
@@ -740,8 +726,7 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
             const ExPart = Math.min(Math.abs(TotalDeci - R), Math.abs(TotalDeci - L)) // 限內外分，應該是在0-250之間            
             isInside = TotalDeci > Math.min(L, R) && TotalDeci < Math.max(L, R)
             isInside = L > R ? !isInside : isInside
-            let McorrYin = 0
-            let McorrYang = 0
+            let McorrYin = 0, McorrYang = 0
             if (isInside) { // 內
                 McorrYin = 630 - ExPart ** 2 / 179 // 陰曆蝕差 +-335.812以內爲正，極值630
                 McorrYang = (500 - ExPart) * ExPart / 313.5 // 陽曆蝕差，極值f(250)=199.362
@@ -958,10 +943,7 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
     } else if (Type === 10) {
         MagniPortion = 9.682
     }
-    let Magni = 0
-    let MagniTotal = 0 // 月食旣內分
-    let Last = 0
-    let TheNotEcli = 0
+    let Magni = 0, MagniTotal = 0, Last = 0, TheNotEcli = 0
     if (isNewm) {
         if (CalName === 'Dayan') {
             if (isYin) {
@@ -1115,8 +1097,7 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
 }
 
 const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, MoonLimitNone, SunLimitYang, SunLimitYin, YinYangBorder) => {
-    let StartDeci = 0
-    let EndDeci = 0
+    let StartDeci = 0, EndDeci = 0
     if (Magni) {
         if (['Dayan', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(CalName)) {
             if (CalName === 'Dayan') {
