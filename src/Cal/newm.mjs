@@ -291,8 +291,6 @@ export default (CalName, year) => {
             NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, WinsolsDifRaw, AcrWinsolsDifRaw
         }
     }
-    const Newm = AutoNewmSyzygy(1)
-    const Syzygy = AutoNewmSyzygy(0)
     const {
         Tcorr: NewmTcorr,
         AvgSc: NewmAvgSc,
@@ -307,13 +305,24 @@ export default (CalName, year) => {
         Deci2: NewmDeci2,
         Deci3: NewmDeci3,
         Equa: NewmEqua,
-        TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif
-    } = Newm
+        TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif,
+        ///// 交食
+        NodeAccum: NewmNodeAccum,
+        AnomaAccum: NewmAnomaAccum,
+        WinsolsDifRaw: NewmWinsolsDifRaw,
+        NodeAccumNight: NewmNodeAccumNight,
+        AnomaAccumNight: NewmAnomaAccumNight,
+        AcrWinsolsDifRaw: NewmAcrWinsolsDifRaw,
+    } = AutoNewmSyzygy(1)
     const {
         Sc: SyzygySc,
         Deci: SyzygyDeci,
         AvgDeci: SyzygyAvgDeci,
-    } = Syzygy
+        NodeAccum: SyzygyNodeAccum,
+        AnomaAccum: SyzygyAnomaAccum,
+        WinsolsDifRaw: SyzygyWinsolsDifRaw,
+        AcrWinsolsDifRaw: SyzygyAcrWinsolsDifRaw,
+    } = AutoNewmSyzygy(0)
     let LeapSurAcrThis = 0
     if (ZhangRange) {
         LeapSurAcrThis = (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange
@@ -363,17 +372,7 @@ export default (CalName, year) => {
         NewmStart, NewmEnd, TermStart, TermEnd,
         EquaDegAccumList, NewmEqua, TermAvgWinsolsDif, TermAcrWinsolsDif,
         //////// 交食用
-        NewmNodeAccum: Newm.NodeAccum,
-        NewmNodeAccumNight: Newm.NodeAccumNight,
-        NewmAnomaAccum: Newm.AnomaAccum,
-        NewmAnomaAccumNight: Newm.AnomaAccumNight,
-        NewmDeci,
-        NewmWinsolsDifRaw: Newm.WinsolsDifRaw,
-        NewmAcrWinsolsDifRaw: Newm.AcrWinsolsDifRaw,
-        SyzygyNodeAccum: Syzygy.NodeAccum,
-        SyzygyAnomaAccum: Syzygy.AnomaAccum,
-        SyzygyDeci, SyzygyAvgDeci,
-        SyzygyWinsolsDifRaw: Syzygy.WinsolsDifRaw,
-        SyzygyAcrWinsolsDifRaw: Syzygy.AcrWinsolsDifRaw,
+        NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmWinsolsDifRaw, NewmAcrWinsolsDifRaw,
+        SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygyWinsolsDifRaw, SyzygyAcrWinsolsDifRaw,
     }
 }

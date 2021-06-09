@@ -45,13 +45,8 @@ export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週�
     }
     // 《古代曆法》頁123    沒明白。曲安京《中国古代的二次求根公式与反函数》，西北大学学报(自然科学版). 1997(01)。曆法中二次反函數僅有的例子是大衍行星行度、紀元。赤道度爲Solar/8，黃道度就是43.1287。兩篇公式不一樣，最後畫圖才想明白。我把其他幾個曆法補出來了
     Eclp2EquaDif = Math.abs(Longi - h)
-    let sign1 = 1
-    let sign2 = 1
-    if (LongiRaw < Solar25 || (LongiRaw >= Solar50 && LongiRaw < Solar75)) {
-        sign1 = -1
-    } else {
-        sign2 = -1
-    }
+    const sign1 = LongiRaw < Solar25 || (LongiRaw >= Solar50 && LongiRaw < Solar75) ? -1 : 1
+    const sign2 = LongiRaw < Solar25 || (LongiRaw >= Solar50 && LongiRaw < Solar75) ? 1 : -1
     Equa2EclpDif *= sign1
     Eclp2EquaDif *= sign2
     Equa2Eclp = LongiRaw + Equa2EclpDif

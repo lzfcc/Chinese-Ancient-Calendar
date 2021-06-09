@@ -57,10 +57,7 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     // | 弱子      強子 |
     // |  0       強率 |
     // | 弱率       0  |
-    let R1 = 1
-    let R2 = 0
-    let L1 = 0
-    let L2 = 1
+    let R1 = 1, R2 = 0, L1 = 0, L2 = 1
     let M1_1 = R1 + L1
     let M2_1 = R2 + L2
     let a1_1 = 0
@@ -104,9 +101,5 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
         title: Result1Title,
         data: [Result1a, Result1b, Result1c]
     })
-    return {
-        SmallPrint,
-        Result,
-        Foot
-    }
+    return { SmallPrint, Result, Foot }
 }

@@ -527,7 +527,7 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     const num = CalName === 'Qintian' ? 248 : 27
     for (let i = 0; i <= num; i++) {
         MoonAcrVDeg[i] = MoonAcrVList[i] / MoonDegDenom
-        MoonAcrVDeg[i] *= (CalName === 'Qintian' ? 1 / 9 : 1)
+        MoonAcrVDeg[i] *= CalName === 'Qintian' ? 1 / 9 : 1
     }
     let MoonAcrSList = MoonAcrVDeg.slice()
     for (let i = 1; i <= num; i++) {

@@ -511,11 +511,7 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     const MoonNodeDifHalf = MoonNodeDif % (Quadrant * 2)
     const MoonNodeDifQuar = MoonNodeDif % Quadrant // 所入初末限：置黃道宿積度，滿交象度（90多那個）去之，在半交象已下爲初限
     const MoonNodeDifRev = Quadrant / 2 - Math.abs(Quadrant / 2 - MoonNodeDifQuar)
-    let EclpWhiteDif = 0
-    let EquaWhiteDif = 0
-    let EquaLati = 0
-    let EquaLongi = 0
-    let WhiteLongi = 0
+    let EclpWhiteDif = 0, EquaWhiteDif = 0, EquaLati = 0, EquaLongi = 0, WhiteLongi = 0
     if (Type === 6) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Huangji')
     } else if (CalName === 'Qintian') {
@@ -537,10 +533,7 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
         EquaLongi = Func.EquaLongi
         WhiteLongi = Func.WhiteLongi
     }
-    let sign1 = 1
-    if (MoonNodeDifHalf > Quadrant) { // 距半交後正交前，以差數爲減；距正交後、半交前，以差數爲加
-        sign1 = -1
-    }
+    const sign1 = MoonNodeDifHalf > Quadrant ? -1 : 1 // 距半交後正交前，以差數爲減；距正交後、半交前，以差數爲加    
     EclpWhiteDif *= sign1
     if (Type < 11) {
         WhiteLongi = MoonEclp + EclpWhiteDif

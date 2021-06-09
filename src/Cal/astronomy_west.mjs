@@ -114,19 +114,11 @@ export const Equa2EclpWest = (LongiRaw, Sidereal, year, E) => { // 《中國古�
     const Equa = Angle.tan().div(E.cos()).atan().mul(Sidereal / 2).div(pi)
     let Equa2EclpDif = big.sub(Longi, Eclp).abs().toNumber()
     let Eclp2EquaDif = big.sub(Longi, Equa).abs().toNumber()
-    let Eclp2Equa = 0
-    let Equa2Eclp = 0
-    let sign1 = 1
-    let sign2 = 1
-    if ((LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)) {
-        sign1 = -1
-    } else {
-        sign2 = -1
-    }
-    Equa2EclpDif *= sign1
-    Eclp2EquaDif *= sign2
-    Equa2Eclp = LongiRaw + Equa2EclpDif
-    Eclp2Equa = LongiRaw + Eclp2EquaDif
+    const condition = (LongiRaw >= 0 && LongiRaw < Sidereal / 4) || (LongiRaw >= Sidereal / 2 && LongiRaw < Sidereal * 0.75)
+    Equa2EclpDif *= condition ? -1 : 1
+    Eclp2EquaDif *= condition ? 1 : -1
+    const Equa2Eclp = LongiRaw + Equa2EclpDif
+    const Eclp2Equa = LongiRaw + Eclp2EquaDif
     return { Eclp2Equa, Equa2Eclp, Equa2EclpDif, Eclp2EquaDif }
 }
 
@@ -420,7 +412,7 @@ export const Regression = (Sidereal, Node, Lunar) => {
     if (Sidereal.includes('/') && Node.includes('/') && Lunar.includes('/')) {
         Sidereal = frc('365 ' + DeciFrac2Frac(Sidereal))
         Node = frc('27 ' + DeciFrac2Frac(Node))
-        Lunar = frc('29 ' + DeciFrac2Frac(Lunar))       
+        Lunar = frc('29 ' + DeciFrac2Frac(Lunar))
         Regression = Sidereal.div(Node).sub(Sidereal.div(Lunar)).sub(1)
         Portion = Regression.add(1).div(Sidereal.div(Lunar).add(1).add(Regression))
         Regression = Regression.toFraction() + ' = ' + Regression.toString()

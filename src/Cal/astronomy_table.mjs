@@ -373,18 +373,13 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
     }
     let EquaLongi = 0
     // 大衍：（黃白差）距半交前後各九限，以差數爲減；距正交前後各九限，以差數爲加
-    let sign = 1
-    // if (LongiRaw >= Quadrant && LongiRaw < Quadrant * 3) {
-    if ((LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant)) {
-        sign = -1
-    }
+    // if (LongiRaw >= Quadrant && LongiRaw < Quadrant * 3) {}
+    const sign = (LongiRaw >= Quadrant && LongiRaw < 2 * Quadrant) || (LongiRaw >= 3 * Quadrant) ? -1 : 1
     EclpWhiteDif *= sign
     EquaWhiteDif *= sign
     WhiteLongi = EclpLongi + EclpWhiteDif
     EquaLongi = EquaWhiteDif ? WhiteLongi + EquaWhiteDif : 0
-    return {
-        EclpLongi, WhiteLongi, EquaLongi, EclpWhiteDif, EquaWhiteDif
-    }
+    return { EclpLongi, WhiteLongi, EquaLongi, EclpWhiteDif, EquaWhiteDif }
 }
 // console.log(MoonLongiTable(55.25, 11.22, 'Qianxiang').EclpLongi)
 // console.log(MoonLongiTable(45, 3, 'Qintian'))

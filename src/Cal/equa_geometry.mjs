@@ -184,19 +184,11 @@ const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
     const BL = PC * BN / PQ
     const BD = RoundC2HL(BL).Halfl
     let Equa2EclpDif = Longi - BD
-    let sign1 = 1
-    let sign2 = 1
-    let Eclp2Equa = 0
-    let Equa2Eclp = 0
-    if ((LongiRaw >= 0 && LongiRaw < Sidereal25) || (LongiRaw >= Sidereal50 && LongiRaw < Sidereal75)) {
-        sign2 = -1
-    } else {
-        sign1 = -1
-    }
-    Eclp2EquaDif *= sign1
-    Equa2EclpDif *= sign2
-    Eclp2Equa = LongiRaw + Eclp2EquaDif
-    Equa2Eclp = LongiRaw + Equa2EclpDif
+    const condition = (LongiRaw >= 0 && LongiRaw < Sidereal25) || (LongiRaw >= Sidereal50 && LongiRaw < Sidereal75)
+    Eclp2EquaDif *= condition ? 1 : -1
+    Equa2EclpDif *= condition ? -1 : 1
+    const Eclp2Equa = LongiRaw + Eclp2EquaDif
+    const Equa2Eclp = LongiRaw + Equa2EclpDif
     return { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lati, ON, p2Another, sign }
 
 }
@@ -276,19 +268,11 @@ const HushigeyuanWest = (LongiRaw, Sidereal, DE) => { // DE黃赤交角。變量
     let Eclp2EquaDif = (EquaLongi - Longi) * Portion4
     let Equa2EclpDif = (Longi - BD) * Portion4
     Lati *= Portion4
-    let sign1 = 1
-    let sign2 = 1
-    let Eclp2Equa = 0
-    let Equa2Eclp = 0
-    if ((LongiRaw >= 0 && LongiRaw < Sidereal25) || (LongiRaw >= Sidereal50 && LongiRaw < Sidereal75)) {
-        sign2 = -1
-    } else {
-        sign1 = -1
-    }
-    Eclp2EquaDif *= sign1
-    Equa2EclpDif *= sign2
-    Eclp2Equa = LongiRaw + Eclp2EquaDif
-    Equa2Eclp = LongiRaw + Equa2EclpDif
+    const condition = (LongiRaw >= 0 && LongiRaw < Sidereal25) || (LongiRaw >= Sidereal50 && LongiRaw < Sidereal75)
+    Eclp2EquaDif *= condition ? 1 : -1
+    Equa2EclpDif *= condition ? -1 : 1
+    const Eclp2Equa = LongiRaw + Eclp2EquaDif
+    const Equa2Eclp = LongiRaw + Equa2EclpDif
     return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati }
 }
 // console.log(HushigeyuanWest(32, 365.25, 1000).Eclp2Equa)

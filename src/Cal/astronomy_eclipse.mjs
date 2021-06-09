@@ -68,8 +68,7 @@ const Eclipse1 = (NodeAccum, CalName) => {
     const NodeAccumHalf = NodeAccum % Node50
     const NodeDif = Node25 - Math.abs(NodeAccumHalf - Node25)
     const Limit = ['Daming', 'Kaihuang'].includes(CalName) ? MoonAvgVDeg * (Lunar - Node) / 2 : Lunar / 2
-    let status = 0
-    let Magni = 0
+    let status = 0, Magni = 0
     if (NodeDif * MoonAvgVDeg < Limit) {
         Magni = 15 - NodeDif * MoonAvgVDeg
         const Func = ExMagni(Magni, Type)
@@ -296,8 +295,7 @@ const Eclipse2 = (NodeAccum, AnomaAccum, TotalDeci, WinsolsDifRaw, isNewm, CalNa
     } else {
         status = NodeDif <= HalfSynodicNodeDif ? 2 : 0
     }
-    let Magni = 0
-    let Mcorr = 0
+    let Magni = 0, Mcorr = 0
     if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
         if (isNewm) {
             let Tcorr4 = 184000
@@ -935,8 +933,7 @@ const EcliMcorr = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Side
 
 const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, NodeCycle50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
     TheNodeAccum, TheNodeDif, TotalDeci, AcrAnomaAccum, statusRaw, Std1, Std2, YinYangBorder, McorrA, McorrB) => {
-    let MagniPortion = 10
-    let MagniMax = 10
+    let MagniPortion = 10, MagniMax = 10
     if (Type <= 7) {
         MagniPortion = 15 // 宣明日食定法爲限的1/15，崇天爲1/10
         MagniMax = 15
@@ -1038,7 +1035,7 @@ const EcliMagni = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Node
             let TheNodeDifYin = 0
             let isYin = false
             if (TheNodeDif < SunLimitYang) { // 類同陽曆                
-                Magni /= (SunLimitYang / MagniPortion)
+                Magni /= SunLimitYang / MagniPortion
             } else if (TheNodeDif < SunLimitYin) {
                 isYin = true
                 TheNodeDif -= SunLimitYang // 以上者去之                
