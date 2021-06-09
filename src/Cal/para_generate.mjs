@@ -172,10 +172,11 @@ const GenSolar = () => {
 //     return b
 // }
 // console.log(test4())
-const test5 = function() {
+const test5 = function () {
     let a = 3
     // a *= 4 * a - 2
-    a /= 6/2
+    a /= 6 / 2
+    const b = 100 * 1e-1
     return a
 }
 // console.log(test5())

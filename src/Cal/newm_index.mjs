@@ -7,7 +7,7 @@ import { AutoLongi2Lati } from './bind_astronomy.mjs'
 export default (CalName, YearStart, YearEnd) => {
     const { Type, AutoNewm, AutoPara } = Bind(CalName)
     const isExcl = Type >= 4 ? 1 : 0
-    const { OriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw } = AutoPara[CalName]
+    const { OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw } = AutoPara[CalName]
     let { ScCorr } = AutoPara[CalName]
     ScCorr = ScCorr || 0
     const YearMemo = []
@@ -370,7 +370,7 @@ export default (CalName, YearStart, YearEnd) => {
         } else {
             Era = `公元前 ${1 - year} 年 ${YearSc}`
         }
-        let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元${year - OriginAd} `
+        let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元${year - (OriginAd || CloseOriginAd)} `
         if (Type === 1) {
             const LeapSur = isTermLeap ? ThisYear.LeapSurAvgThis : ThisYear.LeapSurAvgFix
             if (CalName === 'Taichu') {
