@@ -1,6 +1,6 @@
 import { Bind } from './bind.mjs'
 
-export const AutoQuar = CalName => { // 盈縮限
+export const AutoQuar = (CalName, Type) => { // 盈縮限
     let QuarA = 0
     let QuarB = 0
     if (CalName === 'Yitian') {
@@ -9,7 +9,7 @@ export const AutoQuar = CalName => { // 盈縮限
     } else if (['Fengyuan', 'Guantian', 'Zhantian'].includes(CalName)) {
         QuarA = 88 + 10958 / 12030
         QuarB = 93 + 8552 / 12030
-    } else if (['Shoushi', 'Datong'].includes(CalName)) {
+    } else if (Type === 11) {
         QuarA = 88.909225
         QuarB = 93.712025
     } else {

@@ -113,7 +113,10 @@ export const CalNameList = { // 按照時間順序排列
     Daming3: '重修大明',
     Yiwei: '乙未(擬)',
     Gengwu: '庚午',
-    Shoushi: '授時',
+    ShoushiA: '早期授時',
+    ShoushiA1: '早期無消長授時',
+    ShoushiB: '授時',
+    ShoushiB: '無消長授時',
     Datong: '大統',
     // Huihui: '回回',
     // West: '現代近似',
@@ -167,7 +170,7 @@ export const CalNameDayList = { // 可計算日書的曆法
     Daming2: '楊級大明(擬)',
     Daming3: '重修大明',
     Gengwu: '庚午',
-    Shoushi: '授時',
+    ShoushiB: '授時',
     Datong: '大統',
 }
 

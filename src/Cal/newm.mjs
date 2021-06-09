@@ -42,7 +42,7 @@ export default (CalName, year) => {
         SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長。原來有/2，看術文沒有        
         Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = signX * 10.5 * CloseOriginYear / Denom
-    } else if (CalName === 'Shoushi') {
+    } else if (['ShoushiA', 'ShoushiB'].includes(CalName)) {
         // Solar = SolarRaw - OriginYear / 15000000 // 這個是實際値
         // SolarChangeAccum = signX * (OriginYear ** 2) / 30000000
         Solar = SolarRaw - OriginYear * 1e-6 // 授時歲實消長高了16倍
@@ -88,7 +88,8 @@ export default (CalName, year) => {
         LeapSurAvgPrev = ((OriginAccumPrev + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
         LeapSurAvgNext = ((OriginAccumNext + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
     } else if (Type === 11) {
-        AccumZhongThis = OriginYear * Solar // SolarRaw // 中積
+        AccumZhongThis = OriginYear * Solar
+        // AccumZhongThis = OriginYear * SolarRaw // 中積
         const AccumZhongPrev = (OriginYear - 1) * SolarRaw
         const AccumZhongNext = (OriginYear + 1) * SolarRaw
         OriginAccum = AccumZhongThis + WinsolsCorr // + SolarChangeAccum // 通積：該年冬至積日

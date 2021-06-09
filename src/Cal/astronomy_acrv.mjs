@@ -147,7 +147,7 @@ const SunDifAccumFormula = (WinsolsDif, CalName) => {
     const Solar25 = Solar / 4
     const WinsolsDifHalf = WinsolsDif % Solar50
     const T = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
-    const { QuarA, QuarB } = AutoQuar(CalName)
+    const { QuarA, QuarB } = AutoQuar(CalName, Type)
     if (Type === 11) {
         // 定平立三差精確值、曆取値。f(88.5)精確值2.40247，曆取値2.40127 f(45)精確值1.78437，曆取值1.78354
         // DeltaSunA1: 513.3822097763196114, // 513.32
@@ -918,7 +918,7 @@ export const AutoMoonAcrS = (AnomaAccum, CalName) => {
             if (CalName === 'Mingtian') {
                 MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
                 AnomaCycle = 368.3708
-            } else if (['Futian', 'Shoushi', 'Datong'].includes(CalName)) {
+            } else if (CalName === 'Futian' || Type === 11) {
                 MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
                 AnomaCycle = MoonFormula(Anoma - 1e-13, CalName).MoonAcrS
             } else {

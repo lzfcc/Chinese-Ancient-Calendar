@@ -91,7 +91,7 @@ const EcliLast1 = (CalName, Magni, TotalDeci, AnomaAccum, Denom) => {
         const LastList = [0, 1, 2, 3, 6, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 20]
         Last = LastList[~~Magni] + (Magni - ~~Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
         const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AnomaAccum, CalName) // 紀元：食甚加時入轉算外損益率。應朒者依其損益，應朏者益減損加其副
-        Last += Last * MoonTcorrDif / TheDenom / Denom // 舊唐「以乘所入變增減率，總法而一，應速：增損減加，應遲：依其增減副」
+        Last *= 1 + MoonTcorrDif / TheDenom / Denom // 舊唐「以乘所入變增減率，總法而一，應速：增損減加，應遲：依其增減副」
     }
     let Portion = 0.5
     if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
@@ -559,7 +559,7 @@ const EcliTcorr = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNo
                 Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4 // 四因退位            
                 Tcorr *= AvgTotalDeci > 0.5 ? -1 : 1
             }
-        } else if (CalName === 'Shoushi') { // 大統取消授時的月食時差改正
+        } else if (['ShoushiA', 'ShoushiB', 'ShoushiA1', 'ShoushiB1'].includes(CalName)) { // 大統取消授時的月食時差改正
             const AcrDeciHalfRev = 0.25 - Math.abs(AcrDeci % 0.5 - 0.25)
             Tcorr = AcrDeciHalfRev ** 2 / 4.78
             Tcorr *= AcrDeci > 0.5 ? -1 : 1 // 子前以減            
@@ -1123,7 +1123,7 @@ const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
                 Last = Magni * (isNewm ? 6 / 5 : 4 / 3)
             }
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AcrAnomaAccum, CalName)
-            Last += Last * MoonTcorrDif / TheDenom / Denom // 「應朒者，依其損益；應朓者，損加益減其副」
+            Last *= 1 + MoonTcorrDif / TheDenom / Denom // 「應朒者，依其損益；應朓者，損加益減其副」
         } else if (CalName === 'Chongxuan') {
             if (isNewm) {
                 Last = 1800 - MoonAcrVList[~~AcrAnomaAccum] * 9 / 13.37 // 日食泛用刻是月食的0.9 f(2674)=0
@@ -1186,14 +1186,14 @@ const EcliLast2 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
             const LastDenomSunYin = ~~((SunLimitYin ** 2 / LastMaxSun) / 100) * 100 // 紀元算出來是31715.268，要00結尾
             const LastDenomSunYang = ~~((SunLimitYang ** 2 / LastMaxSun) / 100) * 100
             const LastMaxMoon = Math.round(Denom * 656 / 7290)
-            const LastDenomMoon = ~~((MoonLimitNone ** 2 / LastMaxMoon) / 100) * 100
+            const LastDenomMoon = ~~((MoonLimitNone ** 2 / (Denom * 656 / 7290)) / 100) * 100
             if (isNewm) {
                 Last = isYin ? LastMaxSun - TheNodeDif ** 2 / LastDenomSunYin : LastMaxSun - TheNodeDif ** 2 / LastDenomSunYang
             } else {
                 Last = LastMaxMoon - TheNodeDif ** 2 / LastDenomMoon
             }
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif((AvgAnomaAccum + TotalDeciEx1 - AvgDeci) % Anoma, CalName) // 食甚加時入轉算外損益率。應朒者依其損益，應朏者益減損加其副
-            Last += Last * MoonTcorrDif / TheDenom / Denom
+            Last *= 1 + MoonTcorrDif / TheDenom / Denom
         } else if (Type === 10) {
             if (isNewm) {
                 Last = Magni * (30 - Magni) * 2450 / MoonAcrVList[~~AcrAnomaAccum]
@@ -1257,9 +1257,9 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     const { Tcorr2: AvgTcorr, SunTcorr, MoonAcrV, MoonTcorr: AvgMoonTcorr, NodeTcorr: AvgNodeTcorr
     } = AutoTcorr(AvgAnomaAccum, AvgWinsolsDif, CalName) // 經朔修正    
     const AcrAnomaAccum = (AvgAnomaAccum + AvgTcorr) % Anoma // 定朔入轉
-    const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 朔入交常日    
-    const AcrNodeAccum = AvgNodeAccum + AvgNodeTcorr // 紀元之外的朔入交定日
-    const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr // 定朔入交泛日
+    const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 入交常日    
+    const AcrNodeAccum = AvgNodeAccum + AvgNodeTcorr // 入交定日
+    const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr // 紀元定朔入交泛日
     const NewmNoonDif = AcrDeci - 0.5 // 應天乾元儀天崇天午前後分
     const NewmNoonDifAbs = Math.abs(NewmNoonDif)
     const WinsolsDeci = OriginAccum - Math.floor(OriginAccum)

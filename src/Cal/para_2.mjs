@@ -1268,11 +1268,61 @@ export default {
     },
 
     ///////////////////////////////
-
-    Shoushi: {
+    ShoushiA: { // 早期授時
         CloseOriginAd: 1281,
         Denom: 1,
-        // JdOrigin: 2188925.56,
+        SolarRaw: 365.2425, // 曆元歲實
+        Sidereal: 365.2575,
+        Lunar: 29.530593, // 朔策。秒單位100，分10000
+        Node: 27.212224,
+        NodeCorr: 26.018786,
+        SunLimitYang: 6, // 陽曆限6度，定法60
+        SunLimitYin: 8,
+        MoonLimitNone: 13.5,
+        MoonLimitDenom: 0.87,
+        Anoma: 27.5546, // 轉終：近點月
+        AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
+        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
+        FirstCorr: 20.185, // 閏應：曆元前冬至月齡
+        PartRange: 0.082, // 限法
+        AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
+        ZhengNum: 2,
+        OriginMonNum: 0,
+        WeekCorr: 2,
+        MansionDayCorr: -12,
+        MansionCorr: 315.1075,
+        MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
+        MansionFractPosition: 11,
+    },
+    ShoushiA1: { // 早期授時不加消長
+        CloseOriginAd: 1281,
+        Denom: 1,
+        Solar: 365.2425, // 曆元歲實
+        Sidereal: 365.2575,
+        Lunar: 29.530593, // 朔策。秒單位100，分10000
+        Node: 27.212224,
+        NodeCorr: 26.018786,
+        SunLimitYang: 6, // 陽曆限6度，定法60
+        SunLimitYin: 8,
+        MoonLimitNone: 13.5,
+        MoonLimitDenom: 0.87,
+        Anoma: 27.5546, // 轉終：近點月
+        AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
+        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
+        FirstCorr: 20.185, // 閏應：曆元前冬至月齡
+        PartRange: 0.082, // 限法
+        AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
+        ZhengNum: 2,
+        OriginMonNum: 0,
+        WeekCorr: 2,
+        MansionDayCorr: -12,
+        MansionCorr: 315.1075,
+        MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
+        MansionFractPosition: 11,
+    },
+    ShoushiB: {
+        CloseOriginAd: 1281,
+        Denom: 1,
         SolarRaw: 365.2425, // 曆元歲實
         Sidereal: 365.2575,
         Lunar: 29.530593, // 朔策。秒單位100，分10000
@@ -1294,6 +1344,32 @@ export default {
         MansionDayCorr: -12,
         MansionCorr: 315.1075, // 週應。置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
         MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
+        MansionFractPosition: 11,
+    },
+    ShoushiB1: { // 後期授時不加消長。A A1，B B1參數分別一模一樣，只是把solarraw改成solar
+        CloseOriginAd: 1281,
+        Denom: 1,
+        Solar: 365.2425, // 曆元歲實
+        Sidereal: 365.2575,
+        Lunar: 29.530593, // 朔策。秒單位100，分10000
+        Node: 27.212224,
+        NodeCorr: 26.0388,
+        SunLimitYang: 6, // 陽曆限6度，定法60
+        SunLimitYin: 8,
+        MoonLimitNone: 13.5,
+        MoonLimitDenom: 0.87,
+        Anoma: 27.5546, // 轉終：近點月
+        AnomaCorr: 13.0205, // 轉應：曆元前冬至距月過近地點
+        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
+        FirstCorr: 20.205, // 閏應：曆元前冬至月齡
+        PartRange: 0.082, // 限法
+        AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
+        ZhengNum: 2,
+        OriginMonNum: 0,
+        WeekCorr: 2,
+        MansionDayCorr: -12,
+        MansionCorr: 315.1075,
+        MansionRaw: [11, 6],
         MansionFractPosition: 11,
     },
     Datong: {
