@@ -138,7 +138,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const YearGod = YearGodConvert(YearStem, YearBranch, YearScOrder, YuanYear)
         const YearColor = YearColorConvert(YuanYear)
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
-        const OriginJdAccum = 2086292 + ~~(365.2428 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
+        const OriginJdAccum = 2086292 + ~~(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
         const OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
         const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], Eclp = [], Duskstar = [], MoonEclp = [], MoonEclpLati = [], Rise = [], Dial = [], Lati = [], HouName = [], HexagramName = [], FiveName = [], ManGod = [], Luck = []
         let DayAccum = 0, JieAccum = 0, SummsolsDayAccum = 0, AutumnDayAccum = 0 // 各節積日 // 夏至積日// 立秋積日
@@ -213,6 +213,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 let SunEquaLongi = 0, SunEquaLongiAccum = 0, SunEclpLongi = 0, SunEclpLongiAccum = 0, SunEquaLongiNoon = 0, SunEclpLongiNoon = 0, MoonEclpLongi = 0, MoonEclpLongiAccum = 0, AnomaAccumNight = 0, NodeAccumNight = 0, MoonLongiLatiFunc = {}
                 if (Type === 1) {
                     SunEquaLongiAccum = WinsolsDifNight + OriginAccum
+                    SunEclpLongi = AutoEqua2Eclp(WinsolsDifNight, CalName).Equa2Eclp
+                    SunEclpLongiAccum = SunEclpLongi + OriginAccum
                     MoonEclpLongiAccum = SunEquaLongiAccum * MoonAvgVDeg
                 } else {
                     NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node

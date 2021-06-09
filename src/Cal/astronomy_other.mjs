@@ -38,8 +38,8 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     const MansionName = MansionNameList[MansionOrder]
     const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(3)
     const MansionResult = MansionName + MansionDeg
-    /////////昏中星/////////               
-    // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏
+    /////////昏中《中》頁326
+    // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏=1-(Rise-LightRange)，夜半至明東行度數=Rise-LightRange
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
     let DuskstarResult = ''
     const LightRange = AutoLightRange(CalName)
@@ -47,8 +47,11 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
         let DuskstarOrder = 0
         let MorningstarOrder = 0
         const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
-        const DuskstarRaw = (MansionAccum + (0.5 + LightRange - Rise) * Sidereal + (Type === 7 ? 0 : 1 - Rise)) % Sidereal // 大衍只考慮了昬時距午度
-        const MorningstarRaw = (MansionAccum - (0.5 + LightRange - Rise) * Sidereal + (Type === 7 ? 0 : Rise) + Sidereal) % Sidereal
+        const HalfLight = 0.5 - Rise + LightRange // 半晝漏
+        const HalfNight = Rise - LightRange
+        // 大衍只考慮了昬時距午度
+        const MorningstarRaw = (MansionAccum + Sidereal * (1 - HalfLight) + (Type === 7 ? 0 : HalfNight)) % Sidereal
+        const DuskstarRaw = (MansionAccum + Sidereal * HalfLight + (Type === 7 ? 0 : 1 - HalfNight)) % Sidereal
         for (let k = 1; k <= 28; k++) {
             if (DegAccumList[k] < DuskstarRaw && DuskstarRaw < DegAccumList[k + 1]) {
                 DuskstarOrder = k
