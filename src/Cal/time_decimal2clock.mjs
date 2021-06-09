@@ -1,8 +1,6 @@
+import { Bind } from './bind.mjs'
 import {
-    Bind,
-} from './bind.mjs'
-import {
-    BranchList, HalfList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, big, nzh
+    BranchList, HalfList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh
 } from './para_constant.mjs'
 
 const ClockWest = Deci => {
@@ -24,6 +22,37 @@ const ClockWest = Deci => {
     const Print = h + 'h ' + m + 'm ' + s + 's'
     return Print
 }
+
+export const Deci2Stage = Deci => {
+    let Order12 = ~~Deci
+    const Order4 = Order12
+    let Order4B = Order12
+    const Frac = Deci - Order4
+    const Twelve = ~~(Frac * 12)
+    const Four = ~~(Frac * 4)
+    const FourB = ~~((Frac + 0.125) * 4)
+    if (Twelve === 11) {
+        Order12++
+    }
+    if (FourB === 4) {
+        Order4B++
+    }
+    let Print = [{
+        title: '十二段',
+        data: `${Order12} 度${TwelveList[Twelve]}`
+    }]
+    Print = Print.concat({
+        title: '三段A',
+        data: `${Order4} 度${FourList[Four]}`
+    })
+    Print = Print.concat({
+        title: '三段B',
+        data: `${Order4B} 度${FourList[FourB]}`
+    })
+    return Print
+}
+// console.log(Deci2Stage(1.65))
+
 const ClockWeijin = (Deci, CalName) => {
     const { Type } = Bind(CalName)
     Deci = big(Deci)

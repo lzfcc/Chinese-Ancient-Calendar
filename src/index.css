@@ -376,7 +376,7 @@ table td {
 .table2 table {
   font-size: .9em;
   margin: .25em auto;
-
+  border: none;
 }
 
 .table2 table td {
@@ -393,7 +393,7 @@ table td {
   text-align: center;
   padding: .15em 1em;
   border: none;
-  border-bottom: 1px solid var(--gray);
+  /* border-bottom: 1px solid var(--gray); */
 }
 
 .table2 table .RowTitle {

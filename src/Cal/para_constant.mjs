@@ -180,6 +180,7 @@ export const NayinList = ['大海水', '海中金', '爐中火', '大林木', '�
 export const HalfList = '初正初'
 export const QuarList = '初一二三四五六七八'
 export const TwelveList = ['', '彊', '少弱', '少', '少彊', '半弱', '半', '半彊', '太弱', '太', '太彊', '弱', '']
+export const FourList = ['', '半弱', '半', '半彊', '']
 export const TwelveListHuangji = ['', '彊', '小少', '小', '小太', '半少', '半', '半太', '大少', '大', '大太', '弱', '']
 export const TwelveListWuyin = ['初', '初彊', '少弱', '少', '少彊', '半弱', '半', '半彊 ', '太弱 ', '太', '太彊', '末', '初']
 export const TwentyfourList = '子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥壬'

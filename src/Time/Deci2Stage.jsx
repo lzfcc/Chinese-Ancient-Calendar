@@ -1,9 +1,10 @@
 import React from "react"
-import { BindClock1 } from "../Cal/time_decimal2clock"
+import { Deci2Stage } from "../Cal/time_decimal2clock"
 export default class a extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      a: 2.88
     }
     this.handle = this.handle.bind(this)
   }
@@ -11,7 +12,6 @@ export default class a extends React.Component {
   input() {
     return (
       <span className="year-select width3">
-        <span>日分 0.</span>
         <input
           value={this.state.a}
           onChange={e => {
@@ -24,7 +24,7 @@ export default class a extends React.Component {
 
   handle() {
     try {
-      const Print = BindClock1(this.state.a);
+      const Print = Deci2Stage(this.state.a);
       this.setState({ output: Print });
     } catch (e) {
       alert(e.message);
@@ -54,10 +54,10 @@ export default class a extends React.Component {
   render() {
     return (
       <div>
-        <h3>日分、時刻 ⇒ 辰刻加時</h3>
+        <h3>小數 ⇒ 弱半彊</h3>
         {this.input()}
         <button onClick={this.handle} className="button4-1">
-          decimal2clock
+          decimal2stage
         </button>
         {this.result()}
       </div>
