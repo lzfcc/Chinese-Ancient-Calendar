@@ -80,9 +80,9 @@ export default (CalName, year) => {
     } else {
         fixed = 6
     }
-    let OriginAccum = Type < 11 ? OriginYear * SolarRaw + WinsolsCorr - SolarChangeAccum : 0
-    OriginAccum = +OriginAccum.toFixed(fixed)
     const ZondeDif = CalName === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
+    let OriginAccum = Type < 11 ? OriginYear * SolarRaw + WinsolsCorr + ZondeDif - SolarChangeAccum : 0
+    OriginAccum = +OriginAccum.toFixed(fixed)
     let LeapSurAvgThis = 0, LeapSurAvgPrev = 0, LeapSurAvgNext = 0, AccumZhongThis = 0
     if (ZhangRange) {
         LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
@@ -111,7 +111,7 @@ export default (CalName, year) => {
         LeapSurAvgNext = parseFloat(((AccumLeapNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
     const WinsolsDeci = OriginAccum - Math.floor(OriginAccum)
-    let FirstAccum = 0
+    let FirstAccum = 0, FirstAnomaAccum = 0, FirstNodeAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
     } else if (Type < 8) {
@@ -119,19 +119,18 @@ export default (CalName, year) => {
     } else {
         FirstAccum = OriginAccum - LeapSurAvgThis - LunarChangeAccum
     }
-    let FirstAnomaAccum = 0
+    if (Node && Type < 11) {
+        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0) + ZondeDif / 18) % Node
+    } else if (Type >= 11) {
+        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node + Node) % Node
+    }
+    FirstAccum += ZondeDif
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
         FirstAnomaAccum = ((FirstAccum + AnomaCorr + (CalName === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
     } else if (Type === 11) {
         FirstAnomaAccum = ((AccumZhongThis - LeapSurAvgThis + AnomaCorr) % Anoma + Anoma) % Anoma
-    }
-    let FirstNodeAccum = 0
-    if (Node && Type < 11) {
-        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node
-    } else if (Type >= 11) {
-        FirstNodeAccum = ((AccumZhongThis - LeapSurAvgThis + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node + Node) % Node
     }
     const AccumPrint = (Anoma ? '轉' + ((OriginAccum % Anoma + AnomaCorr + Anoma) % Anoma).toFixed(4) : '') +
         (Node ? '交' + ((OriginAccum % Node + NodeCorr + Node) % Node).toFixed(4) : '') +
