@@ -34,15 +34,16 @@ export default (CalName, year) => {
         const Func = ConstWest(year)
         Solar = Func.Solar
         Lunar = Func.Lunar
-        SolarChangeAccum = signX * ((year - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2            
+        SolarChangeAccum = signX * ((year - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
         LunarChangeAccum = -signX * ((year - 2000) ** 2) * 1e-9
     } else if (CalName === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長
-        Solar = SolarRaw - 0.0254 * CloseOriginYear / Denom
         SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長。原來有/2，看術文沒有        
-        Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = signX * 10.5 * CloseOriginYear / Denom
+        Solar = SolarRaw // 之前要區分Solar和SolarRaw，後來不區分了，但還是留著框架吧
+        Lunar = LunarRaw
     } else if (['ShoushiA', 'ShoushiB'].includes(CalName)) {
-        SolarChangeAccum = parseFloat((~~(OriginYear / 100) / 10000).toPrecision(10))
+        Solar = SolarRaw
+        SolarChangeAccum = parseFloat(signX * CloseOriginYear * (~~(CloseOriginYear / 100) / 10000).toPrecision(10))
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
