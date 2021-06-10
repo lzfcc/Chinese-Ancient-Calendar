@@ -46,13 +46,13 @@ export const ConstWest = year => { // 儒略世紀：36525日。我下面索性�
 
 export const BindSolarChange = year => {
     year = +year
-    const year1 = year - 1194 // 統一歸算爲統天曆元
+    const year1 = year - 1194 // 現代値歸算爲統天曆元
     const year2 = year - 1281
     const sign1 = year1 > 0 ? -1 : 1
     const sign2 = year2 > 0 ? -1 : 1
     const SolarWest = big(365.2422393296).sub(big(6.16 * 1e-8).mul(year1)).toNumber()
     const SolarChangeWest = parseFloat((sign1 * big(3.08 * 1e-8).mul(year1 ** 2).toNumber()).toPrecision(12))
-    const SolarTongtian = parseFloat((365.2425 - 0.0254 / 12000 * year1).toPrecision(10))
+    const SolarTongtian = parseFloat((365.2425 - 0.021167 / 12000 * year1).toPrecision(10))
     const SolarChangeTongtian = parseFloat((sign1 * 0.0127 / 12000 * year1 ** 2).toPrecision(10))
     const SolarShoushi = parseFloat((365.2425 - 2 * 1e-6 * year2).toPrecision(10))
     const SolarChangeShoushiRaw = parseFloat((-~~(year2 / 100) / 10000).toPrecision(10))
