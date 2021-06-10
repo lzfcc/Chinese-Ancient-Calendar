@@ -17,6 +17,7 @@ import Round1 from './Round1'
 import Round2 from './Round2'
 import Hushigeyuan from './Hushigeyuan'
 import Heron from './Heron'
+import SolarChange from './SolarChange'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import md1 from '../note/astronomy.md';
@@ -65,6 +66,7 @@ export default class Astronomy extends React.Component {
           <h2>現代天文計算</h2>
           <Deciaml2Angle />
           <Const />
+          <SolarChange />
         </section>
         <hr />
         <article>

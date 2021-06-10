@@ -25,8 +25,7 @@ const r2d = degree => big(degree).mul(180).div(pi)
 
 export const ConstWest = year => { // 儒略世紀：36525日。我下面索性將100年作爲儒略世紀，要不然太麻煩
     year = +year
-    // 黃赤交角
-    // ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3   // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
+    // 黃赤交角 ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3 // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
     const t = big.sub(year, 2000).div(100)
     const obliquity = +(big(84381.448).sub(t.mul(46.84024)).sub(t.pow(2).mul(big(10).pow(-5).mul(59))).add(t.pow(3).mul(big(10).pow(-6).mul(1813))).div(3600).toFixed(10))
     //《古曆新探》頁322.近日點平黃經 ω=281+13/60+15/3600+1.719175*T+ (1.63/3600)*T^2+(0.012/3600)*T^3 // T自1900起算的儒略世紀數。也就是說近日點越來越向春分移動 。375年在大雪，1247年近日點在冬至
@@ -44,6 +43,38 @@ export const ConstWest = year => { // 儒略世紀：36525日。我下面索性�
     return { Print, obliquity, perihelion, eccentricity, Anoma, Solar, Sidereal, Lunar }
 }
 // console.log(ConstWest(501).perihelion)
+
+export const BindSolarChange = year => {
+    year = +year
+    const year1 = year - 1194 // 統一歸算爲統天曆元
+    const year2 = year - 1281
+    const sign1 = year1 > 0 ? -1 : 1
+    const sign2 = year2 > 0 ? -1 : 1
+    const SolarWest = big(365.2422393296).sub(big(6.16 * 1e-8).mul(year1)).toNumber()
+    const SolarChangeWest = parseFloat((sign1 * big(3.08 * 1e-8).mul(year1 ** 2).toNumber()).toPrecision(12))
+    const SolarTongtian = parseFloat((365.2425 - 0.0254 / 12000 * year1).toPrecision(10))
+    const SolarChangeTongtian = parseFloat((sign1 * 0.0127 / 12000 * year1 ** 2).toPrecision(10))
+    const SolarChangeShoushiRaw = parseFloat((sign2 * ~~(year2 / 100) / 10000).toPrecision(10))
+    const SolarChangeShoushi = parseFloat((SolarChangeShoushiRaw * year2).toPrecision(10))
+    const LunarWest = big(29.530587110428).add(big(2.162 * 1e-9).mul(year1)).toNumber()
+    const LunarCahngeWest = -sign1 * (big(1.081 * 1e-9).mul(year1 ** 2)).toNumber()
+    const LunarTongtian = parseFloat((year1 ? (365.2425 + SolarChangeTongtian / year1 - 7 / 8000) / (365.2425 / (29 + 6368 / 12000)) : 29 + 6368 / 12000).toPrecision(10))
+    const LunarChangeTongtian = parseFloat((sign1 * 7 / 8000 * year1).toPrecision(10))
+    let Print = []
+    Print = Print.concat({
+        title: '現代',
+        data: [SolarWest, '', SolarChangeWest, LunarWest, LunarCahngeWest]
+    })
+    Print = Print.concat({
+        title: '統天',
+        data: [SolarTongtian, '', SolarChangeTongtian, LunarTongtian, LunarChangeTongtian]
+    })
+    Print = Print.concat({
+        title: '授時',
+        data: ['', SolarChangeShoushiRaw, SolarChangeShoushi]
+    })
+    return Print
+}
 
 export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)

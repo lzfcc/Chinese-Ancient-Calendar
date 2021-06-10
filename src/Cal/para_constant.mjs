@@ -116,7 +116,7 @@ export const CalNameList = { // 按照時間順序排列
     ShoushiA: '早期授時',
     ShoushiA1: '早期無消長授時',
     ShoushiB: '授時',
-    ShoushiB: '無消長授時',
+    ShoushiB1: '無消長授時',
     Datong: '大統',
     // Huihui: '回回',
     // West: '現代近似',
