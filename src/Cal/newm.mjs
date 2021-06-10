@@ -37,7 +37,7 @@ export default (CalName, year) => {
         SolarChangeAccum = signX * ((year - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
         LunarChangeAccum = -signX * ((year - 2000) ** 2) * 1e-9
     } else if (CalName === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長
-        Solar = SolarRaw - 0.0254 * CloseOriginYear / Denom
+        Solar = SolarRaw - 0.021167 * CloseOriginYear / Denom
         SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長。原來有/2，看術文沒有
         Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
