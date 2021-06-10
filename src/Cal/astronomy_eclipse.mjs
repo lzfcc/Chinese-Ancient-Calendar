@@ -559,7 +559,7 @@ const EcliTcorr = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNo
                 Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4 // 四因退位            
                 Tcorr *= AvgTotalDeci > 0.5 ? -1 : 1
             }
-        } else if (['ShoushiA', 'ShoushiB', 'ShoushiA1', 'ShoushiB1'].includes(CalName)) { // 大統取消授時的月食時差改正
+        } else if (['ShoushiOld', 'Shoushi', 'ShoushiOld1', 'Shoushi1'].includes(CalName)) { // 大統取消授時的月食時差改正
             const AcrDeciHalfRev = 0.25 - Math.abs(AcrDeci % 0.5 - 0.25)
             Tcorr = AcrDeciHalfRev ** 2 / 4.78
             Tcorr *= AcrDeci > 0.5 ? -1 : 1 // 子前以減            

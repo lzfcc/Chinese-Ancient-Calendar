@@ -983,7 +983,7 @@ export default {
         MoonTcorrDifList: [-3763, -3387, -2981, -2461, -1853, -1129, -376, 29, 521, 1303, 1997, 2577, 3097, 3473, 3792, 3705, 3329, 2866, 2316, 1708, 984, 203, -58, -724, -1476, -2113, -2692, -3185, -3589, -2113],
     },
     Tongtian: { // 以下三個宋志十七。統天特色是消長、積年。積年僅僅是甲子日，其他什麼都不是——這就是授時的理論來源
-        Solar: 365.2425, // - 0.0254 / 12000, // 《統天曆的歲實消長與氣朔算法分析》歲餘 2910 / 12000。斗分差127
+        SolarRaw: 365.2425, // - 0.0254 / 12000, // 《統天曆的歲實消長與氣朔算法分析》歲餘 2910 / 12000。斗分差127
         SolarNumer: 4382910, // 歲分
         Sidereal: 365.2575, // 365 + 3090 / 12000
         SiderealNumer: 4383090, // 週天分
@@ -1268,7 +1268,33 @@ export default {
     },
 
     ///////////////////////////////
-    ShoushiA: { // 早期授時
+    ShoushiOld: { // 早期授時
+        CloseOriginAd: 1281,
+        Denom: 1,
+        SolarRaw: 365.2425, // 曆元歲實
+        Sidereal: 365.2575,
+        Lunar: 29.530593, // 朔策。秒單位100，分10000
+        Node: 27.212224,
+        NodeCorr: 26.018786,
+        SunLimitYang: 6, // 陽曆限6度，定法60
+        SunLimitYin: 8,
+        MoonLimitNone: 13.5,
+        MoonLimitDenom: 0.87,
+        Anoma: 27.5546, // 轉終：近點月
+        AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
+        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
+        FirstCorr: 20.185, // 閏應：曆元前冬至月齡
+        PartRange: 0.082, // 限法
+        AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
+        ZhengNum: 2,
+        OriginMonNum: 0,
+        WeekCorr: 2,
+        MansionDayCorr: -12,
+        MansionCorr: 315.1075,
+        MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
+        MansionFractPosition: 11,
+    },
+    ShoushiOld1: { // 早期授時不加消長
         CloseOriginAd: 1281,
         Denom: 1,
         Solar: 365.2425, // 曆元歲實
@@ -1294,36 +1320,10 @@ export default {
         MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
         MansionFractPosition: 11,
     },
-    ShoushiA1: { // 早期授時不加消長
+    Shoushi: {
         CloseOriginAd: 1281,
         Denom: 1,
-        Solar: 365.2425, // 曆元歲實
-        Sidereal: 365.2575,
-        Lunar: 29.530593, // 朔策。秒單位100，分10000
-        Node: 27.212224,
-        NodeCorr: 26.018786,
-        SunLimitYang: 6, // 陽曆限6度，定法60
-        SunLimitYin: 8,
-        MoonLimitNone: 13.5,
-        MoonLimitDenom: 0.87,
-        Anoma: 27.5546, // 轉終：近點月
-        AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
-        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
-        FirstCorr: 20.185, // 閏應：曆元前冬至月齡
-        PartRange: 0.082, // 限法
-        AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
-        ZhengNum: 2,
-        OriginMonNum: 0,
-        WeekCorr: 2,
-        MansionDayCorr: -12,
-        MansionCorr: 315.1075,
-        MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
-        MansionFractPosition: 11,
-    },
-    ShoushiB: {
-        CloseOriginAd: 1281,
-        Denom: 1,
-        Solar: 365.2425, // 曆元歲實
+        SolarRaw: 365.2425, // 曆元歲實
         Sidereal: 365.2575,
         Lunar: 29.530593, // 朔策。秒單位100，分10000
         Node: 27.212224,
@@ -1346,7 +1346,7 @@ export default {
         MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
         MansionFractPosition: 11,
     },
-    ShoushiB1: { // 後期授時不加消長。A A1，B B1參數分別一模一樣，只是把Solar改成solar
+    Shoushi1: { // 後期授時不加消長。A A1，B B1參數分別一模一樣，只是把Solar改成solar
         CloseOriginAd: 1281,
         Denom: 1,
         Solar: 365.2425, // 曆元歲實

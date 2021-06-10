@@ -54,12 +54,13 @@ export const BindSolarChange = year => {
     const SolarChangeWest = parseFloat((sign1 * big(3.08 * 1e-8).mul(year1 ** 2).toNumber()).toPrecision(12))
     const SolarTongtian = parseFloat((365.2425 - 0.0254 / 12000 * year1).toPrecision(10))
     const SolarChangeTongtian = parseFloat((sign1 * 0.0127 / 12000 * year1 ** 2).toPrecision(10))
-    const SolarChangeShoushiRaw = parseFloat((sign2 * ~~(year2 / 100) / 10000).toPrecision(10))
-    const SolarChangeShoushi = parseFloat((SolarChangeShoushiRaw * year2).toPrecision(10))
+    const SolarShoushi = parseFloat((365.2425 - 2 * 1e-6 * year2).toPrecision(10))
+    const SolarChangeShoushiRaw = parseFloat((-~~(year2 / 100) / 10000).toPrecision(10))
+    const SolarChangeShoushi = parseFloat((sign2 * -SolarChangeShoushiRaw * year2).toPrecision(10))
     const LunarWest = big(29.530587110428).add(big(2.162 * 1e-9).mul(year1)).toNumber()
     const LunarCahngeWest = -sign1 * (big(1.081 * 1e-9).mul(year1 ** 2)).toNumber()
     const LunarTongtian = parseFloat((year1 ? (365.2425 + SolarChangeTongtian / year1 - 7 / 8000) / (365.2425 / (29 + 6368 / 12000)) : 29 + 6368 / 12000).toPrecision(10))
-    const LunarChangeTongtian = parseFloat((sign1 * 7 / 8000 * year1).toPrecision(10))
+    const LunarChangeTongtian = parseFloat((-7 / 8000 * year1).toPrecision(10))
     let Print = []
     Print = Print.concat({
         title: '現代',
@@ -71,7 +72,7 @@ export const BindSolarChange = year => {
     })
     Print = Print.concat({
         title: '授時',
-        data: ['', SolarChangeShoushiRaw, SolarChangeShoushi]
+        data: [SolarShoushi, SolarChangeShoushiRaw, SolarChangeShoushi]
     })
     return Print
 }

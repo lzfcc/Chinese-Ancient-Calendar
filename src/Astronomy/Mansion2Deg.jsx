@@ -6,7 +6,7 @@ export default class Converter extends React.Component {
     super(props)
     this.state = {
       a: '張5.9142',
-      b: 'ShoushiB',
+      b: 'Shoushi',
     }
     this.handle = this.handle.bind(this)
   }

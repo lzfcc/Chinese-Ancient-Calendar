@@ -26,7 +26,7 @@ export default (CalName, year) => {
     const ZhengWinsolsDif = ZhengNum - OriginMonNum
     const OriginYear = year - (OriginAd || CloseOriginAd) // 上元積年（算上）
     // const CloseWinsolsDif = CloseOriginAd - OriginAd // 統天距算
-    const CloseOriginYear = year - CloseOriginAd // 距差    
+    const CloseOriginYear = year - CloseOriginAd // 距差。授時以1280開始
     let SolarChangeAccum = 0, LunarChangeAccum = 0
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? -1 : 1
@@ -37,13 +37,12 @@ export default (CalName, year) => {
         SolarChangeAccum = signX * ((year - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
         LunarChangeAccum = -signX * ((year - 2000) ** 2) * 1e-9
     } else if (CalName === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長
-        SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長。原來有/2，看術文沒有        
-        LunarChangeAccum = signX * 10.5 * CloseOriginYear / Denom
-        Solar = SolarRaw // 之前要區分Solar和SolarRaw，後來不區分了，但還是留著框架吧
-        Lunar = LunarRaw
-    } else if (['ShoushiA', 'ShoushiB'].includes(CalName)) {
-        Solar = SolarRaw
-        SolarChangeAccum = parseFloat(signX * CloseOriginYear * (~~(CloseOriginYear / 100) / 10000).toPrecision(10))
+        Solar = SolarRaw - 0.0254 * CloseOriginYear / Denom
+        SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長。原來有/2，看術文沒有
+        Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
+        LunarChangeAccum = -10.5 * CloseOriginYear / Denom
+    } else if (['ShoushiOld', 'Shoushi'].includes(CalName)) {
+        Solar = parseFloat(SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000).toPrecision(10))
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
@@ -85,9 +84,9 @@ export default (CalName, year) => {
         LeapSurAvgPrev = ((OriginAccumPrev + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
         LeapSurAvgNext = ((OriginAccumNext + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
     } else if (Type === 11) {
-        OriginAccumRawThis = OriginYear * SolarRaw + SolarChangeAccum // 中積
-        const OriginAccumRawPrev = (OriginYear - 1) * SolarRaw
-        const OriginAccumRawNext = (OriginYear + 1) * SolarRaw
+        OriginAccumRawThis = CloseOriginYear * Solar // 中積
+        const OriginAccumRawPrev = (CloseOriginYear - 1) * Solar
+        const OriginAccumRawNext = (CloseOriginYear + 1) * Solar
         OriginAccum = OriginAccumRawThis + WinsolsCorr // 通積：該年冬至積日
         const LeapAccumThis = OriginAccumRawThis + FirstCorr // 閏積
         const LeapAccumPrev = OriginAccumRawPrev + FirstCorr
@@ -96,7 +95,7 @@ export default (CalName, year) => {
         LeapSurAvgPrev = parseFloat(((LeapAccumPrev % Lunar + Lunar) % Lunar).toPrecision(14))
         LeapSurAvgNext = parseFloat(((LeapAccumNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
-    const WinsolsDeci = OriginAccum - Math.floor(OriginAccum)
+    const WinsolsDeci = +(OriginAccum - Math.floor(OriginAccum)).toFixed(fixed)
     let FirstAccum = 0, FirstAnomaAccum = 0, FirstNodeAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
