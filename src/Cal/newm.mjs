@@ -50,7 +50,7 @@ export default (CalName, year) => {
         NodeCorr = CalName === 'Yuanjia' ? Node * EcliCorr : (Node / 2) * EcliCorr
     }
     const SynodicAnomaDif = Lunar - Anoma
-    const HalfSynodicNodeDif = (Lunar - Node) / 2
+    const SynodicNodeDif50 = (Lunar - Node) / 2
     let JiSkip = 0, JiOrder = 0, JiYear = 0, JiScOrder = 0
     if (JiRange) {
         JiSkip = Math.round(Solar * JiRange % 60)
@@ -258,7 +258,7 @@ export default (CalName, year) => {
                 }
             }
             if (Node) {
-                NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : HalfSynodicNodeDif)) % Node).toFixed(fixed)
+                NodeAccum[i] = +((FirstNodeAccum + (ZhengWinsolsDif + i - 1) * Lunar + (isNewm ? 0 : SynodicNodeDif50)) % Node).toFixed(fixed)
                 NodeAccumNight[i] = ~~NodeAccum[i]
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以

@@ -156,12 +156,12 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行�
     Lunar = Lunar || LunarRaw
     Solar = Solar || SolarRaw
     const Node50 = Node / 2
-    const HalfSynodicNodeDif = (Lunar - Node) / 2 // 望差
+    const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
     const WinsolsDif = WinsolsDifRaw + (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
     let Print = ''
     if (Type <= 6) {
-        if ((NodeAccum > Node50 - HalfSynodicNodeDif && NodeAccum < Node50) || NodeAccum < HalfSynodicNodeDif || (NodeAccum > Node50 && NodeAccum < Node50 + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
+        if ((NodeAccum > Node50 - SynodicNodeDif50 && NodeAccum < Node50) || NodeAccum < SynodicNodeDif50 || (NodeAccum > Node50 && NodeAccum < Node50 + SynodicNodeDif50) || (NodeAccum > Node - SynodicNodeDif50)) {
             Print = `<span class='lati-yellow'>黃</span>`
         } else if (NodeAccum < Node50) {
             Print = `<span class='lati-yang'>陽</span>`
@@ -194,9 +194,9 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行�
                 Print = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
             }
         }
-        if ((NodeAccum > Node50 - HalfSynodicNodeDif && NodeAccum < Node50) || NodeAccum < HalfSynodicNodeDif) {
+        if ((NodeAccum > Node50 - SynodicNodeDif50 && NodeAccum < Node50) || NodeAccum < SynodicNodeDif50) {
             Print = `<span class='lati-yellow'>黃</span><span class='lati-yang'>陽</span>`
-        } else if ((NodeAccum > Node50 && NodeAccum < Node50 + HalfSynodicNodeDif) || (NodeAccum > Node - HalfSynodicNodeDif)) {
+        } else if ((NodeAccum > Node50 && NodeAccum < Node50 + SynodicNodeDif50) || (NodeAccum > Node - SynodicNodeDif50)) {
             Print = `<span class='lati-yellow'>黃</span><span class='lati-yin'>陰</span>`
         }
     }

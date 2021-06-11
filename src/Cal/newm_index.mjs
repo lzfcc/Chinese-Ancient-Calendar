@@ -3,6 +3,7 @@ import { TermList, ScList, ThreeList, CalNameList, MonNumList } from './para_con
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Accum2Mansion, LeapAdjust } from './astronomy_other.mjs'
 import { AutoLongi2Lati } from './bind_astronomy.mjs'
+import { AutoRangeEcli } from './para_auto-constant.mjs'
 
 export default (CalName, YearStart, YearEnd) => {
     const { Type, AutoNewm, AutoPara } = Bind(CalName)
@@ -283,7 +284,7 @@ export default (CalName, YearStart, YearEnd) => {
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
                 const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
                 const SyzygyAcrWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyAcrWinsolsDifRaw)
-                for (let i = 4; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+                for (let i = 6; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTermThis > 0) {
                         if (i === LeapNumTermThis) {
@@ -293,22 +294,10 @@ export default (CalName, YearStart, YearEnd) => {
                         }
                     }
                     let Rise = AutoLongi2Lati(NewmAcrWinsolsDifRawPrint[i], WinsolsDeci, CalName).Rise / 100
-                    let NewmEcliFunc = {}, SyzygyEcliFunc = {}, rangeNewm = 0
-                    if (Type === 11) {
-                        rangeNewm = 0.002 // 大統是20分
-                    } else {
-                        rangeNewm = 0.05 // 其他的瞎填一個
-                    }
-                    let rangeSyzygy = 0
-                    if (Type <= 6) {
-                        rangeSyzygy = 0.125 // 戊寅麟德
-                    } else if (Type === 11) {
-                        rangeSyzygy = 0.082 // 大統是20分
-                    } else {
-                        rangeSyzygy = 0.1 // 其他的瞎填一個
-                    }
-                    let NewmCondition = NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3 && (NewmDeciPrint[i] > Rise - rangeNewm && NewmDeciPrint[i] < 1 - Rise + rangeNewm)
-                    let SyzygyCondition = SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7 && (SyzygyDeciPrint[i] < Rise + rangeSyzygy || SyzygyDeciPrint[i] > 1 - Rise - rangeSyzygy) // 大統月食八刻二十分
+                    let NewmEcliFunc = {}, SyzygyEcliFunc = {}
+                    const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(CalName, Type)
+                    let NewmCondition = NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3 && (NewmDeciPrint[i] > Rise - RangeSunEcli && NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
+                    let SyzygyCondition = SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7 && (SyzygyDeciPrint[i] < Rise + RangeMoonEcli || SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli) // 大統月食八刻二十分
                     const Sunset = (1 - Rise).toFixed(4).slice(2, 6)
                     Rise = Rise.toFixed(4).slice(2, 6)
                     if (CalName === 'Mingtian') {
@@ -317,40 +306,40 @@ export default (CalName, YearStart, YearEnd) => {
                     }
                     if (NewmCondition) { // 這些數字根據大統，再放寬0.3
                         NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
-                        const Newmstatus = NewmEcliFunc.status
+                        const NewmStatus = NewmEcliFunc.Status
                         let NewmMagni = 0
                         const NewmStartDeci = NewmEcliFunc.StartDeci ? NewmEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
                         const NewmTotalDeci = NewmEcliFunc.TotalDeci ? NewmEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
                         const NewmEndDeci = NewmEcliFunc.EndDeci ? NewmEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
-                        if (Newmstatus) {
+                        if (NewmStatus) {
                             NewmMagni = NewmEcliFunc.Magni.toFixed(2)
                             NewmEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
                             NewmEcli[i] += '出' + Rise + ' 分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '') + ' 入' + Sunset
-                            if (Newmstatus === 1) {
+                            if (NewmStatus === 1) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                            } else if (Newmstatus === 2) {
+                            } else if (NewmStatus === 2) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                            } else if (Newmstatus === 3) {
+                            } else if (NewmStatus === 3) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>` // ◍
                             }
                         }
                     }
                     if (SyzygyCondition) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
                         SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
-                        const Syzygystatus = SyzygyEcliFunc.status
+                        const SyzygyStatus = SyzygyEcliFunc.Status
                         let SyzygyMagni = 0
                         const SyzygyStartDeci = SyzygyEcliFunc.StartDeci ? SyzygyEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
                         const SyzygyTotalDeci = SyzygyEcliFunc.TotalDeci ? SyzygyEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
                         const SyzygyEndDeci = SyzygyEcliFunc.EndDeci ? SyzygyEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
-                        if (Syzygystatus) {
+                        if (SyzygyStatus) {
                             SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
                             SyzygyEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
                             SyzygyEcli[i] += '出' + Rise + ' 分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '') + ' 入' + Sunset
-                            if (Syzygystatus === 1) {
+                            if (SyzygyStatus === 1) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                            } else if (Syzygystatus === 2) {
+                            } else if (SyzygyStatus === 2) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                            } else if (Syzygystatus === 3) {
+                            } else if (SyzygyStatus === 3) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
                             }
                         }

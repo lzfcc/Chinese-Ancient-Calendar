@@ -621,7 +621,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, status
+            const { Magni, StartDeci, TotalDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
@@ -632,17 +632,17 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
-            let statusPrint = '不食'
-            if (status === 3) {
-                statusPrint = '微少'
-            } else if (status === 2) {
-                statusPrint = '偏食'
-            } else if (status === 1) {
-                statusPrint = '全食'
+            let StatusPrint = '不食'
+            if (Status === 3) {
+                StatusPrint = '微少'
+            } else if (Status === 2) {
+                StatusPrint = '偏食'
+            } else if (Status === 1) {
+                StatusPrint = '全食'
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
@@ -651,7 +651,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, status
+            const { Magni, StartDeci, TotalDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
@@ -662,17 +662,17 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
-            let statusPrint = '不食'
-            if (status === 3) {
-                statusPrint = '微少'
-            } else if (status === 2) {
-                statusPrint = '偏食'
-            } else if (status === 1) {
-                statusPrint = '全食'
+            let StatusPrint = '不食'
+            if (Status === 3) {
+                StatusPrint = '微少'
+            } else if (Status === 2) {
+                StatusPrint = '偏食'
+            } else if (Status === 1) {
+                StatusPrint = '全食'
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }
@@ -706,7 +706,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, status
+            const { Magni, StartDeci, TotalDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
@@ -717,17 +717,17 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
-            let statusPrint = '不食'
-            if (status === 3) {
-                statusPrint = '微少'
-            } else if (status === 2) {
-                statusPrint = '偏食'
-            } else if (status === 1) {
-                statusPrint = '全食'
+            let StatusPrint = '不食'
+            if (Status === 3) {
+                StatusPrint = '微少'
+            } else if (Status === 2) {
+                StatusPrint = '偏食'
+            } else if (Status === 1) {
+                StatusPrint = '全食'
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
@@ -736,7 +736,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, status
+            const { Magni, StartDeci, TotalDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
@@ -747,17 +747,17 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
-            let statusPrint = '不食'
-            if (status === 3) {
-                statusPrint = '微少'
-            } else if (status === 2) {
-                statusPrint = '偏食'
-            } else if (status === 1) {
-                statusPrint = '全食'
+            let StatusPrint = '不食'
+            if (Status === 3) {
+                StatusPrint = '微少'
+            } else if (Status === 2) {
+                StatusPrint = '偏食'
+            } else if (Status === 1) {
+                StatusPrint = '全食'
             }
             return {
                 title: CalNameList[title],
-                data: [statusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }
