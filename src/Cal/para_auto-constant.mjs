@@ -181,7 +181,7 @@ export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算
     } else if (['WuyinA', 'WuyinB'].includes(CalName)) {
         RangeSunEcli = 0.125
     } else {
-        RangeSunEcli = 0.05 // 其他的瞎填一個
+        RangeSunEcli = 0.01 // 其他的瞎填一個
     }
     if (Type <= 6) {
         RangeMoonEcli = 0.125 // 戊寅麟德

@@ -247,34 +247,40 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                 }
             }
         } else if (CalName === 'Huangji') {
-            if (isYin) { // 在陰曆應食不食《中國古代曆法》頁531:黃道南食限小於黃道北，因爲月在黃道北，視去交小於計算去交
-                if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 10 && NoonDif < 0.125 && NoonDif >= 1 / 12 && NodeDif >= 12.25 / 12) {
+            if (isYin) {
+                if (NoonDif < 0.125) { // 加南三辰
+                    if (SummsolsDif < 11 && NodeDif > 12.25 / 12) {
+                        Status = 0
+                    } else if (SummsolsDif < 21 && NodeDif >= 12.5 / 12) {
+                        Status = 0
+                    } else if (SummsolsDif <= Lunar && NodeDif >= 12.75 / 12) {
+                        Status = 0
+                    } else if ((i === 6 || (Leap === 4 && i === 4)) && NodeDif >= 13 / 12) {
+                        Status = 0
+                    } else if (SummsolsDif < Solar * 4 / 24) {
+                        Status = 0
+                    }
+                } else if (NoonDif < 2 / 12 && NodeDif >= 13 / 12) {
+                    if (SummsolsDif <= 20) {
+                        Status = 0
+                    } else if ((i === 6 || (Leap === 4 && i === 4))) {
+                        Status = 0
+                    }
+                } else if (NoonDif < 1 / 12 && SummsolsDif < Solar * 5 / 24) {
                     Status = 0
-                } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 20 && NoonDif < 0.125 && NoonDif >= 1 / 12 && NodeDif >= 12.5 / 12) {
+                } else if (NoonDif < 1 / 12 && SummsolsDif < Solar25) {
                     Status = 0
-                } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 20 && NoonDif < 2 / 12 && NoonDif >= 0.125 && NodeDif >= 13 / 12) {
-                    Status = 0
-                } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= Lunar && NoonDif < 0.125 && NoonDif >= 1 / 12 && NodeDif >= 12.75 / 12) {
-                    Status = 0
-                } else if ((i === 6 || (Leap === 4 && i === 4)) && NoonDif < 0.125 && NoonDif >= 1 / 12 && NodeDif >= 13 / 12) {
-                    Status = 0
-                } else if ((i === 6 || (Leap === 4 && i === 4)) && NoonDif >= 0.125 && NoonDif < 2 / 12 && NodeDif >= 13.5 / 12) {
-                    Status = 0
-                } else if (WinsolsDif >= HalfTermLeng * 8 && WinsolsDif <= HalfTermLeng * 16 && NoonDif < 0.125 && NoonDif >= 1 / 12 && NodeDif >= 13.5 / 12) {
-                    Status = 0
-                } else if (WinsolsDif >= HalfTermLeng * 7 && WinsolsDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24 && NodeDif >= 13.5 / 12) {
-                    Status = 0
-                } else if (WinsolsDif >= HalfTermLeng * 6 && WinsolsDif <= HalfTermLeng * 18 && NoonDif < 1 / 24 && NodeDif >= 13.5 / 12) {
+                } else if (NodeDif > 13.5 / 12) {
                     Status = 0
                 }
-            } else {
-                if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= Lunar && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 2 / 12) {
+            } else { // 這塊沿用原來的
+                if (SummsolsDif <= Lunar && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 2 / 12) {
                     Status = 3
-                } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= Lunar && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1.5 / 12) {
+                } else if (SummsolsDif <= Lunar && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1.5 / 12) {
                     Status = 3
-                } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 46 && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 1.5 / 12) {
+                } else if (SummsolsDif < 47 && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 1.5 / 12) {
                     Status = 3
-                } else if (Math.abs(HalfTermLeng * 12 - WinsolsDif) <= 46 && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1 / 12) {
+                } else if (SummsolsDif < 47 && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1 / 12) {
                     Status = 3
                 } else if (WinsolsDif >= HalfTermLeng * 8 && WinsolsDif <= HalfTermLeng * 16 && NoonDif < 1.25 / 12 && NoonDif >= 1 / 12 && NodeDif <= 0.5 / 12) {
                     Status = 3
