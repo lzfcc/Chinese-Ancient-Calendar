@@ -23,36 +23,6 @@ const ClockWest = Deci => {
     return Print
 }
 
-export const Deci2Stage = Deci => {
-    let Order12 = ~~Deci
-    const Order4 = Order12
-    let Order4B = Order12
-    const Frac = Deci - Order4
-    const Twelve = ~~(Frac * 12)
-    const Four = ~~(Frac * 4)
-    const FourB = ~~((Frac + 0.125) * 4)
-    if (Twelve === 11) {
-        Order12++
-    }
-    if (FourB === 4) {
-        Order4B++
-    }
-    let Print = [{
-        title: '十二段',
-        data: `${Order12} 度${TwelveList[Twelve]}`
-    }]
-    Print = Print.concat({
-        title: '三段A',
-        data: `${Order4} 度${FourList[Four]}`
-    })
-    Print = Print.concat({
-        title: '三段B',
-        data: `${Order4B} 度${FourList[FourB]}`
-    })
-    return Print
-}
-// console.log(Deci2Stage(1.65))
-
 const ClockWeijin = (Deci, CalName) => {
     const { Type } = Bind(CalName)
     Deci = big(Deci)
@@ -121,7 +91,7 @@ const ClockTang = Deci => { // 唐、宋皇祐之前。1/3刻放在時辰最後�
     return BranchList[ClockOrder + 1] + '時' + QuarList[QuarOrder] + '刻'
 }
 
-const ClockSong = Deci => { // 皇祐之後、元、明。（之前假設初刻是1/6，也就是2.4分鐘。）四刻是1/6。 1刻60分，1分=14.4s
+const ClockSong = Deci => { // 皇祐之後、元、明。四刻是1/6。1刻60分，1分=14.4s
     const KeRaw = (Deci + 100 / 24) % 100 // 夜半子半 
     let ClockOrder = ~~(KeRaw / (100 / 12))
     const HalfOrder = ~~((KeRaw - ClockOrder * (100 / 12)) / (4 + 1 / 6))
@@ -136,8 +106,8 @@ const ClockSong = Deci => { // 皇祐之後、元、明。（之前假設初刻�
     } else {
         QuarOrder = 4
     }
-    // const MinOrder = ~~((KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6) + QuarOrder)) * 60)
-    return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' // + nzh.encodeS(MinOrder) +'分'
+    const MinOrder = ~~((KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6) + QuarOrder)) * 60)
+    return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
 }
 
 const ClockQing = Deci => { // 清代96刻
@@ -165,7 +135,7 @@ export const AutoClock = (Deci, CalName) => {
 }
 
 const ClockNameList = {
-    Easthan: '後漢四分',
+    Easthan: '後漢四分曆',
     Yuanjia: '魏晉南北',
     WuyinA: '戊寅曆',
     Huangji: '皇極曆',
@@ -181,7 +151,7 @@ export const BindClock1 = Deci => {
     }]
     Deci *= 100 + 1e-12
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'WuyinA', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
+        ['Yuanjia', 'WuyinA', 'Easthan', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
             return {
                 title: ClockNameList[title],
                 data: AutoClock(Deci, title)
@@ -192,7 +162,7 @@ export const BindClock1 = Deci => {
         data: ClockQing(Deci)
     })
     Print = Print.concat({
-        title: '24小時',
+        title: '南北朝方位制',
         data: Clock24(Deci)
     })
     Print = Print.concat({
@@ -210,6 +180,25 @@ export const BindClock1 = Deci => {
     return Print
 }
 // console.log(BindClock1('5')) // 128  9584  9999
+
+export const Clock2Deci = Clock => {
+    const ARaw = Clock[0]
+    const BRaw = Clock[1]
+    const CRaw = Clock[2]
+    const A = BranchList.indexOf(ARaw)
+    const B = HalfList.indexOf(BRaw)
+    const C = QuarList.indexOf(CRaw)
+    let Start = (A - 1) / 12 + B / 24 + C / 100 - 1 / 24
+    const End = ((Start + (C === 4 ? 0.01 / 6 : 0.01) + 1) % 1).toFixed(6)
+    Start = ((Start + 1) % 1).toFixed(6)
+    let Print = [{
+        title: ClockNameList['Mingtian'],
+        data: `${Start} — ${End}`
+    }]
+    return Print
+}
+
+// console.log(Clock2DeciSong('子初四刻'))
 
 const GengList = '初二三四五'
 
@@ -257,11 +246,11 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
     }
     const ChouName2 = QuarList[Chou] + '點'
     let Print = [{
-        title: '麟德',
+        title: '麟德曆',
         data: Print1
     }]
     Print = Print.concat({
-        title: '大統',
+        title: '大統曆',
         data: GengName2 + ChouName2
     })
     const GengRange3 = Night / 5 - 0.02
@@ -293,3 +282,33 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
     })
     return Print
 }
+
+export const Deci2Stage = Deci => {
+    let Order12 = ~~Deci
+    const Order4 = Order12
+    let Order4B = Order12
+    const Frac = Deci - Order4
+    const Twelve = ~~(Frac * 12)
+    const Four = ~~(Frac * 4)
+    const FourB = ~~((Frac + 0.125) * 4)
+    if (Twelve === 11) {
+        Order12++
+    }
+    if (FourB === 4) {
+        Order4B++
+    }
+    let Print = [{
+        title: '十二段',
+        data: `${Order12} 度${TwelveList[Twelve]}`
+    }]
+    Print = Print.concat({
+        title: '三段A',
+        data: `${Order4} 度${FourList[Four]}`
+    })
+    Print = Print.concat({
+        title: '三段B',
+        data: `${Order4B} 度${FourList[FourB]}`
+    })
+    return Print
+}
+// console.log(Deci2Stage(1.65))

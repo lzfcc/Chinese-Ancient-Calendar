@@ -1,5 +1,6 @@
 import React from "react"
-import Clock from './Clock'
+import Deci2Clock from './Deci2Clock'
+import Clock2Deci from './Clock2Deci'
 import NightClock from './NightClock'
 import Deci2Stage from './Deci2Stage'
 import Date from './Date'
@@ -27,14 +28,16 @@ export default class Time extends React.Component {
     return (
       <>
         <section className="modulo">
-          <Clock />
+          <Deci2Clock />
+          <br />
+          <Clock2Deci />
           <NightClock />
           <Deci2Stage />
           <JD />
-          <p></p>
+          <br />
           <Date />
           <Year />
-          <p></p>
+          <br />
           <SC />
         </section>
         <hr />
