@@ -1,6 +1,6 @@
 import { Bind } from './bind.mjs'
 import {
-    BranchList, HalfList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh
+    BranchList, HalfList, StemList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh,
 } from './para_constant.mjs'
 
 const ClockWest = Deci => {
@@ -152,9 +152,7 @@ const ClockQing = Deci => { // 清代96刻
 }
 
 export const AutoClock = (Deci, CalName) => {
-    const {
-        Type,
-    } = Bind(CalName)
+    const { Type } = Bind(CalName)
     let Print = ''
     if (Type <= 6 && !['LindeA', 'LindeB'].includes(CalName)) {
         Print = ClockWeijin(Deci, CalName)
@@ -212,3 +210,86 @@ export const BindClock1 = Deci => {
     return Print
 }
 // console.log(BindClock1('5')) // 128  9584  9999
+
+const GengList = '初二三四五'
+
+export const BindNightClock = (DeciRaw, Rise, LightRange) => {
+    DeciRaw = +('0.' + DeciRaw)
+    Rise = +('0.' + Rise)
+    LightRange = +LightRange / 100
+    const Dawn = Rise - LightRange
+    const Dusk = 1 - Rise + LightRange
+    if (DeciRaw > Dawn && DeciRaw < Dusk) {
+        throw (new Error('請輸入夜中時刻'))
+    }
+    const Night = 2 * (Rise - LightRange)
+    if (DeciRaw < Dawn) {
+        DeciRaw += 1
+    }
+    DeciRaw -= Dusk
+    const GengRange = Night / 5
+    const ChouRange = Night / 25
+    let Geng = 0
+    for (let i = 0; i <= 4; i++) {
+        if (DeciRaw >= i * GengRange && DeciRaw < (i + 1) * GengRange) {
+            Geng = i
+            break
+        }
+    }
+    const GengName1 = StemList[Geng + 1] + '夜'
+    const GengName2 = GengList[Geng] + '更'
+    const Deci1 = DeciRaw % GengRange
+    let Chou = 0
+    for (let i = 1; i <= 5; i++) {
+        if (Deci1 >= (i - 1) * ChouRange && Deci1 < i * ChouRange) {
+            Chou = i
+            break
+        }
+    }
+    let ChouName1 = ''
+    let Print1 = ''
+    if (Chou === 1) {
+        ChouName1 = StemList[Geng + 1] + '辰刻'
+        Print1 = ChouName1
+    } else {
+        ChouName1 = QuarList[Chou - 1] + '籌'
+        Print1 = GengName1 + ChouName1
+    }
+    const ChouName2 = QuarList[Chou] + '點'
+    let Print = [{
+        title: '麟德',
+        data: Print1
+    }]
+    Print = Print.concat({
+        title: '大統',
+        data: GengName2 + ChouName2
+    })
+    const GengRange3 = Night / 5 - 0.02
+    const ChouRange3 = Night / 25
+    let Geng3 = 0
+    for (let i = 0; i <= 4; i++) {
+        if (DeciRaw >= i * GengRange3 && DeciRaw < (i + 1) * GengRange3) {
+            Geng3 = i
+            break
+        }
+    }
+    const Deci3 = DeciRaw % GengRange3
+    let Chou3 = 0
+    for (let i = 1; i <= 5; i++) {
+        if (Deci3 >= (i - 1) * ChouRange3 && Deci3 < i * ChouRange3) {
+            Chou3 = i
+            break
+        }
+    }
+    let Print3 = ''
+    if (DeciRaw + Dusk < 0.9 + Dawn) {
+        const GengName3 = GengList[Geng3] + '更'
+        const ChouName3 = QuarList[Chou3] + '點'
+        Print3 = GengName3 + ChouName3
+    }
+    Print = Print.concat({
+        title: '宋內中更點',
+        data: Print3
+    })
+    return Print
+}
