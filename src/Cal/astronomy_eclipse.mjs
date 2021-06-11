@@ -147,17 +147,17 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
             }
             TotalDeci = AcrDeci + Tcorr1 / Denom
             QuarDif = 0.125 - Math.abs(TotalDeci % 0.25 - 0.125) // 差率QuarDif
-            let Tcorr3 = NodeDif // 修正三
+            let tmp3 = NodeDif // 修正三
             if (NodeDif <= 3 / 12) {
-                Tcorr3 += 3 / 12
+                tmp3 += 3 / 12
             } else if (NodeDif <= 6 / 12) {
-                Tcorr3 += 2 / 12
+                tmp3 += 2 / 12
             } else if (NodeDif <= 9 / 12) {
-                Tcorr3 += 1 / 12
+                tmp3 += 1 / 12
             } else if (NodeDif <= 1) { } else {
-                Tcorr3 = 1
+                tmp3 = 1
             }
-            Tcorr = -Tcorr3 * QuarDif / (14 / 12) // 時差
+            Tcorr = -tmp3 * QuarDif / (14 / 12) // 時差
             if (TotalDeci <= 0.25 || (TotalDeci > 0.5 && TotalDeci <= 0.75)) {
                 Tcorr = -Tcorr
             }
@@ -1343,7 +1343,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     const NodeCycle = (CalName === 'Chongxuan' || Type === 11) ? AutoNodeCycle(CalName) : 0
     const NodeCycle50 = NodeCycle / 2
     const NodeCycle25 = NodeCycle / 4
-    const { Tcorr2: AvgTcorr, SunTcorr, MoonAcrV, MoonTcorr: AvgMoonTcorr, NodeTcorr: AvgNodeTcorr
+    const { Tcorr2: AvgTcorr, SunTcorr, MoonAcrV, MoonTcorr: AvgMoonTcorr, NodeAccumCorrA: AvgNodeTcorr
     } = AutoTcorr(AvgAnomaAccum, AvgWinsolsDif, CalName) // 經朔修正    
     const AcrAnomaAccum = (AvgAnomaAccum + AvgTcorr) % Anoma // 定朔入轉
     const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 入交常日    
@@ -1396,13 +1396,13 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsD
         Eclipse = Eclipse1(NodeAccum, CalName)
     } else {
         if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'Daye', NodeAccum).NodeTcorr
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'Daye', NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'Daye', i, Leap)
         } else if (CalName === 'Shenlong') {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'LindeA', NodeAccum).NodeTcorr
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'LindeA', NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'LindeA', i, Leap)
         } else if (Type <= 6) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeTcorr
+            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
         } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
             Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Guantian')

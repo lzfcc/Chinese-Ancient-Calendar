@@ -45,14 +45,14 @@ const printData = outputFile(1, 650, 650, false, [ // mode, YearStart, YearEnd, 
     // 'Yuanjia', 
     // 'Daming',
     // 'Liangwu',
-    'Daye',
+    // 'Zhangmengbin',
+    'Liuxiaosun',
+    // 'Daye',
     // 'WuyinA',
     // 'WuyinB', // 上南朝系
     // 'Jiuzhi',
     // 'Shenlong',
-    // 'Futian', // 上印度系
-    // 'Zhangmengbin',
-    // 'Liuxiaosun',
+    // 'Futian', // 上印度系    
     // 'Huangji',
     // 'LindeA', 
     // 'LindeB',// 上隋、初唐系

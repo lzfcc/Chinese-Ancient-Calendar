@@ -220,7 +220,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node
                     AnomaAccumNight = (NewmAnomaAccumNightPrint[i - 1] + k - 1) % Anoma
                     const AnomaAccumNoon = (AnomaAccumNight + 0.5) % Anoma // 正午入轉                    
-                    NodeAccumNight = (NodeAccumNight + AutoTcorr(AnomaAccumNight, WinsolsDifNight, CalName, NodeAccumNight).NodeTcorr) % Node
+                    NodeAccumNight = (NodeAccumNight + AutoTcorr(AnomaAccumNight, WinsolsDifNight, CalName, NodeAccumNight).NodeAccumCorrA) % Node
                     const SunDifAccumNight = AutoDifAccum(AnomaAccumNight, WinsolsDifNight, CalName).SunDifAccum
                     const SunDifAccumNoon = AutoDifAccum(AnomaAccumNoon, WinsolsDifNoon, CalName).SunDifAccum
                     if (Type < 11) {

@@ -289,7 +289,7 @@ export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) =
             Lati = f1 - f3
         }
     } else if (CalName === 'Qintian') {
-        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw, CalName, NodeAccum).NodeTcorr // 欽天用入交定日                
+        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw, CalName, NodeAccum).NodeAccumCorrA // 欽天用入交定日                
         const NodeAccumHalf = NodeAccum % Cycle50
         Lati = (Node / 2 - NodeAccumHalf) * NodeAccumHalf / (556 / 72)
     } else if (CalName === 'Chongtian') {

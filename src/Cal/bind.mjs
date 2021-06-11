@@ -16,7 +16,7 @@ export const Bind = CalName => {
     let isNewmPlus = 0 // 是否進朔
     let AutoNewm = N2
     let AutoPara = P1
-    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'TaiyiJiayin', 'Shiji', 'Taichu', 'Qianzaodu', 'Yuanmingbao', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB', 'TaiyiKaiyuan'].includes(CalName)) {
+    if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'TaiyiJiayin', 'Shiji', 'Taichu', 'Qianzaodu', 'Yuanmingbao', 'Easthan', 'Qianxiang', 'Huangchu', 'Jingchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Yuanjia', 'Daming', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Daye', 'WuyinB', 'TaiyiKaiyuan'].includes(CalName)) {
         isAcr = 0
         if (['Yin', 'Zhou', 'Huangdi', 'Lu', 'LuA', 'LuB', 'LuC', 'LuD', 'LuE', 'LuF', 'LuG', 'XiaDong', 'XiaYu', 'ZhuanxuA', 'ZhuanxuB', 'ZhuanxuC', 'ZhuanxuD', 'ZhuanxuE', 'ZhuanxuF', 'TaiyiJiayin', 'Shiji', 'Taichu', 'Qianzaodu', 'Yuanmingbao', 'Easthan'].includes(CalName)) {
             AutoNewm = N1
@@ -25,7 +25,7 @@ export const Bind = CalName => {
             Type = 2 // 魏晉
         } else if (['Xuanshi', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'TaiyiKaiyuan'].includes(CalName)) {
             Type = 3 // 北朝
-        } else if (['Yuanjia', 'Daming', 'Liangwu', 'Daye', 'WuyinB'].includes(CalName)) {
+        } else if (['Yuanjia', 'Daming', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Daye', 'WuyinB'].includes(CalName)) {
             Type = 4 // 南朝
         }
     } else if (CalName === 'WuyinA') { // 戊寅A定朔B平朔。麟德A不進朔B進朔
@@ -38,7 +38,7 @@ export const Bind = CalName => {
         if (['Jiuzhi'].includes(CalName)) {
             Type = 5 // 天竺
             isNewmPlus = 0
-        } else if (['Zhangmengbin', 'Liuxiaosun', 'Huangji', 'LindeA', 'Shenlong'].includes(CalName)) {
+        } else if (['Huangji', 'LindeA', 'Shenlong'].includes(CalName)) {
             Type = 6 // 隋初唐
             isNewmPlus = 0
         } else if (CalName === 'LindeB') {

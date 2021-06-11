@@ -24,7 +24,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     const {
         SunTcorr2: WestSunTcorr,
         MoonTcorr2: WestMoonTcorr,
-        NodeTcorr: WestNodeCorr
+        NodeAccumCorrA: WestNodeCorr
     } = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'West', 0, year)
     const {
         SunDifAccum: WestSun,
@@ -32,7 +32,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, 'West', year)
     const {
         MoonTcorr2: WestMoonTcorrB,
-        NodeTcorr: WestNodeCorrB
+        NodeAccumCorrA: WestNodeCorrB
     } = AutoTcorr(AnomaAccum + 13.7772755949, WinsolsDifRaw, 'West', 0, year) // 13.7772755949是應天半轉
     const { MoonDifAccum: WestMoonB,
     } = AutoDifAccum(AnomaAccum + 13.7772755949, WinsolsDifRaw, 'West', year)
@@ -54,7 +54,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
                 AutoDifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
             }
             const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
-            const { SunTcorr, MoonTcorr, NodeTcorr } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            const { SunTcorr, MoonTcorr, NodeAccumCorrA } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             let SunTcorrPrint = '-'
             let SunTcorrInacPrint = '-'
@@ -81,8 +81,8 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
                 MoonTcorrInac = MoonTcorr - WestMoonTcorr
                 MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
             }
-            if (NodeTcorr) {
-                NodeAccumCorrPrint = NodeTcorr.toFixed(4)
+            if (NodeAccumCorrA) {
+                NodeAccumCorrPrint = NodeAccumCorrA.toFixed(4)
             }
             const Tcorr = +MoonTcorrPrint + (+SunTcorrPrint || 0)
             return {
@@ -98,7 +98,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         List2.map(title => {
             const { SunDifAccum, MoonDifAccum,
             } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
-            const { SunTcorr, MoonTcorr, NodeTcorr
+            const { SunTcorr, MoonTcorr, NodeAccumCorrA
             } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             const SunDifAccumPrint = SunDifAccum.toFixed(5)
@@ -118,7 +118,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
             const Tcorr = +MoonTcorrPrint + +SunTcorrPrint
             return {
                 title: CalNameList[title],
-                data: [SunDifAccumPrint, SunDifAccumInacPrint, MoonAcrSPrint, MoonDifAccumPrint, MoonDifAccumInacPrint, SunTcorrPrint, SunTcorrInacPrint, MoonTcorrPrint, MoonTcorrInacPrint, Tcorr.toFixed(4), NodeTcorr.toFixed(4)]
+                data: [SunDifAccumPrint, SunDifAccumInacPrint, MoonAcrSPrint, MoonDifAccumPrint, MoonDifAccumInacPrint, SunTcorrPrint, SunTcorrInacPrint, MoonTcorrPrint, MoonTcorrInacPrint, Tcorr.toFixed(4), NodeAccumCorrA.toFixed(4)]
             }
         }))
     return { Print1, Print2, SunTcorrInac, MoonTcorrInac }
@@ -339,10 +339,10 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // �
         Longi2Lati = Longi2LatiTable1(Longi1, 'Easthan')
     } else if (CalName === 'Liangwu') {
         Longi2Lati = Longi2LatiTable1(Longi1, 'Daming')
+    } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable2(Longi1, 'Daye')
     } else if (Type === 4) {
         Longi2Lati = Longi2LatiTable1(Longi1, CalName)
-    } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, 'Huangji')
     } else if (CalName === 'Shenlong') {
         Longi2Lati = Longi2LatiTable2(Longi1, 'LindeA')
     } else if (Type === 6) {
