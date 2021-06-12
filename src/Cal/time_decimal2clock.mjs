@@ -246,11 +246,11 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
     }
     const ChouName2 = QuarList[Chou] + '點'
     let Print = [{
-        title: '麟德曆',
+        title: '唐',
         data: Print1
     }]
     Print = Print.concat({
-        title: '大統曆',
+        title: '宋以後',
         data: GengName2 + ChouName2
     })
     const GengRange3 = Night / 5 - 0.02
@@ -278,7 +278,7 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
         Print3 = GengName3 + ChouName3 + Zandian
     }
     Print = Print.concat({
-        title: '宋至淸內中',
+        title: '宋以後內中',
         data: Print3
     })
     return Print

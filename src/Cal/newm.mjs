@@ -29,7 +29,7 @@ export default (CalName, year) => {
     const CloseOriginYear = year - CloseOriginAd // 距差。授時以1280開始
     let SolarChangeAccum = 0, LunarChangeAccum = 0
     // 統天躔差=斗分差/10000*距差
-    const signX = CloseOriginYear > 0 ? -1 : 1
+    const signX = CloseOriginYear > 0 ? 1 : -1
     if (CalName === 'West') {
         const Func = ConstWest(year)
         Solar = Func.Solar
@@ -37,7 +37,7 @@ export default (CalName, year) => {
         SolarChangeAccum = signX * ((year - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
         LunarChangeAccum = -signX * ((year - 2000) ** 2) * 1e-9
     } else if (CalName === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
-        SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長。原來有/2，看術文沒有
+        SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
@@ -78,8 +78,8 @@ export default (CalName, year) => {
         LeapSurAvgPrev = (OriginYear - 1) * SolarNumer % LunarNumer
         LeapSurAvgNext = (OriginYear + 1) * SolarNumer % LunarNumer
     } else if (Type < 11) {
-        const OriginAccumPrev = (OriginYear - 1) * SolarRaw + WinsolsCorr + SolarChangeAccum
-        const OriginAccumNext = (OriginYear + 1) * SolarRaw + WinsolsCorr + SolarChangeAccum
+        const OriginAccumPrev = (OriginYear - 1) * Solar + WinsolsCorr + SolarChangeAccum
+        const OriginAccumNext = (OriginYear + 1) * Solar + WinsolsCorr + SolarChangeAccum
         LeapSurAvgThis = ((OriginAccum + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
         LeapSurAvgPrev = ((OriginAccumPrev + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
         LeapSurAvgNext = ((OriginAccumNext + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
