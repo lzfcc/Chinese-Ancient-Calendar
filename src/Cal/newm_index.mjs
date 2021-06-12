@@ -301,8 +301,8 @@ export default (CalName, YearStart, YearEnd) => {
                     const Sunset = (1 - Rise).toFixed(4).slice(2, 6)
                     Rise = Rise.toFixed(4).slice(2, 6)
                     if (CalName === 'Mingtian') {
-                        NewmCondition = 1
-                        SyzygyCondition = 1
+                        NewmCondition = NewmDeciPrint[i] > Rise - RangeSunEcli && NewmDeciPrint[i] < 1 - Rise + RangeSunEcli
+                        SyzygyCondition = SyzygyDeciPrint[i] < Rise + RangeMoonEcli || SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli
                     }
                     if (NewmCondition) { // 這些數字根據大統，再放寬0.3
                         NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, OriginAccum)

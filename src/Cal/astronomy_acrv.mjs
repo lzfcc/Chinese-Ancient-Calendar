@@ -89,8 +89,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
     }
     const t = WinsolsDif - TermNum * HalfTermLeng
     const n = t / TermRange
-    let SunTcorr1 = 0
-    let SunTcorr2 = 0
+    let SunTcorr1 = 0, SunTcorr2 = 0 // , SunTcorr2a = 0
     if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
         if (['WuyinA', 'WuyinB'].includes(CalName)) {
             Denom = 11830
@@ -121,20 +120,15 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
             const G1 = D1 / TermRange + (D1 - D2) / (2 * TermRange) - Plus
             const Gt = G1 - (t - 1) * D // 前多者日減，前少者日加初數
             SunTcorr2 = (G1 + Gt) * t / 2 + SunTcorrList[TermNum]
+            // 結果和用招差術完全相同，二分而至前後也沒問題
+            // const Initial = SunTcorrList[TermNum] + ',' + SunTcorrList[TermNum + 1] + ',' + SunTcorrList[TermNum + 2]
+            // SunTcorr2a = Interpolate1(n + 1, Initial) / Denom
         }
         SunTcorr2 /= Denom
     }
-    // 結果和下面用招差術完全相同
-    // else {
-    //     if (Type >= 5) {
-    //         const Initial = SunTcorrList[TermNum] + ',' + SunTcorrList[TermNum + 1] + ',' + SunTcorrList[TermNum + 2]
-    //         SunTcorr2 = Interpolate1(n + 1, Initial)
-    //     }
-    //     SunTcorr1 = SunTcorrList[TermNum] + n * (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum])
-    // }    
     return { SunTcorr1, SunTcorr2 }
 }
-// console.log(SunTcorrTable(55, 'Yingtian'))
+// console.log(SunTcorrTable(106, 'Chongtian'))
 
 const SunDifAccumFormula = (WinsolsDif, CalName) => {
     const { AutoPara, Type } = Bind(CalName)

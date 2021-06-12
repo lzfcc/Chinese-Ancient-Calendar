@@ -187,13 +187,12 @@ export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算
     }
     if (Type <= 6) {
         RangeMoonEcli = 0.125 // 戊寅麟德
-    } else if (Type === 11) {
-        RangeMoonEcli = 0.082 // 大統是20分
     } else {
-        RangeMoonEcli = 0.1 // 其他的瞎填一個
+        RangeMoonEcli = 0.082 // 大統是20分，其他不知道
     }
     return { RangeSunEcli, RangeMoonEcli }
 }
+
 export const AutoMoonTcorrDif = (AnomaAccum, CalName) => { // 唐宋月離損益率
     const { AutoPara } = Bind(CalName)
     const { MoonTcorrDifList, Anoma } = AutoPara[CalName]
