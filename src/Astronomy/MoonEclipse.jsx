@@ -5,7 +5,8 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 0.1
+      a: 0.1,
+      f: 5
     }
     this.handle = this.handle.bind(this)
   }
@@ -41,13 +42,20 @@ export default class Converter extends React.Component {
             this.setState({ d: e.currentTarget.value });
           }}
         />
+        <span> 冬至小餘 0.</span>
+        <input
+          value={this.state.f}
+          onChange={e => {
+            this.setState({ f: e.currentTarget.value });
+          }}
+        />
       </span>
     );
   }
 
   handle() {
     try {
-      const { Print1, Print2 } = BindMoonEclipse(this.state.a, this.state.b, this.state.c, this.state.d)
+      const { Print1, Print2 } = BindMoonEclipse(this.state.a, this.state.b, this.state.c, this.state.d, this.state.f)
       this.setState({ output1: Print1, output2: Print2 })
     } catch (e) {
       alert(e.message)

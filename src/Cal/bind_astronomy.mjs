@@ -594,11 +594,12 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
 
-export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) => {
+export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, WinsolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     AvgDeci = +('0.' + AvgDeci)
     AvgWinsolsDif = +AvgWinsolsDif
+    WinsolsDeci = +('0.' + WinsolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -622,7 +623,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0, 0, WinsolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -652,7 +653,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0, 0, WinsolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -677,13 +678,14 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =>
         }))
     return { Print1, Print2 }
 }
-// console.log(BindSunEclipse(0.1, 14, 1355, 14))
+// console.log(BindSunEclipse(0.1, 14, 3355, 14, 5))
 
-export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) => {
+export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, WinsolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     AvgDeci = +('0.' + AvgDeci)
     AvgWinsolsDif = +AvgWinsolsDif
+    WinsolsDeci = +('0.' + WinsolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -707,7 +709,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0, 0, WinsolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -737,7 +739,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif) =
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0, 0, WinsolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'

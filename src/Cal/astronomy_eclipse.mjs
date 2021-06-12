@@ -629,7 +629,7 @@ const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmN
             Tcorr = -AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) / 1.5
             Tcorr *= AvgTotalDeci >= 0.5 ? -1.5 : 1
         } else if (Type === 10) {
-            Tcorr = -2 * AvgTotalNoonDif * (0.5 - AvgTotalNoonDif)
+            Tcorr = -2 * AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) // 的確要倍之，這樣感覺太大了
             Tcorr *= AvgTotalDeci >= 0.5 ? -1 : 1
         } else if (Type === 11) {
             Tcorr = -NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 0.96 //「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
@@ -661,9 +661,10 @@ const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmN
         }
     }
     let TotalDeci = 0 // 食甚定餘
-    if (CalName === 'Qintian' && isNewm) {
-        TotalDeci = AcrDeci < 0.5 ? 0.5 + Tcorr : AcrDeci + Tcorr
-    } else if (CalName === 'Mingtian') { // 明天沒有時差，《數理》頁424
+    // if (CalName === 'Qintian' && isNewm) { // 原文是這麼說的，但也太扯了，這樣結果很奇怪
+    //     TotalDeci = AcrDeci < 0.5 ? 0.5 + Tcorr : AcrDeci + Tcorr
+    // } else
+    if (CalName === 'Mingtian') { // 明天沒有時差，《數理》頁424
         TotalDeci = (AvgDeci + AvgMoonTcorr) * 13.37 / MoonAcrV + SunTcorr
     } else if (Type === 9 || Type === 10) {
         TotalDeci = AvgTotalDeci + Tcorr
@@ -1317,7 +1318,7 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
 }
 
 // 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
-const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName) => {
+const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, OriginAccum, isNewm, CalName) => {
     const { Type, AutoPara } = Bind(CalName)
     const { SolarRaw, Sidereal, Node, Anoma, MoonAcrVList, Denom, AcrTermList,
         SunLimitNone, MoonLimitNone, SunLimitNoneYang, SunLimitNoneYin, SunLimitYang, SunLimitYin
@@ -1349,8 +1350,6 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr // 紀元定朔入交泛日
     const NewmNoonDif = AcrDeci - 0.5 // 應天乾元儀天崇天午前後分
     const NewmNoonDifAbs = Math.abs(NewmNoonDif)
-    const WinsolsDeci = OriginAccum - Math.floor(OriginAccum)
-    const Rise = AutoLongi2Lati(AcrWinsolsDif, WinsolsDeci, CalName).Rise / 100
     const isDescend = AvgNodeAccum < 3 || AvgNodeAccum > 25 // 交中前後皆為交中
     let isYin = AcrNodeAccum > Node50
     let Tcorr0 = 0, AvgTotalDeci = 0, AvgTotalNoonDif = 0 // 紀元中前後分
@@ -1385,7 +1384,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
 // console.log(Eclipse3(13.81, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 1, 'Chongxuan')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
 // console.log(Eclipse3(26 + 5644.4277 / 10590, 22.052297, 0.4495401228, 0.8172804533, 175.6583788196 + 0.02675303116, 175.6583788196, 0, 1, 'Chongtian')) // 1024年崇天曆日食，藤豔輝論文
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
-export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum) => { // 這就不用%solar了，後面都模了的
+export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum, WinsolsDeci) => { // 這就不用%solar了，後面都模了的
     const { Type } = Bind(CalName)
     let Eclipse = {}
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
@@ -1400,14 +1399,18 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsD
         } else if (Type <= 6) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
-        } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
-            Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Guantian')
-        } else if (['Chunyou', 'Huitian'].includes(CalName)) {
-            Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Chengtian')
-        } else if (['Daming1', 'Daming2', 'Yiwei'].includes(CalName)) {
-            Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, isNewm, 'Daming3')
-        } else if (Type <= 11) {
-            Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
+        } else {
+            WinsolsDeci = WinsolsDeci || OriginAccum - Math.floor(OriginAccum)
+            const Rise = AutoLongi2Lati(AcrWinsolsDif, WinsolsDeci, CalName).Rise / 100
+            if (['Fengyuan', 'Zhantian'].includes(CalName)) {
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, 0, isNewm, 'Guantian')
+            } else if (['Chunyou', 'Huitian'].includes(CalName)) {
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, 0, isNewm, 'Chengtian')
+            } else if (['Daming1', 'Daming2', 'Yiwei'].includes(CalName)) {
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, 0, isNewm, 'Daming3')
+            } else if (Type <= 11) {
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, OriginAccum, isNewm, CalName)
+            }
         }
     }
     return Eclipse
