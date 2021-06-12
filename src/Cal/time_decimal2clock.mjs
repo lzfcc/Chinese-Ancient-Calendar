@@ -212,22 +212,23 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
         throw (new Error('請輸入夜中時刻'))
     }
     const Night = 2 * (Rise - LightRange)
+    let Deci = DeciRaw
     if (DeciRaw < Dawn) {
-        DeciRaw += 1
+        Deci += 1
     }
-    DeciRaw -= Dusk
+    Deci -= Dusk
     const GengRange = Night / 5
     const ChouRange = Night / 25
     let Geng = 0
     for (let i = 0; i <= 4; i++) {
-        if (DeciRaw >= i * GengRange && DeciRaw < (i + 1) * GengRange) {
+        if (Deci >= i * GengRange && Deci < (i + 1) * GengRange) {
             Geng = i
             break
         }
     }
     const GengName1 = StemList[Geng + 1] + '夜'
     const GengName2 = GengList[Geng] + '更'
-    const Deci1 = DeciRaw % GengRange
+    const Deci1 = Deci % GengRange
     let Chou = 0
     for (let i = 1; i <= 5; i++) {
         if (Deci1 >= (i - 1) * ChouRange && Deci1 < i * ChouRange) {
@@ -253,16 +254,17 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
         title: '宋以後',
         data: GengName2 + ChouName2
     })
+
     const GengRange3 = Night / 5 - 0.02
     const ChouRange3 = Night / 25
     let Geng3 = 0
     for (let i = 0; i <= 4; i++) {
-        if (DeciRaw >= i * GengRange3 && DeciRaw < (i + 1) * GengRange3) {
+        if (Deci >= i * GengRange3 && Deci < (i + 1) * GengRange3) {
             Geng3 = i
             break
         }
     }
-    const Deci3 = DeciRaw % GengRange3
+    const Deci3 = Deci % GengRange3
     let Chou3 = 0
     for (let i = 1; i <= 5; i++) {
         if (Deci3 >= (i - 1) * ChouRange3 && Deci3 < i * ChouRange3) {
@@ -271,11 +273,13 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
         }
     }
     let Print3 = ''
-    if (DeciRaw + Dusk < 0.9 + Dawn) {
+    if (Deci + Dusk < 0.9 + Dawn) {
         const GengName3 = GengList[Geng3] + '更'
         const ChouName3 = QuarList[Chou3] + '點'
-        const Zandian = '，攢點' + (Rise - 0.1).toFixed(4)
-        Print3 = GengName3 + ChouName3 + Zandian
+        Print3 = GengName3 + ChouName3
+    } else {
+        const tmp = (DeciRaw - (Rise - 0.1)) * 100
+        Print3 = '攢點後' + tmp.toFixed(2) + '刻'
     }
     Print = Print.concat({
         title: '宋以後內中',
