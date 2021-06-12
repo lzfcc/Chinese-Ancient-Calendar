@@ -217,7 +217,7 @@ export default (CalName, YearStart, YearEnd) => {
         const NewmWinsolsDifRawPrint = ThisYear.NewmWinsolsDifRaw ? NewmSlice(ThisYear.NewmWinsolsDifRaw) : []
         const NewmAcrWinsolsDifRawPrint = ThisYear.NewmAcrWinsolsDifRaw ? NewmSlice(ThisYear.NewmAcrWinsolsDifRaw) : []
         const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
-        let NewmAvgDeciPrint = []
+        const NewmAvgDeciPrint = NewmSlice(ThisYear.NewmAvgDeci)
         NewmInt = NewmInt.slice(1 + NewmStart)
         let ZhengGreatSur = 0, ZhengSmallSur = 0
         if (Type === 1) {
@@ -269,11 +269,11 @@ export default (CalName, YearStart, YearEnd) => {
             TermEquaPrint = TermSlice(TermEqua)
             TermDuskstarPrint = TermSlice(TermDuskstar)
         }
+
         ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
         let NewmEcli = [], SyzygyEcli = [], NewmNodeAccumPrint = [], NewmNodeAccumNightPrint = [], NewmAnomaAccumPrint = [], NewmAnomaAccumNightPrint = []
         if (Type > 1) {
             NewmDeciPrint = NewmSlice(ThisYear.NewmDeci)
-            NewmAvgDeciPrint = NewmSlice(ThisYear.NewmAvgDeci)
             const SyzygyAvgDeciPrint = NewmSlice(ThisYear.SyzygyAvgDeci)
             if (Node) {
                 NewmNodeAccumPrint = NewmSlice(ThisYear.NewmNodeAccum)

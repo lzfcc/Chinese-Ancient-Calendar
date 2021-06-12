@@ -183,9 +183,11 @@ export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算
     } else if (Type >= 8) {
         RangeSunEcli = 0.02 // 其他的瞎填一個
     } else {
-        RangeSunEcli = 0.1 // 其他的瞎填一個
+        RangeSunEcli = 0.2 // 其他的瞎填一個
     }
-    if (Type <= 6) {
+    if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
+        RangeMoonEcli = 0.2 // 胡亂填，考慮到那時候沒有太陽修正，最多有0.2日差距
+    } else if (Type <= 6) {
         RangeMoonEcli = 0.125 // 戊寅麟德
     } else {
         RangeMoonEcli = 0.082 // 大統是20分，其他不知道

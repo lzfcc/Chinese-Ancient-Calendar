@@ -13,6 +13,8 @@ export default {
         JiRange: 1520, // 紀
         BuRange: 76, // 蔀
         isTermLeap: 0, // 是否用無中氣置閏法
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     Zhou: {
         Denom: 940,
@@ -28,6 +30,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     Huangdi: {
         Denom: 940,
@@ -43,6 +47,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     Lu: { // 無加小餘
         Denom: 940,
@@ -58,6 +64,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuA: { // 隱元-721,宣元-607
         Denom: 940,
@@ -74,6 +82,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 539 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuB: { // 宣二-606，成四-586
         Denom: 940,
@@ -90,6 +100,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 469 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuC: { // 成五-585，襄六-566
         Denom: 940,
@@ -106,6 +118,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 403 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuD: { // 襄七-565，襄廿五-547
         Denom: 940,
@@ -122,6 +136,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 348 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuE: { // 襄廿六-546，昭十二-529
         Denom: 940,
@@ -138,6 +154,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 280 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuF: { // 昭十三-528，定元-508
         Denom: 940,
@@ -154,6 +172,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 213 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     LuG: { // -507，-466
         Denom: 940,
@@ -170,6 +190,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 147 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     XiaDong: { // 冬至曆元夏曆
         Denom: 940,
@@ -185,6 +207,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0, // 0:固定冬至，1:無中氣
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     XiaYu: { // 雨水曆元夏曆
         Denom: 940,
@@ -202,6 +226,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     ZhuanxuA: {
         Denom: 940,
@@ -220,6 +246,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     ZhuanxuB: { // 朱桂昌《顓頊日曆表》：暫定秦昭王元年前306行十月爲歲首
         Denom: 940,
@@ -238,6 +266,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     ZhuanxuC: { // 秦始皇元年前246朔餘增加3/4日。《顓頊日曆表》第545頁
         Denom: 940,
@@ -257,6 +287,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 3 / 4,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     ZhuanxuD: { // 高帝元年前206朔餘減少210分
         Denom: 940,
@@ -276,6 +308,8 @@ export default {
         BuRange: 76,
         isTermLeap: 0,
         WinsolsCorr: 3 / 4 - 210 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     ZhuanxuE: { // 前162年改變閏章（但我看他提供的資料，應該是前186-182之間變化），減朔餘25分。《顓頊日曆表》第544頁：出土資料的閏年：前251、208、205、202、199、197、191、186、180、164、153、151、134、129、110
         Denom: 940,
@@ -295,6 +329,8 @@ export default {
         BuRange: 76,
         isTermLeap: 1,
         WinsolsCorr: 3 / 4 - 210 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     ZhuanxuF: {
         Denom: 940,
@@ -314,6 +350,8 @@ export default {
         BuRange: 76,
         isTermLeap: 1,
         WinsolsCorr: 3 / 4 - 235 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     TaiyiJiayin: {
         Denom: 940, // 日法
@@ -326,7 +364,7 @@ export default {
         YuanRange: 4560, // 元
         JiRange: 1520, // 紀
         BuRange: 76, // 蔀
-        isTermLeap: 1, // 是否用無中氣置閏法
+        isTermLeap: 1, // 是否用無中氣置閏法        
     },
     Shiji: {
         Denom: 940, // 日法
@@ -346,6 +384,8 @@ export default {
         BuRange: 76, // 蔀
         isTermLeap: 1, // 是否用無中氣置閏法
         WinsolsCorr: -0.75, // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     Taichu: {
         Denom: 81,
@@ -382,6 +422,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     Yuanmingbao: {
         Denom: 81,
@@ -395,6 +437,8 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
     },
     Easthan: {
         Denom: 940,
