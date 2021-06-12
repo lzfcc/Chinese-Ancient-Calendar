@@ -945,7 +945,7 @@ export default {
         FirstCorr: -21704 / 12000, // 閏差
         AnomaCorr: -188800, // 轉差
         NodeCorr: 80298 / 12000, // 交差
-        YinyangCorr: -1,
+        YinyangCorr : -1,
         OriginAd: 1194 - 3830,
         CloseOriginAd: 1194, // 紹熙五年甲寅
         SunLimitYang: 5680,

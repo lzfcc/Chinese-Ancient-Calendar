@@ -121,7 +121,7 @@ export default (CalName, year) => {
     FirstAnomaAccum = +FirstAnomaAccum.toFixed(fixed)
     FirstNodeAccum = +FirstNodeAccum.toFixed(fixed)
     const AccumPrint = (Anoma ? '轉' + ((OriginAccum % Anoma + AnomaCorr + Anoma) % Anoma).toFixed(4) : '') +
-        (Node ? '交' + ((OriginAccum % Node + NodeCorr + Node) % Node).toFixed(4) : '') +
+        (Node ? '交' + ((OriginAccum % Node + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0) + Node) % Node).toFixed(4) : '') +
         (Sidereal ? '週' + (((OriginAccum % Sidereal + MansionCorr) % Sidereal + Sidereal) % Sidereal).toFixed(4) : '')
     let LeapLimit = 0
     if (ZhangRange) {

@@ -274,10 +274,11 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
     if (DeciRaw + Dusk < 0.9 + Dawn) {
         const GengName3 = GengList[Geng3] + '更'
         const ChouName3 = QuarList[Chou3] + '點'
-        Print3 = GengName3 + ChouName3
+        const Zandian = '，攢點' + (Rise - 0.1).toFixed(4)
+        Print3 = GengName3 + ChouName3 + Zandian
     }
     Print = Print.concat({
-        title: '宋內中更點',
+        title: '宋至淸內中',
         data: Print3
     })
     return Print
