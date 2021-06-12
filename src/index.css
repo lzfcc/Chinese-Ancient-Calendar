@@ -980,59 +980,72 @@ hr {
 }
 
 .YearColor table {
-  /* border-collapse: separate; */
-  /* border: 1px solid var(--shallowgray); */
-  border: none;
+  border-collapse: separate;
   font-family: var(--serif);
+  border: none;
 }
 
 .YearColor table td {
-  border: none;
-  border: 1px solid var(--gray);
   padding: .7em 0;
-  width: auto;
   font-weight: bold;
+  min-width: 3.4em;
+  width: 3em;
+  height: 1.9em;
 }
 
 .color-white {
   background: white;
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .color-black {
   color: var(--bg);
   background: var(--black);
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .color-cyan {
   background: var(--cyan);
   color: var(--bg);
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .color-green {
   color: var(--bg);
   background: var(--green);
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .color-yellow {
   color: var(--bg);
   background: var(--letteryellow);
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .color-red {
   color: var(--bg);
   background: var(--letterred);
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .color-purple {
   color: var(--bg);
   background: var(--purple);
   padding: 1em .5em;
+  border-radius: .7em;
+  margin: .2em;
 }
 
 .lati-red {
