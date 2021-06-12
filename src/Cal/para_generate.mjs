@@ -177,6 +177,9 @@ const test5 = function () {
     // a *= 4 * a - 2
     a /= 6 / 2
     const b = 100 * 1e-1
+    let f=true
+    !f
+    f
     return a
 }
 // console.log(test5())

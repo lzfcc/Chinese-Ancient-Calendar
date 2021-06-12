@@ -64,7 +64,7 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>程度</th>
+            <th>食類</th>
             <th>食分</th>
             <th>虧初刻數</th>
             <th>定望</th>
@@ -86,7 +86,7 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>程度</th>
+            <th>食類</th>
             <th>食分</th>
             <th>虧初刻數</th>
             <th>定望</th>
@@ -113,7 +113,7 @@ export default class Converter extends React.Component {
       <div>
         <h3>月食</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-7'>交</button>
+        <button onClick={this.handle} className='button4-7'>暗虛奄月</button>
         {this.result()}
       </div>
     )
