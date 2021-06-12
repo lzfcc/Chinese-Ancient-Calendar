@@ -18,6 +18,7 @@
     "react-scripts": "^4.0.3",
     "react-window-dynamic-list": "^2.3.5",
     "rehype-raw": "^5.1.0",
+    "remark-gfm": "^1.0.0",
     "remarkable": "^2.0.1",
     "web-vitals": "^1.1.0"
   },

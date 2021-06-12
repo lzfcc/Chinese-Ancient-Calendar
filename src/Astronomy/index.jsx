@@ -20,6 +20,7 @@ import Heron from './Heron'
 import SolarChange from './SolarChange'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import gfm from 'remark-gfm'
 import md1 from '../note/astronomy.md';
 
 export default class Astronomy extends React.Component {
@@ -70,7 +71,7 @@ export default class Astronomy extends React.Component {
         </section>
         <hr />
         <article>
-          <ReactMarkdown rehypePlugins={[rehypeRaw]} children={md} />
+          <ReactMarkdown rehypePlugins={[rehypeRaw, gfm]} children={md} />
         </article>
       </>
     )

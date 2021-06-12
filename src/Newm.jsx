@@ -4,6 +4,7 @@ import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import gfm from 'remark-gfm'
 import md1 from './note/newm.md';
 const TableRowNameMap = {
   MonthPrint: ' ',
@@ -325,7 +326,7 @@ export default class Newm extends React.Component {
         {this.renderTableList()}
         <hr />
         <article>
-          <ReactMarkdown rehypePlugins={[rehypeRaw]} children={md} />
+          <ReactMarkdown rehypePlugins={[rehypeRaw, gfm]} children={md} />
         </article>
       </>
     )
