@@ -736,9 +736,7 @@ export default {
         Lunar: 29 + 14899 / 28080,
         Denom: 28080,
         Anoma: 27 + 15573.1413 / 28080,
-        Node: 27 + 5956.6421 / 28080,
-        // Anoma: 27 + 15573.9140 / 28080,
-        // Node: 27 + 5959.3377 / 28080,
+        Node: 27 + 5959.1249 / 28080,
         OriginAd: 1103 - 269190, // 1103 - 25501759,
         CloseOriginAd: 1103, // 崇寧二年癸未
         WeekCorr: 2,
@@ -945,7 +943,7 @@ export default {
         FirstCorr: -21704 / 12000, // 閏差
         AnomaCorr: -188800, // 轉差
         NodeCorr: 80298 / 12000, // 交差
-        YinyangCorr : -1,
+        YinyangCorr: -1,
         OriginAd: 1194 - 3830,
         CloseOriginAd: 1194, // 紹熙五年甲寅
         SunLimitYang: 5680,
