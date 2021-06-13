@@ -142,6 +142,7 @@ const ClockNameList = {
     Dayan: '唐北宋前期',
     Mingtian: '南宋元明'
 }
+const GengList = '初二三四五'
 
 export const BindClock1 = Deci => {
     Deci = +('0.' + Deci)
@@ -182,25 +183,54 @@ export const BindClock1 = Deci => {
 // console.log(BindClock1('5')) // 128  9584  9999
 
 export const Clock2Deci = Clock => {
-    const ARaw = Clock[0]
-    const BRaw = Clock[1]
-    const CRaw = Clock[2]
-    const A = BranchList.indexOf(ARaw)
-    const B = HalfList.indexOf(BRaw)
-    const C = QuarList.indexOf(CRaw)
-    let Start = (A - 1) / 12 + B / 24 + C / 100 - 1 / 24
-    const End = ((Start + (C === 4 ? 0.01 / 6 : 0.01) + 1) % 1).toFixed(6)
-    Start = ((Start + 1) % 1).toFixed(6)
+    const info = '請按如下格式輸入：「子正初刻」「辰初」「未初四刻」「巳時」「申時八刻」'
+    const A = BranchList.indexOf(Clock[0])
+    const B = HalfList.indexOf(Clock[1])
+    const C = QuarList.indexOf(Clock[2])
+    if (A < 0) {
+        throw (new Error(info))
+    } else if (B < 0) {
+        throw (new Error(info))
+    }
+    let Start = 0, End = 0
+    if (Clock.length === 2) {
+        if (B <= 2) {
+            Start = (A - 1) / 12 + B / 24 - 1 / 24
+            End = (Start + 1 / 24).toFixed(6)
+        } else {
+            Start = (A - 1) / 12 - 1 / 24
+            End = (Start + 1 / 12).toFixed(6)
+        }
+        Start = ((Start + 1) % 1).toFixed(6)
+    } else if (Clock.length === 4) {
+        if (C < 0) {
+            throw (new Error(info))
+        } else if (B <= 2 && C > 4) { // 又有初正，刻數又>四
+            throw (new Error(info))
+        } else if (Clock[3] !== '刻') {
+            throw (new Error(info))
+        }
+        if (B <= 2) {
+            Start = (A - 1) / 12 + B / 24 + C / 100 - 1 / 24
+            End = ((Start + (C === 4 ? 0.01 / 6 : 0.01) + 1) % 1).toFixed(6)
+        } else {
+            Start = (A - 1) / 12 + C / 100 - 1 / 24
+            End = ((Start + (C === 8 ? 0.01 / 3 : 0.01) + 1) % 1).toFixed(6)
+        }
+        Start = ((Start + 1) % 1).toFixed(6)
+    } else {
+        throw (new Error(info))
+    }
     let Print = [{
-        title: ClockNameList['Mingtian'],
+        title: '約餘',
         data: `${Start} — ${End}`
     }]
     return Print
 }
 
-// console.log(Clock2DeciSong('子初四刻'))
+// console.log(Clock2Deci('子時八刻'))
 
-const GengList = '初二三四五'
+
 
 export const BindNightClock = (DeciRaw, Rise, LightRange) => {
     DeciRaw = +('0.' + DeciRaw)

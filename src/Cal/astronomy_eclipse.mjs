@@ -1021,7 +1021,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
     return { TheNodeAccum, TheNodeDif, Std1, Std2, StatusRaw, YinYangBorder, McorrA, McorrB }
 }
 
-const EcliMagni3 = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, NodeCycle50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
+const EcliMagni3 = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
     TheNodeAccum, TheNodeDif, TotalDeci, AcrAnomaAccum, StatusRaw, Std1, Std2, YinYangBorder, McorrA, McorrB) => {
     let MagniPortion = 10, MagniMax = 10
     if (Type <= 7) {
@@ -1373,7 +1373,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
         isNewm, isYin, isDescend, isSame, AcrWinsolsDif, AvgWinsolsDif, dd, TotalDeci, TotalDeciEx1, TheTotalNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, AvgDeci, Tcorr, OriginAccum)
     isYin = TheNodeAccum > Node50
     ////////////////////// 食分
-    let { Magni, Status, Last, TheNotEcli, TheNodeDif } = EcliMagni3(CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, NodeCycle50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
+    let { Magni, Status, Last, TheNotEcli, TheNodeDif } = EcliMagni3(CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
         TheNodeAccum, TheNodeDifRaw, TotalDeci, AcrAnomaAccum, StatusRaw, Std1, Std2, YinYangBorder, McorrA, McorrB)
     //////////////////////  食延
     const { StartDeci, EndDeci } = EcliLast3(CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, TotalDeci, TotalDeciEx1, isDescend, isYin, TheNotEcli, Denom, Anoma, MoonAcrVList, AcrAnomaAccum, AvgAnomaAccum, Anoma50, MoonLimit1, MoonLimitNone, SunLimitYang, SunLimitYin, YinYangBorder)
