@@ -20,15 +20,19 @@ export const Deg2Mansion = (MansionAccum, DegAccumList) => {
 export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
-export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
+export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci, year) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
     const { AutoPara, Type } = Bind(CalName)
     const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = AutoPara[CalName]
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
+    if (['Shoushi', 'ShoushiOld'].includes(CalName)) {
+        Sidereal += +(~~((year - 1281) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
+    }
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? WinsolsCorr : 0
+    Accum += MansionCorr || 0
     let MansionOrder = 0
-    const MansionAccum = ((Mansion + (MansionCorr || 0) + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
+    const MansionAccum = ((Mansion + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
     for (let j = 1; j <= 28; j++) {
         if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
             MansionOrder = j

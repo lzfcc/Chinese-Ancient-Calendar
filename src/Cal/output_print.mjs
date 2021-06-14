@@ -2,7 +2,7 @@ import { outputFile } from './output.mjs'
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 760, 760, false, [ // mode, YearStart, YearEnd, isAuto,
+const printData = outputFile(1, 1584, 1584, false, [ // mode, YearStart, YearEnd, isAuto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -23,7 +23,7 @@ const printData = outputFile(1, 760, 760, false, [ // mode, YearStart, YearEnd, 
     // 'ZhuanxuE',
     // 'ZhuanxuF',
     // 'TaiyiJiayin',
-    'Shiji',
+    // 'Shiji',
     // 'Taichu',
     // 'Qianzaodu',
     // 'Yuanmingbao',
@@ -95,7 +95,7 @@ const printData = outputFile(1, 760, 760, false, [ // mode, YearStart, YearEnd, 
     // 'ShoushiOld1',
     // 'Shoushi',
     // 'Shoushi1',
-    // 'Datong', 
+    'Datong', 
     // 'West', // 上授時系
     // 'Huihui',     
 ]) // 注意，-1000年爲公元前1001年，因爲沒有公元0年

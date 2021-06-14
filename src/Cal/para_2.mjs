@@ -1326,8 +1326,7 @@ export default {
         Lunar: 29.530593, // 朔策
         Anoma: 27.5546, // 轉終：近點月
         Node: 27.212224,
-        NodeCorr: -2.318369, // 交差
-        YinyangCorr: -1, // 沒有，但是似乎是這樣的
+        NodeCorr: 11.510508, // 曆五·大統曆法三上 
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
         MoonLimitNone: 13.5,

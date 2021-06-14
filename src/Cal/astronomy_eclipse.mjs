@@ -623,17 +623,17 @@ const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmN
             Tcorr = NewmNoonDif * RiseNoonDif / (1.77 * 84 / 101)
             Tcorr *= AcrDeci >= 0.5 ? 2 : 1
         } else if (['Chongxuan', 'Chongtian', 'Guantian'].includes(CalName)) { // 「定朔約餘距午前後分，與五千先相減後相乘，三萬除之；午前以減，午後倍之，以加約餘」崇天「午後以一萬三千八百八十五除之」，應該改成一萬五千八百八十五
-            Tcorr = -NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 3 // 午前，0-0.5<0, f(0.25)=-0.0208
-            Tcorr *= AcrDeci >= 0.5 ? -2 : 1
+            Tcorr = NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 3 // 午前，0-0.5<0, f(0.25)=-0.0208
+            Tcorr *= AcrDeci >= 0.5 ? 2 : -1
         } else if (Type === 9) {
-            Tcorr = -AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) / 1.5
-            Tcorr *= AvgTotalDeci >= 0.5 ? -1.5 : 1
+            Tcorr = AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) / 1.5
+            Tcorr *= AvgTotalDeci >= 0.5 ? 1.5 : -1
         } else if (Type === 10) {
-            Tcorr = -2 * AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) // 的確要倍之，這樣感覺太大了
-            Tcorr *= AvgTotalDeci >= 0.5 ? -1 : 1
+            Tcorr = 2 * AvgTotalNoonDif * (0.5 - AvgTotalNoonDif) // 的確要倍之，這樣感覺太大了
+            Tcorr *= AvgTotalDeci >= 0.5 ? 1 : -1
         } else if (Type === 11) {
-            Tcorr = -NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 0.96 //「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
-            Tcorr *= AcrDeci >= 0.5 ? -1 : 1
+            Tcorr = NewmNoonDifAbs * (0.5 - NewmNoonDifAbs) / 0.96 //「在中前爲減，中後爲加」。「退二位」。最大值一個半小時左右《中國古代的日食時差算法》
+            Tcorr *= AcrDeci >= 0.5 ? 1 : -1
         }
     } else {
         if (CalName === 'Qintian') {
@@ -955,8 +955,10 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
             const Mcorr0Descend = Math.round(Denom * (3100 / 7290))
             const Mcorr0Ascend = Math.round(Denom * (3000 / 7290))
             Mcorr0 = isDescend ? Mcorr0Descend : -Mcorr0Ascend // 5.685度        
+        } else if (CalName === 'Datong') {
+            Mcorr0 = isDescend ? 6.1534196 : -6.1532902
         } else if (Type === 11) {
-            Mcorr0 = isDescend ? 6.15335 : -6.15335
+            Mcorr0 = isDescend ? 6.1534 : -6.1533
         }
         if (CalName === 'Mingtian') {
             Mcorr = (sign1b * McorrTerm + sign2b * McorrClock) / 100
@@ -1317,7 +1319,6 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
     return { StartDeci, EndDeci, Last } // 這個last是半食延，0.xxxx
 }
 
-// 大衍第一次提出陰陽食限。宣明之後直接採用去交、食限，捨棄大衍的變動食限
 const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, OriginAccum, isNewm, CalName) => {
     const { Type, AutoPara } = Bind(CalName)
     const { SolarRaw, Sidereal, Node, Anoma, MoonAcrVList, Denom, AcrTermList,
