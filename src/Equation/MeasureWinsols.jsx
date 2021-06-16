@@ -1,11 +1,10 @@
 import React from "react";
-import { Interpolate3_big } from "../Cal/equa_sn";
+import { MeasureWinsols } from "../Cal/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      n: 11.36116,
-      initial: '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565',
+      initial: '14,7.94855,21,7.9541,22,7.9455',
     };
     this.handle = this.handle.bind(this)
   }
@@ -13,15 +12,7 @@ export default class Equa extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>n</span>
-        <input className='width4'
-          value={this.state.n}
-          onChange={e => {
-            this.setState({ n: e.currentTarget.value });
-          }}
-        />
-        <p></p>
-        <span> 數列</span>
+        <span> 日數,影長</span>
         <input className='width5'
           value={this.state.initial}
           onChange={e => {
@@ -34,7 +25,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const { Print } = Interpolate3_big(this.state.n, this.state.initial)
+      const Print = MeasureWinsols(this.state.initial)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -55,10 +46,10 @@ export default class Equa extends React.Component {
   render() {
     return (
       <div>
-        <h3>拉格朗日內插</h3>
-        <h4>不等間距高次內插</h4>
+        <h3>晷長 ⇒ 冬至時刻</h3>
+        <h4>不等間距二次內插求極大值</h4>
         {this.input()}
-        <button onClick={this.handle} className='button4-6'>Lagrange</button><span className='Deci64'>.64</span>
+        <button onClick={this.handle} className='button4-6'>不是線性插值</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     );

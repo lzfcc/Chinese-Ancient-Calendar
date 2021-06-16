@@ -8,6 +8,7 @@ import Sn5 from './Sn5'
 import Interpolate1 from './Interpolate1'
 import Interpolate2 from './Interpolate2'
 import Interpolate3 from './Interpolate3'
+import MeasureWinsols from './MeasureWinsols'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import md1 from '../note/equation.md';
@@ -38,6 +39,7 @@ export default class Equation extends React.Component {
           <p></p>
           <Interpolate2 />
           <Interpolate3 />
+          <MeasureWinsols />
           <h2>方程之什</h2>
           <Equa1 />
           {/* <h2>開方之什</h2>

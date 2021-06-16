@@ -1,6 +1,4 @@
-import {
-    big,
-} from './para_constant.mjs'
+import { big } from './para_constant.mjs'
 
 // const a = input => {
 //     input.toNumber()
@@ -190,18 +188,15 @@ export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一�
 // Li=Π(n,j=1,j≠i) (x-xj)/(xi-xj)
 export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用Deci.js
     Initial = Initial.split(/;|,|，|。|；|｜| /)
-    const x = []
-    const y = []
+    const x = [], y = [], l = []
     for (let i = 0; i < Initial.length / 2; i++) {
         x[i] = Initial[2 * i]
         y[i] = Initial[2 * i + 1]
     }
     const p = x.length - 1
-    const l = []
-    let tmp = 1
     let f = 0
     for (let i = 0; i <= p; i++) {
-        tmp = 1
+        let tmp = 1
         for (let j = 0; j < i; j++) {
             tmp *= (n - x[j]) / (x[i] - x[j])
         }
@@ -216,18 +211,15 @@ export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用Deci
 
 export const Interpolate3_big = (n, Initial) => {
     Initial = Initial.split(/;|,|，|。|；|｜| /)
-    const x = []
-    const y = []
+    const x = [], y = [], l = []
     for (let i = 0; i < Initial.length / 2; i++) {
         x[i] = Initial[2 * i]
         y[i] = Initial[2 * i + 1]
     }
     const p = x.length - 1
-    const l = []
-    let tmp = 1
     let f = 0
     for (let i = 0; i <= p; i++) {
-        tmp = big(1)
+        let tmp = big(1)
         for (let j = 0; j < i; j++) {
             tmp = tmp.mul((big.sub(n, x[j])).div(big.sub(x[i], x[j])))
         }
@@ -237,8 +229,61 @@ export const Interpolate3_big = (n, Initial) => {
         l[i] = tmp
         f = big(f).add(big(y[i]).mul(l[i]))
     }
-    const Print = 'y (' + n + ') = ' + f.toFixed(15)
-    return Print
+    const Print = `f (${n}) = ${parseFloat((+f.toFixed(15)).toPrecision(14))}`
+    return { Print, f }
 }
 // console.log(Interpolate3_big('12.1', '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
 // console.log(Interpolate3(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
+
+export const MeasureWinsols = ListRaw => {
+    const List = ListRaw.split(/;|,|，|。|；|｜| /)
+    if (List.length !== 6) {
+        throw (new Error('請輸入d1,l1,d2,l2,d3,l3'))
+    }
+    for (let i = 0; i < List.length; i++) {
+        List[i] = +List[i]
+    }
+    // const d1 = List[0]
+    const l1 = List[1]
+    // const d2 = List[2]
+    // const l2 = List[3]
+    // const d3 = List[4]
+    const l3 = List[5]
+    // const delta1 = l1 - l3
+    // const delta2 = l2 - l3
+    // const div1 = delta1 / delta2
+    // const result = (d3 - d1 - div1) / 2 + 0.5 // 以上是授時曆議原文
+    // 先判斷冬至在哪個區間
+    // if ([l1, l2, l3].indexOf((Math.max(...[l1, l2, l3]))) !== 1) {
+    //     throw (new Error('最大影長應爲l2'))
+    // }
+    // 以下不對，直接用不等間距內插吧
+    // const isLeft = Math.max(l1, l3) === l1 ? true : false // 冬至在左邊d1d2還是右邊d2d3
+    // const k = isLeft ? -(l2 - l3) / (d2 - d3) : (l2 - l1) / (d2 - d1) // 斜率
+    // const result = (isLeft ? (k * (d1 + d2) - (l1 - l2)) : (k * (d2 + d3) - (l2 - l3))) / k / 2
+    // 算法学习笔记(62): 三分法 - Pecco的文章https://zhuanlan.zhihu.com/p/337752413
+    let Small = Math.min(l1, l3)
+    let Big = Math.max(l1, l3)
+    let l = List[List.indexOf(Small) - 1]
+    let r = List[List.indexOf(Big) - 1]
+    let mid = (l + r) / 2
+    const eps = '0.00000000000000000001'
+    while (big.sub(r, l).abs().gt(eps)) {
+        mid = big.add(l, r).div(2)
+        let fl = Interpolate3_big(mid.sub(eps), ListRaw).f
+        let fr = Interpolate3_big(mid.add(eps), ListRaw).f
+        if (fl.lt(fr)) {
+            r = mid
+        } else {
+            l = mid
+        }
+    }
+    return `f (${parseFloat((+mid.toFixed(15)).toPrecision(14))}) = ${parseFloat((+Interpolate3_big(mid, ListRaw).f.toFixed(15)).toPrecision(14))}`
+}
+// console.log(MeasureWinsols('-1,-5,6,-12,7,-21')) // (4-x)x
+// console.log(MeasureWinsols('14,7.94855,21,7.9541,22,7.9455')) // 授時曆議剛開始的例子
+// console.log(MeasureWinsols('9,7.86355,26,7.87935,27,7.855'))
+// console.log(MeasureWinsols('9,7.86355,26,7.87935,28,7.83045'))
+// console.log(MeasureWinsols('0,7.59865,1,7.6377,34,7.5851'))
+
+// New.sort((a, b) => b - a)
