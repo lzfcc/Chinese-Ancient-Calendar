@@ -249,10 +249,6 @@ export const MeasureWinsols = ListRaw => {
     // const l2 = List[3]
     // const d3 = List[4]
     const l3 = List[5]
-    // const delta1 = l1 - l3
-    // const delta2 = l2 - l3
-    // const div1 = delta1 / delta2
-    // const result = (d3 - d1 - div1) / 2 + 0.5 // 以上是授時曆議原文
     // 先判斷冬至在哪個區間
     // if ([l1, l2, l3].indexOf((Math.max(...[l1, l2, l3]))) !== 1) {
     //     throw (new Error('最大影長應爲l2'))
@@ -281,9 +277,12 @@ export const MeasureWinsols = ListRaw => {
     return `f (${parseFloat((+mid.toFixed(15)).toPrecision(14))}) = ${parseFloat((+Interpolate3_big(mid, ListRaw).f.toFixed(15)).toPrecision(14))}`
 }
 // console.log(MeasureWinsols('-1,-5,6,-12,7,-21')) // (4-x)x
-// console.log(MeasureWinsols('14,7.94855,21,7.9541,22,7.9455')) // 授時曆議剛開始的例子
-// console.log(MeasureWinsols('9,7.86355,26,7.87935,27,7.855'))
-// console.log(MeasureWinsols('9,7.86355,26,7.87935,28,7.83045'))
-// console.log(MeasureWinsols('0,7.59865,1,7.6377,34,7.5851'))
+
+const avg = () => {
+    const a = (7830.337642585551 + 7830.330890052356 + 7830.347896627651 + 7830.333308480895 + 7830.320788807215 + 7830.323408937259) / 6
+    const c = (8560.8089908599 + 8560.8218455321 + 8560.8193548387 + 8560.8131256952 + 8560.8188436178) / 5
+    return (c - a) / 2
+}
+// console.log(avg())
 
 // New.sort((a, b) => b - a)

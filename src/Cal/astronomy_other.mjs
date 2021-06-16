@@ -25,8 +25,9 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = AutoPara[CalName]
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
-    if (['Shoushi', 'ShoushiOld'].includes(CalName)) {
-        Sidereal += +(~~((year - 1281) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
+    if (['Shoushi', 'ShoushiOld'].includes(CalName)) { // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
+        // 試了一下，按上面這樣區分1281前後，沒有任何變化
+        Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
     }
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? WinsolsCorr : 0
