@@ -41,7 +41,7 @@ export default (CalName, year) => {
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
-    } else if (['ShoushiOld', 'Shoushi'].includes(CalName)) {
+    } else if (['Shoushi', 'ShoushiTonggui'].includes(CalName)) {
         Solar = parseFloat(SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000).toPrecision(10))
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
@@ -59,7 +59,9 @@ export default (CalName, year) => {
         JiScOrder = (1 + JiOrder * JiSkip) % 60
     }
     let fixed = 4 // 試出來的OriginAccum能保留幾位小數
-    if (OriginYear > 8.5 * 1e7) {
+    if (Type === 11) { // 大統通軌最多有10位
+        fixed = 10
+    } else if (OriginYear > 8.5 * 1e7) {
     } else if (OriginYear > 8.5 * 1e6) {
         fixed = 5
     } else {

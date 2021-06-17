@@ -52,7 +52,7 @@ export const Bind = CalName => {
             Type = 9 // 南宋。宋志統元、乾道、淳熙、會元合在一起
         } else if (['Daming2', 'Daming3', 'Yiwei', 'Gengwu'].includes(CalName)) {
             Type = 10 // 遼金元
-        } else if (['ShoushiOld', 'ShoushiOld1', 'Shoushi', 'Shoushi1', 'Datong'].includes(CalName)) {
+        } else if (['Shoushi', 'Shoushi1', 'ShoushiTonggui', 'ShoushiTonggui1', 'Datong', 'DatongLizhi'].includes(CalName)) {
             isNewmPlus = 0
             Type = 11 // 授時
         }
@@ -270,7 +270,7 @@ const CalRange = {
     // Bentian: [
     //     [1277, 1279]
     // ],
-    Shoushi: [
+    ShoushiTonggui: [
         [1281, 1367]
     ],
     Datong: [
@@ -294,7 +294,7 @@ const CalRange = {
 }
 
 export const AutoCal = year => {
-    if (year > 1683 || year < -721) {
+    if (year < -721 || year > 1683) {
         throw (new Error('年份範圍 -721 至 1683'))
     }
     const Cals = []

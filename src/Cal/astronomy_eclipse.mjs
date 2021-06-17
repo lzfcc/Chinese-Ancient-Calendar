@@ -654,10 +654,13 @@ const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmN
                 Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4 // 四因退位            
                 Tcorr *= AvgTotalDeci > 0.5 ? -1 : 1
             }
-        } else if (['ShoushiOld', 'Shoushi', 'ShoushiOld1', 'Shoushi1'].includes(CalName)) { // 大統取消授時的月食時差改正
+        } else if (['Shoushi', 'Shoushi1', 'ShoushiTonggui', 'ShoushiTonggui1'].includes(CalName)) {
             const AcrDeciHalfRev = 0.25 - Math.abs(AcrDeci % 0.5 - 0.25)
             Tcorr = AcrDeciHalfRev ** 2 / 4.78
-            Tcorr *= AcrDeci > 0.5 ? -1 : 1 // 子前以減            
+            Tcorr *= AcrDeci > 0.5 ? -1 : 1 // 子前以減
+        } else if (CalName === 'Datong') { // 通軌大統都是加
+            const AcrDeciHalfRev = 0.25 - Math.abs(AcrDeci % 0.5 - 0.25)
+            Tcorr = (1 - AcrDeciHalfRev) / 100
         }
     }
     let TotalDeci = 0 // 食甚定餘
@@ -955,7 +958,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
             const Mcorr0Descend = Math.round(Denom * (3100 / 7290))
             const Mcorr0Ascend = Math.round(Denom * (3000 / 7290))
             Mcorr0 = isDescend ? Mcorr0Descend : -Mcorr0Ascend // 5.685度        
-        } else if (CalName === 'Datong') {
+        } else if (['Datong', 'DatongLizhi'].includes(CalName)) {
             Mcorr0 = isDescend ? 6.1534196 : -6.1532902
         } else if (Type === 11) {
             Mcorr0 = isDescend ? 6.1534 : -6.1533
@@ -1292,7 +1295,7 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, AvgDeci, Tota
             }
         } else if (Type === 11) {
             Last = Math.sqrt(((isNewm ? 20 : 30) - Magni) * Magni) * 0.00574 / MoonFormula(AcrAnomaAccum, CalName).MoonAcrV // 「如入定限行度而一」我猜是這樣            
-            Last *= CalName === 'Datong' && !isNewm ? 6 / 7 : 1
+            Last *= ['Datong', 'DatongLizhi'].includes(CalName) && !isNewm ? 6 / 7 : 1
         }
         if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
             let Portion = 0.5
