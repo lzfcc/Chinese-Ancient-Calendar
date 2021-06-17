@@ -46,8 +46,8 @@ export default class Equa extends React.Component {
   render() {
     return (
       <div>
-        <h3>晷長 ⇒ 冬至時刻</h3>
-        <h4>不等間距二次內插求極大值</h4>
+        <h3>晷長 ⇒ 冬夏至時刻</h3>
+        <h4>不等間距二次內插求極值</h4>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>不是線性插值</button><span className='Deci64'>.64</span>
         {this.result()}

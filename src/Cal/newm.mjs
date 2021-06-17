@@ -27,7 +27,7 @@ export default (CalName, year) => {
     const OriginYear = year - (OriginAd || CloseOriginAd) // 上元積年（算上）
     // const CloseWinsolsDif = CloseOriginAd - OriginAd // 統天距算
     const CloseOriginYear = year - CloseOriginAd // 距差。授時以1280開始
-    let SolarChangeAccum = 0, LunarChangeAccum = 0
+    let SolarChangeAccum = 0, LunarChangeAccum = 0, LeapSurAvgThis = 0, LeapSurAvgPrev = 0, LeapSurAvgNext = 0, OriginAccumRawThis = 0
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? 1 : -1
     if (CalName === 'West') {
@@ -42,7 +42,11 @@ export default (CalName, year) => {
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
     } else if (['Shoushi', 'ShoushiTonggui'].includes(CalName)) {
-        Solar = parseFloat(SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000).toPrecision(10))
+        Solar = parseFloat((SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000)).toPrecision(10))
+    } else if (CalName === 'Wannian') {
+        // 置曆元所距年積算為汎距，來加往減元紀為定距，以朞實乘之，四約，為積日，不滿，退除為刻，是名汎積。定距自相乘，七之八而一，所得滿百萬為日，不滿為刻及分秒，〔帶半秒已上者收作一秒〕是名節氣歲差，用減汎積，餘為定積。
+        // Solar = parseFloat((SolarRaw - (year - 1281) * 1.75 * 1e-6).toPrecision(10))       
+        SolarChangeAccum = signX * 8.75 * 1e-7 * (year - 1281) ** 2
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
@@ -67,10 +71,14 @@ export default (CalName, year) => {
     } else {
         fixed = 6
     }
+    // const WannianDingju = CloseOriginYear => {
+    //     const Dingju = CloseOriginYear + 4560 // 定距        
+    //     const OriginAccumRaw = Dingju * 365.25 - Dingju ** 2 * 8.75 * 1e-7
+    //     return OriginAccumRaw
+    // }
     const ZondeDif = CalName === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
     let OriginAccum = Type < 11 ? OriginYear * Solar + WinsolsCorr + ZondeDif + SolarChangeAccum : 0
     OriginAccum = +OriginAccum.toFixed(fixed)
-    let LeapSurAvgThis = 0, LeapSurAvgPrev = 0, LeapSurAvgNext = 0, OriginAccumRawThis = 0
     if (ZhangRange) {
         LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
         LeapSurAvgPrev = (OriginYear - 1) * ZhangMon % ZhangRange
@@ -80,11 +88,34 @@ export default (CalName, year) => {
         LeapSurAvgPrev = (OriginYear - 1) * SolarNumer % LunarNumer
         LeapSurAvgNext = (OriginYear + 1) * SolarNumer % LunarNumer
     } else if (Type < 11) {
-        const OriginAccumPrev = (OriginYear - 1) * Solar + WinsolsCorr + SolarChangeAccum
-        const OriginAccumNext = (OriginYear + 1) * Solar + WinsolsCorr + SolarChangeAccum
+        const OriginAccumPrev = (OriginYear - 1) * Solar + WinsolsCorr + signX * 0.0127 * (CloseOriginYear - 1) ** 2 / Denom
+        const OriginAccumNext = (OriginYear + 1) * Solar + WinsolsCorr + signX * 0.0127 * (CloseOriginYear + 1) ** 2 / Denom
         LeapSurAvgThis = ((OriginAccum + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
         LeapSurAvgPrev = ((OriginAccumPrev + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
         LeapSurAvgNext = ((OriginAccumNext + FirstCorr) % LunarRaw + LunarRaw) % LunarRaw
+    } else if (CalName === 'Wannian') {
+        // 置歲定積減去律應滿律總去之不盡得歲首黃鍾正律大小餘大餘命甲子筭外累加律策得次律大小餘滿律總去之 
+        // 置歲定積減去閏應滿朔策去之不盡即所求閏餘日及分秒
+        // OriginAccumRawThis = WannianDingju(CloseOriginYear)
+        // const OriginAccumRawPrev = WannianDingju(CloseOriginYear - 1)
+        // const OriginAccumRawNext = WannianDingju(CloseOriginYear + 1)
+        // OriginAccum = OriginAccumRawThis + WinsolsCorr
+        // const LeapAccumThis = OriginAccumRawThis + FirstCorr // 閏積
+        // const LeapAccumPrev = OriginAccumRawPrev + FirstCorr
+        // const LeapAccumNext = OriginAccumRawNext + FirstCorr
+        // LeapSurAvgThis = parseFloat((LeapAccumThis % Lunar).toPrecision(14))
+        // LeapSurAvgPrev = parseFloat((LeapAccumPrev % Lunar).toPrecision(14))
+        // LeapSurAvgNext = parseFloat((LeapAccumNext % Lunar).toPrecision(14))
+        OriginAccumRawThis = CloseOriginYear * SolarRaw + SolarChangeAccum
+        const OriginAccumRawPrev = (CloseOriginYear - 1) * SolarRaw + signX * 8.75 * 1e-7 * (year - 1281 - 1) ** 2
+        const OriginAccumRawNext = (CloseOriginYear + 1) * SolarRaw + signX * 8.75 * 1e-7 * (year - 1281 + 1) ** 2
+        OriginAccum = OriginAccumRawThis + WinsolsCorr
+        const LeapAccumThis = OriginAccumRawThis - FirstCorr // 閏積
+        const LeapAccumPrev = OriginAccumRawPrev - FirstCorr
+        const LeapAccumNext = OriginAccumRawNext - FirstCorr
+        LeapSurAvgThis = parseFloat(((LeapAccumThis % Lunar + Lunar) % Lunar).toPrecision(14)) // 閏餘、冬至月齡
+        LeapSurAvgPrev = parseFloat(((LeapAccumPrev % Lunar + Lunar) % Lunar).toPrecision(14))
+        LeapSurAvgNext = parseFloat(((LeapAccumNext % Lunar + Lunar) % Lunar).toPrecision(14))
     } else if (Type === 11) {
         OriginAccumRawThis = CloseOriginYear * Solar // 中積
         const OriginAccumRawPrev = (CloseOriginYear - 1) * Solar

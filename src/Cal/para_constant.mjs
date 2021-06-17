@@ -119,6 +119,8 @@ export const CalNameList = { // 按照時間順序排列
     ShoushiTonggui1: '授時(通軌無消長)',    
     Datong: '大統(通軌)',
     DatongLizhi: '大統(曆志)',
+    Wannian: '聖壽萬年',
+    // Huangzhong: '黃鐘',
     // Huihui: '回回',
     // West: '現代近似',
 }
