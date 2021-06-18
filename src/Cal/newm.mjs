@@ -41,7 +41,7 @@ export default (CalName, year) => {
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
-    } else if (['Shoushi', 'ShoushiTonggui'].includes(CalName)) {
+    } else if (CalName === 'Shoushi') {
         Solar = parseFloat((SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000)).toPrecision(10))
     } else if (CalName === 'Wannian') {
         // 置曆元所距年積算為汎距，來加往減元紀為定距，以朞實乘之，四約，為積日，不滿，退除為刻，是名汎積。定距自相乘，七之八而一，所得滿百萬為日，不滿為刻及分秒，〔帶半秒已上者收作一秒〕是名節氣歲差，用減汎積，餘為定積。
@@ -340,16 +340,10 @@ export default (CalName, year) => {
         WinsolsDifRaw: SyzygyWinsolsDifRaw,
         AcrWinsolsDifRaw: SyzygyAcrWinsolsDifRaw,
     } = AutoNewmSyzygy(0)
-    let LeapSurAcrThis = 0
-    if (ZhangRange) {
-        LeapSurAcrThis = (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange
-    } else {
-        LeapSurAcrThis = LeapSurAvgThis - NewmTcorr[1] // * Denom
-    }
+    const LeapSurAcrThis = ZhangRange ? (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange : LeapSurAvgThis - NewmTcorr[1]
     // 中氣
     let LeapNumTerm = LeapNumAvgThis > 0 ? LeapNumAvgThis : 0
-    let isLeapAdvan = 0
-    let isLeapPost = 0
+    let isLeapAdvan = 0, isLeapPost = 0
     if (isLeapThis) {
         LeapNumTerm = LeapAdjust(LeapNumTerm, TermAvgRaw, NewmInt, CalName)
         if (LeapNumTerm < 1) {
@@ -361,24 +355,10 @@ export default (CalName, year) => {
         }
     }
     // 最後是積月、月數
-    let NewmStart = 0
-    let NewmEnd = 0
-    if (isAdvance && isLeapPrev) {
-        NewmStart = 1
-    }
-    if (isLeapThis) {
-        NewmEnd = 1
-    } else {
-        NewmEnd = NewmStart
-    }
-    let TermStart = NewmStart
-    let TermEnd = NewmEnd
-    if ((isAdvance && isLeapPrev)) {
-        TermStart = 0
-    }
-    if (NewmStart && !TermStart) {
-        TermEnd = 0
-    }
+    const NewmStart = isAdvance && isLeapPrev ? 1 : 0
+    const NewmEnd = isLeapThis ? 1 : NewmStart
+    const TermStart = isAdvance && isLeapPrev ? 0 : NewmStart
+    const TermEnd = NewmStart && !TermStart ? 0 : NewmEnd
     return {
         LeapLimit, OriginYear, JiYear, JiScOrder, OriginAccum, AccumPrint,
         NewmAvgSc, NewmAvgDeci,

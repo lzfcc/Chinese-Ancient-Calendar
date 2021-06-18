@@ -654,7 +654,7 @@ const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmN
                 Tcorr = AvgTotalDeciHalfRev ** 2 * 0.4 // 四因退位            
                 Tcorr *= AvgTotalDeci > 0.5 ? -1 : 1
             }
-        } else if (['Shoushi', 'Shoushi1', 'ShoushiTonggui', 'ShoushiTonggui1'].includes(CalName)) {
+        } else if (['Shoushi', 'Shoushi1'].includes(CalName)) {
             const AcrDeciHalfRev = 0.25 - Math.abs(AcrDeci % 0.5 - 0.25)
             Tcorr = AcrDeciHalfRev ** 2 / 4.78
             Tcorr *= AcrDeci > 0.5 ? -1 : 1 // 子前以減
@@ -959,7 +959,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
             const Mcorr0Ascend = Math.round(Denom * (3000 / 7290))
             Mcorr0 = isDescend ? Mcorr0Descend : -Mcorr0Ascend // 5.685度        
         } else if (['Datong', 'DatongLizhi'].includes(CalName)) {
-            Mcorr0 = isDescend ? 6.1534196 : -6.1532902
+            Mcorr0 = isDescend ? 6.153419 : -6.1532905
         } else if (Type === 11) {
             Mcorr0 = isDescend ? 6.1534 : -6.1533
         }

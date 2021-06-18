@@ -25,7 +25,7 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, Winso
     const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = AutoPara[CalName]
     let { Sidereal, Solar } = AutoPara[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
-    if (['ShoushiTonggui', 'Shoushi'].includes(CalName)) { // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
+    if (CalName === 'Shoushi') { // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
         // 試了一下，按上面這樣區分1281前後，沒有任何變化
         Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
     }
@@ -85,18 +85,18 @@ ${DuskstarName}${DuskstarDeg}`
 // }
 
 export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
-    const isNewmPlus = Bind(CalName)
-    let Plus = 3.5 // 若不用進朔，需要改成3.5
+    const { isNewmPlus } = Bind(CalName)
+    let Plus = 3.75 // 若不用進朔，需要改成3.75
     if (isNewmPlus) {
         Plus = 2.75
         if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
             Plus = 3
         }
     }
-    while (LeapNumTerm >= 2 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + Plus)) {
+    while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + Plus)) { // 原來是LeapNumTerm >= 2
         LeapNumTerm--
     }
-    while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - Plus)) {
+    while (LeapNumTerm <= 12 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - Plus)) {
         LeapNumTerm++
     }
     return LeapNumTerm

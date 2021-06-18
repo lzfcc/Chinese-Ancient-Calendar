@@ -41,7 +41,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         title: '現代近似',
         data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
     }]
-    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'ShoushiTonggui']
+    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Fengyuan', 'Guantian', 'Zhantian']
     List1 = CalName ? [CalName] : List1 // 這行用來給誤差分析程序
     List2 = CalName ? [CalName] : List2
@@ -197,8 +197,8 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
         title: '球面三角',
         data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4), 0]
     }]
-    const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'ShoushiTonggui']
-    const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'ShoushiTonggui']
+    const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
+    const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
         List1.map(title => {
             let EclpLongiPrint = '-'
@@ -215,7 +215,7 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
             const Equa2EclpDif = Func.Equa2EclpDif
             const Eclp2EquaDif = Func.Eclp2EquaDif
             let Eclp2EquaLati = 0
-            if (title === 'ShoushiTonggui') {
+            if (title === 'Shoushi') {
                 Eclp2EquaLati = Func.Eclp2EquaLati
             } else if (List2.indexOf(title) > 0) {
                 Eclp2EquaLati = AutoLongi2Lati(LongiRaw, 0.5, title, 1).Lati
@@ -263,7 +263,7 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
     const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
     const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
-    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'ShoushiTonggui'].map(title => {
+    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
         const Eclp = Deg2Mansion(Deg, EclpList, CalName)
         const EquaList = eval('EquaAccumList' + title)
@@ -299,7 +299,7 @@ export const BindMansion2Deg = (Mansion, CalName) => {
     const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
     const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
     const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
-    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'ShoushiTonggui'].map(title => {
+    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
         const Eclp = Mansion2Deg(Mansion, EclpList, CalName)
         const EquaList = eval('EquaAccumList' + title)
@@ -422,7 +422,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDeci, f, Sidereal, year) => {
         data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, (WestC1 - WestC).toFixed(4), `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0, (WestD1 - WestD).toFixed(4)]
     }]
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'ShoushiTonggui'].map(title => {
+        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
             let Lati1Print = '-'
             let LatiPrint = '-'
             let LatiInacPrint = '-'
@@ -553,7 +553,7 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
     }
     let Print = []
     Print = Print.concat(
-        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'ShoushiTonggui'].map(title => {
+        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
             let NodeWinsolsDifDegPrint = '-'
             let WhiteLongiPrint = '-'
             let EquaLongiPrint = '-'
@@ -618,7 +618,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, Wi
     }
     let Print1 = []
     Print1 = Print1.concat(
-        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'ShoushiTonggui', 'Datong'].map(title => {
+        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -704,7 +704,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, W
     }
     let Print1 = []
     Print1 = Print1.concat(
-        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'ShoushiTonggui', 'Datong', 'DatongLizhi'].map(title => {
+        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong', 'DatongLizhi'].map(title => {
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
@@ -773,4 +773,4 @@ const InacPrintAnaly_SunTcorr = (CalName, AnomaAccum, year) => {
     }
     return SunTcorrInac
 }
-// console.log (InacPrintAnaly_SunTcorr('ShoushiTonggui', 7, 1247))
+// console.log (InacPrintAnaly_SunTcorr('Shoushi', 7, 1247))

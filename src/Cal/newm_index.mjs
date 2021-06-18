@@ -382,12 +382,7 @@ export default (CalName, YearStart, YearEnd) => {
                 YearInfo += `${ScList[JiScOrder]}紀${ThisYear.JiYear}`
             }
             if (Type <= 10) {
-                if (OriginMonNum === 2) {
-                    YearInfo += `雨`
-                } else {
-                    YearInfo += `冬`
-                }
-                YearInfo += `${((OriginAccum % 60 + 60) % 60).toFixed(4)}`
+                YearInfo += (OriginMonNum === 2 ? '雨' : '冬') + ((OriginAccum % 60 + 60) % 60).toFixed(4)
             }
             if (Type === 2) {
                 YearInfo += `  平${ThisYear.LeapSurAvgThis}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${LeapLimit}`
@@ -400,19 +395,19 @@ export default (CalName, YearStart, YearEnd) => {
             }
         }
         if (AccumPrint) {
-            YearInfo += ' ' + AccumPrint
+            YearInfo += ` ${AccumPrint}`
         }
         let NewmEcliPrint = [], SyzygyEcliPrint = []
         if ((NewmEcli || []).length) {
             NewmEcliPrint = NewmEcli.join('')
-            YearInfo += `\n` + NewmEcliPrint
+            YearInfo += `\n${NewmEcliPrint}`
         }
         if ((SyzygyEcli || []).length) {
-            SyzygyEcliPrint = `<span class='eclipse-wrap'>` + SyzygyEcli.join('') + `</span>`
+            SyzygyEcliPrint = `<span class='eclipse-wrap'>${SyzygyEcli.join('')}</span>`
             if ((NewmEcli || []).length > 0) {
                 YearInfo += SyzygyEcliPrint
             } else {
-                YearInfo += `\n` + SyzygyEcliPrint
+                YearInfo += `\n${SyzygyEcliPrint}`
             }
         }
         const step = []
@@ -462,13 +457,11 @@ export default (CalName, YearStart, YearEnd) => {
     YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年
     YearMemo[1] = AutoNewm(CalName, YearStart) // 今年
     const result = []
-    if (YearEnd === undefined) {
-        YearEnd = YearStart
-    }
+    YearEnd = YearEnd === undefined ? YearStart : YearEnd
     for (let year = YearStart; year <= YearEnd; year++) {
         YearMemo[2] = AutoNewm(CalName, year + 1) // 明年
         result.push(calculate(year))
-        YearMemo[0] = YearMemo[1] // YearMemo 数组滚动，避免重复运算
+        YearMemo[0] = YearMemo[1] // 数组滚动，避免重复运算
         YearMemo[1] = YearMemo[2]
     }
     return result
