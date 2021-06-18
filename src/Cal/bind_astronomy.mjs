@@ -54,7 +54,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
                 AutoDifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
             }
             const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
-            const { SunTcorr, MoonTcorr, NodeAccumCorrA } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            const { SunTcorr, MoonTcorr, MoonAcrV, NodeAccumCorrA } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             let SunTcorrPrint = '-'
             let SunTcorrInacPrint = '-'
@@ -65,7 +65,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
             const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
             const SunDifAccumInac = SunDifAccum ? SunDifAccum - WestSun : 0
             const SunDifAccumInacPrint = SunDifAccumInac ? SunDifAccumInac.toFixed(4) : '-'
-            const MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(4) : '-'
+            let MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(4) : '-'
             const MoonDifAccumInac = MoonDifAccum ? MoonDifAccum - WestMoon : '-'
             const MoonDifAccumInacPrint = MoonDifAccum ? MoonDifAccumInac.toFixed(4) : '-'
             if (SunTcorr) {
@@ -80,6 +80,9 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
                 MoonTcorrPrint = MoonTcorr.toFixed(5)
                 MoonTcorrInac = MoonTcorr - WestMoonTcorr
                 MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
+            }
+            if (MoonAcrV) {
+                MoonDifAccumPrint += `\n${MoonAcrV.toFixed(4)}`
             }
             if (NodeAccumCorrA) {
                 NodeAccumCorrPrint = NodeAccumCorrA.toFixed(4)
@@ -318,20 +321,21 @@ export const BindMansion2Deg = (Mansion, CalName) => {
 export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
     const { Type, AutoPara } = Bind(CalName)
     const { Solar, SolarRaw } = AutoPara[CalName]
-    LongiRaw %= Solar || SolarRaw
-    LongiRaw += WinsolsDeci - 0.5 // 以正午爲準
-    let Longi2Lati = {}
-    let Longi2LatiA = {}
-    let Longi2LatiB = {}
-    let special = 0
-    // 公式曆法加上日躔
-    let Plus1 = 0
-    let Plus2 = 0
-    if ((['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].includes(CalName) || Type === 11) && !isBare) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔
-        Plus1 = AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
+    let special = 0, Plus1 = 0, Plus2 = 0
+    LongiRaw = ~~(LongiRaw + WinsolsDeci) - WinsolsDeci
+    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 WinsolsDeci 0.3, LongiRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LongiRaw 2.8，該日3.1，去掉小數點是3
+    } else if (CalName === 'Chongxuan') { // 崇玄「昏後夜半」
+        Plus1 = 1
+        Plus2 = 0.5
+    } else { // 其他假設是午中
+        Plus1 = 0.5
+        Plus2 = 0.5
     }
-    if (CalName === 'Chongxuan') { // 崇玄說昏後夜半
-        Plus1 = -0.5
+    LongiRaw %= Solar || SolarRaw
+    let Longi2Lati = {}, Longi2LatiA = {}, Longi2LatiB = {}
+    // 公式曆法加上日躔
+    if ((['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].includes(CalName) || Type === 11) && !isBare) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔。
+        Plus1 = AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
     }
     const Longi1 = LongiRaw + Plus1
     const Longi2 = LongiRaw + Plus2
@@ -374,7 +378,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // �
         Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
-        Longi2Lati = Hushigeyuan(Longi1)
+        Longi2Lati = Hushigeyuan(Longi1, CalName)
     }
     let Lati = 0
     let Lati1 = 0
@@ -422,7 +426,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDeci, f, Sidereal, year) => {
         data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, (WestC1 - WestC).toFixed(4), `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0, (WestD1 - WestD).toFixed(4)]
     }]
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
+        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi', 'Datong'].map(title => {
             let Lati1Print = '-'
             let LatiPrint = '-'
             let LatiInacPrint = '-'

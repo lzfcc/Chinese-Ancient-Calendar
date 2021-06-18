@@ -52,7 +52,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right'>
+      <div className='ans table2 right' style={{ whiteSpace: "pre-wrap" }}>
         <h3>近地點入轉</h3>
         <table>
           <tr>

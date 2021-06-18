@@ -193,8 +193,9 @@ const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
 
 }
 // 弧矢割圓術黃赤轉換。跟元志六《黃赤道率》立成表分毫不差，耶！！！
-export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》頁629
+export const Hushigeyuan = (LongiRaw, CalName) => { // 變量名見《中國古代曆法》頁629
     // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915    
+    LongiRaw += 1e-12
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
     const pAnother = 23.71 // 二至黃赤內外半弧弦
     const q = 56.0268 // OK
@@ -205,11 +206,12 @@ export const Hushigeyuan = LongiRaw => { // 變量名見《中國古代曆法》
     //////////晷漏//////// 
     // const v2 = LatiFunc.h
     const SunHundred = 6 * ON + 1 // 日行百刻度
-    const Banhubei = p2Another * 19.9614 / pAnother // 19.9614：二至出入差半弧背
+    const Banhubei = p2Another * (['Datong', 'DatongLizhi'].includes(CalName) ? 14.5554 : 19.9614) / pAnother // 19.9614：二至出入差半弧背 // 根據大統晨昏立成，14.5554與冬至初日相合
     const Rise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
     //  const Duskstar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
     return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati, Lati1, Rise }
 }
+
 const Hushigeyuan_Ex = (LongiRaw, e) => { // 度數，黃赤交角
     const r = 60.875
     const h = RoundL2H(e)
@@ -335,10 +337,7 @@ export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交
     const v0 = Sidereal25 - Math.abs(NodeEclp - Sidereal25) // NodeEclpRev。黃白正交到二至的距離，黃白正交在回歸年中的位置：正交在二至後初末限，冬至距正交積度
     const d = v0 * k / Sidereal25 // 定差EH
     const a0 = k - d // 距差BH：白赤交點赤經
-    let sign2 = 1
-    if (NodeEclpHalf < Sidereal25) { // 初限- 末限+
-        sign2 = -1
-    }
+    const sign2 = NodeEclpHalf < Sidereal25 ? -1 : 1 // 初限- 末限+
     let base = Solar / 4
     if (NodeEclp >= Sidereal50) {
         base = Solar * 0.75

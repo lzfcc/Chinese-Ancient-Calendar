@@ -1223,7 +1223,7 @@ export default {
         NodeCorr: 26.018786,
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
-        MoonLimitNone: 13.5,
+        MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
         AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
@@ -1249,7 +1249,7 @@ export default {
         NodeCorr: 26.018786,
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
-        MoonLimitNone: 13.5,
+        MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
         AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
@@ -1275,7 +1275,7 @@ export default {
         NodeCorr: 26.018786,
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
-        MoonLimitNone: 13.5,
+        MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
         AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
@@ -1298,15 +1298,15 @@ export default {
         Sidereal: 365.2575,
         Lunar: 29.530593, // 朔策。秒單位100，分10000
         Node: 27.212224,
-        NodeCorr: 26.0388,
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
-        MoonLimitNone: 13.5,
+        MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
-        AnomaCorr: 13.0205, // 轉應：曆元前冬至距月過近地點
         WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
         FirstCorr: 20.205, // 閏應：曆元前冬至月齡
+        AnomaCorr: 13.0205, // 轉應：曆元前冬至距月過近地點
+        NodeCorr: 26.0388,
         PartRange: 0.082, // 限法
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,
@@ -1329,7 +1329,7 @@ export default {
         NodeCorr: 11.510508, // 曆五·大統曆法三上 
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
-        MoonLimitNone: 13.5,
+        MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         WinsolsCorr: 55.0375, // 氣應
         FirstCorr: 18.20708, // 閏應
@@ -1354,7 +1354,7 @@ export default {
         Node: 27.212224,
         SunLimitYang: 6,
         SunLimitYin: 8,
-        MoonLimitNone: 13.5,
+        MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         NodeCorr: 20.4734,
         WinsolsCorr: -55.6089,
