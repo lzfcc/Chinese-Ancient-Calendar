@@ -1211,7 +1211,7 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
                     Last += TheNodeDif <= 520 ? 0.5 : 0
                     Last += TheNodeDif <= 260 ? 0.5 : 0
                 }
-            } else { // 宣明沒有食延，暫用五紀            
+            } else { // 宣明食延與五紀完全一樣
                 Last = Magni * (isNewm ? 6 / 5 : 4 / 3)
             }
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AcrAnomaAccum, CalName)
