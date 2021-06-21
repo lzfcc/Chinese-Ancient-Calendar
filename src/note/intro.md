@@ -523,12 +523,11 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 ### 2. 文件功能
 
-核心计算程序在 `/src/Cal` 目录下，有 9 个板块，各文件功能说明：
+核心计算程序在 `/src/Cal` 目录下，有 8 个板块，各文件功能说明：
 
 - `para_` 参数
     - `para_constant` 全局常量参数
-    - `para_1` 四分魏晋南北系历法参数
-    - `para_2` 隋唐宋元历法参数
+    - `para_calendars` 各历法参数 
     - `para_auto-constant` 根据历法自动选择相应常量
     - `para_generate` 生成参数的临时文件
 - `newm_` 朔闰表模块
@@ -544,6 +543,7 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
     - `astronomy_Accum2Mansion` 黄赤道积度转换为入宿度
     - `astronomy_formula` 使用公式进行计算的历法，`astronomy_table` 使用表格进行计算的历法，`astronomy_west` 使用现代方法进行计算。包含黄赤转换、经纬转换、月亮坐标转换
     - `astronomy_other` 積度轉宿度，進朔，月行九道
+    - `astronomy_bind` 路由模块，根据历法自动选择天文计算
 - `modulo_` 同馀模块
     - `modulo_continued-frac` 分数连分数
     - `modulo_continued-frac1` 小数连分数
@@ -562,9 +562,6 @@ $ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
     - `time_decimal2clock` 日分转换为辰刻
     - `time_era` 年干支转换
     - `time_jd2date` 儒略日、日期转换
-- `bind_` 路由模块
-    - `bind` 根据历法自动选择朔闰计算
-    - `bind_astronomy` 根据历法自动选择天文计算
 - `output_`其他
     - `output` 输出准备
     - `output_print` 本地打印入口。`const printData = outputFile(2, 1255, 1255, 0` 第一个数字为模式，`1` 为朔闰表，`2` 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持
@@ -821,6 +818,10 @@ a = [0, ...a]
 #### 6-19 `1.02`
 
  **核心** 明晰授時系的區別：授時、大統通軌<n>實行</n>、大統曆志。將大統晨昏分換成應天晷刻。徹底解決授時系交食：交定度、月食食分、食延、 TheWinsolsDif 定義。修改授時系限行度，躔離改正完全沒問題了。修復閏月調整問題：本來是 `LeapNumTerm >= 2`，換成 1。修改步軌漏夜半的定義。 **文字** 凡五萬九千字。
+
+#### 6-21 `前端 1.06`
+
+調整代碼結構：把 AutoCal 的實行年份、Bind 的 `Type, isAcr, isNewmPlus` 全部移到曆法參數中，兩個曆法參數文件合并，刪掉 `bind.mjs`。
 
 ### Todo list
 

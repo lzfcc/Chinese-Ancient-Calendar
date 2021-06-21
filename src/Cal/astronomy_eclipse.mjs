@@ -1,8 +1,8 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 import { frc } from './para_constant.mjs'
 import { AutoTcorr, AutoDifAccum, MoonFormula } from './astronomy_acrv.mjs'
 import { Interpolate3 } from './equa_sn.mjs'
-import { AutoLongi2Lati } from './bind_astronomy.mjs'
+import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { AutoQuar, AutoMoonAvgV, AutoMoonTcorrDif, AutoNodePortion, AutoNodeCycle } from './para_auto-constant.mjs'
 
 const ExMagni = (Magni, Type, CalName, isNewm) => {
@@ -65,8 +65,7 @@ const ExMagni = (Magni, Type, CalName, isNewm) => {
 }
 
 const Eclipse1 = (NodeAccum, CalName) => {
-    const { AutoPara, Type } = Bind(CalName)
-    const { Node, Lunar } = AutoPara[CalName]
+    const { Type, Node, Lunar } = Para[CalName]
     const MoonAvgVDeg = AutoMoonAvgV(CalName)
     const Node50 = Node / 2
     const Node25 = Node / 4
@@ -206,7 +205,7 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
     return { TotalDeci, NoonDif, Tcorr }
 }
 
-const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, i, Leap, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci) => {
+const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci) => {
     let Status = 0
     if (isNewm) {
         if (isYin) {
@@ -221,7 +220,7 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
         if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) { // 《劉洪濤》頁458。最後有個條件是五星伏見，目前沒辦法加上去
             if (isYin) {
                 if (NodeDif >= 13 / 12) {
-                    if (NoonDif < 1.5 / 12 && ((i === 5 && !isBefore) || (i === 6 && isBefore))) { // 南方三辰                        
+                    if (NoonDif < 1.5 / 12 && ((Month === 5 && !isBefore) || (Month === 6 && isBefore))) { // 南方三辰                        
                         Status = 0
                     } else if (WinsolsDif > Solar * 4 / 24 && WinsolsDif < Solar * 8 / 24 && !isFast && TotalDeci > 7 / 12) {
                         Status = 0
@@ -255,7 +254,7 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                         Status = 0
                     } else if (SummsolsDif <= Lunar && NodeDif >= 12.75 / 12) {
                         Status = 0
-                    } else if ((i === 6 || (Leap === 4 && i === 4)) && NodeDif >= 13 / 12) {
+                    } else if ((Month === 6 || (Leap === 4 && Month === 4)) && NodeDif >= 13 / 12) {
                         Status = 0
                     } else if (SummsolsDif < Solar * 4 / 24) {
                         Status = 0
@@ -263,7 +262,7 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                 } else if (NoonDif < 2 / 12 && NodeDif >= 13 / 12) {
                     if (SummsolsDif <= 20) {
                         Status = 0
-                    } else if ((i === 6 || (Leap === 4 && i === 4))) {
+                    } else if ((Month === 6 || (Leap === 4 && Month === 4))) {
                         Status = 0
                     }
                 } else if (NoonDif < 1 / 12 && SummsolsDif < Solar * 5 / 24) {
@@ -557,9 +556,8 @@ const EcliLast2 = (CalName, Magni, TotalDeci, AnomaAccum, Denom) => {
 }
 
 // 春夏秋冬各三月，那麼閏月怎麼辦呢，所以輸入的時候應該用day的noleapmon，閏月還是上一個月
-const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDifRaw, isNewm, CalName, i, Leap) => {
-    const { AutoPara, Type } = Bind(CalName)
-    const { Node, Lunar, Anoma, Solar, Denom, NodeDenom } = AutoPara[CalName]
+const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDifRaw, isNewm, CalName, Month, Leap) => {
+    const { Type, Node, Lunar, Anoma, Solar, Denom, NodeDenom } = Para[CalName]
     const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const Node50 = Node / 2
     const Node25 = Node / 4
@@ -578,17 +576,17 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDifRaw, isNewm, CalName
     const isBefore = NodeAccumHalf > Node25 // 交後，在交點之後    
     const isFast = AnomaAccum < Anoma / 2 // AnomaAccum > Anoma * 0.25 && AnomaAccum <= Anoma75    
     let Season = 1
-    if (i >= 1 && i <= 3) {
-    } else if (i >= 4 && i <= 6) {
+    if (Month >= 1 && Month <= 3) {
+    } else if (Month >= 4 && Month <= 6) {
         Season = 2
-    } else if (i >= 7 && i <= 9) {
+    } else if (Month >= 7 && Month <= 9) {
         Season = 3
     } else {
         Season = 4
     }
     //  下戊寅食甚時刻修正（大業月食食甚無修正）。當然要先算出是否食，再來修正。戊寅時法6503：半日法，時餘：不足半辰的日分數的12倍。離交點越遠，修正值越大
     const { TotalDeci, NoonDif, Tcorr } = EcliTcorr2(isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin, Season, NodeDif, NodeDif12, AnomaAccum, AcrDeci, Denom, WinsolsDif, WinsolsDifHalf, WinsolsDifHalfRev)
-    let Status = EcliStatus2(isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, i, Leap, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci)
+    let Status = EcliStatus2(isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci)
     let Magni = EcliMagni2(Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50, Solar75, Solar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, NodeDif12, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci, Tcorr)
     const MagniFunc = ExMagni(Magni, Type, CalName, isNewm)
     Magni = MagniFunc.Magni
@@ -1323,11 +1321,10 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
 }
 
 const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, OriginAccum, isNewm, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    const { SolarRaw, Sidereal, Node, Anoma, MoonAcrVList, Denom, AcrTermList,
+    const { Type, SolarRaw, Sidereal, Node, Anoma, MoonAcrVList, Denom, AcrTermList,
         SunLimitNone, MoonLimitNone, SunLimitNoneYang, SunLimitNoneYin, SunLimitYang, SunLimitYin
-    } = AutoPara[CalName]
-    let { Solar, MoonLimit1, MoonLimitDenom } = AutoPara[CalName]
+    } = Para[CalName]
+    let { Solar, MoonLimit1, MoonLimitDenom } = Para[CalName]
     Solar = Solar || SolarRaw
     AcrWinsolsDif %= Solar // 注意，AcrWinsolsDif是定朔距冬至日，而非積度
     AvgWinsolsDif %= Solar
@@ -1388,21 +1385,21 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
 // console.log(Eclipse3(13.81, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 1, 'Chongxuan')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
 // console.log(Eclipse3(26 + 5644.4277 / 10590, 22.052297, 0.4495401228, 0.8172804533, 175.6583788196 + 0.02675303116, 175.6583788196, 0, 1, 'Chongtian')) // 1024年崇天曆日食，藤豔輝論文
 // (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, OriginAccum, isNewm, CalName)
-export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, i, Leap, OriginAccum, WinsolsDeci) => { // 這就不用%solar了，後面都模了的
-    const { Type } = Bind(CalName)
+export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, Month, Leap, OriginAccum, WinsolsDeci) => { // 這就不用%solar了，後面都模了的
+    const { Type } = Para[CalName]
     let Eclipse = {}
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = Eclipse1(NodeAccum, CalName)
     } else {
         if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'Daye', NodeAccum).NodeAccumCorrA
-            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'Daye', i, Leap)
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'Daye', Month, Leap)
         } else if (CalName === 'Shenlong') {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'LindeA', NodeAccum).NodeAccumCorrA
-            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'LindeA', i, Leap)
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'LindeA', Month, Leap)
         } else if (Type <= 6) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeAccumCorrA
-            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, i, Leap)
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, Month, Leap)
         } else {
             WinsolsDeci = WinsolsDeci || OriginAccum - Math.floor(OriginAccum)
             const Rise = AutoLongi2Lati(AcrWinsolsDif, WinsolsDeci, CalName).Rise / 100

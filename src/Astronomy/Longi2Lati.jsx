@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindLongi2Lati } from '../Cal/bind_astronomy'
+import { BindLongi2Lati } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {

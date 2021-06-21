@@ -1,4 +1,4 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 import {
     BranchList, HalfList, StemList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh,
 } from './para_constant.mjs'
@@ -24,7 +24,7 @@ const ClockWest = Deci => {
 }
 
 const ClockWeijin = (Deci, CalName) => {
-    const { Type } = Bind(CalName)
+    const { Type } = Para[CalName]
     Deci = big(Deci)
     const Portion = big.div(100, 12)
     if (CalName === 'Easthan' || Type >= 5) {
@@ -122,7 +122,7 @@ const ClockQing = Deci => { // 清代96刻
 }
 
 export const AutoClock = (Deci, CalName) => {
-    const { Type } = Bind(CalName)
+    const { Type } = Para[CalName]
     let Print = ''
     if (Type <= 6 && !['LindeA', 'LindeB'].includes(CalName)) {
         Print = ClockWeijin(Deci, CalName)

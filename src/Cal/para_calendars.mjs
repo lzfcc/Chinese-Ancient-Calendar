@@ -1,5 +1,1215 @@
 export default {
+    Yin: {
+        Type: 1,
+        Denom: 940, // 日法
+        Lunar: 27759 / 940, // 朔策
+        Solar: 365.25, // 歲實
+        OriginAd: -2760366, // 上元積年的公曆
+        // JdOrigin: 1704250.5,
+        JdWinsols: 1704250.5 + 46 * 365.25,
+        OriginYearSc: 51, // 上元年干支
+        ZhengNum: 0, // 年首子月。這兩個一定要記得一起調
+        OriginMonNum: 0, // 正月建子
+        YuanRange: 4560, // 元
+        JiRange: 1520, // 紀
+        BuRange: 76, // 蔀
+        isTermLeap: 0, // 是否用無中氣置閏法
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Zhou: {
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2760423,
+        // JdOrigin: 1683430.5,
+        JdWinsols: 1721051.25,
+        OriginYearSc: 54,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Huangdi: {
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        // JdOrigin: 1783510.5,
+        JdWinsols: 1721052.75,
+        OriginAd: -2760149,
+        OriginYearSc: 28,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Lu: { // 無加小餘
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 1,
+        OriginMonNum: 1,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuA: { // 隱元-721,宣元-607
+        Type: 1,
+        ApplyYear: [[-721, -607]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0, // 隱元建丑
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 539 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuB: { // 宣二-606，成四-586
+        Type: 1,
+        ApplyYear: [[-606, -586]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 469 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuC: { // 成五-585，襄六-566
+        Type: 1,
+        ApplyYear: [[-585, -566]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 403 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuD: { // 襄七-565，襄廿五-547
+        Type: 1,
+        ApplyYear: [[-565, -547]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 348 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuE: { // 襄廿六-546，昭十二-529
+        Type: 1,
+        ApplyYear: [[-546, -529]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 280 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuF: { // 昭十三-528，定元-508
+        Type: 1,
+        ApplyYear: [[-528, -508]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 213 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuG: { // -507，-466
+        Type: 1,
+        ApplyYear: [[-507, -466]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 147 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    XiaDong: { // 冬至曆元夏曆
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2759875,
+        // JdOrigin: 1883590.5,
+        JdWinsols: 1721054.25,
+        OriginYearSc: 2,
+        ZhengNum: 2,
+        OriginMonNum: 2,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0, // 0:固定冬至，1:無中氣
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    XiaYu: { // 雨水曆元夏曆
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -60.875, // 冬至距雨水日數
+        WinsolsOriginMon: -(2 + 7 / 114), // 冬至距雨水閏餘
+        OriginAd: -2759875,
+        // JdOrigin: 1883650.5,
+        JdWinsols: 1721053.375,
+        OriginYearSc: 2,
+        ZhengNum: 2,
+        OriginMonNum: 2,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    ZhuanxuA: {
+        Type: 1,
+        ApplyYear: [[-365, -306]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305,
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52, // 曆元距甲子日數
+        OriginDayCorr: 5,
+        ZhengNum: 2, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    ZhuanxuB: { // 朱桂昌《顓頊日曆表》：暫定秦昭王元年前306行十月爲歲首
+        Type: 1,
+        ApplyYear: [[-305, -246]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305,
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52,
+        OriginDayCorr: 5,
+        ZhengNum: -1, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    ZhuanxuC: { // 秦始皇元年前246朔餘增加3/4日。《顓頊日曆表》第545頁
+        Type: 1,
+        ApplyYear: [[-245, -206]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305,
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52,
+        OriginDayCorr: 5,
+        ZhengNum: -1, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 3 / 4,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    ZhuanxuD: { // 高帝元年前206朔餘減少210分
+        Type: 1,
+        ApplyYear: [[-205, -183]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305,
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52,
+        OriginDayCorr: 5,
+        ZhengNum: -1, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 3 / 4 - 210 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    ZhuanxuE: { // 前162年改變閏章（但我看他提供的資料，應該是前186-182之間變化），減朔餘25分。《顓頊日曆表》第544頁：出土資料的閏年：前251、208、205、202、199、197、191、186、180、164、153、151、134、129、110
+        Type: 1,
+        ApplyYear: [[-182, -162]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305,
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52,
+        OriginDayCorr: 5,
+        ZhengNum: -1, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 1,
+        WinsolsCorr: 3 / 4 - 210 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    ZhuanxuF: {
+        Type: 1,
+        ApplyYear: [[-161, -104]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305,
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52,
+        OriginDayCorr: 5,
+        ZhengNum: -1, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 1,
+        WinsolsCorr: 3 / 4 - 235 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    TaiyiJiayin: {
+        Type: 1,
+        Denom: 940, // 日法
+        Lunar: 27759 / 940, // 朔策
+        Solar: 365.25, // 歲實
+        OriginAd: -103 - 284183,
+        OriginYearSc: 51, // 上元甲寅
+        ZhengNum: 2,
+        OriginMonNum: 2,
+        YuanRange: 4560, // 元
+        JiRange: 1520, // 紀
+        BuRange: 76, // 蔀
+        isTermLeap: 1, // 是否用無中氣置閏法        
+    },
+    Shiji: {
+        Type: 1,
+        ApplyYear: [[-104, 85]],
+        Denom: 940, // 日法
+        Lunar: 27759 / 940, // 朔策
+        Solar: 365.25, // 歲實
+        OriginAd: -1566, // 上元積年的公曆
+        // JdOrigin: 1704249.75,
+        JdWinsols: 1704249.75 + 46 * 365.25,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+        Node: 27.212729649262943,
+        OriginYearSc: 0, // 上元年干支
+        ZhengNum: 2,
+        OriginMonNum: 2,
+        YuanRange: 4560, // 元
+        JiRange: 1520, // 紀
+        BuRange: 76, // 蔀
+        isTermLeap: 1, // 是否用無中氣置閏法
+        WinsolsCorr: -0.75, // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Taichu: {
+        Type: 1,
+        ApplyYear: [[-104, 85]],
+        Denom: 81,
+        Lunar: 2392 / 81,
+        Solar: 365 + 385 / 1539,
+        OriginAd: -143230,
+        OriginCloseAd: -103,
+        // JdOrigin: 1683430.5,
+        JdWinsols: 1683430.5 + 103 * 365.25,
+        OriginYearSc: 13,
+        ZhengNum: 2,
+        OriginMonNum: 2,
+        YuanRange: 4617, // 元法
+        TongRange: 1539, // 統法
+        isTermLeap: 1,
+        // MansionRaw: [8, 26], // 牽牛初度。
+        MansionRaw: [9, 0], // 這兩個結果都等於牛0
+        MansionFractPosition: 8,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+        Node: 27 + 187 / 879,
+    },
+    Qianzaodu: {
+        Type: 1,
+        Denom: 81,
+        Lunar: 2392 / 81,
+        Solar: 365 + 385 / 1539,
+        OriginAd: -2760366,
+        // JdOrigin: 1704250.5,
+        JdWinsols: 1721052,
+        OriginYearSc: 51,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Yuanmingbao: {
+        Type: 1,
+        Denom: 81,
+        Lunar: 2392 / 81,
+        Solar: 365 + 385 / 1539,
+        OriginAd: -103 - 2760377,
+        OriginYearSc: 57,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Easthan: {
+        Type: 1,
+        ApplyYear: [[85, 263]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2760480,
+        OriginCloseAd: -160,
+        // JdOrigin: 1662610.5,
+        JdWinsols: 1662610.5 + 160 * 365.25,
+        OriginYearSc: 17,
+        ZhengNum: 2,
+        OriginMonNum: 2,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 1,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+        Node: 27 + 5859 / 27542,
+        MansionRaw: [8, 21.25], // 斗21度235分
+        MansionFractPosition: 8,
+        // DayLight: [45, 45 + 8 / 32, 46 + 8 / 32, 48 + 6 / 32, 50 + 8 / 32, 53 + 3 / 32, 55 + 8 / 32, 58 + 3 / 32, 60 + 5 / 32, 62 + 4 / 32, 63 + 9 / 32, 64 + 9 / 32, 65, 64 + 7 / 32, 63 + 8 / 32, 62 + 3 / 32, 60 + 2 / 32, 57 + 8 / 32, 55 + 2 / 32, 52 + 6 / 32, 50 + 3 / 32, 48 + 2 / 32, 46 + 7 / 32, 45 + 5 / 32], // 四分、乾象、景初。正光興和沒有漏刻
+        NightList: [27.5, 27.375, 26.875, 25.90625, 24.875, 23.453125, 22.375, 20.953125, 19.921875, 18.9375, 18.359375, 17.859375, 17.5, 17.890625, 18.375, 18.953125, 19.96875, 21.375, 22.46875, 23.90625, 24.953125, 25.96875, 26.890625, 27.421875, 27.5], // 夜半漏
+        DialList: [13, 12.3, 11, 9.6, 7.95, 6.5, 5.25, 4.15, 3.2, 2.52, 1.98, 1.68, 1.5, 1.7, 2, 2.55, 3.33, 4.35, 5.5, 6.85, 8.4, 10, 11.4, 12.56, 13], // 節氣晷長
+        SunLatiList: [115, 113 + 1 / 12, 110 + 8 / 12, 106 + 2 / 12, 101 + 1 / 12, 95 + 1 / 12, 89 + 1 / 12, 83 + 2 / 12, 77 + 10 / 12, 73 + 2 / 12, 69 + 8 / 12, 67 + 2 / 12, 67 + 1 / 12, 67 + 10 / 12, 70, 73 + 7 / 12, 78 + 7 / 12, 84 + 4 / 12, 90 + 7 / 12, 96 + 10 / 12, 102 + 4 / 12, 107 + 4 / 12, 110 + 11 / 12, 113 + 10 / 12, 115, 113 + 1 / 12], // 太陽去極度。111弱我暫時處理成110+11/12。106少強改成少弱
+    },
+
+    /////////////////魏晉/////////////////////
+    // if (!Node) {
+    //     Node = Lunar * EcliRange / (0.5 + EcliRange) // 獨創發明！以皇極驗之，完全符合
+    // }
+    Qianxiang: {
+        Type: 2,
+        ApplyYear: [[223, 280]],
+        Solar: 365 + 145 / 589, // 歲實 
+        SolarNumer: 215130,
+        SolarDenom: 589,
+        LunarNumer: 43026, // 通法。會通=LunarNumer/(12/2)
+        Denom: 1457, // 日法
+        Lunar: 29 + 773 / 1457, // 朔策。月19年行天254週，小週：254
+        // SurConst: 29, //  餘率 Math.floor(Lunar) 
+        // TianDiConst: 25 + 30, // 天地凡數
+        EcliRange: 11045 / 1882, // 月食週期
+        EcliNumer: 11045, // 會月
+        EcliDenom: 1882, // 會率。一半是朔望合數：初交到再交
+        Node: 27.212150734997284,
+        // exCycleFractConst: 1825 + 7 / 47, // 過週分 ((huiConst + TianDiConst) * SurConst ** 2) / huiConst 
+        Anoma: 27 + 3303 / 5969, // 近點月=歷日數=(過週分+週天)/月週。週天=Solar*JiRange。月週（每紀恆星月數）=小週*JiRange/19。恆星月=週天/月週
+        AnomaNumer: 164466, // 歷週。歷日數：164466 / 5969
+        // AnomaFract: 3303, // 週日分。少大法=cycleDayFract/3
+        AnomaDenom: 5969, // 週日法。週虛=5969-cycleDayFract。通週=5969*31
+        // SynodicAnomaDif: 11801 + 25 / 31, // 朔行分=(小週/2)*LunarNumer/通數 - pasScycle。朔行分卽朔望月交點月之差的5969倍。程序中我沒用5969倍
+        // 乾象還沒有交點月。JiDay/每紀月行週數=27 + 2532 / 7874 。紀行週=254*589/19=7874。歷日=(27 + 2532 / 7874)/2。紀日215130/2=歷週107565.每紀月行週數就是每日月行分數
+        MoonAcrVList: [276, 275, 273, 270, 266, 262, 258, 254, 250, 246, 243, 239, 236, 234, 233, 234, 236, 239, 243, 246, 250, 254, 258, 262, 266, 270, 273, 275 + (4093 + 202 / 1101) / 5969, 276],
+        MoonDifAccumList: [0, 22, 43, 62, 78, 90, 98, 102, 102, 98, 90, 79, 64, 46, 26, 5, -15, -33, -48, -59, -67, -71, -71, -67, -59, -47, -31, -12, 9.68574023615],
+        MoonLatiDifList: [17, 16, 15, 12, 8, 4, 1, -2, -6, -10, -13, -15, -16, -(16 + 306 / 473)], // 乾象陰陽曆。/12爲度
+        MoonLatiAccumList: [0, 1.4166666666666667, 2.75, 4, 5, 5.666666666666667, 6, 6.083333333333333, 5.916666666666667, 5.416666666666667, 4.583333333333333, 3.5, 2.25, 0.916666666666667, -0.4705778717406],
+        // y = parseFloat((-0.0011792 * x ** 4 + 0.070674 * x ** 3 - 1.1513 * x ** 2 + 2.7606 * x + 273.65).toPrecision(12))
+        OriginAd: 206 - 7377, // 上元積年的公元 內紀。-103
+        CloseOriginAd: 206,
+        // JdOrigin: 1796291.56961 - 7377 * (365 + 145 / 589), // -103年癸亥朔，並非甲子夜半朔旦冬至。定朔1683430.240082638
+        OriginYearSc: 26, // 上元年干支
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 1178, // 元：乾法，內紀外紀
+        JiRange: 589, // 紀法，每紀31章，31:通數
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        MansionRaw: [8, 22], // 斗22度
+        MansionFractPosition: 8, // 斗分所加在斗
+    },
+    Huangchu: { // 開元占經。「太史丞韓詡以爲乾象減斗分太過，後當先天，造黃初曆」看開元占經的斗分，確實比乾象大。
+        Type: 2,
+        Solar: 365 + 1205 / 4883, // 歲實。。年月跟王朔之一樣
+        SolarNumer: 1783500, // 週天
+        SolarDenom: 4883,
+        Lunar: 29 + 6409 / 12079, // 朔策。經6409.
+        LunarNumer: 356700, // 月法
+        Denom: 12079, // 
+        Anoma: 27 + 6698 / 12079, // 闕，按景初比例補之
+        AnomaNumer: 332831,
+        OriginAd: 220 - 31578, // 開元占經有問題，以景初爲準移之+ 722。《疇人傳》「上元壬午至黃初元年庚子，積三萬一千五百七十八算外」
+        // JdOrigin: 1801769.6790 - 31578 * (365 + 1204 / 4883), // 220-12-23癸未
+        CloseOriginAd: 220,
+        OriginYearSc: 19, // 上元壬午。
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 9766, // 元法。闕，假設是2倍
+        JiRange: 4883, // 紀法
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        AnomaCorr: 220000, // 闕，據紀差77194、以景初爲準補之
+        // FirstCorr: -8.2,
+        MansionRaw: [8, 22], // 闕，以乾象補之
+        MansionFractPosition: 8,
+    },
+    Jingchu: {
+        Type: 2,
+        ApplyYear: [[237, 451]],
+        Solar: 365 + 455 / 1843, // 歲實。斗分：455。
+        SolarNumer: 673150, // 紀日673150
+        SolarDenom: 1843,
+        LunarNumer: 134630, // 通數。 // const TongRange = JiRange / ZhangRange // 通數
+        Denom: 4559, // 日法=97*47。47:通法
+        Lunar: 29 + 2419 / 4559, // 朔策。月19年行天254週，小週：254
+        Anoma: 27 + 2528 / 4559, // 近點月、交點月=歷日數=(過週分+週天)/月週。// AnomaFract: 2528 週日日餘。週虛=Denom-AnomaFract
+        AnomaNumer: 125621, // 通週。歷日數：164466 / 5969
+        AnomaCorr: 103947, // 甲子紀的遲疾差率，實測得出
+        EcliRange: 5 + 116960 / 134630, // 分母是朔實
+        EcliNumer: 790110, // 會通
+        EcliCorr: 412919 / 790110, // 甲子交會差率
+        Node: 27.2122009856701,
+        YinyangCorr: -1,
+        MoonAcrVList: [280, 277, 274, 271, 267, 261, 254, 248, 244, 241, 239, 236, 233, 231, 233, 235, 237, 240, 243, 246, 250, 254, 259, 265, 271, 277, 278, 279 + 626 / 86621, 280],
+        MoonDifAccumList: [0, 26, 49, 69, 86, 99, 106, 106, 100, 90, 77, 62, 44, 23, 0, -21, -40, -57, -71, -82, -90, -94, -94, -89, -78, -61, -38, -14, 11.0072268849],
+        OriginAd: 237 - 4045, // 上元積年的公元
+        CloseOriginAd: 237,
+        // JdOrigin: 1807614.129951 - 4045 * (365 + 455 / 1843),
+        OriginYearSc: 29, // 上元壬辰
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 11058, // 元法
+        JiRange: 1843, // 紀法。紀月：22795。日數：673150。每年月行254/19週，每紀24638（月週）
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        // MansionRaw: [8, 22], // 斗22度
+        MansionRaw: [8, 21.25], // 《中國古代曆法》27頁
+        MansionFractPosition: 8,
+    },
+    Liuzhi: { // 晉志下、開元占經。武帝侍中平原劉智，以斗曆改憲，推四分法，三百年而減一日，以百五十爲度法，三十七爲斗分。推甲子爲上元，至泰始十年，歲在甲午，九萬七千四百一十一歲，上元天正甲子朔夜半冬至，日月五星始于星紀，得元首之端。飾以浮說，名爲正曆。
+        Type: 2,
+        Solar: 365 + 37 / 150, // 歲實
+        SolarNumer: 54787,
+        SolarDenom: 150,
+        Lunar: 29 + 18703 / 35250, // 朔策。闕，據「紀日1040953，紀月35250，餘18703」補之。交會通6109174不知何指
+        LunarNumer: 1040953, // 
+        Denom: 35250, //         
+        Anoma: 27 + 19547 / 35250, // 闕，據景初補之
+        AnomaNumer: 971297,
+        AnomaCorr: 620000, // 闕。據紀差906481補之
+        OriginAd: 274 - (97411 + 1823), // 晉泰始十年。不太對，據景初調整。但這是正史的數據，再看看。
+        CloseOriginAd: 274,
+        // JdOrigin: 1821128.2200 - (97411 + 1823) * (365 + 37 / 150),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 17100, // 元法闕，我算得171000
+        JiRange: 2850, // 紀法。
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        MansionRaw: [8, 21], // 占經：冬至斗21度.晉志：[25, 0]
+        MansionFractPosition: 8, // 闕
+    },
+    Wangshuozhi: { // 晉志
+        Type: 2,
+        Solar: 365 + 1205 / 4883,
+        SolarNumer: 1783500,
+        SolarDenom: 4883,
+        Lunar: 29 + 6409 / 12079, // 闕，劉洪濤補，第237頁。紀月60395
+        LunarNumer: 356700, // 通數，闕
+        Denom: 12079, //         
+        Anoma: 27 + 36197 / 65278, // 闕，據景初補之。分母月週，劉洪濤補
+        AnomaNumer: 1798703,
+        AnomaCorr: 811000, // 闕，據紀差1629372補之
+        OriginAd: 352 - (97000 - 864), // 永和八年。原來的數字不對， 改後嚴絲合縫。
+        CloseOriginAd: 352,
+        //+1205,+2533,-464這三個方案都不好
+        // JdOrigin: 1849614.4156 - (97000 - 864) * (365 + 1205 / 4883),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 4883, // 元法闕，我算得等於紀法
+        JiRange: 4883, // 紀法。
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        MansionRaw: [8, 19], // 闕，酌情調整
+        MansionFractPosition: 8,
+    },
+    Sanji: { //晉書律曆下，開元占經卷105。始悟以月食衝檢日宿度所在。劉洪濤238頁
+        // 周天/紀法 / (通數/日法) = 895220/2451 / (179044/6062) = 12 898/2451
+        Type: 2,
+        ApplyYear: [[384, 417]],
+        Solar: 365 + 605 / 2451, // 605:斗分
+        SolarNumer: 895220, // 週天、紀日
+        SolarDenom: 2451,
+        Lunar: 29 + 3217 / 6063, // 朔策。月19年行天254週，小週：254
+        LunarNumer: 179044, // 通數
+        Denom: 6063, // 日法。原文日法誤6062        
+        Anoma: 27 + 3362 / 6063, // 近點月。月週=254*2451/19=32766。週日日餘3362
+        AnomaNumer: 167063, // 通週
+        AnomaCorr: 86178, // 本來是49178
+        EcliRange: 11045 / 1882, // 會月/會率。會率/2=朔望合數。893:會歲會月-朔望合數=11045-941=入交限
+        EcliCorr: 12700 / 11045, // 原來是 9157 / 11045
+        Node: 27.212199762772333,
+        OriginAd: 384 - 83840, // 晉孝武太元九年甲申
+        CloseOriginAd: 384,
+        // JdOrigin: 1861305.400041 - 83840 * (365 + 605 / 2451),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 7353, // 元法。元月90945
+        JiRange: 2451, // 紀月30315，紀日895220
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        MansionRaw: [8, 17], // 占經：斗17度，《中國數理天文學》頁193
+        MansionFractPosition: 8, // 闕
+    },
+    Xuanshi: { // 開元占經卷105、疇人傳卷第六
+        // https://github.com/kanasimi/CeJS/blob/master/data/date/calendar.js 《梁趙厯》上元甲寅，至今六萬一千七百四十算上。 元法四十三萬二千，紀法七萬二千，蔀法七千二百，章歲六百，章月七千四百二十一（亦曰時法），章閏二百二十二，周天二百六十二萬九千七百五十九，亦曰通數餘數三萬七千七百五十九，斗分一千七百五十九，日法八萬九千五十二，亦曰蔀日月周九萬六千二百五十二，小周八千二十二，會數一百七十三，度餘二萬七千七百一十九，會虛六萬一千三百三十三，交會差一百四十七，度餘三千三百一十一，遲疾差六百餘四千五百三十，周日二十七日，餘四萬九千三百八十，周虛三萬九千六百七十二。
+        // 上元甲寅，至今(開元2年)61740算上。元法432000，紀法72000，蔀法7200，章歲600，章月7421，(亦曰時法)章閏222，周天2629759，(亦曰通數)餘數37759，斗分1759，日法89052，(亦曰蔀)日月周96252，小周8022，會數173，度餘27719，會虛61333，交會差147，度餘3311，遲疾差600餘4530，周日27日，餘49380，周虛39672。
+        // 疇人傳卷第六: 趙𢾺，河西人也。善曆算。沮渠蒙遜元始時，修元始術。上元甲寅至元始元年壬子，積六萬一千四百三十八算上，元法四十三萬二千，紀法七萬二千，蔀法七千二百。章歲六百，章月七千四百二十一，亦曰時法。章閏二百二十一，周天二百六十二萬九千七百五十九，亦曰通數。餘數三萬七千七百五十九，斗分一千七百五十九，日法八萬九千五十二，亦曰蔀月。月周九萬六千二百五十二，小周八千二十一，會數一百七十三，度餘二萬七千七百一十九，會虛六萬一千三百三十三，交會差一百四十七，度餘三千三百一十一，遲疾差六百，餘四萬一千五百三十。周日二十七，日餘四萬九千三百八十。周虛三萬九千六百七十二。《宋書 大且渠蒙遜傳》、《魏書 律曆志》、《開元占經》
+        // 上元甲寅至元始元年壬子，積61438算上，元法432000，紀法72000，蔀法7200。章歲600，章月7421，亦曰時法。章閏221，周天2629759，亦曰通數。餘數37759，斗分1759，日法89052，亦曰蔀月。月周96252，小周8021，會數173，度餘27719，會虛61333，交會差147，度餘3311，遲疾差600，餘41530。周日27，日餘49380。周虛39672。
+        Type: 3,
+        ApplyYear: [[412, 439], [452, 522]],
+        Solar: 365 + 1759 / 7200,
+        SolarNumer: 2629759, // 週天、通數
+        SolarDenom: 7200,
+        Lunar: 29 + 47251 / 89052, // 朔策。
+        LunarNumer: 2629759, // 
+        Denom: 89052, // 日法、蔀日        
+        Anoma: 27 + 49380 / 89052, // 近點月。月週96252
+        AnomaNumer: 2453784,
+        AnomaCorr: 600000, // 「遲疾差600」紀差795624
+        EcliRange: 15433715 / 2629759, // 闕。交會週期=會通/週天。會數173+(89052-61333,度餘27719)/89052日一交=會通/日法。分子爲會餘。所以會通=15433715
+        EcliCorr: -2300000 / 15433715, // 不知道怎麼補，瞎填一個 -2300000 / 15433715
+        Node: 27.212245523296843,
+        OriginAd: 412 - 61438, // 玄始元年壬子
+        CloseOriginAd: 412,
+        // JdOrigin: 1871530.1447 - 61438 * (365 + 1759 / 7200),
+        OriginYearSc: 51, // 上元甲寅
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        YuanRange: 432000, // 元法
+        JiRange: 72000, // 紀日26297590，
+        BuRange: 7200, // 蔀法
+        ZhangRange: 600, // 章月、時法7421
+        ZhangLeap: 221,
+        MansionRaw: [8, 16], // 闕，酌情處理
+        MansionFractPosition: 8,
+    },
+    Tsrengguang: {
+        Type: 3,
+        ApplyYear: [[523, 558]],
+        Solar: 365 + 1477 / 6060, // 歲實.斗分：1477，
+        SolarNumer: 2213377, // 週天分
+        SolarDenom: 6060,
+        Lunar: 29 + 39769 / 74952, // 朔策。
+        LunarNumer: 2213377, // 月法
+        Denom: 74952, // 日法=蔀月        
+        Anoma: 27 + 41562 / 74952, // 近點月。277:週日。41562：週日餘
+        AnomaNumer: 2065266, // 通週
+        AnomaCorr: 24 * 74952 + 63568, // 而交會差就是空
+        EcliRange: 5 + 1923019 / 2213377,
+        Node: 27.212219336007635,
+        // MoonAcrVList: [(14 + 361 / 505), (14 + 300 / 505), (14 + 236 / 505), (14 + 171 / 505), (14 + 99 / 505), (13 + 471 / 505), (13 + 266 / 505), (13 + 61 / 505), (12 + 439 / 505), (12 + 338 / 505), (12 + 237 / 505), (12 + 136 / 505), (12 + 35 / 505), (11 + 464 / 505), (12 + 36 / 505), (12 + 109 / 505), (12 + 189 / 505), (12 + 290 / 505), (12 + 392 / 505), (12 + 496 / 505), (13 + 118 / 505), (13 + 243 / 505), (13 + 388 / 505), (14 + 29 / 505), (14 + 174 / 505), (14 + 287 / 505), (14 + 312 / 505), (14 + (339 + 9684 / 41562) / 505), (14 + 361 / 505)], // 《古代曆法計算法》第328頁有誤，4日是171而非176
+        MoonAcrVList: [7431, 7370, 7306, 7241, 7169, 7036, 6831, 6626, 6499, 6398, 6297, 6196, 6095, 6019, 6096, 6169, 6249, 6350, 6452, 6556, 6683, 6808, 6953, 7099, 7244, 7357, 7382, 7409.233001299263],
+        MoonDifAccumList: [0, 680, 1299, 1854, 2344, 2762, 3047, 3127, 3002, 2750, 2397, 1943, 1388, 732, 0, -655, -1237, -1739, -2140, -2439, -2634, -2702, -2645, -2443, -2095, -1602, -996, -365, 293],
+        OriginAd: 522 - 167750, // 壬寅
+        CloseOriginAd: 522,
+        // JdOrigin: 1911706.1023 - 167750 * (365 + 1477 / 6060),
+        OriginYearSc: 49, // 上元壬子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 363600, // 元法，6紀
+        JiRange: 60600, // 1紀10蔀
+        TongRange: 121200, // 統法，1統2紀
+        BuRange: 6060, // 蔀法、度法。蔀日=月通
+        ZhangRange: 505, // 章法，1蔀12章 
+        ZhangLeap: 186, // 閏餘。每年月數：12+186/505
+        MansionRaw: [8, 15], // 斗15度
+        MansionFractPosition: 8, // 經斗除分
+    },
+    Xinghe: {
+        Type: 3,
+        ApplyYear: [[540, 550]],
+        Solar: 365 + 4117 / 16860, // 歲實.斗分：4177，
+        SolarNumer: 6158017, // 週天
+        SolarDenom: 16860,
+        Lunar: 29 + 110647 / 208530, // 朔策。經月餘：110647.度分=日法-經月餘=97883
+        LunarNumer: 6158017, // 通數、週天
+        Denom: 208530, // 日法=蔀月        
+        Anoma: 27 + 115631 / 208530, // 近點月。27:週日，115631:週餘。週虛=日法-週餘=92899
+        AnomaNumer: 5745941, // 通週
+        EcliRange: 36142807 / 6158017,
+        Node: 27.21237997247385,
+        // MoonAcrVList: [(14 + 402 / 562), (14 + 334 / 562), (14 + 261 / 562), (14 + 190 / 562), (14 + 111 / 562), (13 + 522 / 562), (13 + 296 / 562), (13 + 68 / 562), (12 + 486 / 562), (12 + 379 / 562), (12 + 267 / 562), (12 + 151 / 562), (12 + 40 / 562), (11 + 515 / 562), (12 + 38 / 562), (12 + 123 / 562), (12 + 211 / 562), (12 + 324 / 562), (12 + 435 / 562), (12 + 555 / 562), (13 + 128 / 562), (13 + 270 / 562), (13 + 432 / 562), (14 + 33 / 562), (14 + 194 / 562), (14 + 319 / 562), (14 + 346 / 562), (14 + 379 / 562), (14 + 402 / 562)],
+        MoonAcrVList: [8270, 8202, 8129, 8058, 7979, 7828, 7602, 7374, 7230, 7123, 7011, 6895, 6784, 6697, 6782, 6867, 6955, 7068, 7179, 7299, 7434, 7576, 7738, 7901, 8062, 8187, 8214, 8247],
+        MoonDifAccumList: [0, 757, 1446, 2062, 2607, 3073, 3388, 3477, 3338, 3055, 2665, 2163, 1545, 816, 0, -731, -1377, -1935, -2380, -2714, -2928, -3007, -2944, -2719, -2331, -1782, -1108, -407, 327],
+        OriginAd: 540 - 293996, // 庚申
+        CloseOriginAd: 540,
+        // JdOrigin: 1918280.6265 - 293996 * (365 + 4117 / 16860),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 1011600, // 元法，6紀
+        JiRange: 168600, // 1紀10蔀
+        TongRange: 337200, // 統法，1統2紀
+        BuRange: 16860, // 蔀法、度法。蔀日=月通
+        ZhangRange: 562, // 章法，1蔀30章.章中：6744
+        ZhangLeap: 207, // 閏餘。每年月數：12+186/505
+        MansionRaw: [8, 15], // 斗15度
+        MansionFractPosition: 8,
+    },
+    Tianbao: { // https://github.com/kanasimi/CeJS/blob/master/data/date/calendar.js // 嚴敦傑《補北齊書曆志》，《自然科學史研究》1984年第3期
+        Type: 3,
+        ApplyYear: [[551, 577]],
+        Solar: 365 + 5787 / 23660, // 
+        SolarNumer: 8641687, // 週天、蔀日，通數，沒分
+        SolarDenom: 23660,
+        Lunar: 29 + 155272 / 292635, // 朔策
+        LunarNumer: 8641687, // 月法
+        Denom: 292635, // 日法=蔀月
+        // 餘數124087(亦名没分)
+        Anoma: 27 + 162261 / 292635, // 近點月。歷餘162261
+        AnomaNumer: 8063406, // 通週。週虛130374。小週9037.月週316295.虛分137363
+        EcliRange: 50716913 / 8641687, // 「甲子紀差分空」
+        Node: 27.212243804560554,
+        // MoonAcrVList: [14 + 483 / 676, 14 + 401 / 676, 14 + 314 / 676, 14 + 228 / 676, 14 + 133 / 676, 13 + 630 / 676, 13 + 356 / 676, 13 + 82 / 676, 12 + 587 / 676, 12 + 454 / 676, 12 + 320 / 676, 12 + 182 / 676, 12 + 47 / 676, 11 + 621 / 676, 12 + 46 / 676, 12 + 146 / 676, 12 + 253 / 676, 12 + 389 / 676, 12 + 524 / 676, 12 + 665 / 676, 13 + 155 / 676, 13 + 324 / 676, 13 + 519 / 676, 14 + 39 / 676, 14 + 233 / 676, 14 + 384 / 676, 14 + 417 / 676, 14 + (465 + 117513 / 162261) / 676, 14 + 483 / 676], // 原闕，嚴敦傑《補北齊書曆志》，《自然科學史研究》1984年第3期
+        MoonAcrVList: [9947, 9865, 9778, 9692, 9597, 9418, 9144, 8870, 8699, 8566, 8432, 8294, 8159, 8057, 8158, 8258, 8365, 8501, 8636, 8777, 8943, 9112, 9307, 9503, 9697, 9848, 9881, 9929.724222086637],
+        MoonDifAccumList: [0, 910, 1738, 2479, 3134, 3694, 4075, 4182, 4015, 3677, 3206, 2601, 1858, 980, 0, -879, -1658, -2330, -2866, -3267, -3527, -3621, -3546, -3276, -2810, -2150, -1339, -495, 398],
+        OriginAd: 550 - 110526, // 天保元年庚午
+        CloseOriginAd: 550,
+        // JdOrigin: 1921934.0571 - 110526 * (365 + 5787 / 23660),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 1419600, // 元法，6紀
+        JiRange: 236600, // 原文的數字是20036600
+        BuRange: 23660, // 蔀法、度法
+        ZhangRange: 676, // 章歲
+        ZhangLeap: 249,
+        MansionRaw: [8, 15], // 「命起牛前十二度」斗15
+        MansionFractPosition: 8, // 闕，應該就是斗分
+    },
+    Jiayin: { // 嚴敦傑《補北齊書曆志》，《自然科學史研究》1984年第3期
+        Type: 3,
+        Solar: 365 + 5461 / 22338,
+        SolarNumer: 8158831, // 週天、蔀日，通數，沒分
+        SolarDenom: 22338,
+        Lunar: 29 + 146595 / 276284, //《古代曆法計算法》第615頁 (146595 + 2 / 657) / 276284，不知道他是怎麼算出小數的，不要小數正好
+        Denom: 22338, // 日法
+        Anoma: 27 + 153225 / 276284, // 近點月。闕
+        // AnomaCorr: 85000, // 闕，據紀差214931酌情增補。照理說應該是空，以後再說。這是嚴敦傑積年的情況
+        OriginAd: 576 - 1010382, // 武平四年癸巳 // 嚴敦傑573 - 123399
+        CloseOriginAd: 576,
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 1340280, // 元法。闕，我假設是紀法的6倍
+        JiRange: 223380, // 闕，我假設是蔀法的10倍
+        BuRange: 22338, // 蔀法、度法。蔀日8158831
+        ZhangRange: 657, // 章歲。章月8126.蔀月276284
+        ZhangLeap: 242,
+        MansionRaw: [8, 15], // 闕，酌情處理
+        MansionFractPosition: 8,
+    },
+    Tianhe: { // https://github.com/kanasimi/CeJS/blob/master/data/date/calendar.js 及武帝時，甄鸞造《天和曆》。上元甲寅至天和元年丙戌，積八十七萬五千七百九十二算外，章歲三百九十一，蔀法二萬三千四百六十，日法二十九萬一百六十，朔餘十五萬三千九百九十一，斗分五千七百三十一，會餘九萬三千五百一十六，曆餘一十六萬八百三十，冬至斗十五度，參用推步。終於宣政元年。
+        // 及武帝時，甄鸞造《天和曆》。上元甲寅(50)至天和元年(566)丙戌(22)，積875792算外，章歲391，蔀法23460，日法290160，朔餘十五萬三千九百九十一，斗分5731，會餘93516，曆餘160830，冬至斗十五度，3用推步。終於宣政元年。
+        Type: 3,
+        ApplyYear: [[566, 578]],
+        Solar: 365 + 5731 / 23460,
+        SolarNumer: 8568631, // 週天
+        SolarDenom: 23460,
+        Lunar: 29 + 153991 / 290160, // 朔策
+        LunarNumer: 8568631, //
+        Denom: 290160, // 日法。
+        Anoma: 27 + 160830 / 290160, // 歷餘160830
+        AnomaNumer: 7995150,
+        EcliRange: 50291196 / 8568631, // 173+ 93516/290160=會通/8568631。實驗得天保、天和甲子紀差交會遲疾並空
+        Node: 27.21247526807761,
+        OriginAd: 566 - 875792, // 天和元年丙戌
+        CloseOriginAd: 566,
+        // JdOrigin: 1927776.1075 - 875792 * (365 + 5731 / 23460),
+        OriginYearSc: 51, // 上元甲寅
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 1407600, // 元法闕，我算得
+        JiRange: 234600, // 闕
+        BuRange: 23460, // 蔀法
+        ZhangRange: 391, // 章歲
+        ZhangLeap: 144, // 
+        MansionRaw: [8, 15], // 斗15度
+        MansionFractPosition: 8
+    },
+    Daxiang: { // https://github.com/kanasimi/CeJS/blob/master/data/date/calendar.js 大象元年，太史上士馬顯等，又上《丙寅元曆》...上元丙寅至大象元年己亥，積四萬一千五百五十四算上。日法五萬三千五百六十三，亦名蔀會法。章歲四百四十八，斗分三千一百六十七，蔀法一萬二千九百九十二。章中爲章會法。日法五萬三千五百六十三，曆餘二萬九千六百九十三，會日百七十三，會餘一萬六千六百一十九，冬至日在斗十二度。小周餘、盈縮積，其曆術別推入蔀會，分用陽率四百九十九，陰率九。每十二月下各有日月蝕轉分，推步加減之，乃爲定蝕大小餘，而求加時之正。
+        // 上元丙寅至大象元年己亥，積41554算上。日法53563，亦名蔀會法。章歲448，斗分3167，蔀法12992。章中爲章會法。日法53563，曆餘29693，會日百七十三，會餘16619，冬至日在斗12度。小周餘、盈縮積，其曆術別推入蔀會，分用陽率499，陰率9。每12月下各有日月蝕轉分，推步加減之，乃爲定蝕大小餘，而求加時之正。
+        Type: 3,
+        ApplyYear: [[579, 583]],
+        Solar: 365 + 3167 / 12992,
+        SolarNumer: 4745247, // 週天
+        SolarDenom: 12992,
+        Lunar: 29 + 28422 / 53563, // 朔策沒問題。陽率499，陰率9
+        LunarNumer: 1581748, // 闕了這項參數，我復原的
+        Denom: 53563, // 日法、蔀會法。「別推入蔀會」：用另一種方法推出日法   
+        Anoma: 27 + 29693 / 53563, // 近點月
+        AnomaNumer: 1475894, // 通週
+        EcliRange: 9283018 / (4745247 / 3), // 173+16619/53563
+        Node: 27.21225648359655,
+        OriginAd: 579 - 41553, // 大象元年己亥。隋志41555，授時議42555。幾個方案：-274。-57:先天半日；- 41553後天0.4日
+        CloseOriginAd: 579,
+        // 會日173，會餘16619，冬至日在斗12度。
+        // JdOrigin: 1932524.2832 - 41553 * (365 + 3167 / 12992),
+        OriginYearSc: 3, // 上元丙寅
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 259840, // 闕，我算得。1 元 = 20 蔀，1 蔀 = 29 章
+        JiRange: 129920, // 闕，我假設是蔀法的10倍。
+        BuRange: 12992, // 蔀法29章。蔀日4734247
+        ZhangRange: 448, // 章法
+        ZhangLeap: 165,
+        MansionRaw: [8, 12], // 斗12度
+        MansionFractPosition: 8, // 闕，擬
+    },
+    Kaihuang: { // 《隋志中》除了月離表都有了。《劉洪濤》618頁。以開皇曆交點月、月食週期比之，與我的換算公式完全相合！
+        Type: 3,
+        ApplyYear: [[584, 596]],
+        Solar: 365 + 25063 / 102960,
+        SolarNumer: 37605463, // 週天分、蔀日、沒分。斗分=25063
+        SolarDenom: 102960,
+        Lunar: 29 + 96529 / 181920, // 朔策。
+        LunarNumer: 5372209, // 通月
+        Denom: 181920, // 日法、週法。（朔）虛分=30*Denom-LunarNumer。朔時法=Denom/12
+        Node: 27 + (38607 + 1841 / 2815) / 181920, // 交點月
+        NodeNumer: 512104800, // 交法
+        NodeSmallFract: 2815, // 交分法
+        Anoma: 27 + 100859 / 181920, // 近點月
+        AnomaFract: 100859, // 週日餘、小大法
+        AnomaNumer: 5012699, // 週通。週虛81061CycleDif = Denom - AnomaNumer 
+        EcliRange: 1297 / 221,
+        YinyangCorr: -1,
+        OriginAd: 584 - 4129000, // 開皇四年行用至開皇十六年
+        CloseOriginAd: 584,
+        // JdOrigin: 1934350.8011 - 4129000 * (365 + 25063 / 102960),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        YuanRange: 6177600, // 元法
+        JiRange: 1029600, // 紀法
+        BuRange: 102960, // 蔀法、度法
+        ZhangRange: 429, // 章歲
+        ZhangLeap: 158, // 章閏
+        MansionRaw: [8, 12], // 闕，以大象補之
+        MansionFractPosition: 8, // 闕，擬
+    },
+    TaiyiKaiyuan: { // 曲安京《曆法》頁380
+        Type: 3,
+        ZhangRange: 657, // 同董峻甲寅元曆
+        ZhangLeap: 242,
+        Solar: 365 + 7877 / 32193,
+        Lunar: 29 + 26 / 49,
+        Denom: 49,
+        OriginAd: 724 - 1937280,
+        OriginMonNum: 0,
+        ZhengNum: 2,
+    },
+    Yuanjia: {
+        Type: 4,
+        ApplyYear: [[445, 509]],
+        Solar: 365 + 75 / 304, // 歲實。304:度法。111035:週天。75:度分。
+        SolarNumer: 111035,
+        SolarDenom: 304,
+        Lunar: 29 + 399 / 752, // 朔策。
+        LunarNumer: 22207, // 通數
+        Denom: 752, // 日法=16*47。47:通法
+        Anoma: 27 + 417 / 752, // 近點月、交點月
+        AnomaNumer: 20721, // 通週。417:週日日餘。 Denom-週日日餘=335:週虛
+        AnomaCorr: 625, // 原來是17663。2343比較合
+        EcliRange: 939 / 160, // 會月/會數。朔望合數=EcliDenom/2。
+        EcliCorr: 877 / 939, //661 / 939
+        Node: 27.21218784582298,
+        MoonAcrVList: [279, 277, 274, 270, 265, 260, 254, 249, 245, 242, 239, 236, 234, 232, 230, 232, 234, 237, 242, 248, 254, 259, 263, 267, 271, 274, 277, 278 + 103 / 417, 279],
+        MoonDifAccumList: [0, 25, 48, 68, 84, 95, 101, 101, 96, 87, 75, 60, 42, 22, 0, -24, -46, -66, -83, -95, -101, -101, -96, -87, -74, -57, -37, -14, 10.2470023981],
+        MoonLatiDifList: [17, 16, 15, 12, 8, 4, 1, -2, -6, -10, -13, -15, -16, -(16 + 3472 / 5371)], // 元嘉陰陽曆
+        MoonLatiAccumList: [0, 1.416666666666666667, 2.75, 4, 5, 5.666666666666667, 6, 6.083333333333333, 5.916666666666667, 5.416666666666667, 4.583333333333333, 3.5, 2.25, 0.916666666666667, -0.4705362129957],
+        OriginAd: 443 - 5703, // 上元積年的公元
+        CloseOriginAd: 443,
+        // JdOrigin: 1882851.6157 - 5703 * (365 + 75 / 304) + 1.5, // 有點不對，修正一下
+        OriginYearSc: 17, // 上元庚辰
+        OriginMonNum: 2, // 雨水爲歲首
+        ZhengNum: 2, // 建寅
+        YuanRange: 3648, // 元法
+        JiRange: 608, // 紀法。紀月：7520.紀日：222070
+        ZhangRange: 19,
+        ZhangLeap: 7,
+        // MansionRaw: [13, 2], // 劉洪濤頁251：冬至在斗17，雨水日在室2度。由於日行盈縮，雨水本來是4度265+20/24分
+        MansionRaw: [13, 1 + 5 / 6], // 《中國古代曆法》27頁
+        MansionFractPosition: 13, // 經室去度分
+        // DayLight: [45, 45.6, 46.7, 48.4, 50.5, 52.9, 55.5, 58, 60.3, 62.3, 63.9, 64.8, 65, 64.8, 63.9, 62.3, 60.3, 58, 55.5, 52.9, 50.5, 48.4, 46.7, 45.6], // 晝漏
+        NightList: [27.5, 27.2, 26.65, 25.8, 24.75, 23.55, 22.25, 21, 19.85, 18.85, 18.05, 17.6, 17.5, 17.6, 18.05, 18.85, 19.85, 21, 22.25, 23.55, 24.75, 25.8, 26.65, 27.2, 27.5],
+        DialList: [13, 12.48, 11.34, 9.91, 8.22, 6.72, 5.39, 4.25, 3.25, 2.5, 1.97, 1.69, 1.5, 1.69, 1.97, 2.5, 3.25, 4.25, 5.39, 6.72, 8.22, 9.91, 11.34, 12.48, 13], // 晷長
+        SunLatiList: [115, 113 + 1 / 12, 110 + 8 / 12, 106 + 2 / 12, 101 + 1 / 12, 95 + 1 / 12, 89 + 1 / 12, 83 + 2 / 12, 77 + 10 / 12, 73 + 2 / 12, 69 + 8 / 12, 67 + 2 / 12, 67 + 1 / 12, 67 + 10 / 12, 70, 73 + 7 / 12, 78 + 7 / 12, 84 + 4 / 12, 90 + 7 / 12, 96 + 10 / 12, 102 + 4 / 12, 107 + 4 / 12, 110 + 11 / 12, 113 + 10 / 12, 115, 113 + 1 / 12], // 四分
+    },
+    Daming: {
+        Type: 4,
+        ApplyYear: [[510, 589]],
+        YuanRange: 592365, // 元法，15紀
+        JiRange: 39491, // 紀法。每紀101章。紀日：14423804，紀月488436
+        ZhangRange: 391, // 章歲
+        ZhangLeap: 144, // 章閏。每年12+144/391月
+        Solar: 365 + 9589 / 39491, // 歲實。歲餘：9589.歲分：14423804
+        SolarNumer: 14423804,
+        SolarDenom: 39491,
+        Sidereal: 365 + 10449 / 39491, // 365.264592
+        SiderealNumer: 14424664, // 週天。冬至點45.92年西移1度（39391分）。現代値：回歸年比恆星年短20分鐘
+        Lunar: 29 + 2090 / 3939, // 朔策
+        LunarNumer: 116321, // 月法
+        Denom: 3939, // 日法        
+        Anoma: 27 + 14631 / 26377, // 近點月
+        AnomaNumer: 726810, // 通週
+        // MoonAcrVList: [(14 + 13 / 23), (14 + 11 / 23), (14 + 8 / 23), (14 + 4 / 23), (13 + 22 / 23), (13 + 17 / 23), (13 + 11 / 23), (13 + 5 / 23), (12 + 22 / 23), (12 + 16 / 23), (12 + 11 / 23), (12 + 8 / 23), (12 + 6 / 23), (12 + 4 / 23), (12 + 5 / 23), (12 + 7 / 23), (12 + 10 / 23), (12 + 14 / 23), (12 + 19 / 23), (13 + 1 / 23), (13 + 7 / 23), (13 + 13 / 23), (13 + 19 / 23), (14 + 1 / 23), (14 + 6 / 23), (14 + 10 / 23), (14 + 12 / 23), (14 + (14 + 1010 / 1717) / 23), (14 + 13 / 23)], // 《古代曆法計算法》第303頁
+        MoonAcrVList: [5695, 5661, 5610, 5542, 5457, 5372, 5270, 5168, 5066, 4964, 4879, 4828, 4794, 4760, 4777, 4811, 4862, 4930, 5015, 5100, 5202, 5304, 5406, 5491, 5576, 5644, 5678, 5722],
+        MoonDifAccumList: [0, 467.71165998000015, 901.42331996, 1284.13497994, 1598.84663992, 1828.5582999, 1973.26995988, 2015.98161986, 1956.69327984, 1795.40493982, 1532.1165998, 1183.82825978, 784.53991976, 351.25157974, -116.03676028, -566.3251003, -982.61344032, -1347.90178034, -1645.19012036, -1857.47846038, -1984.7668004, -2010.05514042, -1933.34348044, -1754.63182046, -1490.92016048, -1142.2085005, -725.49684052, -274.78518054, 219.92647944],
+        Node: 27 + 5598 / 26377, // 分母通法類似以往的月週 // NodeNumer: 358888.5, // 交點月一半的分子：交數。15987.5日餘。朔望合數=Lunar/2，差爲前限。
+        MoonLatiDifList: [16, 15, 14, 12, 9, 5, 1, -2, -6, -10, -13, -15, -16, -(16 + 3188 / 6395)], // 陰陽曆表遠離黃道益，接近黃道損
+        MoonLatiAccumList: [0, 1.3333333333333333, 2.583333333333333, 3.75, 4.75, 5.5, 5.916666666666667, 6, 5.833333333333333, 5.333333333333333, 4.5, 3.416666666666667, 2.166666666666667, 0.833333333333333, -0.5415428720354],
+        OriginAd: 463 - 51939, // 宋大明七年癸卯
+        CloseOriginAd: 463,
+        // JdOrigin: 1890157.0589 - 51939 * (365 + 9589 / 39491),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        MansionRaw: [11, 0], // 虛初度 // 大概想明白了，這是上元的！！！從上元到463年，大概退了35度，從虛初退，正好是斗12左右
+        MansionFractPosition: 10, // 虛前，入虛去度分 
+        // DayLight: [45, 45.6, 46.7, 48.4, 50.5, 52.9, 55.5, 58.1, 60.4, 62.4, 63.9, 64.8, 65, 64.8, 63.9, 62.4, 60.4, 58.1, 55.5, 52.9, 50.5, 48.4, 46.7, 45.6], // 大明在元嘉基礎上微調
+        // const tmpA = NightList.slice()
+        //  const tmpB = tmpA.reverse().slice(1, -1)
+        //   NightList = NightList.concat(tmpB)
+        NightList: [27.5, 27.2, 26.65, 25.8, 24.75, 23.55, 22.25, 20.95, 19.8, 18.8, 18.05, 17.6, 17.5, 17.6, 18.05, 18.8, 19.8, 20.95, 22.25, 23.55, 24.75, 25.8, 26.65, 27.2, 27.5],
+        DialList: [13, 12.43, 11.2, 9.8, 8.17, 6.67, 5.37, 4.25, 3.26, 2.53, 1.99, 1.69, 1.5, 1.69, 1.99, 2.53, 3.26, 4.25, 5.37, 6.67, 8.17, 9.8, 11.2, 12.43, 13, 12.43],
+        SunLatiList: [115, 113 + 1 / 12, 110 + 8 / 12, 106 + 2 / 12, 101 + 1 / 12, 95 + 1 / 12, 89 + 1 / 12, 83 + 2 / 12, 77 + 10 / 12, 73 + 2 / 12, 69 + 8 / 12, 67 + 2 / 12, 67 + 1 / 12, 67 + 10 / 12, 70, 73 + 7 / 12, 78 + 7 / 12, 84 + 4 / 12, 90 + 7 / 12, 96 + 10 / 12, 102 + 4 / 12, 107 + 4 / 12, 110 + 11 / 12, 113 + 10 / 12, 115, 113 + 1 / 12], // 四分
+    },
+    Liangwu: { // 開元占經「梁武大同」，虞𠠎。用來補明克讓。只有以下信息：《隋志中》「初，西魏入關，尚行李業興《正光術》。至武成元年，始詔克讓與麟趾學士庾季才及諸日者定新術，采祖暅舊議，通簡南北之術。自斯已後，頗親其謬。故周齊並時，而曆差一日。」跟元嘉大概三年有兩年差一天。陳久金《符天曆研究》：祖暅的符天經與後來的符天曆毫無關係。「采祖暅舊議」說明與大明很接近
+        // 我根據大衍曆議的歲差，補出恆星年
+        Type: 4,
+        ApplyYear: [[559, 565]],
+        YuanRange: 2376960, // 元法闕，我算得。這麼來看，1元=60紀，是北系。
+        JiRange: 39616, // 紀64章。章月7656，紀月489984/日法=319
+        ZhangRange: 619, // 章歲同劉孝孫
+        ZhangLeap: 228, // 章閏闕，以劉孝孫補之
+        Solar: 365 + 9681 / 39616, // 闕。設斗分y,朔餘x，由朔策=紀日/紀月,設x=815，可得此數
+        SolarNumer: 14469521,
+        SolarDenom: 39616,
+        Sidereal: 365 + 9894 / 39616,
+        Lunar: 29 + 815 / 1536, // 闕，這是唯一可選。3月11日看到《李氏遺書》p229，推算結果跟李銳一樣，真厲害！
+        LunarNumer: 45359,
+        Denom: 1536, // 日法        
+        Anoma: 27 + 852 / 1536, // 闕，以大明補之
+        AnomaNumer: 42324,
+        AnomaCorr: 72500,
+        OriginAd: 535 - 1025691, // 假設梁武帝大同元年。積年沒錯
+        CloseOriginAd: 535,
+        // JdOrigin: 1916454.5956 - 1025691 * (365 + 9681 / 39616),
+        OriginYearSc: 1,
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        MansionRaw: [11, 0], // 假設是虛初 
+        MansionFractPosition: 8,
+    },
+    Zhangmengbin: { // 嚴敦傑《補北齊書曆志》，《自然科學史研究》1984年第3期
+        Type: 4,
+        JiRange: 48901, // 紀法。紀日1786810
+        ZhangRange: 619, // 章歲。章月7656
+        ZhangLeap: 228, // 章閏。闕，以章月補之。置閏週期與劉孝孫同
+        YuanRange: 293406, // 闕，我算得
+        Solar: 365 + 11945 / 48901, // 《中國古代曆法》第616頁。這些數據竟然都是他推出來的。原來歲實分母就是紀法
+        SolarNumer: 17860810, //
+        Lunar: 29 + 503 / 948, // 朔策
+        LunarNumer: 27995, // 月法
+        Denom: 948, // 日法 
+        Anoma: 27 + 3866 / 6971, // 闕
+        AnomaNumer: 945673,
+        AnomaDenom: 34320,
+        AcrTermList: [0, 14.68005, 29.437022, 44.270918, 59.104814, 73.861787, 88.541836, 104.298809, 119.978859, 135.581986, 151.185112, 166.865162, 182.622135, 198.379107, 214.059157, 229.662284, 245.26541, 260.94546, 276.702433, 291.382482, 306.139455, 320.973351, 335.807247, 350.564219, 365.244269], // 皇極日躔
+        OriginAd: 576 - 25952, // 武平四年癸巳// 嚴敦傑573 - 876569
+        CloseOriginAd: 576,
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        MansionRaw: [8, 11], // 「日月五星并從斗十一起」
+        MansionFractPosition: 8
+    },
+    Liuxiaosun: { // 開元占經保存的數據。《中國古代曆法》第427頁
+        Type: 4,
+        YuanRange: 160940, // 元法
+        JiRange: 8047, // 紀法
+        ZhangRange: 619, // 章歲
+        ZhangLeap: 228, // 章閏
+        Solar: 365 + 1966 / 8047, // 歲餘1966
+        SolarNumer: 2939121, //
+        Sidereal: 365 + 6407 / 24141, // 虛分6407.差分509.
+        SiderealNumer: 8817872,
+        Lunar: 29 + 17603 / 33176, // 朔策=紀日/紀月 // 《古代曆法計算法》第615頁
+        LunarNumer: 979707, // 月法
+        Denom: 33176,
+        Node: 27 + 51021 / 227084, // 自己算的交點月
+        EcliRange: 2013 / 341, // 會月 2013，會率341
+        Anoma: 27 + 19033 / 34320, // 近點月。歷朔差分67817.通法3442 
+        AnomaNumer: 945673, // 闕，根據皇極比例：19033，大明：19037，元嘉、正光：19031，以上三個數字可選
+        AnomaDenom: 34320, // 週法：開元占經已知。說明分子不能是偶數、3的倍數
+        AcrTermList: [0, 14.680052, 29.437026, 44.270924, 59.104822, 73.861796, 88.541848, 104.298823, 119.978874, 135.582003, 151.185131, 166.865183, 182.622157, 198.379132, 214.059184, 229.662312, 245.265441, 260.945492, 276.702467, 291.382518, 306.139493, 320.973391, 335.807288, 350.564263, 365.244315],
+        OriginAd: 573 - 435089,
+        CloseOriginAd: 573,
+        // JdOrigin: 1930334.1174 - 435089 * (365 + 1966 / 8047),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0,
+        ZhengNum: 2, // 建寅
+        MansionRaw: [11, 7], // 先是9，後來改成7
+        MansionFractPosition: 11,
+    },
+    Daye: { // 隋志的大業曆就是修改之後的，冬至起虛七。占經寫成了張曹玄
+        // YuanRange: 852800, // 無，我算得
+        Type: 4,
+        ApplyYear: [[597, 618]],
+        ZhangRange: 410, // 章歲
+        ZhangLeap: 151, // 章閏。每年12+144/391月
+        Solar: 365 + 10363 / 42640,
+        SolarNumer: 15573963, // 歲分。度法、度分：42640
+        SolarDenom: 42640,
+        Sidereal: 365 + 10866 / 42640, // 恆星年。斗分：10866。歲差84.77年1度
+        SiderealNumer: 15574466, // 週天
+        Lunar: 29 + 607 / 1144, // 朔策。
+        LunarNumer: 33783, // 月法
+        Denom: 1144, // 日法        
+        Anoma: 27 + 1413 / 2548, // 近點月
+        AnomaNumer: 70209, // 週通
+        AnomaDenom: 2548, // 週法
+        Node: 10646729 / 391248, // 會通10646729，朔差907057
+        NodeDenom: 391248,
+        MoonAcrVList: [6010, 5950, 5880, 5800, 5710, 5620, 5530, 5430, 5330, 5240, 5160, 5090, 5020, 4960, 4980, 5040, 5110, 5190, 5270, 5360, 5450, 5550, 5640, 5730, 5810, 5890, 5950, 6000, 6010], // 《古代曆法計算法》第404頁，劉洪濤最後一個600改成333，但沒必要，因爲28日入曆肯定不會在1413 / 2548以上。最後一個601不當有，我爲了求轉差。我都乘了10，因爲原算法涉及10倍轉換
+        MoonDifAccumList: [0, 528.98514, 997.97028, 1396.95542, 1715.94056, 1944.9257, 2083.91084, 2132.89598, 2081.88112, 1930.86626, 1689.8514, 1368.83654, 977.82167988, 516.80681987, -4.20804, -505.2229, -946.23776, -1317.25262, -1608.26748, -1819.28234, -1940.2972, -1971.31206, -1902.32692, -1743.34178, -1494.35664, -1165.3715, -756.38636, -287.40122, 231.58392],
+        SunTcorrDifList: [70, 35, 35, 20, 30, 35, -55, -45, -40, -30, -55, -65, -55, -40, -25, -5, -30, -40, 60, 55, 50, 45, 40, 10], // 入氣盈縮。我改變了後半部分正負。以日法爲單位，月離表是以章爲單位
+        SunTcorrList: [0, 70, 105, 140, 160, 190, 225, 170, 125, 85, 55, 0, -65, -120, -160, -185, -190, -220, -260, -200, -145, -95, -50, -10, 0],
+        // OriginAd: 604 - 1427645,
+        OriginAd: 604 - 1427640, // 跟皇極一樣，原來的積年不對，要退後5年。嚴絲合縫！大業四年戊辰。603年12月19日冬至
+        CloseOriginAd: 604,
+        // JdOrigin: 1941656.5722 - 1427640 * (365 + 10363 / 42640),
+        OriginYearSc: 1, // 上元甲子
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        MansionRaw: [11, 7], // 虛7度
+        MansionFractPosition: 8, // 經斗去其分
+        NightList: [29.980147, 29.715441, 29.132353, 28.323530, 27.279412, 26.044118, 24.720588, 23.455882, 22.323530, 21.323529, 20.56397, 20.108088, 20.019853, 20.108088, 20.563971, 21.323529, 22.323529, 23.455882, 24.720588, 26.044118, 27.279412, 28.323529, 29.132353, 29.715442, 29.980147], // 《中國古代曆法》43
+        DialList: [13, 12.43, 11.2, 9.8, 8.17, 6.67, 5.37, 4.25, 3.26, 2.53, 1.99, 1.69, 1.5, 1.69, 1.99, 2.53, 3.26, 4.25, 5.37, 6.67, 8.17, 9.8, 11.2, 12.43, 13, 12.43], // 大明
+        SunLatiList: [115, 113 + 1 / 12, 110 + 8 / 12, 106 + 2 / 12, 101 + 1 / 12, 95 + 1 / 12, 89 + 1 / 12, 83 + 2 / 12, 77 + 10 / 12, 73 + 2 / 12, 69 + 8 / 12, 67 + 2 / 12, 67 + 1 / 12, 67 + 10 / 12, 70, 73 + 7 / 12, 78 + 7 / 12, 84 + 4 / 12, 90 + 7 / 12, 96 + 10 / 12, 102 + 4 / 12, 107 + 4 / 12, 110 + 11 / 12, 113 + 10 / 12, 115, 113 + 1 / 12], // 四分
+    },
+    WuyinA: { // 戊寅定朔 // 崔善爲修改的戊寅曆未改動傅仁均原始數據，《中國古代曆法》第460頁
+        // YuanRange: 37856, // 無，我算得
+        // JiRange: 9464, // 無，我算得
+        Type: 4,
+        isAcr: true,
+        ApplyYear: [[619, 644]],
+        ZhangRange: 676, // 章歲
+        ZhangLeap: 249, // 章閏
+        Solar: 365 + 2315 / 9464, // 餘數49635
+        SolarNumer: 3456675, // 歲分
+        SolarDenom: 9464,
+        Sidereal: 365 + 2485.5 / 9464, // 週天。分子爲斗分
+        SiderealNumer: 3456845.5, // 週分 
+        Lunar: 29 + 6901 / 13006, // 朔策
+        // 沒分76815，沒法1103，沒日距=沒分/沒法=歲分/餘數
+        LunarNumer: 384075, // 月法
+        Denom: 13006, // 日法。時法=日法/2。度法、氣法9464。
+        TermDenom: 1183, // 氣時法=氣法/8=1183        
+        Anoma: 27 + 16064 / 28968, // 分子爲歷餘 
+        AnomaNumer: 798200, // 歷週
+        AnomaDenom: 28968, // 歷法
+        Node: 27 + 99373.8 / 468216, // 朔差=36月法-交會法。交會法/2=交分法=望差+交限。交點月+朔差=朔望月
+        NodeDenom: 468216, // 36 * 13006,
+        MoonAcrVList: [9909, 9810, 9695, 9563, 9414, 9266, 9118, 8953, 8788, 8640, 8508, 8392, 8277, 8178, 8211, 8310, 8425, 8557, 8689, 8837, 8986, 9151, 9299, 9447, 9578, 9710, 9809, 9891, 9909],
+        MoonDifAccumList: [0, 872, 1645, 2303, 2829, 3206, 3435, 3516, 3432, 3183, 2786, 2257, 1612, 852, -7, -833, -1560, -2172, -2652, -3000, -3200, -3251, -3137, -2875, -2465, -1924, -1251, -479, 375],
+        SunTcorrDifList: [896, 398, 400, 228, 341, 450, -500, -455, -355, -555, -848, -739, -626, -456, -288, -40, -342, -455, 682, 625, 570, 513, 456, 100],
+        SunTcorrList: [0, 896, 1294, 1694, 1922, 2263, 2713, 2213, 1758, 1403, 848, 0, -739, -1365, -1821, -2109, -2149, -2491, -2946, -2264, -1639, -1069, -556, -100, 0],
+        OriginAd: 626 - 164348, // 618武德元年加交差7755164
+        CloseOriginAd: 626,
+        // JdOrigin: 1949691.8546 - 164348 * (365 + 2315 / 9464),
+        OriginYearSc: 15, // 上元戊寅
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        MansionRaw: [11, 6], // 命以虛六
+        MansionFractPosition: 8, // 經斗去分
+        // NightList: [27 + 12 / 24, 27 + 5 / 24, 26 + 15 / 24, 25 + 19 / 24, 24 + 18 / 24, 23 + 13 / 24, 22 + 6 / 24, 20 + 3 / 24, 19 + 19 / 24, 18 + 19 / 24, 18 + 1 / 24, 17 + 14 / 24, 17 + 12 / 24], // 夜漏半
+        NightList: [27.5, 27.208333333333333, 26.625, 25.791666666666667, 24.75, 23.541666666666667, 22.25, 20.125, 19.791666666666667, 18.791666666666667, 18.041666666666667, 17.583333333333333, 17.5, 17.583333333333333, 18.041666666666667, 18.791666666666667, 19.791666666666667, 20.125, 22.25, 23.541666666666667, 24.75, 25.791666666666667, 26.625, 27.208333333333333, 27.5],
+        DialList: [13, 12.43, 11.2, 9.8, 8.17, 6.67, 5.37, 4.25, 3.26, 2.53, 1.99, 1.69, 1.5, 1.69, 1.99, 2.53, 3.26, 4.25, 5.37, 6.67, 8.17, 9.8, 11.2, 12.43, 13, 12.43], // 大明
+        SunLatiList: [115, 113 + 1 / 12, 110 + 8 / 12, 106 + 2 / 12, 101 + 1 / 12, 95 + 1 / 12, 89 + 1 / 12, 83 + 2 / 12, 77 + 10 / 12, 73 + 2 / 12, 69 + 8 / 12, 67 + 2 / 12, 67 + 1 / 12, 67 + 10 / 12, 70, 73 + 7 / 12, 78 + 7 / 12, 84 + 4 / 12, 90 + 7 / 12, 96 + 10 / 12, 102 + 4 / 12, 107 + 4 / 12, 110 + 11 / 12, 113 + 10 / 12, 115, 113 + 1 / 12], // 四分
+    },
+    WuyinB: { // 戊寅平朔 // 崔善爲修改的戊寅曆未改動傅仁均原始數據，《中國古代曆法》第460頁
+        // YuanRange: 37856, // 無，我算得
+        // JiRange: 9464, // 無，我算得
+        Type: 4,
+        ApplyYear: [[645, 664]],
+        ZhangRange: 676, // 章歲
+        ZhangLeap: 249, // 章閏
+        Solar: 365 + 2315 / 9464, // 餘數49635
+        SolarNumer: 3456675, // 歲分
+        SolarDenom: 9464,
+        Sidereal: 365 + 2485.5 / 9464, // 週天。分子爲斗分
+        SiderealNumer: 3456845.5, // 週分 
+        Lunar: 29 + 6901 / 13006, // 朔策
+        // 沒分76815，沒法1103，沒日距=沒分/沒法=歲分/餘數
+        LunarNumer: 384075, // 月法
+        Denom: 13006, // 日法。時法=日法/2。度法、氣法9464。
+        TermDenom: 1183, // 氣時法=氣法/8=1183        
+        Anoma: 27 + 16064 / 28968, // 分子爲歷餘 
+        AnomaNumer: 798200, // 歷週
+        AnomaDenom: 28968, // 歷法
+        Node: 27 + 99373.8 / 468216, // 朔差=36月法-交會法。交會法/2=交分法=望差+交限。交點月+朔差=朔望月
+        NodeDenom: 468216, // 36 * 13006,
+        MoonAcrVList: [9909, 9810, 9695, 9563, 9414, 9266, 9118, 8953, 8788, 8640, 8508, 8392, 8277, 8178, 8211, 8310, 8425, 8557, 8689, 8837, 8986, 9151, 9299, 9447, 9578, 9710, 9809, 9891, 9909],
+        MoonDifAccumList: [0, 872, 1645, 2303, 2829, 3206, 3435, 3516, 3432, 3183, 2786, 2257, 1612, 852, -7, -833, -1560, -2172, -2652, -3000, -3200, -3251, -3137, -2875, -2465, -1924, -1251, -479, 375],
+        SunTcorrDifList: [896, 398, 400, 228, 341, 450, -500, -455, -355, -555, -848, -739, -626, -456, -288, -40, -342, -455, 682, 625, 570, 513, 456, 100],
+        SunTcorrList: [0, 896, 1294, 1694, 1922, 2263, 2713, 2213, 1758, 1403, 848, 0, -739, -1365, -1821, -2109, -2149, -2491, -2946, -2264, -1639, -1069, -556, -100, 0],
+        OriginAd: 626 - 164348, // 618武德元年加交差7755164
+        CloseOriginAd: 626,
+        // JdOrigin: 1949691.8546 - 164348 * (365 + 2315 / 9464),
+        OriginYearSc: 15, // 上元戊寅
+        OriginMonNum: 0, // 
+        ZhengNum: 2, // 建寅
+        MansionRaw: [11, 6], // 命以虛六
+        MansionFractPosition: 8, // 經斗去分
+        // NightList: [27 + 12 / 24, 27 + 5 / 24, 26 + 15 / 24, 25 + 19 / 24, 24 + 18 / 24, 23 + 13 / 24, 22 + 6 / 24, 20 + 3 / 24, 19 + 19 / 24, 18 + 19 / 24, 18 + 1 / 24, 17 + 14 / 24, 17 + 12 / 24], // 夜漏半
+        NightList: [27.5, 27.208333333333333, 26.625, 25.791666666666667, 24.75, 23.541666666666667, 22.25, 20.125, 19.791666666666667, 18.791666666666667, 18.041666666666667, 17.583333333333333, 17.5, 17.583333333333333, 18.041666666666667, 18.791666666666667, 19.791666666666667, 20.125, 22.25, 23.541666666666667, 24.75, 25.791666666666667, 26.625, 27.208333333333333, 27.5],
+        DialList: [13, 12.43, 11.2, 9.8, 8.17, 6.67, 5.37, 4.25, 3.26, 2.53, 1.99, 1.69, 1.5, 1.69, 1.99, 2.53, 3.26, 4.25, 5.37, 6.67, 8.17, 9.8, 11.2, 12.43, 13, 12.43], // 大明
+        SunLatiList: [115, 113 + 1 / 12, 110 + 8 / 12, 106 + 2 / 12, 101 + 1 / 12, 95 + 1 / 12, 89 + 1 / 12, 83 + 2 / 12, 77 + 10 / 12, 73 + 2 / 12, 69 + 8 / 12, 67 + 2 / 12, 67 + 1 / 12, 67 + 10 / 12, 70, 73 + 7 / 12, 78 + 7 / 12, 84 + 4 / 12, 90 + 7 / 12, 96 + 10 / 12, 102 + 4 / 12, 107 + 4 / 12, 110 + 11 / 12, 113 + 10 / 12, 115, 113 + 1 / 12], // 四分
+    },
+
+    //////////////
+
     Huangji: {
+        Type: 6,
+        isAcr: true,
         ClockCorr: 7 / 24, // 皇極以辰時爲夜半，但是計算仍然以子時。皇極曆夜半爲子半。皇極對時辰的規定過於曲折，見第478—480頁，我沒有考慮這些因素，直接用通行辦法。這不符合皇極原意。
         ZhangRange: 676, // 歲率、閏限，卽章法，設置閏月的週限。章月：81453
         ZhangLeap: 249, // 。每年12+144/391月
@@ -54,6 +1264,9 @@ export default {
         // const MoonAvgVDeg = parseFloat((Sidereal / Lunar + 1).toPrecision(13))
     },
     LindeA: {
+        Type: 6,
+        isAcr: true,
+        ApplyYear: [[665, 707], [717, 720]],
         Solar: 365 + 328 / 1340, // 麟德不用歲差
         SolarNumer: 489428, // 期實
         Lunar: 29 + 711 / 1340, // 朔策
@@ -90,6 +1303,10 @@ export default {
         SunLatiList: [115.3, 114.1, 111.7, 107.9, 102.9, 97.3, 91.3, 85.3, 79.7, 74.7, 70.9, 68.5, 67.3, 68.5, 70.9, 74.7, 79.7, 85.3, 91.3, 97.3, 102.9, 107.9, 111.7, 114.1, 115.3, 114.1], // 黃道去極《古代曆法》46頁
     },
     LindeB: {
+        Type: 6,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[708, 716], [721, 728]],
         Solar: 365 + 328 / 1340, // 麟德不用歲差
         SolarNumer: 489428, // 期實
         Lunar: 29 + 711 / 1340, // 朔策
@@ -126,6 +1343,9 @@ export default {
         SunLatiList: [115.3, 114.1, 111.7, 107.9, 102.9, 97.3, 91.3, 85.3, 79.7, 74.7, 70.9, 68.5, 67.3, 68.5, 70.9, 74.7, 79.7, 85.3, 91.3, 97.3, 102.9, 107.9, 111.7, 114.1, 115.3, 114.1], // 黃道去極《古代曆法》46頁
     },
     Shenlong: { // 開元占經、新唐志二末尾。鈕衛星《大衍寫九執公案再解讀》，《中國科技史雜誌》2009年第1期。小數是民間小曆的作法，源於印度曆法。「有黃道而無赤道」
+        Type: 6,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 2448 / 10000, // 母法100，辰法8刻33分20.5.期週365。氣法15餘21奇85少半
         SolarNumer: 3652448,
         Sidereal: 365 + 2571.71 / 10000, // 天週
@@ -145,6 +1365,10 @@ export default {
         ZhengNum: 2, // 建寅
     },
     Dayan: {
+        Type: 7,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[729, 757]],
         Solar: 365 + 743 / 3040,
         SolarNumer: 1110343, // 策實
         Sidereal: 365 + 779.75 / 3040,
@@ -188,6 +1412,10 @@ export default {
         MoonLatiAccumList: [0, 187, 358, 505, 620, 695, 722, 695, 620, 505, 358, 187], // 大衍陰陽積
     },
     Zhide: { // 在大衍的基礎上每節增二日
+        Type: 7,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[758, 762]],
         Solar: 365 + 743 / 3040,
         SolarNumer: 1110343, // 策實
         Sidereal: 365 + 779.75 / 3040,
@@ -211,6 +1439,10 @@ export default {
         MansionFractPosition: 11,
     },
     Wuji: { // 新唐志五
+        Type: 7,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[762, 783]],
         Solar: 365 + 328 / 1340,
         SolarNumer: 489428, //策實。策餘7028
         Sidereal: 365 + 342.7 / 1340, // 週天度
@@ -246,6 +1478,10 @@ export default {
         MoonLatiAccumList: [0, 24, 41, 52, 60, 71, 88, 100, 83, 72, 64, 53, 36, 12], // 屈伸積
     },
     Tsrengyuan: { // 新唐志五
+        Type: 7,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[784, 821]],
         Solar: 365 + 268 / 1095,
         SolarNumer: 399943, //策實。策餘5743
         Sidereal: 365 + 280.02 / 1095, // 週天度
@@ -279,6 +1515,10 @@ export default {
         MoonLatiAccumList: [0, 78, 134, 170, 196, 232, 288, 327, 271, 235, 209, 173, 117, 39],
     },
     Xuanming: {
+        Type: 7,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[822, 892]],
         Solar: 365 + 2055 / 8400,
         SolarNumer: 3068055, // 章歲
         Sidereal: 365 + (2153 + 299 / 300) / 8400, // 歲差29699
@@ -318,6 +1558,10 @@ export default {
         SunLatiList: [115.20238095238095, 114.54761904761905, 112.29761904761905, 108.6547619047619, 103.79761904761905, 97.95238095238095, 91.29761904761905, 84.6547619047619, 78.79761904761905, 73.95238095238095, 70.29761904761905, 68.04761904761905, 67.4047619047619, 68.04761904761905, 70.29761904761905, 73.95238095238095, 78.79761904761905, 84.6547619047619, 91.29761904761905, 97.95238095238095, 103.79761904761905, 108.6547619047619, 112.29761904761905, 114.54761904761905, 115.20238095238095, 114.54761904761905]
     },
     Chongxuan: { // 新唐志六下。崇玄發揚了符天的公式化，符天：平行實行差=(182-平行度)*平行度/3300「相減相乘」。陳美東《中國古代有關曆表及其算法的公式化》，《自然科學史研究》1988年第3期
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[893, 955]],
         Solar: 365 + 3301 / 13500,
         SolarNumer: 4930801, // 歲實。歲餘70801
         Sidereal: 365 + 3461.24 / 13500, // 歲差160.24
@@ -347,6 +1591,10 @@ export default {
         MoonTcorrDifList: [1319, 1150, 978, 799, 617, 431, 213, -27, -285, -471, -650, -840, -1017, -1185, -1325, -1284, -1110, -941, -757, -578, -386, -160, 80, 324, 516, 697, 879, 1053, 1223, 737],
     },
     Qintian: { // 新五代志一。統法7200經法72通法100
+        Type: 7,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[956, 963]],
         Solar: 365.2445, // 歲策 + 1760.40 / 7200
         SolarNumer: 2629760.40, // 歲實。歲餘
         Sidereal: 365 + 1844.80 / 7200, // 軌策。歲差84.40.辰則600，八刻二十四分
@@ -386,6 +1634,8 @@ export default {
         // https://zh.wikipedia.org/zh-hant/%E4%B9%9D%E5%9F%B7%E6%9B%86 九執是指太陽、月亮、金星、木星、水星、火星、土星五星，再加計都、羅睺二暗曜。《九執曆》歲實365.2469日，朔策29.53058日，以二月春分朔爲曆元，周天爲三百六十度；三十爲一相，六十爲一交，十二相而周天；以兩月爲時，六時爲歲；從朔到望叫做白博叉，從望到朔叫黑博叉。推算交食的食限是用合朔時月亮離交點及月亮黃緯來表示。規定當日月合朔發生在距交點的黃道度數不超過12度時，即發生交食；交點以6794日退行一周天。
         // 《推積日及小餘章》上古积年数太繁广，每因章首，遂便删除，务从简易，用舍随时。今起显庆二年丁巳岁二月一日，以为历首，至开元二年甲寅岁，置积年57算。术曰: 置积年，以12乘之，加自入年已来所积月。（假令推其年三月五日事，即历起二月一日为首，于12乘讫，数上更加1算，即是加入年所经一个月了。）加讫，重张位下，以7乘之，恒加132，以228除之，得闰月。以闰月加上位，为积月，以30乘之，加自入月已来所经日。（假令推三月五日事，即于三十乘讫，数上更加五算，即是加入月所经五日了。）重张位下位，11乘之，恒加差429，以703除之， 得自入历已来所经小月（其小月梵云欠夜），不尽为小余（其小梵云小月餘）。以小月减上位，为积日。（鈕衛星《符天曆曆元問題再研究》，《自然科學史研究》2017年第1期）
         // 中日、中月就是平行度
+        Type: 5,
+        isAcr: true,
         Solar: 365.25875, // 陳久金《符天曆研究》。顧：365.2762必譯書者之失
         SunAvgVDeg: 887 / 900,
         MoonAvgVDeg: 12 + 887 / 900,
@@ -405,6 +1655,10 @@ export default {
         AnomaCorr: 15,
     },
     Futian: { // 陳久金《符天曆研究》。調元沿襲符天。參數以崇玄補之
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[961, 993]],
         Solar: 365.2445,
         Sidereal: 365.2564,
         Lunar: 29.5306,
@@ -422,6 +1676,10 @@ export default {
     },
     // 下宋曆
     Yingtian: { // 宋志一
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[964, 982]],
         Solar: 365 + 2445 / 10002, // 破解成功。
         SolarNumer: 730635, // 歲盈。=3653175/5
         Sidereal: 365 + 2563.19 / 10002, // 2563.1888 / 10002這個根據天總*5再減一點。「小餘2563微88」不懂。下三曆的虛分跟週天有細微差別，爲何
@@ -467,6 +1725,10 @@ export default {
         SunLatiList: [115.2, 114.58, 112.32, 108.67, 103.81, 97.93, 91.31, 84.67, 78.79, 73.92, 70.27, 68.02, 67.39, 68.02, 70.27, 73.92, 78.79, 84.67, 91.31, 97.93, 103.81, 108.67, 112.32, 114.58, 115.2, 114.58], // 《中國古代曆法》頁46
     },
     Qianyuan: { // 宋志一
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[983, 1000]],
         Solar: 365 + 72 / 294, // 終於破解了，原來是要去掉0
         SolarNumer: 214764, // 歲週
         Sidereal: 365 + 753.75535 / 2940, // 。週天2563。 。會週17364， 會餘214764
@@ -507,6 +1769,9 @@ export default {
         SunLatiList: [115.2, 114.58, 112.32, 108.67, 103.81, 97.93, 91.31, 84.67, 78.79, 73.92, 70.27, 68.02, 67.39, 68.02, 70.27, 73.92, 78.79, 84.67, 91.31, 97.93, 103.81, 108.67, 112.32, 114.58, 115.2, 114.58], // 應天
     },
     Zhidao1: { // 曲安京《曆法》頁115
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 2591 / 10590,
         Sidereal: 365 + 2713.99 / 10590,
         Lunar: 29 + 5619 / 10590,
@@ -527,6 +1792,9 @@ export default {
         MoonTcorrDifList: [1034, 901, 767, 623, 483, 335, 166, -22, -223, -367, -508, -659, -796, -922, -1037, -1009, -872, -738, -594, -454, -303, -126, 61, 256, 403, 540, 695, 825, 962, 580],
     },
     Zhidao2: {
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 416 / 1700,
         Sidereal: 365 + 435.67 / 1700,
         Lunar: 29 + 902 / 1700,
@@ -548,6 +1816,10 @@ export default {
         MoonTcorrDifList: [166, 145, 123, 100, 77, 54, 27, -3, -36, -59, -82, -106, -128, -148, -167, -162, -140, -119, -95, -73, -49, -20, 10, 41, 65, 87, 112, 132, 154, 93],
     },
     Yitian: { // 宋志
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1001, 1023]],
         Solar: 365 + 2470 / 10100, // 365.2445。歲餘52970，餘2470
         SolarNumer: 368897, // 歲週
         Sidereal: 365 + 2588.99 / 10100, // 乾則
@@ -579,6 +1851,9 @@ export default {
         // 「以盈縮定分、四限直求二十四氣陰陽差，乃更不制二十四氣差法。」用公式
     },
     Qianxing: { // 乾興初，議改曆，命司天役人張奎運算，其術8000為日法，1958為半分，4299為朔，距乾興元年壬戌，歲39006658為積年。
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 1958 / 8008,
         Sidereal: 365 + 2052.65 / 8008,
         Lunar: 29 + 4249 / 8008,
@@ -599,6 +1874,10 @@ export default {
         MoonTcorrDifList: [789, 715, 606, 476, 340, 199, 63, -8, -88, -232, -373, -508, -632, -734, -789, -774, -691, -578, -447, -309, -166, -48, 23, 120, 264, 402, 537, 656, 750, 437,]
     },
     Chongtian: { // 宋志四五六
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1024, 1064], [1068, 1074]],
         Solar: 365 + 2590 / 10590, // 歲餘55540
         SolarNumer: 3867940, // 歲週
         Sidereal: 365 + 2715.02 / 10590, // 約分25.64
@@ -633,6 +1912,9 @@ export default {
         MoonTcorrDifList: [1043, 946, 802, 630, 450, 263, 83, -10, -117, -307, -493, -672, -836, -971, -1044, -1023, -914, -764, -591, -409, -220, -63, 31, 159, 349, 531, 710, 867, 992, 578],
     },
     TaiyiJingyou: { // 曲安京《曆法》頁394 以崇天爲參照
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 360 + 55068 / 10500,
         Lunar: 29 + 5571.24 / 10500,
         Denom: 10500,
@@ -641,6 +1923,10 @@ export default {
         ZhengNum: 2,
     },
     Mingtian: { // 宋志七。王錦瑞曲安京《明天曆歲差與上元積年》，我4月24日看竟然看懂了，之前都沒看懂
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1065, 1067]],
         Solar: 365 + 9500 / 39000, // 歲餘，古曆斗分。二至限：182+24250/39000，一象度91+12125/39000
         SolarNumer: 14244500, // 歲週
         Sidereal: 365 + 1600447 / 6240000, // 365.2564
@@ -675,6 +1961,10 @@ export default {
         MansionFractPosition: 11,
     },
     Fengyuan: { // 《李氏遺書·補修宋奉元術》「以明天術推熙寧七年甲寅歲前天正經朔⋯⋯得庚子日五十六刻二百二分」，0.56202，我算的是0.5652，恐怕是小數點精度造成的。李銳實際上只有朔策根據調日法補出來了，其他還是我自己來補吧。沒看到奉元算法的提示，用觀天的定朔算法。
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1075, 1093]],
         Solar: 365 + 5773 / 23700, // 李銳直接根據明天的比例來算
         SolarNumer: 8656273,
         Sidereal: 365 + 6077.40 / 23700,
@@ -696,6 +1986,10 @@ export default {
         MoonTcorrDifList: [2328, 2140, 1819, 1467, 1053, 613, 190, -20, -283, -707, -1137, -1550, -1900, -2169, -2374, -2288, -2059, -1741, -1362, -962, -521, -151, 79, 373, 807, 1241, 1628, 1957, 2215, 1311],
     },
     Guantian: { // 宋志十
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1094, 1102]],
         Solar: 365 + 293 / 1203, // 歲餘63080
         SolarNumer: 4393880, // 歲週
         Sidereal: 365 + 3084.57 / 12030, // 歲差154.57
@@ -730,6 +2024,10 @@ export default {
         MoonTcorrDifList: [1179, 1098, 936, 774, 558, 324, 99, -9, -154, -369, -594, -810, -979, -1099, -1224, -1161, -1052, -900, -711, -512, -279, -82, 45, 198, 423, 657, 846, 1002, 1122, 674],
     },
     Zhantian: { // 《李氏遺書》
+        Type: 8,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1103, 1105]],
         Solar: 365 + 684 / 2808,
         SolarNumer: 10256040, // 李銳根據觀天
         Sidereal: 365 + 7225.68 / 28080, //365 + 7201.21 / 28080,
@@ -753,6 +2051,10 @@ export default {
         MoonTcorrDifList: [2759, 2536, 2156, 1739, 1248, 727, 226, -24, -335, -838, -1347, -1836, -2251, -2570, -2813, -2711, -2440, -2063, -1613, -1140, -617, -179, 94, 442, 956, 1471, 1929, 2319, 2625, 1553],
     },
     Jiyuan: { // 宋志十二
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1106, 1166]],
         Solar: 365 + 1776 / 7290, // 2662626/7290=365.2436213992 歲週。紀法60，刻法729，辰法1215，月閏6607.5
         SolarNumer: 2662626, // 期實
         Sidereal: 365 + 1875.2125 / 7290, // 書上寫的週天度365.2572，這是去掉了小數點之後的，理論上是左邊的。歲差7937.週天分213018017.(213018017-7937)/80=(365*7290+1776)
@@ -795,6 +2097,10 @@ export default {
             -120, -256, -388, -512, -611, -687, -409] // 23-29 損益率，特殊處理各節點
     },
     Tongyuan: { // 宋志十六
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1136, 1167]],
         Solar: 365 + 1688 / 6930, // 
         SolarNumer: 2531138, // 歲週
         Sidereal: 365 + 1776.87 / 6930, // 約分365.2564，三曆同
@@ -828,6 +2134,10 @@ export default {
         MoonTcorrDifList: [-680, -618, -523, -411, -293, -172, -54, 7, 76, 200, 321, 438, 545, 633, 682, 669, 598, 499, 386, 267, 141, 40, -20, -104, -228, -348, -463, -567, -644, -377]
     },
     Qiandao: { // 宋志
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1168, 1176]],
         Solar: 365.2436, // 歲週7308 / 30000
         SolarNumer: 10957308, // 期實
         Sidereal: 365 + 7717.05 / 30000,
@@ -862,6 +2172,10 @@ export default {
         MoonTcorrDifList: [-2850, -2603, -2266, -1773, -1279, -808, -247, 23, 314, 853, 1391, 1863, 2176, 2738, 3118, 2783, 2581, 2266, 1796, 1323, 763, 157, -22, -539, -1122, -1683, -2019, -2446, -2805, -1683],
     },
     Chunxi: { // 宋志
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1177, 1190]],
         Solar: 365 + 1374 / 5640, // 歲餘
         SolarNumer: 2059974, // 歲週
         Sidereal: 365 + (1374 + 11513 / 150) / 5640, // 約分365.2564
@@ -896,6 +2210,10 @@ export default {
         MoonTcorrDifList: [-553, -506, -443, -358, -262, -152, -46, 4, 67, 178, 278, 380, 460, 518, 562, 544, 498, 426, 333, 236, 127, 29, -12, -93, -198, -300, -397, -472, -532, -316],
     },
     Huiyuan: { // 宋志
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1191, 1198]],
         Solar: 365 + 9432 / 38700,
         SolarNumer: 14134932, // 氣率
         Sidereal: 365 + 9957.13 / 38700, // 
@@ -928,6 +2246,10 @@ export default {
         MoonTcorrDifList: [-3763, -3387, -2981, -2461, -1853, -1129, -376, 29, 521, 1303, 1997, 2577, 3097, 3473, 3792, 3705, 3329, 2866, 2316, 1708, 984, 203, -58, -724, -1476, -2113, -2692, -3185, -3589, -2113],
     },
     Tongtian: { // 以下三個宋志十七。統天特色是消長、積年。積年僅僅是甲子日，其他什麼都不是——這就是授時的理論來源
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1199, 1251]],
         Solar: 365.2425, // - 0.0254 / 12000, // 《統天曆的歲實消長與氣朔算法分析》歲餘 2910 / 12000。斗分差127
         SolarNumer: 4382910, // 歲分
         Sidereal: 365.2575, // 365 + 3090 / 12000
@@ -968,6 +2290,10 @@ export default {
         MoonTcorrDifList: [-1194, -1086, -942, -772, -574, -350, -108, 9, 162, 404, 619, 808, 969, 1104, 1211, 1167, 1059, 915, 736, 530, 296, 63, -18, -215, -458, -673, -862, -1014, -1131, -655],
     },
     Kaixi: {
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1208, 1251]],
         Solar: 365 + 4108 / 16900, // 歲餘
         SolarNumer: 6172608, // 歲率
         Sidereal: 365 + 4359.01 / 16900,
@@ -1003,6 +2329,10 @@ export default {
         MoonTcorrDifList: [-1631, -1504, -1302, -1062, -784, -480, -164, 13, 202, 531, 834, 1112, 1353, 1555, 1706, 1618, 1466, 1264, 1011, 721, 392, 76, -25, -303, -632, -936, -1188, -1391, -1542, -910],
     },
     Chunyou: { // 《李氏遺書》、曲安京《曆法》
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1252, 1252]],
         Solar: 365 + 857 / 3530,
         Sidereal: 365 + 909.04 / 3530,
         Lunar: 29 + 1873 / 3530,
@@ -1028,6 +2358,10 @@ export default {
         MoonTcorrDifList: [-343, -313, -272, -223, -165, -101, -33, 3, 45, 114, 177, 232, 281, 322, 356, 338, 306, 264, 211, 151, 85, 18, -5, -63, -134, -195, -248, -290, -324, -191],
     },
     Huitian: { // 《李氏遺書》。根據寶祐四年會天曆來看，冬至時刻癸丑卯正初刻，成天是卯初四刻。
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1253, 1270]],
         Solar: 365 + 2366 / 9740,
         SolarNumer: 3557464,
         Sidereal: 365 + 2510.15 / 9740,
@@ -1056,6 +2390,10 @@ export default {
         MoonTcorrDifList: [-947, -865, -750, -615, -456, -279, -92, 7, 124, 316, 488, 641, 775, 889, 981, 932, 845, 728, 583, 418, 233, 49, -14, -175, -369, -539, -685, -801, -894, -527],
     },
     Chengtian: {
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1271, 1276], [1277, 1279]],
         Solar: 365 + 1801 / 7420,
         SolarNumer: 2710101, // 歲率
         Sidereal: 365 + 1910.61 / 7420, // 365.2574946
@@ -1091,6 +2429,9 @@ export default {
         MoonTcorrDifList: [-710, -644, -561, -461, -344, -211, -72, 5, 94, 239, 366, 477, 578, 666, 744, 699, 633, 544, 433, 311, 178, 39, -11, -133, -283, -405, -511, -594, -666, -400],
     },
     Bentian: {
+        Type: 9,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 1714 / 7060,
         Sidereal: 365 + 1817.5807 / 7060,
         Lunar: 29 + 3746 / 7060,
@@ -1114,8 +2455,14 @@ export default {
     },
 
     //////////////////////////////// 下金
-
+    // Daming1: {
+    //     ApplyYear: [[995, 1136]],
+    // },
     Daming2: { // 楊級。授時曆議有積年1127 - 383768503、日法。《金志上》「然其所本，不能詳究，或曰因宋紀元曆而增損之也。」《元志一》「衡等以爲金雖改曆，止以宋紀元曆微加增益，實未嘗測驗於天」
+        Type: 10,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1127, 1180]],
         Solar: 365 + 1274 / 5230,
         Sidereal: 365 + 1342.957 / 5230,
         Lunar: 29 + 2775 / 5230,
@@ -1133,6 +2480,10 @@ export default {
         AcrTermList: [0, 14.512483, 29.138966, 43.885749, 58.759132, 73.765416, 88.910899, 104.202382, 119.633065, 135.196648, 150.886831, 166.697314, 182.621797, 198.54628, 214.356764, 230.046947, 245.61053, 261.041213, 276.332696, 291.478179, 306.484462, 321.357845, 336.104628, 350.731112, 365.243595, 365 + 1274 / 5230 + 14.512483],
     },
     Daming3: { // 金志上。「時翰林應奉耶律履亦造乙未曆。二十一年十一月望，太陰虧食，遂命尙書省委禮部員外郞任忠傑與司天曆官驗所食時刻分秒，比校知微、履及見行曆之親疏，以知微曆爲親，遂用之。」
+        Type: 10,
+        isAcr: true,
+        isNewmPlus: true,
+        ApplyYear: [[1181, 1280]],
         Solar: 365 + 1274 / 5230, // 通餘27424
         SolarNumer: 1910224, // 
         Sidereal: 365 + 1343.053 / 5230, // 週天度
@@ -1167,6 +2518,9 @@ export default {
         // NightList: [29.979349904397708, 29.780497131931167, 29.231166347992353, 28.39827915869981, 27.34302103250478, 26.12122370936903, 24.798470363288722, 23.561567877629063, 22.431739961759085, 21.459655831739962, 20.69751434034417, 20.19923518164436, 20.020458891013384, 20.19923518164436, 20.69751434034417, 21.459655831739962, 22.431739961759085, 23.561567877629063, 24.798470363288722, 26.12122370936903, 27.34302103250478, 28.39827915869981, 29.231166347992353, 29.780497131931167, 29.979349904397708, 29.780497131931167, 29.231166347992353]
     },
     Gengwu: { // 元志八。沿用重修大明。耶律楚材是耶律履之子，那應該跟乙未很近。「惟萬年曆不復傳，而庚午元曆雖未嘗頒用，其爲書猶在，因附著于後，使來者有考焉。」「乃損節氣之分，減周天之秒，去交終之率，治月轉之餘，課兩曜之後先，調五行之出沒，以正（重修）大明曆之失。」
+        Type: 10,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 1274 / 5230, // 通餘27424
         SolarNumer: 1910224, // 
         Sidereal: 365 + 1342.98 / 5230, // 週天度365.2567
@@ -1195,6 +2549,9 @@ export default {
         MoonAcrVList: [1468, 1457, 1442, 1422, 1399, 1373, 1347, 1321, 1295, 1271, 1247, 1228, 1214, 1204, 1208, 1219, 1236, 1258, 1281, 1307, 1333, 1359, 1384, 1408, 1431, 1449, 1463, 1472, 1468], // 大明轉定分
     },
     Yiwei: { // 乙未元曆《李氏遺書》。《授時曆議》「大定二十年庚子耶律履（耶律楚材之父）造，不見行用，至辛巳後天一十九刻」那麼應該是用授時作爲標準。李銳說是20690，授時曆議2690。若用2690.朔實就不對 積年都不對，前後一萬年看了，閏餘差最小也是0.13。不行，還是求不出來。最後用曲安京復原結果
+        Type: 10,
+        isAcr: true,
+        isNewmPlus: true,
         Solar: 365 + 5040 / 20690,
         Sidereal: 365 + 5311.65 / 20690,
         Lunar: 29 + 10978 / 20690,
@@ -1214,6 +2571,9 @@ export default {
 
     ///////////////////////////////
     Shoushi: { // 授時曆經
+        Type: 11,
+        isAcr: true,
+        ApplyYear: [[1281, 1367]],
         CloseOriginAd: 1281,
         Denom: 1,
         SolarRaw: 365.2425, // 曆元歲實
@@ -1240,6 +2600,8 @@ export default {
         MansionFractPosition: 11,
     },
     Shoushi1: { // 授時曆經不消長
+        Type: 11,
+        isAcr: true,
         CloseOriginAd: 1281,
         Denom: 1,
         Solar: 365.2425, // 曆元歲實
@@ -1266,6 +2628,8 @@ export default {
         MansionFractPosition: 11,
     },
     ShoushiA: { // 授時曆經建子
+        Type: 11,
+        isAcr: true,
         CloseOriginAd: 1281,
         Denom: 1,
         SolarRaw: 365.2425, // 曆元歲實
@@ -1292,6 +2656,9 @@ export default {
         MansionFractPosition: 11,
     },
     Datong: { // 後期授時不加消長。A A1，B B1參數分別一模一樣，只是把Solar改成solar
+        Type: 11,
+        isAcr: true,
+        ApplyYear: [[1368, 1683]],
         CloseOriginAd: 1281,
         Denom: 1,
         Solar: 365.2425, // 曆元歲實
@@ -1318,6 +2685,8 @@ export default {
         MansionFractPosition: 11,
     },
     DatongLizhi: {
+        Type: 11,
+        isAcr: true,
         CloseOriginAd: 1384,
         Denom: 1,
         // JdOrigin: 2226545.5375,
@@ -1345,6 +2714,8 @@ export default {
         MansionFractPosition: 11,
     },
     Wannian: {
+        Type: 11,
+        isAcr: true,
         CloseOriginAd: 1554, // 嘉靖甲寅歲
         Denom: 1,
         Solar: 365.2424995, // 365.25-(4560-(1553-1280))*0.00000175=365.2424995
@@ -1372,6 +2743,8 @@ export default {
         MansionFractPosition: 11,
     },
     West: {
+        Type: 20,
+        isAcr: true,
         OriginAd: 1281,
         // JdOrigin: 2188925.5,
         SolarRaw: 365.24218968, // 365.24218968-0.0000000616*(year-2000) 
@@ -1393,6 +2766,8 @@ export default {
     ////////////////
 
     Huihui: { // 明志十三。其法不用閏月，以三百六十五日爲一歲。歲十二宮，宮有閏日，凡百二十八年而宮閏三十一日。以三百五十四日爲一周，周十二月，月有閏日。凡三十年月閏十一日，歷千九百四十一年，宮月日辰再會。此其立法之大槪也。
+        Type: 15,
+        isAcr: true,
         Solar: 365.2421997, // 360度，60分，60秒 // 《回回曆法中若干天文數據之研究》 
         // Sidereal: , // 週天度
         SiderLunar: 27.32158575,
@@ -1410,3 +2785,19 @@ export default {
         Mercury: 115.8771744,
     },
 }
+
+    // Huihui: [
+    //     [1368, 1662]
+    // ],
+    // Shixian1: [ // 西洋新法曆書
+    //     [1645, 1679]
+    // ],
+    // Shixian2: [ // 康熙永年曆法
+    //     [1680, 1726]
+    // ],
+    // Shixian3: [ // 曆象考成
+    //     [1727, 1733]
+    // ],
+    // Shixian4: [ // 曆象考成後編
+    //     [1734, 1913]
+    // ]

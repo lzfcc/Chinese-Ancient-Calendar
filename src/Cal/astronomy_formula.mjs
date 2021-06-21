@@ -1,7 +1,7 @@
+import Para from './para_calendars.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
-import { AutoEqua2Eclp } from './bind_astronomy.mjs'
+import { AutoEqua2Eclp } from './astronomy_bind.mjs'
 import { big } from './para_constant.mjs'
-import { Bind } from './bind.mjs'
 import { AutoMoonAvgV, AutoNodeCycle, AutoSolar, AutoSidereal } from './para_auto-constant.mjs'
 
 export const Equa2EclpFormula = (LongiRaw, CalName) => { // 公式化的，週天度就用自己的
@@ -263,8 +263,7 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
 // console.log(MoonLongiFormula(91, 92, 'Jiyuan').EclpWhiteDif)
 
 export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
-    const { AutoPara } = Bind(CalName)
-    const { Node } = AutoPara[CalName]
+    const { Node } = Para[CalName]
     const Cycle = AutoNodeCycle(CalName)
     let MoonAvgVDeg = AutoMoonAvgV(CalName) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
     if (CalName === 'Qintian') {

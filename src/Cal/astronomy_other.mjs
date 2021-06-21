@@ -1,7 +1,7 @@
-import { AutoLongi2Lati } from './bind_astronomy.mjs'
+import Para from './para_calendars.mjs'
+import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { MansionNameList } from './para_constant.mjs' // 賦值解構
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
-import { Bind } from './bind.mjs'
 
 export const Deg2Mansion = (MansionAccum, DegAccumList) => {
     let MansionOrder = 0
@@ -21,9 +21,8 @@ export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameL
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
 export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci, year) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
-    const { AutoPara, Type } = Bind(CalName)
-    const { SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = AutoPara[CalName]
-    let { Sidereal, Solar } = AutoPara[CalName]
+    const { Type, SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = Para[CalName]
+    let { Sidereal, Solar } = Para[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
     if (CalName === 'Shoushi') { // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
         // 試了一下，按上面這樣區分1281前後，沒有任何變化
@@ -85,7 +84,7 @@ ${DuskstarName}${DuskstarDeg}`
 // }
 
 export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
-    const { isNewmPlus } = Bind(CalName)
+    const { isNewmPlus } = Para[CalName]
     let Plus = 3.75 // 若不用進朔，需要改成3.75
     if (isNewmPlus) {
         Plus = 2.75
@@ -103,8 +102,7 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
 }
 
 export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 朔小分
-    const { AutoPara } = Bind(CalName)
-    const { Solar } = AutoPara[CalName]
+    const { Solar } = Para[CalName]
     const Solar25 = Solar / 4
     const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDeci, CalName).Rise / 100
     let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName)
@@ -137,7 +135,7 @@ export const AutoNewmPlus = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => { // 
 // console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
 export const AutoSyzygySub = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => {
-    const { Type } = Bind(CalName)
+    const { Type } = Para[CalName]
     const LightRange = AutoLightRange(CalName)
     const Rise = AutoLongi2Lati(WinsolsDifRaw, WinsolsDeci, CalName).Rise / 100
     let standard = Rise - LightRange
@@ -154,10 +152,9 @@ export const AutoSyzygySub = (Deci, WinsolsDifRaw, WinsolsDeci, CalName) => {
 }
 
 export const AutoNineOrbit = (NodeAccum, WinsolsDifRaw, CalName) => { // 月行九道法
-    const { Type, AutoPara } = Bind(CalName)
-    const { SolarRaw, Node, LunarRaw } = AutoPara[CalName]
+    const { Type, SolarRaw, Node, LunarRaw } = Para[CalName]
     let { Solar, Lunar
-    } = AutoPara[CalName]
+    } = Para[CalName]
     Lunar = Lunar || LunarRaw
     Solar = Solar || SolarRaw
     const Node50 = Node / 2

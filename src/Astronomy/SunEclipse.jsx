@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindSunEclipse } from '../Cal/bind_astronomy'
+import { BindSunEclipse } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {

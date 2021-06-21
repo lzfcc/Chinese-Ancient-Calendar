@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindMansion2Deg } from '../Cal/bind_astronomy'
+import { BindMansion2Deg } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {

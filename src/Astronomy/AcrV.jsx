@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindTcorr } from '../Cal/bind_astronomy'
+import { BindTcorr } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {

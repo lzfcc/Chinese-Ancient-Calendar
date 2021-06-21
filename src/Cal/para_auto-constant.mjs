@@ -1,4 +1,4 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 
 export const AutoQuar = (CalName, Type) => { // 盈縮限
     let QuarA = 0
@@ -13,8 +13,7 @@ export const AutoQuar = (CalName, Type) => { // 盈縮限
         QuarA = 88.909225
         QuarB = 93.712025
     } else {
-        const { AutoPara } = Bind(CalName)
-        const { Solar, SolarRaw, AcrTermList } = AutoPara[CalName]
+        const { Solar, SolarRaw, AcrTermList } = Para[CalName]
         QuarA = AcrTermList[6]
         QuarB = (Solar || SolarRaw) / 2 - QuarA
     }
@@ -34,8 +33,7 @@ export const AutoSolar = CalName => {
     } else if (['Guantian', 'Jiyuan'].includes(CalName)) {
         Solar = 365.2436
     } else {
-        const { AutoPara } = Bind(CalName)
-        Solar = +(AutoPara[CalName].Solar).toFixed(4)
+        Solar = +(Para[CalName].Solar).toFixed(4)
     }
     return Solar
 }
@@ -53,15 +51,14 @@ export const AutoSidereal = CalName => {
     } else if (['Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(CalName)) {
         Sidereal = 365.2436
     } else {
-        const { AutoPara } = Bind(CalName)
-        Sidereal = +(AutoPara[CalName].Sidereal).toFixed(4)
+        Sidereal = +(Para[CalName].Sidereal).toFixed(4)
     }
     return Sidereal
 }
 // console.log(AutoSidereal('Xuanming'))
 
 export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
-    const { AutoPara, Type } = Bind(CalName)
+    const { Type } = Para[CalName]
     let V = 0
     if (CalName === 'Daye') {
         V = 548.101486 / 41
@@ -86,7 +83,7 @@ export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
     } else if (Type === 10) {
         V = 5230 / 391.21 // 13.3687789
     } else {
-        const { Sidereal, Solar, Lunar, LunarRaw } = AutoPara[CalName]
+        const { Sidereal, Solar, Lunar, LunarRaw } = Para[CalName]
         V = parseFloat(((Sidereal || Solar) / (Lunar || LunarRaw) + 1).toPrecision(14))
     }
     return V
@@ -115,8 +112,7 @@ export const AutoNodeCycle = CalName => {
     } else if (['Datong', 'DatongLizhi'].includes(CalName)) {
         NodeCycle = 363.793419
     } else { // 其他的不知道了
-        const { AutoPara } = Bind(CalName)
-        const { Node } = AutoPara[CalName]
+        const { Node } = Para[CalName]
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         NodeCycle = +(MoonAvgVDeg * Node).toFixed(4)
     }
@@ -198,8 +194,7 @@ export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算
 }
 
 export const AutoMoonTcorrDif = (AnomaAccum, CalName) => { // 唐宋月離損益率
-    const { AutoPara } = Bind(CalName)
-    const { MoonTcorrDifList, Anoma } = AutoPara[CalName]
+    const { MoonTcorrDifList, Anoma } = Para[CalName]
     const AnomaAccumInt = ~~AnomaAccum
     const Anoma25 = Anoma / 4 // 6.8887
     const Anoma50 = Anoma / 2 // 13.7772

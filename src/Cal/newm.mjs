@@ -1,18 +1,17 @@
+import Para from './para_calendars.mjs'
 import { ScList, AutoDegAccumList } from './para_constant.mjs'
-import { Bind } from './bind.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
 import { ConstWest } from './astronomy_west.mjs'
 import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub, LeapAdjust } from './astronomy_other.mjs'
-import { AutoEqua2Eclp } from './bind_astronomy.mjs'
+import { AutoEqua2Eclp } from './astronomy_bind.mjs'
 
 export default (CalName, year) => {
-    const { Type, AutoPara, isAcr, isNewmPlus } = Bind(CalName)
-    const { Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
+    const { Type, isAcr, isNewmPlus, Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
-        YinyangCorr, EcliCorr } = AutoPara[CalName]
+        YinyangCorr, EcliCorr } = Para[CalName]
     let { Solar, SolarRaw, Lunar, LunarRaw, ScCorr, NodeCorr, FirstCorr, AnomaCorr, MansionCorr, WinsolsCorr
-    } = AutoPara[CalName]
+    } = Para[CalName]
     ScCorr = ScCorr || 0
     SolarRaw = SolarRaw || Solar
     LunarRaw = LunarRaw || Lunar
@@ -164,9 +163,9 @@ export default (CalName, year) => {
     } else {
         LeapLimit = parseFloat((13 * Lunar - Solar).toPrecision(14))
     }
-    let isLeapThis = LeapSurAvgThis >= LeapLimit ? 1 : 0 // 是否有閏月
-    let isLeapPrev = LeapSurAvgPrev >= LeapLimit ? 1 : 0
-    let isLeapNext = LeapSurAvgNext >= LeapLimit ? 1 : 0
+    let isLeapThis = LeapSurAvgThis >= LeapLimit // 是否有閏月
+    let isLeapPrev = LeapSurAvgPrev >= LeapLimit
+    let isLeapNext = LeapSurAvgNext >= LeapLimit
     let LeapNumAvgThis = 0, LeapNumAvgNext = 0, isAdvance = 0
     if (ZhangRange) {
         LeapNumAvgThis = isLeapThis ? Math.ceil(parseFloat(((ZhangRange - LeapSurAvgThis) * 12 / ZhangLeap).toPrecision(14))) : 0
@@ -195,6 +194,7 @@ export default (CalName, year) => {
             isAdvance = 1
         }
     }
+
     const EquaDegAccumList = AutoDegAccumList(CalName, year)
     const AutoNewmSyzygy = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDifRaw = [], AcrWinsolsDifRaw = [], Equa = []

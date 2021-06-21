@@ -1,4 +1,4 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
 import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 
@@ -42,8 +42,7 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 // }
 
 export const Equa2EclpTable = (LongiRaw, CalName) => {
-    const { AutoPara, Type } = Bind(CalName)
-    let { Sidereal, Solar } = AutoPara[CalName]
+    let { Type, Sidereal, Solar } = Para[CalName]
     Sidereal = Sidereal || Solar
     const Sidereal50 = Sidereal / 2
     const Sidereal25 = Sidereal / 4
@@ -132,8 +131,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
 // console.log(Equa2EclpTable(23, 'Yitian'))
 
 export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
-    const { AutoPara } = Bind(CalName)
-    const { Solar, NightList, DialList, SunLatiList } = AutoPara[CalName]
+    const { Solar, NightList, DialList, SunLatiList } = Para[CalName]
     let DawnRange = 0
     if (CalName !== 'Daye') {
         DawnRange = 2.5
@@ -150,9 +148,8 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
 }
 
 export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    const { Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
-    } = AutoPara[CalName]
+    const { Type, Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
+    } = Para[CalName]
     const WinsolsDif = WinsolsDifRaw % Solar
     let DawnRange = 2.5
     if (CalName === 'Huangji') {
@@ -285,9 +282,8 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
-    const { AutoPara } = Bind(CalName)
-    const { Solar } = AutoPara[CalName]
-    let { Sidereal } = AutoPara[CalName]
+    const { Solar } = Para[CalName]
+    let { Sidereal } = Para[CalName]
     const Quadrant = AutoNodeCycle(CalName) / 4
     const NodeAccum = NodeAccumRaw// % (Node / 2)
     // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
@@ -385,9 +381,8 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
 // console.log(MoonLongiTable(45, 3, 'Qintian'))
 
 export const MoonLatiTable = (NodeAccum, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    const { Node, MoonLatiAccumList } = AutoPara[CalName]
-    let { MoonLatiDifList } = AutoPara[CalName]
+    const { Type, Node, MoonLatiAccumList } = Para[CalName]
+    let { MoonLatiDifList } = Para[CalName]
     ///////預處理陰陽曆////////
     let Portion = 10
     if (Type <= 4) {

@@ -1,4 +1,4 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 import {
     ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
     WeekList, MansionNameList, MansionAnimalNameList,
@@ -12,7 +12,7 @@ import {
 import CalNewm from './newm_index.mjs'
 import {
     AutoEqua2Eclp, AutoLongi2Lati, AutoMoonLongi, AutoMoonLati
-} from './bind_astronomy.mjs'
+} from './astronomy_bind.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
 import { Accum2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
@@ -21,9 +21,8 @@ import { AutoMoonAvgV } from './para_auto-constant.mjs'
 export const CalDay = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, year) => {
-        const { Type, AutoPara } = Bind(CalName)
-        const { LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionDayCorr, ScCorr } = AutoPara[CalName]
-        let { Solar, Sidereal, Lunar } = AutoPara[CalName]
+        const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionDayCorr, ScCorr } = Para[CalName]
+        let { Solar, Sidereal, Lunar } = Para[CalName]
         const { LeapNumTermThis, OriginAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar

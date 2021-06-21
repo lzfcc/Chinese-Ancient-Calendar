@@ -96,7 +96,7 @@ $ npm run build
   - `eclipse_table` 使用表格进行交食计算的历法
 - `bind_` 自动选择
   - `bind` 根据历法自动选择朔闰计算
-  - `bind_astronomy` 根据历法自动选择天文计算
+  - `astronomy_bind` 根据历法自动选择天文计算
 - 输出
   - `output` 输出准备
   - `print` 本地打印入口。`const printData = outputFile(2, 1255, 1255, 0` 第一个数字为模式，`1` 为朔闰表，`2` 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持

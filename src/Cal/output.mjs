@@ -1,10 +1,24 @@
 import CalNewm from './newm_index.mjs'
-import {
-    CalDay
-} from './day.mjs'
-import {
-    AutoCal
-} from './bind.mjs'
+import { CalDay } from './day.mjs'
+import Para from './para_calendars.mjs'
+
+const AutoCal = year => {
+    if (year < -721 || year > 1683) {
+        throw (new Error('年份範圍 -721 至 1683'))
+    }
+    const Cals = []
+    for (const [Cal, CalPara] of Object.entries(Para)) {
+        const ApplyRange = CalPara.ApplyYear || [] // 兼容 ApplyRange 为空
+        for (const [start, end] of ApplyRange) {
+            if (year >= start && year <= end) {
+                Cals.push(Cal)
+                break
+            }
+        }
+    }
+    return Cals
+}
+// console.log (AutoCal(1150))
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,

@@ -82,7 +82,7 @@ export const BindSolarChange = year => {
     })
     return Print
 }
-console.log(BindSolarChange(2000))
+// console.log(BindSolarChange(2000))
 
 export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)

@@ -1,4 +1,4 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 import { Interpolate1 } from './equa_sn.mjs'
 import { CalNameList } from './para_constant.mjs'
 
@@ -23,8 +23,7 @@ import { CalNameList } from './para_constant.mjs'
 // }
 
 const AutoSunInterpolate = (n, CalName, S1, S2, S3) => {
-    const { AutoPara, Type } = Bind(CalName)
-    const { Solar, SolarRaw, SunTcorrList, TermRangeA, TermRangeS } = AutoPara[CalName]
+    const { Type,Solar, SolarRaw, SunTcorrList, TermRangeA, TermRangeS } = Para[CalName]
     let D1, D2 = 0
     if (S1) {
         D1 = S2 - S1
@@ -61,12 +60,11 @@ const b1 = a1 => a1 * (700 / 10200 + 800 / 11700 + 440 / 6800 + 356 / 5460 + 730
 // console.log(b1(10200))
 
 const GenAcrV = () => { // 生成殘曆的躔離
-    const { AutoPara } = Bind('Tongtian')
-    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = AutoPara['Chongxuan']
-    const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = AutoPara['Guantian']
-    const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = AutoPara['Jiyuan']
-    const { Denom: Denom4 } = AutoPara['Qintian']
-    const { Denom: Denom5 } = AutoPara['Zhantian']
+    const { Denom: Denom1, SunAcrAvgDifList: SunAcrAvgDifList1, SunTcorrList: SunTcorrList1, MoonAcrVList: MoonAcrVList1, MoonTcorrList: MoonTcorrList1, MoonTcorrDifList: MoonTcorrDifList1 } = Para['Chongxuan']
+    const { Denom: Denom2, SunAcrAvgDifList: SunAcrAvgDifList2, SunTcorrList: SunTcorrList2, MoonAcrVList: MoonAcrVList2, MoonTcorrList: MoonTcorrList2, MoonTcorrDifList: MoonTcorrDifList2 } = Para['Guantian']
+    const { Denom: Denom3, SunAcrAvgDifList: SunAcrAvgDifList3, SunTcorrList: SunTcorrList3, MoonAcrVList: MoonAcrVList3, MoonTcorrList: MoonTcorrList3, MoonTcorrDifList: MoonTcorrDifList3 } = Para['Jiyuan']
+    const { Denom: Denom4 } = Para['Qintian']
+    const { Denom: Denom5 } = Para['Zhantian']
     const SunAcrAvgDif = []
     const SunTcorr = []
     const MoonAcrV = []
@@ -96,9 +94,8 @@ const GenAcrV = () => { // 生成殘曆的躔離
 }
 // console.log(GenAcrV())
 const GenMoon248 = () => { // 欽天月離表
-    const { AutoPara } = Bind('Chongxuan')
-    const { MoonTcorrList: MoonTcorrList1, Denom: Denom1, MoonAcrVList: MoonAcrVList1 } = AutoPara['Wuji']
-    const { MoonTcorrList: MoonTcorrList2, Denom: Denom2, MoonAcrVList: MoonAcrVList2 } = AutoPara['Jiyuan']
+    const { MoonTcorrList: MoonTcorrList1, Denom: Denom1, MoonAcrVList: MoonAcrVList1 } = Para['Wuji']
+    const { MoonTcorrList: MoonTcorrList2, Denom: Denom2, MoonAcrVList: MoonAcrVList2 } = Para['Jiyuan']
     let list = []
     let list2 = []
     for (let l = 0; l <= 27; l++) {
@@ -144,8 +141,7 @@ const GenSolar = () => {
     const SolarList = []
     const Change = []
     CalList.forEach(name => {
-        const { AutoPara } = Bind(name)
-        let { Solar, SolarRaw, CloseOriginAd } = AutoPara[name]
+        let { Solar, SolarRaw, CloseOriginAd } = Para[name]
         Solar = Solar || SolarRaw
         if (CloseOriginAd) {
             const Frac = Solar - ~~Solar

@@ -1,4 +1,4 @@
-import { Bind } from './bind.mjs'
+import Para from './para_calendars.mjs'
 import {
     Equa2EclpTable, Longi2LatiTable1, Longi2LatiTable2, MoonLatiTable
 } from './astronomy_table.mjs'
@@ -129,8 +129,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
 export const AutoEqua2Eclp = (LongiRaw, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    const { Sidereal, Solar, SolarRaw } = AutoPara[CalName]
+    const { Type, Sidereal, Solar, SolarRaw } = Para[CalName]
     LongiRaw %= Sidereal || (Solar || SolarRaw)
     let Equa2Eclp = 0
     let Eclp2Equa = 0
@@ -319,8 +318,7 @@ export const BindMansion2Deg = (Mansion, CalName) => {
 }
 
 export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
-    const { Type, AutoPara } = Bind(CalName)
-    const { Solar, SolarRaw } = AutoPara[CalName]
+    const { Type, Solar, SolarRaw } = Para[CalName]
     let special = 0, Plus1 = 0, Plus2 = 0
     LongiRaw = ~~(LongiRaw + WinsolsDeci) - WinsolsDeci
     if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 WinsolsDeci 0.3, LongiRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LongiRaw 2.8，該日3.1，去掉小數點是3
@@ -463,8 +461,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDeci, f, Sidereal, year) => {
 // console.log(BindLongi2Lati(330, 0.45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLati = (NodeAccum, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    let { Sidereal } = AutoPara[CalName]
+    let { Type, Sidereal } = Para[CalName]
     // Solar = Solar || SolarRaw
     let MoonLati = {}
     if (Type <= 3) {
@@ -496,8 +493,7 @@ export const AutoMoonLati = (NodeAccum, CalName) => {
 // console.log(AutoMoonLati(2, 'Tsrengyuan').MoonEclpLati)
 
 export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
-    const { Type, AutoPara } = Bind(CalName)
-    let { Solar, SolarRaw, Sidereal, Node } = AutoPara[CalName]
+    let { Type, Solar, SolarRaw, Sidereal, Node } = Para[CalName]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
     const MoonAvgVDeg = AutoMoonAvgV(CalName)

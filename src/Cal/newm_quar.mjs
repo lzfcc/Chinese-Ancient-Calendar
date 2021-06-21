@@ -1,13 +1,13 @@
 import { ScList, TermList, AutoDegAccumList } from './para_constant.mjs'
-import AutoPara from './para_1.mjs'
+import Para from './para_calendars.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
-export default function CalQuar(CalName, year) {
+export default (CalName, year) => {
     const { Lunar, Solar, WinsolsWinsolsDif, WinsolsOriginMon,
         OriginAd, OriginYearSc, OriginDayCorr, WinsolsCorr, ZhengNum, OriginMonNum,
         YuanRange, TongRange, isTermLeap, EcliRange, EcliNumer, MansionRaw
-    } = AutoPara[CalName]
-    let { JiRange, BuRange } = AutoPara[CalName]
+    } = Para[CalName]
+    let { JiRange, BuRange } = Para[CalName]
     if (CalName === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange
@@ -28,9 +28,9 @@ export default function CalQuar(CalName, year) {
     const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
     const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
     const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - ~~(BuYear * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
-    let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)) ? 1 : 0 // 是否有閏月
-    let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11)) ? 1 : 0
-    let isLeapAvgNext = LeapSurAvgNext >= parseFloat((12 / 19).toPrecision(11)) ? 1 : 0
+    let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)) // 是否有閏月
+    let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11))
+    let isLeapAvgNext = LeapSurAvgNext >= parseFloat((12 / 19).toPrecision(11))
     let LeapNumAvgThis = isLeapAvgThis ? ~~(parseFloat(((1 - LeapSurAvgThis) * 228 / 7).toPrecision(12))) : 0 // 閏餘法今年閏月
     let LeapNumAvgPrev = isLeapAvgPrev ? ~~(parseFloat(((1 - LeapSurAvgPrev) * 228 / 7).toPrecision(12))) : 0
     let LeapNumAvgNext = isLeapAvgNext ? ~~(parseFloat(((1 - LeapSurAvgNext) * 228 / 7).toPrecision(12))) : 0
@@ -99,8 +99,7 @@ export default function CalQuar(CalName, year) {
     if (EcliNumer) {
         EcliAccum = EcliRange * ((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange - ~~((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange))
         for (let k = 1; k <= 3; k++) {
-            const a = ~~(EcliRange * k - EcliAccum)
-            SyzygySc[a] += `<span class='eclipse-symbol'>◐</span>`
+            SyzygySc[~~(EcliRange * k - EcliAccum)] += `<span class='eclipse-symbol'>◐</span>`
         } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
     }
     // 中氣
