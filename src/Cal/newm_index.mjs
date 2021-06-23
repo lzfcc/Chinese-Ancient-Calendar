@@ -19,7 +19,7 @@ export default (CalName, YearStart, YearEnd) => {
     const calculate = year => {
         const [PrevYear, ThisYear, NextYear] = YearMemo
         const ZhengWinsolsDif = ZhengNum - OriginMonNum
-        const WinsolsMonNum = (1 - ZhengNum + 12) % 12 // 冬至月
+        const WinsolsMon = (1 - ZhengNum + 12) % 12 // 冬至月
         const isLeapPvPt = PrevYear.isLeapPost
         const { isLeapAdvan: isLeapTA, JiScOrder: JiScOrder,
             OriginAccum, NewmEqua, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgWinsolsDif, TermAcrWinsolsDif, AccumPrint, LeapLimit
@@ -30,14 +30,14 @@ export default (CalName, YearStart, YearEnd) => {
         const WinsolsDeci = +(OriginAccum - Math.floor(OriginAccum)).toFixed(5)
         let specialStart = 0, specialNewmSyzygyEnd = 0
         if (Type === 1) {
-            if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[WinsolsMonNum] === '')) {
+            if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[WinsolsMon] === '')) {
                 specialNewmSyzygyEnd = 1
                 TermEnd = 1
                 LeapNumTermThis = 12
-                if (WinsolsMonNum === 1) {
+                if (WinsolsMon === 1) {
                     TermEnd = 0
                 }
-            } else if ((isTermLeap && ThisYear.TermSc[1] === '') || (!isTermLeap && ThisYear.TermSc[WinsolsMonNum] === '')) {
+            } else if ((isTermLeap && ThisYear.TermSc[1] === '') || (!isTermLeap && ThisYear.TermSc[WinsolsMon] === '')) {
                 specialStart = 1
                 LeapNumTermThis--
             } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
