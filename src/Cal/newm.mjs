@@ -260,7 +260,13 @@ export default (CalName, year) => {
                 TermAvgRaw[i] = OriginAccum + TermAvgWinsolsDif[i]
                 const TermNum3 = 2 * (i + ZhengWinsolsDif - 1)
                 if (Type >= 5 && AcrTermList) {
-                    TermAcrWinsolsDif[i] = AcrTermList[TermNum3 % 24] + (TermNum3 >= 24 ? Solar : 0)
+                    let Plus = 0
+                    if (TermNum3 >= 24) {
+                        Plus = Solar
+                    } else if (TermNum3 < 0) {
+                        Plus = -Solar
+                    }
+                    TermAcrWinsolsDif[i] = AcrTermList[(TermNum3 + 24) % 24] + Plus
                     TermAcrRaw[i] = OriginAccum + TermAcrWinsolsDif[i]
                 }
             } else {
