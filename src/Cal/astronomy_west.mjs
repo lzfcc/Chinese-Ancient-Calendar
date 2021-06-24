@@ -33,16 +33,27 @@ export const ConstWest = year => { // 儒略世紀：36525日。我下面索性�
     const perihelion = +(big(281).add(13 / 60).add(15 / 3600).add(T.mul(1.719175)).add(big.div(1.63, 3600).mul(T).pow(2)).add(big.div(0.012, 3600).mul(T).pow(3)).toFixed(8))
     // 黃道離心率 e=0.01670862 -0.00004204T-0.000000124T**2
     const eccentricity = +(big(0.01675104).sub(big(0.0000418).mul(T)).sub(big(0.00000000126).mul(T).pow(2)).toFixed(8))
-    const y = year - 2000
-    const Solar = big(365.24218968).sub(big(0.0000000616).mul(y)).toNumber()
+    const y = big(year - 2000)
+    const y1 = y.div(1000)
+    const Solar = big(365.242189623).sub(big(0.000061522).mul(y1)).sub(big.mul(big(6.09).mul(1e-8), y1.pow(2))).add(big.mul(big(2.6525).mul(1e-7), y1.pow(3))).toNumber()
+    // τ = 365.242189623 - 0.000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)
+    // Association，1992，102( 1) : 42. τ = 365.242189623 - 0.000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)
+    // VSOP87 曆表 Meeus J，Savoie D. The history of the tropical year[J]. Journal of the British Astronomical Association，1992，102( 1) : 42. 
     const Sidereal = big(365.25636042).add(big(0.000000001).mul(y)).toNumber()
     const Lunar = big(29.530588853).add(big(0.000000002162).mul(y)).toNumber()
     const Anoma = big(27.554549878).sub(big(0.00000001039).mul(y)).toNumber() // 近點月
     const Node = big(27.21222082).add(big(0.0000000038).mul(y)).toNumber()
-    const Print = '朔望月 ' + Lunar + ` 日\n近點月 ` + Anoma + ` 日\n交點月 ` + Node + ` 日\n回歸年 ` + Solar + ` 日\n恆星年 ` + Sidereal + ` 日\n黃赤交角 ` + obliquity + `°\n黃道離心率 ` + eccentricity + `\n近日點平黃經 ` + perihelion + '°'
+    const Print = `朔望月 ${Lunar} 日
+近點月 ${Anoma} 日
+交點月 ${Node} 日
+回歸年 ${Solar} 日
+恆星年 ${Sidereal} 日
+黃赤交角 ${obliquity}°
+黃道離心率 ${eccentricity}
+近日點平黃經 ${perihelion}°`
     return { Print, obliquity, perihelion, eccentricity, Anoma, Solar, Sidereal, Lunar }
 }
-// console.log(ConstWest(501).perihelion)
+// console.log(ConstWest(-401).Print)
 
 export const BindSolarChange = year => {
     year = +year
