@@ -418,6 +418,8 @@ table td {
 }
 
 article table {
+  max-width: 95vw;
+  overflow: hidden;
   font-size: .9em;
   margin: .25em auto;
 }
@@ -835,7 +837,7 @@ hr {
   border: 1px solid var(--shallowgray);
   margin: 3em auto 0;
   width: 1299px;
-  padding-bottom: 2em;
+  padding: 0 .5em 2em;
 }
 
 .day-render h2 {
@@ -870,8 +872,7 @@ hr {
 }
 
 .day-table table {
-  border-top: 1px solid var(--shallowgray);
-  border-bottom: 1px solid var(--shallowgray);
+  border: none;
   font-size: .9em;
 }
 
@@ -880,8 +881,8 @@ hr {
   height: auto;
   padding: .4em .25em;
   vertical-align: top;
-  border: 1px solid var(--shallowgray);
-  border-left: none;
+  border-top: 1px solid var(--shallowgray);
+  border-bottom: 1px solid var(--shallowgray);
 }
 
 .day-table td p {
