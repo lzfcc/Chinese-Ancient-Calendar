@@ -1,0 +1,114 @@
+import React from 'react'
+import { Pythagorean } from '../Cal/guqin'
+
+export default class Converter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      a: 81,
+    }
+    this.handle = this.handle.bind(this)
+  }
+
+  input() {
+    return (
+      <span className='year-select'>
+        <span>黃鐘</span>
+        <input className='width2'
+          value={this.state.a}
+          onChange={e => {
+            this.setState({ a: e.currentTarget.value });
+          }}
+        />
+      </span>
+    );
+  }
+
+  handle() {
+    try {
+      const { Print1, Print2 } = Pythagorean(this.state.a)
+      this.setState({ output1: Print1, output2: Print2 })
+    } catch (e) {
+      alert(e.message)
+    }
+  }
+
+  result() {
+    if (!this.state.output1) {
+      return null
+    }
+    return (
+      <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
+        <h3>向上</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>C</th>
+            <th>G</th>
+            <th>D</th>
+            <th>A</th>
+            <th>E</th>
+            <th>B</th>
+            <th>#F</th>
+            <th>#C</th>
+            <th>#G</th>
+            <th>#D</th>
+            <th>#A</th>
+            <th>#E</th>
+            <th>#B</th>
+          </tr>
+          {(this.state.output1 || []).map(row => {
+            return (
+              <tr>
+                <td className='RowTitle'>{row.title}</td>
+                {row.data.map(d => {
+                  return (<td>{d}</td>)
+                })}
+              </tr>
+            )
+          })}
+        </table>
+        <h3>向下</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>C</th>
+            <th>F</th>
+            <th>bB</th>
+            <th>bE</th>
+            <th>bA</th>
+            <th>bD</th>
+            <th>bG</th>
+            <th>bC</th>
+            <th>bF</th>
+            <th>bbB</th>
+            <th>bbE</th>
+            <th>bbA</th>
+            <th>bbD</th>
+          </tr>
+          {(this.state.output2 || []).map(row => {
+            return (
+              <tr>
+                <td className='RowTitle'>{row.title}</td>
+                {row.data.map(d => {
+                  return (<td>{d}</td>)
+                })}
+              </tr>
+            )
+          })}
+        </table>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>三分損益律</h3>
+        {this.input()}
+        <button onClick={this.handle} className='button4-3'>五度相生律</button>
+        {this.result()}
+      </div>
+    )
+  }
+}

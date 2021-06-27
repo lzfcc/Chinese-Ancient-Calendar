@@ -5,14 +5,15 @@ import Modulo from './Modulo'
 import Equation from './Equation'
 import Astronomy from './Astronomy'
 import Time from './Time'
+import Guqin from './Guqin'
 import Intro from './Intro'
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['朔閏表', '曆書', '同餘', '招差', '天文', '時間', '簡介']
+    this.tabTitles = ['朔閏表', '曆書', '同餘', '招差', '天文', '時間', '琴律', '簡介']
     this.state = {
-      activeTab: 6,
+      activeTab: 7,
     };
   }
 
@@ -57,6 +58,10 @@ export default class App extends React.Component {
         <Time />
       )
     } else if (this.state.activeTab === 6) {
+      return (
+        <Guqin />
+      )
+    } else if (this.state.activeTab === 7) {
       return (
         <Intro />
       )

@@ -73,6 +73,7 @@ export const CalNameList = { // 按照時間順序排列
     WuyinA: '戊寅',
     WuyinB: '戊寅(平朔)',
     Shenlong: '神龍(擬)',
+    Yisi: '乙巳(擬)',
     LindeA: '麟德',
     LindeB: '麟德(進朔)',
     // Jiuzhi: '九執(擬)', // 顯慶年間印度曆法
@@ -302,7 +303,7 @@ export const HexagramSymbolListB = [
     '䷮', '䷖', '䷳', '䷳', '䷾', '䷔',
     '䷛', '䷁', '䷿', '䷿', '䷦', '䷚']
 export const FiveList1 = ' 木火土金水'
-export const FiveList2 = '火土金土水土木土' // 土王用事
+export const FiveList2 = '火土金土水土木土火' // 土王用事
 export const ThreeList = '天地人' // 四分曆三紀名
 export const YuanList = '上中下'
 export const MansionNameList = ' 角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢觜參井鬼柳星張翼軫' // 值日，星期日對應房、虛、昴、星
@@ -355,7 +356,7 @@ const EclpDegNewDaming = [0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11,
 const EclpDegShoushi = [0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34, 17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28, 31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75] // 黃道度
 
 export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1，是黃道度
-    const { Type,Solar, SolarRaw, MansionRaw, MansionFractPosition } = Para[CalName]
+    const { Type, Solar, SolarRaw, MansionRaw, MansionFractPosition } = Para[CalName]
     let { Sidereal } = Para[CalName]
     let DegListRaw = [] // 不同時期用不同的宿度
     if (isEclp) {

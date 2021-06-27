@@ -66,6 +66,10 @@ export const AutoMoonAvgV = CalName => { // 陳美東《月離表初探》
         V = 13.36834319526627 // parseFloat((Solar / Lunar + 1).toPrecision(14))
     } else if (CalName === 'Huangji') {
         V = 695 / 52
+    } else if (['LindeA', 'LindeB'].includes(CalName)) {
+        V = 13 + 480 / 1340
+    } else if (CalName === 'Yisi') {
+        V = 13 + 494 / 1340
     } else if (CalName === 'Xuanming') {
         V = 1123 / 84
     } else if (CalName === 'Chongxuan') {

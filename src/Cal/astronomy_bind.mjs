@@ -142,6 +142,10 @@ export const AutoEqua2Eclp = (LongiRaw, CalName) => {
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
         Eclp2EquaDif = Func.Eclp2EquaDif
+    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
+        const Func = Equa2EclpTable(LongiRaw, 'LindeA')
+        Equa2Eclp = Func.Equa2Eclp
+        Equa2EclpDif = Func.Equa2EclpDif
     } else if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
         const Func = Equa2EclpTable(LongiRaw, CalName)
         Equa2Eclp = Func.Equa2Eclp
@@ -345,7 +349,7 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // å
         Longi2Lati = Longi2LatiTable2(Longi1, 'Daye')
     } else if (Type === 4) {
         Longi2Lati = Longi2LatiTable1(Longi1, CalName)
-    } else if (CalName === 'Shenlong') {
+    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
         Longi2Lati = Longi2LatiTable2(Longi1, 'LindeA')
     } else if (Type === 6) {
         Longi2Lati = Longi2LatiTable2(Longi1, CalName)

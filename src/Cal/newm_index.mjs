@@ -324,7 +324,7 @@ export default (CalName, YearStart, YearEnd) => {
                             } else if (NewmStatus === 2) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
                             } else if (NewmStatus === 3) {
-                                NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>` // ◍
+                                NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
                             }
                         }
                     }

@@ -140,11 +140,15 @@ export const Interpolate1_big = (n, Initial) => {
     delta = delta.reverse().slice(0, p)
     delta = delta.reverse()
     const delta1 = delta[0] // 一階
-    const Print = `Δ = ` + delta + `\nsum (` + n + `) = ` + S.toFixed(10) + (n1 === Number(n) ? `` : `\nsum (` + n1 + `) = ` + S1) + `\nf (` + n + `) = ` + y.toFixed(10) + (n1 === Number(n) ? `` : `\nf (` + n1 + `) = ` + y1)
+    const Print = `Δ = ${delta}
+sum (${n}) = ${S.toNumber()}` + (n1 === Number(n) ? `` : `
+sum (${n1}) = ${S1}`) + `
+f (${n}) = ${y}` + (n1 === Number(n) ? `` : `
+f (${n1}) = ${y1}`)
     return { Print, S, delta, delta1, y }
 }
 // console.log(Interpolate1_big(2.115, '27,64,125,216,343').y)
-// console.log(Interpolate1(2.115, '27,64,125,216,343'))
+// console.log(Interpolate1_big(3, '1,4,9').delta1)
 // console.log(Interpolate1_big(4.000001, 4, '27,64,125,216,343').Print)
 // console.log(Interpolate1_big(4.000001, 3, '25791，27341，28910，30499，32109').Print)
 // 算出來差分之後，求y。爲了節省算力。delta由低次到高次。
@@ -162,6 +166,7 @@ export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用De
     }
     return y + f0
 }
+
 export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一個數n是0，上面的函數第一個是1
     delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length // 次數
@@ -174,12 +179,9 @@ export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一�
     for (let i = 0; i < p; i++) {
         y = big(y).add(big.mul(delta[i], tmp[i]))
     }
-    const y0 = big(y).add(f0)
-    const yPrint = 'f (' + n + ') = ' + f0 + ' + ' + y.toFixed(10) + ' = ' + (y0.toFixed(10)).toString()
-    return {
-        y0: y0.toNumber(),
-        yPrint
-    }
+    const y0 = big(y).add(f0).toNumber()
+    const yPrint = `f (${n}) = ${f0} + ${y.toNumber()} = ${y0}`
+    return { y0, yPrint }
 }
 
 // 拉格朗日不等間距
@@ -274,7 +276,7 @@ export const MeasureWinsols = ListRaw => {
             l = mid
         }
     }
-    return `f (${parseFloat((+mid.toFixed(15)).toPrecision(14))}) = ${parseFloat((+Interpolate3_big(mid, ListRaw).f.toFixed(15)).toPrecision(14))}`
+    return `f (${mid.toNumber()}) = ${Interpolate3_big(mid, ListRaw).f.toNumber()}`
 }
 // console.log(MeasureWinsols('-1,-5,6,-12,7,-21')) // (4-x)x
 

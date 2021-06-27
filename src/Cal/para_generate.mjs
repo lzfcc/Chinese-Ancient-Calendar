@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import { Interpolate1 } from './equa_sn.mjs'
-import { CalNameList } from './para_constant.mjs'
+import { CalNameList, big } from './para_constant.mjs'
 
 // import { Interpolate2 } from './equa_sn.mjs'
 // import { Interpolate1_big } from './equa_sn.mjs'
@@ -184,6 +184,10 @@ const test5 = function () {
 // const test3 = a => a *= a > 3 ? 4 : 3
 // console.log(test2(2)) // 3.8
 // console.log(test3(4)) // 16
+
+// console.log(big.log(2,1.5).toNumber())
+console.log(Math.log2(1.5))
+
 ////// 下面的放在newm文件
 
 // const EcliRange = EcliNumer / (Solar / Lunar) // 乾象會歲

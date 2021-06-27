@@ -99,6 +99,7 @@ export default (CalName, year) => {
     if (EcliNumer) {
         EcliAccum = EcliRange * ((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange - ~~((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange))
         for (let k = 1; k <= 3; k++) {
+            // NewmAvgSc[~~(EcliRange * k - EcliAccum)] += `<span class='eclipse-symbol'>◐</span>`
             SyzygySc[~~(EcliRange * k - EcliAccum)] += `<span class='eclipse-symbol'>◐</span>`
         } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
     }

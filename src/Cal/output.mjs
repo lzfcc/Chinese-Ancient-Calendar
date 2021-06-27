@@ -303,9 +303,7 @@ export const outputNewmWeb = (start, end, isAuto, listRaw) => {
     const data = []
     start = ~~start
     end = ~~end
-    if (!Array.isArray(listRaw)) {
-        listRaw = [listRaw]
-    }
+    listRaw = Array.isArray(listRaw) ? listRaw : [listRaw]
     listRaw = listRaw.filter(i => i && i.trim()) // 去除空字符串
     let k = 0
     for (let Year = start; Year <= end; Year++) {

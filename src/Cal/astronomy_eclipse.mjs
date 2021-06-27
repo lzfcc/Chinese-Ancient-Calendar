@@ -1394,7 +1394,7 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsD
         if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'Daye', NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'Daye', Month, Leap)
-        } else if (CalName === 'Shenlong') {
+        } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
             NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'LindeA', NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'LindeA', Month, Leap)
         } else if (Type <= 6) {
