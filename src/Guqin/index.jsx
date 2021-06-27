@@ -6,6 +6,7 @@ import md1 from '../note/guqin.md'
 import Cent from './Cent'
 import Frequency from './Frequency'
 import Pythagorean from './Pythagorean'
+import Equal12 from './Equal12'
 
 export default class Astronomy extends React.Component {
   constructor(props) {
@@ -28,6 +29,7 @@ export default class Astronomy extends React.Component {
           <br />
           <Frequency />
           <Pythagorean />
+          <Equal12 />
         </section>
         <hr />
         <article>

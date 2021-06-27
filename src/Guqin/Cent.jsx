@@ -1,5 +1,5 @@
 import React from 'react'
-import { Cent } from '../Cal/guqin'
+import { OctaveCent } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Cent(this.state.a, this.state.b)
+      const { Print } = OctaveCent(this.state.a, this.state.b)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

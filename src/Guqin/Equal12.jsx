@@ -1,11 +1,11 @@
 import React from 'react'
-import { Pythagorean } from '../Cal/guqin'
+import { Equal12 } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 81,
+      a: 1,
     }
     this.handle = this.handle.bind(this)
   }
@@ -26,20 +26,19 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print1, Print2 } = Pythagorean(this.state.a)
-      this.setState({ output1: Print1, output2: Print2 })
+      const Print = Equal12(this.state.a)
+      this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
     }
   }
 
   result() {
-    if (!this.state.output1) {
+    if (!this.state.output) {
       return null
     }
     return (
-      <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
-        <h3>向上</h3>
+      <div className='ans table2 right table-vertical' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
             <th></th>
@@ -57,36 +56,7 @@ export default class Converter extends React.Component {
             <th>仲呂F</th>
             <th>淸黃鐘#B</th>
           </tr>
-          {(this.state.output1 || []).map(row => {
-            return (
-              <tr>
-                <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d => {
-                  return (<td>{d}</td>)
-                })}
-              </tr>
-            )
-          })}
-        </table>
-        <h3>向下</h3>
-        <table>
-          <tr>
-            <th></th>
-            <th>C</th>
-            <th>F</th>
-            <th>bB</th>
-            <th>bE</th>
-            <th>bA</th>
-            <th>bD</th>
-            <th>bG</th>
-            <th>bC</th>
-            <th>bF</th>
-            <th>bbB</th>
-            <th>bbE</th>
-            <th>bbA</th>
-            <th>bbD</th>
-          </tr>
-          {(this.state.output2 || []).map(row => {
+          {(this.state.output || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
@@ -104,9 +74,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>三分損益律</h3>
+        <h3>新法密率</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>五度相生律</button><span className='Deci64'>n/d</span>
+        <button onClick={this.handle} className='button4-3'>朱載堉</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     )

@@ -417,6 +417,16 @@ table td {
   text-align: right;
 }
 
+/* .table-vertical table tr {
+  display: block;
+  float: left;
+}
+
+.table-vertical table th,
+td {
+  display: block;
+} */
+
 article table {
   max-width: 95vw;
   overflow: hidden;
