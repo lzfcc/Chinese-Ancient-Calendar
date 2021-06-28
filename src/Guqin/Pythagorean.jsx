@@ -104,7 +104,7 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>三分損益律</h3>
+        <h3>三分損益律　準法律</h3>
         {this.input()}
         <button onClick={this.handle} className='button4-3'>五度相生律</button><span className='Deci64'>n/d</span>
         {this.result()}

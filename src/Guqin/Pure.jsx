@@ -1,5 +1,5 @@
 import React from 'react'
-import { Equal12 } from '../Cal/guqin'
+import { Pure } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Equal12(this.state.a)
+      const Print = Pure(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -43,18 +43,18 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th>黃鐘C</th>
-            <th>大呂#C</th>
+            <th>林鐘G</th>            
             <th>太簇D</th>
-            <th>夾鐘#D</th>
-            <th>姑洗E</th>
-            <th>仲呂F</th>
-            <th>蕤賓#F</th>
-            <th>林鐘G</th>
-            <th>夷則#G</th>
             <th>南呂A</th>
-            <th>无射#A</th>
-            <th>應鐘B</th>
-            <th>淸黃鐘C</th>
+            <th>姑洗E</th>
+            <th>應鐘B-</th>
+            <th>蕤賓#F-</th>
+            <th>大呂#C-</th>
+            <th>bE+</th>
+            <th>bB+</th>
+            <th>仲呂F+</th>
+            <th>淸黃鐘C+</th>
+            <th></th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -74,9 +74,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>新法密率</h3>
+        <h3>純律　徽法律</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>朱載堉</button><span className='Deci64'>.64</span>
+        <button onClick={this.handle} className='button4-3'>幽蘭</button><span className='Deci64'>n/d</span>
         {this.result()}
       </div>
     )
