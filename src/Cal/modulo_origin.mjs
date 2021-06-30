@@ -1,15 +1,7 @@
-import {
-    big
-} from './para_constant.mjs'
-import {
-    CongruenceModulo,
-} from './modulo_qiuyi.mjs'
-import {
-    GcdLcm, GcdLcmGroup, FracLcm1
-} from './modulo_gcdlcm.mjs'
-import {
-    isSame, Frac2FalseFrac, Deci2Int
-} from './equa_math.mjs'
+import { big } from './para_constant.mjs'
+import { CongruenceModulo } from './modulo_qiuyi.mjs'
+import { GcdLcm, GcdLcmGroup, FracLcm1 } from './modulo_gcdlcm.mjs'
+import { isSame, Frac2FalseFrac, Deci2Int } from './equa_math.mjs'
 // const pi = big.acos(-1).toString()
 // console.log(pi)
 /////// 大衍總數術（秦九韶元數變定母推廣）。1、张述信、张志尚《一次同余式组的程序求解》，《吉林工程技術師範學院學報》2006() 2、沈康身《數書九章大衍類算題中的數論命題》，《杭州大學學報》1986
@@ -367,8 +359,8 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
     SolarDenom = +SolarDenom
     LunarFrac = +LunarFrac
     Denom = +Denom
-    const OriginConstNumer = Frac2FalseFrac(OriginConstRaw).Numer
-    const FirstConstNumer = Frac2FalseFrac(FirstConstRaw).Numer
+    const OriginConstNumer = Frac2FalseFrac(OriginConstRaw).NumerSub
+    const FirstConstNumer = Frac2FalseFrac(FirstConstRaw).NumerSub
     const SolarNumer = SolarDenom * 365 + SolarFrac
     const LunarNumer = Denom * 29 + LunarFrac
     const Portion = SolarDenom * Denom
@@ -394,8 +386,8 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
 export const OriginModulo = (Denom, SolarFrac, OriginConstRaw, FirstConstRaw) => { //  LunarFrac,
     Denom = +Denom
     SolarFrac = +SolarFrac
-    let OriginConst = Frac2FalseFrac(OriginConstRaw).Numer
-    const FirstConst = Frac2FalseFrac(FirstConstRaw).Numer
+    let OriginConst = Frac2FalseFrac(OriginConstRaw).NumerSub
+    const FirstConst = Frac2FalseFrac(FirstConstRaw).NumerSub
     const LunarFrac = IndetermEqua(49, 17, Denom).LunarFrac1
     const SolarNumer = Denom * 365 + SolarFrac
     const LunarNumer = Denom * 29 + LunarFrac

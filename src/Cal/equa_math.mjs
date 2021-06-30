@@ -1,3 +1,5 @@
+import { big } from './para_constant.mjs'
+
 export const isSame = (arr1, arr2) => { // 判斷元數定母是否相等。https://blog.csdn.net/qq_25887937/article/details/97660928
     let flag = true
     if (arr1.length !== arr2.length) {
@@ -14,11 +16,11 @@ export const isSame = (arr1, arr2) => { // 判斷元數定母是否相等。http
 
 export const Frac2FalseFrac = FracRaw => {
     FracRaw = FracRaw.toString()
-    const Frac = FracRaw.split(/\D/) // 以下把輸入的分數字符串轉成假分數
-    let Numer = 0
-    let Denom = 0
+    const Frac = FracRaw.split(/ |\+|\//) // 以下把輸入的分數字符串轉成假分數
+    let Numer = 0, NumerSub = 0, Denom = 0
     if (Frac.length === 3) {
-        Numer = +(Frac[0] - 1) * +Frac[2] + +Frac[1] // 干支數-1
+        Numer = +Frac[0] * +Frac[2] + +Frac[1]
+        NumerSub = +(Frac[0] - 1) * +Frac[2] + +Frac[1] // 干支數-1
         Denom = +Frac[2]
     } else if (Frac.length === 2) {
         Numer = +Frac[0]
@@ -27,9 +29,11 @@ export const Frac2FalseFrac = FracRaw => {
         Numer = +Frac[0]
         Denom = 1
     }
-    return { Numer, Denom }
+    const Deci = big.div(Numer, Denom).toString()
+    const FracResult = Numer + '/' + Denom
+    return { Numer, NumerSub, Denom, Deci, FracResult }
 }
-// console.log(Frac2FalseFrac('888+3/2'))
+// console.log(Frac2FalseFrac('2 3.2/2'))
 
 export const Deci2Int = function () { // 輸入字符串
     const Raw = arguments[0].split(/;|,|，|。|；|｜| /)
@@ -64,7 +68,7 @@ export const DeciFrac2Frac = Deci => { // 把有小數點的分數轉換為整�
     d = Math.round(+d * 10 ** L)
     return n + '/' + d
 }
-// console.log(DeciFrac2Frac('2553.0026/12030'))
+// console.log(DeciFrac2Frac('2553.026/12030'))
 
 // 把一個數字按照幾位分割
 export const SliceNum = (Input, num) => { // a：小數點前，b：小數點後，c：并之

@@ -26,7 +26,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Equal12(this.state.a)
+      const { Print } = Equal12(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
