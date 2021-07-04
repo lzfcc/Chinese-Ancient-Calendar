@@ -232,34 +232,33 @@ export const Fret2Leng = x => { // 徽位轉弦長
     return Leng.toFraction()
 }
 
-export const Tuning = x => { // 輸入五弦頻率
-    x = frc(Frac2FalseFrac(x).FracResult)
-    // 也就是說fraction的小數精度就是普通的16位，沒法保留高精度
+const EqualTuningSub = (OriginFrq, KnownLeng, KnownFret, UnknownFret, isGt) => { // 初始弦頻率，已知弦長，已知弦徽位，所求弦徽位，所求頻率是否高於初始弦
+    let Leng = frc(KnownLeng).mul(frc(Fret2Leng(KnownFret)).div(Fret2Leng(UnknownFret)))
+    if (isGt && Leng > 1) {
+        Leng = Leng.div(2)
+    } else if (!isGt && Leng < 1) {
+        Leng = Leng.mul(2)
+    }
+    const Frq = OriginFrq.div(Leng).toFraction(true)
+    return { Leng, Frq }
+}
+// const { Leng: Leng, Frq:  } = EqualTuningSub(x, , , )
+
+const EqualTuning1 = x => { // 正調
     // 準法律
-    let Two1 = x.mul(frc(Fret2Leng(7)).div(Fret2Leng(5)))
-    let Four1 = Two1.mul(frc(Fret2Leng(4)).div(Fret2Leng(5)))
-    let One1 = Four1.mul(frc(Fret2Leng(7)).div(Fret2Leng(5)))
-    let Six1 = Four1.mul(frc(Fret2Leng(4)).div(Fret2Leng(5)))
-    let Seven1 = Four1.mul(frc(Fret2Leng(5)).div(Fret2Leng(7)))
-    let Three1 = One1.mul(frc(Fret2Leng(4)).div(Fret2Leng(5)))
-    Two1 = x.mul(x).div(Two1).toFraction(true)
-    Four1 = x.mul(x).div(Four1).toFraction(true)
-    One1 = x.mul(x).div(One1).toFraction(true)
-    Six1 = x.mul(x).div(Six1).toFraction(true)
-    Seven1 = x.mul(x).div(Seven1).toFraction(true)
-    Three1 = x.mul(x).div(Three1).toFraction(true)
+    const { Leng: Two1Leng, Frq: Two1 } = EqualTuningSub(x, 1, 7, 5, false)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Two1Leng, 4, 5, false)
+    const { Leng: One1Leng, Frq: One1 } = EqualTuningSub(x, Four1Leng, 7, 5, false)
+    const { Frq: Six1 } = EqualTuningSub(x, Four1Leng, 4, 5, true)
+    const { Frq: Seven1 } = EqualTuningSub(x, Four1Leng, 5, 7, true)
+    const { Frq: Three1 } = EqualTuningSub(x, One1Leng, 4, 5, false)
     // 徽法律
     const Seven2 = Seven1
     const Two2 = Two1
-    let Three2 = x.mul(frc(Fret2Leng(4)).div(Fret2Leng(6)))
-    let One2 = Three2.mul(frc(Fret2Leng(5)).div(Fret2Leng(4)))
-    let Six2 = Three2.mul(frc(Fret2Leng(5)).div(Fret2Leng(7)))
-    let Four2 = Six2.mul(frc(Fret2Leng(5)).div(Fret2Leng(4)))
-    Three2 = x.mul(x).div(Three2).div(2).toFraction(true)
-    One2 = x.mul(x).div(One2).div(2).toFraction(true)
-    Six2 = x.mul(x).div(Six2).div(2).toFraction(true)
-    Four2 = x.mul(x).div(Four2).div(2).toFraction(true)
-    x = x.toFraction(true)
+    const { Leng: Three2Leng, Frq: Three2 } = EqualTuningSub(x, 1, 4, 6, false)
+    const { Frq: One2 } = EqualTuningSub(x, Three2Leng, 5, 4, false)
+    const { Leng: Six2Leng, Frq: Six2 } = EqualTuningSub(x, Three2Leng, 5, 7, true)
+    const { Frq: Four2 } = EqualTuningSub(x, Six2Leng, 5, 4, false)
     // 新法密率
     const List1 = Equal12(x).List1
     const One3 = +List1[3] / 2
@@ -268,6 +267,224 @@ export const Tuning = x => { // 輸入五弦頻率
     const Four3 = +List1[10] / 2
     const Six3 = +List1[3]
     const Seven3 = +List1[5]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning2 = x => { // 蕤賓調
+    // 準法律
+    const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Leng: Six1Leng, Frq: Six1 } = EqualTuningSub(x, Three1Leng, 2, 4, true)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Six1Leng, 5, 4, false)
+    const { Frq: Two1 } = EqualTuningSub(x, Four1Leng, 5, 4, false)
+    const { Frq: One1 } = EqualTuningSub(x, Six1Leng, 7, 4, false)
+    const { Frq: Seven1 } = EqualTuningSub(x, Four1Leng, 5, 7, true)
+    // 徽法律
+    const { Leng: Three2Leng, Frq: Three2 } = EqualTuningSub(x, 1, 5, 7, false)
+    const { Frq: One2 } = EqualTuningSub(x, Three2Leng, 5, 4, false)
+    const { Frq: Six2 } = EqualTuningSub(x, Three2Leng, 5, 7, true)
+    const { Leng: Four2Leng, Frq: Four2 } = EqualTuningSub(x, 1, 6, 5, false)
+    const { Frq: Two2 } = EqualTuningSub(x, Four2Leng, 5, 4, false)
+    const { Frq: Seven2 } = EqualTuningSub(x, 1, 6, 7, true)
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[2] / 2
+    const Two3 = +List1[4] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[9] / 2
+    const Six3 = +List1[2]
+    const Seven3 = +List1[4]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning3 = x => { // 慢角調
+    // 準法律
+    const { Leng: Two1Leng, Frq: Two1 } = EqualTuningSub(x, 1, 4, 2, false)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Two1Leng, 4, 5, false)
+    const { Leng: One1Leng, Frq: One1 } = EqualTuningSub(x, Four1Leng, 4, 2, false)
+    const { Frq: Six1 } = EqualTuningSub(x, One1Leng, 4, 7, true)
+    const { Frq: Seven1 } = EqualTuningSub(x, Two1Leng, 4, 7, true)
+    const { Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    // 徽法律
+    const { Frq: Three2 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Leng: One2Leng, Frq: One2 } = EqualTuningSub(x, 1, 5, 3, false)
+    const { Frq: Six2 } = EqualTuningSub(x, One2Leng, 4, 7, true)
+    const { Leng: Four2Leng, Frq: Four2 } = EqualTuningSub(x, One2Leng, 5, 7, false)
+    const { Frq: Two2 } = EqualTuningSub(x, Four2Leng, 5, 4, false)
+    const { Frq: Seven2 } = EqualTuningSub(x, Four2Leng, 5, 7, true)
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[3] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[10] / 2
+    const Six3 = +List1[3]
+    const Seven3 = +List1[5]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning4 = x => { // 慢宮調
+    // 準法律
+    const { Leng: Seven1Leng, Frq: Seven1 } = EqualTuningSub(x, 1, 4, 5, true)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Seven1Leng, 7, 5, false)
+    const { Frq: Two1 } = EqualTuningSub(x, Four1Leng, 5, 4, false)
+    const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Leng: Six1Leng, Frq: Six1 } = EqualTuningSub(x, Three1Leng, 5, 4, true)
+    const { Frq: One1 } = EqualTuningSub(x, Six1Leng, 7, 4, false)
+    // 徽法律    
+    const { Leng: Seven2Leng, Frq: Seven2 } = EqualTuningSub(x, 1, 4, 5, true)
+    const { Frq: Two2 } = EqualTuningSub(x, Seven2Leng, 7, 4, false)
+    const { Leng: Four2Leng, Frq: Four2 } = EqualTuningSub(x, Seven2Leng, 7, 5, false)
+    const { Frq: Three2 } = EqualTuningSub(x, Four2Leng, 3, 2, false)
+    const { Leng: Six2Leng, Frq: Six2 } = EqualTuningSub(x, Four2Leng, 3, 4, true)
+    const { Frq: One2 } = EqualTuningSub(x, Six2Leng, 7, 4, false)
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[2] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[10] / 2
+    const Six3 = +List1[2]
+    const Seven3 = +List1[5]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning5 = x => { // 清商調
+    // 準法律
+    const { Leng: Two1Leng, Frq: Two1 } = EqualTuningSub(x, 1, 7, 5, false)
+    const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Leng: Six1Leng, Frq: Six1 } = EqualTuningSub(x, Three1Leng, 5, 7, true)
+    const { Frq: Four1 } = EqualTuningSub(x, Six1Leng, 5, 4, false)
+    const { Frq: One1 } = EqualTuningSub(x, Six1Leng, 7, 4, false)
+    const { Frq: Seven1 } = EqualTuningSub(x, 1, 3, 4, true)
+    // 徽法律
+    const { Frq: Three2 } = EqualTuningSub(x, 1, 5, 7, false)
+    const { Leng: Four2Leng, Frq: Four2 } = EqualTuningSub(x, 1, 6, 5, false)
+    const { Leng: Six2Leng, Frq: Six2 } = EqualTuningSub(x, Four2Leng, 4, 5, true)
+    const { Frq: Two2 } = EqualTuningSub(x, Four2Leng, 4, 3, false)
+    const { Frq: Seven2 } = EqualTuningSub(x, Four2Leng, 5, 4, true)
+    const { Frq: One2 } = EqualTuningSub(x, Six2Leng, 7, 4, false)
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[2] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[9] / 2
+    const Six3 = +List1[2]
+    const Seven3 = +List1[4]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning7 = x => { // 側商調
+    // 準法律
+    const { Leng: Two1Leng, Frq: Two1 } = EqualTuningSub(x, 1, 7, 5, false)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Two1Leng, 4, 5, false)
+    const { Leng: One1Leng, Frq: One1 } = EqualTuningSub(x, Four1Leng, 7, 5, false)
+    const { Frq: Six1 } = EqualTuningSub(x, Four1Leng, 4, 5, true)
+    const { Frq: Seven1 } = EqualTuningSub(x, Four1Leng, 5, 7, true)
+    const { Frq: Three1 } = EqualTuningSub(x, One1Leng, 4, 5, false)
+    // 徽法律
+    const { Frq: Three2 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Frq: One2 } = EqualTuningSub(x, 1, 5, 6, false)
+    const { Leng: Two2Leng, Frq: Two2 } = EqualTuningSub(x, 1, 7, 5, false)
+    const { Leng: Four2Leng, Frq: Four2 } = EqualTuningSub(x, Two2Leng, 3, 4, false)
+    const { Frq: Six2 } = EqualTuningSub(x, Four2Leng, 4, 5, true)
+    const { Frq: Seven2 } = EqualTuningSub(x, Two2Leng, 4, 7, true)
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[3] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[9] / 2
+    const Six3 = +List1[2]
+    const Seven3 = +List1[5]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning8 = x => { // 淒涼調
+    // 準法律
+    const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Frq: One1 } = EqualTuningSub(x, 1, 7, 4, false)
+    const { Leng: Six1Leng, Frq: Six1 } = EqualTuningSub(x, Three1Leng, 5, 7, true)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Six1Leng, 5, 4, false)
+    const { Frq: Two1 } = EqualTuningSub(x, Four1Leng, 5, 4, false)
+    const { Frq: Seven1 } = EqualTuningSub(x, Four1Leng, 5, 7, true)
+    // 徽法律
+    const { Leng: Three2Leng, Frq: Three2 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Frq: One2 } = EqualTuningSub(x, Three2Leng, 5, 4, false)
+    const { Leng: Six2Leng, Frq: Six2 } = EqualTuningSub(x, Three2Leng, 5, 7, true)
+    const { Frq: Four2 } = EqualTuningSub(x, Six2Leng, 5, 4, false)
+    const { Frq: Two2 } = EqualTuningSub(x, Six2Leng, 5, 6, false)
+    const { Frq: Seven2 } = EqualTuningSub(x, Three2Leng, 6, 5, true)
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[2] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[9] / 2
+    const Six3 = +List1[2]
+    const Seven3 = +List1[4]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning9 = x => { // 無媒調
+    // 準法律
+    const { Leng: Two1Leng, Frq: Two1 } = EqualTuningSub(x, 1, 7, 5, false)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Two1Leng, 4, 5, false)
+    const { Frq: One1 } = EqualTuningSub(x, Four1Leng, 7, 5, false)
+    const { Frq: Seven1 } = EqualTuningSub(x, Four1Leng, 5, 7, true)
+    const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Frq: Six1 } = EqualTuningSub(x, Three1Leng, 5, 7, true)
+    // 徽法律
+    let { Leng: Three2Leng, Frq: Three2 } = EqualTuningSub(x, 1, 4, 6, false)
+    const { Leng: One2Leng, Frq: One2 } = EqualTuningSub(x, Three2Leng, 5, 4, false)
+    const { Leng: Four2Leng, Frq: Four2 } = EqualTuningSub(x, One2Leng, 5, 7, false)
+    const { Frq: Six2 } = EqualTuningSub(x, Four2Leng, 6, 7, true)
+    const { Leng: Seven2Leng, Frq: Seven2 } = EqualTuningSub(x, 1, 4, 5, true)
+    const { Frq: Two2 } = EqualTuningSub(x, Seven2Leng, 7, 4, false)
+    Three2 = EqualTuningSub(x, 1, 5, 4, false).Frq
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[3] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[7] / 2
+    const Four3 = +List1[10] / 2
+    const Six3 = +List1[2]
+    const Seven3 = +List1[5]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+const EqualTuning10 = x => { // 閒弦調
+    // 準法律
+    const { Leng: Two1Leng, Frq: Two1 } = EqualTuningSub(x, 1, 7, 5, false)
+    const { Leng: Four1Leng, Frq: Four1 } = EqualTuningSub(x, Two1Leng, 4, 5, false)
+    const { Frq: Six1 } = EqualTuningSub(x, Four1Leng, 4, 5, true)
+    const { Frq: Seven1 } = EqualTuningSub(x, Four1Leng, 5, 7, true)
+    const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Frq: One1 } = EqualTuningSub(x, Three1Leng, 5, 4, false)
+    // 徽法律
+    let { Leng: Three2Leng, Frq: Three2 } = EqualTuningSub(x, 1, 5, 4, false)
+    const { Leng: Seven2Leng, Frq: Seven2 } = EqualTuningSub(x, 1, 3, 4, true)
+    const { Leng: One2Leng, Frq: One2 } = EqualTuningSub(x, Three2Leng, 5, 4, false)
+    const { Frq: Six2 } = EqualTuningSub(x, Three2Leng, 5, 7, true)
+    const { Frq: Four2 } = EqualTuningSub(x, One2Leng, 5, 7, false)
+    const { Frq: Two2 } = EqualTuningSub(x, Seven2Leng, 7, 4, false)
+    Three2 = EqualTuningSub(x, One2Leng, 3, 4, false).Frq
+    // 新法密率
+    const List1 = Equal12(x).List1
+    const One3 = +List1[3] / 2
+    const Two3 = +List1[5] / 2
+    const Three3 = +List1[8] / 2
+    const Four3 = +List1[10] / 2
+    const Six3 = +List1[3]
+    const Seven3 = +List1[5]
+    return { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 }
+}
+
+export const Tuning = (x, mode) => { // 輸入五弦頻率
+    x = frc(Frac2FalseFrac(x).FracResult)
+    // fraction的小數精度就是普通的16位，沒法保留高精度
+    const { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 } = eval('EqualTuning' + mode)(x)
+    x = x.toFraction(true)
     const DifA1 = OctaveCent(Two1, One1).Cent.toFixed(3)
     const DifA2 = OctaveCent(Three1, Two1).Cent.toFixed(3)
     const DifA3 = OctaveCent(Four1, Three1).Cent.toFixed(3)
