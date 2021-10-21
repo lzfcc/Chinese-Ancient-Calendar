@@ -288,7 +288,7 @@ export default (CalName, YearStart, YearEnd) => {
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
                 const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
                 const SyzygyAcrWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyAcrWinsolsDifRaw)
-                for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+                for (let i = 8; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTermThis > 0) {
                         if (i === LeapNumTermThis) {

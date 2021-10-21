@@ -944,7 +944,8 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
         } else { // 崇天、紀元、遼金、授時
             const Portion = Type === 11 ? 1870 : +(3.43 * 7290 / Denom).toFixed(2) // 3*Solar25**2 ，以紀元爲準。紀元3.43，崇天2.36，大明庚午4.78
             const McorrTermMax = Type === 11 ? 4.46 : Math.round(91.31 ** 2 / (Portion + 0.0005)) // 崇天3533，紀元2430，大明庚午1744            
-            McorrTerm = (McorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) * dd // 置日食甚日行積度。紀元是午前後分，崇天是距午定分。紀元最後有「如半晝分而一，所得，在氣差已上者，即以氣差覆減之，余應加者為減，減者為加。」崇天「如不及減者，覆減爲定數，應加者減之⋯⋯」那就什麼都不用處理
+            McorrTerm = (McorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) // 氣差
+            McorrTerm *= dd // 氣差定數 置日食甚日行積度。紀元是午前後分，崇天是距午定分。紀元最後有「如半晝分而一，所得，在氣差已上者，即以氣差覆減之，余應加者為減，減者為加。」崇天「如不及減者，覆減爲定數，應加者減之⋯⋯」那就什麼都不用處理
             const McorrClockRaw = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / Portion
             McorrClock = McorrClockRaw * TheTotalNoonDif * 4
             if (Type === 9 || Type === 11) { // 只有紀元授時有這種處理。如果崇天用這個，1042食分從5.02變成4.96

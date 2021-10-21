@@ -59,7 +59,25 @@ export default {
         Lunar: 27759 / 940,
         Solar: 365.25,
         OriginAd: -2763680,
+        // OriginAd: -2763680 + 2880, // 經學與曆學的貫通p155錯誤積年
         // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 0,
+        OriginMonNum: 0,
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    Lu1: { // 無加小餘建丑
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
         JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 1,
@@ -73,7 +91,27 @@ export default {
     },
     LuA: { // 隱元-721,宣元-607
         Type: 1,
-        ApplyYear: [[-721, -607]],
+        ApplyYear: [[-721, -666]],
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        OriginAd: -2763680,
+        // JdOrigin: 1604170.5,
+        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        OriginYearSc: 37,
+        ZhengNum: 1,
+        OriginMonNum: 1, // 隱元建丑
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 539 / 940,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
+    LuA1: { // 隱元-721,宣元-607
+        Type: 1,
+        ApplyYear: [[-665, -607]],
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
@@ -1169,7 +1207,7 @@ export default {
         // YuanRange: 37856, // 無，我算得
         // JiRange: 9464, // 無，我算得
         Type: 4,
-        ApplyYear: [[645, 664]],
+        ApplyYear: [[645, 665]],
         ZhangRange: 676, // 章歲
         ZhangLeap: 249, // 章閏
         Solar: 365 + 2315 / 9464, // 餘數49635
@@ -1284,7 +1322,7 @@ export default {
     LindeA: {
         Type: 6,
         isAcr: true,
-        ApplyYear: [[665, 707], [717, 720]],
+        ApplyYear: [[666, 707], [717, 720]],
         Solar: 365 + 328 / 1340, // 麟德不用歲差
         SolarNumer: 489428, // 期實
         Lunar: 29 + 711 / 1340, // 朔策

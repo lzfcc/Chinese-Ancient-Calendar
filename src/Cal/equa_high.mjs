@@ -1,7 +1,6 @@
 import { big } from './para_constant.mjs'
 
-export const HighEqua1 = (args, upperRaw) => {
-    const [nine, eight, seven, six, five, four, three, two, one, zero] = args
+export const HighEqua1 = (nine, eight, seven, six, five, four, three, two, one, zero, upperRaw) => {
     let mid = 0
     let lower = 0
     let upper = Number(upperRaw)

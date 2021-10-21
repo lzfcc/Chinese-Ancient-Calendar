@@ -25,6 +25,7 @@
 
 ### 實行曆法
 
+- [和暦(わごよみ)　& 中華暦（からごよみ）](http://www.wagoyomi.info/) 〔寶藏！〕
 - [時憲曆計算](http://ytliu.epizy.com/Shixian/index_chinese.html)
 - [紀年轉換工具](https://kanasimi.github.io/CeJS/_test%20suite/era.htm)：世界各國曆法
 
@@ -832,11 +833,13 @@ a = [0, ...a]
 
 6-27 `1.03.1` 調整招差術輸出的取值精度
 
-### 6-27 `1.04`
+#### 6-27 `1.04`
 
 增加琴律計算模塊。
 
 7-04 `1.04.1` 增加所有調的調弦法，準法律側弄調還很奇怪。
+
+7-31 `1.04.2` 調整魯曆
 
 ### Todo list
 
