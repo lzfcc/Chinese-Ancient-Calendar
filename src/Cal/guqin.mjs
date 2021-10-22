@@ -222,12 +222,12 @@ export const Equal12 = aRaw => {
 
 export const Fret2Leng = x => { // 徽位轉弦長
     x = +x
-    if (x >= 15 || x <= 0) {
+    if (x > 16 || x < 0) {
         throw (new Error('請輸入13徽以內的數字'))
     }
     const Fret = ~~x
     const Frac = frc(x - ~~x)
-    const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '9/10', 1] // 吉他品的英文 0是徽外！
+    const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '57/64', '9/10', 1] // 0, 14是徽外，15是外外。照理說徽外是1/5處，但洞庭結果不太對，多了
     const Leng = frc(FretList[Fret]).add(Frac.mul(frc(FretList[Fret + 1]).sub(FretList[Fret])))
     return Leng.toFraction()
 }
@@ -620,10 +620,130 @@ export const Tuning = (x, TuningMode, TempMode) => { // 輸入五弦頻率
 }
 // console.log(Tuning(1, 1))
 
-export const Position2Pitch = (InputRaw, TuningMode, TempMode) => { // 暫時三弦散音都是do
-    const String = Tuning(1, TuningMode, TempMode).String
-    const Input = InputRaw.split(';')
-    return Input
+const PythagoreanListA = {
+    0: 'C',
+    90: 'bD',
+    114: '#C',
+    180: 'bbE',
+    204: 'D',
+    294: 'bE',
+    318: '#D',
+    384: 'bF',
+    408: 'E',
+    498: 'F',
+    522: '#E',
+    588: 'bG',
+    612: '#F',
+    678: 'bbA',
+    702: 'G',
+    792: 'bA',
+    816: '#G',
+    882: 'bbB',
+    906: 'A',
+    996: 'bB',
+    1020: '#A',
+    1086: 'bC',
+    1110: 'B',
+    1177: 'bbD'
 }
-console.log(Position2Pitch('10,2;9,4;0,2;10,3;11,3;0,4;14,1;0,2;11,3;10,3;8,3;0,7;10,2;0,4', '2', '1'))
+
+const PythagoreanListB = {
+    0: '1',
+    90: 'b2',
+    114: '#1',
+    180: 'bb3',
+    204: '2',
+    294: 'b3',
+    318: '#2',
+    384: 'b4',
+    408: '3',
+    498: '4',
+    522: '#3',
+    588: 'b5',
+    612: '#4',
+    678: 'bb6',
+    702: '5',
+    792: 'b6',
+    816: '#5',
+    882: 'bb7',
+    906: '6',
+    996: 'b7',
+    1020: '#6',
+    1086: 'b1',
+    1110: '7',
+    1177: 'bb2'
+}
+// console.log(PythagoreanList[1110])
+
+// s散音，f泛音，a按音
+export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode) => { // ；調弦法；律制；宮弦
+    const StringList = Tuning(1, TuningMode, TempMode).String
+    TuningMode = +TuningMode
+    GongMode = +GongMode
+    const Input = InputRaw.split(';')
+    const String = [], Fret = [], Freq = [], RelScale = [], CentRaw = [], Cent = [], Pitch = []
+    for (let i = 0; i < Input.length; i++) {
+        const Pre = Input[i].split(',')
+        const Type = Pre[0]
+        if (Type === 'zhuang') {
+            CentRaw[i] = CentRaw[i - 1] + 204
+        } else {
+            if (Type === 's') {
+                Freq[i] = StringList[+Pre[1] - 1]
+            } else {
+                if (Type === 'f') {
+                    Fret[i] = 7 - Math.abs(7 - +Pre[1])
+                    String[i] = Pre[2]
+                } else if (Type === 'l') {
+                    String[i] = String[i - 1]
+                    Fret[i] = Pre[1]
+                } else {
+                    Fret[i] = Pre[0]
+                    String[i] = Pre[1]
+                }
+                const Leng = Fret2Leng(Fret[i])
+                Freq[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1]).toFraction()
+            }
+            RelScale[i] = frc(Freq[i]).div(StringList[GongMode - 1]).toFraction(false)
+            if (RelScale[i].includes('/')) {
+                const n = RelScale[i].split('/')[0]
+                const d = RelScale[i].split('/')[1]
+                CentRaw[i] = big.log2(big.div(n, d)).mul(1200).round().toNumber()
+            } else {
+                CentRaw[i] = big.log2(big(RelScale[i])).mul(1200).round().toNumber()
+            }
+        }
+        Cent[i] = (CentRaw[i] % 1200 + 1200) % 1200
+        for (const [key] of Object.entries(PythagoreanListB)) {
+            if (Cent[i] > +key - 12 && Cent[i] < +key + 12) {
+                Pitch[i] = PythagoreanListB[key]
+                break
+            }
+        }
+        if (Type === 'zhuang') {
+            Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
+        } else if (Type === 'f') {
+            Pitch[i] = '৹' + Pitch[i]
+        } else if (Type === 'l') {
+            Pitch[i] = '◠' + Pitch[i]
+        }
+        const floor = Math.floor(CentRaw[i] / 1200) // 超出一個八度
+        if (floor === 2) {
+            Pitch[i] = '··' + Pitch[i]
+        } else if (floor === 1) {
+            Pitch[i] = '·' + Pitch[i]
+        } else if (floor === -1) {
+            Pitch[i] += '·'
+        } else if (floor === -2) {
+            Pitch[i] += '··'
+        }
+    }
+    let PitchCombine = ''
+    for (let i = 0; i < Pitch.length; i++) {
+        PitchCombine += Pitch[i] + '　'
+    }
+    return PitchCombine
+}
+// console.log(Position2Pitch('9.6,3;9,4;s,2;9.6,3;l,10.8;zhuang;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4', '1', '1', '4')) // 洞庭第一句
+// console.log(Position2Pitch('10.8,3;zhuang', '1', '1', 4))
 

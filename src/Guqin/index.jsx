@@ -10,6 +10,7 @@ import Pythagorean from './Pythagorean'
 import Fret2Leng from './Fret2Leng'
 import Equal12 from './Equal12'
 import Tuning from './Tuning'
+import Position2Pitch from './Position2Pitch'
 
 export default class Astronomy extends React.Component {
   constructor(props) {
@@ -39,6 +40,8 @@ export default class Astronomy extends React.Component {
           <h2>調弦之什</h2>
           <Fret2Leng />
           <Tuning />
+          <h2>打譜第一步</h2>
+          <Position2Pitch />
         </section>
         <hr />
         <article>
