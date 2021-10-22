@@ -644,7 +644,8 @@ const PythagoreanListA = {
     1020: '#A',
     1086: 'bC',
     1110: 'B',
-    1177: 'bbD'
+    1177: 'bbD',
+    1200: 'C'
 }
 
 const PythagoreanListB = {
@@ -671,7 +672,8 @@ const PythagoreanListB = {
     1020: '#6',
     1086: 'b1',
     1110: '7',
-    1177: 'bb2'
+    1177: 'bb2',
+    1200: '1'
 }
 // console.log(PythagoreanList[1110])
 
@@ -698,7 +700,8 @@ const PythagoreanListC = [
     '32768/19683',
     '65536/59049',
     '262144/177147',
-    '1048576/531441'
+    '1048576/531441',
+    '2/1'
 ]
 
 const JustoniListA = {
@@ -726,7 +729,8 @@ const JustoniListA = {
     977: '#A╤',
     1018: 'bB',
     1088: 'B',
-    1129: 'bC╧'
+    1129: 'bC╧',
+    1200: 'C'
 }
 
 const JustoniListB = {
@@ -754,7 +758,8 @@ const JustoniListB = {
     977: '#6╤',
     1018: 'b7',
     1088: '7',
-    1129: 'b1╧'
+    1129: 'b1╧',
+    1200: '1'
 }
 
 const JustoniListC = [
@@ -782,7 +787,8 @@ const JustoniListC = [
     '225/128',
     '9/5',
     '15/8',
-    '48/25'
+    '48/25',
+    '2/1'
 ]
 
 // s散音，f泛音，a按音
@@ -794,24 +800,37 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
     OutputMode = +OutputMode
     GongFrq = +GongFrq
     const Input = InputRaw.split(';')
-    const String = [], Fret = [], AbsScale = [], RelScaleRaw = [], CentRaw = [], Cent = [], Pitch = []
+    const Type = [], String = [], Fret = [], AbsScale = [], RelScaleRaw = [], CentRaw = [], Cent = [], Pitch = []
     for (let i = 0; i < Input.length; i++) {
-        const Pre = Input[i].split(',')
-        const Type = Pre[0]
-        if (Type === 'zhuang') {
+        let Pre = Input[i].split(',')
+        if (Pre.length === 1 && isNaN(Pre[0]) === false) { // 「就」，與上一音徽位同，或同爲散音            
+            if (Type[i - 1] === 'f') {
+                Type[i] = Type[i - 1]
+                Pre = Type[i].concat(Fret[i - 1]).concat(Pre)
+            } else if (Type[i - 1] === 'l') {
+                Pre = Fret[i - 1].concat(Pre)
+                Type[i] = Pre[0]
+            } else {
+                Type[i] = Type[i - 1]
+                Pre = [Type[i], Pre[0]]
+            }
+        } else {
+            Type[i] = Pre[0]
+        }
+        if (Type[i] === 'zhuang') {
             CentRaw[i] = CentRaw[i - 1] + (TempMode === 1 ? 204 : 182)
         } else {
-            if (Type === 's') {
+            if (Type[i] === 's') {
                 AbsScale[i] = StringList[+Pre[1] - 1]
             } else {
-                if (Type === 'f') {
+                if (Type[i] === 'f') {
                     Fret[i] = 7 - Math.abs(7 - +Pre[1]) // 泛音以7徽對稱
                     String[i] = Pre[2]
-                } else if (Type === 'l') {
+                } else if (Type[i] === 'l') {
                     String[i] = String[i - 1]
                     Fret[i] = Pre[1]
                 } else {
-                    Fret[i] = Pre[0]
+                    Fret[i] = Type[i]
                     String[i] = Pre[1]
                 }
                 const Leng = Fret2Leng(Fret[i])
@@ -851,14 +870,14 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
                 break
             }
         }
-        if (Type === 'zhuang') {
+        if (Type[i] === 'zhuang') {
             Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
-        } else if (Type === 'f') {
+        } else if (Type[i] === 'f') {
             Pitch[i] = '৹' + Pitch[i]
-        } else if (Type === 'l') {
+        } else if (Type[i] === 'l') {
             Pitch[i] = '◠' + Pitch[i]
         }
-        const floor = Math.floor(CentRaw[i] / 1200) // 超出一個八度
+        const floor = Math.round((CentRaw[i] + 11) / 1200) // 超出一個八度
         if (floor === 2) {
             Pitch[i] = '··' + Pitch[i]
         } else if (floor === 1) {
@@ -887,6 +906,6 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
     }
     return Print
 }
-// console.log(Position2Pitch('9.5,3;9,4;s,2;9.46,3;l,10.8;zhuang;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4', '1', '2', '4', '347.654321', '3')) // 洞庭第一句
-// console.log(Position2Pitch('9.46,3', '1', '1', '4', '347.654321', '2'))
+// console.log(Position2Pitch('9,5;l,7.6;l,9;4;10,2;10.8,3', '1', '1', '4', '347.654321', '1')) // 洞庭第一句
+// console.log(Position2Pitch('14,4;3', '1', '1', '4', '347.654321', '1'))
 
