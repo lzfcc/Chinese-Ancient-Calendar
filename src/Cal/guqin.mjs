@@ -675,24 +675,109 @@ const PythagoreanListB = {
 }
 // console.log(PythagoreanList[1110])
 
+const PythagoreanListC = [
+    '3/2',
+    '9/8',
+    '27/16',
+    '81/64',
+    '243/128',
+    '729/512',
+    '2187/2048',
+    '6561/4096',
+    '19683/16384',
+    '59049/32768',
+    '177147/131072',
+    '4/3',
+    '16/9',
+    '32/27',
+    '128/81',
+    '256/243',
+    '1024/729',
+    '4096/2187',
+    '8192/6561',
+    '32768/19683',
+    '65536/59049',
+    '262144/177147',
+    '1048576/531441'
+]
+
+const JustoniListA = {
+    0: 'C',
+    71: '#C╤',
+    112: 'bD',
+    182: 'D┬',
+    204: 'D',
+    224: 'bbE╧',
+    275: '#D',
+    316: 'bE',
+    386: 'E',
+    427: 'bF╧',
+    498: 'F',
+    520: 'F┴',
+    590: '#F',
+    610: 'bG',
+    680: 'G┬',
+    702: 'G',
+    773: '#G╤',
+    794: '#G',
+    814: 'bA',
+    884: 'A',
+    925: 'bbB╧',
+    977: '#A╤',
+    1018: 'bB',
+    1088: 'B',
+    1129: 'bC╧',
+}
+
+const JustoniListB = {
+    0: '1',
+    71: '#1╤',
+    112: 'b2',
+    182: '2┬',
+    204: '2',
+    224: 'bb3╧',
+    275: '#2',
+    316: 'b3',
+    386: '3',
+    427: 'b4╧',
+    498: '4',
+    520: '4┴',
+    590: '#4',
+    610: 'b5',
+    680: '5┬',
+    702: '5',
+    773: '#5╤',
+    794: '#5',
+    814: 'b6',
+    884: '6',
+    925: 'bb7╧',
+    977: '#6╤',
+    1018: 'b7',
+    1088: '7',
+    1129: 'b1╧',
+}
+
 // s散音，f泛音，a按音
-export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode) => { // ；調弦法；律制；宮弦
+export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2 與宮弦頻率比 3 頻率；
     const StringList = Tuning(1, TuningMode, TempMode).String
     TuningMode = +TuningMode
     GongMode = +GongMode
+    TempMode = +TempMode
+    OutputMode = +OutputMode
+    GongFrq = +GongFrq
     const Input = InputRaw.split(';')
-    const String = [], Fret = [], Freq = [], RelScale = [], CentRaw = [], Cent = [], Pitch = []
+    const String = [], Fret = [], AbsScale = [], RelScaleRaw = [], CentRaw = [], Cent = [], Pitch = []
     for (let i = 0; i < Input.length; i++) {
         const Pre = Input[i].split(',')
         const Type = Pre[0]
         if (Type === 'zhuang') {
-            CentRaw[i] = CentRaw[i - 1] + 204
+            CentRaw[i] = CentRaw[i - 1] + (TempMode === 1 ? 204 : 182)
         } else {
             if (Type === 's') {
-                Freq[i] = StringList[+Pre[1] - 1]
+                AbsScale[i] = StringList[+Pre[1] - 1]
             } else {
                 if (Type === 'f') {
-                    Fret[i] = 7 - Math.abs(7 - +Pre[1])
+                    Fret[i] = 7 - Math.abs(7 - +Pre[1]) // 泛音以7徽對稱
                     String[i] = Pre[2]
                 } else if (Type === 'l') {
                     String[i] = String[i - 1]
@@ -702,21 +787,34 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode) => { //
                     String[i] = Pre[1]
                 }
                 const Leng = Fret2Leng(Fret[i])
-                Freq[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1]).toFraction()
+                AbsScale[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1]).toFraction()
             }
-            RelScale[i] = frc(Freq[i]).div(StringList[GongMode - 1]).toFraction(false)
-            if (RelScale[i].includes('/')) {
-                const n = RelScale[i].split('/')[0]
-                const d = RelScale[i].split('/')[1]
-                CentRaw[i] = big.log2(big.div(n, d)).mul(1200).round().toNumber()
-            } else {
-                CentRaw[i] = big.log2(big(RelScale[i])).mul(1200).round().toNumber()
+            const tmp = frc(AbsScale[i]).div(StringList[GongMode - 1])
+            RelScaleRaw[i] = tmp.toFraction(false)
+            if (OutputMode > 1) { // 把頻率比歸到標準音高
+                if (TempMode === 1) {
+                    const tmp1 = RelScaleRaw[i].split('/')[0] / RelScaleRaw[i].split('/')[1]
+                    for (let k = 0; k < PythagoreanListC.length; k++) {
+                        const tmp2 = PythagoreanListC[k].split('/')[0] / PythagoreanListC[k].split('/')[1]
+                        if (tmp1 > tmp2 - 0.03 && tmp1 < tmp2 + 0.03) {
+                            RelScaleRaw[i] = PythagoreanListC[k]
+                            break
+                        }
+                    }
+                }
             }
+            CentRaw[i] = Math.log2(Number(tmp)) * 1200
         }
         Cent[i] = (CentRaw[i] % 1200 + 1200) % 1200
-        for (const [key] of Object.entries(PythagoreanListB)) {
+        let TempList = {}
+        if (TempMode === 1) {
+            TempList = PythagoreanListB
+        } else if (TempMode === 2) {
+            TempList = JustoniListB
+        }
+        for (const [key] of Object.entries(TempList)) {
             if (Cent[i] > +key - 12 && Cent[i] < +key + 12) {
-                Pitch[i] = PythagoreanListB[key]
+                Pitch[i] = TempList[key]
                 break
             }
         }
@@ -738,12 +836,24 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode) => { //
             Pitch[i] += '··'
         }
     }
-    let PitchCombine = ''
-    for (let i = 0; i < Pitch.length; i++) {
-        PitchCombine += Pitch[i] + '　'
+    let Print = ''
+    const Frq = []
+    if (OutputMode === 1) {
+        for (let i = 0; i < Pitch.length; i++) {
+            Print += Pitch[i] + '　'
+        }
+    } else if (OutputMode === 2) {
+        for (let i = 0; i < RelScaleRaw.length; i++) {
+            Print += RelScaleRaw[i] + '　'
+        }
+    } else if (OutputMode === 3) {
+        for (let i = 0; i < RelScaleRaw.length; i++) {
+            Frq[i] = Number(frc(RelScaleRaw[i]).mul(GongFrq)).toFixed(3)
+            Print += Frq[i] + '　'
+        }
     }
-    return PitchCombine
+    return Print
 }
-// console.log(Position2Pitch('9.6,3;9,4;s,2;9.6,3;l,10.8;zhuang;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4', '1', '1', '4')) // 洞庭第一句
-// console.log(Position2Pitch('10.8,3;zhuang', '1', '1', 4))
+// console.log(Position2Pitch('9.46,3;9,4;s,2;9.46,3;l,10.8;zhuang;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4', '1', '1', '4', '347.654321', '3')) // 洞庭第一句
+// console.log(Position2Pitch('9.46,3', '1', '1', '4', '347.654321', '2'))
 

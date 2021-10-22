@@ -549,6 +549,7 @@ year-range {
 }
 
 .year-select textarea.width6 {
+  font-size: 1.1em;
   width: 90%;
   max-width: 50em;
   height: 15em;
@@ -557,7 +558,7 @@ year-range {
   border-radius: 1.5em;
   border: .15em solid var(--black);
   padding: .5em .8em;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .year-select.width3 input {
