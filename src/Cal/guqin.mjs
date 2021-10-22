@@ -726,7 +726,7 @@ const JustoniListA = {
     977: '#A╤',
     1018: 'bB',
     1088: 'B',
-    1129: 'bC╧',
+    1129: 'bC╧'
 }
 
 const JustoniListB = {
@@ -754,8 +754,36 @@ const JustoniListB = {
     977: '#6╤',
     1018: 'b7',
     1088: '7',
-    1129: 'b1╧',
+    1129: 'b1╧'
 }
+
+const JustoniListC = [
+    '1/1',
+    '25/24',
+    '16/15',
+    '10/9',
+    '9/8',
+    '256/225',
+    '75/64',
+    '6/5',
+    '5/4',
+    '32/25',
+    '4/3',
+    '27/20',
+    '45/32',
+    '64/45',
+    '40/27',
+    '3/2',
+    '25/16',
+    '405/256',
+    '8/5',
+    '5/3',
+    '128/75',
+    '225/128',
+    '9/5',
+    '15/8',
+    '48/25'
+]
 
 // s散音，f泛音，a按音
 export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2 與宮弦頻率比 3 頻率；
@@ -792,16 +820,21 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
             const tmp = frc(AbsScale[i]).div(StringList[GongMode - 1])
             RelScaleRaw[i] = tmp.toFraction(false)
             if (OutputMode > 1) { // 把頻率比歸到標準音高
+                let TempListC = []
                 if (TempMode === 1) {
-                    const tmp1 = RelScaleRaw[i].split('/')[0] / RelScaleRaw[i].split('/')[1]
-                    for (let k = 0; k < PythagoreanListC.length; k++) {
-                        const tmp2 = PythagoreanListC[k].split('/')[0] / PythagoreanListC[k].split('/')[1]
-                        if (tmp1 > tmp2 - 0.03 && tmp1 < tmp2 + 0.03) {
-                            RelScaleRaw[i] = PythagoreanListC[k]
-                            break
-                        }
+                    TempListC = PythagoreanListC
+                } else if (TempMode === 2) {
+                    TempListC = JustoniListC
+                }
+                const tmp1 = RelScaleRaw[i].split('/')[0] / RelScaleRaw[i].split('/')[1]
+                for (let k = 0; k < TempListC.length; k++) {
+                    const tmp2 = TempListC[k].split('/')[0] / TempListC[k].split('/')[1]
+                    if (tmp1 > tmp2 - 0.007 && tmp1 < tmp2 + 0.007) { // 0.007大概是11音分
+                        RelScaleRaw[i] = TempListC[k]
+                        break
                     }
                 }
+
             }
             CentRaw[i] = Math.log2(Number(tmp)) * 1200
         }
@@ -854,6 +887,6 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
     }
     return Print
 }
-// console.log(Position2Pitch('9.46,3;9,4;s,2;9.46,3;l,10.8;zhuang;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4', '1', '1', '4', '347.654321', '3')) // 洞庭第一句
+// console.log(Position2Pitch('9.5,3;9,4;s,2;9.46,3;l,10.8;zhuang;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4', '1', '2', '4', '347.654321', '3')) // 洞庭第一句
 // console.log(Position2Pitch('9.46,3', '1', '1', '4', '347.654321', '2'))
 
