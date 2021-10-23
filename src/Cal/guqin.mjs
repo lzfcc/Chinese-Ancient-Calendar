@@ -792,7 +792,7 @@ const JustoniListC = [
 ]
 
 // s散音，f泛音，a按音
-export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2 與宮弦頻率比 3 頻率；
+export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     const StringList = Tuning(1, TuningMode, TempMode).String
     TuningMode = +TuningMode
     GongMode = +GongMode
@@ -838,7 +838,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
             }
             const tmp = frc(AbsScale[i]).div(StringList[GongMode - 1])
             RelScaleRaw[i] = tmp.toFraction(false)
-            if (OutputMode > 1) { // 把頻率比歸到標準音高
+            if (OutputMode > 2) { // 把頻率比歸到標準音高
                 let TempListC = []
                 if (TempMode === 1) {
                     TempListC = PythagoreanListC
@@ -853,52 +853,61 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
                         break
                     }
                 }
-
             }
             CentRaw[i] = Math.log2(Number(tmp)) * 1200
         }
-        Cent[i] = (CentRaw[i] % 1200 + 1200) % 1200
-        let TempList = {}
-        if (TempMode === 1) {
-            TempList = PythagoreanListB
-        } else if (TempMode === 2) {
-            TempList = JustoniListB
-        }
-        for (const [key] of Object.entries(TempList)) {
-            if (Cent[i] > +key - 12 && Cent[i] < +key + 12) {
-                Pitch[i] = TempList[key]
-                break
+        if (OutputMode <= 2) {
+            Cent[i] = (CentRaw[i] % 1200 + 1200) % 1200
+            let TempList = {}
+            if (OutputMode === 1) {
+                if (TempMode === 1) {
+                    TempList = PythagoreanListA
+                } else if (TempMode === 2) {
+                    TempList = JustoniListA
+                }
+            } else if (OutputMode === 2) {
+                if (TempMode === 1) {
+                    TempList = PythagoreanListB
+                } else if (TempMode === 2) {
+                    TempList = JustoniListB
+                }
             }
-        }
-        if (Type[i] === 'zhuang') {
-            Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
-        } else if (Type[i] === 'f') {
-            Pitch[i] = '৹' + Pitch[i]
-        } else if (Type[i] === 'l') {
-            Pitch[i] = '◠' + Pitch[i]
-        }
-        const floor = Math.round((CentRaw[i] + 11) / 1200) // 超出一個八度
-        if (floor === 2) {
-            Pitch[i] = '··' + Pitch[i]
-        } else if (floor === 1) {
-            Pitch[i] = '·' + Pitch[i]
-        } else if (floor === -1) {
-            Pitch[i] += '·'
-        } else if (floor === -2) {
-            Pitch[i] += '··'
+            for (const [key] of Object.entries(TempList)) {
+                if (Cent[i] > +key - 12 && Cent[i] < +key + 12) {
+                    Pitch[i] = TempList[key]
+                    break
+                }
+            }
+            if (Type[i] === 'zhuang') {
+                Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
+            } else if (Type[i] === 'f') {
+                Pitch[i] = '৹' + Pitch[i]
+            } else if (Type[i] === 'l') {
+                Pitch[i] = '◠' + Pitch[i]
+            }
+            const floor = Math.round((CentRaw[i] + 11) / 1200) // 超出一個八度
+            if (floor === 2) {
+                Pitch[i] = '··' + Pitch[i]
+            } else if (floor === 1) {
+                Pitch[i] = '·' + Pitch[i]
+            } else if (floor === -1) {
+                Pitch[i] += '·'
+            } else if (floor === -2) {
+                Pitch[i] += '··'
+            }
         }
     }
     let Print = ''
     const Frq = []
-    if (OutputMode === 1) {
+    if (OutputMode <= 2) {
         for (let i = 0; i < Pitch.length; i++) {
             Print += Pitch[i] + '　'
         }
-    } else if (OutputMode === 2) {
+    } else if (OutputMode === 3) {
         for (let i = 0; i < RelScaleRaw.length; i++) {
             Print += RelScaleRaw[i] + '　'
         }
-    } else if (OutputMode === 3) {
+    } else if (OutputMode === 4) {
         for (let i = 0; i < RelScaleRaw.length; i++) {
             Frq[i] = Number(frc(RelScaleRaw[i]).mul(GongFrq)).toFixed(3)
             Print += Frq[i] + '　'
