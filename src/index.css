@@ -168,6 +168,27 @@ u {
   margin: 0 .1em
 }
 
+.upline1 {
+  border-top: 1px solid var(--black)
+}
+
+.upline2 {
+  border-top: 3px double var(--black)
+}
+
+.dnline1 {
+  border-bottom: 1px solid var(--black)
+}
+
+.dnline2 {
+  border-bottom: 3px double var(--black)
+}
+
+.updot1 {
+  text-emphasis: dot;
+  text-emphasis-position: up;
+}
+
 p {
   margin: 1.3em auto
 }

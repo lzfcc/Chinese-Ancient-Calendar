@@ -85,7 +85,7 @@ export default class Converter extends React.Component {
     }
     return (
       <div className='ans' style={{ whiteSpace: "pre-wrap" }}>
-        <p>{this.state.output}</p>
+        <p dangerouslySetInnerHTML={{ __html: this.state.output }}></p>
       </div>
     )
   }

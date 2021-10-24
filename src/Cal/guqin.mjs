@@ -227,7 +227,7 @@ export const Fret2Leng = x => { // 徽位轉弦長
     }
     const Fret = ~~x
     const Frac = frc(x - ~~x)
-    const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '57/64', '9/10', 1] // 0, 14是徽外，15是外外。照理說徽外是1/5處，但洞庭結果不太對，多了
+    const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '8/9', '9/10', 1] // 0, 14是徽外13.11(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
     const Leng = frc(FretList[Fret]).add(Frac.mul(frc(FretList[Fret + 1]).sub(FretList[Fret])))
     return Leng.toFraction()
 }
@@ -620,31 +620,88 @@ export const Tuning = (x, TuningMode, TempMode) => { // 輸入五弦頻率
 }
 // console.log(Tuning(1, 1))
 
+const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律
+    0: 'C',
+    70.67: '#<span class="dnline2">C</span>', // 小半音
+    90.22: 'bD',
+    92.18: '#<span class="dnline1">C</span>',
+    111.73: 'b<span class="upline1">D</span>',
+    113.69: '#C',
+    133.24: 'b<span class="upline2">D</span>',
+    180.45: 'bbE',
+    182.40: '<span class="dnline1">D</span>',
+    203.91: 'D',
+    223.46: 'bb<span class="upline2">E</span>',
+    274.58: '#<span class="dnline2">D',
+    294.13: 'bE',
+    315.64: 'b<span class="upline1">E</span>',
+    317.60: '#D',
+    364.81: '<span class="dnline2">E</span>',
+    384.36: 'bF',
+    386.31: '<span class="dnline1">E</span>',
+    407.82: 'E',
+    427.37: 'b<span class="upline2">F</span>',
+    478.49: '#<span class="dnline2">E</span>',
+    498.04: 'F',
+    519.55: '<span class="upline1">F</span>',
+    521.51: '#E',
+    568.72: '#<span class="dnline2">F</span>',
+    588.27: 'bG',
+    590.22: '#<span class="dnline1">F</span>',
+    609.77: 'b<span class="upline1">G</span>',
+    611.73: '#F',
+    631.28: 'b<span class="upline2">G</span>',
+    678.49: 'bbA',
+    680.45: '<span class="dnline1">G</span>',
+    701.96: 'G',
+    772.63: '#<span class="dnline2">G</span>',
+    792.18: 'bA',
+    794.13: '#<span class="dnline1">G</span>',
+    813.69: 'b<span class="upline1">A</span>',
+    815.64: '#G',
+    882.40: 'bbB',
+    884.36: '<span class="dnline1">A</span>',
+    905.87: 'A',
+    925.42: 'bb<span class="upline2">B</span>',
+    976.54: '#<span class="dnline2">A</span>',
+    996.09: 'bB',
+    1017.59: 'b<span class="upline1">B</span>',
+    1019.55: '#A',
+    1066.76: '<span class="dnline2">B</span>',
+    1086.31: '<span class="updot1">bC</span>',
+    1088.27: '<span class="dnline1">B</span>',
+    1107.82: 'b<span class="updot1"><span class="upline1">C</span></span>',
+    1109.78: 'B',
+    1129.33: 'b<span class="updot1"><span class="upline2">C</span></span>',
+    1176.54: '<span class="updot1">bbD</span>',
+    1200: 'C'
+}
+
 const PythagoreanListA = {
     0: 'C',
-    90: 'bD',
-    114: '#C',
-    180: 'bbE',
-    204: 'D',
-    294: 'bE',
-    318: '#D',
-    384: 'bF',
-    408: 'E',
-    498: 'F',
-    522: '#E',
-    588: 'bG',
-    612: '#F',
-    678: 'bbA',
-    702: 'G',
-    792: 'bA',
-    816: '#G',
-    882: 'bbB',
-    906: 'A',
-    996: 'bB',
-    1020: '#A',
-    1086: '·bC',
-    1110: 'B',
-    1177: '·bbD',
+    90.22: 'bD',
+    113.69: '#C',
+    180.45: 'bbE',
+    203.91: 'D',
+    294.13: 'bE',
+    317.60: '#D',
+    384.36: 'bF',
+    407.82: 'E',
+    498.04: 'F',
+    521.51: '#E',
+    588.27: 'bG',
+    611.73: '#F',
+    678.49: 'bbA',
+    701.96: 'G',
+    792.18: 'bA',
+    815.64: '#G',
+    882.40: 'bbB',
+    905.87: 'A',
+    996.09: 'bB',
+    1019.55: '#A',
+    1086.31: '<span class="updot1">bC</span>',
+    1109.78: 'B',
+    1176.54: '<span class="updot1">bbD</span>',
     1200: 'C'
 }
 
@@ -675,7 +732,6 @@ const PythagoreanListB = {
     1177: '·bb2',
     1200: '1'
 }
-// console.log(PythagoreanList[1110])
 
 const PythagoreanListC = [
     '3/2',
@@ -703,51 +759,60 @@ const PythagoreanListC = [
     '1048576/531441',
     '2/1'
 ]
+// const faas = z => { // 把分數處理成音分
+//     const b = []
+//     for (let i = 0; i < PythagoreanListC.length; i++) {
+//         const a = PythagoreanListC[i].split('/')[0] / PythagoreanListC[i].split('/')[1]
+//         b[i] = (Math.log2(a) * 1200).toFixed(2)
+//     }
+//     return b
+// }
+// console.log(faas(1))
 
 const JustoniListA = {
     0: 'C',
-    70.67: '#C╤', // 小半音
-    92.18: '#C┬',
-    111.73: 'bD',
-    133.24: 'bD╧',
-    182.40: 'D┬',
+    70.67: '#<span class="dnline2">C</span>', // 小半音
+    92.18: '#<span class="dnline1">C</span>',
+    111.73: 'b<span class="upline1">D</span>',
+    133.24: 'b<span class="upline2">D</span>',
+    182.40: '<span class="dnline1">D</span>',
     203.91: 'D',
-    223.46: 'bbE╧',
-    274.58: '#D',
-    315.64: 'bE',
-    364.81: 'E╤',
-    386.31: 'E',
-    427.37: 'bF╧',
-    478.49: '#E╤',
+    223.46: 'bb<span class="upline2">E</span>',
+    274.58: '#<span class="dnline2">D',
+    315.64: 'b<span class="upline1">E</span>',
+    364.81: '<span class="dnline2">E</span>',
+    386.31: '<span class="dnline1">E</span>',
+    427.37: 'b<span class="upline2">F</span>',
+    478.49: '#<span class="dnline2">E</span>',
     498.05: 'F',
-    519.55: 'F┴',
-    568.72: '#F╤',
-    590.22: '#F',
-    609.77: 'bG',
-    631.28: 'bG╧',
-    680.45: 'G┬',
+    519.55: '<span class="upline1">F</span>',
+    568.72: '#<span class="dnline2">F</span>',
+    590.22: '#<span class="dnline1">F</span>',
+    609.77: 'b<span class="upline1">G</span>',
+    631.28: 'b<span class="upline2">G</span>',
+    680.45: '<span class="dnline1">G</span>',
     701.96: 'G',
-    772.63: '#G╤',
-    794.13: '#G',
-    813.69: 'bA',
-    884.36: 'A',
-    925.42: 'bbB╧',
-    976.54: '#A╤',
-    1017.59: 'bB',
-    1066.76: 'B╤',
-    1088.27: 'B',
-    1107.82: '·bC',
-    1129.33: '·bC╧',
+    772.63: '#<span class="dnline2">G</span>',
+    794.13: '#<span class="dnline1">G</span>',
+    813.69: 'b<span class="upline1">A</span>',
+    884.36: '<span class="dnline1">A</span>',
+    925.42: 'bb<span class="upline2">B</span>',
+    976.54: '#<span class="dnline2">A</span>',
+    1017.59: 'b<span class="upline1">B</span>',
+    1066.76: '<span class="dnline2">B</span>',
+    1088.27: '<span class="dnline1">B</span>',
+    1107.82: 'b<span class="updot1"><span class="upline1">C</span></span>',
+    1129.33: 'b<span class="updot1"><span class="upline2">C</span></span>',
     1200: 'C'
 }
 
 const JustoniListB = {
     0: '1',
-    70.67: '#1╤', // 小半音
+    70.67: '#<span style="border-bottom:3px double var(--black)">1╤</span>', // 小半音
     92.18: '#1┬',
     111.73: 'b2',
     133.24: 'b2╧',
-    182.40: '2┬',
+    182.40: '<u>2┬</u>',
     203.91: '2',
     223.46: 'bb3╧',
     274.58: '#2',
