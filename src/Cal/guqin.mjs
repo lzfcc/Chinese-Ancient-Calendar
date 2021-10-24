@@ -686,14 +686,20 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
 // }
 // console.log(faas(1))
 
+// const fa3 = z => {
+//     const a = 1.276584120678397
+//     return frc(a).toFraction(false)
+// }
+// console.log(fa3(3))
 // s散音，f泛音，a按音
-export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
+export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode, isStrict) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     const StringList = Tuning(1, TuningMode, TempMode).String
     TuningMode = +TuningMode
     GongMode = +GongMode
     TempMode = +TempMode
     OutputMode = +OutputMode
     GongFrq = +GongFrq
+    isStrict = +isStrict
     const Input = InputRaw.split(';')
     const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = []
     for (let i = 0; i < Input.length; i++) {
@@ -714,7 +720,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
         }
         let floor = 0
         if (Type[i] === 'zhuang') {
-            Cent[i] = Cent[i - 1] + (TempMode === 1 ? 204 : 182)
+            Cent[i] = Cent[i - 1] + (TempMode === 1 ? 203.91 : 182.4)
         } else {
             if (Type[i] === 's') {
                 AbsScale[i] = StringList[+Pre[1] - 1]
@@ -737,12 +743,13 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
             floor = Math.floor((Cent[i] + 21.5) / 1200) // 超出一個八度
             Cent[i] = (Cent[i] % 1200 + 1200) % 1200
             for (const [key] of Object.entries(FushionList)) {
-                if (Cent[i] > +key - 10 && Cent[i] < +key + 10 && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
+                const threshold = isStrict ? 0.1 : 10
+                if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
                     Pitch[i] = FushionList[key][OutputMode <= 3 ? OutputMode : 3]
                     break
                 }
             }
-            if (Pitch[i] === undefined) { // 這個用來對付徽位更不準的
+            if (isStrict === 0 && Pitch[i] === undefined) { // 這個用來對付徽位更不準的
                 for (const [key] of Object.entries(FushionList)) {
                     if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
                         Pitch[i] = FushionList[key][OutputMode <= 3 ? OutputMode : 3]
@@ -751,6 +758,9 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
                 }
             }
             if (OutputMode >= 3) {
+                if (Pitch[i] === undefined) {
+                    Pitch[i] = frc(2 ** (Cent[i] / 1200)).toFraction(false)
+                }
                 Pitch[i] = frc(Pitch[i]).mul(2 ** floor).toFraction(false)
             }
             if (OutputMode === 4) {
@@ -784,7 +794,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
     }
     return Print
 }
-// console.log(Position2Pitch('9,5;l,7.6;l,9;4;10,2;10.8,3', '1', '1', '4', '347.654321', '3')) 
+// console.log(Position2Pitch('9,5;l,7.6;l,9;4;10,2;10.8,3', '1', '1', '4', '347.654321', '3'))
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
-// console.log(Position2Pitch('f,12,4', '1', '2', '1', '347.654321', '2'))
+// console.log(Position2Pitch('9.9,2', '1', '2', '1', '347.654321', '3', '1'))
 

@@ -10,7 +10,8 @@ export default class Converter extends React.Component {
       c: '1',
       d: '4',
       f: '347.654321',
-      g: 1
+      g: '1',
+      h: '0'
     }
     this.handle = this.handle.bind(this)
   }
@@ -66,13 +67,21 @@ export default class Converter extends React.Component {
             this.setState({ g: e.currentTarget.value });
           }}
         />
+        <span> 嚴格模式</span>
+        <input
+          className='width1'
+          value={this.state.h}
+          onChange={e => {
+            this.setState({ h: e.currentTarget.value });
+          }}
+        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = Position2Pitch(this.state.a, this.state.b, this.state.c, this.state.d, this.state.f, this.state.g)
+      const Print = Position2Pitch(this.state.a, this.state.b, this.state.c, this.state.d, this.state.f, this.state.g, this.state.h)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

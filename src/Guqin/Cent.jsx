@@ -54,6 +54,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>頻率比 ⇌ 八度値、音分</h3>
+        <p className='note'>可輸入整數、分數、小數</p>
         {this.input()}
         <button onClick={this.handle} className='button4-1'>frq2cent</button><span className='Deci64'>.64</span>
         {this.result()}
