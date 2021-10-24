@@ -620,145 +620,62 @@ export const Tuning = (x, TuningMode, TempMode) => { // 輸入五弦頻率
 }
 // console.log(Tuning(1, 1))
 
-const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律
-    0: 'C',
-    70.67: '#<span class="dnline2">C</span>', // 小半音
-    90.22: 'bD',
-    92.18: '#<span class="dnline1">C</span>',
-    111.73: 'b<span class="upline1">D</span>',
-    113.69: '#C',
-    133.24: 'b<span class="upline2">D</span>',
-    180.45: 'bbE',
-    182.40: '<span class="dnline1">D</span>',
-    203.91: 'D',
-    223.46: 'bb<span class="upline2">E</span>',
-    274.58: '#<span class="dnline2">D',
-    294.13: 'bE',
-    315.64: 'b<span class="upline1">E</span>',
-    317.60: '#D',
-    364.81: '<span class="dnline2">E</span>',
-    384.36: 'bF',
-    386.31: '<span class="dnline1">E</span>',
-    407.82: 'E',
-    427.37: 'b<span class="upline2">F</span>',
-    478.49: '#<span class="dnline2">E</span>',
-    498.04: 'F',
-    519.55: '<span class="upline1">F</span>',
-    521.51: '#E',
-    568.72: '#<span class="dnline2">F</span>',
-    588.27: 'bG',
-    590.22: '#<span class="dnline1">F</span>',
-    609.77: 'b<span class="upline1">G</span>',
-    611.73: '#F',
-    631.28: 'b<span class="upline2">G</span>',
-    678.49: 'bbA',
-    680.45: '<span class="dnline1">G</span>',
-    701.96: 'G',
-    772.63: '#<span class="dnline2">G</span>',
-    792.18: 'bA',
-    794.13: '#<span class="dnline1">G</span>',
-    813.69: 'b<span class="upline1">A</span>',
-    815.64: '#G',
-    882.40: 'bbB',
-    884.36: '<span class="dnline1">A</span>',
-    905.87: 'A',
-    925.42: 'bb<span class="upline2">B</span>',
-    976.54: '#<span class="dnline2">A</span>',
-    996.09: 'bB',
-    1017.59: 'b<span class="upline1">B</span>',
-    1019.55: '#A',
-    1066.76: '<span class="dnline2">B</span>',
-    1086.31: '<span class="updot1">bC</span>',
-    1088.27: '<span class="dnline1">B</span>',
-    1107.82: 'b<span class="updot1"><span class="upline1">C</span></span>',
-    1109.78: 'B',
-    1129.33: 'b<span class="updot1"><span class="upline2">C</span></span>',
-    1176.54: '<span class="updot1">bbD</span>',
-    1200: 'C'
+const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
+    0: [0, 'C', '1', '1/1'],
+    70.67: [2, '#<span class="dnline2">C</span>', '#<span class="dnline2">1</span>', '25/24'], // 小半音
+    90.22: [1, 'bD', 'b2', '256/243'],
+    92.18: [2, '#<span class="dnline1">C</span>', '#<span class="dnline1">1</span>', '135/128'],
+    111.73: [2, 'b<span class="upline1">D</span>', 'b<span class="upline1">2</span>', '16/15'],
+    113.69: [1, '#C', '#1', '2187/2048'],
+    133.24: [2, 'b<span class="upline2">D</span>', 'b<span class="upline2">2</span>', '27/25'],
+    180.45: [1, 'bbE', 'bb3', '65536/59049'],
+    182.40: [2, '<span class="dnline1">D</span>', '<span class="dnline1">2</span>', '10/9'],
+    203.91: [0, 'D', '2', '9/8'],
+    223.46: [2, 'bb<span class="upline2">E</span>', 'bb<span class="upline2">3</span>', '256/225'],
+    274.58: [2, '#<span class="dnline2">D</span>', '#<span class="dnline2">2</span>', '75/64'],
+    294.13: [1, 'bE', 'b3', '32/27'],
+    315.64: [2, 'b<span class="upline1">E</span>', 'b<span class="upline1">3</span>', '6/5'],
+    317.60: [1, '#D', '#2', '19683/16384'],
+    364.81: [2, '<span class="dnline2">E</span>', '<span class="dnline2">3</span>', '100/81'],
+    384.36: [1, 'bF', 'b4', '8192/6561'],
+    386.31: [2, '<span class="dnline1">E</span>', '<span class="dnline1">3</span>', '5/4'],
+    407.82: [0, 'E', '3', '81/64'],
+    427.37: [2, 'b<span class="upline2">F</span>', 'b<span class="upline2">4</span>', '32/25'],
+    478.49: [2, '#<span class="dnline2">E</span>', '#<span class="dnline2">3</span>', '675/512'],
+    498.04: [1, 'F', '4', '4/3'],
+    519.55: [2, '<span class="upline1">F</span>', '<span class="upline1">4</span>', '27/20'],
+    521.51: [1, '#E', '#3', '177147/131072'],
+    568.72: [2, '#<span class="dnline2">F</span>', '#<span class="dnline2">4</span>', '25/18'],
+    588.27: [1, 'bG', 'b5', '1024/729'],
+    590.22: [2, '#<span class="dnline1">F</span>', '#<span class="dnline1">4</span>', '45/32'],
+    609.77: [2, 'b<span class="upline1">G</span>', 'b<span class="upline1">5</span>', '64/45'],
+    611.73: [1, '#F', '#4', '729/512'],
+    631.28: [2, 'b<span class="upline2">G</span>', 'b<span class="upline2">5</span>', '36/25'],
+    678.49: [1, 'bbA', 'bb6', '262144/177147'],
+    680.45: [2, '<span class="dnline1">G</span>', '<span class="dnline1">5</span>', '40/27'],
+    701.96: [0, 'G', '5', '3/2'],
+    772.63: [2, '#<span class="dnline2">G</span>', '#<span class="dnline2">5</span>', '25/16'],
+    792.18: [1, 'bA', 'b6', '128/81'],
+    794.13: [2, '#<span class="dnline1">G</span>', '#<span class="dnline1">5</span>', '405/256'],
+    813.69: [2, 'b<span class="upline1">A</span>', 'b<span class="upline1">6</span>', '8/5'],
+    815.64: [1, '#G', '#5', '6561/4096'],
+    882.40: [1, 'bbB', 'bb7', '32768/19683'],
+    884.36: [2, '<span class="dnline1">A</span>', '<span class="dnline1">6</span>', '5/3'],
+    905.87: [1, 'A', '6', '27/16'],
+    925.42: [2, 'bb<span class="upline2">B</span>', 'bb<span class="upline2">7</span>', '128/75'],
+    976.54: [2, '#<span class="dnline2">A</span>', '#<span class="dnline2">6</span>', '225/128'],
+    996.09: [1, 'bB', 'b7', '16/9'],
+    1017.59: [2, 'b<span class="upline1">B</span>', 'b<span class="upline1">7</span>', '9/5'],
+    1019.55: [1, '#A', '#6', '59049/32768'],
+    1066.76: [2, '<span class="dnline2">B</span>', '<span class="dnline2">7</span>', '50/27'],
+    1086.31: [1, '·bC', '·b1', '4096/2187'],
+    1088.27: [2, '<span class="dnline1">B</span>', '<span class="dnline1">7</span>', '15/8'],
+    1107.82: [2, '·b<span class="upline1">C</span>', '·b<span class="upline1">1</span>', '256/135'],
+    1109.78: [1, 'B', '7', '243/128'],
+    1129.33: [2, '·b<span class="upline2">C</span>', '·b<span class="upline2">1</span>', '48/25'],
+    1176.54: [1, '·bbD', '·bb2', '1048576/531441'],
+    1200: [0, 'C', '1', '2/1']
 }
-
-const PythagoreanListA = {
-    0: 'C',
-    90.22: 'bD',
-    113.69: '#C',
-    180.45: 'bbE',
-    203.91: 'D',
-    294.13: 'bE',
-    317.60: '#D',
-    384.36: 'bF',
-    407.82: 'E',
-    498.04: 'F',
-    521.51: '#E',
-    588.27: 'bG',
-    611.73: '#F',
-    678.49: 'bbA',
-    701.96: 'G',
-    792.18: 'bA',
-    815.64: '#G',
-    882.40: 'bbB',
-    905.87: 'A',
-    996.09: 'bB',
-    1019.55: '#A',
-    1086.31: '<span class="updot1">bC</span>',
-    1109.78: 'B',
-    1176.54: '<span class="updot1">bbD</span>',
-    1200: 'C'
-}
-
-const PythagoreanListB = {
-    0: '1',
-    90: 'b2',
-    114: '#1',
-    180: 'bb3',
-    204: '2',
-    294: 'b3',
-    318: '#2',
-    384: 'b4',
-    408: '3',
-    498: '4',
-    522: '#3',
-    588: 'b5',
-    612: '#4',
-    678: 'bb6',
-    702: '5',
-    792: 'b6',
-    816: '#5',
-    882: 'bb7',
-    906: '6',
-    996: 'b7',
-    1020: '#6',
-    1086: '·b1',
-    1110: '7',
-    1177: '·bb2',
-    1200: '1'
-}
-
-const PythagoreanListC = [
-    '3/2',
-    '9/8',
-    '27/16',
-    '81/64',
-    '243/128',
-    '729/512',
-    '2187/2048',
-    '6561/4096',
-    '19683/16384',
-    '59049/32768',
-    '177147/131072',
-    '4/3',
-    '16/9',
-    '32/27',
-    '128/81',
-    '256/243',
-    '1024/729',
-    '4096/2187',
-    '8192/6561',
-    '32768/19683',
-    '65536/59049',
-    '262144/177147',
-    '1048576/531441',
-    '2/1'
-]
 // const faas = z => { // 把分數處理成音分
 //     const b = []
 //     for (let i = 0; i < PythagoreanListC.length; i++) {
@@ -769,117 +686,6 @@ const PythagoreanListC = [
 // }
 // console.log(faas(1))
 
-const JustoniListA = {
-    0: 'C',
-    70.67: '#<span class="dnline2">C</span>', // 小半音
-    92.18: '#<span class="dnline1">C</span>',
-    111.73: 'b<span class="upline1">D</span>',
-    133.24: 'b<span class="upline2">D</span>',
-    182.40: '<span class="dnline1">D</span>',
-    203.91: 'D',
-    223.46: 'bb<span class="upline2">E</span>',
-    274.58: '#<span class="dnline2">D',
-    315.64: 'b<span class="upline1">E</span>',
-    364.81: '<span class="dnline2">E</span>',
-    386.31: '<span class="dnline1">E</span>',
-    427.37: 'b<span class="upline2">F</span>',
-    478.49: '#<span class="dnline2">E</span>',
-    498.05: 'F',
-    519.55: '<span class="upline1">F</span>',
-    568.72: '#<span class="dnline2">F</span>',
-    590.22: '#<span class="dnline1">F</span>',
-    609.77: 'b<span class="upline1">G</span>',
-    631.28: 'b<span class="upline2">G</span>',
-    680.45: '<span class="dnline1">G</span>',
-    701.96: 'G',
-    772.63: '#<span class="dnline2">G</span>',
-    794.13: '#<span class="dnline1">G</span>',
-    813.69: 'b<span class="upline1">A</span>',
-    884.36: '<span class="dnline1">A</span>',
-    925.42: 'bb<span class="upline2">B</span>',
-    976.54: '#<span class="dnline2">A</span>',
-    1017.59: 'b<span class="upline1">B</span>',
-    1066.76: '<span class="dnline2">B</span>',
-    1088.27: '<span class="dnline1">B</span>',
-    1107.82: 'b<span class="updot1"><span class="upline1">C</span></span>',
-    1129.33: 'b<span class="updot1"><span class="upline2">C</span></span>',
-    1200: 'C'
-}
-
-const JustoniListB = {
-    0: '1',
-    70.67: '#<span style="border-bottom:3px double var(--black)">1╤</span>', // 小半音
-    92.18: '#1┬',
-    111.73: 'b2',
-    133.24: 'b2╧',
-    182.40: '<u>2┬</u>',
-    203.91: '2',
-    223.46: 'bb3╧',
-    274.58: '#2',
-    315.64: 'b3',
-    364.81: '3╤',
-    386.31: '3',
-    427.37: 'b4╧',
-    478.49: '#3╤',
-    498.05: '4',
-    519.55: '4┴',
-    568.72: '#4╤',
-    590.22: '#4',
-    609.77: 'b5',
-    631.28: 'b5╧',
-    680.45: '5┬',
-    701.96: '5',
-    772.63: '#5╤',
-    794.13: '#5',
-    813.69: 'b6',
-    884.36: '6',
-    925.42: 'bb7╧',
-    976.54: '#6╤',
-    1017.59: 'b7',
-    1066.76: '7╤',
-    1088.27: '7',
-    1107.82: '·b1',
-    1129.33: '·b1╧',
-    1200: '1'
-}
-
-const JustoniListC = [
-    '1/1',
-    '25/24', // 70.67
-    '135/128', // 92.18
-    '16/15', // 111.73
-    '27/25', // 133.24
-    '10/9', // 182.40
-    '9/8', // 203.91
-    '256/225', // 223.46
-    '75/64', // 274.58
-    '6/5', // 315.64
-    '100/81',
-    '5/4', // 386.31
-    '32/25', // 427.37
-    '675/512', // 478.49
-    '4/3', // 498.05
-    '27/20', // 519.55
-    '25/18', // 568.72
-    '45/32', // 590.22
-    '64/45', // 609.77
-    '36/25', // 631.28
-    '40/27', // 680.45
-    '3/2', // 701.96
-    '25/16', // 772.63
-    '405/256', // 794.13
-    '8/5', // 813.69
-    '5/3', // 884.36
-    '128/75', // 925.42
-    '225/128', // 976.54
-    '9/5', // 1017.59
-    '50/27', // 1066.76
-    '15/8', // 1088.27
-    '256/135', // 1107.82
-    '48/25', // 1129.33
-    '2/1'
-]
-
 // s散音，f泛音，a按音
 export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     const StringList = Tuning(1, TuningMode, TempMode).String
@@ -889,7 +695,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
     OutputMode = +OutputMode
     GongFrq = +GongFrq
     const Input = InputRaw.split(';')
-    const Type = [], String = [], Fret = [], AbsScale = [], RelScaleRaw = [], CentRaw = [], Cent = [], Pitch = []
+    const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = []
     for (let i = 0; i < Input.length; i++) {
         let Pre = Input[i].split(',')
         if (Pre.length === 1 && isNaN(Pre[0]) === false) { // 「就」，與上一音徽位同，或同爲散音            
@@ -906,8 +712,9 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
         } else {
             Type[i] = Pre[0]
         }
+        let floor = 0
         if (Type[i] === 'zhuang') {
-            CentRaw[i] = CentRaw[i - 1] + (TempMode === 1 ? 204 : 182)
+            Cent[i] = Cent[i - 1] + (TempMode === 1 ? 204 : 182)
         } else {
             if (Type[i] === 's') {
                 AbsScale[i] = StringList[+Pre[1] - 1]
@@ -923,59 +730,37 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
                     String[i] = Pre[1]
                 }
                 const Leng = Fret2Leng(Fret[i])
-                AbsScale[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1]).toFraction()
+                AbsScale[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1])
             }
-            const tmp = frc(AbsScale[i]).div(StringList[GongMode - 1])
-            RelScaleRaw[i] = tmp.toFraction(false)
-            if (OutputMode > 2) { // 把頻率比歸到標準音高
-                let TempListC = []
-                if (TempMode === 1) {
-                    TempListC = PythagoreanListC
-                } else if (TempMode === 2) {
-                    TempListC = JustoniListC
+            RelScale[i] = Number(frc(AbsScale[i]).div(StringList[GongMode - 1]))
+            Cent[i] = Math.log2(RelScale[i]) * 1200
+            floor = Math.floor((Cent[i] + 21.5) / 1200) // 超出一個八度
+            Cent[i] = (Cent[i] % 1200 + 1200) % 1200
+            for (const [key] of Object.entries(FushionList)) {
+                if (Cent[i] > +key - 10 && Cent[i] < +key + 10 && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
+                    Pitch[i] = FushionList[key][OutputMode <= 3 ? OutputMode : 3]
+                    break
                 }
-                const tmp1 = RelScaleRaw[i].split('/')[0] / RelScaleRaw[i].split('/')[1]
-                for (let k = 0; k < TempListC.length; k++) {
-                    const tmp2 = TempListC[k].split('/')[0] / TempListC[k].split('/')[1]
-                    if (tmp1 > tmp2 - 0.006 && tmp1 < tmp2 + 0.006) { // 0.007大概是11音分
-                        RelScaleRaw[i] = TempListC[k]
+            }
+            if (Pitch[i] === undefined) { // 這個用來對付徽位更不準的
+                for (const [key] of Object.entries(FushionList)) {
+                    if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
+                        Pitch[i] = FushionList[key][OutputMode <= 3 ? OutputMode : 3]
                         break
                     }
                 }
             }
-            CentRaw[i] = Math.log2(Number(tmp)) * 1200
+            if (OutputMode >= 3) {
+                Pitch[i] = frc(Pitch[i]).mul(2 ** floor).toFraction(false)
+            }
+            if (OutputMode === 4) {
+                Pitch[i] = Number(frc(Pitch[i]).mul(GongFrq)).toFixed(3)
+            }
         }
         if (OutputMode <= 2) {
-            Cent[i] = (CentRaw[i] % 1200 + 1200) % 1200
-            let TempList = {}
-            if (OutputMode === 1) {
-                if (TempMode === 1) {
-                    TempList = PythagoreanListA
-                } else if (TempMode === 2) {
-                    TempList = JustoniListA
-                }
-            } else if (OutputMode === 2) {
-                if (TempMode === 1) {
-                    TempList = PythagoreanListB
-                } else if (TempMode === 2) {
-                    TempList = JustoniListB
-                }
-            }
-            for (const [key] of Object.entries(TempList)) {
-                if (Cent[i] > +key - 12 && Cent[i] < +key + 12) {
-                    Pitch[i] = TempList[key]
-                    break
-                }
-            }
-            if (Type[i] === 'zhuang') {
-                Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
-            } else if (Type[i] === 'f') {
-                Pitch[i] = '৹' + Pitch[i]
-            } else if (Type[i] === 'l') {
-                Pitch[i] = '◠' + Pitch[i]
-            }
-            const floor = Math.floor((CentRaw[i] + 11) / 1200) // 超出一個八度
-            if (floor === 2) {
+            if (floor === 3) {
+                Pitch[i] = '···' + Pitch[i]
+            } else if (floor === 2) {
                 Pitch[i] = '··' + Pitch[i]
             } else if (floor === 1) {
                 Pitch[i] = '·' + Pitch[i]
@@ -985,26 +770,21 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
                 Pitch[i] += '··'
             }
         }
+        if (Type[i] === 'zhuang') {
+            Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
+        } else if (Type[i] === 'f') {
+            Pitch[i] = '৹' + Pitch[i]
+        } else if (Type[i] === 'l') {
+            Pitch[i] = '◠' + Pitch[i]
+        }
     }
     let Print = ''
-    const Frq = []
-    if (OutputMode <= 2) {
-        for (let i = 0; i < Pitch.length; i++) {
-            Print += Pitch[i] + '　'
-        }
-    } else if (OutputMode === 3) {
-        for (let i = 0; i < RelScaleRaw.length; i++) {
-            Print += RelScaleRaw[i] + '　'
-        }
-    } else if (OutputMode === 4) {
-        for (let i = 0; i < RelScaleRaw.length; i++) {
-            Frq[i] = Number(frc(RelScaleRaw[i]).mul(GongFrq)).toFixed(3)
-            Print += Frq[i] + '　'
-        }
+    for (let i = 0; i < Pitch.length; i++) {
+        Print += Pitch[i] + '　'
     }
     return Print
 }
-// console.log(Position2Pitch('9,5;l,7.6;l,9;4;10,2;10.8,3', '1', '1', '4', '347.654321', '1')) // 洞庭第一句
-// console.log(Position2Pitch('14,4;3', '1', '1', '4', '347.654321', '1'))
+// console.log(Position2Pitch('9,5;l,7.6;l,9;4;10,2;10.8,3', '1', '1', '4', '347.654321', '3')) 
+// console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
 // console.log(Position2Pitch('f,12,4', '1', '2', '1', '347.654321', '2'))
 

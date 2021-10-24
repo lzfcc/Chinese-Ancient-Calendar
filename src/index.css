@@ -169,24 +169,30 @@ u {
 }
 
 .upline1 {
-  border-top: 1px solid var(--black)
+  border-top: 1px solid var(--shallowgray)
 }
 
 .upline2 {
-  border-top: 3px double var(--black)
+  border-top: 3px double var(--shallowgray)
 }
 
 .dnline1 {
-  border-bottom: 1px solid var(--black)
+  border-bottom: 1px solid var(--shallowgray)
 }
 
 .dnline2 {
-  border-bottom: 3px double var(--black)
+  border-bottom: 3px double var(--shallowgray)
 }
 
 .updot1 {
   text-emphasis: dot;
-  text-emphasis-position: up;
+  text-emphasis-position: over;
+  -webkit-text-emphasis-position: over;
+}
+
+.dndot1 {
+  text-emphasis: dot;
+  text-emphasis-position: under;
 }
 
 p {
