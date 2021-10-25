@@ -28,23 +28,28 @@ const Sn2Sub = (n, p) => {
     return b
 }
 
-export const Sn2 = (n, p) => {
+export const Sn2 = (n, p) => { // 四角垛
     n = parseInt(n)
     // let S = (big(big(n).mul(big(n).add(1)).mul(big(n).add(0.5))).mul(1 / 3)).toFixed(10).toString()
     p = parseInt(p)
-    let S = 1
-    for (let i = 0; i <= p - 1; i++) {
-        S = big(S).mul(big.add(n, i)).mul(big.div(1, big.add(i, 1)))
+    // 注釋中的似乎有問題
+    // let S = big(1)
+    // for (let i = 0; i <= p - 1; i++) {
+    //     S = S.mul(big.add(n, i)).mul(big.div(1, big.add(i, 1)))
+    // }
+    // S = big(S).mul(big(big(n).mul(2)).add(p).sub(1)).div(big.add(p, 1))
+    // S = S.toFixed(10).toString().split('.')
+    // S = S[0]
+    let S = 0
+    for (let i = 1; i <= n; i++) {
+        S += Sn2Sub(i, p)
     }
-    S = big(S).mul(big(big(n).mul(2)).add(p).sub(1)).div(big.add(p, 1))
-    S = S.toFixed(10).toString().split('.')
-    S = S[0]
     const tmp1 = Sn2Sub(1, p)
     const tmp2 = Sn2Sub(2, p)
     const tmp3 = Sn2Sub(3, p)
     return tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + '+...+ n^' + p + ' = ' + S
 }
-// console.log(Sn2(15, 3).Print)
+// console.log(Sn2(40, 1))
 
 // 這個小函數求三角垛第n項是什麼
 export const Sn5Sub = (n, p) => {
