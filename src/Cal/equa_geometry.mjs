@@ -1,11 +1,6 @@
 // import { ConstWest } from './astronomy_west.mjs'
-import {
-    big
-} from './para_constant.mjs'
-import {
-    Equa2EclpWest,
-    Longi2LatiWest
-} from './astronomy_west.mjs'
+import { big } from './para_constant.mjs'
+import { Equa2EclpWest, Longi2LatiWest } from './astronomy_west.mjs'
 
 const pi = big.acos(-1)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -25,12 +20,8 @@ const RoundH2LC = h => { // 弓弦長 2* sqrt (r^2-(r-h)^2) //半徑，矢長
     const r = 60.875
     let Halfc = Math.sqrt(h * (2 * r - h))
     const c = Halfc * 2
-    let l = h ** 2 / r + c // h^2 / r + c    
-    return {
-        Halfc,
-        c,
-        l
-    }
+    let l = h ** 2 / r + c
+    return { Halfc, c, l }
 }
 const RoundL2H = l => { // 會圓術已知半弧長反求矢長
     const r = 60.875
@@ -54,11 +45,7 @@ const RoundC2HL = c => { // c 半弦長
     const h = r - Math.sqrt(r ** 2 - c ** 2)
     const l = 2 * c + h ** 2 / r
     const Halfl = l / 2
-    return {
-        h,
-        l,
-        Halfl
-    }
+    return { h, l, Halfl }
 }
 export const RoundH2LPrint = h => {
     h = +h
@@ -290,9 +277,7 @@ export const Hushigeyuan_Ex_Print = (LongiRaw, eRaw) => {
         Eclp2Equa: WestA,
         Eclp2EquaDif: WestA1
     } = Equa2EclpWest(LongiRaw, Sidereal, 0, e)
-    const {
-        Lati: WestLati
-    } = Longi2LatiWest(LongiRaw, Sidereal, 0, e)
+    const { Lati: WestLati } = Longi2LatiWest(LongiRaw, Sidereal, 0, e)
     let Print = [{
         title: '球面三角',
         data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4), 0]
@@ -375,11 +360,9 @@ export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交
 export const Heron = (a, b, c) => {
     const tmp1 = big(c).pow(2).mul(big(a).pow(2)) // 225
     const tmp2 = big(c).pow(2).add(big(a).pow(2)).sub(big(b).pow(2)) // 18
-    const tmp3 = big(tmp1).sub(big(big(tmp2).div(2).pow(2)))
-    const S = (big(big(tmp3).div(4)).sqrt()).toFixed(15)
+    const tmp3 = tmp1.sub(tmp2.div(2).pow(2))
+    const S = tmp3.div(4).sqrt().toFixed(15)
     const Print = 'S△ABC = ' + S
-    return {
-        Print
-    }
+    return { Print }
 }
-// console.log(Heron(30000000000, 40000000000, 50000000000))
+// console.log(Heron(31, 41, 51))

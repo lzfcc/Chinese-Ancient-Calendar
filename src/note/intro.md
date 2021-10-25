@@ -845,9 +845,9 @@ a = [0, ...a]
 
 增加減字譜轉唱名。
 
-#### 10-25 `1.05.2`
+10-25 `1.05.2` 優化代碼 [Code Review on Math Lib #8](https://github.com/lzfcc/Chinese-Ancient-Calendar/issues/8)。主要是 `_math.mjs` 文件
 
-優化代碼 Code Review on Math Lib #8
+10-25 `1.05.3` 優化代碼 [Code Review #9](https://github.com/lzfcc/Chinese-Ancient-Calendar/issues/9)。簡化解高次方程寫法
 
 ### Todo list
 

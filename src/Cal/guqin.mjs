@@ -454,7 +454,7 @@ const EqualTuning7 = (x, TempMode) => {  // 側商調
     return { Print, String }
 }
 
-const EqualTuning8 = (x, TempMode) => {  // 淒涼調
+const EqualTuning8 = (x, TempMode) => {  // 黃鐘調緊五慢一
     // 準法律
     const { Leng: Three1Leng, Frq: Three1 } = EqualTuningSub(x, 1, 5, 4, false)
     const { Frq: One1 } = EqualTuningSub(x, 1, 7, 4, false)

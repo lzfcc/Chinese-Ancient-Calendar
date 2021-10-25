@@ -11,13 +11,10 @@ export const Sn1 = (a, b, n) => { // 上有寬a個、長b個，下有寬c個、�
     const tmp1 = big(a).mul(big(big(2).mul(b)).add(d))
     const tmp2 = c.mul(big(big(2).mul(d)).add(b))
     const tmp3 = c.sub(a).mul(n).div(6)
-    const S = big(tmp1.add(tmp2)).mul(n).div(6).add(tmp3)
-    const Print = 'sum = ' + S
-    return {
-        Print
-    }
+    const S = tmp1.add(tmp2).mul(n).div(6).add(tmp3)
+    return 'sum = ' + S
 }
-// console.log(Sn1(30, 40, 3000000).Print)
+// console.log(Sn1(30, 40, 3000).Print)
 // https://www.zhihu.com/question/265476515/answer/355445437
 // 杨辉在《详解九章算法》《商功》篇阐述了方垛，刍甍垛，刍童垛，和三角垛
 // 方垛 1+4+9+...+n^2=1/3 n (n+1) (n+1/2)=1/6 n (n+1) (2n+1) 自然數平方級數求和
@@ -45,10 +42,7 @@ export const Sn2 = (n, p) => {
     const tmp1 = Sn2Sub(1, p)
     const tmp2 = Sn2Sub(2, p)
     const tmp3 = Sn2Sub(3, p)
-    const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + '+...+ n^' + p + ' = ' + S
-    return {
-        Print
-    }
+    return tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + '+...+ n^' + p + ' = ' + S
 }
 // console.log(Sn2(15, 3).Print)
 
@@ -75,6 +69,7 @@ const Sn5_quick = (n, p) => {
     }
     return S
 }
+
 export const Sn5 = (n, p) => {
     let S = 1
     for (let i = 0; i <= p; i++) {
@@ -110,6 +105,7 @@ export const Interpolate1 = (n, Initial) => {
     }
     return S - S4
 }
+
 export const Interpolate1_big = (n, Initial) => {
     n = big(n)
     const n1 = Math.floor(n)
@@ -152,6 +148,7 @@ f (${n1}) = ${y1}`)
 // console.log(Interpolate1_big(4.000001, 4, '27,64,125,216,343').Print)
 // console.log(Interpolate1_big(4.000001, 3, '25791，27341，28910，30499，32109').Print)
 // 算出來差分之後，求y。爲了節省算力。delta由低次到高次。
+
 export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用Deci.js
     delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length

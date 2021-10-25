@@ -33,7 +33,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const { Print } = Sn2(this.state.Sn2N, this.state.Sn2P)
+      const Print = Sn2(this.state.Sn2N, this.state.Sn2P)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -50,7 +50,7 @@ export default class Equa extends React.Component {
       </div>
     )
   }
-  
+
   render() {
     return (
       <div>

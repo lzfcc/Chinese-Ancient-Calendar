@@ -1,6 +1,6 @@
 import { SliceNum } from './equa_math.mjs'
 
-// 九章算術開方術。暫時有問題，比如輸入63.9
+// 九章算術開方術。暫時有問題，只能處理平方數，開不盡的就沒辦法了。這個文件的功能不重要，可以忽略不管。
 export const SqrtA = (Input, Mode) => {
     Mode = parseInt(Mode)
     if (Mode < 2 || Mode > 3) {

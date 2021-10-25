@@ -1,5 +1,3 @@
-import { big } from './para_constant.mjs'
-
 export const isSame = (arr1, arr2) => { // 判斷元數定母是否想等 @lzfcc 时间复杂度2*O(nlog(n)) + O(n) = O(nlog(n))
     if (arr1.length !== arr2.length) {
         return false
