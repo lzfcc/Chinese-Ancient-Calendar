@@ -1,22 +1,27 @@
 import { big } from './para_constant.mjs'
 
-export const isSame = (arr1, arr2) => { // 判斷元數定母是否相等。https://blog.csdn.net/qq_25887937/article/details/97660928
-    let flag = true
+export const isSame = (arr1, arr2) => { // 判斷元數定母是否想等 @lzfcc 时间复杂度2*O(nlog(n)) + O(n) = O(nlog(n))
     if (arr1.length !== arr2.length) {
-        flag = false
-    } else {
-        arr1.forEach(item => {
-            if (arr2.indexOf(item) === -1) {
-                flag = false
-            }
-        })
+        return false
     }
-    return flag
+    arr1.sort((a, b) => a - b)
+    arr2.sort((a, b) => a - b)
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false
+    }
+    return true
 }
+// console.log(isSame([9, 4, 4, 2, 7, 5], [3, 6, 5, 7, 1]))
+// console.log(isSame([111, 400, 23], [3, 6, 5, 7, 1]))
 
+/**
+ * 1、fraction庫不能處理帶小數點的分數，所以要自己寫一個 2、獲得分數的分母、分子 3、把輸入的分數字符串轉成假分數
+ * @param FracRaw 
+ * @returns 
+ */
 export const Frac2FalseFrac = FracRaw => {
     FracRaw = FracRaw.toString()
-    const Frac = FracRaw.split(/ |\+|\//) // 以下把輸入的分數字符串轉成假分數
+    const Frac = FracRaw.split(/ |\+|\//)
     let Numer = 0, NumerSub = 0, Denom = 0
     if (Frac.length === 3) {
         Numer = +Frac[0] * +Frac[2] + +Frac[1]
@@ -29,13 +34,17 @@ export const Frac2FalseFrac = FracRaw => {
         Numer = +Frac[0]
         Denom = 1
     }
-    const Deci = big.div(Numer, Denom).toString()
-    const FracResult = Numer + '/' + Denom
-    return { Numer, NumerSub, Denom, Deci, FracResult }
+    const Deci = Numer / Denom
+    const FalseFrac = Numer + '/' + Denom
+    return { Numer, NumerSub, Denom, Deci, FalseFrac }
 }
 // console.log(Frac2FalseFrac('2 3.2/2'))
+// console.log(Frac2FalseFrac('34+3/4'))
 
-export const Deci2Int = function () { // 輸入字符串
+// const sg = a => frc(a).toFraction(false)
+// console.log(sg('1 2.1/3')) 
+
+const Deci2Int_1 = function () { // 輸入字符串
     const Raw = arguments[0].split(/;|,|，|。|；|｜| /)
     let Portion = 1
     let Int = []
@@ -57,9 +66,46 @@ export const Deci2Int = function () { // 輸入字符串
     }
     return { Int, Portion }
 }
-// console.log(Deci2Int('1.1,2.23,3.4,5.555').Int)
+// console.log(Deci2Int_1('1.1,2.23,3.4,5.555').Int)
 
-export const DeciFrac2Frac = Deci => { // 把有小數點的分數轉換為整數分數
+const Deci2Int_2 = str => { // @lzfcc
+    const Raw = str.split(/[^0-9.+-]/).filter(Boolean)
+    // 先按照所有非数字和小数点正负号的字符分开（结果会出现空字符串），再把空字符串过滤出去
+    let prec = 0
+    let Portion = 1
+    const Int = []
+    for (let i = 0; i < Raw.length; i++) {
+        Int[i] = +Raw[i] // 这步是可能产生 NaN 的，后面考虑处理（比如 fallback 成 0）
+        const dotIndex = Raw[i].indexOf('.') // -1 means not found
+        if (dotIndex >= 0) {
+            prec = Math.max(Raw[i].length - 1 - dotIndex, prec)
+        }
+    }
+    if (prec) {
+        Portion = 10 ** prec
+        for (let i = 0; i < Int.length; i++) {
+            Int[i] *= Portion
+        }
+    }
+    return { Int, Portion }
+}
+// console.log(Deci2Int_2('1.1, 2 1/2,2.23,3.4,5.555').Int)
+
+export const Deci2Int = str => {
+    const Raw = str.split(/[^0-9.+-]/).filter(Boolean)
+    const prec = [], Int = []
+    for (let i = 0; i < Raw.length; i++) {
+        prec[i] = (Raw[i].split('.')[1] || '').length
+    }
+    const Portion = 10 ** Math.max(...prec)
+    for (let i = 0; i < Raw.length; i++) {
+        Int[i] = +Raw[i] * Portion
+    }
+    return { Int, Portion }
+}
+// console.log(Deci2Int('1.1, 2.23,3.4,5.5515').Int)
+
+const DeciFrac2IntFrac_1 = Deci => { // 把有小數點的分數轉換為整數分數
     const Raw = Deci.split('/')
     let n = Raw[0]
     let d = Raw[1]
@@ -68,10 +114,16 @@ export const DeciFrac2Frac = Deci => { // 把有小數點的分數轉換為整�
     d = Math.round(+d * 10 ** L)
     return n + '/' + d
 }
-// console.log(DeciFrac2Frac('2553.026/12030'))
+// console.log(DeciFrac2IntFrac('2553.026/12030'))
 
-// 把一個數字按照幾位分割
-export const SliceNum = (Input, num) => { // a：小數點前，b：小數點後，c：并之
+export const DeciFrac2IntFrac = Deci => { // @lzfcc 把有小數點的分數轉換為整數分數
+    const { Int } = Deci2Int(Deci)
+    return Int[0] + '/' + Int[1]
+}
+// console.log(DeciFrac2IntFrac('2553026/1203'))
+
+// 把一個數字按照幾位分割 @lzfcc 写的好像没问题，但是返回值有点迷。返回一个 a，一个 cString 是什么鬼呢？不应该是 a 和 b 吗？至于合并在一起的 c，调用者自己去合就好了啊。代码好像有点繁琐，不过正确就好。
+export const SliceNum = (Input, num = 3) => { // a：小數點前，b：小數點後，c：并之
     Input = Input.toString()
     Input = Input.split('.')
     num = parseInt(num)
@@ -104,3 +156,4 @@ export const SliceNum = (Input, num) => { // a：小數點前，b：小數點後
     const cString = aString.concat(bString)
     return { a, cString }
 }
+// console.log(SliceNum('123456789.876543', 4).cString)

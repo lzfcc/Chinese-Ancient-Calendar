@@ -1,6 +1,4 @@
-import {
-    SliceNum
-} from './equa_math.mjs'
+import { SliceNum } from './equa_math.mjs'
 
 // 九章算術開方術。暫時有問題，比如輸入63.9
 export const SqrtA = (Input, Mode) => {

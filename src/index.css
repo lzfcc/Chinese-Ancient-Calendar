@@ -169,19 +169,19 @@ u {
 }
 
 .upline1 {
-  border-top: 1px solid var(--shallowgray)
+  border-top: 1px solid var(--gray)
 }
 
 .upline2 {
-  border-top: 3px double var(--shallowgray)
+  border-top: 3px double var(--gray)
 }
 
 .dnline1 {
-  border-bottom: 1px solid var(--shallowgray)
+  border-bottom: 1px solid var(--gray)
 }
 
 .dnline2 {
-  border-bottom: 3px double var(--shallowgray)
+  border-bottom: 3px double var(--gray)
 }
 
 .updot1 {

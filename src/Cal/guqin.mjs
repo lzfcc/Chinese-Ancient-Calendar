@@ -4,16 +4,15 @@ import { Frac2FalseFrac } from './equa_math.mjs'
 export const OctaveCent = (a, b) => {
     a = Frac2FalseFrac(a).Deci
     b = Frac2FalseFrac(b).Deci
-    let Octave = big.log2(big.div(a, b))
-    const Cent = Octave.mul(1200).toNumber()
-    Octave = Octave.toNumber()
+    const Octave = Math.log2(a / b)
+    const Cent = Octave * 1200
     const Print = `八度値 ${Octave}
 音分 ${Cent}`
     return { Print, Octave, Cent }
 }
 // console.log(OctaveCent('4/3', 1))
 
-export const Frequency = a => '頻率比 ' + big(2).pow(big.div(a, 1200)).toNumber()
+export const Frequency = a => '頻率比 ' + 2 ** (a / 1200)
 
 export const Pythagorean = x => {
     const upA = [], upB = [], downA = [], downB = [], Octave1 = [], Cent1 = [], Octave2 = [], Cent2 = []
@@ -562,13 +561,8 @@ const EqualTuning10 = (x, TempMode) => {  // 閒弦調
     return { Print, String }
 }
 
-export const Tuning = (x, TuningMode, TempMode) => { // 輸入五弦頻率
-    x = frc(Frac2FalseFrac(x).FracResult)
-    // fraction的小數精度就是普通的16位，沒法保留高精度
-    const Pre = eval('EqualTuning' + TuningMode)(x, TempMode)
-    const { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 } = Pre.Print
-    const String = Pre.String
-    x = x.toFraction(true)
+export const Tuning = (x, TuningMode) => { // 輸入五弦頻率 // fraction的小數精度就是普通的16位，沒法保留高精度
+    const { Two1, Four1, One1, Six1, Seven1, Three1, Seven2, Two2, Three2, One2, Six2, Four2, One3, Two3, Three3, Four3, Six3, Seven3 } = eval('EqualTuning' + TuningMode)(x).Print
     const DifA1 = OctaveCent(Two1, One1).Cent.toFixed(4)
     const DifA2 = OctaveCent(Three1, Two1).Cent.toFixed(4)
     const DifA3 = OctaveCent(Four1, Three1).Cent.toFixed(4)
@@ -616,7 +610,7 @@ export const Tuning = (x, TuningMode, TempMode) => { // 輸入五弦頻率
         title: '七',
         data: [Seven1, DifA6, Seven2, DifB6, Seven3, DifC6]
     })
-    return { Print, String }
+    return Print
 }
 // console.log(Tuning(1, 1))
 
@@ -693,7 +687,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
 // console.log(fa3(3))
 // s散音，f泛音，a按音
 export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq, OutputMode, isStrict) => { // ；調弦法；律制；宮弦；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
-    const StringList = Tuning(1, TuningMode, TempMode).String
+    const StringList = eval('EqualTuning' + TuningMode)(1, TempMode).String
     TuningMode = +TuningMode
     GongMode = +GongMode
     TempMode = +TempMode
@@ -798,3 +792,68 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
 // console.log(Position2Pitch('9.9,2', '1', '2', '1', '347.654321', '3', '1'))
 
+
+// const PythagoreanListA = {
+//     0: 'C',
+//     90.22: 'bD',
+//     113.69: '#C',
+//     180.45: 'bbE',
+//     203.91: 'D',
+//     294.13: 'bE',
+//     317.60: '#D',
+//     384.36: 'bF',
+//     407.82: 'E',
+//     498.04: 'F',
+//     521.51: '#E',
+//     588.27: 'bG',
+//     611.73: '#F',
+//     678.49: 'bbA',
+//     701.96: 'G',
+//     792.18: 'bA',
+//     815.64: '#G',
+//     882.40: 'bbB',
+//     905.87: 'A',
+//     996.09: 'bB',
+//     1019.55: '#A',
+//     1086.31: '<span class="updot1">bC</span>',
+//     1109.78: 'B',
+//     1176.54: '<span class="updot1">bbD</span>',
+//     1200: 'C'
+// }
+
+// const JustoniListA = {
+//     0: 'C',
+//     70.67: '#<span class="dnline2">C</span>', // 小半音
+//     92.18: '#<span class="dnline1">C</span>',
+//     111.73: 'b<span class="upline1">D</span>',
+//     133.24: 'b<span class="upline2">D</span>',
+//     182.40: '<span class="dnline1">D</span>',
+//     203.91: 'D',
+//     223.46: 'bb<span class="upline2">E</span>',
+//     274.58: '#<span class="dnline2">D',
+//     315.64: 'b<span class="upline1">E</span>',
+//     364.81: '<span class="dnline2">E</span>',
+//     386.31: '<span class="dnline1">E</span>',
+//     427.37: 'b<span class="upline2">F</span>',
+//     478.49: '#<span class="dnline2">E</span>',
+//     498.05: 'F',
+//     519.55: '<span class="upline1">F</span>',
+//     568.72: '#<span class="dnline2">F</span>',
+//     590.22: '#<span class="dnline1">F</span>',
+//     609.77: 'b<span class="upline1">G</span>',
+//     631.28: 'b<span class="upline2">G</span>',
+//     680.45: '<span class="dnline1">G</span>',
+//     701.96: 'G',
+//     772.63: '#<span class="dnline2">G</span>',
+//     794.13: '#<span class="dnline1">G</span>',
+//     813.69: 'b<span class="upline1">A</span>',
+//     884.36: '<span class="dnline1">A</span>',
+//     925.42: 'bb<span class="upline2">B</span>',
+//     976.54: '#<span class="dnline2">A</span>',
+//     1017.59: 'b<span class="upline1">B</span>',
+//     1066.76: '<span class="dnline2">B</span>',
+//     1088.27: '<span class="dnline1">B</span>',
+//     1107.82: 'b<span class="updot1"><span class="upline1">C</span></span>',
+//     1129.33: 'b<span class="updot1"><span class="upline2">C</span></span>',
+//     1200: 'C'
+// }

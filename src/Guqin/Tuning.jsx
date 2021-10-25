@@ -36,7 +36,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print } = Tuning(this.state.a, this.state.b)
+      const Print = Tuning(this.state.a, this.state.b)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

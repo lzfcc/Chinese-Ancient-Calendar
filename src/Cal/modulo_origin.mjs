@@ -16,8 +16,7 @@ export const Sunzi = function () {
     for (let m = 1; m < InputRaw.length; m++) { // 處理成一個字符串傳給轉整數函數
         InputRaw[m] = InputRaw[m - 1] + ',' + InputRaw[m]
     }
-    const Input = Deci2Int(InputRaw[InputRaw.length - 1]).Int
-    const Portion = Deci2Int(InputRaw[InputRaw.length - 1]).Portion
+    const { Int: Input, Portion } = Deci2Int(InputRaw[InputRaw.length - 1])    
     const i = Input.length
     if (i % 2 === 1) {
         throw (new Error('[大衍總數] 參數數量應爲偶數！' + Input[0] + ', ' + Input[1]))
@@ -359,7 +358,7 @@ export const OriginModulo2 = (SolarFrac, SolarDenom, LunarFrac, Denom, OriginCon
     SolarDenom = +SolarDenom
     LunarFrac = +LunarFrac
     Denom = +Denom
-    const OriginConstNumer = Frac2FalseFrac(OriginConstRaw).NumerSub
+    const OriginConstNumer = Frac2FalseFrac(OriginConstRaw).NumerSub // input '34+3/4', output 135=(34-1)*4+3
     const FirstConstNumer = Frac2FalseFrac(FirstConstRaw).NumerSub
     const SolarNumer = SolarDenom * 365 + SolarFrac
     const LunarNumer = Denom * 29 + LunarFrac

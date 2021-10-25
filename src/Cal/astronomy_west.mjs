@@ -1,5 +1,5 @@
 import { big, frc } from './para_constant.mjs'
-import { Frac2FalseFrac, DeciFrac2Frac } from './equa_math.mjs'
+import { Frac2FalseFrac, DeciFrac2IntFrac } from './equa_math.mjs'
 const pi = big.acos(-1)
 const d2r = degree => big(degree).mul(pi).div(180)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -460,9 +460,9 @@ export const Regression = (Sidereal, Node, Lunar) => {
     let Regression = 0
     let Portion = 0
     if (Sidereal.includes('/') && Node.includes('/') && Lunar.includes('/')) {
-        Sidereal = frc('365 ' + DeciFrac2Frac(Sidereal))
-        Node = frc('27 ' + DeciFrac2Frac(Node))
-        Lunar = frc('29 ' + DeciFrac2Frac(Lunar))
+        Sidereal = frc('365 ' + DeciFrac2IntFrac(Sidereal))
+        Node = frc('27 ' + DeciFrac2IntFrac(Node))
+        Lunar = frc('29 ' + DeciFrac2IntFrac(Lunar))
         Regression = Sidereal.div(Node).sub(Sidereal.div(Lunar)).sub(1)
         Portion = Regression.add(1).div(Sidereal.div(Lunar).add(1).add(Regression))
         Regression = Regression.toFraction() + ' = ' + Regression.toString()
