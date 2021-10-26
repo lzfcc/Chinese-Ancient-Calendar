@@ -1,14 +1,20 @@
 import { big } from './para_constant.mjs'
 
+// function myMax(z, ...args) {
+//     let ans = -Infinity
+//     for (const x of args) {
+//         if (x > ans) ans = x
+//     }
+//     return ans
+// }
+// console.log(myMax(12, 4, 2, 1, 6, 2, 9))
+
+
 // @lzfcc 试比较：
 // a_9 * x ^ 9 + a_8 * x ^ 8 + ... + a_0 共 (10+9+...+1) = 55 次乘法，9 次加法。
 // 但是如果变形成：
 // (...((a_9 * x + a_8 ) * x + a_7) * x.... ) * x + a_0 共 9 次乘法，9 次加法。当然这只是理论上，其实对于我们这规模的输入差别不大（甚至可能反优化）。
-export const HighEqua1 = (Input, upperRaw) => {
-    Input = Input.split(',')
-    for (let i = 0; i < Input.length; i++) {
-        Input[i] = Number(Input[i])
-    }
+export const HighEqua1 = (upperRaw, Input) => {
     let mid = 0
     let lower = 0
     let upper = Number(upperRaw)
@@ -46,4 +52,4 @@ export const HighEqua1 = (Input, upperRaw) => {
 // 0.748507253641946590505540370941162109375 // 1e-10
 // 0.7485072536414568988849538300200947560369968414306640625 // 1e-16
 // 0.748507253641456891163318450549741762154054209798291790550559457 // 1e-62跟1e-10，13位開始不同；跟1e-16，18位開始不同
-// console.log(HighEqua1("-2,0,3,1", 2))
+// console.log(HighEqua1(2, -2, 0, 3, 1))

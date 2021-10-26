@@ -1,6 +1,4 @@
-import {
-    big
-} from './para_constant.mjs'
+import { big } from './para_constant.mjs'
 
 // 兩個數的gcd, lcm
 export const GcdLcm = (a, b) => {
@@ -17,52 +15,29 @@ export const GcdLcm = (a, b) => {
     let lcm = big.div(big.mul(a, b), gcd)
     gcd = gcd.toString()
     lcm = lcm.toString()
-    return {
-        gcd,
-        lcm
-    }
+    return { gcd, lcm }
 }
 // console.log(GcdLcm(62244,7521150))
-export const GcdLcmGroup = function () {
-    let InputRaw = ((arguments[0]).split(/;|,|，|。|；|｜| /))
-    if (InputRaw[InputRaw.length - 1] === '') { // 避免最後一個是符號
-        InputRaw = InputRaw.slice(0, -1)
-    }
-    // for (let m = 1; m < InputRaw.length; m++) { // 處理成一個字符串傳給轉整數函數
-    //     InputRaw[m] = InputRaw[m - 1] + ',' + InputRaw[m]
-    // }
-    // const Input = Deci2Int(InputRaw[InputRaw.length - 1]).Int
-    // const Portion = Deci2Int(InputRaw[InputRaw.length - 1]).Portion
-    let lcm = big(InputRaw[0])
-    let gcd = big(InputRaw[0])
-    for (let k = 0; k < InputRaw.length - 1; k++) {
-        lcm = GcdLcm(lcm, big(InputRaw[k + 1])).lcm
-        gcd = GcdLcm(gcd, big(InputRaw[k + 1])).gcd
+export const GcdLcmGroup = Input => {
+    let lcm = big(Input[0])
+    let gcd = big(Input[0])
+    for (let k = 0; k < Input.length - 1; k++) {
+        lcm = GcdLcm(lcm, big(Input[k + 1])).lcm
+        gcd = GcdLcm(gcd, big(Input[k + 1])).gcd
     }
     // gcd = parseFloat((gcd / Portion).toPrecision(12))
     // lcm = parseFloat((lcm / Portion).toPrecision(12))
-    // let Print = 'gcd(' + InputRaw[InputRaw.length - 1] + ') = ' + gcd + ', lcm(' + InputRaw[InputRaw.length - 1] + ') = ' + lcm
-    let Print = `gcd(${InputRaw}) = ${gcd}\n lcm(${InputRaw}) = ${lcm}`
+    // let Print = 'gcd(' + Input[Input.length - 1] + ') = ' + gcd + ', lcm(' + Input[Input.length - 1] + ') = ' + lcm
+    let Print = `gcd(${Input}) = ${gcd}\n lcm(${Input}) = ${lcm}`
     if (big(gcd).eq(1)) {
-        Print = `互質\nlcm(${InputRaw}) = ${lcm}`
+        Print = `互質\nlcm(${Input}) = ${lcm}`
     }
-    return {
-        lcm,
-        gcd,
-        Print
-    }
+    return { lcm, gcd, Print }
 }
 // console.log(GcdLcmGroup('2.156,5.196,9.16,4.89162556').Print) // 這個超過精度範圍
 
 // 分數最小公倍數。先通分，然后求分子的最小公倍数，再跟分母约分。
-export const FracLcm1 = function () { // 不能改成箭頭函數
-    let Input = ((arguments[0]).split(/;|,|，|。|；|｜| /))
-    if (Input[Input.length - 1] === '') {
-        Input = Input.slice(0, -1)
-    }
-    for (let j = 0; j < Input.length; j++) {
-        Input[j] = parseInt(Input[j])
-    }
+export const FracLcm1 = Input => {
     const i = Input.length
     const Numer = []
     const Denom = []
@@ -95,7 +70,7 @@ export const FracLcm1 = function () { // 不能改成箭頭函數
     const lcmFracPrint = 'lcm(' + InputPrint + ') = ' + big.floor(big.div(lcmNumer, S)) + (big.mod(lcmNumer, S).eq(0) ? '' : ' + ' + big.mod(lcmNumer, S) + ' / ' + S)
     return { lcmFracPrint, lcmResult }
 }
-// console.log(FracLcm1('6172608,16900,499067,16900,60,1').lcmFracPrint) // 開禧
+// console.log(FracLcm1([6172608, 16900, 499067, 16900, 60, 1]).lcmFracPrint) // 開禧
 // console.log(FracLcm1('13,145;114,7;14,57;9,13;8,10').lcmFracPrint) // 這個超過精度範圍
 // console.log(FracLcm1('145166,2662;48255773,117653995;167015,90728715;17587515,2076107').lcmFracPrint)
 // https://chaoli.club/index.php/2756/0

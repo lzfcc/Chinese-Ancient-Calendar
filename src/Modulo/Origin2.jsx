@@ -67,7 +67,7 @@ export default class a extends React.Component {
 
   handle() {
     try {
-      const { Print } = OriginModulo2(
+      const Print = OriginModulo2(
         this.state.SolarFrac3,
         this.state.SolarDenom3,
         this.state.LunarFrac3,

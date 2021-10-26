@@ -4,7 +4,7 @@ export default class Equa extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: '-2,0,3,1',
+      inputRaw: '-2,0,3,1',
       upperRaw: 2,
     };
     this.handle = this.handle.bind(this)
@@ -15,9 +15,9 @@ export default class Equa extends React.Component {
       <span className='year-select'>
         <span>系數</span>
         <input className='width4'
-          value={this.state.input}
+          value={this.state.inputRaw}
           onChange={e => {
-            this.setState({ input: e.currentTarget.value });
+            this.setState({ inputRaw: e.currentTarget.value });
           }}
         />
         <span> 估根</span>
@@ -33,7 +33,11 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const upper = HighEqua1(this.state.input, this.state.upperRaw)
+      let arr = this.state.inputRaw.split(',').filter(Boolean)
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Number(arr[i])
+      }
+      const upper = HighEqua1(this.state.upperRaw, arr)
       this.setState({ output: upper })
     } catch (e) {
       alert(e.message)

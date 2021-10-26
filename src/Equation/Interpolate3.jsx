@@ -34,7 +34,11 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const { Print } = Interpolate3_big(this.state.n, this.state.initial)
+      let arr = this.state.initial.split(/;|,|，|。|；|｜| /).filter(Boolean)
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Number(arr[i])
+      }
+      const { Print } = Interpolate3_big(this.state.n, arr)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

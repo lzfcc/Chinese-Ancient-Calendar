@@ -1,5 +1,5 @@
 import React from "react"
-import { FracLcm1 } from "../Cal/modulo_gcdlcm"
+import { FracLcm1 } from "../Cal/modulo_gcdlcm.mjs"
 export default class a extends React.Component {
   constructor(props) {
     super(props)
@@ -23,8 +23,12 @@ export default class a extends React.Component {
   }
 
   handle() {
-    try {
-      const { lcmFracPrint } = FracLcm1(this.state.FracLcmIn);
+    try {      
+      let arr = this.state.FracLcmIn.split(/;|,|，|。|；|｜| /).filter(Boolean)
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Number(arr[i])
+      }
+      const { lcmFracPrint } = FracLcm1(arr);
       this.setState({ output: lcmFracPrint });
     } catch (e) {
       alert(e.message);

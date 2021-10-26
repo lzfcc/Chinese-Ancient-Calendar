@@ -95,7 +95,6 @@ export const Sn5 = (n, p) => {
 
 // 招差術，垛積（三角垛）求和公式。3^3+4^3+5^3...+(n+2)^3, 卽 f(n)=sum(n) (n+2)^3=27n+37 * 1/2! (n-1)n+ 24 1/3! (n-2)(n-1)n + 6 1/4! (n-3)(n-2)(n-1)n
 export const Interpolate1 = (n, Initial) => {
-    Initial = Initial.split(/;|,|，|。|；|｜| /)
     const p = Initial.length - 1
     let S = 0
     let S4 = 0
@@ -114,7 +113,6 @@ export const Interpolate1 = (n, Initial) => {
 export const Interpolate1_big = (n, Initial) => {
     n = big(n)
     const n1 = Math.floor(n)
-    Initial = Initial.split(/;|,|，|。|；|｜| /)
     const p = Initial.length - 1
     let S = 0
     let S1 = 0
@@ -155,7 +153,6 @@ f (${n1}) = ${y1}`)
 // 算出來差分之後，求y。爲了節省算力。delta由低次到高次。
 
 export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用Deci.js
-    delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length
     const tmp = []
     tmp[0] = n
@@ -170,7 +167,6 @@ export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用De
 }
 
 export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一個數n是0，上面的函數第一個是1
-    delta = delta.split(/;|,|，|。|；|｜| /)
     const p = delta.length // 次數
     const tmp = []
     tmp[0] = n
@@ -191,7 +187,6 @@ export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一�
 // y=Σ(n,1) yiLi
 // Li=Π(n,j=1,j≠i) (x-xj)/(xi-xj)
 export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用Deci.js
-    Initial = Initial.split(/;|,|，|。|；|｜| /)
     const x = [], y = [], l = []
     for (let i = 0; i < Initial.length / 2; i++) {
         x[i] = Initial[2 * i]
@@ -214,7 +209,6 @@ export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用Deci
 }
 
 export const Interpolate3_big = (n, Initial) => {
-    Initial = Initial.split(/;|,|，|。|；|｜| /)
     const x = [], y = [], l = []
     for (let i = 0; i < Initial.length / 2; i++) {
         x[i] = Initial[2 * i]
@@ -239,8 +233,7 @@ export const Interpolate3_big = (n, Initial) => {
 // console.log(Interpolate3_big('12.1', '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
 // console.log(Interpolate3(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
 
-export const MeasureWinsols = ListRaw => {
-    const List = ListRaw.split(/;|,|，|。|；|｜| /)
+export const MeasureWinsols = List => {
     if (List.length !== 6) {
         throw (new Error('請輸入d1,l1,d2,l2,d3,l3'))
     }
@@ -270,23 +263,19 @@ export const MeasureWinsols = ListRaw => {
     const eps = '0.00000000000000000001'
     while (big.sub(r, l).abs().gt(eps)) {
         mid = big.add(l, r).div(2)
-        let fl = Interpolate3_big(mid.sub(eps), ListRaw).f
-        let fr = Interpolate3_big(mid.add(eps), ListRaw).f
-        if (fl.lt(fr)) {
-            r = mid
-        } else {
-            l = mid
-        }
+        let fl = Interpolate3_big(mid.sub(eps), List).f
+        let fr = Interpolate3_big(mid.add(eps), List).f
+        if (fl.lt(fr)) r = mid
+        else l = mid
     }
-    return `f (${mid.toNumber()}) = ${Interpolate3_big(mid, ListRaw).f.toNumber()}`
+    return `f (${mid.toNumber()}) = ${Interpolate3_big(mid, List).f.toNumber()}`
 }
-// console.log(MeasureWinsols('-1,-5,6,-12,7,-21')) // (4-x)x
+// console.log(MeasureWinsols([-1, -5, 6, -12, 7, -21])) // (4-x)x
 
-const avg = () => {
-    const a = (7830.337642585551 + 7830.330890052356 + 7830.347896627651 + 7830.333308480895 + 7830.320788807215 + 7830.323408937259) / 6
-    const c = (8560.8089908599 + 8560.8218455321 + 8560.8193548387 + 8560.8131256952 + 8560.8188436178) / 5
-    return (c - a) / 2
-}
+// const avg = () => {
+//     const a = (7830.337642585551 + 7830.330890052356 + 7830.347896627651 + 7830.333308480895 + 7830.320788807215 + 7830.323408937259) / 6
+//     const c = (8560.8089908599 + 8560.8218455321 + 8560.8193548387 + 8560.8131256952 + 8560.8188436178) / 5
+//     return (c - a) / 2
+// }
 // console.log(avg())
 
-// New.sort((a, b) => b - a)

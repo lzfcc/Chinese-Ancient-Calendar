@@ -792,6 +792,12 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
 // console.log(Position2Pitch('9.9,2', '1', '2', '1', '347.654321', '3', '1'))
 
+// const xxx = () => {
+//     const a = Number(frc('3/4').pow(18))
+//     const c = a
+//     return c
+// }
+// console.log(xxx())
 
 // const PythagoreanListA = {
 //     0: 'C',

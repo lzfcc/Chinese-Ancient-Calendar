@@ -182,11 +182,9 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
         const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDeciDif[TermNum]
         const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDeciDif[TermNum]
-        const Initial1 = t1 + ',' + NightList[TermNum] + ';' + t2 + ',' + NightList[TermNum + 1] + ';' + t3 + ',' + NightList[TermNum + 2]
-        const Initial2 = t1 + ',' + SunLatiList[TermNum] + ';' + t2 + ',' + SunLatiList[TermNum + 1] + ';' + t3 + ',' + SunLatiList[TermNum + 2]
-        Rise = DawnRange + Interpolate3(WinsolsDif, Initial1)
+        Rise = DawnRange + Interpolate3(WinsolsDif, [t1, NightList[TermNum], t2, NightList[TermNum + 1], t3, NightList[TermNum + 2]])
         Sunrise1 = DawnRange + NightList[TermNum] + ((WinsolsDif - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
-        Lati1 = Interpolate3(WinsolsDif, Initial2)
+        Lati1 = Interpolate3(WinsolsDif, [t1, SunLatiList[TermNum], t2, SunLatiList[TermNum + 1], t3, SunLatiList[TermNum + 2]])
         Lati = 91.31 - Lati1
     } else {
         ////////////平氣////////////
@@ -209,25 +207,21 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
             TermAvgNoonDeciDif[i] = TermAvgDeci - 0.5 // 平氣與正午的距離
         }
         const nAvg = 1 + (TermDif + TermAvgNoonDeciDif[TermNum]) / TermRange
-        const Initial3 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2]
-        const Initial4 = NightList[TermNum] + ',' + NightList[TermNum + 1] + ',' + NightList[TermNum + 2] + ',' + NightList[TermNum + 3]
         if (Type === 10) { // 重修大明的日出分是三次內插
-            Rise = 100 * (Interpolate1(nAvg, Initial4) / Denom)
+            Rise = 100 * (Interpolate1(nAvg, [NightList[TermNum], NightList[TermNum + 1], NightList[TermNum + 2], NightList[TermNum + 3]]) / Denom)
             Sunrise1 = 100 * (NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])) / Denom
         } else {
-            Rise = DawnRange + Interpolate1(nAvg, Initial3)
+            Rise = DawnRange + Interpolate1(nAvg, [NightList[TermNum], NightList[TermNum + 1], NightList[TermNum + 2]])
             Sunrise1 = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])
         }
         if (Type === 6) {
-            const Initial1 = DialList[TermNum] + ',' + DialList[TermNum + 1] + ',' + DialList[TermNum + 2]
-            Dial = Interpolate1(nAvg, Initial1)
+            Dial = Interpolate1(nAvg, [DialList[TermNum], DialList[TermNum + 1], DialList[TermNum + 2]])
         }
         if (Type === 10) {
             Lati = -(Rise - 25) / (10896 / 52300)
             Lati1 = Sidereal / 4 - Lati
         } else {
-            const Initial2 = SunLatiList[TermNum] + ',' + SunLatiList[TermNum + 1] + ',' + SunLatiList[TermNum + 2]
-            Lati1 = Interpolate1(nAvg, Initial2)
+            Lati1 = Interpolate1(nAvg, [SunLatiList[TermNum], SunLatiList[TermNum + 1], SunLatiList[TermNum + 2]])
             Lati = 91.31 - Lati1 // 赤緯
         }
         // 紀志剛《麟德曆晷影計算方法研究》，《自然科學史研究》1994(4)                         
@@ -255,23 +249,23 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const SunLati2 = Lati1 - (91.3 - f) // 天頂距
         // 下爲大衍晷影差分表
         if (SunLati2 <= 27) {
-            Dial = Interpolate2(SunLati2 - 1, 1379, '1380,2,1')
+            Dial = Interpolate2(SunLati2 - 1, 1379, [1380, 2, 1])
         } else if (SunLati2 <= 42) {
-            Dial = Interpolate2(SunLati2 - 28, 42267, '1788,32,2')
+            Dial = Interpolate2(SunLati2 - 28, 42267, [1788, 32, 2])
         } else if (SunLati2 <= 46) {
-            Dial = Interpolate2(SunLati2 - 43, 73361, '2490,74,6')
+            Dial = Interpolate2(SunLati2 - 43, 73361, [2490, 74, 6])
         } else if (SunLati2 <= 50) {
-            Dial = Interpolate2(SunLati2 - 47, 83581, '3212,-118,272')
+            Dial = Interpolate2(SunLati2 - 47, 83581, [3212, -118, 272])
         } else if (SunLati2 <= 57) {
-            Dial = Interpolate2(SunLati2 - 51, 96539, '3562,165,7')
+            Dial = Interpolate2(SunLati2 - 51, 96539, [3562, 165, 7])
         } else if (SunLati2 <= 61) {
-            Dial = Interpolate2(SunLati2 - 58, 125195, '4900,250,19')
+            Dial = Interpolate2(SunLati2 - 58, 125195, [4900, 250, 19])
         } else if (SunLati2 <= 67) {
-            Dial = Interpolate2(SunLati2 - 60, 146371, '6155,481,33')
+            Dial = Interpolate2(SunLati2 - 60, 146371, [6155, 481, 33])
         } else if (SunLati2 <= 72) {
-            Dial = Interpolate2(SunLati2 - 68, 191179, '9545,688,36')
+            Dial = Interpolate2(SunLati2 - 68, 191179, [9545, 688, 36])
         } else {
-            Dial = Interpolate2(SunLati2 - 73, 246147, '13354,1098,440,620,180')
+            Dial = Interpolate2(SunLati2 - 73, 246147, [13354, 1098, 440, 620, 180])
         }
         Dial /= 10000
     }
@@ -404,10 +398,10 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     if (Type < 6) {
         Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDifList[NodeAccumHalfInt] / Portion)
     } else if (Type === 6 || ['Wuji', 'Tsrengyuan'].includes(CalName)) { // 二次
-        let Initial = MoonLatiAccumList[NodeAccumHalfInt] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt + 2]
+        let Initial = [MoonLatiAccumList[NodeAccumHalfInt], MoonLatiAccumList[NodeAccumHalfInt + 1], MoonLatiAccumList[NodeAccumHalfInt + 2]]
         let n = 1 + NodeAccumHalf - NodeAccumHalfInt
         if (NodeAccumHalf >= 12) {
-            Initial = MoonLatiAccumList[NodeAccumHalfInt - 2] + ',' + MoonLatiAccumList[NodeAccumHalfInt - 1] + ',' + MoonLatiAccumList[NodeAccumHalfInt]
+            Initial = [MoonLatiAccumList[NodeAccumHalfInt - 2], MoonLatiAccumList[NodeAccumHalfInt - 1], MoonLatiAccumList[NodeAccumHalfInt]]
             n = 3 + NodeAccumHalf - NodeAccumHalfInt
         }
         Lati = Yinyang * Interpolate1(n, Initial) / Portion

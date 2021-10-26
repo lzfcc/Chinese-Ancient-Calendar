@@ -849,6 +849,8 @@ a = [0, ...a]
 
 10-25 `1.05.3` 優化代碼 [Code Review #9](https://github.com/lzfcc/Chinese-Ancient-Calendar/issues/9)。簡化解高次方程寫法
 
+10-26 `前端 1.07` 調整函數接口：字符串 `'1,2,3'` 全部換成數組  `[1, 2, 3]` 。全部改下來頗麻煩
+
 ### Todo list
 
 ##### 核心

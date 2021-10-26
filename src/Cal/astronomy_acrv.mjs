@@ -35,8 +35,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
                 break
             }
         }
-        const Initial = AcrTermList[TermNum] + ',' + SunDifAccumList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + SunDifAccumList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + SunDifAccumList[TermNum + 2]
-        SunDifAccum2 = Interpolate3(WinsolsDif, Initial) // 直接拉格朗日內插，懶得寫了
+        SunDifAccum2 = Interpolate3(WinsolsDif, [AcrTermList[TermNum], SunDifAccumList[TermNum], AcrTermList[TermNum + 1], SunDifAccumList[TermNum + 1], AcrTermList[TermNum + 2], SunDifAccumList[TermNum + 2]]) // 直接拉格朗日內插，懶得寫了
     } else {
         let TermRange = 0
         const TermNum1 = ~~(WinsolsDif / HalfTermLeng)  // 朔望所在氣名
@@ -53,8 +52,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
         }
         // 招差術和精確公式算出來結果一樣
         const n = (WinsolsDif - TermNum1 * HalfTermLeng) / TermRange
-        const Initial = SunDifAccumList[TermNum1] + ',' + SunDifAccumList[TermNum1 + 1] + ',' + SunDifAccumList[TermNum1 + 2]
-        SunDifAccum2 = Interpolate1(n + 1, Initial)
+        SunDifAccum2 = Interpolate1(n + 1, [SunDifAccumList[TermNum1], SunDifAccumList[TermNum1 + 1], SunDifAccumList[TermNum1 + 2]])
         // const SunAcrAvgDif1 = SunAcrAvgDifListList[TermNum1]
         // const SunAcrAvgDif2 = SunAcrAvgDifListList[TermNum2]
         // SunDifAccum2 = SunDifAccumList[TermNum1] + 0.5 * (TermNewmDif / TermRange) * (SunAcrAvgDif1 + SunAcrAvgDif2) + (TermNewmDif / TermRange) * (SunAcrAvgDif1 - SunAcrAvgDif2) - 0.5 * ((TermNewmDif / TermRange) ** 2) * (SunAcrAvgDif1 - SunAcrAvgDif2)
@@ -103,8 +101,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
                     break
                 }
             }
-            const Initial = AcrTermList[TermNum] + ',' + SunTcorrList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + SunTcorrList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + SunTcorrList[TermNum + 2]
-            SunTcorr2 = Interpolate3(WinsolsDif, Initial)
+            SunTcorr2 = Interpolate3(WinsolsDif, [AcrTermList[TermNum], SunTcorrList[TermNum], AcrTermList[TermNum + 1], SunTcorrList[TermNum + 1], AcrTermList[TermNum + 2], SunTcorrList[TermNum + 2]])
             TermRange = AcrTermList[TermNum + 1] - AcrTermList[TermNum] // 本氣長度
             SunTcorr1 = SunTcorrList[TermNum] + (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) * (WinsolsDif - AcrTermList[TermNum]) / TermRange
         } else {
@@ -119,7 +116,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
             const Gt = G1 - (t - 1) * D // 前多者日減，前少者日加初數
             SunTcorr2 = (G1 + Gt) * t / 2 + SunTcorrList[TermNum]
             // 結果和用招差術完全相同，二分而至前後也沒問題
-            // const Initial = SunTcorrList[TermNum] + ',' + SunTcorrList[TermNum + 1] + ',' + SunTcorrList[TermNum + 2]
+            // const Initial = [[SunTcorrList[TermNum] ,SunTcorrList[TermNum + 1] , SunTcorrList[TermNum + 2]]]
             // SunTcorr2a = Interpolate1(n + 1, Initial) / Denom
         }
         SunTcorr2 /= Denom
@@ -383,27 +380,21 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
     }
     if (Type === 7 && CalName !== 'Qintian') {
         if (CalName === 'Xuanming') {
-            let Initial = ''
             AnomaAccumInt = AnomaAccumHalfInt
             AnomaAccumFrac = AnomaAccumHalfFrac
             if (AnomaAccum >= Anoma50) {
                 Plus = 14
             }
             if (AnomaAccumInt <= 11) {
-                Initial = MoonTcorrList[Plus + AnomaAccumInt] + ',' + MoonTcorrList[Plus + AnomaAccumInt + 1] + ',' + MoonTcorrList[Plus + AnomaAccumInt + 2]
-                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 1, Initial)
+                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 1, [MoonTcorrList[Plus + AnomaAccumInt], MoonTcorrList[Plus + AnomaAccumInt + 1], MoonTcorrList[Plus + AnomaAccumInt + 2]])
             } else {
-                Initial = MoonTcorrList[Plus + AnomaAccumInt - 2] + ',' + MoonTcorrList[Plus + AnomaAccumInt - 1] + ',' + MoonTcorrList[Plus + AnomaAccumInt]
-                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 3, Initial)
+                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 3, [MoonTcorrList[Plus + AnomaAccumInt - 2], MoonTcorrList[Plus + AnomaAccumInt - 1], MoonTcorrList[Plus + AnomaAccumInt]])
             }
         } else {
-            let Initial = ''
             if (~~AnomaAccum <= 25) {
-                Initial = MoonTcorrList[Plus + AnomaAccumInt] + ',' + MoonTcorrList[Plus + AnomaAccumInt + 1] + ',' + MoonTcorrList[Plus + AnomaAccumInt + 2]
-                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 1, Initial)
+                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 1, [MoonTcorrList[Plus + AnomaAccumInt], MoonTcorrList[Plus + AnomaAccumInt + 1], MoonTcorrList[Plus + AnomaAccumInt + 2]])
             } else {
-                Initial = MoonTcorrList[Plus + AnomaAccumInt - 2] + ',' + MoonTcorrList[Plus + AnomaAccumInt - 1] + ',' + MoonTcorrList[Plus + AnomaAccumInt]
-                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 3, Initial)
+                MoonTcorr2 = Interpolate1(AnomaAccumFrac + 3, [MoonTcorrList[Plus + AnomaAccumInt - 2], MoonTcorrList[Plus + AnomaAccumInt - 1], MoonTcorrList[Plus + AnomaAccumInt]])
             }
         }
     }
@@ -473,14 +464,11 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
             Plus = 14
         }
     }
-    let Initial = ''
     let MoonDifAccum2 = 0
     if (~~AnomaAccum <= 25) {
-        Initial = MoonDifAccumList[Plus + AnomaAccumInt] + ',' + MoonDifAccumList[Plus + AnomaAccumInt + 1] + ',' + MoonDifAccumList[Plus + AnomaAccumInt + 2]
-        MoonDifAccum2 = Interpolate1(AnomaAccumFrac + 1, Initial)
+        MoonDifAccum2 = Interpolate1(AnomaAccumFrac + 1, [MoonDifAccumList[Plus + AnomaAccumInt], MoonDifAccumList[Plus + AnomaAccumInt + 1], MoonDifAccumList[Plus + AnomaAccumInt + 2]])
     } else {
-        Initial = MoonDifAccumList[Plus + AnomaAccumInt - 2] + ',' + MoonDifAccumList[Plus + AnomaAccumInt - 1] + ',' + MoonDifAccumList[Plus + AnomaAccumInt]
-        MoonDifAccum2 = Interpolate1(AnomaAccumFrac + 3, Initial)
+        MoonDifAccum2 = Interpolate1(AnomaAccumFrac + 3, [MoonDifAccumList[Plus + AnomaAccumInt - 2], MoonDifAccumList[Plus + AnomaAccumInt - 1], MoonDifAccumList[Plus + AnomaAccumInt]])
     }
     // 以下是原本的算法
     // const AnomaAccumDay1 = AnomaAccumInt
@@ -559,11 +547,9 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
             }
         }
         if (~~AnomaAccum <= num - 2) {
-            const Initial = MoonAcrSList[Plus + AnomaAccumInt] + ',' + MoonAcrSList[Plus + AnomaAccumInt + 1] + ',' + MoonAcrSList[Plus + AnomaAccumInt + 2]
-            MoonAcrS = Interpolate1(AnomaAccumFrac + 1, Initial)
+            MoonAcrS = Interpolate1(AnomaAccumFrac + 1, [MoonAcrSList[Plus + AnomaAccumInt], MoonAcrSList[Plus + AnomaAccumInt + 1], MoonAcrSList[Plus + AnomaAccumInt + 2]])
         } else {
-            const Initial = MoonAcrSList[Plus + AnomaAccumInt - 2] + ',' + MoonAcrSList[Plus + AnomaAccumInt - 1] + ',' + MoonAcrSList[Plus + AnomaAccumInt]
-            MoonAcrS = Interpolate1(AnomaAccumFrac + 3, Initial)
+            MoonAcrS = Interpolate1(AnomaAccumFrac + 3, [MoonAcrSList[Plus + AnomaAccumInt - 2], MoonAcrSList[Plus + AnomaAccumInt - 1], MoonAcrSList[Plus + AnomaAccumInt]])
         }
     }
     return MoonAcrS

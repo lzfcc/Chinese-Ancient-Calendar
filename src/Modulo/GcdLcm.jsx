@@ -1,5 +1,5 @@
 import React from "react"
-import { GcdLcmGroup } from "../Cal/modulo_gcdlcm"
+import { GcdLcmGroup } from "../Cal/modulo_gcdlcm.mjs"
 export default class a extends React.Component {
   constructor(props) {
     super(props)
@@ -23,7 +23,11 @@ export default class a extends React.Component {
 
   handle() {
     try {
-      const { Print } = GcdLcmGroup(this.state.GcdLcmIn);
+      let arr = this.state.GcdLcmIn.split(/;|,|，|。|；|｜| /).filter(Boolean)
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Number(arr[i])
+      }
+      const { Print } = GcdLcmGroup(arr);
       this.setState({ output: Print });
     } catch (e) {
       alert(e.message);

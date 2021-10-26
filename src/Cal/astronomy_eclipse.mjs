@@ -754,8 +754,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                     break
                 }
             }
-            const Initial = AcrTermList[TermNum] + ',' + McorrBList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + McorrBList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + McorrBList[TermNum + 2]
-            McorrB = Interpolate3(TheWinsolsDif, Initial) // 當日差積                
+            McorrB = Interpolate3(TheWinsolsDif, [AcrTermList[TermNum], McorrBList[TermNum], AcrTermList[TermNum + 1], McorrBList[TermNum + 1], AcrTermList[TermNum + 2], McorrBList[TermNum + 2]]) // 當日差積                
             McorrB *= isYin ? -1 : 1
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
         } else if (CalName === 'Qintian') {
@@ -982,8 +981,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                     break
                 }
             }
-            const Initial = AcrTermList[TermNum] + ',' + McorrBList[TermNum] + ';' + AcrTermList[TermNum + 1] + ',' + McorrBList[TermNum + 1] + ';' + AcrTermList[TermNum + 2] + ',' + McorrBList[TermNum + 2]
-            McorrB = Interpolate3(TheWinsolsDif, Initial)
+            McorrB = Interpolate3(TheWinsolsDif, [AcrTermList[TermNum], McorrBList[TermNum], AcrTermList[TermNum + 1], McorrBList[TermNum + 1], AcrTermList[TermNum + 2], McorrBList[TermNum + 2]])
             if (isSame) {
                 McorrB *= !isBefore ? -1 : 1
             } else {
