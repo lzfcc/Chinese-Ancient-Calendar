@@ -36,7 +36,7 @@ const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
     x = +x
     if (Math.floor(x) === x) {
         if (x === -1) {
-            return FretList[15] // 15徽泛音以7徽對稱就變成了-1
+            return '1/10' // 15徽泛音以7徽對稱就變成了-1
         }
         return FretList[x]
     }
