@@ -1,5 +1,5 @@
 import React from 'react'
-import { Fret2Leng } from '../Cal/guqin'
+import { Leng2Fret } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -12,7 +12,7 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select width3'>
-        <span>徽位</span>
+        <span>弦長</span>
         <input
           value={this.state.a}
           onChange={e => {
@@ -25,7 +25,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Fret2Leng(this.state.a)
+      const Print = Leng2Fret(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -46,10 +46,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>徽位 ⇌ 弦長</h3>
-        <p className='note'>支持 13.111，13 1/9，118/9 等格式</p>
+        <p className='note'>輸入 0—1 之間的小數或分數</p>
         {this.input()}
-        <button onClick={this.handle} className='button4-1'>fret2leng</button><span className='Deci64'>n/d</span>
+        <button onClick={this.handle} className='button4-1'>leng2fret</button><span className='Deci64'>n/d</span>
         {this.result()}
       </div>
     )

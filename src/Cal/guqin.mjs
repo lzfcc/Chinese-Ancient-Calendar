@@ -219,17 +219,34 @@ export const Equal12 = aRaw => {
 // 1.059463094359295264561825294946341700779204317494185628559208431
 // 1.059463094359295264561825 // 朱載堉25位大算盤
 
-export const Fret2Leng = x => { // 徽位轉弦長
-    x = +x
-    if (x > 16 || x < 0) {
+const FretListA = [0, '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', 1]
+const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '8/9', '9/10', 1] // 0, 14是徽外13.111(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
+
+export const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
+    x = frc(x).simplify()
+    if (x.compare(14) > 0 || x.compare(0) < 0) {
         throw (new Error('請輸入13徽以內的數字'))
     }
-    const Fret = ~~x
-    const Frac = frc(x - ~~x)
-    const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '8/9', '9/10', 1] // 0, 14是徽外13.11(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
-    const Leng = frc(FretList[Fret]).add(Frac.mul(frc(FretList[Fret + 1]).sub(FretList[Fret])))
+    const Fret = x.floor()
+    const Frac = x.sub(Fret)
+    const Leng = frc(FretListA[Fret]).add(Frac.mul(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
     return Leng.toFraction()
 }
+// console.log(Fret2Leng('13.111'))
+
+export const Leng2Fret = x => {
+    x = frc(x)
+    let Fret = 0
+    for (let i = 0; i <= 13; i++) {
+        if (x.compare(FretListA[i]) >= 0 && x.compare(FretListA[i + 1]) < 0) {
+            Fret = i
+            break
+        }
+    }
+    const Result = frc(Fret).add(x.sub(FretListA[Fret]).div(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
+    return Number(Number(Result).toFixed(3))
+}
+// console.log(Leng2Fret('11/20'))
 
 const EqualTuningSub = (OriginFrq, KnownLeng, KnownFret, UnknownFret, isGt) => { // 初始弦頻率，已知弦長，已知弦徽位，所求弦徽位，所求頻率是否高於初始弦
     let Leng = frc(KnownLeng).mul(frc(Fret2Leng(KnownFret)).div(Fret2Leng(UnknownFret)))
@@ -694,10 +711,10 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongMode, GongFrq
     OutputMode = +OutputMode
     GongFrq = +GongFrq
     isStrict = +isStrict
-    const Input = InputRaw.split(';')
+    const Input = InputRaw.split(';').filter(Boolean)
     const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = []
     for (let i = 0; i < Input.length; i++) {
-        let Pre = Input[i].split(',')
+        let Pre = Input[i].split(',').filter(Boolean)
         if (Pre.length === 1 && isNaN(Pre[0]) === false) { // 「就」，與上一音徽位同，或同爲散音            
             if (Type[i - 1] === 'f') {
                 Type[i] = Type[i - 1]
