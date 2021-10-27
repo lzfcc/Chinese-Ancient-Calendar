@@ -14,6 +14,53 @@ export const OctaveCent = (a, b) => {
 
 export const Frequency = a => '頻率比 ' + 2 ** (a / 1200)
 
+const FretListA = [0, '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', 1]
+const FretList = ['1/9', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '8/9', '9/10', 1] // 0, 14是徽外13.111(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
+
+export const Fret2LengPrint = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
+    if (Math.floor(+x) === +x) {
+        return FretList[+x]
+    }
+    x = frc(x).simplify()
+    if (x.compare(14) >= 0 || x.compare(0) < 0) {
+        throw (new Error('請輸入13徽以內的數字'))
+    }
+    const Fret = x.floor()
+    const Frac = x.sub(Fret)
+    const Leng = frc(FretListA[Fret]).add(Frac.mul(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
+    return Leng.toFraction()
+}
+// console.log(Fret2Leng('13.111'))
+
+const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
+    x = +x
+    if (Math.floor(x) === x) {
+        if (x === -1) {
+            return FretList[15] // 15徽泛音以7徽對稱就變成了-1
+        }
+        return FretList[x]
+    }
+    const Fret = ~~x
+    const Frac = frc(x - ~~x)
+    const Leng = frc(FretList[Fret]).add(Frac.mul(frc(FretList[Fret + 1]).sub(FretList[Fret])))
+    return Leng.toFraction()
+}
+// console.log(Fret2Leng('0'))
+
+export const Leng2Fret = x => {
+    x = frc(x)
+    let Fret = 0
+    for (let i = 0; i <= 13; i++) {
+        if (x.compare(FretListA[i]) >= 0 && x.compare(FretListA[i + 1]) < 0) {
+            Fret = i
+            break
+        }
+    }
+    const Result = frc(Fret).add(x.sub(FretListA[Fret]).div(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
+    return Number(Number(Result).toFixed(3))
+}
+// console.log(Leng2Fret('11/20'))
+
 export const Pythagorean = x => {
     const upA = [], upB = [], downA = [], downB = [], Octave1 = [], Cent1 = [], Octave2 = [], Cent2 = []
     upA[0] = x
@@ -218,35 +265,6 @@ export const Equal12 = aRaw => {
 // console.log(big(2).pow(big.div(1, 12)).toString())
 // 1.059463094359295264561825294946341700779204317494185628559208431
 // 1.059463094359295264561825 // 朱載堉25位大算盤
-
-const FretListA = [0, '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', 1]
-const FretList = ['1/10', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '8/9', '9/10', 1] // 0, 14是徽外13.111(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
-
-export const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
-    x = frc(x).simplify()
-    if (x.compare(14) > 0 || x.compare(0) < 0) {
-        throw (new Error('請輸入13徽以內的數字'))
-    }
-    const Fret = x.floor()
-    const Frac = x.sub(Fret)
-    const Leng = frc(FretListA[Fret]).add(Frac.mul(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
-    return Leng.toFraction()
-}
-// console.log(Fret2Leng('13.111'))
-
-export const Leng2Fret = x => {
-    x = frc(x)
-    let Fret = 0
-    for (let i = 0; i <= 13; i++) {
-        if (x.compare(FretListA[i]) >= 0 && x.compare(FretListA[i + 1]) < 0) {
-            Fret = i
-            break
-        }
-    }
-    const Result = frc(Fret).add(x.sub(FretListA[Fret]).div(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
-    return Number(Number(Result).toFixed(3))
-}
-// console.log(Leng2Fret('11/20'))
 
 const EqualTuningSub = (OriginFrq, KnownLeng, KnownFret, UnknownFret, isGt) => { // 初始弦頻率，已知弦長，已知弦徽位，所求弦徽位，所求頻率是否高於初始弦
     let Leng = frc(KnownLeng).mul(frc(Fret2Leng(KnownFret)).div(Fret2Leng(UnknownFret)))
@@ -778,14 +796,12 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
 
         if (OutputMode <= 2) {
             if (floor === 3) {
-                Pitch[i] = '···' + Pitch[i]
-            } else if (floor === 2) {
                 Pitch[i] = '··' + Pitch[i]
-            } else if (floor === 1) {
+            } else if (floor === 2) {
                 Pitch[i] = '·' + Pitch[i]
-            } else if (floor === -1) {
+            } else if (floor === 0) {
                 Pitch[i] += '·'
-            } else if (floor === -2) {
+            } else if (floor === -1) {
                 Pitch[i] += '··'
             }
         }
@@ -805,7 +821,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
 }
 // console.log(Position2Pitch(`9,5;l,7.6;l,9;4;10,2;10.8,3`, '1', '1', '4', '0', '347.654321', '3'))
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
-// console.log(Position2Pitch('9.9,2', '1', '2', '1', '347.654321', '3', '1'))
+// console.log(Position2Pitch('s,5', '1', '1', '3', '0', '347.654321', '2', '0'))
 
 // const xxx = () => {
 //     const a = Number(frc('3/4').pow(18))

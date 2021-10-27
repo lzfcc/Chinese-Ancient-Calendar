@@ -1,5 +1,5 @@
 import React from 'react'
-import { Fret2Leng } from '../Cal/guqin'
+import { Fret2LengPrint } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Fret2Leng(this.state.a)
+      const Print = Fret2LengPrint(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
