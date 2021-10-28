@@ -1,7 +1,7 @@
 import Para from './para_calendars.mjs'
 import { frc } from './para_constant.mjs'
 import { AutoTcorr, AutoDifAccum, MoonFormula } from './astronomy_acrv.mjs'
-import { Interpolate3 } from './equa_sn.mjs'
+import { Interpolate3, Make2DPoints } from './equa_sn.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { AutoQuar, AutoMoonAvgV, AutoMoonTcorrDif, AutoNodePortion, AutoNodeCycle } from './para_auto-constant.mjs'
 
@@ -754,7 +754,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                     break
                 }
             }
-            McorrB = Interpolate3(TheWinsolsDif, [AcrTermList[TermNum], McorrBList[TermNum], AcrTermList[TermNum + 1], McorrBList[TermNum + 1], AcrTermList[TermNum + 2], McorrBList[TermNum + 2]]) // 當日差積                
+            McorrB = Interpolate3(TheWinsolsDif, Make2DPoints(AcrTermList, McorrBList, TermNum)) // 當日差積            
             McorrB *= isYin ? -1 : 1
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
         } else if (CalName === 'Qintian') {
@@ -981,7 +981,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                     break
                 }
             }
-            McorrB = Interpolate3(TheWinsolsDif, [AcrTermList[TermNum], McorrBList[TermNum], AcrTermList[TermNum + 1], McorrBList[TermNum + 1], AcrTermList[TermNum + 2], McorrBList[TermNum + 2]])
+            McorrB = Interpolate3(TheWinsolsDif, Make2DPoints(AcrTermList, McorrBList, TermNum))
             if (isSame) {
                 McorrB *= !isBefore ? -1 : 1
             } else {

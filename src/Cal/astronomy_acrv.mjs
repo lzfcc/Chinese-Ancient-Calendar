@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import { SunAcrVWest, MoonAcrVWest } from './astronomy_west.mjs'
-import { Interpolate1, Interpolate3 } from './equa_sn.mjs'
+import { Interpolate1, Interpolate3, Make2DPoints } from './equa_sn.mjs'
 import { AutoMoonAvgV, AutoNodePortion, AutoQuar, AutoMoonTcorrDif } from './para_auto-constant.mjs'
 
 // 大衍用不等間距二次內插，宣明也是。崇玄暫且用平氣。計算盈縮積
@@ -35,7 +35,7 @@ export const SunDifAccumTable = (WinsolsDif, CalName) => {
                 break
             }
         }
-        SunDifAccum2 = Interpolate3(WinsolsDif, [AcrTermList[TermNum], SunDifAccumList[TermNum], AcrTermList[TermNum + 1], SunDifAccumList[TermNum + 1], AcrTermList[TermNum + 2], SunDifAccumList[TermNum + 2]]) // 直接拉格朗日內插，懶得寫了
+        SunDifAccum2 = Interpolate3(WinsolsDif, Make2DPoints(AcrTermList, SunDifAccumList, TermNum)) // 直接用拉格朗日內插，懶得寫了
     } else {
         let TermRange = 0
         const TermNum1 = ~~(WinsolsDif / HalfTermLeng)  // 朔望所在氣名
@@ -101,7 +101,7 @@ const SunTcorrTable = (WinsolsDif, CalName) => {
                     break
                 }
             }
-            SunTcorr2 = Interpolate3(WinsolsDif, [AcrTermList[TermNum], SunTcorrList[TermNum], AcrTermList[TermNum + 1], SunTcorrList[TermNum + 1], AcrTermList[TermNum + 2], SunTcorrList[TermNum + 2]])
+            SunTcorr2 = Interpolate3(WinsolsDif, Make2DPoints(AcrTermList, SunTcorrList, TermNum))
             TermRange = AcrTermList[TermNum + 1] - AcrTermList[TermNum] // 本氣長度
             SunTcorr1 = SunTcorrList[TermNum] + (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) * (WinsolsDif - AcrTermList[TermNum]) / TermRange
         } else {

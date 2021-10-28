@@ -3,8 +3,8 @@ import Equa1 from './Equa1'
 // import Sqrt1 from './Sqrt1'
 // import Sqrt3 from './Sqrt3'
 import Sn1 from './Sn1'
-import Sn2 from './Sn2'
-import Sn5 from './Sn5'
+import Sn4 from './Sn4'
+import Sn3 from './Sn3'
 import Interpolate1 from './Interpolate1'
 import Interpolate2 from './Interpolate2'
 import Interpolate3 from './Interpolate3'
@@ -32,8 +32,8 @@ export default class Equation extends React.Component {
         <section className='modulo'>
           <h2>垛積之什</h2>
           <Sn1 />
-          <Sn5 />
-          <Sn2 />
+          <Sn3 />
+          <Sn4 />
           <h2>內插之什</h2>
           <Interpolate1 />
           <p></p>

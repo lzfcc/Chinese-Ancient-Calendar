@@ -11,7 +11,7 @@ export default class Converter extends React.Component {
       GongString: '4',
       ZhiString: '0',
       f: '347.654321',
-      g: '1',
+      g: '2',
       h: '0'
     }
     this.handle = this.handle.bind(this)

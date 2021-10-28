@@ -18,7 +18,7 @@ export const Sn1 = (a, b, n) => { // 上有寬a個、長b個，下有寬c個、�
 // https://www.zhihu.com/question/265476515/answer/355445437
 // 杨辉在《详解九章算法》《商功》篇阐述了方垛，刍甍垛，刍童垛，和三角垛
 // 方垛 1+4+9+...+n^2=1/3 n (n+1) (n+1/2)=1/6 n (n+1) (2n+1) 自然數平方級數求和
-const Sn2Sub = (n, p) => {
+const Sn4Sub = (n, p) => {
     n = parseInt(n)
     p = parseInt(p)
     let b = 1
@@ -28,7 +28,7 @@ const Sn2Sub = (n, p) => {
     return b
 }
 
-export const Sn2 = (n, p) => { // 四角垛
+export const Sn4 = (n, p) => { // 四角垛
     n = parseInt(n)
     // let S = (big(big(n).mul(big(n).add(1)).mul(big(n).add(0.5))).mul(1 / 3)).toFixed(10).toString()
     p = parseInt(p)
@@ -42,17 +42,17 @@ export const Sn2 = (n, p) => { // 四角垛
     // S = S[0]
     let S = 0
     for (let i = 1; i <= n; i++) {
-        S += Sn2Sub(i, p)
+        S += Sn4Sub(i, p)
     }
-    const tmp1 = Sn2Sub(1, p)
-    const tmp2 = Sn2Sub(2, p)
-    const tmp3 = Sn2Sub(3, p)
+    const tmp1 = Sn4Sub(1, p)
+    const tmp2 = Sn4Sub(2, p)
+    const tmp3 = Sn4Sub(3, p)
     return tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + '+...+ n^' + p + ' = ' + S
 }
-// console.log(Sn2(40, 1))
+// console.log(Sn4(40, 1))
 
 // 這個小函數求三角垛第n項是什麼
-export const Sn5Sub = (n, p) => {
+export const Sn3Sub = (n, p) => {
     n = parseInt(n)
     p = parseInt(p)
     let b = 1
@@ -67,23 +67,23 @@ export const Sn5Sub = (n, p) => {
 }
 // 三角垛 1+3+6+10+...+n (n+1) /2 = 1/6 n (n+1) (n+2)
 // 李兆華、程貞一《朱世傑招差術探原》，《自然科學史研究》2000(1)
-const Sn5_quick = (n, p) => {
+const Sn3_quick = (n, p) => {
     let S = 1
     for (let i = 0; i <= p; i++) {
-        S *= (n + i) * (1 / (i + 1))
+        S *= (n + i) / (i + 1)
     }
     return S
 }
 
-export const Sn5 = (n, p) => {
-    let S = 1
+export const Sn3 = (n, p) => {
+    let S = big(1)
     for (let i = 0; i <= p; i++) {
-        S = big(S).mul(big.add(n, i)).mul(big.div(1, big.add(i, 1)))
+        S = S.mul(big.add(n, i)).mul(big.div(1, big.add(i, 1)))
     }
-    const tmp1 = Sn5Sub(1, p)
-    const tmp2 = Sn5Sub(2, p)
-    const tmp3 = Sn5Sub(3, p)
-    const tmp4 = Sn5Sub(4, p)
+    const tmp1 = Sn3Sub(1, p)
+    const tmp2 = Sn3Sub(2, p)
+    const tmp3 = Sn3Sub(3, p)
+    const tmp4 = Sn3Sub(4, p)
     const tmp5 = 'n(n+1)...(n+p-1)/p!'
     const Print = tmp1 + ' + ' + tmp2 + ' + ' + tmp3 + ' +' + tmp4 + ' + ... ' + tmp5 + ' = ' + S
     return {
@@ -91,43 +91,41 @@ export const Sn5 = (n, p) => {
         S: S.toString()
     }
 }
-// console.log(Sn5(22.11112111111111, 3).Print)
+// console.log(Sn3(22.11112111111111, 3).Print)
 
 // 招差術，垛積（三角垛）求和公式。3^3+4^3+5^3...+(n+2)^3, 卽 f(n)=sum(n) (n+2)^3=27n+37 * 1/2! (n-1)n+ 24 1/3! (n-2)(n-1)n + 6 1/4! (n-3)(n-2)(n-1)n
-export const Interpolate1 = (n, Initial) => {
-    const p = Initial.length - 1
-    let S = 0
-    let S4 = 0
+export const Interpolate1 = (n, initial) => {
+    let S = 0, S4 = 0
     let delta = []
-    for (let i = 0; i <= p; i++) {
-        delta[i] = Initial[i]
+    for (let i = 0; i < initial.length; i++) {
+        delta[i] = initial[i]
         for (let l = 0; l < i; l++) {
-            delta[i] -= delta[l] * Sn5Sub(i - l + 1, l)
+            delta[i] -= delta[l] * Sn3Sub(i - l + 1, l)
         }
-        S4 += Sn5_quick(n - 1 - i, i) * delta[i]
-        S += Sn5_quick(n - i, i) * delta[i]
+        S4 += Sn3_quick(n - 1 - i, i) * delta[i]
+        S += Sn3_quick(n - i, i) * delta[i]
     }
     return S - S4
 }
 
-export const Interpolate1_big = (n, Initial) => {
+export const Interpolate1_big = (n, initial) => {
     n = big(n)
     const n1 = Math.floor(n)
-    const p = Initial.length - 1
+    const p = initial.length - 1
     let S = 0
     let S1 = 0
     let S2 = 0
     let S4 = 0
     let delta = []
     for (let i = 0; i <= p; i++) {
-        delta[i] = big(Initial[i])
+        delta[i] = big(initial[i])
         for (let l = 0; l < i; l++) {
-            delta[i] = big(delta[i]).sub(big(delta[l]).mul(Sn5Sub(i - l + 1, l)))
+            delta[i] = big(delta[i]).sub(big(delta[l]).mul(Sn3Sub(i - l + 1, l)))
         }
-        S2 = big(S2).add(big(Sn5(big.sub((n1 - 1), i), i).S).mul(delta[i]))
-        S1 = big(S1).add(big(Sn5(big.sub(n1, i), i).S).mul(delta[i]))
-        S4 = big(S4).add(big(Sn5(big.sub((big.sub(n, 1)), i), i).S).mul(delta[i]))
-        S = big(S).add(big(Sn5(big.sub(n, i), i).S).mul(delta[i]))
+        S2 = big(S2).add(big(Sn3(big.sub((n1 - 1), i), i).S).mul(delta[i]))
+        S1 = big(S1).add(big(Sn3(big.sub(n1, i), i).S).mul(delta[i]))
+        S4 = big(S4).add(big(Sn3(big.sub((big.sub(n, 1)), i), i).S).mul(delta[i]))
+        S = big(S).add(big(Sn3(big.sub(n, i), i).S).mul(delta[i]))
     }
     const y1 = big(S1).sub(S2)
     let y = big(S).sub(S4)
@@ -186,46 +184,45 @@ export const Interpolate2_big = (n, f0, delta) => { // delta是string。第一�
 // 關鍵：tmp
 // y=Σ(n,1) yiLi
 // Li=Π(n,j=1,j≠i) (x-xj)/(xi-xj)
-export const Interpolate3 = (n, Initial) => { // 跟下面的區別是沒用Deci.js
-    const x = [], y = [], l = []
-    for (let i = 0; i < Initial.length / 2; i++) {
-        x[i] = Initial[2 * i]
-        y[i] = Initial[2 * i + 1]
+
+export const Make2DPoints = (xList, yList, baseIndex = 0, num = 3) => {
+    const points = []
+    for (let i = 0; i < num; i++) {
+        points[i] = [xList[i + baseIndex], yList[i + baseIndex]]
     }
-    const p = x.length - 1
+    return points
+}
+export const Interpolate3 = (n, points) => { // modified by @lzfcc
+    const x = [], y = []
+    for (let i = 0; i < points.length; i++) {
+        x[i] = points[i][0]
+        y[i] = points[i][1]
+    }
     let f = 0
-    for (let i = 0; i <= p; i++) {
+    for (let i = 0; i < points.length; i++) {
         let tmp = 1
-        for (let j = 0; j < i; j++) {
-            tmp *= (n - x[j]) / (x[i] - x[j])
+        for (let j = 0; j < points.length; j++) {
+            if (i !== j) tmp *= (n - x[j]) / (x[i] - x[j])
         }
-        for (let j = i + 1; j <= p; j++) {
-            tmp *= (n - x[j]) / (x[i] - x[j])
-        }
-        l[i] = tmp
-        f += y[i] * l[i]
+        f += y[i] * tmp
     }
     return f
 }
+// console.log(Interpolate3(2.5,[[1,0.5],[2.4,1],[4,2]]))
 
-export const Interpolate3_big = (n, Initial) => {
-    const x = [], y = [], l = []
-    for (let i = 0; i < Initial.length / 2; i++) {
-        x[i] = Initial[2 * i]
-        y[i] = Initial[2 * i + 1]
+export const Interpolate3_big = (n, initial) => {
+    const x = [], y = []
+    for (let i = 0; i < initial.length / 2; i++) {
+        x[i] = initial[2 * i]
+        y[i] = initial[2 * i + 1]
     }
-    const p = x.length - 1
     let f = 0
-    for (let i = 0; i <= p; i++) {
+    for (let i = 0; i < x.length; i++) {
         let tmp = big(1)
         for (let j = 0; j < i; j++) {
-            tmp = tmp.mul((big.sub(n, x[j])).div(big.sub(x[i], x[j])))
+            if (i !== j) tmp = tmp.mul((big.sub(n, x[j])).div(big.sub(x[i], x[j])))
         }
-        for (let j = i + 1; j <= p; j++) {
-            tmp = tmp.mul((big.sub(n, x[j])).div(big.sub(x[i], x[j])))
-        }
-        l[i] = tmp
-        f = big(f).add(big(y[i]).mul(l[i]))
+        f = big(f).add(big(y[i]).mul(tmp))
     }
     const Print = `f (${n}) = ${parseFloat((+f.toFixed(15)).toPrecision(14))}`
     return { Print, f }

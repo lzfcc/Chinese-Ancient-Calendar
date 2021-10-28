@@ -182,9 +182,9 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
         const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDeciDif[TermNum]
         const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDeciDif[TermNum]
-        Rise = DawnRange + Interpolate3(WinsolsDif, [t1, NightList[TermNum], t2, NightList[TermNum + 1], t3, NightList[TermNum + 2]])
+        Rise = DawnRange + Interpolate3(WinsolsDif, [[t1, NightList[TermNum]], [t2, NightList[TermNum + 1]], [t3, NightList[TermNum + 2]]])
         Sunrise1 = DawnRange + NightList[TermNum] + ((WinsolsDif - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
-        Lati1 = Interpolate3(WinsolsDif, [t1, SunLatiList[TermNum], t2, SunLatiList[TermNum + 1], t3, SunLatiList[TermNum + 2]])
+        Lati1 = Interpolate3(WinsolsDif, [[t1, SunLatiList[TermNum]], [t2, SunLatiList[TermNum + 1]], [t3, SunLatiList[TermNum + 2]]])
         Lati = 91.31 - Lati1
     } else {
         ////////////平氣////////////

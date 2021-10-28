@@ -1,11 +1,11 @@
 import React from "react";
-import { Sn2 } from "../Cal/equa_sn";
+import { Sn3 } from "../Cal/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Sn2N: 4,
-      Sn2P: 2,
+      Sn5N: 4,
+      Sn5P: 2,
     };
     this.handle = this.handle.bind(this)
   }
@@ -15,16 +15,16 @@ export default class Equa extends React.Component {
       <span className='year-select'>
         <span>n</span>
         <input className='width3'
-          value={this.state.Sn2N}
+          value={this.state.Sn5N}
           onChange={e => {
-            this.setState({ Sn2N: e.currentTarget.value });
+            this.setState({ Sn5N: e.currentTarget.value });
           }}
         />
         <span> p</span>
         <input className='width3'
-          value={this.state.Sn2P}
+          value={this.state.Sn5P}
           onChange={e => {
-            this.setState({ Sn2P: e.currentTarget.value });
+            this.setState({ Sn5P: e.currentTarget.value });
           }}
         />
       </span>
@@ -33,7 +33,7 @@ export default class Equa extends React.Component {
 
   handle() {
     try {
-      const Print = Sn2(this.state.Sn2N, this.state.Sn2P)
+      const { Print } = Sn3(this.state.Sn5N, this.state.Sn5P)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -54,9 +54,9 @@ export default class Equa extends React.Component {
   render() {
     return (
       <div>
-        <h3>四角垛　方垛</h3>
+        <h3>三角垛　落一形垛</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>解</button>
+        <button onClick={this.handle} className='button4-3'>解</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     );

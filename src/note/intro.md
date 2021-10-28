@@ -851,7 +851,9 @@ a = [0, ...a]
 
 10-26 `前端 1.07` 調整函數接口：字符串 `'1,2,3'` 全部換成數組  `[1, 2, 3]` 。全部改下來頗麻煩
 
-10-27 `1.06` 增加徵弦。增強fret2leng，增加leng2fret
+10-27 `1.06` 減字譜轉音高增加徵弦。增強fret2leng，增加leng2fret
+
+10-28 `1.06.1` 優化代碼  [Code Review #10](https://github.com/lzfcc/Chinese-Ancient-Calendar/issues/10)
 
 ### Todo list
 
