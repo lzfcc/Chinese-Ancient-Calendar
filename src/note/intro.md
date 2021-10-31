@@ -855,6 +855,8 @@ a = [0, ...a]
 
 10-28 `1.06.1` 優化代碼  [Code Review #10](https://github.com/lzfcc/Chinese-Ancient-Calendar/issues/10)
 
+10-31 `1.06.2` 優化代碼 `guqin.mjs`
+
 ### Todo list
 
 ##### 核心

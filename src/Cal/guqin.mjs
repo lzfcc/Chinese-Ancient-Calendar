@@ -1,7 +1,7 @@
 import { big, frc } from './para_constant.mjs'
 import { Frac2FalseFrac } from './equa_math.mjs'
 
-export const OctaveCent = (a, b) => {
+export const OctaveCent = (a, b) => { // 兩個要比較的頻率
     a = Frac2FalseFrac(a).Deci
     b = Frac2FalseFrac(b).Deci
     const Octave = Math.log2(a / b)
@@ -17,7 +17,7 @@ export const Frequency = a => '頻率比 ' + 2 ** (a / 1200)
 const FretListA = [0, '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', 1]
 const FretList = ['1/9', '1/8', '1/6', '1/5', '1/4', '1/3', '2/5', '1/2', '3/5', '2/3', '3/4', '4/5', '5/6', '7/8', '8/9', '9/10', 1] // 0, 14是徽外13.111(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
 
-export const Fret2LengPrint = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
+export const Fret2LengPrint = x => { // 徽位轉弦長. 支持 13.111，13 1/9，118/9
     if (Math.floor(+x) === +x) {
         return FretList[+x]
     }
@@ -47,7 +47,7 @@ const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
 }
 // console.log(Fret2Leng('0'))
 
-export const Leng2Fret = x => {
+export const Leng2Fret = x => { // 弦長轉徽位
     x = frc(x)
     let Fret = 0
     for (let i = 0; i <= 13; i++) {
@@ -115,39 +115,32 @@ export const Pythagorean = x => {
         Octave2[i] = Func.Octave.toFixed(10)
         Cent2[i] = Func.Cent.toFixed(8)
     }
-    let Print1 = [], Print2 = []
-    Print1 = Print1.concat({
+    const Print1 = [{
         title: '向上A',
         data: upA
-    })
-    Print1 = Print1.concat({
+    }, {
         title: '向上B',
         data: upB
-    })
-    Print1 = Print1.concat({
+    }, {
         title: '八度値',
         data: Octave1
-    })
-    Print1 = Print1.concat({
+    }, {
         title: '音分',
         data: Cent1
-    })
-    Print2 = Print2.concat({
+    }]
+    const Print2 = [{
         title: '向下A',
         data: downA
-    })
-    Print2 = Print2.concat({
+    }, {
         title: '向下B',
         data: downB
-    })
-    Print2 = Print2.concat({
+    }, {
         title: '八度値',
         data: Octave2
-    })
-    Print2 = Print2.concat({
+    }, {
         title: '音分',
         data: Cent2
-    })
+    }]
     return { Print1, Print2 }
 }
 // console.log(Pythagorean(100))
@@ -163,13 +156,12 @@ export const Pure = x => {
         while (List1[i] >= frc(x).mul(2)) {
             List1[i] = List1[i].div(2)
         }
-        const tmp = Number(List1[i])
         if (x === '1') {
             List1[i] = List1[i].toFraction()
         } else {
             List1[i] = List1[i].toFraction(true)
         }
-        const Func = OctaveCent(tmp, x)
+        const Func = OctaveCent(Number(List1[i]), x)
         Octave1[i] = Func.Octave.toFixed(10)
         Cent1[i] = Func.Cent.toFixed(8)
     }
@@ -178,13 +170,12 @@ export const Pure = x => {
         while (List2[i] >= frc(x).mul(2)) {
             List2[i] = List2[i].div(2)
         }
-        const tmp = Number(List2[i])
         if (x === '1') {
             List2[i] = List2[i].toFraction()
         } else {
             List2[i] = List2[i].toFraction(true)
         }
-        const Func = OctaveCent(tmp, x)
+        const Func = OctaveCent(Number(List2[i]), x)
         Octave2[i] = Func.Octave.toFixed(10)
         Cent2[i] = Func.Cent.toFixed(8)
     }
@@ -193,46 +184,44 @@ export const Pure = x => {
         while (List3[i] >= frc(x).mul(2)) {
             List3[i] = List3[i].div(2)
         }
-        const tmp = Number(List3[i])
         if (x === '1') {
             List3[i] = List3[i].toFraction()
         } else {
             List3[i] = List3[i].toFraction(true)
         }
-        const Func = OctaveCent(tmp, x)
+        const Func = OctaveCent(Number(List3[i]), x)
         Octave3[i] = Func.Octave.toFixed(10)
         Cent3[i] = Func.Cent.toFixed(8)
     }
-    const List = [...List1, ...List2, ...List3]
-    const Octave = [...Octave1, ...Octave2, ...Octave3]
-    const Cent = [...Cent1, ...Cent2, ...Cent3]
-    let Print = []
-    Print = Print.concat({
+    const Print = [{
         title: '頻率',
-        data: List
-    })
-    Print = Print.concat({
+        data: [...List1, ...List2, ...List3]
+    }, {
         title: '八度値',
-        data: Octave
-    })
-    Print = Print.concat({
+        data: [...Octave1, ...Octave2, ...Octave3]
+    }, {
         title: '音分',
-        data: Cent
-    })
+        data: [...Cent1, ...Cent2, ...Cent3]
+    }]
     return Print
 }
 // console.log(Pure(1))
 
-export const Equal12 = aRaw => {
-    aRaw = aRaw.toString()
-    let a = aRaw
-    if (aRaw.includes('/')) {
-        a = aRaw.split('/')
+/**
+ * 十二平均律。新法密率
+ * @param CFreq c的頻率
+ * @returns 
+ */
+export const Equal12 = CFreq => {
+    CFreq = CFreq.toString()
+    let a = CFreq
+    if (CFreq.includes('/')) {
+        a = CFreq.split('/')
         a = big.div(a[0], a[1])
     }
     const List = [], List1 = [], Octave = [], Cent = []
-    List[0] = aRaw
-    List1[0] = aRaw
+    List[0] = CFreq
+    List1[0] = CFreq
     Octave[0] = 0
     Cent[0] = 0
     for (let i = 1; i <= 12; i++) {
@@ -246,27 +235,28 @@ export const Equal12 = aRaw => {
         Octave[i] = +Func.Octave.toFixed(12)
         Cent[i] = +Func.Cent.toFixed(12)
     }
-    let Print = []
-    Print = Print.concat({
-        title: '頻率',
-        data: List1
-    })
-    Print = Print.concat({
-        title: '八度値',
-        data: Octave
-    })
-    Print = Print.concat({
-        title: '音分',
-        data: Cent
-    })
+    const Print = [
+        {
+            title: '頻率',
+            data: List1
+        },
+        {
+            title: '八度値',
+            data: Octave
+        },
+        {
+            title: '音分',
+            data: Cent
+        }]
     return { Print, List1 }
 }
-// console.log(Equal12('1'))
+// console.log(Equal12('1').Print)
 // console.log(big(2).pow(big.div(1, 12)).toString())
 // 1.059463094359295264561825294946341700779204317494185628559208431
 // 1.059463094359295264561825 // 朱載堉25位大算盤
 
 const EqualTuningSub = (OriginFrq, KnownLeng, KnownFret, UnknownFret, isGt) => { // 初始弦頻率，已知弦長，已知弦徽位，所求弦徽位，所求頻率是否高於初始弦
+    // 寫的啥？？？ 幾弦幾徽=幾陷幾徽 比如一弦一徽=二弦？徽   1 *1/8=5/6 * x ，求x
     let Leng = frc(KnownLeng).mul(frc(Fret2Leng(KnownFret)).div(Fret2Leng(UnknownFret)))
     if (isGt && Leng > 1) {
         Leng = Leng.div(2)
@@ -610,6 +600,7 @@ export const Tuning = (x, TuningMode) => { // 輸入五弦頻率 // fraction的�
     const DifB4 = OctaveCent(x, Four2).Cent.toFixed(4)
     const DifB5 = OctaveCent(Six2, x).Cent.toFixed(4)
     const DifB6 = OctaveCent(Seven2, Six2).Cent.toFixed(4)
+
     const DifC1 = +OctaveCent(Two3, One3).Cent.toFixed(10)
     const DifC2 = +OctaveCent(Three3, Two3).Cent.toFixed(10)
     const DifC3 = +OctaveCent(Four3, Three3).Cent.toFixed(10)
@@ -727,7 +718,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
     const TheString = ZhiString || GongString
     const isZhi = ZhiString ? true : false
     const Input = InputRaw.split(';').filter(Boolean)
-    const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = []
+    const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = [], PitchPrint = []
     for (let i = 0; i < Input.length; i++) {
         let Pre = Input[i].split(',').filter(Boolean)
         if (Pre.length === 1 && isNaN(Pre[0]) === false) { // 「就」，與上一音徽位同，或同爲散音            
@@ -745,41 +736,39 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
             Type[i] = Pre[0]
         }
         let floor = 0
-        if (Type[i] === 'zhuang') {
-            Cent[i] = Cent[i - 1] + (TempMode === 1 ? 203.91 : 182.4)
+        if (Type[i] === 's') {
+            AbsScale[i] = StringList[+Pre[1] - 1]
+        } else if (Type[i] === 'zhuang') {
+            AbsScale[i] = AbsScale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
         } else {
-            if (Type[i] === 's') {
-                AbsScale[i] = StringList[+Pre[1] - 1]
+            if (Type[i] === 'f') {
+                Fret[i] = 7 - Math.abs(7 - +Pre[1]) // 泛音以7徽對稱
+                String[i] = Pre[2]
+            } else if (Type[i] === 'l') {
+                String[i] = String[i - 1]
+                Fret[i] = Pre[1]
             } else {
-                if (Type[i] === 'f') {
-                    Fret[i] = 7 - Math.abs(7 - +Pre[1]) // 泛音以7徽對稱
-                    String[i] = Pre[2]
-                } else if (Type[i] === 'l') {
-                    String[i] = String[i - 1]
-                    Fret[i] = Pre[1]
-                } else {
-                    Fret[i] = Type[i]
-                    String[i] = Pre[1]
-                }
-                const Leng = Fret2Leng(Fret[i])
-                AbsScale[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1])
+                Fret[i] = Type[i]
+                String[i] = Pre[1]
             }
+            const Leng = Fret2Leng(Fret[i])
+            AbsScale[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1])
         }
         RelScale[i] = Number(frc(AbsScale[i]).div(StringList[TheString - 1]))
         Cent[i] = Math.log2(RelScale[i]) * 1200 - (isZhi ? 498.045 : 0) // 若用徵弦作為基準，減純五度
         floor = Math.floor((Cent[i] + 21.5) / 1200) // 超出一個八度
         Cent[i] = (Cent[i] % 1200 + 1200) % 1200
-        for (const [key] of Object.entries(FushionList)) {
+        for (const [key, value] of Object.entries(FushionList)) {
             const threshold = isStrict ? 0.1 : 10
-            if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
-                Pitch[i] = FushionList[key][OutputMode <= 3 ? OutputMode : 3]
+            if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && (TempMode === value[0] || value[0] === 0)) {
+                Pitch[i] = value[OutputMode <= 3 ? OutputMode : 3]
                 break
             }
         }
         if (isStrict === 0 && Pitch[i] === undefined) { // 這個用來對付徽位更不準的
-            for (const [key] of Object.entries(FushionList)) {
-                if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && (TempMode === FushionList[key][0] || FushionList[key][0] === 0)) {
-                    Pitch[i] = FushionList[key][OutputMode <= 3 ? OutputMode : 3]
+            for (const [key, value] of Object.entries(FushionList)) { // 21.5普通音差
+                if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && (TempMode === value[0] || value[0] === 0)) {
+                    Pitch[i] = value[OutputMode <= 3 ? OutputMode : 3]
                     break
                 }
             }
@@ -793,33 +782,31 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
         if (OutputMode === 4) {
             Pitch[i] = Number(frc(Pitch[i]).mul(GongFrq)).toFixed(3)
         }
-
+        PitchPrint[i] = Pitch[i]
         if (OutputMode <= 2) {
             if (floor === 3) {
-                Pitch[i] = '··' + Pitch[i]
+                PitchPrint[i] = '··' + PitchPrint[i]
             } else if (floor === 2) {
-                Pitch[i] = '·' + Pitch[i]
+                PitchPrint[i] = '·' + PitchPrint[i]
             } else if (floor === 0) {
-                Pitch[i] += '·'
+                PitchPrint[i] += '·'
             } else if (floor === -1) {
-                Pitch[i] += '··'
+                PitchPrint[i] += '··'
             }
         }
         if (Type[i] === 'zhuang') {
-            Pitch[i] = '^' + Pitch[i] + Pitch[i - 1].slice(-1)
+            if (i > 0) {
+                PitchPrint[i] = '^' + PitchPrint[i] + Pitch[i - 1]
+            }
         } else if (Type[i] === 'f') {
-            Pitch[i] = '৹' + Pitch[i]
+            PitchPrint[i] = '৹' + PitchPrint[i]
         } else if (Type[i] === 'l') {
-            Pitch[i] = '◠' + Pitch[i]
+            PitchPrint[i] = '◠' + PitchPrint[i]
         }
     }
-    let Print = ''
-    for (let i = 0; i < Pitch.length; i++) {
-        Print += Pitch[i] + '　'
-    }
-    return Print
+    return PitchPrint.join('　')
 }
-// console.log(Position2Pitch(`9,5;l,7.6;l,9;4;10,2;10.8,3`, '1', '1', '4', '0', '347.654321', '3'))
+// console.log(Position2Pitch(`9.6,3;l,10.8`, '1', '1', '4', '0', '347.654321', '3'))
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
 // console.log(Position2Pitch('s,5', '1', '1', '3', '0', '347.654321', '2', '0'))
 
