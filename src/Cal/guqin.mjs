@@ -706,7 +706,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
 // }
 // console.log(fa3(3))
 // s散音，f泛音，a按音
-export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiString, GongFrq, OutputMode, isStrict) => { // ；調弦法；律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
+export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiString, GongFrq, OutputMode, isStrict) => { // ；調弦法；律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     const StringList = eval('EqualTuning' + TuningMode)(1, TempMode).String
     TuningMode = +TuningMode
     TempMode = +TempMode
@@ -717,47 +717,81 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
     ZhiString = +ZhiString
     const TheString = ZhiString || GongString
     const isZhi = ZhiString ? true : false
-    const Input = InputRaw.split(';').filter(Boolean)
+    Input = Input.replace(/\[(.+?)\]/g, function () { // @lzfcc [泛音]
+        return arguments[1].split(';').map(x => 'f,' + x).join(';')
+    })
+    Input = Input.split(';').filter(Boolean)
+    for (let i = 0; i < Input.length; i++) {
+        if (Input[i] === 'dayuan') {
+            Input.splice(i, i, Input[i - 2], Input[i - 1], Input[i - 2], Input[i - 1])
+        } else if (Input[i] === 'suo3') {
+            Input.splice(i, i, Input[i - 1], Input[i - 1])
+        } else if (Input[i] === 'suo7') {
+            Input.splice(i, i, Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1])
+        } else if (Input[i] === 'suo9') {
+            Input.splice(i, i, Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1])
+        } else if (Input[i] === 'fenkai') {
+            Input.splice(i, i, 'shang', 'xia')
+        }
+    }
     const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = [], PitchPrint = []
     for (let i = 0; i < Input.length; i++) {
         let Pre = Input[i].split(',').filter(Boolean)
-        if (Pre.length === 1 && isNaN(Pre[0]) === false) { // 「就」，與上一音徽位同，或同爲散音            
-            if (Type[i - 1] === 'f') {
-                Type[i] = Type[i - 1]
-                Pre = Type[i].concat(Fret[i - 1]).concat(Pre)
-            } else if (Type[i - 1] === 'l') {
-                Pre = [Fret[i - 1], Pre]
-                Type[i] = Pre[0]
-            } else {
-                Type[i] = Type[i - 1]
-                Pre = [Type[i], Pre[0]]
+        // 下面是補全承前省略
+        if (Pre.length === 1) {
+            if (isNaN(Pre[0]) === false) {
+                // 「就」，與上一音徽位同，或同爲散音            
+                if (Type[i - 1] === 'f') { // f,7,6;3                    
+                    Pre = [Type[i - 1], Fret[i - 1], Pre[0]]
+                } else if (Type[i - 1] === 'l') {  // l,13;2 
+                    Pre = [Fret[i - 1], Pre[0]]
+                } else { // 散、按音                    
+                    Pre = [Type[i - 1], Pre[0]]
+                }
             }
-        } else {
-            Type[i] = Pre[0]
+        } else if (Pre.length === 2 && Pre[0] === 'f') { // f,7,3;f,3
+            Pre = [Type[i], Fret[i - 1], Pre[1]]
         }
+        // 下面是正式處理
+        Type[i] = Pre[0]
         let floor = 0
         if (Type[i] === 's') {
-            AbsScale[i] = StringList[+Pre[1] - 1]
-        } else if (Type[i] === 'zhuang') {
+            String[i] = +Pre[1]
+            AbsScale[i] = StringList[String[i] - 1]
+        } else if (Type[i] === 'zh') {
+            String[i] = String[i - 1]
             AbsScale[i] = AbsScale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
+        } else if (Type[i] === 'shang') {
+            String[i] = String[i - 1]
+            AbsScale[i] = AbsScale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
+        } else if (Type[i] === 'xia') {
+            String[i] = String[i - 1]
+            AbsScale[i] = AbsScale[i - 1].div(TempMode === 1 ? '9/8' : '10/9')
+        } else if (Type[i] === 'qi' && Pre.length === 1) {
+            String[i] = String[i - 1]
+            AbsScale[i] = StringList[String[i] - 1]
         } else {
             if (Type[i] === 'f') {
                 Fret[i] = 7 - Math.abs(7 - +Pre[1]) // 泛音以7徽對稱
-                String[i] = Pre[2]
-            } else if (Type[i] === 'l') {
-                String[i] = String[i - 1]
+                String[i] = +Pre[2]
+            } else if (Type[i] === 'l' || (Type[i] === 'qi' && Pre.length === 2)) {
                 Fret[i] = Pre[1]
+                String[i] = +String[i - 1]
+            } else if (Type[i] === 'yin' || Type[i] === 'nao') {
+                Fret[i] = Fret[i - 1]
+                String[i] = String[i - 1]
             } else {
                 Fret[i] = Type[i]
-                String[i] = Pre[1]
+                String[i] = +Pre[1]
             }
             const Leng = Fret2Leng(Fret[i])
-            AbsScale[i] = frc(1).div(Leng).mul(StringList[+String[i] - 1])
+            AbsScale[i] = frc(1).div(Leng).mul(StringList[String[i] - 1])
         }
         RelScale[i] = Number(frc(AbsScale[i]).div(StringList[TheString - 1]))
         Cent[i] = Math.log2(RelScale[i]) * 1200 - (isZhi ? 498.045 : 0) // 若用徵弦作為基準，減純五度
         floor = Math.floor((Cent[i] + 21.5) / 1200) // 超出一個八度
         Cent[i] = (Cent[i] % 1200 + 1200) % 1200
+        // 下面是處理模糊徽位
         for (const [key, value] of Object.entries(FushionList)) {
             const threshold = isStrict ? 0.1 : 10
             if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && (TempMode === value[0] || value[0] === 0)) {
@@ -773,6 +807,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
                 }
             }
         }
+
         if (OutputMode >= 3) {
             if (Pitch[i] === undefined) {
                 Pitch[i] = frc(2 ** (Cent[i] / 1200)).toFraction(false)
@@ -794,7 +829,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
                 PitchPrint[i] += '··'
             }
         }
-        if (Type[i] === 'zhuang') {
+        if (Type[i] === 'zh') {
             if (i > 0) {
                 PitchPrint[i] = '^' + PitchPrint[i] + Pitch[i - 1]
             }
@@ -806,7 +841,7 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
     }
     return PitchPrint.join('　')
 }
-// console.log(Position2Pitch(`9.6,3;l,10.8`, '1', '1', '4', '0', '347.654321', '3'))
+// console.log(Position2Pitch('9,3;s,6;f,9,3;suo3', '1', '1', '4', '0', '347.654321', '3'))
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
 // console.log(Position2Pitch('s,5', '1', '1', '3', '0', '347.654321', '2', '0'))
 
@@ -938,3 +973,6 @@ export const Position2Pitch = (InputRaw, TuningMode, TempMode, GongString, ZhiSt
 //     1176.54: [1, '·bbD', '·bb2', '1048576/531441'],
 //     1200: [0, 'C', '1', '2/1']
 // }
+
+
+// console.log(test('2,1;[3;5,4;2];2;4;[9,5];3,4;6'))

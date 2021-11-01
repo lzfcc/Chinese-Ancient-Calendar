@@ -857,6 +857,8 @@ a = [0, ...a]
 
 10-31 `1.06.2` 優化代碼 `guqin.mjs`
 
+11-01 `1.06.3` 增加 [] qi dayuan shang xia fenkai suo3 suo7 suo9
+
 ### Todo list
 
 ##### 核心
