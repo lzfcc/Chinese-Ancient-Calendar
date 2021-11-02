@@ -721,19 +721,19 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
         return arguments[1].split(';').map(x => 'f,' + x).join(';')
     })
     Input = Input.split(';').filter(Boolean)
-    for (let i = 0; i < Input.length; i++) {
-        if (Input[i] === 'dayuan') {
-            Input.splice(i, i, Input[i - 2], Input[i - 1], Input[i - 2], Input[i - 1])
-        } else if (Input[i] === 'suo3') {
-            Input.splice(i, i, Input[i - 1], Input[i - 1])
-        } else if (Input[i] === 'suo7') {
-            Input.splice(i, i, Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1])
-        } else if (Input[i] === 'suo9') {
-            Input.splice(i, i, Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1])
-        } else if (Input[i] === 'fenkai') {
-            Input.splice(i, i, 'shang', 'xia')
-        }
-    }
+    // for (let i = 0; i < Input.length; i++) {
+    //     if (Input[i] === 'dayuan') {
+    //         Input.splice(i, i, Input[i - 2], Input[i - 1], Input[i - 2], Input[i - 1])
+    //     } else if (Input[i] === 'suo3') {
+    //         Input.splice(i, i, Input[i - 1], Input[i - 1])
+    //     } else if (Input[i] === 'suo7') {
+    //         Input.splice(i, i, Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1])
+    //     } else if (Input[i] === 'suo9') {
+    //         Input.splice(i, i, Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1], Input[i - 1])
+    //     } else if (Input[i] === 'fenkai') {
+    //         Input.splice(i, i, 'shang', 'xia')
+    //     }
+    // }
     const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = [], PitchPrint = []
     for (let i = 0; i < Input.length; i++) {
         let Pre = Input[i].split(',').filter(Boolean)
@@ -750,7 +750,7 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
                 }
             }
         } else if (Pre.length === 2 && Pre[0] === 'f') { // f,7,3;f,3
-            Pre = [Type[i], Fret[i - 1], Pre[1]]
+            Pre = [Type[i - 1], Fret[i - 1], Pre[1]]
         }
         // 下面是正式處理
         Type[i] = Pre[0]
@@ -841,7 +841,7 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
     }
     return PitchPrint.join('　')
 }
-// console.log(Position2Pitch('9,3;s,6;f,9,3;suo3', '1', '1', '4', '0', '347.654321', '3'))
+console.log(Position2Pitch('8.4,7;s,5;dayuan;s,1', '1', '1', '4', '0', '347.654321', '3'))
 // console.log(Position2Pitch('s,1;9.9,2;s,1;9.9,2;l,14;s,2;1;2;2;1;2;14,2;3;3;2;3;s,5;4;10,2;s,4;8,2;s,5;11,1;9,1;2;1;2;8,2;l,7.6;s,2;1;10,4', '1', '2', '1', '347.654321', '2'))
 // console.log(Position2Pitch('s,5', '1', '1', '3', '0', '347.654321', '2', '0'))
 
