@@ -5,8 +5,8 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 440,
-      b: 1
+      b: '1',
+      Freq: '432'
     }
     this.handle = this.handle.bind(this)
   }
@@ -14,20 +14,20 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>五弦頻率</span>
-        <input
-          className='width3'
-          value={this.state.a}
-          onChange={e => {
-            this.setState({ a: e.currentTarget.value });
-          }}
-        />
-        <span> 弦式</span>
+        <span> 調弦法</span>
         <input
           className='width1'
           value={this.state.b}
           onChange={e => {
             this.setState({ b: e.currentTarget.value });
+          }}
+        />
+        <span> 基準頻率</span>
+        <input
+          className='width2'
+          value={this.state.Freq}
+          onChange={e => {
+            this.setState({ Freq: e.currentTarget.value });
           }}
         />
       </span>
@@ -36,7 +36,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Tuning(this.state.a, this.state.b)
+      const Print = Tuning(this.state.b, this.state.Freq)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -53,11 +53,12 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th>準法律</th>
+            <th>頻率</th>
             <th>鄰弦音分</th>
             <th>徽法律</th>
+            <th>頻率</th>
             <th>鄰弦音分</th>
-            <th>新法密率</th>
-            <th>鄰弦音分</th>
+            <th>新法密率頻率</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -76,7 +77,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>調弦法</h3>
-        <p className='note'>正弄調：1 正調，2 蕤賓調，3 慢角，4 慢宮，5 清商；側弄調：7 側商（準法律闕），8 淒涼（又名黃鐘調。準法律待定），9 无媒（準法律待定），10 閒弦（準法律待定）</p>
+        <p className='note'>正弄調：1 正調，2 蕤賓，3 清商，4 慢角，5 慢宮；側弄調：6 徽法淒涼（楚商），7 徽法側商，8 準法黃鐘，9 无媒，10 準法間弦，11 徽法間弦，12 徽法平調</p>
         {this.input()}
         <button onClick={this.handle} className='button4-1'>暈</button><span className='Deci64'>n/d</span>
         {this.result()}

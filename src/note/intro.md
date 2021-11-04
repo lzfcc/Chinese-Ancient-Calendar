@@ -857,7 +857,9 @@ a = [0, ...a]
 
 10-31 `1.06.2` 優化代碼 `guqin.mjs`
 
-11-01 `1.06.3` 增加 [] qi dayuan shang xia fenkai suo3 suo7 suo9
+11-01 `1.06.3` 增加 [] qi shang xia
+
+11-04 `1.06.4` 重寫調弦法
 
 ### Todo list
 
