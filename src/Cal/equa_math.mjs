@@ -1,3 +1,6 @@
+import { GcdLcm } from './modulo_gcdlcm.mjs'
+import { big } from './para_constant.mjs'
+
 export const isSame = (arr1, arr2) => { // 判斷元數定母是否想等 @lzfcc 时间复杂度2*O(nlog(n)) + O(n) = O(nlog(n))
     if (arr1.length !== arr2.length) {
         return false
@@ -22,18 +25,21 @@ export const Frac2FalseFrac = FracRaw => {
     const Frac = FracRaw.split(/ |\+|\//)
     let Numer = 0, NumerSub = 0, Denom = 0
     if (Frac.length === 3) {
-        Numer = +Frac[0] * +Frac[2] + +Frac[1]
-        NumerSub = +(Frac[0] - 1) * +Frac[2] + +Frac[1] // 干支數-1
-        Denom = +Frac[2]
+        // Numer = +Frac[0] * +Frac[2] + +Frac[1]
+        // NumerSub = +(Frac[0] - 1) * +Frac[2] + +Frac[1] // 干支數-1
+        // Denom = +Frac[2]
+        Denom = Frac[2]
+        Numer = big(Frac[0]).mul(Denom).add(Frac[1])
+        NumerSub = big.sub(Frac[0], 1).mul(Denom).add(Frac[1]) // 干支數-1        
     } else if (Frac.length === 2) {
-        Numer = +Frac[0]
-        Denom = +Frac[1]
+        Numer = Frac[0]
+        Denom = Frac[1]
     } else {
-        Numer = +Frac[0]
+        Numer = Frac[0]
         Denom = 1
     }
-    const Deci = Numer / Denom
-    const FalseFrac = Numer + '/' + Denom
+    const Deci = big.div(Numer, Denom).toNumber()
+    const FalseFrac = Numer.toString() + '/' + Denom.toString()
     return { Numer, NumerSub, Denom, Deci, FalseFrac }
 }
 // console.log(Frac2FalseFrac('2 3.2/2'))
@@ -41,6 +47,28 @@ export const Frac2FalseFrac = FracRaw => {
 
 // const sg = a => frc(a).toFraction(false)
 // console.log(sg('1 2.1/3')) 
+
+export const BigFrc = (a, b) => { // 大分數計算。現在只能算乘法
+    a = Frac2FalseFrac(a).FalseFrac
+    const an = big(a.split('/')[0])
+    const ad = big(a.split('/')[1])
+    const bn = big(b.split('/')[0])
+    const bd = big(b.split('/')[1])
+    let n = an.mul(bn)
+    let d = ad.mul(bd)
+    // 約分
+    const gcd = GcdLcm(n, d).gcd
+    n = n.div(gcd)
+    d = d.div(gcd)
+    const Deci = n.div(d).toNumber()
+    // 眞分數
+    const int = n.div(d).floor()
+    n = n.sub(d.mul(int)).toString()
+    const Frac = int.toString() + ' ' + n + '/' + d.toString()
+    return { Frac, Deci }
+}
+// console.log(BigFrc('5/4', '3/2'))
+// console.log(BigFrc('1 14002745558097800342739/360287997426667018963968', '3/2'))
 
 const Deci2Int_1 = function () { // 輸入字符串
     const Raw = arguments[0].split(/;|,|，|。|；|｜| /)

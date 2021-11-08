@@ -5,8 +5,8 @@ import Para from './para_calendars.mjs'
 
 big.config({
     precision: 64,
-    toExpNeg: -17,
-    toExpPos: 17,
+    toExpNeg: -60,
+    toExpPos: 60,
     rounding: 4
 })
 export { big, frc, nzh }

@@ -18,6 +18,7 @@ export const GcdLcm = (a, b) => {
     return { gcd, lcm }
 }
 // console.log(GcdLcm(62244,7521150))
+
 export const GcdLcmGroup = Input => {
     let lcm = big(Input[0])
     let gcd = big(Input[0])

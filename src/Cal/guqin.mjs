@@ -1,5 +1,5 @@
 import { big, frc } from './para_constant.mjs'
-import { Frac2FalseFrac } from './equa_math.mjs'
+import { Frac2FalseFrac, BigFrc } from './equa_math.mjs'
 
 export const OctaveCent = (a, b) => { // 兩個要比較的頻率
     a = Frac2FalseFrac(a).Deci
@@ -45,7 +45,7 @@ const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
     const Leng = frc(FretList[Fret]).add(Frac.mul(frc(FretList[Fret + 1]).sub(FretList[Fret])))
     return Leng.toFraction()
 }
-// console.log(Fret2Leng('0'))
+// console.log(Fret2Leng('16'))
 
 export const Leng2Fret = x => { // 弦長轉徽位
     x = frc(x)
@@ -62,14 +62,12 @@ export const Leng2Fret = x => { // 弦長轉徽位
 // console.log(Leng2Fret('11/20'))
 
 export const Pythagorean = x => {
-    const upA = [], upB = [], downA = [], downB = [], Octave1 = [], Cent1 = [], Octave2 = [], Cent2 = []
+    const upA = [], upB = [], downA = [], downB = [], Cent1 = [], Cent2 = []
     upA[0] = x
     upB[0] = x
     downA[0] = x
     downB[0] = x
-    Octave1[0] = 0
     Cent1[0] = 0
-    Octave2[0] = 0
     Cent2[0] = 0
     for (let i = 1; i <= 12; i++) {
         upA[i] = frc(upA[i - 1]).mul('3/2')
@@ -77,14 +75,8 @@ export const Pythagorean = x => {
             upA[i] = upA[i].div(2)
         }
         const tmp = Number(upA[i])
-        if (x === '1') {
-            upA[i] = upA[i].toFraction()
-        } else {
-            upA[i] = upA[i].toFraction(true)
-        }
-        const Func = OctaveCent(tmp, x)
-        Octave1[i] = Func.Octave.toFixed(10)
-        Cent1[i] = Func.Cent.toFixed(8)
+        upA[i] = upA[i].toFraction(true)
+        Cent1[i] = OctaveCent(tmp, x).Cent.toFixed(8)
     }
     for (let i = 1; i <= 12; i++) {
         upB[i] = frc(upB[i - 1]).mul('3/4')
@@ -106,14 +98,8 @@ export const Pythagorean = x => {
             downB[i] = downB[i].div(2)
         }
         const tmp = Number(downB[i])
-        if (x === '1') {
-            downB[i] = downB[i].toFraction()
-        } else {
-            downB[i] = downB[i].toFraction(true)
-        }
-        const Func = OctaveCent(tmp, x)
-        Octave2[i] = Func.Octave.toFixed(10)
-        Cent2[i] = Func.Cent.toFixed(8)
+        downB[i] = downB[i].toFraction(true)
+        Cent2[i] = OctaveCent(tmp, x).Cent.toFixed(8)
     }
     const Print1 = [{
         title: '向上A',
@@ -121,9 +107,6 @@ export const Pythagorean = x => {
     }, {
         title: '向上B',
         data: upB
-    }, {
-        title: '八度値',
-        data: Octave1
     }, {
         title: '音分',
         data: Cent1
@@ -135,21 +118,41 @@ export const Pythagorean = x => {
         title: '向下B',
         data: downB
     }, {
-        title: '八度値',
-        data: Octave2
-    }, {
         title: '音分',
         data: Cent2
     }]
     return { Print1, Print2 }
 }
-// console.log(Pythagorean(100))
 
-export const Pure = x => {
+export const Pythagorean60 = x => {
+    const upA = [], Cent1 = []
+    upA[0] = x
+    Cent1[0] = 0
+    for (let i = 1; i < 60; i++) {
+        const Func1 = BigFrc(upA[i - 1], '3/2')
+        upA[i] = Func1.Frac
+        let Deci = Func1.Deci
+        while (Deci >= Number(frc(x).mul(2))) {
+            const Func2 = BigFrc(upA[i], '1/2')
+            upA[i] = Func2.Frac
+            Deci = Func2.Deci
+        }
+        Cent1[i] = OctaveCent(Deci, x).Cent.toFixed(8)
+    }
+    const Print1 = [{
+        title: '向上',
+        data: upA
+    }, {
+        title: '音分',
+        data: Cent1
+    }]
+    return Print1
+}
+// console.log(Pythagorean60(81))
+export const Justoni = x => {
     x = x.toString()
-    const List1 = [], List2 = [], List3 = [], Octave1 = [], Cent1 = [], Octave2 = [], Cent2 = [], Octave3 = [], Cent3 = []
+    const List1 = [], List2 = [], List3 = [], Cent1 = [], Cent2 = [], Cent3 = []
     List1[0] = x
-    Octave1[0] = ''
     Cent1[0] = ''
     for (let i = 1; i <= 3; i++) {
         List1[i] = frc(List1[i - 1]).mul('3/2')
@@ -161,9 +164,7 @@ export const Pure = x => {
         } else {
             List1[i] = List1[i].toFraction(true)
         }
-        const Func = OctaveCent(Number(List1[i]), x)
-        Octave1[i] = Func.Octave.toFixed(10)
-        Cent1[i] = Func.Cent.toFixed(8)
+        Cent1[i] = OctaveCent(Number(List1[i]), x).Cent.toFixed(8)
     }
     for (let i = 0; i <= 3; i++) {
         List2[i] = frc(List1[i]).mul('5/4')
@@ -175,9 +176,7 @@ export const Pure = x => {
         } else {
             List2[i] = List2[i].toFraction(true)
         }
-        const Func = OctaveCent(Number(List2[i]), x)
-        Octave2[i] = Func.Octave.toFixed(10)
-        Cent2[i] = Func.Cent.toFixed(8)
+        Cent2[i] = OctaveCent(Number(List2[i]), x).Cent.toFixed(8)
     }
     for (let i = 0; i <= 3; i++) {
         List3[i] = frc(List1[i]).mul('6/5')
@@ -189,40 +188,34 @@ export const Pure = x => {
         } else {
             List3[i] = List3[i].toFraction(true)
         }
-        const Func = OctaveCent(Number(List3[i]), x)
-        Octave3[i] = Func.Octave.toFixed(10)
-        Cent3[i] = Func.Cent.toFixed(8)
+        Cent3[i] = OctaveCent(Number(List3[i]), x).Cent.toFixed(8)
     }
     const Print = [{
         title: '頻率',
         data: [...List1, ...List2, ...List3]
-    }, {
-        title: '八度値',
-        data: [...Octave1, ...Octave2, ...Octave3]
     }, {
         title: '音分',
         data: [...Cent1, ...Cent2, ...Cent3]
     }]
     return Print
 }
-// console.log(Pure(1))
+// console.log(Justoni(1))
 
 /**
  * 十二平均律。新法密率
  * @param CFreq c的頻率
  * @returns 
  */
-export const Equal12 = CFreq => {
+export const EqualTemp = CFreq => {
     CFreq = CFreq.toString()
     let a = CFreq
     if (CFreq.includes('/')) {
         a = CFreq.split('/')
         a = big.div(a[0], a[1])
     }
-    const List = [], List1 = [], Octave = [], Cent = []
+    const List = [], List1 = [], Cent = []
     List[0] = CFreq
     List1[0] = CFreq
-    Octave[0] = 0
     Cent[0] = 0
     for (let i = 1; i <= 12; i++) {
         List[i] = big(a).mul(big(2).pow(big.div(i, 12)))
@@ -231,23 +224,18 @@ export const Equal12 = CFreq => {
         } else {
             List1[i] = List[i].toFixed(24)
         }
-        const Func = OctaveCent(List1[i], a)
-        Octave[i] = +Func.Octave.toFixed(12)
-        Cent[i] = +Func.Cent.toFixed(12)
+        Cent[i] = +OctaveCent(List1[i], a).Cent.toFixed(12)
     }
     const Print = [{
         title: '頻率',
         data: List1
-    }, {
-        title: '八度値',
-        data: Octave
     }, {
         title: '音分',
         data: Cent
     }]
     return { Print, List1 }
 }
-// console.log(Equal12('1').Print)
+// console.log(EqualTemp('1').Print)
 // console.log(big(2).pow(big.div(1, 12)).toString())
 // 1.059463094359295264561825294946341700779204317494185628559208431
 // 1.059463094359295264561825 // 朱載堉25位大算盤
@@ -283,7 +271,7 @@ const Tuning1 = Freq => { // 正調
     const Two2 = TuningSub1(Seven2, 7, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 5, '1', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[8] / 2
@@ -319,7 +307,7 @@ const Tuning2 = Freq => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     const Two2 = TuningSub1(Five2, 6, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 3, '4/5', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[8] / 2
@@ -355,7 +343,7 @@ const Tuning3 = Freq => {  // 清商調緊二五七 6 1 2 3 5 6 7
     const Seven2 = TuningSub1(Four2, 5, 7)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 3, '4/5', Freq)
 
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[6] / 2
     const Three3 = +List12[8] / 2
@@ -392,7 +380,7 @@ const Tuning4 = Freq => {  // 慢角調慢三 1 2 3 5 6 1 2
     const Six2 = TuningSub1(One2, 4, 7)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 5, '1', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[7] / 2
@@ -428,7 +416,7 @@ const Tuning5 = Freq => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     const Five2 = TuningSub1(Seven2, 5, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 5, '1', Freq)
 
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[2] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[7] / 2
@@ -456,7 +444,7 @@ const Tuning6 = Freq => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
     const One2 = TuningSub1(Three2, 5, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 3, '4/5', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[6] / 2
     const Three3 = +List12[8] / 2
@@ -482,7 +470,7 @@ const Tuning7 = Freq => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 
     const One2 = TuningSub1(Five2, 5, 3)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 5, '1', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[7] / 2
@@ -508,7 +496,7 @@ const Tuning8 = Freq => {  // 準法律黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4
     const Two1 = TuningSub1(Seven1, 7, 4)
     const FreqList1 = TuningSub2([One1, Two1, Three1, Four1, Five1, Six1, Seven1], 3, '64/81', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[1] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[8] / 2
@@ -544,7 +532,7 @@ const Tuning9 = Freq => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
     Three2 = TuningSub1(Five2, 5, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 5, '1', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[7] / 2
@@ -572,7 +560,7 @@ const Tuning10 = Freq => {  // 準法間弦調慢一三 7 2 3 5 6 1 2 或 3 5 6 
     const One1 = TuningSub1(Three1, 5, 4)
     const FreqList1 = TuningSub2([One1, Two1, Three1, Four1, Five1, Six1, Seven1], 4, '8/9', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[2] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[7] / 2
@@ -599,7 +587,7 @@ const Tuning11 = Freq => {  // 徽法律間弦調緊五慢三 1 2 3 5 #6 1 2 或
     Three2 = TuningSub1(One2, 3, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 2, '2/3', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[5] / 2
     const Three3 = +List12[7] / 2
@@ -625,7 +613,7 @@ const Tuning12 = Freq => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 
     const Two2 = TuningSub1(Seven2, 7, 4)
     const FreqList2 = TuningSub2([One2, Two2, Three2, Four2, Five2, Six2, Seven2], 3, '4/5', Freq)
     // 新法密率
-    const List12 = Equal12(Freq).List1
+    const List12 = EqualTemp(Freq).List1
     const One3 = +List12[3] / 2
     const Two3 = +List12[4] / 2
     const Three3 = +List12[8] / 2
@@ -639,6 +627,33 @@ const Tuning12 = Freq => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 
         OneFreq2: FreqList2[0], TwoFreq2: FreqList2[1], ThreeFreq2: FreqList2[2], FourFreq2: FreqList2[3], FiveFreq2: FreqList2[4], SixFreq2: FreqList2[5], SevenFreq2: FreqList2[6]
     }
 }
+
+const Tuning20 = Freq => { // 上古調弦法同後世慢角調。丁承運《琴調溯源——論古琴正調調弦法》
+    const One1 = '1'
+    // 準法律
+    const Four1 = TuningSub1(One1, 9, 16)
+    const Two1 = TuningSub1(Four1, 16, 10)
+    const Five1 = TuningSub1(Two1, 9, 16)
+    const Three1 = TuningSub1(Five1, 16, 10)
+    const Six1 = TuningSub1(Four1, 10, 16)
+    const Seven1 = TuningSub1(Five1, 10, 16)
+    const FreqList1 = TuningSub2([One1, Two1, Three1, Four1, Five1, Six1, Seven1], 5, '1', Freq)
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1
+    const One3 = +List12[3] / 2
+    const Two3 = +List12[5] / 2
+    const Three3 = +List12[7] / 2
+    const Four3 = +List12[10] / 2
+    const Five3 = +List12[12] / 2
+    const Six3 = +List12[3]
+    const Seven3 = +List12[5]
+    return {
+        One1, Two1, Three1, Four1, Five1, Six1, Seven1,
+        One3, Two3, Three3, Four3, Five3, Six3, Seven3,
+        OneFreq1: FreqList1[0], TwoFreq1: FreqList1[1], ThreeFreq1: FreqList1[2], FourFreq1: FreqList1[3], FiveFreq1: FreqList1[4], SixFreq1: FreqList1[5], SevenFreq1: FreqList1[6]
+    }
+}
+// console.log(Tuning20(432))
 
 export const Tuning = (TuningMode, Freq) => { // 輸入五弦頻率 // fraction的小數精度就是普通的16位，沒法保留高精度
     const { One1, Two1, Three1, Four1, Five1, Six1, Seven1, One2, Two2, Three2, Four2, Five2, Six2, Seven2, One3, Two3, Three3, Four3, Five3, Six3, Seven3, OneFreq1, TwoFreq1, ThreeFreq1, FourFreq1, FiveFreq1, SixFreq1, SevenFreq1, OneFreq2, TwoFreq2, ThreeFreq2, FourFreq2, FiveFreq2, SixFreq2, SevenFreq2 } = eval('Tuning' + TuningMode)(Freq)

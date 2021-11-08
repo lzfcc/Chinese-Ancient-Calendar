@@ -5,11 +5,12 @@ import gfm from 'remark-gfm'
 import md1 from '../note/guqin.md'
 import Cent from './Cent'
 import Frequency from './Frequency'
-import Pure from './Pure'
+import Justoni from './Justoni'
 import Pythagorean from './Pythagorean'
+import Pythagorean60 from './Pythagorean60'
 import Fret2Leng from './Fret2Leng'
 import Leng2Fret from './Leng2Fret'
-import Equal12 from './Equal12'
+import EqualTemp from './EqualTemp'
 import Tuning from './Tuning'
 import Position2Pitch from './Position2Pitch'
 
@@ -36,8 +37,9 @@ export default class Astronomy extends React.Component {
           <Frequency />
           <h2>生律之什</h2>
           <Pythagorean />
-          <Pure />
-          <Equal12 />
+          <Pythagorean60 />
+          <Justoni />
+          <EqualTemp />
           <h2>調弦之什</h2>
           <Fret2Leng />
           <br />

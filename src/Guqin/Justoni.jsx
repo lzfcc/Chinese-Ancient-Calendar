@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pure } from '../Cal/guqin'
+import { Justoni } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Pure(this.state.a)
+      const Print = Justoni(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

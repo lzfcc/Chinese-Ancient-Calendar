@@ -1,5 +1,5 @@
 import React from 'react'
-import { Equal12 } from '../Cal/guqin'
+import { EqualTemp } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print } = Equal12(this.state.a)
+      const { Print } = EqualTemp(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
