@@ -164,7 +164,7 @@ export const Justoni = x => {
         } else {
             List1[i] = List1[i].toFraction(true)
         }
-        Cent1[i] = OctaveCent(Number(List1[i]), x).Cent.toFixed(8)
+        Cent1[i] = OctaveCent(Number(frc(List1[i])), x).Cent.toFixed(8)
     }
     for (let i = 0; i <= 3; i++) {
         List2[i] = frc(List1[i]).mul('5/4')
@@ -176,7 +176,7 @@ export const Justoni = x => {
         } else {
             List2[i] = List2[i].toFraction(true)
         }
-        Cent2[i] = OctaveCent(Number(List2[i]), x).Cent.toFixed(8)
+        Cent2[i] = OctaveCent(Number(frc(List2[i])), x).Cent.toFixed(8)
     }
     for (let i = 0; i <= 3; i++) {
         List3[i] = frc(List1[i]).mul('6/5')
@@ -188,7 +188,7 @@ export const Justoni = x => {
         } else {
             List3[i] = List3[i].toFraction(true)
         }
-        Cent3[i] = OctaveCent(Number(List3[i]), x).Cent.toFixed(8)
+        Cent3[i] = OctaveCent(Number(frc(List3[i])), x).Cent.toFixed(8)
     }
     const Print = [{
         title: '頻率',

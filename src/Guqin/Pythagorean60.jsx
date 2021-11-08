@@ -39,7 +39,6 @@ export default class Converter extends React.Component {
     }
     return (
       <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
-        <h3>向上</h3>
         {/* 京房六十律及其算出之法 www.360doc.com/document/13/0210/22/11311924_265092390.shtml */}
         <table>
           <tr>
@@ -123,7 +122,7 @@ export default class Converter extends React.Component {
       <div>
         <h3>京房六十律</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>京房</button><span className='Deci64'>n/d</span>
+        <button onClick={this.handle} className='button4-3'>京房</button><span className='Deci64'>n/d</span><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     )
