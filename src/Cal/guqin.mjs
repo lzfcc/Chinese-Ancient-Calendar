@@ -2,7 +2,7 @@ import { big, frc } from './para_constant.mjs'
 import { Frac2FalseFrac, BigFrc } from './equa_math.mjs'
 
 const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
-    0: [0, 'C', '1', '1/1'],
+    0: [0, 'C', '1', '1'],
     70.67: [2, '#<span class="dnline2">C</span>', '#<span class="dnline2">1</span>', '25/24'], // 小半音
     90.22: [1, 'bD', 'b2', '256/243'],
     92.18: [2, '#<span class="dnline1">C</span>', '#<span class="dnline1">1</span>', '135/128'],
@@ -49,7 +49,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     1107.82: [2, '·b<span class="upline1">C</span>', '·b<span class="upline1">1</span>', '256/135'],
     1109.78: [1, 'B', '7', '243/128'],
     1129.33: [2, '·b<span class="upline2">C</span>', '·b<span class="upline2">1</span>', '48/25'],
-    1200: [0, 'C', '1', '2/1']
+    1200: [0, 'C', '1', '2']
 }
 
 const Freq2Name = a => { // 輸入頻率比，輸出對應的唱名
@@ -706,7 +706,7 @@ const Tuning11 = (Freq = 432) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 
     const Hui7 = TuningSub1(Hui5, 4, 5)
     const Hui2 = TuningSub1(Hui7, 7, 4)
     const Hui3 = TuningSub1(Hui4, 6, 5)
-    const Hui1 = TuningSub1(Hui2, 6, 5)
+    const Hui1 = TuningSub1(Hui3, 5, 4) // 這樣是低了兩個音差
     const FreqList2 = TuningSub2([Hui1, Hui2, Hui3, Hui4, Hui5, Hui6, Hui7], 4, '9/10', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
@@ -730,22 +730,22 @@ const Tuning12 = (Freq = 432) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #6
     const Hui1 = '1'
     // 徽法律
     // 陳應時法
-    // let Hui3 = TuningSub1(Hui1, 4, 5)
-    // const Hui5 = TuningSub1(Hui3, 4, 5)
-    // const Hui7 = TuningSub1(Hui5, 3, 4)
-    // const Hui4 = TuningSub1(Hui1, 5, 7)
-    // const Hui6 = TuningSub1(Hui3, 5, 7)
-    // const Hui2 = TuningSub1(Hui7, 7, 4)
-    // Hui3 = TuningSub1(Hui1, 3, 4)
-    // const FreqList2 = TuningSub2([Hui1, Hui2, Hui3, Hui4, Hui5, Hui6, Hui7], 2, '2/3', Freq)
-    // 我
-    const Hui3 = TuningSub1(Hui1, 6, 7)
+    let Hui3 = TuningSub1(Hui1, 4, 5)
+    const Hui5 = TuningSub1(Hui3, 4, 5)
+    const Hui7 = TuningSub1(Hui5, 3, 4)
     const Hui4 = TuningSub1(Hui1, 5, 7)
-    const Hui5 = TuningSub1(Hui4, 5, 6)
-    const Hui7 = TuningSub1(Hui5, 6, 7)
+    const Hui6 = TuningSub1(Hui3, 5, 7)
     const Hui2 = TuningSub1(Hui7, 7, 4)
-    const Hui6 = TuningSub1(Hui1, 4, 7)
+    Hui3 = TuningSub1(Hui1, 3, 4)
     const FreqList2 = TuningSub2([Hui1, Hui2, Hui3, Hui4, Hui5, Hui6, Hui7], 2, '2/3', Freq)
+    // 我
+    // const Hui3 = TuningSub1(Hui1, 6, 7)
+    // const Hui4 = TuningSub1(Hui1, 5, 7)
+    // const Hui5 = TuningSub1(Hui4, 5, 6)
+    // const Hui7 = TuningSub1(Hui5, 6, 7)
+    // const Hui2 = TuningSub1(Hui7, 7, 4)
+    // const Hui6 = TuningSub1(Hui1, 4, 7)
+    // const FreqList2 = TuningSub2([Hui1, Hui2, Hui3, Hui4, Hui5, Hui6, Hui7], 2, '2/3', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     const Xin1 = +List12[3] / 2
