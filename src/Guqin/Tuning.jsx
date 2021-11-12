@@ -6,7 +6,8 @@ export default class Converter extends React.Component {
     super(props)
     this.state = {
       b: '1',
-      Freq: '432'
+      Freq: '432',
+      n: '0'
     }
     this.handle = this.handle.bind(this)
   }
@@ -30,13 +31,21 @@ export default class Converter extends React.Component {
             this.setState({ Freq: e.currentTarget.value });
           }}
         />
+        <span> 宮弦</span>
+        <input
+          className='width1'
+          value={this.state.n}
+          onChange={e => {
+            this.setState({ n: e.currentTarget.value });
+          }}
+        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = Tuning(this.state.b, this.state.Freq)
+      const Print = Tuning(this.state.b, this.state.Freq, this.state.n)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
