@@ -54,9 +54,10 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
 
 const Freq2Name = a => { // 輸入頻率比，輸出對應的唱名
     a = frc(a)
-    if (Number(a) < 1) {
+    while (Number(a) < 1) {
         a = a.mul(2)
-    } else if (Number(a) > 2) {
+    }
+    while (Number(a) > 2) {
         a = a.div(2)
     }
     a = a.toFraction(false)
@@ -309,7 +310,7 @@ export const EqualTemp = CFreq => {
 
 const TuningSub1 = (KnownFreq, KnownFret, UnknownFret) => frc(KnownFreq).div(Fret2Leng(KnownFret)).mul(Fret2Leng(UnknownFret)).toFraction(false) // 已知弦頻率比（不是實際頻率），已知弦徽位，所求弦徽位。這個沒分是泛音還是按音，所以如果是泛音調弦，一定要七徽以上。散音是14
 
-const AllTuningMethod = () => { // 所有泛音調弦可能。沒寫對，還是手算的。
+const AllTuningMethod = () => { // 所有泛音調弦可能。沒寫對，最後還是手算的。
     let leng = []
     for (let i = 3; i <= 7; i++) {
         let tmp = frc(Fret2Leng(i))
@@ -325,7 +326,17 @@ const AllTuningMethod = () => { // 所有泛音調弦可能。沒寫對，還是
 }
 // console.log(AllTuningMethod())
 
-const TuningSub2 = (PortionList, Unmoved, Unmoved2Five, Freq) => { // 各弦頻率比，那根弦沒動作為基準，這根弦到五弦正調的比例，五弦基準頻率
+const TuningSub2 = (List, a, n) => { // 把默認的宮弦換成自定義的宮弦
+    if (a !== n && n !== 0) {
+        const p = frc(1).div(List[n])
+        for (let i = 1; i <= 7; i++) {
+            List[i] = frc(List[i]).mul(p).toFraction(false)
+        }
+    }
+    return List
+}
+
+const TuningSub3 = (PortionList, Unmoved, Unmoved2Five, Freq) => { // 各弦頻率比，那根弦沒動作為基準，這根弦到五弦正調的比例，五弦基準頻率
     Freq = frc(Unmoved2Five).mul(Freq)
     const FreqList = []
     for (let i = 1; i <= 7; i++) {
@@ -335,7 +346,7 @@ const TuningSub2 = (PortionList, Unmoved, Unmoved2Five, Freq) => { // 各弦頻�
 }
 
 const Tuning1 = (Freq, n = 3) => { // 正調. 五弦基準頻率，默認宮弦，自定宮弦
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 3
     Zhun[a] = '1'
     Hui[a] = '1'
@@ -353,18 +364,10 @@ const Tuning1 = (Freq, n = 3) => { // 正調. 五弦基準頻率，默認宮弦�
     Hui[5] = TuningSub1(Hui[3], 6, 7)
     Hui[7] = TuningSub1(Hui[5], 4, 5)
     Hui[2] = TuningSub1(Hui[7], 7, 4)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 5, '1', Freq)
-    const HuiFreq = TuningSub2(Hui, 5, '1', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -379,10 +382,10 @@ const Tuning1 = (Freq, n = 3) => { // 正調. 五弦基準頻率，默認宮弦�
 // console.log(Tuning1(432, 1).Zhun)
 
 const Tuning2 = (Freq, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 5
-    Zhun[5] = '1'
-    Hui[5] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[3] = TuningSub1(Zhun[5], 5, 4)
     Zhun[6] = TuningSub1(Zhun[3], 5, 7)
@@ -397,18 +400,10 @@ const Tuning2 = (Freq, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     Hui[4] = TuningSub1(Hui[5], 6, 5)
     Hui[7] = TuningSub1(Hui[5], 6, 7)
     Hui[2] = TuningSub1(Hui[5], 6, 4)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 3, '64/81', Freq)
-    const HuiFreq = TuningSub2(Hui, 3, '4/5', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 3, '64/81', Freq)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -422,10 +417,10 @@ const Tuning2 = (Freq, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
 }
 
 const Tuning3 = (Freq, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 2
-    Zhun[2] = '1'
-    Hui[2] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[5] = TuningSub1(Zhun[2], 5, 7)
     Zhun[3] = TuningSub1(Zhun[5], 5, 4)
@@ -440,18 +435,10 @@ const Tuning3 = (Freq, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     Hui[6] = TuningSub1(Hui[4], 4, 5)
     Hui[1] = TuningSub1(Hui[6], 7, 4)
     Hui[7] = TuningSub1(Hui[4], 5, 7)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 3, '64/81', Freq)
-    const HuiFreq = TuningSub2(Hui, 3, '4/5', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 3, '64/81', Freq)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
     Xin[2] = +List12[6] / 2
@@ -464,10 +451,10 @@ const Tuning3 = (Freq, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
 }
 
 const Tuning4 = (Freq, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 1
-    Zhun[1] = '1'
-    Hui[1] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[4] = TuningSub1(Zhun[1], 5, 7)
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
@@ -482,19 +469,11 @@ const Tuning4 = (Freq, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     Hui[3] = TuningSub1(Hui[1], 6, 7)
     Hui[5] = TuningSub1(Hui[3], 4, 5)
     Hui[6] = TuningSub1(Hui[1], 4, 7)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    // const ZhunFreq = TuningSub2(Zhun, 2, '2/3', Freq)
-    const ZhunFreq = TuningSub2(Zhun, 5, '1', Freq)
-    const HuiFreq = TuningSub2(Hui, 5, '1', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -508,10 +487,10 @@ const Tuning4 = (Freq, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
 }
 
 const Tuning5 = (Freq, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 4
-    Zhun[4] = '1'
-    Hui[4] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
     Zhun[2] = TuningSub1(Zhun[7], 7, 4)
@@ -526,18 +505,10 @@ const Tuning5 = (Freq, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     Hui[2] = TuningSub1(Hui[4], 5, 4)
     Hui[7] = TuningSub1(Hui[4], 5, 7)
     Hui[5] = TuningSub1(Hui[7], 5, 4)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 5, '1', Freq)
-    const HuiFreq = TuningSub2(Hui, 5, '1', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
 
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[2] / 2
@@ -551,9 +522,9 @@ const Tuning5 = (Freq, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
 }
 
 const Tuning6 = (Freq, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
-    const Hui = [], Xin = []
+    let Hui = [], Xin = []
     const a = 3
-    Hui[3] = '1'
+    Hui[a] = '1'
     // 徽法律
     Hui[6] = TuningSub1(Hui[3], 5, 7)
     Hui[4] = TuningSub1(Hui[6], 5, 4)
@@ -561,13 +532,8 @@ const Tuning6 = (Freq, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 
     Hui[5] = TuningSub1(Hui[3], 4, 5)
     Hui[2] = TuningSub1(Hui[6], 5, 3)
     Hui[1] = TuningSub1(Hui[3], 5, 4)
-    if (a !== n && n !== 0) {
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const HuiFreq = TuningSub2(Hui, 3, '4/5', Freq)
+    Hui = TuningSub2(Hui, a, n)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -581,10 +547,10 @@ const Tuning6 = (Freq, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 
 }
 
 const Tuning7 = (Freq, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 1
-    Zhun[1] = '1'
-    Hui[1] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[5] = TuningSub1(Zhun[1], 4, 7)
     Zhun[3] = TuningSub1(Zhun[5], 5, 4)
@@ -599,18 +565,10 @@ const Tuning7 = (Freq, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4
     Hui[5] = TuningSub1(Hui[1], 4, 7)
     Hui[7] = TuningSub1(Hui[2], 4, 7)
     Hui[6] = TuningSub1(Hui[4], 4, 5)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 3, '64/81', Freq)
-    const HuiFreq = TuningSub2(Hui, 3, '4/5', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 3, '64/81', Freq)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[1] / 2
@@ -624,10 +582,10 @@ const Tuning7 = (Freq, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4
 }
 
 const Tuning8 = (Freq, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 1
-    Zhun[1] = '1'
-    Hui[1] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[4] = TuningSub1(Zhun[1], 5, 7)
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
@@ -651,19 +609,11 @@ const Tuning8 = (Freq, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 
     Hui[5] = TuningSub1(Hui[1], 3, 5)
     Hui[2] = TuningSub1(Hui[5], 7, 5)
     Hui[7] = TuningSub1(Hui[2], 4, 7)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    // const ZhunFreq = TuningSub2(Zhun, 2, '2/3', Freq)
-    const ZhunFreq = TuningSub2(Zhun, 5, '1', Freq)
-    const HuiFreq = TuningSub2(Hui, 5, '1', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -677,10 +627,10 @@ const Tuning8 = (Freq, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 
 }
 
 const Tuning9 = (Freq, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 4
-    Zhun[4] = '1'
-    Hui[4] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 準法律
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
     Zhun[2] = TuningSub1(Zhun[4], 5, 4)
@@ -695,18 +645,10 @@ const Tuning9 = (Freq, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 
     Hui[2] = TuningSub1(Hui[7], 7, 4)
     Hui[3] = TuningSub1(Hui[4], 6, 5)
     Hui[1] = TuningSub1(Hui[3], 5, 4) // 這樣是低了兩個音差
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 4, '8/9', Freq)
-    const HuiFreq = TuningSub2(Hui, 4, '9/10', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 4, '8/9', Freq)
+    const HuiFreq = TuningSub3(Hui, 4, '9/10', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[2] / 2
@@ -720,9 +662,9 @@ const Tuning9 = (Freq, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 
 }
 
 const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
-    const Hui = [], Xin = []
+    let Hui = [], Xin = []
     const a = 1
-    Hui[1] = '1'
+    Hui[a] = '1'
     // 徽法律
     // 陳應時法
     Hui[3] = TuningSub1(Hui[1], 4, 5)
@@ -732,13 +674,8 @@ const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #
     Hui[6] = TuningSub1(Hui[3], 5, 7)
     Hui[2] = TuningSub1(Hui[7], 7, 4)
     Hui[3] = TuningSub1(Hui[1], 3, 4)
-    if (a !== n && n !== 0) {
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const HuiFreq = TuningSub2(Hui, 2, '2/3', Freq)
+    Hui = TuningSub2(Hui, a, n)
+    const HuiFreq = TuningSub3(Hui, 2, '2/3', Freq)
     // 我
     // Hui[3] = TuningSub1(Hui[1], 6, 7)
     // Hui[4] = TuningSub1(Hui[1], 5, 7)
@@ -746,7 +683,7 @@ const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #
     // Hui[7] = TuningSub1(Hui[5], 6, 7)
     // Hui[2] = TuningSub1(Hui[7], 7, 4)
     // Hui[6] = TuningSub1(Hui[1], 4, 7)
-    // const HuiFreq = TuningSub2(Hui, 2, '2/3', Freq)
+    // const HuiFreq = TuningSub3(Hui, 2, '2/3', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -760,9 +697,9 @@ const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #
 }
 
 const Tuning11 = (Freq, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
-    const Hui = [], Xin = []
+    let Hui = [], Xin = []
     const a = 3
-    Hui[3] = '1'
+    Hui[a] = '1'
     // 徽法律
     Hui[5] = TuningSub1(Hui[3], 5, 6)
     Hui[7] = TuningSub1(Hui[3], 4, 6)
@@ -770,13 +707,8 @@ const Tuning11 = (Freq, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6
     Hui[4] = TuningSub1(Hui[1], 5, 7)
     Hui[6] = TuningSub1(Hui[3], 5, 7)
     Hui[2] = TuningSub1(Hui[7], 7, 4)
-    if (a !== n && n !== 0) {
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const HuiFreq = TuningSub2(Hui, 3, '4/5', Freq)
+    Hui = TuningSub2(Hui, a, n)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -790,9 +722,9 @@ const Tuning11 = (Freq, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6
 }
 
 const Tuning12 = (Freq, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
-    const Hui = [], Xin = []
+    let Hui = [], Xin = []
     const a = 2
-    Hui[2] = '1'
+    Hui[a] = '1'
     // 徽法律
     Hui[4] = TuningSub1(Hui[2], 6, 7)
     Hui[6] = TuningSub1(Hui[4], 4, 5)
@@ -800,13 +732,8 @@ const Tuning12 = (Freq, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 
     Hui[7] = TuningSub1(Hui[2], 4, 7)
     Hui[3] = TuningSub1(Hui[5], 5, 4)
     Hui[1] = TuningSub1(Hui[5], 5, 3)
-    if (a !== n && n !== 0) {
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const HuiFreq = TuningSub2(Hui, 5, '1', Freq)
+    Hui = TuningSub2(Hui, a, n)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -819,15 +746,36 @@ const Tuning12 = (Freq, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 
     return { Hui, Xin, HuiFreq }
 }
 
-// const sdfs=()=>{
-//     return frc('729/1024').mul('32/27').toFraction()
-// }
-// console.log(sdfs())
+const Tuning13 = (Freq, n = 7) => {  // 徽法律側羽調緊七
+    let Hui = [], Xin = []
+    const a = 7
+    Hui[a] = '1'
+    // 徽法律
+    Hui[6] = TuningSub1(Hui[7], 6, 5)
+    Hui[5] = TuningSub1(Hui[6], 6, 5)
+    Hui[4] = TuningSub1(Hui[6], 5, 4)
+    Hui[3] = TuningSub1(Hui[6], 7, 5)
+    Hui[2] = TuningSub1(Hui[3], 6, 5)
+    Hui[1] = TuningSub1(Hui[6], 7, 4)
+    Hui = TuningSub2(Hui, a, n)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1
+    Xin[1] = +List12[3] / 2
+    Xin[2] = +List12[5] / 2
+    Xin[3] = +List12[7] / 2
+    Xin[4] = +List12[9] / 2
+    Xin[5] = +List12[12] / 2
+    Xin[6] = +List12[2]
+    Xin[7] = +List12[5]
+    return { Hui, Xin, HuiFreq }
+}
+
 const Tuning14 = (Freq, n = 3) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
-    const Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Xin = []
     const a = 3
-    Zhun[3] = '1'
-    Hui[3] = '1'
+    Zhun[a] = '1'
+    Hui[a] = '1'
     // 按音調弦
     Zhun[6] = TuningSub1(Zhun[3], 5, 7)
     Zhun[1] = TuningSub1(Zhun[3], 5, 4)
@@ -842,18 +790,10 @@ const Tuning14 = (Freq, n = 3) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 
     Hui[7] = TuningSub1(Hui[3], 3, 5)
     Hui[4] = TuningSub1(Hui[7], 7, 5)
     Hui[5] = TuningSub1(Hui[6], 4, 3)
-    if (a !== n && n !== 0) {
-        const pZhun = frc(1).div(Zhun[n])
-        for (let i = 1; i <= 7; i++) {
-            Zhun[i] = frc(Zhun[i]).mul(pZhun).toFraction(false)
-        }
-        const pHui = frc(1).div(Hui[n])
-        for (let i = 1; i <= 7; i++) {
-            Hui[i] = frc(Hui[i]).mul(pHui).toFraction(false)
-        }
-    }
-    const ZhunFreq = TuningSub2(Zhun, 3, '4/5', Freq)
-    const HuiFreq = TuningSub2(Hui, 3, '4/5', Freq)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 3, '4/5', Freq)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -864,6 +804,31 @@ const Tuning14 = (Freq, n = 3) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
+}
+
+const Tuning15 = (Freq, n = 2) => {  // 徽法律側楚調慢一二緊五七
+    let Hui = [], Xin = []
+    const a = 2
+    Hui[a] = '1'
+    // 徽法律
+    Hui[1] = TuningSub1(Hui[2], 6, 5)
+    Hui[3] = TuningSub1(Hui[2], 6, 7)
+    Hui[5] = TuningSub1(Hui[1], 4, 7)
+    Hui[7] = TuningSub1(Hui[5], 4, 5)
+    Hui[6] = TuningSub1(Hui[7], 6, 5)
+    Hui[4] = TuningSub1(Hui[5], 6, 5)
+    Hui = TuningSub2(Hui, a, n)
+    const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1
+    Xin[1] = +List12[3] / 2
+    Xin[2] = +List12[5] / 2
+    Xin[3] = +List12[7] / 2
+    Xin[4] = +List12[9] / 2
+    Xin[5] = +List12[12] / 2
+    Xin[6] = +List12[2]
+    Xin[7] = +List12[5]
+    return { Hui, Xin, HuiFreq }
 }
 
 const NumList = '〇一二三四五六七八九'
