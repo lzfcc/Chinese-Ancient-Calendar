@@ -771,7 +771,7 @@ const Tuning13 = (Freq, n = 7) => {  // 徽法律側羽調緊七
     return { Hui, Xin, HuiFreq }
 }
 
-const Tuning14 = (Freq, n = 3) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
+const Tuning14 = (Freq, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
     let Zhun = [], Hui = [], Xin = []
     const a = 3
     Zhun[a] = '1'
