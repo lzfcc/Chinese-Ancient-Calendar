@@ -49,11 +49,11 @@ export default class Converter extends React.Component {
             <th>4南呂A</th>
             <th>5姑洗E</th>
             <th>6應鐘B</th>
-            <th>7蕤賓#F</th>
-            <th>8大呂#C</th>
-            <th>9夷則#G</th>
-            <th>10夾鐘#D</th>
-            <th>11无射#A</th>
+            <th>7蕤賓♯F</th>
+            <th>8大呂♯C</th>
+            <th>9夷則♯G</th>
+            <th>10夾鐘♯D</th>
+            <th>11无射♯A</th>
             <th>12仲呂F</th>
             <th>13執始</th>
             <th>14去滅</th>

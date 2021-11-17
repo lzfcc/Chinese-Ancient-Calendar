@@ -43,16 +43,16 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th>黃鐘C</th>
-            <th>大呂#C</th>
+            <th>大呂♯C</th>
             <th>太簇D</th>
-            <th>夾鐘#D</th>
+            <th>夾鐘♯D</th>
             <th>姑洗E</th>
             <th>仲呂F</th>
-            <th>蕤賓#F</th>
+            <th>蕤賓♯F</th>
             <th>林鐘G</th>
-            <th>夷則#G</th>
+            <th>夷則♯G</th>
             <th>南呂A</th>
-            <th>无射#A</th>
+            <th>无射♯A</th>
             <th>應鐘B</th>
             <th>淸黃鐘C</th>
           </tr>
