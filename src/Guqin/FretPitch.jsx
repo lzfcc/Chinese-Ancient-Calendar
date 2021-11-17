@@ -80,6 +80,7 @@ export default class Converter extends React.Component {
             )
           })}
         </table>
+
         <h3>徽法律</h3>
         <table>
           <tr>
@@ -113,6 +114,7 @@ export default class Converter extends React.Component {
         </table>
       </div>
     )
+
   }
 
   render() {

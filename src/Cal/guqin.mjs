@@ -52,7 +52,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     1200: [0, 'C', '1', '2']
 }
 
-const Freq2Name = a => { // 輸入頻率比，輸出對應的唱名
+const Freq2Name = (a, mode) => { // 輸入頻率比，輸出對應的唱名
     a = frc(a)
     while (Number(a) < 1) {
         a = a.mul(2)
@@ -63,7 +63,23 @@ const Freq2Name = a => { // 輸入頻率比，輸出對應的唱名
     a = a.toFraction(false)
     for (const [key, value] of Object.entries(FushionList)) {
         if (value[3] === a) {
-            return value[2]
+            return value[mode]
+        }
+    }
+}
+
+const Freq2Pitch = a => { // 輸入頻率比，輸出對應的唱名
+    a = frc(a)
+    while (Number(a) < 1) {
+        a = a.mul(2)
+    }
+    while (Number(a) > 2) {
+        a = a.div(2)
+    }
+    a = a.toFraction(false)
+    for (const [key, value] of Object.entries(FushionList)) {
+        if (value[3] === a) {
+            return value[1]
         }
     }
 }
@@ -518,7 +534,11 @@ const Tuning5 = (Freq, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
+    return {
+        Zhun, Hui, Xin, ZhunFreq, HuiFreq,
+        PortionZhun: '243/256',
+        PortionHui: '15/16',
+    }
 }
 
 const Tuning6 = (Freq, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
@@ -578,7 +598,11 @@ const Tuning7 = (Freq, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
+    return {
+        Zhun, Hui, Xin, ZhunFreq, HuiFreq,
+        PortionZhun: '8/9',
+        PortionHui: '9/10',
+    }
 }
 
 const Tuning8 = (Freq, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
@@ -658,7 +682,11 @@ const Tuning9 = (Freq, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
+    return {
+        Zhun, Hui, Xin, ZhunFreq, HuiFreq,
+        PortionZhun: '243/256',
+        PortionHui: '243/256',
+    }
 }
 
 const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
@@ -828,7 +856,10 @@ const Tuning15 = (Freq, n = 2) => {  // 徽法律側楚調慢一二緊五七
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq }
+    return {
+        Hui, Xin, HuiFreq,
+        PortionHui: '9/10'
+    }
 }
 
 const NumList = '〇一二三四五六七八九'
@@ -841,7 +872,7 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
             DifZhun[i] = OctaveCent(Zhun[i + 1], Zhun[i]).Cent.toFixed(3)
         }
         for (let i = 1; i <= 7; i++) {
-            NameZhun[i] = Freq2Name(Zhun[i])
+            NameZhun[i] = Freq2Name(Zhun[i], 2)
         }
     }
     if (Hui) {
@@ -849,7 +880,7 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
             DifHui[i] = OctaveCent(Hui[i + 1], Hui[i]).Cent.toFixed(3)
         }
         for (let i = 1; i <= 7; i++) {
-            NameHui[i] = Freq2Name(Hui[i])
+            NameHui[i] = Freq2Name(Hui[i], 2)
         }
     }
     let Print = []
@@ -865,24 +896,41 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
 // console.log(Tuning(12))
 
 export const FretPitch = (TuningMode, n) => {
-    const { Zhun, Hui } = eval('Tuning' + TuningMode)(432, +n)
+    let { Zhun, Hui, PortionHui, PortionZhun } = eval('Tuning' + TuningMode)(432, +n)
+    // if (!PortionHui) {
+    //     PortionHui = 1
+    // }
+    // if (!PortionZhun) {
+    //     PortionZhun = 1
+    // }
+    const BaseHui = frc(Hui[1]).div(PortionHui || 1)
+    let BaseZhun = frc(1)
+    if (Zhun) {
+        BaseZhun = frc(Zhun[1]).div(PortionZhun || 1)
+    }
     let ZhunPrint = [], HuiPrint = []
     for (let i = 1; i <= 7; i++) {
         let ZhunPitch = [], HuiPitch = []
         for (let k = 0; k <= 15; k++) {
-            ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false)
-            const ZhunName = Freq2Name(ZhunPitch[k])
-            ZhunPitch[k] = ZhunPitch[k] + (ZhunName ? `</br>` + Freq2Name(ZhunPitch[k]) : '')
+            if (Zhun) {
+                ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false)
+                const ZhunName = Freq2Name(ZhunPitch[k], 2)
+                const ZhunNameB = Freq2Name(frc(ZhunPitch[k]).div(BaseZhun).toFraction(false), 1)
+                ZhunPitch[k] = ZhunPitch[k] + (ZhunName ? `</br>` + ZhunName + ' ' + ZhunNameB : '')
+            }
             HuiPitch[k] = frc(Hui[i]).div(Fret2Leng(k)).toFraction(false)
-            const HuiName = Freq2Name(HuiPitch[k])
-            HuiPitch[k] = HuiPitch[k] + (HuiName ? `</br>` + Freq2Name(HuiPitch[k]) : '')
+            const HuiName = Freq2Name(HuiPitch[k], 2)
+            const HuiNameB = Freq2Name(frc(HuiPitch[k]).div(BaseHui).toFraction(false), 1)
+            HuiPitch[k] = HuiPitch[k] + (HuiName ? `</br>` + HuiName + ' ' + HuiNameB : '')
         }
-        ZhunPitch = ZhunPitch.reverse()
-        ZhunPitch = [Zhun[i], ...ZhunPitch]
-        ZhunPrint = ZhunPrint.concat({
-            title: NumList[i],
-            data: ZhunPitch
-        })
+        if (Zhun) {
+            ZhunPitch = ZhunPitch.reverse()
+            ZhunPitch = [Zhun[i], ...ZhunPitch]
+            ZhunPrint = ZhunPrint.concat({
+                title: NumList[i],
+                data: ZhunPitch
+            })
+        }
         HuiPitch = HuiPitch.reverse()
         HuiPitch = [Hui[i], ...HuiPitch]
         HuiPrint = HuiPrint.concat({
