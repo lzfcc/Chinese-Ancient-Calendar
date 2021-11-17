@@ -72,17 +72,17 @@ export default class Converter extends React.Component {
             <th></th>
             <th>C</th>
             <th>F</th>
-            <th>bB</th>
-            <th>bE</th>
-            <th>bA</th>
-            <th>bD</th>
-            <th>bG</th>
-            <th>bC</th>
-            <th>bF</th>
-            <th>bbB</th>
-            <th>bbE</th>
-            <th>bbA</th>
-            <th>bbD</th>
+            <th>♭B</th>
+            <th>♭E</th>
+            <th>♭A</th>
+            <th>♭D</th>
+            <th>♭G</th>
+            <th>♭C</th>
+            <th>♭F</th>
+            <th>♭♭B</th>
+            <th>♭♭E</th>
+            <th>♭♭A</th>
+            <th>♭♭D</th>
           </tr>
           {(this.state.output2 || []).map(row => {
             return (
