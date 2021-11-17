@@ -864,6 +864,38 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
 }
 // console.log(Tuning(12))
 
+export const FretPitch = (TuningMode, n) => {
+    const { Zhun, Hui } = eval('Tuning' + TuningMode)(432, +n)
+    let ZhunPrint = [], HuiPrint = []
+    for (let i = 1; i <= 7; i++) {
+        let ZhunPitch = [], HuiPitch = []
+        for (let k = 0; k <= 15; k++) {
+            ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false)
+            const ZhunName = Freq2Name(ZhunPitch[k])
+            ZhunPitch[k] = ZhunPitch[k] + (ZhunName ? `</br>` + Freq2Name(ZhunPitch[k]) : '')
+            HuiPitch[k] = frc(Hui[i]).div(Fret2Leng(k)).toFraction(false)
+            const HuiName = Freq2Name(HuiPitch[k])
+            HuiPitch[k] = HuiPitch[k] + (HuiName ? `</br>` + Freq2Name(HuiPitch[k]) : '')
+        }
+        ZhunPitch = ZhunPitch.reverse()
+        ZhunPitch = [Zhun[i], ...ZhunPitch]
+        ZhunPrint = ZhunPrint.concat({
+            title: NumList[i],
+            data: ZhunPitch
+        })
+        HuiPitch = HuiPitch.reverse()
+        HuiPitch = [Hui[i], ...HuiPitch]
+        HuiPrint = HuiPrint.concat({
+            title: NumList[i],
+            data: HuiPitch
+        })
+    }
+    return { ZhunPrint, HuiPrint }
+}
+// console.log(FretPitch(1, 0))
+// while (Number(ZhunPitch[k]) >= 2) {
+//     ZhunPitch[k] = ZhunPitch[k].div(2)
+// }
 // const faas = z => { // 把分數處理成音分
 //     const b = []
 //     for (let i = 0; i < PythagoreanListC.length; i++) {
@@ -880,7 +912,7 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
 // }
 // console.log(fa3(3))
 // s散音，f泛音，a按音
-export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiString, GongFrq, OutputMode, isStrict) => { // ；調弦法；律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
+export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiString, GongFrq, OutputMode, isStrict) => { // ；品弦法；律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     TempMode = +TempMode
     TuningMode = +TuningMode
     OutputMode = +OutputMode
@@ -987,7 +1019,6 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
                 }
             }
         }
-
         if (OutputMode >= 3) {
             if (Pitch[i] === undefined) {
                 Pitch[i] = frc(2 ** (Cent[i] / 1200)).toFraction(false)

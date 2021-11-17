@@ -28,7 +28,7 @@ export default class Converter extends React.Component {
           }}
         />
         <br />
-        <span> 調弦法</span>
+        <span> 品弦法</span>
         <input
           className='width1'
           value={this.state.b}

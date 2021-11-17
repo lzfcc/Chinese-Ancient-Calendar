@@ -444,6 +444,18 @@ table td {
   text-align: right;
 }
 
+.rowline table td {
+  border-top: 1px solid var(--shallowgray1);
+  margin-top: 1em;
+  vertical-align: top;
+  padding-top: .5em;
+  padding-bottom: .5em;
+}
+
+.rowline table th {
+  text-align: left;
+  padding-left: .7em;
+}
 /* .table-vertical table tr {
   display: block;
   float: left;

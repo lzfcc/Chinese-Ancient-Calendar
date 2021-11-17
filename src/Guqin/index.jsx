@@ -12,6 +12,7 @@ import Fret2Leng from './Fret2Leng'
 import Leng2Fret from './Leng2Fret'
 import EqualTemp from './EqualTemp'
 import Tuning from './Tuning'
+import FretPitch from './FretPitch'
 import Position2Pitch from './Position2Pitch'
 
 export default class Astronomy extends React.Component {
@@ -45,6 +46,7 @@ export default class Astronomy extends React.Component {
           <br />
           <Leng2Fret />
           <Tuning />
+          <FretPitch />
           <h2>打譜第一步</h2>
           <Position2Pitch />
         </section>

@@ -15,7 +15,7 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span> 調弦法</span>
+        <span>弦法</span>
         <input
           className='width1'
           value={this.state.b}
@@ -87,10 +87,10 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>調弦法</h3>
+        <h3>品弦法</h3>
         <p className='note'>正弄調：1 正調，2 蕤賓，3 清商，4 慢角，5 慢宮；側弄調：6 徽法淒涼（楚商），7 黃鐘，8 无媒，9 間弦一，10 徽法間弦二，11 徽法平調，12 徽法側商，13 徽法側羽，14 徽法側蜀，15 徽法側楚</p>
         {this.input()}
-        <button onClick={this.handle} className='button4-1'>暈</button><span className='Deci64'>n/d</span>
+        <button onClick={this.handle} className='button4-1'>算</button><span className='Deci64'>n/d</span>
         {this.result()}
       </div>
     )
