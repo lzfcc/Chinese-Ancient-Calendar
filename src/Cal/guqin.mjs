@@ -916,12 +916,16 @@ export const FretPitch = (TuningMode, n) => {
                 ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false)
                 const ZhunName = Freq2Name(ZhunPitch[k], 2)
                 const ZhunNameB = Freq2Name(frc(ZhunPitch[k]).div(BaseZhun).toFraction(false), 1)
-                ZhunPitch[k] = ZhunPitch[k] + (ZhunName ? `</br>` + ZhunName + ' ' + ZhunNameB : '')
+                ZhunPitch[k] += `</br>`
+                ZhunPitch[k] += ZhunName ? ZhunName + ' ' : ''
+                ZhunPitch[k] += ZhunNameB || ''
             }
             HuiPitch[k] = frc(Hui[i]).div(Fret2Leng(k)).toFraction(false)
             const HuiName = Freq2Name(HuiPitch[k], 2)
             const HuiNameB = Freq2Name(frc(HuiPitch[k]).div(BaseHui).toFraction(false), 1)
-            HuiPitch[k] = HuiPitch[k] + (HuiName ? `</br>` + HuiName + ' ' + HuiNameB : '')
+            HuiPitch[k] += `</br>`
+            HuiPitch[k] += HuiName ? HuiName + ' ' : ''
+            HuiPitch[k] += HuiNameB || ''
         }
         if (Zhun) {
             ZhunPitch = ZhunPitch.reverse()
