@@ -356,12 +356,12 @@ const TuningSub3 = (PortionList, Unmoved, Unmoved2Five, Freq) => { // 各弦頻�
     Freq = frc(Unmoved2Five).mul(Freq)
     const FreqList = []
     for (let i = 1; i <= 7; i++) {
-        FreqList[i] = Number(frc(Freq).mul(frc(PortionList[i]).div(PortionList[Unmoved]))).toFixed(4)
+        FreqList[i] = Number(frc(Freq).mul(frc(PortionList[i]).div(PortionList[Unmoved])))
     }
     return FreqList
 }
 
-const Tuning1 = (Freq, n = 3) => { // 正調. 五弦基準頻率，默認宮弦，自定宮弦
+const Tuning1 = (Freq = 432, n = 3) => { // 正調. 五弦基準頻率，默認宮弦，自定宮弦
     let Zhun = [], Hui = [], Xin = []
     const a = 3
     Zhun[a] = '1'
@@ -397,7 +397,7 @@ const Tuning1 = (Freq, n = 3) => { // 正調. 五弦基準頻率，默認宮弦�
 }
 // console.log(Tuning1(432, 1).Zhun)
 
-const Tuning2 = (Freq, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
+const Tuning2 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     let Zhun = [], Hui = [], Xin = []
     const a = 5
     Zhun[a] = '1'
@@ -432,7 +432,7 @@ const Tuning2 = (Freq, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
 }
 
-const Tuning3 = (Freq, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
+const Tuning3 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     let Zhun = [], Hui = [], Xin = []
     const a = 2
     Zhun[a] = '1'
@@ -466,7 +466,7 @@ const Tuning3 = (Freq, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
 }
 
-const Tuning4 = (Freq, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
+const Tuning4 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     let Zhun = [], Hui = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -502,7 +502,7 @@ const Tuning4 = (Freq, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
 }
 
-const Tuning5 = (Freq, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
+const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     let Zhun = [], Hui = [], Xin = []
     const a = 4
     Zhun[a] = '1'
@@ -541,7 +541,7 @@ const Tuning5 = (Freq, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     }
 }
 
-const Tuning6 = (Freq, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
+const Tuning6 = (Freq = 432, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
     let Hui = [], Xin = []
     const a = 3
     Hui[a] = '1'
@@ -566,7 +566,7 @@ const Tuning6 = (Freq, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 
     return { Hui, Xin, HuiFreq }
 }
 
-const Tuning7 = (Freq, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
+const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
     let Zhun = [], Hui = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -605,7 +605,7 @@ const Tuning7 = (Freq, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4
     }
 }
 
-const Tuning8 = (Freq, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
+const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
     let Zhun = [], Hui = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -650,7 +650,7 @@ const Tuning8 = (Freq, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
 }
 
-const Tuning9 = (Freq, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
+const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
     let Zhun = [], Hui = [], Xin = []
     const a = 4
     Zhun[a] = '1'
@@ -689,7 +689,7 @@ const Tuning9 = (Freq, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 
     }
 }
 
-const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
+const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
     let Hui = [], Xin = []
     const a = 1
     Hui[a] = '1'
@@ -724,7 +724,7 @@ const Tuning10 = (Freq, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #
     return { Hui, Xin, HuiFreq }
 }
 
-const Tuning11 = (Freq, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
+const Tuning11 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
     let Hui = [], Xin = []
     const a = 3
     Hui[a] = '1'
@@ -749,7 +749,7 @@ const Tuning11 = (Freq, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6
     return { Hui, Xin, HuiFreq }
 }
 
-const Tuning12 = (Freq, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
+const Tuning12 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
     let Hui = [], Xin = []
     const a = 2
     Hui[a] = '1'
@@ -774,7 +774,7 @@ const Tuning12 = (Freq, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 
     return { Hui, Xin, HuiFreq }
 }
 
-const Tuning13 = (Freq, n = 7) => {  // 徽法律側羽調緊七
+const Tuning13 = (Freq = 432, n = 7) => {  // 徽法律側羽調緊七
     let Hui = [], Xin = []
     const a = 7
     Hui[a] = '1'
@@ -799,7 +799,7 @@ const Tuning13 = (Freq, n = 7) => {  // 徽法律側羽調緊七
     return { Hui, Xin, HuiFreq }
 }
 
-const Tuning14 = (Freq, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
+const Tuning14 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
     let Zhun = [], Hui = [], Xin = []
     const a = 3
     Zhun[a] = '1'
@@ -834,7 +834,7 @@ const Tuning14 = (Freq, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq }
 }
 
-const Tuning15 = (Freq, n = 2) => {  // 徽法律側楚調慢一二緊五七
+const Tuning15 = (Freq = 432, n = 2) => {  // 徽法律側楚調慢一二緊五七
     let Hui = [], Xin = []
     const a = 2
     Hui[a] = '1'
@@ -885,10 +885,10 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
     }
     let Print = []
     for (let i = 1; i <= 7; i++) {
-        const tmp = Zhun ? [Zhun[i], NameZhun[i], +ZhunFreq[i], DifZhun[i - 1]] : ['', '', '', '']
+        const tmp = Zhun ? [Zhun[i], NameZhun[i], +(ZhunFreq[i].toFixed(4)), DifZhun[i - 1]] : ['', '', '', '']
         Print = Print.concat({
             title: NumList[i],
-            data: [...tmp, Hui[i], NameHui[i], +HuiFreq[i], DifHui[i - 1], Xin[i]]
+            data: [...tmp, Hui[i], NameHui[i], +(HuiFreq[i].toFixed(4)), DifHui[i - 1], Xin[i]]
         })
     }
     return Print
@@ -964,20 +964,22 @@ export const FretPitch = (TuningMode, n) => {
 // }
 // console.log(fa3(3))
 // s散音，f泛音，a按音
-export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiString, GongFrq, OutputMode, isStrict) => { // ；品弦法；律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
+export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiString, BaseFreq, OutputMode, isStrict) => { // ；品弦法；律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     TempMode = +TempMode
     TuningMode = +TuningMode
     OutputMode = +OutputMode
-    GongFrq = +GongFrq
+    BaseFreq = +BaseFreq
     isStrict = +isStrict
     GongString = +GongString
     ZhiString = +ZhiString
-    const { Zhun, Hui } = eval('Tuning' + TuningMode)()
-    let StringList = []
+    const { Zhun, Hui, ZhunFreq, HuiFreq } = eval('Tuning' + TuningMode)(BaseFreq, GongString)
+    let StringList = [], FreqList = []
     if (TempMode === 1) {
         StringList = Zhun
+        FreqList = ZhunFreq
     } else if (TempMode === 2) {
         StringList = Hui
+        FreqList = HuiFreq
     }
     const TheString = ZhiString || GongString
     const isZhi = ZhiString ? true : false
@@ -998,7 +1000,7 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
     //         Input.splice(i, i, 'shang', 'xia')
     //     }
     // }
-    const Type = [], String = [], Fret = [], AbsScale = [], RelScale = [], Cent = [], Pitch = [], PitchPrint = []
+    const Type = [], String = [], Fret = [], Scale = [], Cent = [], Pitch = [], PitchPrint = []
     for (let i = 0; i < Input.length; i++) {
         let Pre = Input[i].split(',').filter(Boolean)
         // 下面是補全承前省略
@@ -1021,19 +1023,19 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
         let floor = 0
         if (Type[i] === 's') {
             String[i] = +Pre[1]
-            AbsScale[i] = StringList[String[i] - 1]
+            Scale[i] = StringList[String[i]]
         } else if (Type[i] === 'zh') {
             String[i] = String[i - 1]
-            AbsScale[i] = AbsScale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
+            Scale[i] = Scale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
         } else if (Type[i] === 'shang') {
             String[i] = String[i - 1]
-            AbsScale[i] = AbsScale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
+            Scale[i] = Scale[i - 1].mul(TempMode === 1 ? '9/8' : '10/9')
         } else if (Type[i] === 'xia') {
             String[i] = String[i - 1]
-            AbsScale[i] = AbsScale[i - 1].div(TempMode === 1 ? '9/8' : '10/9')
+            Scale[i] = Scale[i - 1].div(TempMode === 1 ? '9/8' : '10/9')
         } else if (Type[i] === 'qi' && Pre.length === 1) {
             String[i] = String[i - 1]
-            AbsScale[i] = StringList[String[i] - 1]
+            Scale[i] = StringList[String[i]]
         } else {
             if (Type[i] === 'f') {
                 Fret[i] = 7 - Math.abs(7 - +Pre[1]) // 泛音以7徽對稱
@@ -1049,10 +1051,9 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
                 String[i] = +Pre[1]
             }
             const Leng = Fret2Leng(Fret[i])
-            AbsScale[i] = frc(1).div(Leng).mul(StringList[String[i] - 1])
+            Scale[i] = frc(1).div(Leng).mul(StringList[String[i]])
         }
-        RelScale[i] = Number(frc(AbsScale[i]).div(StringList[TheString - 1]))
-        Cent[i] = Math.log2(RelScale[i]) * 1200 - (isZhi ? 498.045 : 0) // 若用徵弦作為基準，減純五度
+        Cent[i] = Math.log2(Number(frc(Scale[i]))) * 1200 - (isZhi ? 498.045 : 0) // 若用徵弦作為基準，減純五度
         floor = Math.floor((Cent[i] + 21.5) / 1200) // 超出一個八度
         Cent[i] = (Cent[i] % 1200 + 1200) % 1200
         // 下面是處理模糊徽位
@@ -1078,7 +1079,7 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
             Pitch[i] = frc(Pitch[i]).mul(2 ** floor).toFraction(false)
         }
         if (OutputMode === 4) {
-            Pitch[i] = Number(frc(Pitch[i]).mul(GongFrq)).toFixed(3)
+            Pitch[i] = +Number(frc(FreqList[1]).div(StringList[1]).mul(Pitch[i])).toFixed(3)
         }
         PitchPrint[i] = Pitch[i]
         if (OutputMode <= 2) {
