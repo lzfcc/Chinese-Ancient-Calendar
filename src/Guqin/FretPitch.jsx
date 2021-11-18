@@ -36,8 +36,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { ZhunPrint, HuiPrint } = FretPitch(this.state.b, this.state.n)
-      this.setState({ output1: ZhunPrint, output2: HuiPrint })
+      const { ZhunPrint, HuiPrint, ZhunNamePrint, HuiNamePrint } = FretPitch(this.state.b, this.state.n)
+      this.setState({ output1: ZhunPrint, output2: HuiPrint, output3: ZhunNamePrint, output4: HuiNamePrint })
     } catch (e) {
       alert(e.message)
     }
@@ -48,73 +48,97 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 rowline' style={{ whiteSpace: "nowrap" }}>
-        <h3>準法律</h3>
-        <table>
-          <tr>
-            <th></th>
-            <th>散</th>
-            <th>卜卜</th>
-            <th>卜</th>
-            <th>13</th>
-            <th>12</th>
-            <th>11</th>
-            <th>10</th>
-            <th>9</th>
-            <th>8</th>
-            <th>7</th>
-            <th>6</th>
-            <th>5</th>
-            <th>4</th>
-            <th>3</th>
-            <th>2</th>
-            <th>1</th>
-            <th>卜</th>
-          </tr>
-          {(this.state.output1 || []).map(row => {
-            return (
-              <tr>
-                <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
-              </tr>
-            )
-          })}
-        </table>
-
-        <h3>徽法律</h3>
-        <table>
-          <tr>
-            <th></th>
-            <th>散</th>
-            <th>卜卜</th>
-            <th>卜</th>
-            <th>13</th>
-            <th>12</th>
-            <th>11</th>
-            <th>10</th>
-            <th>9</th>
-            <th>8</th>
-            <th>7</th>
-            <th>6</th>
-            <th>5</th>
-            <th>4</th>
-            <th>3</th>
-            <th>2</th>
-            <th>1</th>
-            <th>卜</th>
-          </tr>
-          {(this.state.output2 || []).map(row => {
-            return (
-              <tr>
-                <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
-              </tr>
-            )
-          })}
-        </table>
+      <div className='ans table2' style={{ whiteSpace: "nowrap" }}>
+        <div className='rowline'>
+          <h3>準法律</h3>
+          <table>
+            <tr>
+              <th></th>
+              <th>散</th>
+              <th>卜卜</th>
+              <th>卜</th>
+              <th>13</th>
+              <th>12</th>
+              <th>11</th>
+              <th>10</th>
+              <th>9</th>
+              <th>8</th>
+              <th>7</th>
+              <th>6</th>
+              <th>5</th>
+              <th>4</th>
+              <th>3</th>
+              <th>2</th>
+              <th>1</th>
+              <th>卜</th>
+            </tr>
+            {(this.state.output1 || []).map(row => {
+              return (
+                <tr>
+                  <td className='RowTitle'>{row.title}</td>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
+        <div className='table-narrow'>
+          <table>
+            {(this.state.output3 || []).map(row => {
+              return (
+                <tr>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
+        <div className='rowline'>
+          <h3>徽法律</h3>
+          <table>
+            <tr>
+              <th></th>
+              <th>散</th>
+              <th>卜卜</th>
+              <th>卜</th>
+              <th>13</th>
+              <th>12</th>
+              <th>11</th>
+              <th>10</th>
+              <th>9</th>
+              <th>8</th>
+              <th>7</th>
+              <th>6</th>
+              <th>5</th>
+              <th>4</th>
+              <th>3</th>
+              <th>2</th>
+              <th>1</th>
+              <th>卜</th>
+            </tr>
+            {(this.state.output2 || []).map(row => {
+              return (
+                <tr>
+                  <td className='RowTitle'>{row.title}</td>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
+        <div className='table-narrow'>
+          <table>
+            {(this.state.output4 || []).map(row => {
+              return (
+                <tr>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
       </div>
     )
-
   }
 
   render() {
