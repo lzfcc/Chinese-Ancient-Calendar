@@ -424,6 +424,7 @@ table td {
 
 .table2 table td {
   width: auto;
+  min-width: 0;
   padding: .15em .7em;
   text-align: left;
 }
@@ -433,8 +434,8 @@ table td {
 }
 
 .table2 table th {
-  text-align: center;
-  padding: .15em 1em;
+  text-align: left;
+  padding: .15em .7em;
   border: none;
   /* border-bottom: 1px solid var(--gray); */
 }
@@ -450,11 +451,6 @@ table td {
   vertical-align: top;
   padding-top: .5em;
   padding-bottom: .5em;
-}
-
-.rowline table th {
-  text-align: left;
-  padding-left: .7em;
 }
 
 .table-narrow table {
@@ -637,11 +633,12 @@ year-range {
 
 code {
   font-family: var(--codesans);
-  background: var(--bgblue);
+  background: var(--black);
+  color: var(--bg);
   border-radius: .2em;
-  padding: .2em .3em;
+  padding: .2em .2em;
   margin: 0 0.2em;
-  font-size: .9em;
+  font-size: .95em;
 }
 
 button {

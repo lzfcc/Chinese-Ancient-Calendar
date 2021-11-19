@@ -38,7 +38,7 @@ export default class Converter extends React.Component {
     }
     return (
       <div className='ans' style={{ whiteSpace: "pre-wrap" }}>
-        <p>{this.state.output}</p>
+        <p>{this.state.output} 徽</p>
       </div>
     )
   }
