@@ -45,19 +45,20 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Tuning(this.state.b, this.state.Freq, this.state.n)
-      this.setState({ output: Print })
+      const { Name, Print } = Tuning(this.state.b, this.state.Freq, this.state.n)
+      this.setState({ output1: Name, output2: Print })
     } catch (e) {
       alert(e.message)
     }
   }
 
   result() {
-    if (!this.state.output) {
+    if (!this.state.output2) {
       return null
     }
     return (
       <div className='ans table2' style={{ whiteSpace: "nowrap" }}>
+        <h3>{this.state.output1}</h3>
         <table>
           <tr>
             <th></th>
@@ -73,7 +74,7 @@ export default class Converter extends React.Component {
             <th>鄰弦音分</th>
             <th><code>新法密率</code>頻率</th>
           </tr>
-          {(this.state.output || []).map(row => {
+          {(this.state.output2 || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
