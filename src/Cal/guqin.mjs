@@ -14,7 +14,7 @@ class Interval {
     static HalfMap = {
         1: '♯', 2: '𝄪', 0: '', '-1': '♭', '-2': '𝄫'
     }
-    get pitch() {
+    get name() {
         return Interval.NameMap[this.pitch]
     }
     nameString(mode) {
@@ -37,7 +37,7 @@ class Interval {
             } else return str
     }
     get cent() {
-        return Number(frc(freq))
+        return Number(frc(this.freq))
     }
 }
 // 0  1  2
@@ -100,7 +100,6 @@ const FushionList2 = [
     new Interval(1, 'D', -2, 0, '1048576/531441'),
     new Interval(0, 'C', 0, 0, '2'),
 ]
-
 const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
     0: [0, 'C', '1', '1'],
     70.67: [2, '♯<span class="dnline2">C</span>', '♯<span class="dnline2">1</span>', '25/24'], // 小半音
@@ -177,6 +176,7 @@ const Portion2Name = (a, mode) => { // 輸入頻率比，輸出對應的唱名mo
     // return '　'
 }
 const Portion2Interval = (a, mode) => { // mode 0 音名 1唱名 
+    a = frc(a)
     while (Number(a) < 1) {
         a = a.mul(2)
     }
@@ -186,15 +186,6 @@ const Portion2Interval = (a, mode) => { // mode 0 音名 1唱名
     a = a.toFraction(false)
     const got = FushionList2.find(obj => obj.freq === a)
     return got
-    // if (got) {
-    //     if (mode === 0) {
-    //         return got.name
-    //     } else {
-    //         return got.pitch
-    //     }
-    // } else {
-    //     return '沒有音'
-    // }
 }
 
 const Portion2Pitch = (portion, one, OneDif) => { // 輸入一弦頻率、一弦是否調了，輸出音名
@@ -1111,7 +1102,7 @@ export const FretPitch = (TuningMode, n) => { // 徽位音。弦法、宮弦
     return { ZhunPrint, HuiPrint, ZhunNamePrint, HuiNamePrint }
 }
 
-console.log(FretPitch(1, 0))
+// console.log(FretPitch(1, 0))
 // while (Number(ZhunPitch[k]) >= 2) {
 //     ZhunPitch[k] = ZhunPitch[k].div(2)
 // }
@@ -1407,3 +1398,49 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
 
 
 // console.log(test('2,1;[3;5,4;2];2;4;[9,5];3,4;6'))
+
+const Portion2Pitch1 = (portion, one, OneDif) => { // 輸入一弦頻率、一弦是否調了，輸出音名
+    const Base = frc(one).div(OneDif || 1)
+    return Portion2Interval(frc(portion).div(Base).toFraction(false), 1)
+}
+
+export const FretPitch1 = (TuningMode, n) => { // 徽位音。弦法、宮弦
+    let { Zhun, Hui, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
+    let ZhunPrint = [], HuiPrint = [], ZhunNameList = [], ZhunNameBList = [], HuiNameList = [], HuiNameBList = []
+    for (let i = 1; i <= 7; i++) { // 七弦
+        let ZhunPitch = [], HuiPitch = [], HuiNameTmp = [], ZhunNameTmp = [], HuiNameBTmp = [], ZhunNameBTmp = []
+        let sample = []
+        if (Zhun) {
+            for (let k = 16; k >= 0; k--) { // 15徽  這樣就行 16=散  我定義的
+                // Zhun 準法律七弦散音頻率比    
+                ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false)
+                const tmp = Portion2Interval(ZhunPitch[k], 2)
+                const tmp1 = Portion2Pitch1(ZhunPitch[k], Zhun[1], OneDifZhun || 1)
+                if (tmp) {
+                    ZhunNameTmp.push(tmp)
+                    ZhunNameBTmp.push(tmp1)
+                }
+                ZhunPitch[k] += `</br>`
+                ZhunPitch[k] += ZhunNameTmp[k] ? ZhunNameTmp[k] + ' ' : ''
+                ZhunPitch[k] += ZhunNameBTmp[k] || ''
+            }
+            ZhunNameList = ZhunNameList.concat(ZhunNameTmp)
+            ZhunNameBList = ZhunNameBList.concat(ZhunNameBTmp)
+            ZhunPrint = ZhunPrint.concat({
+                title: NumList[i],
+                data: ZhunPitch
+            })
+        }
+    }
+    // 排序
+    // ZhunNameList 算一個去一個要去105次，最後只用去1次
+    ZhunNameList.sort((obj1, obj2) => obj1.cent - obj2.cent)
+    ZhunNameBList.sort((obj1, obj2) => obj1.cent - obj2.cent)
+    // 去重
+    ZhunNameList = ZhunNameList.map(obj => obj.nameString(1))
+    ZhunNameBList = ZhunNameList.map(obj => obj.nameString(2))
+
+    const ZhunNamePrint = [ZhunNameBList, ZhunNameList]
+    return { ZhunPrint, ZhunNamePrint }
+}
+console.log(FretPitch1(1, 0))

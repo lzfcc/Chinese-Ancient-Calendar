@@ -1,3 +1,104 @@
+class Interval {
+    constructor(cate = 0, pitch = 'C', half = 0, comma = 0, freq = '1') {
+        this.cate = cate
+        this.pitch = pitch
+        this.half = half
+        this.freq = freq
+        this.comma = comma
+    }
+    static NameMap = {
+        C: 1, D: 2, E: 3, F: 4, G: 5, A: 6, B: 7
+    }
+    static HalfMap = {
+        1: '♯', 2: '𝄪', 0: '', '-1': '♭', '-2': '𝄫'
+    }
+    get pitch() {
+        return Interval.NameMap[this.pitch]
+    }
+    nameString(mode) {
+        let str = ''
+        if (mode === 1) {
+            str = this.pitch
+        } else if (mode === 2) {
+            str = this.name
+        }
+        let commaString = '', halfString = ''
+        if (this.half > 0) {
+            halfString = Interval.HalfMap[this.half]
+        } else
+            if (this.comma > 0) {
+                commaString = 'upline' + this.comma
+                return `${halfString}<span class="${commaString}">${str}</span>`
+            } else if (this.comma < 0) {
+                commaString = 'dnline' + -this.comma
+                return `${halfString}<span class="${commaString}">${str}</span>`
+            } else return str
+    }
+    get cent() {
+        return Number(frc(freq))
+    }
+}
+// 0  1  2
+// 音名
+// 唱名
+// 頻率比
+
+const FushionList2 = [
+    new Interval(0, 'C', 0, 0, '1'),
+    new Interval(2, 'C', 1, -2, '25/24'),
+    new Interval(1, 'D', -1, 0, '256/243'),
+    new Interval(2, 'C', 1, -1, '135/128'),
+    new Interval(2, 'D', -1, 1, '16/15'),
+    new Interval(1, 'C', 1, 0, '2187/2048'),
+    new Interval(2, 'D', -1, 2, '27/25'),
+    new Interval(1, 'E', -2, 0, '65536/59049'),
+    new Interval(2, 'D', 0, -1, '10/9'),
+    new Interval(0, 'D', 0, 0, '9/8'),
+    new Interval(2, 'E', -2, 2, '256/225'),
+    new Interval(2, 'D', 1, -2, '75/64'),
+    new Interval(1, 'E', -1, 0, '32/27'),
+    new Interval(2, 'E', -1, 1, '6/5'),
+    new Interval(1, 'D', 1, 0, '19683/16384'),
+    new Interval(2, 'E', 0, -2, '100/81'),
+    new Interval(1, 'F', -1, 0, '8192/6561'),
+    new Interval(2, 'E', 0, -1, '5/4'),
+    new Interval(0, 'E', 0, 0, '81/64'),
+    new Interval(2, 'F', -1, 2, '32/25'),
+    new Interval(2, 'E', 1, -2, '675/512'),
+    new Interval(0, 'F', 0, 0, '4/3'),
+    new Interval(2, 'F', 0, 1, '27/20'),
+    new Interval(1, 'E', 1, 0, '177147/131072'),
+    new Interval(2, 'F', 1, -2, '25/18'),
+    new Interval(1, 'G', -1, 0, '1024/729'),
+    new Interval(2, 'F', 1, -1, '45/32'),
+    new Interval(2, 'G', -1, 1, '64/45'),
+    new Interval(1, 'F', 1, 0, '729/512'),
+    new Interval(2, 'G', -1, 2, '36/25'),
+    new Interval(1, 'A', -2, 0, '262144/177147'),
+    new Interval(2, 'G', 0, -1, '40/27'),
+    new Interval(0, 'G', 0, 0, '3/2'),
+    new Interval(2, 'G', 1, -2, '25/16'),
+    new Interval(1, 'A', -1, 0, '128/81'),
+    new Interval(2, 'G', 1, -1, '405/256'),
+    new Interval(2, 'A', -1, 1, '8/5'),
+    new Interval(1, 'G', 1, 0, '6561/4096'),
+    new Interval(1, 'B', -2, 0, '32768/19683'),
+    new Interval(2, 'A', 0, -1, '5/3'),
+    new Interval(1, 'A', 0, 0, '27/16'),
+    new Interval(2, 'A', 1, -2, '225/128'),
+    new Interval(1, 'B', -1, 0, '16/9'),
+    new Interval(2, 'B', -1, 1, '9/5'),
+    new Interval(1, 'A', 1, 0, '59049/32768'),
+    new Interval(2, 'B', 0, -2, '50/27'),
+    new Interval(1, 'C', -1, 0, '4096/2187'),
+    new Interval(2, 'B', 0, -1, '15/8'),
+    new Interval(2, 'C', -1, 1, '256/135'),
+    new Interval(1, 'B', 0, 0, '243/128'),
+    new Interval(2, 'C', -1, 2, '48/25'),
+    new Interval(1, 'D', -2, 0, '1048576/531441'),
+    new Interval(0, 'C', 0, 0, '2'),
+]
+
 const Portion2Interval = (a, mode) => { // mode 0 音名 1唱名 
     while (Number(a) < 1) {
         a = a.mul(2)
@@ -57,5 +158,6 @@ export const FretPitch = (TuningMode, n) => { // 徽位音。弦法、宮弦
     ZhunNameBList = ZhunNameList.map(obj => obj.nameString(2))
 
     const ZhunNamePrint = [ZhunNameBList, ZhunNameList]
-    return { ZhunPrint, HuiPrint, ZhunNamePrint, HuiNamePrint }
+    return { ZhunPrint, ZhunNamePrint }
 }
+console.log(FretPitch(1))
