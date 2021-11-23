@@ -8,6 +8,7 @@ export default class Converter extends React.Component {
       a: `9.46,3;9,4;s,2;9.46,3;l,10.8;zh;s,4;14,1;s,2;10.8,3;l,9;l,10.8;l,9;l,7.9;s,7;10,2;l,14;s,4;10.8,3;9,4;5;6;6;10,5;l,9;l,10;l,9;l,7.6;7.9,7;l,9;s,4;9,6;9,5;l,7.6;l,9;4;10,2;10.8,3;9,4;l,7.9;l,7;9,4;l,10.8;14,4;3;4;3;10.8,3;l,9;4;3;l,7.9;l,9;2;s,4;2;14,1;10.8,1;l,9;2;l,7.9;l,9;10,2;s,7;10,2;l,14;s,4;9.46,3;10,4;s,7;9,4;s,7;9,4;10,4;10,3;4;3;3;l,9;l,10;l,9;s,7;2;9,4;s,7;8.6,5;9,6;6;8.6,7;7;2;7;l,7.6;l,7;7;7;2;7;l,6.2;l,5.6;7;7;l,4.8;l,5.6;l,6.2;6.4,6;7,6;l,7.4;l,7;7;s,6;9,4;l,7.6;9,7;7.9,6;l,7;7.6,5;l,8.6;9,4;l,7.6;7;l,9;s,7;4;9,6;10,3;l,9;l,7.9;l,9;9,3;l,7.9;s,3;4;2;12.1,2;l,10;l,9;s,5;7.6,2;l,7;s,7;2;4;9,6`,
       b: '1',
       c: '1',
+      isMixed: '0',
       GongString: '0',
       ZhiString: '0',
       f: '432',
@@ -44,6 +45,14 @@ export default class Converter extends React.Component {
             this.setState({ c: e.currentTarget.value });
           }}
         />
+        <span> 是否混合律制</span>
+        <input
+          className='width1'
+          value={this.state.isMixed}
+          onChange={e => {
+            this.setState({ isMixed: e.currentTarget.value });
+          }}
+        />
         <span> 宮弦</span>
         <input
           className='width1'
@@ -62,7 +71,7 @@ export default class Converter extends React.Component {
         />
         <span> 基準頻率</span>
         <input
-          className='width3'
+          className='width2'
           value={this.state.f}
           onChange={e => {
             this.setState({ f: e.currentTarget.value });
@@ -90,7 +99,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Position2Pitch(this.state.a, this.state.b, this.state.c, this.state.GongString, this.state.ZhiString, this.state.f, this.state.g, this.state.h)
+      const Print = Position2Pitch(this.state.a, this.state.b, this.state.c, this.state.isMixed, this.state.GongString, this.state.ZhiString, this.state.f, this.state.g, this.state.h)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

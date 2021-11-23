@@ -160,4 +160,63 @@ export const FretPitch = (TuningMode, n) => { // 徽位音。弦法、宮弦
     const ZhunNamePrint = [ZhunNameBList, ZhunNameList]
     return { ZhunPrint, ZhunNamePrint }
 }
-console.log(FretPitch(1))
+// console.log(FretPitch(1))
+
+
+const Portion2Interval = (portion, one = 1, oneDif = 1) => {
+    const base = frc(one).div(oneDif)
+    let a = frc(portion).div(base)
+    while (Number(a) < 1) {
+        a = a.mul(2)
+    }
+    while (Number(a) > 2) {
+        a = a.div(2)
+    }
+    const got = FushionList2.find(obj => obj.freq === a.toFraction(false))
+    return got
+}
+
+export const FretPitch1 = (TuningMode, n) => { // 徽位音。弦法、宮弦
+    let { Zhun, Hui, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
+    let ZhunPrint = [], HuiPrint = [], ZhunNameList = [], ZhunNameBList = [], HuiNameList = [], HuiNameBList = []
+    const set1 = new Set() // 用于去重
+    const set2 = new Set()
+    for (let i = 1; i <= 7; i++) { // 七弦
+        let ZhunPitch = [], HuiPitch = [], HuiNameTmp = [], ZhunNameTmp = [], HuiNameBTmp = [], ZhunNameBTmp = []
+        if (Zhun) {
+            for (let k = 16; k >= 0; k--) { // 15徽 16=散
+                // Zhun 準法律七弦散音頻率比    
+                ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false)
+                const tmp = Portion2Interval(ZhunPitch[k])
+                const tmp1 = Portion2Interval(ZhunPitch[k], Zhun[1], OneDifZhun || 1)
+                if (tmp && !set1.has(tmp.freq)) {
+                    ZhunNameTmp[k] = tmp
+                    set1.add(tmp.freq)
+                }
+                if (tmp && !set2.has(tmp.freq)) {
+                    ZhunNameBTmp[k] = tmp1
+                    set2.add(tmp.freq)
+                }
+                ZhunPitch[k] += `</br>`
+                ZhunPitch[k] += ZhunNameTmp[k] ? ZhunNameTmp[k].nameString(2) + ' ' : ''
+                ZhunPitch[k] += ZhunNameBTmp[k] ? ZhunNameBTmp[k].nameString(1) : ''
+            }
+            ZhunNameList = ZhunNameList.concat(ZhunNameTmp.filter(Boolean))
+            ZhunNameBList = ZhunNameBList.concat(ZhunNameBTmp.filter(Boolean))
+            ZhunPrint = ZhunPrint.concat({
+                title: NumList[i],
+                data: ZhunPitch
+            })
+        }
+    }
+    // 排序
+    ZhunNameList.sort((obj1, obj2) => obj1.cent - obj2.cent)
+    ZhunNameBList.sort((obj1, obj2) => obj1.cent - obj2.cent)
+    const data = { 
+        ZhunPrint, 
+        ZhunNameBList: ZhunNameList.map(obj => obj.nameString(2)), 
+        ZhunNameList: ZhunNameList.map(obj => obj.nameString(1))
+    }
+    return data
+}
+console.log(FretPitch1(1, 0))

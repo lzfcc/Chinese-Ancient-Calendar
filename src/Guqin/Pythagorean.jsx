@@ -54,8 +54,8 @@ export default class Converter extends React.Component {
             <th>夷則♯G</th>
             <th>夾鐘♯D</th>
             <th>无射♯A</th>
-            <th>仲呂F</th>
-            <th>淸黃鐘♯B</th>
+            <th>仲呂♯E</th>
+            <th>倍黃鐘𝄪B</th>
           </tr>
           {(this.state.output1 || []).map(row => {
             return (
@@ -79,10 +79,10 @@ export default class Converter extends React.Component {
             <th>♭G</th>
             <th>♭C</th>
             <th>♭F</th>
-            <th>♭♭B</th>
-            <th>♭♭E</th>
-            <th>♭♭A</th>
-            <th>♭♭D</th>
+            <th>𝄫B</th>
+            <th>𝄫E</th>
+            <th>𝄫A</th>
+            <th>𝄫D</th>
           </tr>
           {(this.state.output2 || []).map(row => {
             return (
