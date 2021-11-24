@@ -815,9 +815,6 @@ const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
         OneDifHui: '15/16',
-        OneDifHui2: '15/16',
-        OneDifHui3: '15/16',
-        OneDifHui4: '15/16',
         Name: '慢宮調慢一三六'
     }
 }
@@ -940,9 +937,6 @@ const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '8/9',
         OneDifHui: '9/10',
-        OneDifHui2: '9/10',
-        OneDifHui3: '9/10',
-        OneDifHui4: '9/10',
         Name: '黃鐘調緊五慢一'
     }
 }
@@ -1084,7 +1078,6 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
         OneDifHui: '243/256',
-        // OneDifMix: '243/256',
         Name: '間弦一慢一三'
     }
 }
@@ -1431,26 +1424,29 @@ export const FretPitch = (TuningMode, n) => { // 徽位音。弦法、宮弦
 // s散音，f泛音，a按音
 export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiString, BaseFreq, OutputMode, isStrict) => { // ；品弦法；律制；是否是混合律制；宮弦；徵弦（宮弦徵弦只能二選一，另一個爲0）；宮弦頻率；輸出模式 1 唱名 2音名 3 與宮弦頻率比 4 頻率；
     TempMode = +TempMode
-    if (TempMode === 3) {
-        isMixed = 1
-    }
     TuningMode = +TuningMode
     OutputMode = +OutputMode
     BaseFreq = +BaseFreq
     isStrict = +isStrict
     GongString = +GongString
     ZhiString = +ZhiString
-    const { Zhun, Hui, Hui3, OneDifZhun, OneDifHui, OneDifMix } = eval('Tuning' + TuningMode)(BaseFreq, GongString)
+    const { Zhun, Hui, Hui2, Hui3, Hui4, OneDifZhun, OneDifHui } = eval('Tuning' + TuningMode)(BaseFreq, GongString)
     let StringList = [], OneDif = ''
     if (TempMode === 1) {
-        StringList = Zhun
-        OneDif = OneDifZhun
-    } else if (TempMode === 2) {
         StringList = Hui
+        OneDif = OneDifHui
+    } else if (TempMode === 2) {
+        StringList = Hui2
         OneDif = OneDifHui
     } else if (TempMode === 3) {
         StringList = Hui3
-        OneDif = OneDifMix
+        OneDif = OneDifHui
+    } else if (TempMode === 4) {
+        StringList = Hui4
+        OneDif = OneDifHui
+    } else if (TempMode === 5) {
+        StringList = Zhun
+        OneDif = OneDifZhun
     }
     const TheString = ZhiString || GongString
     const isZhi = ZhiString ? true : false
