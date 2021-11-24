@@ -97,7 +97,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>品弦法</h3>
-        <p className='note'>內調：1 正調，2 蕤賓，3 清商，4 慢角，5 慢宮；外調：6 楚商，7 黃鐘，8 无媒，9 間弦一，10 間弦二，11 徽法日傳平調，12 徽法側商，13 徽法側羽，14 徽法側蜀，15 徽法側楚</p>
+        <p className='note'>內調：1 宮調，2 商調，4 徵調，5 羽調，6 蕤賓，7 清商，8 慢角，9 慢宮；外調：10 楚商，11 黃鐘，12 无媒，13 間弦一，14 間弦二，15 徽法日傳平調，16 徽法側商，17 徽法側羽，18 徽法側蜀，19 徽法側楚</p>
         {this.input()}
         <button onClick={this.handle} className='button4-1'>算</button><span className='Deci64'>n/d</span>
         {this.result()}

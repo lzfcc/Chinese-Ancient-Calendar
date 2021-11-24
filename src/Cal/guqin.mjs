@@ -500,7 +500,7 @@ const TuningSub3 = (PortionList, Unmoved, Unmoved2Five, Freq) => { // 各弦頻�
     return FreqList
 }
 
-const Tuning1 = (Freq = 432, n = 3) => { // 正調. 五弦基準頻率，默認宮弦，自定宮弦
+const Tuning1 = (Freq = 432, n = 3) => { // 宮調. 五弦基準頻率，默認宮弦，自定宮弦
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 3
     Zhun[a] = '1'
@@ -525,10 +525,10 @@ const Tuning1 = (Freq = 432, n = 3) => { // 正調. 五弦基準頻率，默認�
     // 徽二
     Hui2[6] = TuningSub1(Hui2[3], 5, 7)
     Hui2[1] = TuningSub1(Hui2[3], 5, 4)
-    Hui2[4] = TuningSub1(Hui2[3], 8, 9)
     Hui2[5] = TuningSub1(Hui2[3], 6, 7)
     Hui2[7] = TuningSub1(Hui2[5], 4, 5)
     Hui2[2] = TuningSub1(Hui2[7], 7, 4)
+    Hui2[4] = TuningSub1(Hui2[7], 7, 5)
     // 徽三
     Hui3[6] = TuningSub1(Hui3[3], 5, 7)
     Hui3[1] = TuningSub1(Hui3[3], 5, 4)
@@ -537,11 +537,11 @@ const Tuning1 = (Freq = 432, n = 3) => { // 正調. 五弦基準頻率，默認�
     Hui3[7] = TuningSub1(Hui3[4], 5, 7)
     Hui3[2] = TuningSub1(Hui3[7], 7, 4)
     // 徽四
-    Hui4[4] = TuningSub1(Hui4[3], 8, 9)
     Hui4[5] = TuningSub1(Hui4[3], 6, 7)
     Hui4[7] = TuningSub1(Hui4[5], 4, 5)
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5)
     Hui4[2] = TuningSub1(Hui4[7], 7, 4)
-    Hui4[1] = TuningSub1(Hui4[2], 10, 9)
+    Hui4[1] = TuningSub1(Hui4[4], 7, 5)
     Hui4[6] = TuningSub1(Hui4[1], 4, 7)
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
@@ -559,11 +559,174 @@ const Tuning1 = (Freq = 432, n = 3) => { // 正調. 五弦基準頻率，默認�
     Xin[5] = Freq
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '正調' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '宮調 5 6 1 2 3' }
 }
 // console.log(Tuning1(432, 1).Zhun)
 
-const Tuning2 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
+const Tuning2 = (Freq = 432, n = 1) => { // 商調
+    n = n === 0 ? 1 : n
+    let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
+    const a = 3
+    Zhun[a] = '1'
+    Hui[a] = '1'
+    Hui2[a] = '1'
+    Hui3[a] = '1'
+    Hui4[a] = '1'
+    // 準法律
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7)
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4)
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4)
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7)
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4)
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4)
+
+    Hui2[6] = TuningSub1(Hui2[3], 5, 7)
+    Hui2[1] = TuningSub1(Hui2[3], 5, 4)
+    Hui2[4] = TuningSub1(Hui2[6], 5, 4)
+    Hui2[5] = TuningSub1(Hui2[3], 6, 7)
+    Hui2[7] = TuningSub1(Hui2[5], 4, 5)
+    Hui2[2] = TuningSub1(Hui2[7], 7, 4)
+
+    Hui4[6] = TuningSub1(Hui4[3], 5, 7)
+    Hui4[1] = TuningSub1(Hui4[3], 5, 4)
+    Hui4[5] = TuningSub1(Hui4[3], 6, 7)
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5)
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5)
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4)
+
+    Hui[6] = TuningSub1(Hui[3], 5, 7)
+    Hui[1] = TuningSub1(Hui[3], 5, 4)
+    Hui[4] = TuningSub1(Hui[6], 5, 4)
+    Hui[5] = TuningSub1(Hui[3], 6, 7)
+    Hui[7] = TuningSub1(Hui[4], 5, 7)
+    Hui[2] = TuningSub1(Hui[7], 7, 4)
+    // 徽三同準
+    Hui3[6] = TuningSub1(Hui3[3], 5, 7)
+    Hui3[1] = TuningSub1(Hui3[3], 5, 4)
+    Hui3[4] = TuningSub1(Hui3[6], 5, 4)
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7)
+    Hui3[5] = TuningSub1(Hui3[7], 5, 4)
+    Hui3[2] = TuningSub1(Hui3[7], 7, 4)
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    Hui2 = TuningSub2(Hui2, a, n)
+    Hui3 = TuningSub2(Hui3, a, n)
+    Hui4 = TuningSub2(Hui4, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1
+    Xin[1] = +List12[3] / 2
+    Xin[2] = +List12[5] / 2
+    Xin[3] = +List12[8] / 2
+    Xin[4] = +List12[10] / 2
+    Xin[5] = Freq
+    Xin[6] = +List12[3]
+    Xin[7] = +List12[5]
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '商調 1 2 4 5 6' }
+}
+
+const Tuning4 = (Freq = 432, n = 4) => { // 徵調
+    let Zhun = [], Hui = [], Hui2 = [], Hui4 = [], Xin = []
+    const a = 4
+    Zhun[a] = '1'
+    Hui[a] = '1'
+    Hui2[a] = '1'
+    Hui4[a] = '1'
+
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7)
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4)
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4)
+    Zhun[6] = TuningSub1(Zhun[4], 4, 5)    
+    Zhun[3] = TuningSub1(Zhun[6], 7, 5)
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4)
+
+    Hui[7] = TuningSub1(Hui[4], 5, 7)
+    Hui[5] = TuningSub1(Hui[7], 5, 4)
+    Hui[2] = TuningSub1(Hui[7], 7, 4)
+    Hui[1] = TuningSub1(Hui[4], 7, 5)
+    Hui[6] = TuningSub1(Hui[1], 4, 7)
+    Hui[3] = TuningSub1(Hui[2], 5, 6)   
+
+    Hui2[1] = TuningSub1(Hui2[4], 7, 5)
+    Hui2[6] = TuningSub1(Hui2[1], 4, 7)
+    Hui2[7] = TuningSub1(Hui2[4], 5, 7)
+    Hui2[5] = TuningSub1(Hui2[6], 6, 5)
+    Hui2[2] = TuningSub1(Hui2[7], 7, 4)
+    Hui2[3] = TuningSub1(Hui2[2], 5, 6)   
+    
+    Hui4[1] = TuningSub1(Hui4[4], 7, 5)
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7)
+    Hui4[5] = TuningSub1(Hui4[6], 6, 5)
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5)
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4)
+    Hui4[3] = TuningSub1(Hui4[4], 9, 8)  
+
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    Hui2 = TuningSub2(Hui2, a, n)
+    Hui4 = TuningSub2(Hui4, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1
+    Xin[1] = +List12[3] / 2
+    Xin[2] = +List12[5] / 2
+    Xin[3] = +List12[8] / 2
+    Xin[4] = +List12[10] / 2
+    Xin[5] = Freq
+    Xin[6] = +List12[3]
+    Xin[7] = +List12[5]
+    return { Zhun, Hui, Xin, Hui2, Hui4, ZhunFreq, HuiFreq, Name: '徵調 4 5 ♭7 1 2' }
+}
+
+const Tuning5 = (Freq = 432, n = 2) => { // 羽調
+    let Zhun = [], Hui = [], Hui4 = [], Xin = []
+    const a = 2
+    Zhun[a] = '1'
+    Hui[a] = '1'
+    Hui4[a] = '1'
+    // 準法律
+    Zhun[7] = TuningSub1(Zhun[2], 4, 7)
+    Zhun[4] = TuningSub1(Zhun[7], 7, 5)
+    Zhun[6] = TuningSub1(Zhun[4], 4, 5)
+    Zhun[3] = TuningSub1(Zhun[6], 7, 5)
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4)
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4)
+
+    // 一二三同
+    Hui[7] = TuningSub1(Hui[2], 4, 7)
+    Hui[5] = TuningSub1(Hui[7], 5, 4)
+    Hui[3] = TuningSub1(Hui[5], 7, 6) 
+    Hui[6] = TuningSub1(Hui[3], 5, 7)
+    Hui[1] = TuningSub1(Hui[3], 5, 4)   
+    Hui[4] = TuningSub1(Hui[2], 4, 5)
+
+    Hui4[4] = TuningSub1(Hui4[2], 4, 5)
+    Hui4[5] = TuningSub1(Hui4[4], 8, 9)
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7)
+    Hui4[3] = TuningSub1(Hui4[7], 5, 3)
+    Hui4[6] = TuningSub1(Hui4[3], 5, 7)
+    Hui4[1] = TuningSub1(Hui4[3], 5, 4)
+
+    Zhun = TuningSub2(Zhun, a, n)
+    Hui = TuningSub2(Hui, a, n)
+    Hui4 = TuningSub2(Hui4, a, n)
+    const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
+    const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1
+    Xin[1] = +List12[3] / 2
+    Xin[2] = +List12[5] / 2
+    Xin[3] = +List12[8] / 2
+    Xin[4] = +List12[10] / 2
+    Xin[5] = Freq
+    Xin[6] = +List12[3]
+    Xin[7] = +List12[5]
+    return { Zhun, Hui, Xin, Hui4, ZhunFreq, HuiFreq, Name: '羽調 ♭7 1 ♭3 4 5' }
+}
+
+const Tuning6 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 5
     Zhun[a] = '1'
@@ -590,7 +753,7 @@ const Tuning2 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     Hui2[4] = TuningSub1(Hui2[5], 6, 5)
     Hui2[7] = TuningSub1(Hui2[5], 6, 7)
     Hui2[2] = TuningSub1(Hui2[5], 6, 4)
-    Hui2[1] = TuningSub1(Hui2[2], 10, 9)
+    Hui2[1] = TuningSub1(Hui2[4], 7, 5)
     Hui2[6] = TuningSub1(Hui2[1], 4, 7)
 
     Hui3[3] = TuningSub1(Hui3[5], 5, 4)
@@ -601,11 +764,11 @@ const Tuning2 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     Hui3[2] = TuningSub1(Hui3[5], 6, 4)
 
     Hui4[4] = TuningSub1(Hui4[5], 6, 5)
-    Hui4[3] = TuningSub1(Hui4[4], 10, 9)
     Hui4[7] = TuningSub1(Hui4[5], 6, 7)
     Hui4[2] = TuningSub1(Hui4[5], 6, 4)
-    Hui4[1] = TuningSub1(Hui4[2], 10, 9)
+    Hui4[1] = TuningSub1(Hui4[4], 7, 5)
     Hui4[6] = TuningSub1(Hui4[1], 4, 7)
+    Hui4[3] = TuningSub1(Hui4[1], 4, 5)
 
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
@@ -626,7 +789,7 @@ const Tuning2 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '蕤賓調緊五' }
 }
 
-const Tuning3 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
+const Tuning7 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 2
     Zhun[a] = '1'
@@ -651,9 +814,9 @@ const Tuning3 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
 
     Hui2[4] = TuningSub1(Hui2[2], 6, 7)
     Hui2[5] = TuningSub1(Hui2[2], 5, 7)
-    Hui2[3] = TuningSub1(Hui2[4], 10, 9)
     Hui2[6] = TuningSub1(Hui2[4], 4, 5)
     Hui2[1] = TuningSub1(Hui2[6], 7, 4)
+    Hui2[3] = TuningSub1(Hui2[6], 7, 5)
     Hui2[7] = TuningSub1(Hui2[2], 4, 7)
 
     Hui3[4] = TuningSub1(Hui3[2], 6, 7)
@@ -664,9 +827,9 @@ const Tuning3 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     Hui3[7] = TuningSub1(Hui3[2], 4, 7)
 
     Hui4[4] = TuningSub1(Hui4[2], 6, 7)
-    Hui4[3] = TuningSub1(Hui4[4], 10, 9)
     Hui4[6] = TuningSub1(Hui4[4], 4, 5)
-    Hui4[5] = TuningSub1(Hui4[6], 10, 9)
+    Hui4[3] = TuningSub1(Hui4[6], 7, 5)
+    Hui4[5] = TuningSub1(Hui4[3], 4, 5)
     Hui4[1] = TuningSub1(Hui4[6], 7, 4)
     Hui4[7] = TuningSub1(Hui4[2], 4, 7)
 
@@ -688,7 +851,7 @@ const Tuning3 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '淸商調緊二五七' }
 }
 
-const Tuning4 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
+const Tuning8 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -712,10 +875,10 @@ const Tuning4 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     Hui[6] = TuningSub1(Hui[1], 4, 7)
 
     Hui2[4] = TuningSub1(Hui2[1], 5, 7)
-    Hui2[7] = TuningSub1(Hui2[4], 5, 7)
     Hui2[3] = TuningSub1(Hui2[1], 6, 7)
-    Hui2[2] = TuningSub1(Hui2[3], 10, 9)
     Hui2[5] = TuningSub1(Hui2[3], 4, 5)
+    Hui2[2] = TuningSub1(Hui2[5], 7, 5)
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7)
     Hui2[6] = TuningSub1(Hui2[1], 4, 7)
 
     Hui3[4] = TuningSub1(Hui3[1], 5, 7)
@@ -726,10 +889,10 @@ const Tuning4 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     Hui3[6] = TuningSub1(Hui3[1], 4, 7)
 
     Hui4[3] = TuningSub1(Hui4[1], 6, 7)
-    Hui4[2] = TuningSub1(Hui4[3], 10, 9)
     Hui4[5] = TuningSub1(Hui4[3], 4, 5)
-    Hui4[4] = TuningSub1(Hui4[5], 10, 9)
-    Hui4[7] = TuningSub1(Hui4[4], 5, 7)
+    Hui4[2] = TuningSub1(Hui4[5], 7, 5)
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7)
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5)
     Hui4[6] = TuningSub1(Hui4[1], 4, 7)
 
     Zhun = TuningSub2(Zhun, a, n)
@@ -752,7 +915,7 @@ const Tuning4 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '慢角調慢三' }
 }
 
-const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
+const Tuning9 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 4
     Zhun[a] = '1'
@@ -780,7 +943,7 @@ const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     Hui2[1] = TuningSub1(Hui2[6], 7, 4)
     Hui2[2] = TuningSub1(Hui2[4], 5, 4)
     Hui2[7] = TuningSub1(Hui2[4], 5, 7)
-    Hui2[5] = TuningSub1(Hui2[6], 10, 9)
+    Hui2[5] = TuningSub1(Hui2[3], 4, 5)
 
     Hui3[6] = TuningSub1(Hui3[4], 6, 7)
     Hui3[1] = TuningSub1(Hui3[6], 7, 4)
@@ -792,9 +955,9 @@ const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     Hui4[3] = TuningSub1(Hui4[4], 6, 5)
     Hui4[6] = TuningSub1(Hui4[4], 6, 7)
     Hui4[1] = TuningSub1(Hui4[6], 7, 4)
-    Hui4[2] = TuningSub1(Hui4[3], 10, 9)
-    Hui4[7] = TuningSub1(Hui4[2], 4, 7)
-    Hui4[5] = TuningSub1(Hui4[6], 10, 9)
+    Hui4[5] = TuningSub1(Hui4[3], 4, 5)
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5)
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4)
 
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
@@ -819,7 +982,7 @@ const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
     }
 }
 
-const Tuning6 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
+const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
     let Hui3 = [], Zhun = [], Hui2 = [], Hui4 = [], Xin = []
     const a = 1
     Hui3[a] = '1'
@@ -873,7 +1036,7 @@ const Tuning6 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1 
     return { Hui3, Zhun, Hui2, Hui4, Xin, ZhunFreq, Name: '楚商調緊二五' }
 }
 
-const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
+const Tuning11 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -912,10 +1075,10 @@ const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3
 
     Hui4[2] = TuningSub1(Hui4[1], 3, 4)
     Hui4[4] = TuningSub1(Hui4[1], 3, 5)
-    Hui4[3] = TuningSub1(Hui4[4], 10, 9)
     Hui4[5] = TuningSub1(Hui4[1], 4, 7)
     Hui4[7] = TuningSub1(Hui4[2], 4, 7)
     Hui4[6] = TuningSub1(Hui4[4], 4, 5)
+    Hui4[3] = TuningSub1(Hui4[6], 7, 5)
 
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
@@ -941,7 +1104,7 @@ const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3
     }
 }
 
-const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
+const Tuning12 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -989,9 +1152,9 @@ const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
 
     Hui4[3] = TuningSub1(Hui4[1], 3, 4)
     Hui4[5] = TuningSub1(Hui4[1], 3, 5)
-    Hui4[4] = TuningSub1(Hui4[5], 10, 9)
     Hui4[6] = TuningSub1(Hui4[3], 5, 7)
     Hui4[2] = TuningSub1(Hui4[5], 7, 5)
+    Hui4[4] = TuningSub1(Hui4[2], 4, 5)
     Hui4[7] = TuningSub1(Hui4[2], 4, 7)
 
     Zhun = TuningSub2(Zhun, a, n)
@@ -1014,7 +1177,7 @@ const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
     return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '无媒調慢三六' }
 }
 
-const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
+const Tuning13 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 4
     Zhun[a] = '1'
@@ -1082,7 +1245,7 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
     }
 }
 
-const Tuning10 = (Freq = 432, n = 1) => {  // 間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
+const Tuning14 = (Freq = 432, n = 1) => {  // 間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
     let Zhun = [], Hui = [], Hui2 = [], Hui3 = [], Hui4 = [], Xin = []
     const a = 1
     Zhun[a] = '1'
@@ -1150,7 +1313,7 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 間弦二緊五慢三 1 2 3 5 #6 1
     }
 }
 
-const Tuning11 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
+const Tuning15 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
     let Hui = [], Xin = []
     const a = 3
     Hui[a] = '1'
@@ -1175,7 +1338,7 @@ const Tuning11 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b
     return { Hui, Xin, HuiFreq, Name: '日傳平調慢五七' }
 }
 
-const Tuning12 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
+const Tuning16 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
     let Hui = [], Xin = []
     const a = 2
     Hui[a] = '1'
@@ -1200,7 +1363,7 @@ const Tuning12 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 
     return { Hui, Xin, HuiFreq, Name: '側商調慢三四六' }
 }
 
-const Tuning13 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
+const Tuning17 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
     let Hui = [], Xin = []
     const a = 1
     Hui[a] = '1'
@@ -1225,7 +1388,7 @@ const Tuning13 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
     return { Hui, Xin, HuiFreq, Name: '側羽調緊七' }
 }
 
-const Tuning14 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
+const Tuning18 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
     let Zhun = [], Hui = [], Xin = []
     const a = 3
     Zhun[a] = '1'
@@ -1260,7 +1423,7 @@ const Tuning14 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1
     return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, Name: '側蜀調緊二慢五' }
 }
 
-const Tuning15 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五七
+const Tuning19 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五七
     let Hui = [], Xin = []
     const a = 1
     Hui[a] = '1'
