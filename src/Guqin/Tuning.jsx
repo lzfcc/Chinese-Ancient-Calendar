@@ -67,12 +67,16 @@ export default class Converter extends React.Component {
             <th>唱名</th>
             <th>頻率</th>
             <th>鄰弦音分</th>
-            <th><bc>徽法</bc></th>
+            <th><bc>徽一</bc></th>
             <th>音名</th>
             <th>唱名</th>
             <th>頻率</th>
             <th>鄰弦音分</th>
-            <th><bc>混合</bc></th>
+            <th><bc>徽二</bc></th>
+            <th>唱名</th>
+            <th><bc>徽三</bc></th>
+            <th>唱名</th>
+            <th><bc>徽四</bc></th>
             <th>唱名</th>
             <th><bc>新法密率</bc>頻率</th>
           </tr>
@@ -93,7 +97,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>品弦法</h3>
-        <p className='note'>正弄調：1 正調，2 蕤賓，3 清商，4 慢角，5 慢宮；側弄調：6 徽法淒涼（楚商），7 黃鐘，8 无媒，9 間弦一，10 徽法間弦二，11 徽法日本平調，12 徽法側商，13 徽法側羽，14 徽法側蜀，15 徽法側楚</p>
+        <p className='note'>內調：1 正調，2 蕤賓，3 清商，4 慢角，5 慢宮；外調：6 楚商，7 黃鐘，8 无媒，9 間弦一，10 間弦二，11 徽法日傳平調，12 徽法側商，13 徽法側羽，14 徽法側蜀，15 徽法側楚</p>
         {this.input()}
         <button onClick={this.handle} className='button4-1'>算</button><span className='Deci64'>n/d</span>
         {this.result()}
