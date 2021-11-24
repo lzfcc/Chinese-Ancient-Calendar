@@ -73,13 +73,13 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>去極度</th>
+            <th><bc>去極度</bc></th>
             <th>赤緯</th>
             <th>誤差</th>
-            <th>日出</th>
+            <th><bc>日出</bc></th>
             <th>誤差1</th>
             <th>誤差2</th>
-            <th>晷長</th>
+            <th><bc>晷長</bc></th>
             <th>誤差1</th>
             <th>誤差2</th>
           </tr>

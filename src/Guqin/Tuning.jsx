@@ -62,19 +62,19 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th><code>準法</code></th>
+            <th><bc>準法</bc></th>
             <th>音名</th>
             <th>唱名</th>
             <th>頻率</th>
             <th>鄰弦音分</th>
-            <th><code>徽法</code></th>
+            <th><bc>徽法</bc></th>
             <th>音名</th>
             <th>唱名</th>
             <th>頻率</th>
             <th>鄰弦音分</th>
-            <th><code>混合</code></th>
+            <th><bc>混合</bc></th>
             <th>唱名</th>
-            <th><code>新法密率</code>頻率</th>
+            <th><bc>新法密率</bc>頻率</th>
           </tr>
           {(this.state.output2 || []).map(row => {
             return (

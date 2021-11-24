@@ -47,6 +47,7 @@ class Interval {
 
 const FushionList2 = [
     new Interval(0, 'C', 0, 0, '1'),
+    new Interval(2, 'C', 0, 1, '243/240'),
     new Interval(2, 'C', 1, -2, '25/24'),
     new Interval(1, 'D', -1, 0, '256/243'),
     new Interval(2, 'C', 1, -1, '135/128'),
@@ -79,6 +80,7 @@ const FushionList2 = [
     new Interval(1, 'A', -2, 0, '262144/177147'),
     new Interval(2, 'G', 0, -1, '40/27'),
     new Interval(0, 'G', 0, 0, '3/2'),
+    new Interval(2, 'G', 0, 1, '243/160'),
     new Interval(2, 'G', 1, -2, '25/16'),
     new Interval(1, 'A', -1, 0, '128/81'),
     new Interval(2, 'G', 1, -1, '405/256'),
@@ -98,10 +100,12 @@ const FushionList2 = [
     new Interval(1, 'B', 0, 0, '243/128'),
     new Interval(2, 'C', -1, 2, '48/25'),
     new Interval(1, 'D', -2, 0, '1048576/531441'),
+    new Interval(2, 'C', 0, -1, '480/243'),
     new Interval(0, 'C', 0, 0, '2'),
 ]
 const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
     0: [0, 'C', '1', '1'],
+    21.51: [2, '<span class="upline1">C</span>', '<span class="upline1">1</span>', '81/80'],
     70.67: [2, '♯<span class="dnline2">C</span>', '♯<span class="dnline2">1</span>', '25/24'], // 小半音
     90.22: [1, '♭D', '♭2', '256/243'],
     92.18: [2, '♯<span class="dnline1">C</span>', '♯<span class="dnline1">1</span>', '135/128'],
@@ -136,7 +140,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     680.45: [2, '<span class="dnline1">G</span>', '<span class="dnline1">5</span>', '40/27'],
 
     701.96: [0, 'G', '5', '3/2'],
-
+    723.46: [2, '<span class="upline1">G</span>', '<span class="upline1">5</span>', '243/160'],
     772.63: [2, '♯<span class="dnline2">G</span>', '♯<span class="dnline2">5</span>', '25/16'],
     792.18: [1, '♭A', '♭6', '128/81'],
     794.13: [2, '♯<span class="dnline1">G</span>', '♯<span class="dnline1">5</span>', '405/256'],
@@ -154,6 +158,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     1107.82: [2, '·♭<span class="upline1">C</span>', '·♭<span class="upline1">1</span>', '256/135'],
     1109.78: [1, 'B', '7', '243/128'],
     1129.33: [2, '·♭<span class="upline2">C</span>', '·♭<span class="upline2">1</span>', '48/25'],
+    1178.49: [2, '·<span class="dnline1">C</span>', '·<span class="dnline1">1</span>', '160/81'],
     1200: [0, 'C', '1', '2']
 }
 
@@ -175,6 +180,7 @@ const Portion2Name = (a, mode) => { // 輸入頻率比，輸出對應的唱名mo
     }
     // return '　'
 }
+// console.log(Portion2Name('243/240', 1))
 
 const Portion2Pitch = (portion, one, OneDif) => { // 輸入一弦頻率、一弦是否調了，輸出音名
     const Base = frc(one).div(OneDif || 1)
@@ -719,23 +725,44 @@ const Tuning5 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
         Zhun, Hui, Mix, Xin, ZhunFreq, HuiFreq, MixFreq,
         OneDifZhun: '243/256',
         OneDifHui: '15/16',
+        OneDifMix: '15/16',
         Name: '慢宮調慢一三六'
     }
 }
 
-const Tuning6 = (Freq = 432, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
-    let Hui = [], Xin = []
-    const a = 3
+const Tuning6 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
+    let Hui = [], Zhun = [], Mix = [], Xin = []
+    const a = 1
     Hui[a] = '1'
+    Zhun[a] = '1'
+    Mix[a] = '1'
+    // 準法
+    Zhun[3] = TuningSub1(Zhun[1], 4, 5)
+    Zhun[2] = TuningSub1(Zhun[3], 10, 9)
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7)
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4)
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7)
+    Zhun[5] = TuningSub1(Zhun[3], 4, 5)
     // 徽法律
-    Hui[6] = TuningSub1(Hui[3], 5, 7)
-    Hui[4] = TuningSub1(Hui[6], 5, 4)
-    Hui[7] = TuningSub1(Hui[3], 3, 5)
-    Hui[5] = TuningSub1(Hui[3], 4, 5)
+    Mix[6] = TuningSub1(Mix[1], 4, 7)
+    Mix[2] = TuningSub1(Mix[6], 5, 3)
+    Mix[3] = TuningSub1(Mix[6], 7, 5)
+    Mix[5] = TuningSub1(Mix[2], 5, 7)
+    Mix[4] = TuningSub1(Mix[6], 5, 4)
+    Mix[7] = TuningSub1(Mix[3], 3, 5)
+    // 混合
+    Hui[6] = TuningSub1(Hui[1], 4, 7)
+    Hui[3] = TuningSub1(Hui[6], 7, 5)
     Hui[2] = TuningSub1(Hui[6], 5, 3)
-    Hui[1] = TuningSub1(Hui[3], 5, 4)
+    Hui[5] = TuningSub1(Hui[2], 5, 7)
+    Hui[4] = TuningSub1(Hui[6], 5, 4)
+    Hui[7] = TuningSub1(Hui[4], 5, 7)
     Hui = TuningSub2(Hui, a, n)
+    Mix = TuningSub2(Mix, a, n)
+    Zhun = TuningSub2(Zhun, a, n)
     const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
+    const MixFreq = TuningSub3(Mix, 3, '4/5', Freq)
+    const ZhunFreq = TuningSub3(Zhun, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -745,14 +772,15 @@ const Tuning6 = (Freq = 432, n = 3) => {  // 徽法律淒涼調緊二五 5 #6 1 
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq, Name: '淒涼調緊二五' }
+    return { Hui, Zhun, Mix, Xin, HuiFreq, MixFreq, ZhunFreq, Name: '楚商調緊二五' }
 }
 
 const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
-    let Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Mix = [], Xin = []
     const a = 1
     Zhun[a] = '1'
     Hui[a] = '1'
+    Mix[a] = '1'
     // 準法律
     Zhun[5] = TuningSub1(Zhun[1], 4, 7)
     Zhun[3] = TuningSub1(Zhun[5], 5, 4)
@@ -767,10 +795,19 @@ const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3
     Hui[5] = TuningSub1(Hui[1], 4, 7)
     Hui[7] = TuningSub1(Hui[2], 4, 7)
     Hui[6] = TuningSub1(Hui[4], 4, 5)
+    // 混合
+    Mix[2] = TuningSub1(Mix[1], 3, 4)
+    Mix[3] = TuningSub1(Mix[1], 5, 7)
+    Mix[5] = TuningSub1(Mix[1], 4, 7)
+    Mix[7] = TuningSub1(Mix[2], 4, 7)
+    Mix[6] = TuningSub1(Mix[3], 5, 7)
+    Mix[4] = TuningSub1(Mix[6], 5, 4)
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
+    Mix = TuningSub2(Mix, a, n)
     const ZhunFreq = TuningSub3(Zhun, 3, '64/81', Freq)
     const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
+    const MixFreq = TuningSub3(Mix, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[1] / 2
@@ -781,17 +818,20 @@ const Tuning7 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
     return {
-        Zhun, Hui, Xin, ZhunFreq, HuiFreq,
+        Zhun, Hui, Mix, Xin, ZhunFreq, HuiFreq, MixFreq,
         OneDifZhun: '8/9',
-        OneDifHui: '9/10', Name: '黃鐘調緊五慢一'
+        OneDifHui: '9/10',
+        OneDifMix: '9/10',
+        Name: '黃鐘調緊五慢一'
     }
 }
 
 const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
-    let Zhun = [], Hui = [], Xin = []
+    let Zhun = [], Hui = [], Mix = [], Xin = []
     const a = 1
     Zhun[a] = '1'
     Hui[a] = '1'
+    Mix[a] = '1'
     // 準法律
     Zhun[4] = TuningSub1(Zhun[1], 5, 7)
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
@@ -815,11 +855,20 @@ const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
     Hui[5] = TuningSub1(Hui[1], 3, 5)
     Hui[2] = TuningSub1(Hui[5], 7, 5)
     Hui[7] = TuningSub1(Hui[2], 4, 7)
+    // 混合
+    Mix[3] = TuningSub1(Mix[1], 3, 4)
+    Mix[4] = TuningSub1(Mix[3], 5, 6)
+    Mix[6] = TuningSub1(Mix[4], 6, 7)
+    Mix[7] = TuningSub1(Mix[4], 5, 7)
+    Mix[2] = TuningSub1(Mix[7], 7, 4)
+    Mix[5] = TuningSub1(Mix[2], 5, 7)
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
+    Mix = TuningSub2(Mix, a, n)
     // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
     const ZhunFreq = TuningSub3(Zhun, 5, '1', Freq)
     const HuiFreq = TuningSub3(Hui, 5, '1', Freq)
+    const MixFreq = TuningSub3(Mix, 5, '1', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -829,7 +878,7 @@ const Tuning8 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, Name: '无媒調慢三六' }
+    return { Zhun, Hui, Mix, Xin, ZhunFreq, HuiFreq, MixFreq, Name: '无媒調慢三六' }
 }
 
 const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
@@ -837,6 +886,7 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
     const a = 4
     Zhun[a] = '1'
     Hui[a] = '1'
+    // Mix[a] = '1'
     // 準法律
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
     Zhun[2] = TuningSub1(Zhun[4], 5, 4)
@@ -851,9 +901,18 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
     Hui[2] = TuningSub1(Hui[7], 7, 4)
     Hui[3] = TuningSub1(Hui[4], 6, 5)
     Hui[1] = TuningSub1(Hui[3], 5, 4) // 這樣是低了兩個音差
+    // 混合
+    // Mix[6] = TuningSub1(Mix[4], 4, 5)
+    // Mix[2] = TuningSub1(Mix[7], 7, 4)
+    // Mix[5] = TuningSub1(Mix[2], 5, 7)
+    // Mix[3] = TuningSub1(Mix[5], 5, 4)
+    // Mix[7] = TuningSub1(Mix[5], 4, 5)
+    // Mix[1] = TuningSub1(Mix[3], 5, 4)
     Zhun = TuningSub2(Zhun, a, n)
+    // Mix = TuningSub2(Mix, a, n)
     Hui = TuningSub2(Hui, a, n)
     const ZhunFreq = TuningSub3(Zhun, 4, '8/9', Freq)
+    // const MixFreq = TuningSub3(Mix, 4, '9/10', Freq)
     const HuiFreq = TuningSub3(Hui, 4, '9/10', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
@@ -867,14 +926,17 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
     return {
         Zhun, Hui, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
-        OneDifHui: '243/256', Name: '間弦一慢一三'
+        OneDifHui: '243/256',
+        // OneDifMix: '243/256',
+        Name: '間弦一慢一三'
     }
 }
 
 const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
-    let Hui = [], Xin = []
+    let Hui = [], Mix = [], Xin = []
     const a = 1
     Hui[a] = '1'
+    Mix[a] = '1'
     // 徽法律
     // 陳應時法
     Hui[3] = TuningSub1(Hui[1], 4, 5)
@@ -884,8 +946,6 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律間弦二緊五慢三 1 2
     Hui[6] = TuningSub1(Hui[3], 5, 7)
     Hui[2] = TuningSub1(Hui[7], 7, 4)
     Hui[3] = TuningSub1(Hui[1], 3, 4)
-    Hui = TuningSub2(Hui, a, n)
-    const HuiFreq = TuningSub3(Hui, 2, '2/3', Freq)
     // 我
     // Hui[3] = TuningSub1(Hui[1], 6, 7)
     // Hui[4] = TuningSub1(Hui[1], 5, 7)
@@ -894,6 +954,19 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律間弦二緊五慢三 1 2
     // Hui[2] = TuningSub1(Hui[7], 7, 4)
     // Hui[6] = TuningSub1(Hui[1], 4, 7)
     // const HuiFreq = TuningSub3(Hui, 2, '2/3', Freq)
+
+    // 混合
+    Mix[3] = TuningSub1(Mix[1], 4, 5)
+    Mix[5] = TuningSub1(Mix[3], 4, 5)
+    Mix[4] = TuningSub1(Mix[1], 5, 7)
+    Mix[6] = TuningSub1(Mix[3], 5, 7)
+    Mix[2] = TuningSub1(Mix[4], 5, 4)
+    Mix[7] = TuningSub1(Mix[2], 4, 7)
+    Mix[3] = TuningSub1(Mix[1], 3, 4)
+    const HuiFreq = TuningSub3(Hui, 2, '2/3', Freq)
+    const MixFreq = TuningSub3(Mix, 2, '2/3', Freq)
+    Hui = TuningSub2(Hui, a, n)
+    Mix = TuningSub2(Mix, a, n)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
     Xin[1] = +List12[3] / 2
@@ -903,7 +976,7 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律間弦二緊五慢三 1 2
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq, Name: '間弦二緊五慢三' }
+    return { Hui, Xin, Mix, HuiFreq, MixFreq, Name: '間弦二緊五慢三' }
 }
 
 const Tuning11 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
@@ -1046,7 +1119,7 @@ const Tuning15 = (Freq = 432, n = 2) => {  // 徽法律側楚調慢一二緊五�
 
 const NumList = '〇一二三四五六七八九'
 
-export const Tuning = (TuningMode, Freq = 432, n) => {
+export const Tuning = (TuningMode, Freq = 432, n = 0) => {
     const { Zhun, Hui, Xin, Mix, ZhunFreq, HuiFreq, OneDifZhun, OneDifHui, Name } = eval('Tuning' + TuningMode)(Freq, +n)
     const DifZhun = [], NameZhun = [], DifHui = [], NameHui = [], NameMix = [], PitchZhun = [], PitchHui = []
     if (Zhun) {
@@ -1058,14 +1131,12 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
             PitchZhun[i] = Portion2Pitch(Zhun[i], Zhun[1], OneDifZhun || 1)
         }
     }
-    if (Hui) {
-        for (let i = 1; i <= 6; i++) {
-            DifHui[i] = OctaveCent(Hui[i + 1], Hui[i]).Cent.toFixed(1)
-        }
-        for (let i = 1; i <= 7; i++) {
-            NameHui[i] = Portion2Name(Hui[i], 2)
-            PitchHui[i] = Portion2Pitch(Hui[i], Hui[1], OneDifHui || 1)
-        }
+    for (let i = 1; i <= 6; i++) {
+        DifHui[i] = OctaveCent(Hui[i + 1], Hui[i]).Cent.toFixed(1)
+    }
+    for (let i = 1; i <= 7; i++) {
+        NameHui[i] = Portion2Name(Hui[i], 2)
+        PitchHui[i] = Portion2Pitch(Hui[i], Hui[1], OneDifHui || 1)
     }
     if (Mix) {
         for (let i = 1; i <= 7; i++) {
@@ -1074,7 +1145,7 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
     }
     let Print = []
     for (let i = 1; i <= 7; i++) {
-        const Tmp = Zhun ? [Zhun[i], PitchZhun[i], NameZhun[i], +(ZhunFreq[i].toFixed(4)), DifZhun[i - 1]] : ['', '', '', '']
+        const Tmp = Zhun ? [Zhun[i], PitchZhun[i], NameZhun[i], +(ZhunFreq[i].toFixed(4)), DifZhun[i - 1]] : ['', '', '', '', '']
         const Tmp1 = Mix ? [Mix[i], NameMix[i]] : ['', '']
         Print = Print.concat({
             title: NumList[i],
@@ -1084,15 +1155,13 @@ export const Tuning = (TuningMode, Freq = 432, n) => {
     }
     return { Name, Print }
 }
-// console.log(Tuning(12))
+// console.log(Tuning(9))
 
 export const FretPitch = (TuningMode, n) => { // 徽位音。弦法、宮弦
     let { Zhun, Hui, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
     let ZhunPrint = [], HuiPrint = [], ZhunNameList = [], ZhunNameBList = [], HuiNameList = [], HuiNameBList = []
     for (let i = 1; i <= 7; i++) { // 七弦
         let ZhunPitch = [], HuiPitch = [], HuiNameTmp = [], ZhunNameTmp = [], HuiNameBTmp = [], ZhunNameBTmp = []
-        let sample = []
-
         for (let k = 0; k <= 15; k++) { // 15徽 
             if (Zhun) { // Zhun 準法律七弦散音頻率比                 
                 ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false) // 這個是核心，其他都是附帶
@@ -1179,17 +1248,20 @@ export const Position2Pitch = (Input, TuningMode, TempMode, isMixed, GongString,
     isStrict = +isStrict
     GongString = +GongString
     ZhiString = +ZhiString
-    const { Zhun, Hui, Mix, ZhunFreq, HuiFreq, MixFreq } = eval('Tuning' + TuningMode)(BaseFreq, GongString)
-    let StringList = [], FreqList = []
+    const { Zhun, Hui, Mix, ZhunFreq, HuiFreq, MixFreq, OneDifZhun, OneDifHui, OneDifMix } = eval('Tuning' + TuningMode)(BaseFreq, GongString)
+    let StringList = [], FreqList = [], OneDif = ''
     if (TempMode === 1) {
         StringList = Zhun
         FreqList = ZhunFreq
+        OneDif = OneDifZhun
     } else if (TempMode === 2) {
         StringList = Hui
         FreqList = HuiFreq
+        OneDif = OneDifHui
     } else if (TempMode === 3) {
         StringList = Mix
         FreqList = MixFreq
+        OneDif = OneDifMix
     }
     const TheString = ZhiString || GongString
     const isZhi = ZhiString ? true : false
@@ -1264,44 +1336,27 @@ export const Position2Pitch = (Input, TuningMode, TempMode, isMixed, GongString,
             Scale[i] = frc(1).div(Leng).mul(StringList[String[i]])
         }
         Cent[i] = Math.log2(Number(frc(Scale[i]))) * 1200 - (isZhi ? 498.045 : 0) // 若用徵弦作為基準，減純五度
-        floor = Math.floor((Cent[i] + 21.5) / 1200) // 超出一個八度
+        floor = Math.floor(Cent[i] / 1200) // 超出一個八度
         Cent[i] = (Cent[i] % 1200 + 1200) % 1200
         // 下面是處理模糊徽位
-        if (isMixed === 0) {
-            for (const [key, value] of Object.entries(FushionList)) {
-                const threshold = isStrict ? 0.1 : 10
-                if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && (TempMode === value[0] || value[0] === 0)) {
-                    Pitch[i] = value[OutputMode <= 3 ? OutputMode : 3]
+        for (const [key, value] of Object.entries(FushionList)) {
+            const threshold = isStrict ? 0.95 : 10
+            if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && ((TempMode === value[0] || value[0] === 0) || isMixed)) {
+                Pitch[i] = value[OutputMode === 2 ? OutputMode : 3]
+                break
+            }
+        }
+        if (!isStrict && !Pitch[i]) { // 這個用來對付徽位更不準的
+            for (const [key, value] of Object.entries(FushionList)) { // 21.5普通音差
+                if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && ((TempMode === value[0] || value[0] === 0) || isMixed)) {
+                    Pitch[i] = value[OutputMode === 2 ? OutputMode : 3]
                     break
-                }
-            }
-            if (isStrict === 0 && Pitch[i] === undefined) { // 這個用來對付徽位更不準的
-                for (const [key, value] of Object.entries(FushionList)) { // 21.5普通音差
-                    if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && (TempMode === value[0] || value[0] === 0)) {
-                        Pitch[i] = value[OutputMode <= 3 ? OutputMode : 3]
-                        break
-                    }
-                }
-            }
-        } else {
-            for (const [key, value] of Object.entries(FushionList)) {
-                const threshold = isStrict ? 0.1 : 10
-                if (Cent[i] > +key - threshold && Cent[i] < +key + threshold) {
-                    Pitch[i] = value[OutputMode <= 3 ? OutputMode : 3]
-                    break
-                }
-            }
-            if (isStrict === 0 && Pitch[i] === undefined) { // 這個用來對付徽位更不準的
-                for (const [key, value] of Object.entries(FushionList)) { // 21.5普通音差
-                    if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5) {
-                        Pitch[i] = value[OutputMode <= 3 ? OutputMode : 3]
-                        break
-                    }
                 }
             }
         }
-
-        if (OutputMode >= 3) {
+        if (OutputMode === 1) {
+            Pitch[i] = Portion2Pitch(Pitch[i], StringList[1], OneDif || 1)
+        } else if (OutputMode >= 3) {
             if (Pitch[i] === undefined) {
                 Pitch[i] = frc(2 ** (Cent[i] / 1200)).toFraction(false)
             }

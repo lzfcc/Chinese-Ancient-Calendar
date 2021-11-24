@@ -135,6 +135,14 @@ v {
   margin: 0 .2em
 }
 
+bc {
+  background: var(--gray);
+  padding: .1em .2em;
+  margin: 0 .2em;
+  color: var(--bg);
+  font-weight: bold;
+  border-radius: .2em;
+}
 
 blockquote {
   background: var(--bgpink);
@@ -633,12 +641,11 @@ year-range {
 
 code {
   font-family: var(--codesans);
-  background: var(--black);
-  color: var(--bg);
+  font-size: .9em;
+  background: white;
+  border: 1px solid var(--shallowgray);
   border-radius: .2em;
-  padding: .2em .2em;
-  margin: 0 0.2em;
-  font-size: .95em;
+  padding: .1em .2em;
 }
 
 button {
