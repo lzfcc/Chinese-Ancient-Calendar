@@ -637,7 +637,7 @@ const Tuning4 = (Freq = 432, n = 4) => { // 徵調
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
     Zhun[5] = TuningSub1(Zhun[7], 5, 4)
     Zhun[2] = TuningSub1(Zhun[7], 7, 4)
-    Zhun[6] = TuningSub1(Zhun[4], 4, 5)    
+    Zhun[6] = TuningSub1(Zhun[4], 4, 5)
     Zhun[3] = TuningSub1(Zhun[6], 7, 5)
     Zhun[1] = TuningSub1(Zhun[3], 5, 4)
 
@@ -646,21 +646,22 @@ const Tuning4 = (Freq = 432, n = 4) => { // 徵調
     Hui[2] = TuningSub1(Hui[7], 7, 4)
     Hui[1] = TuningSub1(Hui[4], 7, 5)
     Hui[6] = TuningSub1(Hui[1], 4, 7)
-    Hui[3] = TuningSub1(Hui[2], 5, 6)   
+    Hui[3] = TuningSub1(Hui[2], 5, 6)
 
     Hui2[1] = TuningSub1(Hui2[4], 7, 5)
     Hui2[6] = TuningSub1(Hui2[1], 4, 7)
     Hui2[7] = TuningSub1(Hui2[4], 5, 7)
-    Hui2[5] = TuningSub1(Hui2[6], 6, 5)
     Hui2[2] = TuningSub1(Hui2[7], 7, 4)
-    Hui2[3] = TuningSub1(Hui2[2], 5, 6)   
-    
+    Hui2[3] = TuningSub1(Hui2[2], 5, 6)
+    Hui2[5] = TuningSub1(Hui2[6], 6, 5)
+
     Hui4[1] = TuningSub1(Hui4[4], 7, 5)
     Hui4[6] = TuningSub1(Hui4[1], 4, 7)
     Hui4[5] = TuningSub1(Hui4[6], 6, 5)
+    Hui4[3] = TuningSub1(Hui4[4], 9, 8)
     Hui4[7] = TuningSub1(Hui4[5], 4, 5)
     Hui4[2] = TuningSub1(Hui4[7], 7, 4)
-    Hui4[3] = TuningSub1(Hui4[4], 9, 8)  
+
 
     Zhun = TuningSub2(Zhun, a, n)
     Hui = TuningSub2(Hui, a, n)
@@ -697,9 +698,9 @@ const Tuning5 = (Freq = 432, n = 2) => { // 羽調
     // 一二三同
     Hui[7] = TuningSub1(Hui[2], 4, 7)
     Hui[5] = TuningSub1(Hui[7], 5, 4)
-    Hui[3] = TuningSub1(Hui[5], 7, 6) 
+    Hui[3] = TuningSub1(Hui[5], 7, 6)
     Hui[6] = TuningSub1(Hui[3], 5, 7)
-    Hui[1] = TuningSub1(Hui[3], 5, 4)   
+    Hui[1] = TuningSub1(Hui[3], 5, 4)
     Hui[4] = TuningSub1(Hui[2], 4, 5)
 
     Hui4[4] = TuningSub1(Hui4[2], 4, 5)
@@ -997,19 +998,19 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1
     Zhun[7] = TuningSub1(Zhun[4], 5, 7)
     Zhun[5] = TuningSub1(Zhun[3], 4, 5)
     // 徽法律
-    Hui3[6] = TuningSub1(Hui3[1], 4, 7)
-    Hui3[3] = TuningSub1(Hui3[6], 7, 5)
-    Hui3[2] = TuningSub1(Hui3[6], 5, 3)
-    Hui3[5] = TuningSub1(Hui3[2], 5, 7)
-    Hui3[4] = TuningSub1(Hui3[6], 5, 4)
-    Hui3[7] = TuningSub1(Hui3[4], 5, 7)
-
     Hui2[6] = TuningSub1(Hui2[1], 4, 7)
     Hui2[2] = TuningSub1(Hui2[6], 5, 3)
     Hui2[3] = TuningSub1(Hui2[6], 7, 5)
     Hui2[5] = TuningSub1(Hui2[2], 5, 7)
     Hui2[4] = TuningSub1(Hui2[6], 5, 4)
     Hui2[7] = TuningSub1(Hui2[3], 3, 5)
+
+    Hui3[6] = TuningSub1(Hui3[1], 4, 7)
+    Hui3[3] = TuningSub1(Hui3[6], 7, 5)
+    Hui3[2] = TuningSub1(Hui3[6], 5, 3)
+    Hui3[5] = TuningSub1(Hui3[2], 5, 7)
+    Hui3[4] = TuningSub1(Hui3[6], 5, 4)
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7)
 
     Hui4[6] = TuningSub1(Hui4[1], 4, 7)
     Hui4[2] = TuningSub1(Hui4[6], 5, 3)
@@ -1018,8 +1019,8 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1
     Hui4[7] = TuningSub1(Hui4[3], 3, 5)
     Hui4[4] = TuningSub1(Hui4[7], 7, 5)
 
-    Hui3 = TuningSub2(Hui3, a, n)
     Hui2 = TuningSub2(Hui2, a, n)
+    Hui3 = TuningSub2(Hui3, a, n)
     Hui4 = TuningSub2(Hui4, a, n)
     Zhun = TuningSub2(Zhun, a, n)
     // const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
@@ -1142,7 +1143,7 @@ const Tuning12 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
     Hui2[5] = TuningSub1(Hui2[1], 3, 5)
     Hui2[2] = TuningSub1(Hui2[5], 7, 5)
     Hui2[7] = TuningSub1(Hui2[2], 4, 7)
-    // 混合
+
     Hui3[3] = TuningSub1(Hui3[1], 3, 4)
     Hui3[4] = TuningSub1(Hui3[3], 5, 6)
     Hui3[6] = TuningSub1(Hui3[4], 6, 7)
@@ -1506,66 +1507,59 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
 }
 // console.log(Tuning(9))
 
-export const FretPitch = (TuningMode, n) => { // 徽位音。弦法、宮弦
-    let { Zhun, Hui, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
-    let ZhunPrint = [], HuiPrint = [], ZhunNameList = [], ZhunNameBList = [], HuiNameList = [], HuiNameBList = []
+export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、宮弦
+    let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
+    let Print = [], NameList = [], NameBList = []
+    let StringList = []
+    let OneDif = ''
+    TempMode = +TempMode
+    if (TempMode === 1) {
+        StringList = Hui
+        OneDif = OneDifHui
+    } else if (TempMode === 2) {
+        StringList = Hui2
+        OneDif = OneDifHui
+    } else if (TempMode === 3) {
+        StringList = Hui3
+        OneDif = OneDifHui
+    } else if (TempMode === 4) {
+        StringList = Hui4
+        OneDif = OneDifHui
+    } else if (TempMode === 5) {
+        StringList = Zhun
+        OneDif = OneDifZhun
+    }
+    if (StringList === undefined) {
+        return '無此律制'
+    }
     for (let i = 1; i <= 7; i++) { // 七弦
-        let ZhunPitch = [], HuiPitch = [], HuiNameTmp = [], ZhunNameTmp = [], HuiNameBTmp = [], ZhunNameBTmp = []
-        for (let k = 0; k <= 15; k++) { // 15徽 
-            if (Zhun) { // Zhun 準法律七弦散音頻率比                 
-                ZhunPitch[k] = frc(Zhun[i]).div(Fret2Leng(k)).toFraction(false) // 這個是核心，其他都是附帶
-                ZhunNameTmp[k] = Portion2Name(ZhunPitch[k], 2) // ZhunPitch是頻率比分數 知道頻率比，在對象中找到對應的音名唱名  
-                ZhunNameBTmp[k] = Portion2Pitch(ZhunPitch[k], Zhun[1], OneDifZhun || 1)
-                ZhunPitch[k] += `</br>`
-                ZhunPitch[k] += ZhunNameTmp[k] ? ZhunNameTmp[k] + ' ' : ''
-                ZhunPitch[k] += ZhunNameBTmp[k] || ''
-            }
-            // 徽法律 有些沒有準法律
-            HuiPitch[k] = frc(Hui[i]).div(Fret2Leng(k)).toFraction(false)
-            HuiNameTmp[k] = Portion2Name(HuiPitch[k], 2)
-            HuiNameBTmp[k] = Portion2Pitch(HuiPitch[k], Hui[1], OneDifHui || 1)
-            HuiPitch[k] += `</br>`
-            HuiPitch[k] += HuiNameTmp[k] ? HuiNameTmp[k] + ' ' : ''
-            HuiPitch[k] += HuiNameBTmp[k] || ''
+        let Pitch = [], NameTmp = [], NameBTmp = []
+        for (let k = 0; k <= 16; k++) { // 15徽 
+            Pitch[k] = frc(StringList[i]).div(Fret2Leng(k)).toFraction(false) // 這個是核心，其他都是附帶
+            NameTmp[k] = Portion2Name(Pitch[k], 2) // Pitch是頻率比分數 知道頻率比，在對象中找到對應的音名唱名  
+            NameBTmp[k] = Portion2Pitch(Pitch[k], StringList[1], OneDif || 1)
+            Pitch[k] += `</br>`
+            Pitch[k] += NameTmp[k] ? NameTmp[k] + ' ' : ''
+            Pitch[k] += NameBTmp[k] || ''
         }
-        if (Zhun) {
-            ZhunNameList = ZhunNameList.concat(ZhunNameTmp)
-            ZhunNameBList = ZhunNameBList.concat(ZhunNameBTmp) // 右邊這個每個循環清空
-            ZhunPitch = ZhunPitch.reverse()
-            ZhunPitch = [Zhun[i], ...ZhunPitch]
-            ZhunPrint = ZhunPrint.concat({
-                title: NumList[i],
-                data: ZhunPitch
-            })
-        }
-        HuiNameList = HuiNameList.concat(HuiNameTmp)
-        HuiNameBList = HuiNameBList.concat(HuiNameBTmp)
-        HuiPitch = HuiPitch.reverse()
-        HuiPitch = [Hui[i], ...HuiPitch]
-        HuiPrint = HuiPrint.concat({
+        NameList = NameList.concat(NameTmp)
+        NameBList = NameBList.concat(NameBTmp) // 右邊這個每個循環清空
+        Pitch = Pitch.reverse()
+        Print = Print.concat({
             title: NumList[i],
-            data: HuiPitch
+            data: Pitch
         })
     }
-    HuiNameList = Unique(HuiNameList) // 去重
-    HuiNameBList = Unique(HuiNameBList)
-    const HuiNamePrint = [{
-        data: HuiNameBList
+    NameList = Unique(NameList)
+    NameBList = Unique(NameBList)
+    const NamePrint = [{
+        data: NameBList
     }, {
-        data: HuiNameList
+        data: NameList
     }]
-
-    ZhunNameList = Unique(ZhunNameList)
-    ZhunNameBList = Unique(ZhunNameBList)
-    const ZhunNamePrint = [{
-        data: ZhunNameBList
-    }, {
-        data: ZhunNameList
-    }]
-    return { ZhunPrint, HuiPrint, ZhunNamePrint, HuiNamePrint }
+    return { Print, NamePrint }
 }
-
-// console.log(FretPitch(1, 0))
+// console.log(FretPitch(1, 5, 0))
 // while (Number(ZhunPitch[k]) >= 2) {
 //     ZhunPitch[k] = ZhunPitch[k].div(2)
 // }
