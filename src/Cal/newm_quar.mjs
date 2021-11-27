@@ -4,7 +4,7 @@ import { Accum2Mansion } from './astronomy_other.mjs'
 
 export default (CalName, year) => {
     const { Lunar, Solar, WinsolsWinsolsDif, WinsolsOriginMon,
-        OriginAd, OriginYearSc, OriginDayCorr, WinsolsCorr, ZhengNum, OriginMonNum,
+        OriginAd, OriginYearSc, BuScCorr, WinsolsCorr, ZhengNum, OriginMonNum,
         YuanRange, TongRange, isTermLeap, EcliRange, EcliNumer, MansionRaw
     } = Para[CalName]
     let { JiRange, BuRange } = Para[CalName]
@@ -20,7 +20,7 @@ export default (CalName, year) => {
     const JiOrder = ~~(OriginYear % YuanRange / JiRange) // 入第幾紀
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
     const BuOrder = ~~(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
-    const BuScOrder = (1 + BuOrder * BuSkip + (OriginDayCorr || 0)) % 60 // 蔀（統）的干支序號
+    const BuScOrder = (1 + BuOrder * BuSkip + (BuScCorr || 0)) % 60 // 蔀（統）的干支序號
     const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsWinsolsDif || 0) + (WinsolsCorr || 0) // 冬至積日
     const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
     const OriginAccum = WinsolsAccumRaw - (WinsolsWinsolsDif || 0) // 曆元積日

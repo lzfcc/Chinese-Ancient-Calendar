@@ -2,7 +2,7 @@ import { outputFile } from './output.mjs'
 import fs from 'fs'
 
 // const date = new Date()
-const printData = outputFile(1, 1112, 1112, false, [ // mode, YearStart, YearEnd, isAuto,
+const printData = outputFile(1 -600, -600, false, [ // mode, YearStart, YearEnd, isAuto,
     // 'Yin',
     // 'Zhou',
     // 'Huangdi',
@@ -16,6 +16,7 @@ const printData = outputFile(1, 1112, 1112, false, [ // mode, YearStart, YearEnd
     // 'LuG',
     // 'XiaDong',
     // 'XiaYu',
+    // 'Zhuanxu1',
     // 'ZhuanxuA',
     // 'ZhuanxuB',
     // 'ZhuanxuC',
@@ -76,7 +77,7 @@ const printData = outputFile(1, 1112, 1112, false, [ // mode, YearStart, YearEnd
     // 'Fengyuan',
     // 'Guantian',
     // 'Zhantian',
-    'Jiyuan', 
+    // 'Jiyuan', 
     // 'Tongyuan',
     // 'Qiandao', 
     // 'Chunxi', 
