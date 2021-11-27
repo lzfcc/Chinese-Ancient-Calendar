@@ -303,6 +303,28 @@ export default {
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
+    Zhuanxu2: {
+        Type: 1,
+        Denom: 940,
+        Lunar: 27759 / 940,
+        Solar: 365.25,
+        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginMon: -(1 + 83 / 152),
+        OriginAd: -2760305, // -1505
+        // JdOrigin: 1726575.5,
+        JdWinsols: 1721051 + 3 / 32,
+        OriginYearSc: 52, // 曆元距甲子日數
+        BuScCorr: 5,
+        ZhengNum: 2, // 十月爲年首
+        OriginMonNum: 2, // 建寅
+        YuanRange: 4560,
+        JiRange: 1520,
+        BuRange: 76,
+        isTermLeap: 0,
+        WinsolsCorr: 0.5,
+        EcliRange: 135 / 23,
+        EcliNumer: 513,
+    },
     ZhuanxuA: {
         Type: 1,
         ApplyYear: [[-365, -306]],
