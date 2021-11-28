@@ -109,6 +109,12 @@ const FushionList1 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2'
 const FushionList2 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8', '2']
 const FushionList3 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '27/16', '9/5', '15/8', '2']
 const FushionList4 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '40/27', '8/5', '5/3', '9/5', '15/8', '2']
+const FushionList5S = ['1', '9/8', '81/64', '4/3', '729/512', '3/2', '27/16', '243/128', '2']
+const FushionList1S = ['1', '9/8', '5/4', '4/3', '45/32', '3/2', '5/3', '15/8', '2']
+const FushionList2S = ['1', '10/9', '5/4', '4/3', '45/32', '3/2', '5/3', '15/8', '2']
+const FushionList3S = ['1', '9/8', '5/4', '4/3', '45/32', '3/2', '27/16', '15/8', '2']
+const FushionList4S = ['1', '10/9', '5/4', '4/3', '45/32', '40/27', '5/3', '15/8', '2']
+
 const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
     0: [0, 'C', '1', '1'],
     21.51: [2, '<span class="upline1">C</span>', '<span class="upline1">1</span>', '81/80'],
@@ -276,7 +282,7 @@ export const Leng2Fret = x => { // 弦長轉徽位
         }
     }
     const Result = frc(Fret).add(x.sub(FretListA[Fret]).div(frc(FretListA[Fret + 1]).sub(FretListA[Fret])))
-    return +Number(Result).toFixed(4)
+    return +Number(Result).toFixed(3)
 }
 // console.log(Leng2Fret('11/20'))
 
@@ -1564,63 +1570,50 @@ export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、
     return { Print, NamePrint }
 }
 
-export const BetweenFret = (TuningMode, TempMode, n) => {
+export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
+    isSimple = +isSimple
     let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
     let Print = [], StringList = [], FushionList = [], Fret = []
     let OneDif = ''
     TempMode = +TempMode
     if (TempMode === 1) {
         StringList = Hui
-        FushionList = FushionList1
+        FushionList = isSimple ? FushionList1S : FushionList1
         OneDif = OneDifHui
     } else if (TempMode === 2) {
         StringList = Hui2
         FushionList = FushionList2
+        FushionList = isSimple ? FushionList2S : FushionList2
         OneDif = OneDifHui
     } else if (TempMode === 3) {
         StringList = Hui3
         FushionList = FushionList3
+        FushionList = isSimple ? FushionList3S : FushionList3
         OneDif = OneDifHui
     } else if (TempMode === 4) {
         StringList = Hui4
         FushionList = FushionList4
+        FushionList = isSimple ? FushionList4S : FushionList4
         OneDif = OneDifHui
     } else if (TempMode === 5) {
         StringList = Zhun
         FushionList = FushionList5
+        FushionList = isSimple ? FushionList5S : FushionList5
         OneDif = OneDifZhun
     }
     let Length = []
     for (let i = 1; i <= 7; i++) {
-        for (let k = 0; k <= 12; k++) {
-            let tmp = frc(StringList[i]).div(FushionList[k])
-            while (Number(tmp) >= 1) {
-                tmp = tmp.div(2)
+        for (let m = 0; m <= 2; m++) {
+            for (let k = FushionList.length * m; k < FushionList.length * (m + 1); k++) {
+                let tmp = frc(StringList[i]).div(FushionList[k - FushionList.length * m])
+                while (Number(tmp) >= (1 / 2) ** m) {
+                    tmp = tmp.div(2)
+                }
+                while (Number(tmp) < (1 / 2) ** (m + 1)) {
+                    tmp = tmp.mul(2)
+                }
+                Length = Length.concat(tmp.toFraction(false))
             }
-            while (Number(tmp) < 1 / 2) {
-                tmp = tmp.mul(2)
-            }
-            Length = Length.concat(tmp.toFraction(false))
-        }
-        for (let k = 13; k <= 25; k++) {
-            let tmp = frc(StringList[i]).div(FushionList[k - 13])
-            while (Number(tmp) >= 1 / 2) {
-                tmp = tmp.div(2)
-            }
-            while (Number(tmp) < 1 / 4) {
-                tmp = tmp.mul(2)
-            }
-            Length = Length.concat(tmp.toFraction(false))
-        }
-        for (let k = 26; k <= 38; k++) {
-            let tmp = frc(StringList[i]).div(FushionList[k - 26])
-            while (Number(tmp) >= 1 / 4) {
-                tmp = tmp.div(2)
-            }
-            while (Number(tmp) < 1 / 8) {
-                tmp = tmp.mul(2)
-            }
-            Length = Length.concat(tmp.toFraction(false))
         }
     }
     Length = Unique(Length)

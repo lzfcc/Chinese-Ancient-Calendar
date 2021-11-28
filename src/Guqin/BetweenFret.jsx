@@ -7,7 +7,8 @@ export default class Converter extends React.Component {
     this.state = {
       b: '1',
       Temp: '5',
-      n: '0'
+      n: '0',
+      isSimple: '0'
     }
     this.handle = this.handle.bind(this)
   }
@@ -39,13 +40,21 @@ export default class Converter extends React.Component {
             this.setState({ n: e.currentTarget.value });
           }}
         />
+        <span> 簡潔</span>
+        <input
+          className='width1'
+          value={this.state.isSimple}
+          onChange={e => {
+            this.setState({ isSimple: e.currentTarget.value });
+          }}
+        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = BetweenFret(this.state.b, this.state.Temp, this.state.n)
+      const Print = BetweenFret(this.state.b, this.state.Temp, this.state.n, this.state.isSimple)
       this.setState({ output1: Print })
     } catch (e) {
       alert(e.message)
