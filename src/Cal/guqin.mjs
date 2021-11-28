@@ -45,7 +45,7 @@ class Interval {
 // 唱名
 // 頻率比
 
-const FushionList2 = [
+const FushionListB = [
     new Interval(0, 'C', 0, 0, '1'),
     new Interval(2, 'C', 0, 1, '243/240'),
     new Interval(2, 'C', 1, -2, '25/24'),
@@ -104,6 +104,11 @@ const FushionList2 = [
     new Interval(2, 'C', 0, -1, '480/243'),
     new Interval(0, 'C', 0, 0, '2'),
 ]
+const FushionList5 = ['1', '2187/2048', '9/8', '32/27', '81/64', '4/3', '729/512', '3/2', '128/81', '27/16', '16/9', '243/128']
+const FushionList1 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8']
+const FushionList2 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8']
+const FushionList3 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '27/16', '9/5', '15/8']
+const FushionList4 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '40/27', '8/5', '5/3', '9/5', '15/8']
 const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
     0: [0, 'C', '1', '1'],
     21.51: [2, '<span class="upline1">C</span>', '<span class="upline1">1</span>', '81/80'],
@@ -1507,10 +1512,9 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
 }
 // console.log(Tuning(9))
 
-export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、宮弦
+export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、律制、宮弦
     let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
-    let Print = [], NameList = [], NameBList = []
-    let StringList = []
+    let Print = [], NameList = [], NameBList = [], StringList = []
     let OneDif = ''
     TempMode = +TempMode
     if (TempMode === 1) {
@@ -1559,6 +1563,80 @@ export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、
     }]
     return { Print, NamePrint }
 }
+
+export const BetweenFret = (TuningMode, TempMode, n) => {
+    let { Zhun, Hui, Hui2, Hui3, Hui4 } = eval('Tuning' + TuningMode)(432, +n)
+    let Print = [], StringList = [], FushionList = []
+    TempMode = +TempMode
+    if (TempMode === 1) {
+        StringList = Hui
+        FushionList = FushionList1
+    } else if (TempMode === 2) {
+        StringList = Hui2
+        FushionList = FushionList2
+    } else if (TempMode === 3) {
+        StringList = Hui3
+        FushionList = FushionList3
+    } else if (TempMode === 4) {
+        StringList = Hui4
+        FushionList = FushionList4
+    } else if (TempMode === 5) {
+        StringList = Zhun
+        FushionList = FushionList5
+    }
+    for (let i = 1; i <= 7; i++) {
+        let Length = []
+        for (let k = 0; k <= 11; k++) {
+            let tmp = frc(StringList[i]).div(FushionList[k])
+            while (Number(tmp) > 1) {
+                tmp = tmp.div(2)
+            }
+            while (Number(tmp) < 1 / 2) {
+                tmp = tmp.mul(2)
+            }
+            Length[k] = tmp.toFraction(false)
+        }
+        for (let k = 12; k <= 23; k++) {
+            let tmp = frc(StringList[i]).div(FushionList[k - 12])
+            while (Number(tmp) > 1 / 2) {
+                tmp = tmp.div(2)
+            }
+            while (Number(tmp) < 1 / 4) {
+                tmp = tmp.mul(2)
+            }
+            Length[k] = tmp.toFraction(false)
+        }
+        for (let k = 24; k <= 35; k++) {
+            let tmp = frc(StringList[i]).div(FushionList[k - 24])
+            while (Number(tmp) > 1 / 4) {
+                tmp = tmp.div(2)
+            }
+            while (Number(tmp) < 1 / 8) {
+                tmp = tmp.mul(2)
+            }
+            Length[k] = tmp.toFraction(false)
+        }
+        Length.sort((a, b) => Leng2Fret(b) - Leng2Fret(a))
+        Length = Unique(Length)
+        for (let l = 0; l < Length.length; l++) {
+            if (Leng2Fret(Length[l]) < 2.5) {
+                Length = Length.splice(0, l)
+            }
+        }
+        for (let j = 0; j < Length.length; j++) {
+            const tmp1 = frc(StringList[i]).div(Length[j]).toFraction(false)
+            const Name = Portion2Name(tmp1, 2)
+            Length[j] = Leng2Fret(Length[j]) + ' ' + Name
+        }
+        Print = Print.concat({
+            title: NumList[i],
+            data: Length
+        })
+    }
+
+    return Print
+}
+// console.log(BetweenFret(1, 1, 0))
 // console.log(FretPitch(1, 5, 0))
 // while (Number(ZhunPitch[k]) >= 2) {
 //     ZhunPitch[k] = ZhunPitch[k].div(2)
@@ -1743,7 +1821,7 @@ const Portion2Interval = (portion, one = 1, oneDif = 1) => {
     while (Number(a) > 2) {
         a = a.div(2)
     }
-    const got = FushionList2.find(obj => obj.freq === a.toFraction(false))
+    const got = FushionListB.find(obj => obj.freq === a.toFraction(false))
     return got
 }
 
