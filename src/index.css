@@ -457,8 +457,7 @@ table td {
   border-top: 1px solid var(--shallowgray1);
   margin-top: 1em;
   vertical-align: top;
-  padding-top: .5em;
-  padding-bottom: .5em;
+  padding: .5em 1.2em;
 }
 
 .table-narrow table {
