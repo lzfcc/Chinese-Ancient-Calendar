@@ -109,11 +109,13 @@ const FushionList1 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2'
 const FushionList2 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8', '2']
 const FushionList3 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '27/16', '9/5', '15/8', '2']
 const FushionList4 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '40/27', '8/5', '5/3', '9/5', '15/8', '2']
+const FushionList6 = ['1', '196/185', '1769/1576', '1785/1501', '635/504', '3544/2655', '3363/2378', '2655/1772', '4813/3032', '3002/1785', '4679/2626', '2943/1559', '2']
 const FushionList5S = ['1', '9/8', '81/64', '4/3', '729/512', '3/2', '27/16', '243/128', '2']
 const FushionList1S = ['1', '9/8', '5/4', '4/3', '45/32', '3/2', '5/3', '15/8', '2']
 const FushionList2S = ['1', '10/9', '5/4', '4/3', '45/32', '3/2', '5/3', '15/8', '2']
 const FushionList3S = ['1', '9/8', '5/4', '4/3', '45/32', '3/2', '27/16', '15/8', '2']
 const FushionList4S = ['1', '10/9', '5/4', '4/3', '45/32', '40/27', '5/3', '15/8', '2']
+const FushionList6S = ['1', '1769/1576', '635/504', '3544/2655', '3363/2378', '2655/1772', '3002/1785', '4679/2626', '2943/1559', '2']
 
 const FushionList = { // 這是五度律、純律混合在一起。除了 C D F G 是共用，其他加了上下線的都是純律。第一個數字 0 共用，1 五度律，2 純律
     0: [0, 'C', '1', '1'],
@@ -121,53 +123,59 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     70.67: [2, '♯<span class="dnline2">C</span>', '♯<span class="dnline2">1</span>', '25/24'], // 小半音
     90.22: [1, '♭D', '♭2', '256/243'],
     92.18: [2, '♯<span class="dnline1">C</span>', '♯<span class="dnline1">1</span>', '135/128'],
+    100: [3, '♯C', '♯1', '196/185'],
     111.73: [2, '♭<span class="upline1">D</span>', '♭<span class="upline1">2</span>', '16/15'],
     113.69: [1, '♯C', '♯1', '2187/2048'],
     133.24: [2, '♭<span class="upline2">D</span>', '♭<span class="upline2">2</span>', '27/25'],
     182.40: [2, '<span class="dnline1">D</span>', '<span class="dnline1">2</span>', '10/9'],
-
+    200: [3, 'D', '2', '1769/1576'],
     203.91: [0, 'D', '2', '9/8'],
-
     274.58: [2, '♯<span class="dnline2">D</span>', '♯<span class="dnline2">2</span>', '75/64'],
     294.13: [1, '♭E', '♭3', '32/27'],
+    300: [3, '♭E', '♭3', '1785/1501'],
     315.64: [2, '♭<span class="upline1">E</span>', '♭<span class="upline1">3</span>', '6/5'],
     317.60: [1, '♯D', '♯2', '19683/16384'],
     364.81: [2, '<span class="dnline2">E</span>', '<span class="dnline2">3</span>', '100/81'],
     384.36: [1, '♭F', '♭4', '8192/6561'],
     386.31: [2, '<span class="dnline1">E</span>', '<span class="dnline1">3</span>', '5/4'],
-
+    400: [3, 'E', '3', '635/504'],
     407.82: [0, 'E', '3', '81/64'],
-
     427.37: [2, '♭<span class="upline2">F</span>', '♭<span class="upline2">4</span>', '32/25'],
     478.49: [2, '♯<span class="dnline2">E</span>', '♯<span class="dnline2">3</span>', '675/512'],
     498.04: [1, 'F', '4', '4/3'],
+    500: [3, 'F', '4', '3544/2655'],
     519.55: [2, '<span class="upline1">F</span>', '<span class="upline1">4</span>', '27/20'],
     521.51: [1, '♯E', '♯3', '177147/131072'],
     568.72: [2, '♯<span class="dnline2">F</span>', '♯<span class="dnline2">4</span>', '25/18'],
     588.27: [1, '♭G', '♭5', '1024/729'],
     590.22: [2, '♯<span class="dnline1">F</span>', '♯<span class="dnline1">4</span>', '45/32'],
+    600: [3, '♯F', '♯4', '3363/2378'],
     609.77: [2, '♭<span class="upline1">G</span>', '♭<span class="upline1">5</span>', '64/45'],
     611.73: [1, '♯F', '♯4', '729/512'],
     631.28: [2, '♭<span class="upline2">G</span>', '♭<span class="upline2">5</span>', '36/25'],
     680.45: [2, '<span class="dnline1">G</span>', '<span class="dnline1">5</span>', '40/27'],
-
+    700: [3, 'G', '5', '2655/1772'],
     701.96: [0, 'G', '5', '3/2'],
     723.46: [2, '<span class="upline1">G</span>', '<span class="upline1">5</span>', '243/160'],
     772.63: [2, '♯<span class="dnline2">G</span>', '♯<span class="dnline2">5</span>', '25/16'],
     792.18: [1, '♭A', '♭6', '128/81'],
     794.13: [2, '♯<span class="dnline1">G</span>', '♯<span class="dnline1">5</span>', '405/256'],
+    800: [3, '♯G', '♯5', '4813/3032'],
     813.69: [2, '♭<span class="upline1">A</span>', '♭<span class="upline1">6</span>', '8/5'],
     815.64: [1, '♯G', '♯5', '6561/4096'],
     862.85: [2, '<span class="dnline2">A</span>', '<span class="dnline2">6</span>', '400/243'],
     884.36: [2, '<span class="dnline1">A</span>', '<span class="dnline1">6</span>', '5/3'],
+    900: [3, 'A', '6', '3002/1785'],
     905.87: [1, 'A', '6', '27/16'],
     976.54: [2, '♯<span class="dnline2">A</span>', '♯<span class="dnline2">6</span>', '225/128'],
     996.09: [1, '♭B', '♭7', '16/9'],
+    1000: [3, '♭B', '♭7', '4679/2626'],
     1017.59: [2, '♭<span class="upline1">B</span>', '♭<span class="upline1">7</span>', '9/5'],
     1019.55: [1, '♯A', '♯6', '59049/32768'],
     1066.76: [2, '<span class="dnline2">B</span>', '<span class="dnline2">7</span>', '50/27'],
     1086.31: [1, '·♭C', '·♭1', '4096/2187'],
     1088.27: [2, '<span class="dnline1">B</span>', '<span class="dnline1">7</span>', '15/8'],
+    1100: [3, 'B', '7', '2943/1559'],
     1107.82: [2, '·♭<span class="upline1">C</span>', '·♭<span class="upline1">1</span>', '256/135'],
     1109.78: [1, 'B', '7', '243/128'],
     1129.33: [2, '·♭<span class="upline2">C</span>', '·♭<span class="upline2">1</span>', '48/25'],
@@ -798,7 +806,7 @@ const Tuning6 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '蕤賓調緊五' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '蕤賓調　緊五' }
 }
 
 const Tuning7 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
@@ -860,7 +868,7 @@ const Tuning7 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '淸商調緊二五七' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '淸商調　緊二五七' }
 }
 
 const Tuning8 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
@@ -924,7 +932,7 @@ const Tuning8 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '慢角調慢三' }
+    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '慢角調　慢三' }
 }
 
 const Tuning9 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
@@ -990,7 +998,8 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
         OneDifHui: '15/16',
-        Name: '慢宮調慢一三六'
+        OneDifXin: 0.94387431268169,
+        Name: '慢宮調　慢一三六'
     }
 }
 
@@ -1045,7 +1054,7 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Hui3, Zhun, Hui2, Hui4, Xin, ZhunFreq, Name: '楚商調緊二五' }
+    return { Hui3, Zhun, Hui2, Hui4, Xin, ZhunFreq, Name: '楚商調　緊二五' }
 }
 
 const Tuning11 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
@@ -1112,7 +1121,8 @@ const Tuning11 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '8/9',
         OneDifHui: '9/10',
-        Name: '黃鐘調緊五慢一'
+        OneDifXin: 0.8908987181403393,
+        Name: '黃鐘調　緊五慢一'
     }
 }
 
@@ -1186,7 +1196,7 @@ const Tuning12 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '无媒調慢三六' }
+    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '无媒調　慢三六' }
 }
 
 const Tuning13 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
@@ -1253,7 +1263,8 @@ const Tuning13 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
         OneDifHui: '243/256',
-        Name: '間弦一慢一三'
+        OneDifXin: 0.943874312681694,
+        Name: '間弦一　慢一三'
     }
 }
 
@@ -1321,7 +1332,7 @@ const Tuning14 = (Freq = 432, n = 1) => {  // 間弦二緊五慢三 1 2 3 5 #6 1
     return {
         Zhun, Hui2, Hui3, Hui4, Xin, ZhunFreq,
         //  HuiFreq,
-        Name: '間弦二緊五慢三'
+        Name: '間弦二　緊五慢三'
     }
 }
 
@@ -1347,7 +1358,7 @@ const Tuning15 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b
     Xin[5] = +List12[11] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[4]
-    return { Hui, Xin, HuiFreq, Name: '日傳平調慢五七' }
+    return { Hui, Xin, HuiFreq, Name: '日傳平調　慢五七' }
 }
 
 const Tuning16 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
@@ -1372,7 +1383,7 @@ const Tuning16 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq, Name: '側商調慢三四六' }
+    return { Hui, Xin, HuiFreq, Name: '側商調　慢三四六' }
 }
 
 const Tuning17 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
@@ -1397,7 +1408,7 @@ const Tuning17 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq, Name: '側羽調緊七' }
+    return { Hui, Xin, HuiFreq, Name: '側羽調　緊七' }
 }
 
 const Tuning18 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
@@ -1432,7 +1443,7 @@ const Tuning18 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1
     Xin[5] = +List12[11] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, Name: '側蜀調緊二慢五' }
+    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, Name: '側蜀調　緊二慢五' }
 }
 
 const Tuning19 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五七
@@ -1450,16 +1461,18 @@ const Tuning19 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五�
     const HuiFreq = TuningSub3(Hui, 3, '4/5', Freq)
     // 新法密率
     const List12 = EqualTemp(Freq).List1
-    Xin[1] = +List12[3] / 2
-    Xin[2] = +List12[5] / 2
-    Xin[3] = +List12[7] / 2
-    Xin[4] = +List12[9] / 2
-    Xin[5] = +List12[12] / 2
-    Xin[6] = +List12[2]
-    Xin[7] = +List12[5]
+    Xin[1] = +List12[1] / 2
+    Xin[2] = +List12[4] / 2
+    Xin[3] = +List12[8] / 2
+    Xin[4] = +List12[10] / 2
+    Xin[5] = +List12[1]
+    Xin[6] = +List12[3]
+    Xin[7] = +List12[6]
     return {
         Hui, Xin, HuiFreq,
-        OneDifHui: '9/10', Name: '側楚調慢一二緊五七'
+        OneDifHui: '9/10',
+        OneDifXin: 0.890898718140339,
+        Name: '側楚調　慢一二緊五七'
     }
 }
 
@@ -1572,7 +1585,7 @@ export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、
 
 export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
     isSimple = +isSimple
-    let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
+    let { Zhun, Hui, Hui2, Hui3, Hui4, Xin, OneDifHui, OneDifZhun, OneDifXin } = eval('Tuning' + TuningMode)(432, +n)
     let Print = [], StringList = [], FushionList = [], Fret = []
     let OneDif = ''
     TempMode = +TempMode
@@ -1582,25 +1595,26 @@ export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
         OneDif = OneDifHui
     } else if (TempMode === 2) {
         StringList = Hui2
-        FushionList = FushionList2
         FushionList = isSimple ? FushionList2S : FushionList2
         OneDif = OneDifHui
     } else if (TempMode === 3) {
         StringList = Hui3
-        FushionList = FushionList3
         FushionList = isSimple ? FushionList3S : FushionList3
         OneDif = OneDifHui
     } else if (TempMode === 4) {
         StringList = Hui4
-        FushionList = FushionList4
         FushionList = isSimple ? FushionList4S : FushionList4
         OneDif = OneDifHui
     } else if (TempMode === 5) {
         StringList = Zhun
-        FushionList = FushionList5
         FushionList = isSimple ? FushionList5S : FushionList5
         OneDif = OneDifZhun
     }
+    //  else if (TempMode === 6) {
+    //     StringList = Xin
+    //     FushionList = isSimple ? FushionList6S : FushionList6
+    //     OneDif = OneDifXin
+    // }
     let Length = []
     for (let i = 1; i <= 7; i++) {
         for (let m = 0; m <= 2; m++) {
@@ -1654,7 +1668,7 @@ export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
     }
     return Print
 }
-// console.log(BetweenFret(1, 5, 0))
+// console.log(BetweenFret(1, 6, 0))
 // console.log(FretPitch(1, 5, 0))
 // while (Number(ZhunPitch[k]) >= 2) {
 //     ZhunPitch[k] = ZhunPitch[k].div(2)
@@ -1779,14 +1793,14 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
         // 下面是處理模糊徽位
         for (const [key, value] of Object.entries(FushionList)) {
             const threshold = isStrict ? 0.95 : 10
-            if (Cent[i] > +key - threshold && Cent[i] < +key + threshold) {
+            if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && value[0] !== 3) {
                 Pitch[i] = value[OutputMode === 2 ? OutputMode : 3]
                 break
             }
         }
         if (!isStrict && !Pitch[i]) { // 這個用來對付徽位更不準的
             for (const [key, value] of Object.entries(FushionList)) { // 21.5普通音差
-                if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5) {
+                if (Cent[i] > +key - 21.5 && Cent[i] < +key + 21.5 && value[0] !== 3) {
                     Pitch[i] = value[OutputMode === 2 ? OutputMode : 3]
                     break
                 }

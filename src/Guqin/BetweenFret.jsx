@@ -87,7 +87,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h3>律內音</h3>
-        <p className='note'></p>
+        <p className='note'>律制 1 徽法一、2 徽法二、3 徽法三、4 徽法四、5 準法、6 新法密率</p>
         {this.input()}
         <button onClick={this.handle} className='button4-1'>算算算</button><span className='Deci64'>n/d</span>
         {this.result()}
