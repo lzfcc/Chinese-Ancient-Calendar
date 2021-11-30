@@ -135,6 +135,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     300: [3, '♭E', '♭3', '1785/1501'],
     315.64: [2, '♭<span class="upline1">E</span>', '♭<span class="upline1">3</span>', '6/5'],
     317.60: [1, '♯D', '♯2', '19683/16384'],
+    337.15: [2, '♭<span class="upline2">E</span>', '♭<span class="upline2">3</span>', '243/200'],
     364.81: [2, '<span class="dnline2">E</span>', '<span class="dnline2">3</span>', '100/81'],
     384.36: [1, '♭F', '♭4', '8192/6561'],
     386.31: [2, '<span class="dnline1">E</span>', '<span class="dnline1">3</span>', '5/4'],
@@ -146,6 +147,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     500: [3, 'F', '4', '3544/2655'],
     519.55: [2, '<span class="upline1">F</span>', '<span class="upline1">4</span>', '27/20'],
     521.51: [1, '♯E', '♯3', '177147/131072'],
+    541.06: [2, '<span class="upline2">F</span>', '<span class="upline2">4</span>', '2187/1600'],
     568.72: [2, '♯<span class="dnline2">F</span>', '♯<span class="dnline2">4</span>', '25/18'],
     588.27: [1, '♭G', '♭5', '1024/729'],
     590.22: [2, '♯<span class="dnline1">F</span>', '♯<span class="dnline1">4</span>', '45/32'],
@@ -163,6 +165,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     800: [3, '♯G', '♯5', '4813/3032'],
     813.69: [2, '♭<span class="upline1">A</span>', '♭<span class="upline1">6</span>', '8/5'],
     815.64: [1, '♯G', '♯5', '6561/4096'],
+    835.20: [2, '♭<span class="upline2">A</span>', '♭<span class="upline2">6</span>', '81/50'],
     862.85: [2, '<span class="dnline2">A</span>', '<span class="dnline2">6</span>', '400/243'],
     884.36: [2, '<span class="dnline1">A</span>', '<span class="dnline1">6</span>', '5/3'],
     900: [3, 'A', '6', '3002/1785'],
@@ -172,6 +175,7 @@ const FushionList = { // 這是五度律、純律混合在一起。除了 C D F 
     1000: [3, '♭B', '♭7', '4679/2626'],
     1017.59: [2, '♭<span class="upline1">B</span>', '♭<span class="upline1">7</span>', '9/5'],
     1019.55: [1, '♯A', '♯6', '59049/32768'],
+    1039.10: [2, '♭<span class="upline2">B</span>', '♭<span class="upline2">7</span>', '729/400'],
     1066.76: [2, '<span class="dnline2">B</span>', '<span class="dnline2">7</span>', '50/27'],
     1086.31: [1, '·♭C', '·♭1', '4096/2187'],
     1088.27: [2, '<span class="dnline1">B</span>', '<span class="dnline1">7</span>', '15/8'],
@@ -195,9 +199,7 @@ const Portion2Name = (a, mode) => { // 輸入頻率比，輸出對應的唱名mo
     }
     a = a.toFraction(false)
     for (const [key, value] of Object.entries(FushionList)) {
-        if (value[3] === a) {
-            return value[mode]
-        }
+        if (value[3] === a) return value[mode]
     }
     // return '　'
 }
@@ -227,9 +229,7 @@ const Freq2Pitch = a => { // 輸入頻率比，輸出對應的唱名
     }
     a = a.toFraction(false)
     for (const [key, value] of Object.entries(FushionList)) {
-        if (value[3] === a) {
-            return value[1]
-        }
+        if (value[3] === a) return value[1]
     }
 }
 
