@@ -105,10 +105,10 @@ const FushionListB = [
     new Interval(0, 'C', 0, 0, '2'),
 ]
 const FushionList5 = ['1', '2187/2048', '9/8', '32/27', '81/64', '4/3', '729/512', '3/2', '128/81', '27/16', '16/9', '243/128', '2']
-const FushionList1 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8', '2']
-const FushionList2 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8', '2']
-const FushionList3 = ['1', '135/128', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '27/16', '9/5', '15/8', '2']
-const FushionList4 = ['1', '135/128', '10/9', '6/5', '5/4', '4/3', '45/32', '40/27', '8/5', '5/3', '9/5', '15/8', '2']
+const FushionList1 = ['1', '16/15', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8', '2']
+const FushionList2 = ['1', '16/15', '10/9', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '5/3', '9/5', '15/8', '2']
+const FushionList3 = ['1', '16/15', '9/8', '6/5', '5/4', '4/3', '45/32', '3/2', '8/5', '27/16', '9/5', '15/8', '2']
+const FushionList4 = ['1', '16/15', '10/9', '6/5', '5/4', '4/3', '45/32', '40/27', '8/5', '5/3', '9/5', '15/8', '2']
 const FushionList6 = ['1', '196/185', '1769/1576', '1785/1501', '635/504', '3544/2655', '3363/2378', '2655/1772', '4813/3032', '3002/1785', '4679/2626', '2943/1559', '2']
 const FushionList5S = ['1', '9/8', '81/64', '4/3', '729/512', '3/2', '27/16', '243/128', '2']
 const FushionList1S = ['1', '9/8', '5/4', '4/3', '45/32', '3/2', '5/3', '15/8', '2']
@@ -334,7 +334,7 @@ export const Pythagorean = x => {
         }
         const Tmp = Number(upA[i])
         upA[i] = upA[i].toFraction(true)
-        Cent1[i] = OctaveCent(Tmp, x).Cent.toFixed(8)
+        Cent1[i] = +OctaveCent(Tmp, x).Cent.toFixed(8)
     }
     for (let i = 1; i <= 12; i++) {
         upB[i] = frc(upB[i - 1]).mul('3/4')
@@ -357,7 +357,7 @@ export const Pythagorean = x => {
         }
         const Tmp = Number(downB[i])
         downB[i] = downB[i].toFraction(true)
-        Cent2[i] = OctaveCent(Tmp, x).Cent.toFixed(8)
+        Cent2[i] = +OctaveCent(Tmp, x).Cent.toFixed(8)
     }
     const Print1 = [{
         title: '向上A',
@@ -395,7 +395,7 @@ export const Pythagorean60 = x => {
             upA[i] = Func2.Frac
             Deci = Func2.Deci
         }
-        Cent1[i] = OctaveCent(Deci, x).Cent.toFixed(8)
+        Cent1[i] = +OctaveCent(Deci, x).Cent.toFixed(8)
     }
     const Print1 = [{
         title: '向上',
@@ -406,6 +406,43 @@ export const Pythagorean60 = x => {
     }]
     return Print1
 }
+
+export const Meantone = (x, mode) => { // 調和律、中庸全音律
+    mode = mode === undefined ? 4 : +mode
+    const Cent = [], Freq = []
+    Freq[0] = big(x)
+    let a = big(5) // 原理見律曆初階第一章
+    let b = 0.25
+    let c = 12
+    if (mode === 3) {
+        a = big(2.4)
+        b = big.div(1, 3)
+        c = 19
+    }
+    for (let i = 1; i <= c; i++) {
+        Freq[i] = big(Freq[i - 1]).mul(a.pow(b))
+        while (Freq[i].gt(Freq[0].mul(2))) {
+            Freq[i] = Freq[i].div(2)
+        }
+    }
+    for (let i = 1; i <= c; i++) {
+        Freq[i] = Freq[i].toNumber()
+        if (Freq[i].toString().length < 10) Freq[i] = frc(Freq[i]).toFraction(false)
+        Cent[i] = +OctaveCent(Freq[i], x).Cent.toFixed(8)
+    }
+    Freq[0] = x
+    Cent[0] = 0
+    const Print = [{
+        title: '',
+        data: Freq
+    }, {
+        title: '音分',
+        data: Cent
+    }]
+    return Print
+}
+// console.log(Meantone(1))
+// console.log(big.pow(5, 1 / 4).toNumber())
 // console.log(Pythagorean60(81))
 export const Justoni = x => {
     x = x.toString()
@@ -460,11 +497,12 @@ export const Justoni = x => {
 // console.log(Justoni(1))
 
 /**
- * 十二平均律。新法密率
+ * 十二等程律。新法密率
  * @param CFreq c的頻率
  * @returns 
  */
-export const EqualTemp = CFreq => {
+export const EqualTemp = (CFreq, mode) => {
+    mode = mode === undefined ? 12 : +mode
     CFreq = CFreq.toString()
     let a = CFreq
     if (CFreq.includes('/')) {
@@ -475,9 +513,9 @@ export const EqualTemp = CFreq => {
     List[0] = CFreq
     List1[0] = CFreq
     Cent[0] = 0
-    for (let i = 1; i <= 12; i++) {
-        List[i] = big(a).mul(big(2).pow(big.div(i, 12)))
-        if (i === 12) {
+    for (let i = 1; i <= mode; i++) {
+        List[i] = big(a).mul(big(2).pow(big.div(i, mode)))
+        if (i === mode) {
             List1[i] = List[i].toNumber()
         } else {
             List1[i] = List[i].toFixed(24)
@@ -493,7 +531,7 @@ export const EqualTemp = CFreq => {
     }]
     return { Print, List1 }
 }
-// console.log(EqualTemp('1').Print)
+// console.log(EqualTemp('1',19).Print)
 // console.log(big(2).pow(big.div(1, 12)).toString())
 // 1.059463094359295264561825294946341700779204317494185628559208431
 // 1.059463094359295264561825 // 朱載堉25位大算盤

@@ -74,7 +74,7 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>新法密率</h3>
+        <h4>十二等程律　新法密率</h4>
         {this.input()}
         <button onClick={this.handle} className='button4-3'>朱載堉</button><span className='Deci64'>.64</span>
         {this.result()}

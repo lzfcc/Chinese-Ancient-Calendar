@@ -120,7 +120,7 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>京房六十律</h3>
+        <h4>京房六十律</h4>
         {this.input()}
         <button onClick={this.handle} className='button4-3'>京房</button><span className='Deci64'>n/d</span><span className='Deci64'>.64</span>
         {this.result()}

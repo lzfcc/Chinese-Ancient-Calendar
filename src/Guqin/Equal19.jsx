@@ -1,5 +1,5 @@
 import React from 'react'
-import { Justoni } from '../Cal/guqin'
+import { EqualTemp } from '../Cal/guqin'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>黃鐘</span>
+        <span>始發律</span>
         <input className='width2'
           value={this.state.a}
           onChange={e => {
@@ -26,7 +26,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Justoni(this.state.a)
+      const { Print } = EqualTemp(this.state.a, 19)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -42,19 +42,26 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>黃鐘C</th>
-            <th>林鐘G</th>            
-            <th>太簇D</th>
-            <th>南呂A</th>
-            <th>姑洗E</th>
-            <th>應鐘B-</th>
-            <th>蕤賓♯F-</th>
-            <th>大呂♯C-</th>
-            <th>♭E+</th>
-            <th>♭B+</th>
-            <th>仲呂F+</th>
-            <th>淸黃鐘C+</th>
             <th></th>
+            <th>① ♯1 𝄫2</th>
+            <th>② ♭2</th>
+            <th>③ 2</th>
+            <th>④ ♯2 𝄫3</th>
+            <th>⑤ ♭3</th>
+            <th>⑥ 3</th>
+            <th>⑦ ♯3 ♭4</th>
+            <th>⑧ 4</th>
+            <th>⑨ ♯4</th>
+            <th>⑩ ♭5</th>
+            <th>⑪ 5</th>
+            <th>⑫ ♯5 𝄫6</th>
+            <th>⑬ ♭6</th>
+            <th>⑭ 6</th>
+            <th>⑮ ♯6 𝄫7</th>
+            <th>⑯ ♭7</th>
+            <th>⑰ 7</th>
+            <th>⑱ ♯7 ♭1</th>
+            <th>⑲ 1</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -74,8 +81,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
+        <h4>十九等程律</h4>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>幽蘭</button><span className='Deci64'>n/d</span>
+        <button onClick={this.handle} className='button4-3'>嚶嚶嚶</button><span className='Deci64'>.64</span>
         {this.result()}
       </div>
     )
