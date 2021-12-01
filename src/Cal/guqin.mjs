@@ -360,20 +360,20 @@ export const Pythagorean = x => {
         Cent2[i] = +OctaveCent(Tmp, x).Cent.toFixed(8)
     }
     const Print1 = [{
-        title: '向上A',
+        title: '上生A',
         data: upA
     }, {
-        title: '向上B',
+        title: '上生B',
         data: upB
     }, {
         title: '音分',
         data: Cent1
     }]
     const Print2 = [{
-        title: '向下A',
+        title: '下生A',
         data: downA
     }, {
-        title: '向下B',
+        title: '下生B',
         data: downB
     }, {
         title: '音分',
@@ -409,40 +409,67 @@ export const Pythagorean60 = x => {
 
 export const Meantone = (x, mode) => { // 調和律、中庸全音律
     mode = mode === undefined ? 4 : +mode
-    const Cent = [], Freq = []
-    Freq[0] = big(x)
-    let a = big(5) // 原理見律曆初階第一章
-    let b = 0.25
+    const Cent1 = [], Freq1 = [], Cent2 = [], Freq2 = []
+    Freq1[0] = big(x)
+    Freq2[0] = big(x)
+    let a1 = big(5) // 原理見律曆初階第一章
+    let b1 = 0.25
     let c = 12
     if (mode === 3) {
-        a = big(2.4)
-        b = big.div(1, 3)
+        a1 = big(2.4)
+        b1 = big.div(1, 3)
         c = 19
     }
     for (let i = 1; i <= c; i++) {
-        Freq[i] = big(Freq[i - 1]).mul(a.pow(b))
-        while (Freq[i].gt(Freq[0].mul(2))) {
-            Freq[i] = Freq[i].div(2)
+        Freq1[i] = big(Freq1[i - 1]).mul(a1.pow(b1))
+        while (Freq1[i].gt(Freq1[0].mul(2))) {
+            Freq1[i] = Freq1[i].div(2)
         }
     }
     for (let i = 1; i <= c; i++) {
-        Freq[i] = Freq[i].toNumber()
-        if (Freq[i].toString().length < 10) Freq[i] = frc(Freq[i]).toFraction(false)
-        Cent[i] = +OctaveCent(Freq[i], x).Cent.toFixed(8)
+        Freq1[i] = Freq1[i].toNumber()
+        if (Freq1[i].toString().length < 10) Freq1[i] = frc(Freq1[i]).toFraction(false)
+        Cent1[i] = +OctaveCent(Freq1[i], x).Cent.toFixed(8)
     }
-    Freq[0] = x
-    Cent[0] = 0
-    const Print = [{
-        title: '',
-        data: Freq
+    let a2 = big(3.2) // 原理見律曆初階第一章
+    let b2 = 0.25
+    if (mode === 3) {
+        a2 = big(2.4)
+        b2 = big.div(1, 3)
+    }
+    for (let i = 1; i <= c; i++) {
+        Freq2[i] = big(Freq2[i - 1]).mul(a2.pow(b2))
+        while (Freq2[i].gt(Freq2[0].mul(2))) {
+            Freq2[i] = Freq2[i].div(2)
+        }
+    }
+    for (let i = 1; i <= c; i++) {
+        Freq2[i] = Freq2[i].toNumber()
+        if (Freq2[i].toString().length < 10) Freq2[i] = frc(Freq2[i]).toFraction(false)
+        Cent2[i] = +OctaveCent(Freq2[i], x).Cent.toFixed(8)
+    }
+    Freq1[0] = x
+    Cent1[0] = 0
+    const Print1 = [{
+        title: '上生',
+        data: Freq1
     }, {
         title: '音分',
-        data: Cent
+        data: Cent1
     }]
-    return Print
+    Freq2[0] = x
+    Cent2[0] = 0
+    const Print2 = [{
+        title: '下生',
+        data: Freq2
+    }, {
+        title: '音分',
+        data: Cent2
+    }]
+    return { Print1, Print2 }
 }
 // console.log(Meantone(1))
-// console.log(big.pow(5, 1 / 4).toNumber())
+// console.log(big.pow(3.2, 1 / 4).toNumber())
 // console.log(Pythagorean60(81))
 export const Justoni = x => {
     x = x.toString()

@@ -26,8 +26,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Meantone(this.state.a)
-      this.setState({ output1: Print })
+      const { Print1, Print2 } = Meantone(this.state.a)
+      this.setState({ output1: Print1, output2: Print2 })
     } catch (e) {
       alert(e.message)
     }
@@ -57,6 +57,32 @@ export default class Converter extends React.Component {
             <th>⑫</th>
           </tr>
           {(this.state.output1 || []).map(row => {
+            return (
+              <tr>
+                <td className='RowTitle'>{row.title}</td>
+                {row.data.map(d => <td>{d}</td>)}
+              </tr>
+            )
+          })}
+        </table>
+        <table>
+          <tr>
+            <th></th>
+            <th>C</th>
+            <th>① F</th>
+            <th>② ♭B</th>
+            <th>③ ♭E</th>
+            <th>④ ♭A</th>
+            <th>⑤ ♭D</th>
+            <th>⑥ ♭G</th>
+            <th>⑦ ♭C</th>
+            <th>⑧ ♭F</th>
+            <th>⑨ 𝄫B</th>
+            <th>⑩ 𝄫E</th>
+            <th>⑪ 𝄫A</th>
+            <th>⑫ 𝄫D</th>
+          </tr>
+          {(this.state.output2 || []).map(row => {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>

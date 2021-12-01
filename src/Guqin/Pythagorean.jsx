@@ -39,7 +39,6 @@ export default class Converter extends React.Component {
     }
     return (
       <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
-        <h3>向上</h3>
         <table>
           <tr>
             <th></th>
@@ -66,7 +65,6 @@ export default class Converter extends React.Component {
             )
           })}
         </table>
-        <h3>向下</h3>
         <table>
           <tr>
             <th></th>

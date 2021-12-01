@@ -26,8 +26,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = Meantone(this.state.a, 3)
-      this.setState({ output1: Print })
+      const { Print2 } = Meantone(this.state.a, 3)
+      this.setState({ output1: Print2 })
     } catch (e) {
       alert(e.message)
     }
