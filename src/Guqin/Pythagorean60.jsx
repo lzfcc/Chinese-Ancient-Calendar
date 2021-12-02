@@ -38,7 +38,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
+      <div className='ans table2' style={{ whiteSpace: "nowrap" }}>
         {/* 京房六十律及其算出之法 www.360doc.com/document/13/0210/22/11311924_265092390.shtml */}
         <table>
           <tr>
@@ -54,7 +54,7 @@ export default class Converter extends React.Component {
             <th>9夷則♯G</th>
             <th>10夾鐘♯D</th>
             <th>11无射♯A</th>
-            <th>12仲呂F</th>
+            <th>12仲呂♯E</th>
             <th>13執始</th>
             <th>14去滅</th>
             <th>15時息</th>

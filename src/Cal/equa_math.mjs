@@ -49,11 +49,13 @@ export const Frac2FalseFrac = FracRaw => {
 // console.log(sg('1 2.1/3')) 
 
 export const BigFrc = (a, b) => { // 大分數計算。現在只能算乘法
+    a = a.toString()
+    b = b.toString()
     a = Frac2FalseFrac(a).FalseFrac
     const an = big(a.split('/')[0])
-    const ad = big(a.split('/')[1])
+    const ad = a.split('/')[1] ? big(a.split('/')[1]) : 1
     const bn = big(b.split('/')[0])
-    const bd = big(b.split('/')[1])
+    const bd = b.split('/')[1] ? big(b.split('/')[1]) : 1
     let n = an.mul(bn)
     let d = ad.mul(bd)
     // 約分
@@ -64,10 +66,11 @@ export const BigFrc = (a, b) => { // 大分數計算。現在只能算乘法
     // 眞分數
     const int = n.div(d).floor()
     n = n.sub(d.mul(int)).toString()
-    const Frac = int.toString() + ' ' + n + '/' + d.toString()
+    const Frac = int.toString() + (n === '0' ? '' : ' ' + n + '/' + d.toString())
     return { Frac, Deci }
 }
 // console.log(BigFrc('5/4', '3/2'))
+// console.log(BigFrc(81, '2/3'))
 // console.log(BigFrc('1 14002745558097800342739/360287997426667018963968', '3/2'))
 
 const Deci2Int_1 = function () { // 輸入字符串

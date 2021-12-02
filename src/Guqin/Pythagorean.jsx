@@ -26,8 +26,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print1, Print2 } = Pythagorean(this.state.a)
-      this.setState({ output1: Print1, output2: Print2 })
+      const Print = Pythagorean(this.state.a)
+      this.setState({ output1: Print })
     } catch (e) {
       alert(e.message)
     }
@@ -38,7 +38,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
+      <div className='ans table2' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
             <th></th>
@@ -60,33 +60,7 @@ export default class Converter extends React.Component {
             return (
               <tr>
                 <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d => <td>{d}</td>)}
-              </tr>
-            )
-          })}
-        </table>
-        <table>
-          <tr>
-            <th></th>
-            <th>C</th>
-            <th>F</th>
-            <th>♭B</th>
-            <th>♭E</th>
-            <th>♭A</th>
-            <th>♭D</th>
-            <th>♭G</th>
-            <th>♭C</th>
-            <th>♭F</th>
-            <th>𝄫B</th>
-            <th>𝄫E</th>
-            <th>𝄫A</th>
-            <th>𝄫D</th>
-          </tr>
-          {(this.state.output2 || []).map(row => {
-            return (
-              <tr>
-                <td className='RowTitle'>{row.title}</td>
-                {row.data.map(d => <td>{d}</td>)}
+                {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
               </tr>
             )
           })}

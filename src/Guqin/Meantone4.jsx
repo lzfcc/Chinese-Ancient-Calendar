@@ -38,7 +38,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right' style={{ whiteSpace: "nowrap" }}>
+      <div className='ans table2' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
             <th></th>
@@ -98,7 +98,7 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h4>四分音差調和律</h4>
+        <h4>四分音差折中律</h4>
         {this.input()}
         <button onClick={this.handle} className='button4-3'>1/4</button><span className='Deci64'>n/d</span><span className='Deci64'>.64</span>
         {this.result()}

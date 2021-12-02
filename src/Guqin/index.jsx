@@ -8,6 +8,7 @@ import Frequency from './Frequency'
 import Justoni from './Justoni'
 import Pythagorean from './Pythagorean'
 import Pythagorean60 from './Pythagorean60'
+import Hechengtian from './Hechengtian'
 import Meantone4 from './Meantone4'
 import Meantone3 from './Meantone3'
 import Fret2Leng from './Fret2Leng'
@@ -44,18 +45,19 @@ export default class Astronomy extends React.Component {
           <br />
           <Leng2Fret />
           <h2>生律之什</h2>
-          <h3>五度相生律</h3>
+          <h3>五度律</h3>
           <Pythagorean />
           <Pythagorean60 />
           <h3>純律</h3>
           <Justoni />
-          <h3>調和律</h3>
+          <h3>調律</h3>
+          <Hechengtian />
           <Meantone4 />
           <Meantone3 />
           <h3>等程律</h3>
           <Equal12 />
           <Equal19 />
-          <h2>品弦法</h2>          
+          <h2>品弦法</h2>
           <Tuning />
           <h2>徽位之什</h2>
           <FretPitch />

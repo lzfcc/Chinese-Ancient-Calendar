@@ -38,7 +38,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right table-vertical' style={{ whiteSpace: "nowrap" }}>
+      <div className='ans table2 table-vertical' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
             <th></th>

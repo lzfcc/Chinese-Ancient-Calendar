@@ -329,62 +329,65 @@ export const Pythagorean = x => {
     Cent2[0] = 0
     for (let i = 1; i <= 12; i++) {
         upA[i] = frc(upA[i - 1]).mul('3/2')
-        while (upA[i] >= frc(x).mul(2)) {
+        while (Number(upA[i]) > Number(frc(x).mul(2))) {
             upA[i] = upA[i].div(2)
         }
-        const Tmp = Number(upA[i])
+        Cent1[i] = +OctaveCent(Number(upA[i]), x).Cent.toFixed(3)
         upA[i] = upA[i].toFraction(true)
-        Cent1[i] = +OctaveCent(Tmp, x).Cent.toFixed(8)
     }
     for (let i = 1; i <= 12; i++) {
-        upB[i] = frc(upB[i - 1]).mul('3/4')
-        while (upB[i] < frc(x).div(2)) {
+        upB[i] = frc(upB[i - 1]).mul('2/3')
+        while (Number(upB[i]) < Number(frc(x).div(2))) {
             upB[i] = upB[i].mul(2)
         }
         upB[i] = upB[i].toFraction(true)
     }
     for (let i = 1; i <= 12; i++) {
-        downA[i] = frc(downA[i - 1]).mul('2/3')
-        while (downA[i] < frc(x).div(2)) {
-            downA[i] = downA[i].mul(2)
+        downA[i] = frc(downA[i - 1]).mul('4/3')
+        while (Number(downA[i]) > Number(frc(x).mul(2))) {
+            downA[i] = downA[i].div(2)
         }
+        Cent2[i] = +OctaveCent(Number(downA[i]), x).Cent.toFixed(3)
         downA[i] = downA[i].toFraction(true)
     }
     for (let i = 1; i <= 12; i++) {
-        downB[i] = frc(downB[i - 1]).mul('4/3')
-        while (downB[i] >= frc(x).mul(2)) {
-            downB[i] = downB[i].div(2)
+        downB[i] = frc(downB[i - 1]).mul('3/4')
+        while (Number(downB[i]) < Number(frc(x).div(2))) {
+            downB[i] = downB[i].mul(2)
         }
-        const Tmp = Number(downB[i])
         downB[i] = downB[i].toFraction(true)
-        Cent2[i] = +OctaveCent(Tmp, x).Cent.toFixed(8)
     }
-    const Print1 = [{
-        title: '上生A',
+    const Print = [{
+        title: '上生頻率',
         data: upA
     }, {
-        title: '上生B',
+        title: '上生弦長',
         data: upB
     }, {
         title: '音分',
         data: Cent1
-    }]
-    const Print2 = [{
-        title: '下生A',
+    }, {
+        title: '',
+        data: [`<strong>C</strong>`, `<strong>F</strong>`, `<strong>♭B</strong>`, `<strong>♭E</strong>`, `<strong>♭A</strong>`, `<strong>♭D</strong>`, `<strong>♭G</strong>`, `<strong>♭C</strong>`, `<strong>♭F</strong>`, `<strong>𝄫B</strong>`, `<strong>𝄫E</strong>`, `<strong>𝄫A</strong>`, `<strong>𝄫D</strong>`]
+    },
+    {
+        title: '下生頻率',
         data: downA
     }, {
-        title: '下生B',
+        title: '下生弦長',
         data: downB
     }, {
         title: '音分',
         data: Cent2
     }]
-    return { Print1, Print2 }
+    return Print
 }
+// console.log (Pythagorean(81))
 
 export const Pythagorean60 = x => {
-    const upA = [], Cent1 = []
+    const upA = [], upB = [], Cent1 = []
     upA[0] = x
+    upB[0] = x
     Cent1[0] = 0
     for (let i = 1; i < 60; i++) {
         const Func1 = BigFrc(upA[i - 1], '3/2')
@@ -397,17 +400,71 @@ export const Pythagorean60 = x => {
         }
         Cent1[i] = +OctaveCent(Deci, x).Cent.toFixed(8)
     }
-    const Print1 = [{
-        title: '向上',
+    for (let i = 1; i < 60; i++) {
+        const Func1 = BigFrc(upB[i - 1], '2/3')
+        upB[i] = Func1.Frac
+        let Deci = Func1.Deci
+        while (Deci < Number(frc(x).div(2))) {
+            const Func2 = BigFrc(upB[i], 2)
+            upB[i] = Func2.Frac
+            Deci = Func2.Deci
+        }
+    }
+    const Print = [{
+        title: '頻率',
         data: upA
+    }, {
+        title: '弦長',
+        data: upB
     }, {
         title: '音分',
         data: Cent1
     }]
-    return Print1
+    return Print
 }
 
-export const Meantone = (x, mode) => { // 調和律、中庸全音律
+export const Hechengtian = x => {
+    const upA = [], upB = [], Cent1 = []
+    upA[0] = x
+    upB[0] = x
+    Cent1[0] = 0
+    for (let i = 1; i <= 12; i++) {
+        upA[i] = frc(upA[i - 1]).mul('3/2')
+        while (Number(upA[i]) > Number(frc(x).mul(2))) {
+            upA[i] = upA[i].div(2)
+        }
+    }
+    const DifA = upA[12].sub(frc(x)).div(12)
+    for (let i = 1; i <= 12; i++) {
+        upA[i] = upA[i].sub(DifA.mul(i))
+        Cent1[i] = +OctaveCent(Number(upA[i]), x).Cent.toFixed(3)
+        upA[i] = upA[i].toFraction(true)
+    }
+    for (let i = 1; i <= 12; i++) {
+        upB[i] = frc(upB[i - 1]).mul('2/3')
+        while (Number(upB[i]) < Number(frc(x).div(2))) {
+            upB[i] = upB[i].mul(2)
+        }
+    }
+    const DifB = frc(x).sub(upB[12]).div(12)
+    for (let i = 1; i <= 12; i++) {
+        upB[i] = upB[i].add(DifB.mul(i))
+        upB[i] = upB[i].toFraction(true)
+    }
+    const Print = [{
+        title: '上生頻率',
+        data: upA
+    }, {
+        title: '上生弦長',
+        data: upB
+    }, {
+        title: '音分',
+        data: Cent1
+    }]
+    return Print
+}
+
+export const Meantone = (x, mode) => { // 折中律、中庸全音律
     mode = mode === undefined ? 4 : +mode
     const Cent1 = [], Freq1 = [], Cent2 = [], Freq2 = []
     Freq1[0] = big(x)

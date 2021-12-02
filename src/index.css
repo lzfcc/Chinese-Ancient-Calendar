@@ -114,13 +114,13 @@ a:hover {
   border-radius: .2em
 }
 
-strong {
-  background: var(--red);
+/* strong { */
+  /* background: var(--red);
   padding: .1em;
-  color: var(--bg);
-  font-weight: normal;
-  border-radius: .2em;
-}
+  color: var(--bg); */
+  /* font-weight: normal; */
+  /* border-radius: .2em; */
+/* } */
 
 b {
   font-weight: normal;
@@ -770,6 +770,7 @@ input {
   border: 2px solid var(--black);
   -webkit-transition: .3s;
   transition: .3s;
+  font-size: .8em;
 }
 
 .save-file {
