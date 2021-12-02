@@ -526,7 +526,7 @@ export const Meantone = (x, mode) => { // 折中律、中庸全音律
     return { Print1, Print2 }
 }
 // console.log(Meantone(1))
-// console.log(big.pow(3.2, 1 / 4).toNumber())
+// console.log(big.pow(2, big.div(1, 12)).toNumber())
 // console.log(Pythagorean60(81))
 export const Justoni = x => {
     x = x.toString()
