@@ -45,8 +45,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print, NamePrint } = FretPitch(this.state.b,this.state.Temp, this.state.n)
-      this.setState({ output1: Print, output2: NamePrint })
+      const { Print, Print2, NamePrint } = FretPitch(this.state.b, this.state.Temp, this.state.n)
+      this.setState({ output1: Print, output2: NamePrint, output5: Print2 })
     } catch (e) {
       alert(e.message)
     }
@@ -101,7 +101,31 @@ export default class Converter extends React.Component {
             })}
           </table>
         </div>
+        <div className='rowline'>
+          <h3>七限純律</h3>
+          <table>
+            <tr>
+              <th></th>
+              <th>◆6</th>
+              <th>◆5</th>
+              <th>◆4</th>
+              <th>◆3</th>
+              <th>◆2</th>
+              <th>◆1</th>
+            </tr>
+            {(this.state.output5 || []).map(row => {
+              return (
+                <tr>
+                  <td className='RowTitle'>{row.title}</td>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
       </div>
+
+
     )
   }
 

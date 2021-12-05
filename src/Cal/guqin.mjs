@@ -191,15 +191,20 @@ const Prime = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37] // 质数
 
 const Unique = arr => Array.from(new Set(arr)).filter(x => x !== undefined)
 
-const Portion2Name = (a, mode) => { // 輸入頻率比，輸出對應的唱名mode 1 音名 2唱名 
+const IntoOctave = (a, standard) => { // 化到一個八度之內
     a = frc(a)
-    while (Number(a) < 1) {
+    standard = standard === undefined ? 1 : standard
+    while (Number(a) < standard) {
         a = a.mul(2)
     }
-    while (Number(a) > 2) {
+    while (Number(a) > standard * 2) {
         a = a.div(2)
     }
-    a = a.toFraction(false)
+    return a.toFraction(false)
+}
+
+const Portion2Name = (a, mode) => { // 輸入頻率比，輸出對應的唱名mode 1 音名 2唱名 
+    a = IntoOctave(a)
     for (const [key, value] of Object.entries(FushionList)) {
         if (value[3] === a) return value[mode]
     }
@@ -222,14 +227,7 @@ const Name2Freq = a => { // 輸入音名輸出對應頻率
 // console.log(Name2Freq('♭G'))
 
 const Freq2Pitch = a => { // 輸入頻率比，輸出對應的唱名
-    a = frc(a)
-    while (Number(a) < 1) {
-        a = a.mul(2)
-    }
-    while (Number(a) > 2) {
-        a = a.div(2)
-    }
-    a = a.toFraction(false)
+    a = IntoOctave(a)
     for (const [key, value] of Object.entries(FushionList)) {
         if (value[3] === a) return value[1]
     }
@@ -1664,7 +1662,7 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
 
 export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、律制、宮弦
     let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
-    let Print = [], NameList = [], NameBList = [], StringList = []
+    let Print = [], NameList = [], NameBList = [], StringList = [], Print2 = []
     let OneDif = ''
     TempMode = +TempMode
     if (TempMode === 1) {
@@ -1688,7 +1686,7 @@ export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、
     }
     for (let i = 1; i <= 7; i++) { // 七弦
         let Pitch = [], NameTmp = [], NameBTmp = []
-        for (let k = 0; k <= 16; k++) { // 15徽 
+        for (let k = 0; k <= 16; k++) { // 17徽 
             Pitch[k] = frc(StringList[i]).div(Fret2Leng(k)).toFraction(false) // 這個是核心，其他都是附帶
             NameTmp[k] = Portion2Name(Pitch[k], 2) // Pitch是頻率比分數 知道頻率比，在對象中找到對應的音名唱名  
             NameBTmp[k] = Portion2Pitch(Pitch[k], StringList[1], OneDif || 1)
@@ -1711,7 +1709,19 @@ export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、
     }, {
         data: NameList
     }]
-    return { Print, NamePrint }
+    for (let i = 1; i <= 7; i++) { // 七限
+        let Pitch = []
+        for (let k = 1; k <= 6; k++) { // 17徽 
+            Pitch[k] = frc(StringList[i]).div(k + '/7').toFraction(false) // 這個是核心，其他都是附帶            
+            Pitch[k] = IntoOctave(Pitch[k])
+        }
+        Pitch = Pitch.reverse()
+        Print2 = Print2.concat({
+            title: NumList[i],
+            data: Pitch
+        })
+    }
+    return { Print, Print2, NamePrint }
 }
 
 export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
@@ -1779,13 +1789,8 @@ export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
         let String = []
         for (let j = 0; j < Length.length; j++) {
             let tmp1 = frc(StringList[i]).div(Length[j])
-            while (Number(tmp1) > 2) {
-                tmp1 = tmp1.div(2)
-            }
-            while (Number(tmp1) < 1) {
-                tmp1 = tmp1.mul(2)
-            }
-            if (FushionList.indexOf(tmp1.toFraction(false)) > -1) {
+            tmp1 = IntoOctave(tmp1)
+            if (FushionList.indexOf(tmp1) > -1) {
                 String[j] = Portion2Name(tmp1, 2)
                 String[j] = String[j] + ' ' + Portion2Pitch(tmp1, StringList[1], OneDif || 1)
             } else {
@@ -1978,13 +1983,8 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
 const Portion2Interval = (portion, one = 1, oneDif = 1) => {
     const base = frc(one).div(oneDif)
     let a = frc(portion).div(base)
-    while (Number(a) < 1) {
-        a = a.mul(2)
-    }
-    while (Number(a) > 2) {
-        a = a.div(2)
-    }
-    const got = FushionListB.find(obj => obj.freq === a.toFraction(false))
+    a = IntoOctave(a)
+    const got = FushionListB.find(obj => obj.freq === a)
     return got
 }
 
