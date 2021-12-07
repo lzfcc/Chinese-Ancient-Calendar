@@ -268,7 +268,7 @@ const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
     x = frc(x).simplify()
     const xNum = Number(x)
     const Fret = x.floor()
-    if (Fret === xNum) {
+    if (Number(Fret) === xNum) {
         if (xNum === -1) {
             return '1/10' // 15徽泛音以7徽對稱就變成了-1
         }
@@ -278,7 +278,7 @@ const Fret2Leng = x => { // 徽位轉弦長 支持 13.111，13 1/9，118/9
     const Leng = frc(FretList[Fret]).add(Frac.mul(frc(FretList[Fret + 1]).sub(FretList[Fret])))
     return Leng.toFraction()
 }
-// console.log(Fret2Leng('16'))
+// console.log(Fret2Leng('-1'))
 
 export const Leng2Fret = x => { // 弦長轉徽位
     x = frc(x)
@@ -1662,7 +1662,7 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
 
 export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、律制、宮弦
     let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval('Tuning' + TuningMode)(432, +n)
-    let Print = [], NameList = [], NameBList = [], StringList = [], Print2 = []
+    let Print1 = [], Print2 = [], Name1AList = [], Name1BList = [], Name2AList = [], Name2BList = [], StringList = [], Print3 = []
     let OneDif = ''
     TempMode = +TempMode
     if (TempMode === 1) {
@@ -1694,35 +1694,64 @@ export const FretPitch = (TuningMode, TempMode, n) => { // 徽位音。弦法、
             Pitch[k] += NameTmp[k] ? NameTmp[k] + ' ' : ''
             Pitch[k] += NameBTmp[k] || ''
         }
-        NameList = NameList.concat(NameTmp)
-        NameBList = NameBList.concat(NameBTmp) // 右邊這個每個循環清空
+        Name1AList = Name1AList.concat(NameTmp)
+        Name1BList = Name1BList.concat(NameBTmp) // 右邊這個每個循環清空
         Pitch = Pitch.reverse()
-        Print = Print.concat({
+        Print1 = Print1.concat({
             title: NumList[i],
             data: Pitch
         })
     }
-    NameList = Unique(NameList)
-    NameBList = Unique(NameBList)
-    const NamePrint = [{
-        data: NameBList
+    Name1AList = Unique(Name1AList)
+    Name1BList = Unique(Name1BList)
+    const Name1Print = [{
+        data: Name1BList
     }, {
-        data: NameList
+        data: Name1AList
     }]
-    for (let i = 1; i <= 7; i++) { // 七限
-        let Pitch = []
-        for (let k = 1; k <= 6; k++) { // 17徽 
-            Pitch[k] = frc(StringList[i]).div(k + '/7').toFraction(false) // 這個是核心，其他都是附帶            
-            Pitch[k] = IntoOctave(Pitch[k])
+
+    for (let i = 1; i <= 7; i++) { // 泛音
+        let Pitch = [], NameTmp = [], NameBTmp = []
+        for (let k = 0; k <= 15; k++) {
+            const fret = 7 - Math.abs(k - 7)
+            Pitch[k] = frc(StringList[i]).div(Fret2Leng(fret)).toFraction(false) // 這個是核心，其他都是附帶
+            NameTmp[k] = Portion2Name(Pitch[k], 2) // Pitch是頻率比分數 知道頻率比，在對象中找到對應的音名唱名  
+            NameBTmp[k] = Portion2Pitch(Pitch[k], StringList[1], OneDif || 1)
+            Pitch[k] += `</br>`
+            Pitch[k] += NameTmp[k] ? NameTmp[k] + ' ' : ''
+            Pitch[k] += NameBTmp[k] || ''
         }
+        Name2AList = Name2AList.concat(NameTmp)
+        Name2BList = Name2BList.concat(NameBTmp) // 右邊這個每個循環清空
         Pitch = Pitch.reverse()
         Print2 = Print2.concat({
             title: NumList[i],
             data: Pitch
         })
     }
-    return { Print, Print2, NamePrint }
+    Name2AList = Unique(Name2AList)
+    Name2BList = Unique(Name2BList)
+    const Name2Print = [{
+        data: Name2BList
+    }, {
+        data: Name2AList
+    }]
+
+    for (let i = 1; i <= 7; i++) { // 七限
+        let Pitch = []
+        for (let k = 1; k <= 6; k++) {
+            Pitch[k] = frc(StringList[i]).div(k + '/7').toFraction(false)
+            Pitch[k] = IntoOctave(Pitch[k])
+        }
+        Pitch = Pitch.reverse()
+        Print3 = Print3.concat({
+            title: NumList[i],
+            data: Pitch
+        })
+    }
+    return { Print1, Print2, Print3, Name1Print, Name2Print }
 }
+// console.log(FretPitch(1, 1, 0))
 
 export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
     isSimple = +isSimple

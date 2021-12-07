@@ -45,8 +45,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print, Print2, NamePrint } = FretPitch(this.state.b, this.state.Temp, this.state.n)
-      this.setState({ output1: Print, output2: NamePrint, output5: Print2 })
+      const { Print1, Print2, Print3, Name1Print, Name2Print } = FretPitch(this.state.b, this.state.Temp, this.state.n)
+      this.setState({ output1: Print1, output2: Name1Print, output3: Print2, output4: Name2Print, output5: Print3 })
     } catch (e) {
       alert(e.message)
     }
@@ -59,6 +59,7 @@ export default class Converter extends React.Component {
     return (
       <div className='ans table2' style={{ whiteSpace: "nowrap" }}>
         <div className='rowline'>
+        <h3>按音</h3>
           <table>
             <tr>
               <th></th>
@@ -101,6 +102,50 @@ export default class Converter extends React.Component {
             })}
           </table>
         </div>
+        <div className='rowline'>
+        <h3>泛音</h3>
+          <table>
+            <tr>
+              <th></th>
+              <th>卜卜</th>
+              <th>卜</th>
+              <th>13</th>
+              <th>12</th>
+              <th>11</th>
+              <th>10</th>
+              <th>9</th>
+              <th>8</th>
+              <th>7</th>
+              <th>6</th>
+              <th>5</th>
+              <th>4</th>
+              <th>3</th>
+              <th>2</th>
+              <th>1</th>
+              <th>卜</th>
+            </tr>
+            {(this.state.output3 || []).map(row => {
+              return (
+                <tr>
+                  <td className='RowTitle'>{row.title}</td>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
+        <div className='table-narrow'>
+          <table>
+            {(this.state.output4 || []).map(row => {
+              return (
+                <tr>
+                  {row.data.map(d => <td dangerouslySetInnerHTML={{ __html: d }}></td>)}
+                </tr>
+              )
+            })}
+          </table>
+        </div>
+
         <div className='rowline'>
           <h3>七限純律</h3>
           <table>
