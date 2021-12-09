@@ -272,7 +272,7 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -60.875, // 冬至距雨水日數
+        WinsolsOriginDif: -60.875, // 冬至距雨水日數
         WinsolsOriginMon: -(2 + 7 / 114), // 冬至距雨水閏餘
         OriginAd: -2759875,
         // JdOrigin: 1883650.5,
@@ -299,6 +299,7 @@ export default {
         YuanRange: 4560,
         JiRange: 1520,
         BuRange: 76,
+        WinsolsCorr: 0.5,
         isTermLeap: 0, // 0:固定冬至，1:無中氣
         EcliRange: 135 / 23,
         EcliNumer: 513,
@@ -308,7 +309,7 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305, // -1505
         // JdOrigin: 1726575.5,
@@ -321,7 +322,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsCorr: 0.5,
+        DayCorr: 5 / 24, // 寅正爲日始
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -331,7 +332,7 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305, // -1505
         // JdOrigin: 1726575.5,
@@ -353,14 +354,14 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
         JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScCorr: 5,
-        ZhengNum: -1, // 十月爲年首
+        ZhengNum: -1,
         OriginMonNum: 2, // 建寅
         YuanRange: 4560,
         JiRange: 1520,
@@ -375,14 +376,14 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
         JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScCorr: 5,
-        ZhengNum: -1, // 十月爲年首
+        ZhengNum: -1,
         OriginMonNum: 2, // 建寅
         YuanRange: 4560,
         JiRange: 1520,
@@ -398,14 +399,14 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
         JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScCorr: 5,
-        ZhengNum: -1, // 十月爲年首
+        ZhengNum: -1,
         OriginMonNum: 2, // 建寅
         YuanRange: 4560,
         JiRange: 1520,
@@ -421,14 +422,14 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
         JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScCorr: 5,
-        ZhengNum: -1, // 十月爲年首
+        ZhengNum: -1,
         OriginMonNum: 2, // 建寅
         YuanRange: 4560,
         JiRange: 1520,
@@ -444,14 +445,14 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsWinsolsDif: -45.65625, // 立春爲曆元
+        WinsolsOriginDif: -45.65625, // 立春爲曆元
         WinsolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
         JdWinsols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScCorr: 5,
-        ZhengNum: -1, // 十月爲年首
+        ZhengNum: -1,
         OriginMonNum: 2, // 建寅
         YuanRange: 4560,
         JiRange: 1520,

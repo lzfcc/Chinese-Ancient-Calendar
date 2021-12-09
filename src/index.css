@@ -1077,7 +1077,7 @@ hr {
 }
 
 .color-white {
-  background: white;
+  background: var(--bggray);
   padding: 1em .5em;
   border-radius: .7em;
   margin: .2em;

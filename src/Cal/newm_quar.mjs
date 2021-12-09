@@ -3,16 +3,17 @@ import Para from './para_calendars.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
 export default (CalName, year) => {
-    const { Lunar, Solar, WinsolsWinsolsDif, WinsolsOriginMon,
+    const { Lunar, Solar, WinsolsOriginDif, WinsolsOriginMon,
         OriginAd, OriginYearSc, BuScCorr, ZhengNum, OriginMonNum,
         YuanRange, TongRange, isTermLeap, EcliRange, EcliNumer, MansionRaw
     } = Para[CalName]
-    let { JiRange, BuRange, WinsolsCorr } = Para[CalName]
+    let { JiRange, BuRange, WinsolsCorr, DayCorr } = Para[CalName]
     if (CalName === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange
     }
     WinsolsCorr = WinsolsCorr || 0
+    DayCorr = DayCorr || 0
     const BuSkip = ['Qianzaodu', 'Yuanmingbao'].includes(CalName) ? 365.25 * BuRange % 60 : Solar * BuRange % 60
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const ZhengWinsolsDif = ZhengNum - OriginMonNum // 年首和正月的差
@@ -22,9 +23,9 @@ export default (CalName, year) => {
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
     const BuOrder = ~~(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
     const BuScOrder = (1 + BuOrder * BuSkip + (BuScCorr || 0)) % 60 // 蔀（統）的干支序號
-    const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsWinsolsDif || 0) + WinsolsCorr // 冬至積日
+    const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsOriginDif || 0) + WinsolsCorr + DayCorr // 冬至積日
     const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
-    const OriginAccum = WinsolsAccumRaw - (WinsolsWinsolsDif || 0) // 曆元積日
+    const OriginAccum = WinsolsAccumRaw - (WinsolsOriginDif || 0) // 曆元積日
     const WinsolsDeci = WinsolsAccumRaw - ~~WinsolsAccumRaw
     const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
     const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘

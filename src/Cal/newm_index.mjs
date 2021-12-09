@@ -11,7 +11,7 @@ import { AutoRangeEcli } from './para_auto-constant.mjs'
 export default (CalName, YearStart, YearEnd) => {
     const Bind = CalName => Para[CalName].Type === 1 ? N1 : N2
     const AutoNewm = Bind(CalName)
-    const { Type, OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsWinsolsDif, MansionRaw } = Para[CalName]
+    const { Type, OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, WinsolsOriginDif, MansionRaw } = Para[CalName]
     let { ScCorr } = Para[CalName]
     const isExcl = Type >= 4
     ScCorr = ScCorr || 0
@@ -372,9 +372,9 @@ export default (CalName, YearStart, YearEnd) => {
                 YearInfo += `${ThreeList[ThisYear.JiOrder]}紀${ScList[ThisYear.BuScOrder]}蔀${ThisYear.BuYear}`
             }
             YearInfo += `  大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat((ThisYear.WinsolsAccumMod).toPrecision(6)).toFixed(4)}`
-            if (WinsolsWinsolsDif === -45.65625) {
+            if (WinsolsOriginDif === -45.65625) {
                 YearInfo += `立春${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
-            } else if (WinsolsWinsolsDif === -60.875) {
+            } else if (WinsolsOriginDif === -60.875) {
                 YearInfo += `雨水${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
             YearInfo += `  閏餘${LeapSur.toFixed(4)}`
