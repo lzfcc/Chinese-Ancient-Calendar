@@ -321,7 +321,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        DayCorr: 5 / 24, // 寅正爲日始
+        DayCorr: 4 / 24, // 寅正爲日始
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },

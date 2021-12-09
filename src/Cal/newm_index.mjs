@@ -2,7 +2,7 @@ import N1 from './newm_quar.mjs'
 import N2 from './newm.mjs'
 import Para from './para_calendars.mjs'
 // import N3 from './newm_huihui.mjs'
-import { TermList, ScList, ThreeList, CalNameList, MonNumList } from './para_constant.mjs'
+import { TermList, ScList, ThreeList, CalNameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Accum2Mansion, LeapAdjust } from './astronomy_other.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
@@ -131,6 +131,12 @@ export default (CalName, YearStart, YearEnd) => {
         LeapNumTermThis -= NewmStart
         // 月序
         const Month = [], MonthName = []
+        let MonNumList = MonNumList1
+        if (CalName === 'Zhuanxu1') {
+            MonNumList = MonNumListChuA
+        } else if (CalName === 'Zhuanxu2') {
+            MonNumList = MonNumListChuB
+        }
         if (Type === 1) {
             if (isTermLeap) {
                 if (LeapNumTermThis && (ThisYear.isLeapAvgThis || specialNewmSyzygyEnd)) { // || (ThisYear.isLeapAvgNext && ThisYear.isAdvance)))
@@ -470,3 +476,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
+// console.log(NewmIndex('Zhuanxu1', -316, -315))

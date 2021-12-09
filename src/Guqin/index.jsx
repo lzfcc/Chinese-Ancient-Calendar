@@ -45,10 +45,9 @@ export default class Astronomy extends React.Component {
           <br />
           <Leng2Fret />
           <h2>生律之什</h2>
-          <h3>五度律</h3>
+          <h3>純律</h3>
           <Pythagorean />
           <Pythagorean60 />
-          <h3>純律</h3>
           <Justoni />
           <h3>調律</h3>
           <Hechengtian />

@@ -80,7 +80,7 @@ export default (CalName, year) => {
     const NewmAvgBare = [], NewmAvgRaw = [], NewmInt = [], NewmAvgSc = [], NewmWinsolsDifRaw = [], NewmAvgDeci = [], NewmEqua = [], SyzygyAvgRaw = [], SyzygyAvgMod = [], SyzygyOrderMod = [], SyzygyDeci = []
     let SyzygySc = []
     for (let i = 0; i <= 14; i++) { // 本來是1
-        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + WinsolsCorr).toPrecision(14))
+        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + WinsolsCorr + DayCorr).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
         NewmInt[i] = ~~NewmAvgRaw[i]
         NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]

@@ -11,8 +11,8 @@ big.config({
 })
 export { big, frc, nzh }
 // nzh = new nzh({
-//     ch: "〇一二三四五六七八九",      // 数字字符
-//     ch_u: "个十百千萬億兆京",       // 数位单位字符，万以下十进制，万以上万进制，个位不能省略
+//     ch: '〇一二三四五六七八九',      // 数字字符
+//     ch_u: '个十百千萬億兆京',       // 数位单位字符，万以下十进制，万以上万进制，个位不能省略
 // });
 export const debounce = (fn, delay) => {
     let timer = 100 // 返回一个函数，这个函数会在一个时间区间结束后的 delay 毫秒时执行 fn 函数
@@ -318,7 +318,9 @@ export const MonScaleNameList = ['', '太簇', '夾鐘', '姑洗', '中呂', '�
 export const WeekList = ' 月火水木金土日' // 回回不用甲子，用七曜。
 export const WeekList1 = ' 一二三四五六日'
 export const NumList = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '廿', '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '卅']
-export const MonNumList = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
+export const MonNumList1 = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
+export const MonNumListChuA = ['', '冬夕(亥)', '屈夕(子)', '援夕(丑)', '荊尸(寅)', '夏(卯)', '紡(辰)', '七月(巳)', '八月(午)', '九月(未)', '十月(申)', '爨(酉)', '獻馬(戌)'] // 大正
+export const MonNumListChuB = ['', '取(寅)', '如(卯)', '秉(辰)', '餘(巳)', '好(午)', '虘(未)', '倉(申)', '臧(酉)', '玄(戌)', '陽(亥)', '姑(子)', '塗(丑)'] // 小正
 export const ColorList = ' 白黑碧綠黃白赤白紫' // 九宮
 export const ClassColorList = ['', 'color-white', 'color-black', 'color-cyan', 'color-green', 'color-yellow', 'color-white', 'color-red', 'color-white', 'color-purple']
 export const Hexagram8List = ' 乾兌離震巽坎艮坤' // 震 正東;兌 正西;離 正南;坎 正北;坤 西南;艮 東北;巽 東南;乾 西北

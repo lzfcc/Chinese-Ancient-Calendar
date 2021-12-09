@@ -4,7 +4,7 @@ import {
     WeekList, MansionNameList, MansionAnimalNameList,
     ManGodList, JianchuList, HuangheiList, YuanList,
     HalfTermList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
-    nzh, AutoDegAccumList, NumList, MonNumList,
+    nzh, AutoDegAccumList, NumList, MonNumList1,
 } from './para_constant.mjs'
 import {
     YearGodConvert, YearColorConvert, MonColorConvert, WangwangConvert, FubaoConvert, LsStarConvert, BloodConvert, TouringGodConvert
@@ -153,9 +153,9 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     NoleapMon = i - 1
                 }
             }
-            MonName[i] = MonNumList[NoleapMon] + '月'
+            MonName[i] = MonNumList1[NoleapMon] + '月'
             if (LeapNumTermThis > 0 && i === LeapNumTermThis + 1) { // 好像有LeapNumTermThis<0的情況
-                MonName[i] = '閏' + MonNumList[LeapNumTermThis] + '月'
+                MonName[i] = '閏' + MonNumList1[LeapNumTermThis] + '月'
             }
             MonName[i] += NewmInt[i] - NewmInt[i - 1] === 29 ? '小' : '大'
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)
