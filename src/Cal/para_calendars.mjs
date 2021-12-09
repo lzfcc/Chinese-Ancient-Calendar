@@ -299,7 +299,6 @@ export default {
         YuanRange: 4560,
         JiRange: 1520,
         BuRange: 76,
-        WinsolsCorr: 0.5,
         isTermLeap: 0, // 0:固定冬至，1:無中氣
         EcliRange: 135 / 23,
         EcliNumer: 513,

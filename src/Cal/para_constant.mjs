@@ -37,7 +37,7 @@ export const CalNameList = { // 按照時間順序排列
     LuE: '魯(進餘280)',
     LuF: '魯(進餘213)',
     LuG: '魯(進餘147)',
-    Zhuanxu1: '楚顓頊(大正建亥,進餘1/2)',
+    Zhuanxu1: '楚顓頊(大正建亥)',
     Zhuanxu2: '楚顓頊(小正建寅)',
     ZhuanxuA: '秦顓頊(建寅)',
     ZhuanxuB: '秦顓頊(十月首)',
