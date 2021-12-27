@@ -208,7 +208,8 @@ export const Interpolate3 = (n, points) => { // modified by @lzfcc
     }
     return f
 }
-// console.log(Interpolate3(2.5,[[1,0.5],[2.4,1],[4,2]]))
+// console.log(Interpolate3(2.5, [[1, 2], [2, 4], [3, 8]]))
+// console.log(Interpolate3(14, [[2, 64.415], [7, 60.559], [12, 58.313], [17, 73.164], [22, 85.722]]))
 
 export const Interpolate3_big = (n, initial) => {
     const x = [], y = []
@@ -219,7 +220,7 @@ export const Interpolate3_big = (n, initial) => {
     let f = 0
     for (let i = 0; i < x.length; i++) {
         let tmp = big(1)
-        for (let j = 0; j < i; j++) {
+        for (let j = 0; j < x.length; j++) {
             if (i !== j) tmp = tmp.mul((big.sub(n, x[j])).div(big.sub(x[i], x[j])))
         }
         f = big(f).add(big(y[i]).mul(tmp))
@@ -227,7 +228,14 @@ export const Interpolate3_big = (n, initial) => {
     const Print = `f (${n}) = ${parseFloat((+f.toFixed(15)).toPrecision(14))}`
     return { Print, f }
 }
-// console.log(Interpolate3_big('12.1', '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
+const Interpolate3_big_Pre = (n, initial) => {
+    let arr = initial.split(/;|,|，|。|；|｜| /).filter(Boolean)
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = Number(arr[i])
+    }
+    return Interpolate3_big(n, arr).Print
+}
+// console.log(Interpolate3_big_Pre(2.5, '1,2;2,4;3,8'))
 // console.log(Interpolate3(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
 
 export const MeasureWinsols = List => {

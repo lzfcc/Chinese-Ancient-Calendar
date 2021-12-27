@@ -7,11 +7,12 @@ export const DayanHexo = () => {
     const test = []
     const result = []
     const isYangRaw = []
+    const Range = 5
     for (let i = 0; i < 6; i++) {
-        let all = 49
+        let all = 48 // 一般應該是49
         test[i] = []
         for (let k = 0; k < 3; k++) {
-            let a = Random(5, all - 5)
+            let a = Random(Range, all - Range)
             const l = a - 1
             const r = all - a
             const modL = l % 4 || 4 // 0=4
@@ -76,3 +77,50 @@ export const DayanHexo = () => {
     return Print1
 }
 // console.log(DayanHexo())
+
+const TestSub = () => {
+    let all = 48
+    const n = 17
+    for (let k = 0; k < 3; k++) {
+        let a = Random(n, all - n)
+        const l = a - 1
+        const r = all - a
+        const modL = l % 4 || 4 // 0=4
+        const modR = r % 4 || 4
+        all -= modL + modR + 1
+    }
+    return all / 4
+}
+
+const Test = () => {
+    let Num6 = [], Num7 = [], Num8 = [], Num9 = [] //, Num0 = []
+    for (let i = 1; i <= 3; i++) {
+        Num6[i] = 0
+        Num7[i] = 0
+        Num8[i] = 0
+        Num9[i] = 0
+        // Num0[i] = 0
+        for (let k = 0; k <= 100000000; k++) {
+            const a = TestSub()
+            if (a === 6) {
+                Num6[i] += 1
+            } else if (a === 7) {
+                Num7[i] += 1
+            } else if (a === 8) {
+                Num8[i] += 1
+            } else if (a === 9) {
+                Num9[i] += 1
+            } 
+            // else {
+            //     Num0[i] += 1
+            // }
+        }
+    }
+    const A6 = (Num6[1] + Num6[2] + Num6[3]) / 3
+    const A7 = (Num7[1] + Num7[2] + Num7[3]) / 3
+    const A8 = (Num8[1] + Num8[2] + Num8[3]) / 3
+    const A9 = (Num9[1] + Num9[2] + Num9[3]) / 3
+    return '6:' + Num6 + ',' + A6 + '. 7:' + Num7 + ',' + A7 + '. 8:' + Num8 + ',' + A8 + '. 9:' + Num9 + ',' + A9 // + '. 0:' + Num0
+}
+
+console.log(Test())
