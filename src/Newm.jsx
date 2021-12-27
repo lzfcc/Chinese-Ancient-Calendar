@@ -259,7 +259,7 @@ export default class Newm extends React.Component {
           width={(window.innerWidth) * 0.93}
           cache={heightCache}
           data={list}
-          overscanCount={5}
+          overscanCount={15}
         >
           {({ index, style }) => {
             const calInfo = list[index]

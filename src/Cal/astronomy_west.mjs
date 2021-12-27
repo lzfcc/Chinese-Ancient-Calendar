@@ -210,11 +210,9 @@ export const Longi2SunriseWest = (lRaw, f, Sidereal, year) => {
 // 還可參考 李文、赵永超《地球椭球模型中太阳位置计算的改进》
 // h=90°-|緯度φ-赤緯δ|
 const Refraction = h => {
-    const Numer = big(1819.08371242143).add(big(194.887513592849).mul(h)).add(big(1.46555397475109).mul(h).mul(h)).sub(big(0.0419553783815395).mul(h).mul(h).mul(h))
-    const Denom = big(1).add(big(0.409283439734292).mul(h)).add(big(0.0667313795916436).mul(h).mul(h)).add(big(0.00008468597).mul(h).mul(h).mul(h))
-    const DifS = Numer.div(Denom) // 單位：秒
-    const DifD = DifS.div(3600).toNumber()
-    return DifD
+    const n = big(1819.08371242143).add(big(194.887513592849).mul(h)).add(big(1.46555397475109).mul(h).mul(h)).sub(big(0.0419553783815395).mul(h).mul(h).mul(h))
+    const d = big(1).add(big(0.409283439734292).mul(h)).add(big(0.0667313795916436).mul(h).mul(h)).add(big(0.00008468597).mul(h).mul(h).mul(h))
+    return n.div(d).div(3600).toNumber()
 }
 
 // 求眞太陽高度角、天頂距
@@ -274,6 +272,20 @@ export const Longi2DialWest = (l, f, Sidereal, year) => { // 黃經，周天，�
     }
 }
 // console.log(Longi2DialWest(182.62225, 34.4047, 365.2445, 1000))
+
+const Lati = () => { // 由《周髀算经》推算观测地 的纬度有三种数据可用，一是夏至日影一尺六寸，二是冬至日影一丈三尺五寸，三是北极 高度一丈三寸。
+    let x = 30.1
+    const scale = x => Math.tan(d2r(x - 23.958428)) / Math.tan(d2r(x + 23.958428)) // 前2300年黃赤交角
+    const norm = 1.6 / 13.5
+    const eps = 1e-8
+    while (x < 45) {
+        if (scale(x) > norm - eps && scale(x) < norm + eps) {
+            return x
+        }
+        x += 0.00001
+    }
+}
+// console.log(Lati()) // 35.17369
 
 // ε黃赤交角 Φ 黃白交角
 const MoonLongiWest_BACKUP = (EclpRaw, year) => { // 統一360度
