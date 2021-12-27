@@ -52,8 +52,8 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h4>其一</h4>
-        <button onClick={this.handle} className='button4-3'>點之前虔誠</button>
+        <h4>文王卦</h4>
+        <button onClick={this.handle} className='button4-3'>點之前虔誠。解卦靠自己</button>
         {this.result()}
       </div>
     )
