@@ -7,7 +7,7 @@ export const DayanHexo = () => {
     const test = []
     const result = []
     const isYangRaw = []
-    const Range = 5
+    const Range = 12
     for (let i = 0; i < 6; i++) {
         let all = 48 // 一般應該是49
         test[i] = []
@@ -123,4 +123,4 @@ const Test = () => {
     return '6:' + Num6 + ',' + A6 + '. 7:' + Num7 + ',' + A7 + '. 8:' + Num8 + ',' + A8 + '. 9:' + Num9 + ',' + A9 // + '. 0:' + Num0
 }
 
-console.log(Test())
+// console.log(Test())
