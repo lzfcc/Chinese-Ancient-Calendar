@@ -2680,24 +2680,25 @@ export default {
         MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
         MansionFractPosition: 11,
     },
-    Shoushi1: { // 授時曆經不消長
+    Shoushi2: { // 大統通軌的參數用消長
         Type: 11,
         isAcr: true,
+        ApplyYear: [[1368, 1683]],
         CloseOriginAd: 1281,
         Denom: 1,
         Solar: 365.2425, // 曆元歲實
         Sidereal: 365.2575,
         Lunar: 29.530593, // 朔策。秒單位100，分10000
         Node: 27.212224,
-        NodeCorr: 26.018786,
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
         MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
-        AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
         WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
-        FirstCorr: 20.1850, // 閏應：曆元前冬至月齡
+        FirstCorr: 20.205, // 閏應：曆元前冬至月齡
+        AnomaCorr: 13.0205, // 轉應：曆元前冬至距月過近地點
+        NodeCorr: 26.0388,
         PartRange: 0.082, // 限法
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,
@@ -2705,35 +2706,7 @@ export default {
         WeekCorr: 2,
         MansionDayCorr: -12,
         MansionCorr: 315.1075,
-        MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
-        MansionFractPosition: 11,
-    },
-    ShoushiA: { // 授時曆經建子
-        Type: 11,
-        isAcr: true,
-        CloseOriginAd: 1281,
-        Denom: 1,
-        SolarRaw: 365.2425, // 曆元歲實
-        Sidereal: 365.2575,
-        Lunar: 29.530593, // 朔策。秒單位100，分10000
-        Node: 27.212224,
-        NodeCorr: 26.018786,
-        SunLimitYang: 6, // 陽曆限6度，定法60
-        SunLimitYin: 8,
-        MoonLimitNone: 13.05,
-        MoonLimitDenom: 0.87,
-        Anoma: 27.5546, // 轉終：近點月
-        AnomaCorr: 13.1904, // 轉應：曆元前冬至距月過近地點
-        WinsolsCorr: 55.06, // 氣應：曆元前冬至日分
-        FirstCorr: 20.1850, // 閏應：曆元前冬至月齡
-        PartRange: 0.082, // 限法
-        AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
-        ZhengNum: 0,
-        OriginMonNum: 0,
-        WeekCorr: 2,
-        MansionDayCorr: -12,
-        MansionCorr: 315.1075,
-        MansionRaw: [11, 6], // 命起赤道虛宿六度外，實際上曆元是箕10
+        MansionRaw: [11, 6],
         MansionFractPosition: 11,
     },
     Datong: { // 後期授時不加消長。A A1，B B1參數分別一模一樣，只是把Solar改成solar
@@ -2765,7 +2738,7 @@ export default {
         MansionRaw: [11, 6],
         MansionFractPosition: 11,
     },
-    DatongLizhi: {
+    Datong2: {
         Type: 11,
         isAcr: true,
         CloseOriginAd: 1384,
@@ -2775,8 +2748,7 @@ export default {
         Sidereal: 365.2575,
         Lunar: 29.530593, // 朔策
         Anoma: 27.5546, // 轉終：近點月
-        Node: 27.212224,
-        NodeCorr: 11.510508, // 曆五·大統曆法三上 
+        Node: 27.212224,        
         SunLimitYang: 6, // 陽曆限6度，定法60
         SunLimitYin: 8,
         MoonLimitNone: 13.05,
@@ -2784,6 +2756,7 @@ export default {
         WinsolsCorr: 55.0375, // 氣應
         FirstCorr: 18.20708, // 閏應
         AnomaCorr: 20.969, // 轉應
+        NodeCorr: 11.510508, // 曆五·大統曆法三上 
         PartRange: 0.082, // 限法
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
         ZhengNum: 2,

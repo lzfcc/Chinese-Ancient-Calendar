@@ -40,7 +40,7 @@ export default (CalName, year) => {
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
-    } else if (['Shoushi', 'ShoushiA'].includes(CalName)) {
+    } else if (['Shoushi', 'Shoushi2'].includes(CalName)) {
         Solar = parseFloat((SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000)).toPrecision(10))
     } else if (CalName === 'Wannian') {
         // 置曆元所距年積算為汎距，來加往減元紀為定距，以朞實乘之，四約，為積日，不滿，退除為刻，是名汎積。定距自相乘，七之八而一，所得滿百萬為日，不滿為刻及分秒，〔帶半秒已上者收作一秒〕是名節氣歲差，用減汎積，餘為定積。

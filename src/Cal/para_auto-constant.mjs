@@ -113,7 +113,7 @@ export const AutoNodeCycle = CalName => {
         NodeCycle = 363.7946
     } else if (['Daming3', 'Gengwu'].includes(CalName)) {
         NodeCycle = 363.7936
-    } else if (['Datong', 'DatongLizhi'].includes(CalName)) {
+    } else if (['Datong', 'Datong2'].includes(CalName)) {
         NodeCycle = 363.793419
     } else { // 其他的不知道了
         const { Node } = Para[CalName]

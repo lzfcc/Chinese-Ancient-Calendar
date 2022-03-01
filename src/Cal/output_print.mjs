@@ -95,10 +95,9 @@ const printData = outputFile(1 -316, -315, false, [ // mode, YearStart, YearEnd,
     // 'Yiwei',
     // 'Gengwu', 
     // 'Shoushi',
-    // 'Shoushi1',
-    // 'ShoushiA', // 建子
+    // 'Shoushi2',
     // 'Datong',
-    // 'DatongLizhi',    
+    // 'Datong2',    
     // 'Wannian',
     // 'West', // 上授時系
     // 'Huihui',     
