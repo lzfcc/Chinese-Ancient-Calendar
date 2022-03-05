@@ -2802,7 +2802,7 @@ export default {
         CloseOriginAd: 1675,
         Denom: 1,
         Solar: 365.242409,
-        Sidereal: 365.258538,
+        Sidereal: 365.257591, // 365.258538,
         Lunar: 29.53058852,
         Anoma: 27.5545892,
         Node: 27.2122088,
@@ -2820,7 +2820,7 @@ export default {
         WeekCorr: 1,
         MansionDayCorr: -12,
         OriginMonNum: 0,
-        MansionCorr: 308.3, // 我定的，徐發說是箕三度
+        MansionCorr: 308.4, // 我定的，徐發說是箕三度
         MansionRaw: [11, 6],
         MansionFractPosition: 11,
     },
