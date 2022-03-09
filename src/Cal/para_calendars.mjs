@@ -2796,7 +2796,7 @@ export default {
         MansionRaw: [11, 6],
         MansionFractPosition: 11,
     },
-    Xufa: {
+    Xufa: { // 定法是黃赤道表、盈縮表，以後有空了再跟授時曆對照。
         Type: 11,
         isAcr: true,
         CloseOriginAd: 1675,

@@ -24,9 +24,9 @@ export const EraConvert = year => {
 export const YearScConvert = Sc => {
     const a = ScList.indexOf(Sc)
     const year = []
-    year[0] = a + 2043
+    year[0] = a + 2643
     let i = 0
-    while (i < 55) {
+    while (i < 85) {
         year[i + 1] = year[i] - 60
         i++
         if (year[i - 1] > 0 && year[i] <= 0) {
