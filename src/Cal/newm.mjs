@@ -75,8 +75,8 @@ export default (CalName, year) => {
     //     const OriginAccumRaw = Dingju * 365.25 - Dingju ** 2 * 8.75 * 1e-7
     //     return OriginAccumRaw
     // }
-    const ZondeDif = CalName === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
-    let OriginAccum = Type < 11 ? OriginYear * Solar + WinsolsCorr + ZondeDif + SolarChangeAccum : 0
+    const ZoneDif = CalName === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
+    let OriginAccum = Type < 11 ? OriginYear * Solar + WinsolsCorr + ZoneDif + SolarChangeAccum : 0
     OriginAccum = +OriginAccum.toFixed(fixed)
     if (ZhangRange) {
         LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
@@ -137,11 +137,11 @@ export default (CalName, year) => {
         FirstAccum = OriginAccum - LeapSurAvgThis + LunarChangeAccum
     }
     if (Node && Type < 11) {
-        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0) + ZondeDif / 18) % Node
+        FirstNodeAccum = (FirstAccum + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0) + ZoneDif / 18) % Node
     } else if (Type >= 11) {
         FirstNodeAccum = ((OriginAccumRawThis - LeapSurAvgThis + NodeCorr + (YinyangCorr === -1 ? Node / 2 : 0)) % Node + Node) % Node
     }
-    FirstAccum += ZondeDif
+    FirstAccum += ZoneDif
     if (CalName === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
