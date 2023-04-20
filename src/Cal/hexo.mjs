@@ -64,16 +64,14 @@ const HexoList = [
   "夬䷪",
   "乾䷀",
 ];
-
-// [n,m] 范围内的随机整数
-const Random = (n, m) => Math.floor(Math.random() * (m - n + 1)) + n;
-// console.log(Random(23,26))
+const HexoListB = ["坤☷", "艮☶", "坎☵", "巽☴", "震☳", "離☲", "兌☱", "乾☰"]
 const Num = "初二三四五六";
-const TestSub = (n) => {
-  let all = 49;
-  n = +n;
-  for (let k = 0; k < 3; k++) {
-    const small = Math.floor((all * n) / 100);
+const Random = (n, m) => Math.floor(Math.random() * (m - n + 1)) + n;
+// [n,m] 范围内的随机整数
+// console.log(Random(23,26))
+const HexoSub = (all, loop, p) => {
+  for (let k = 0; k < loop; k++) {
+    const small = Math.floor((all * p) / 100);
     let a = Random(small, all - small);
     const l = a - 1;
     const r = all - a;
@@ -83,47 +81,143 @@ const TestSub = (n) => {
   }
   return all / 4;
 };
-const DayanHexoSub = n => {
-  const test = [],
-    result = [],
-    isYangBen = [];
-  const isYangBian = isYangBen.slice(); // 變卦
-  let BinaryStringBen = "";
-  let BinaryStringBian = "";
+const HexoQinghua = p => { // 杨胜男、王承略：大衍揲扐法与清华简《筮法》揲扐法再探讨
+  const result = [],
+    isYang = [];
+  let BinaryString = '';
+  for (let i = 0; i < 12; i++) {
+    result[i] = HexoSub(56, 5, p);
+    if (result[i] % 2 === 1) isYang[i] = 1;
+    else isYang[i] = 0;
+    BinaryString += isYang[i];
+  }
+  const BinaryStringA = BinaryString.slice(0, 3)
+  const BinaryStringB = BinaryString.slice(3, 6)
+  const BinaryStringC = BinaryString.slice(6, 9)
+  const BinaryStringD = BinaryString.slice(9, 12)
+  const BinaryA = parseInt(BinaryStringA, 2);
+  const BinaryB = parseInt(BinaryStringB, 2);
+  const BinaryC = parseInt(BinaryStringC, 2);
+  const BinaryD = parseInt(BinaryStringD, 2);
+  return { result, BinaryA, BinaryB, BinaryC, BinaryD };
+};
+// console.log(HexoQinghua(17))
+const HexoDayan = p => {
+  const result = [],
+    isYangBen = [],
+    isYangBian = [];
+  let BinaryStringBen = '',
+    BinaryStringBian = '';
   for (let i = 0; i < 6; i++) {
-    let all = 49;
-    test[i] = [];
-    for (let k = 0; k < 3; k++) {
-      const small = Math.floor((all * n) / 100);
-      const a = Random(small, all - small);
-      const l = a - 1;
-      const r = all - a;
-      const modL = l % 4 || 4; // 0=4
-      const modR = r % 4 || 4;
-      test[i][k] = modL + modR + 1;
-      all -= test[i][k];
-    }
-    result[i] = all / 4;
-    if (result[i] % 2 === 1) {
-      // 本卦
-      isYangBen[i] = 1;
-    } else {
-      isYangBen[i] = 0;
-    }
-    if (result[i] === 6) {
-      isYangBian[i] = 1;
-    } else if (result[i] === 9) {
-      isYangBian[i] = 0;
-    } else {
-      isYangBian[i] = isYangBen[i]
-    }
+    result[i] = HexoSub(49, 3, p);
+    if (result[i] % 2 === 1) isYangBen[i] = 1;
+    else isYangBen[i] = 0;
+    if (result[i] === 6) isYangBian[i] = 1;
+    else if (result[i] === 9) isYangBian[i] = 0;
+    else isYangBian[i] = isYangBen[i]
     BinaryStringBen += isYangBen[i];
     BinaryStringBian += isYangBian[i];
   }
   const BinaryBen = parseInt(BinaryStringBen, 2);
   const BinaryBian = parseInt(BinaryStringBian, 2);
-  return { BinaryBen, BinaryBian };
+  return { result, BinaryBen, BinaryBian };
 };
+// console.log(HexoDayan(17))
+export const HexoDayanPrint = () => {
+  const { result, BinaryBen, BinaryBian } = HexoDayan(17);
+  const HexoAllBen = HexoList[BinaryBen];
+  const NameBen = HexoAllBen.slice(0, HexoAllBen.length - 1);
+  const GraphBen = HexoAllBen.slice(-1);
+  const HexoAllBian = HexoList[BinaryBian];
+  const NameBian = HexoAllBian.slice(0, HexoAllBian.length - 1);
+  const GraphBian = HexoAllBian.slice(-1);
+  const Print1 = [];
+  for (let i = 0; i < 6; i++) {
+    Print1[i] = {
+      title: Num[i],
+      data: [result[i]],
+    };
+  }
+  const Print2Ben = `<div style="margin:1.5em 0 1em">${NameBen}</div>`;
+  const Print3Ben = `<div style="font-size:4em;margin-left:-.12em">${GraphBen}</div>`;
+  const Print2Bian = `<div style="margin:1.5em 0 1em">${NameBian}</div>`;
+  const Print3Bian = `<div style="font-size:4em;margin-left:-.12em">${GraphBian}</div>`;
+  Print1[6] = {
+    title: "",
+    data: ["", Print2Ben, Print2Bian],
+  };
+  Print1[7] = {
+    title: "",
+    data: ["", Print3Ben, Print3Bian],
+  };
+  return Print1;
+};
+// console.log(HexoDayanPrint())
+
+export const HexoQinghuaPrint = () => {
+  const { result, BinaryA, BinaryB, BinaryC, BinaryD } = HexoQinghua(17);
+  const HexoAllA = HexoListB[BinaryA];
+  const NameA = HexoAllA.slice(0, HexoAllA.length - 1);
+  const HexoAllB = HexoListB[BinaryB];
+  const NameB = HexoAllB.slice(0, HexoAllB.length - 1);
+  const HexoAllC = HexoListB[BinaryC];
+  const NameC = HexoAllC.slice(0, HexoAllC.length - 1);
+  const HexoAllD = HexoListB[BinaryD];
+  const NameD = HexoAllD.slice(0, HexoAllD.length - 1);
+  const Print1 = [];
+  for (let i = 0; i < 3; i++) {
+    Print1[i] = {
+      data: [`<div style="margin:0 2em 0 0">${result[11 - i]}</div>`, result[5 - i]], // 倒序
+    };
+  }
+  Print1[3] = {
+    data: ['', '']
+  }
+  for (let i = 4; i < 7; i++) {
+    Print1[i] = {
+      data: [`<div style="margin:0 2em 0 0">${result[12 - i]}</div>`, result[6 - i]], // 倒序
+    };
+  }
+  return Print1;
+};
+// console.log(HexoQinghuaPrint())
+const Test1 = () => {
+  const output = [];
+  const loop = 100000000;
+  for (let j = 12; j < 40; j++) {
+    let Num6 = 0,
+      Num7 = 0,
+      Num8 = 0,
+      Num9 = 0;
+    for (let k = 0; k < loop; k++) {
+      const a = HexoSub(49, 3, j);
+      if (a === 6) {
+        Num6 += 1;
+      } else if (a === 7) {
+        Num7 += 1;
+      } else if (a === 8) {
+        Num8 += 1;
+      } else if (a === 9) {
+        Num9 += 1;
+      }
+    }
+    const p6 = parseFloat(((Num6 / loop) * 100).toPrecision(4));
+    const p7 = parseFloat(((Num7 / loop) * 100).toPrecision(4));
+    const p8 = parseFloat(((Num8 / loop) * 100).toPrecision(4));
+    const p9 = parseFloat(((Num9 / loop) * 100).toPrecision(4));
+    const d6 = parseFloat((p6 - 6.25).toPrecision(4)); // 1/16
+    const d7 = parseFloat((p7 - 31.25).toPrecision(4)); // 5/16
+    const d8 = parseFloat((p8 - 43.75).toPrecision(4)); // 7/16
+    const d9 = parseFloat((p9 - 18.75).toPrecision(4)); // 3/16
+    const sumdelta = parseFloat(
+      (Math.abs(d6) + Math.abs(d7) + Math.abs(d8) + Math.abs(d9)).toPrecision(4)
+    ); //为什么绝对值相加？？
+    output[j] = j + "% | " + p6 + "% | " + d6 + "% | " + p7 + "% | " + d7 + "% | " + p8 + "% | " + d8 + "% | " + p9 + "% | " + d9 + "% | " + sumdelta + "% | " + `\n`;
+  }
+  return output;
+};
+
+// console.log(Test1())
 
 const probability = [
   5.960464478, 3.576278687, 2.145767212, 1.287460327, 0.7724761963,
@@ -134,9 +228,7 @@ const Compare = (n, loop) => {
   let min = Infinity;
   for (let i = 0; i < probability.length; i++) {
     const result = Math.abs(n - probability[i]);
-    if (result < min) {
-      min = result;
-    }
+    if (result < min) min = result
   }
   return min;
 };
@@ -149,7 +241,7 @@ const Test2 = () => {
     const Bengua = new Array(64).fill(0);
     const Biangua = new Array(64).fill(0);
     for (let i = 0; i < loop; i++) {
-      const { BinaryBen, BinaryBian } = DayanHexoSub(j);
+      const { BinaryBen, BinaryBian } = HexoDayan(j);
       Bengua[BinaryBen] += 1;
       Biangua[BinaryBian] += 1;
     }
@@ -190,48 +282,21 @@ const Test2 = () => {
 };
 // console.log(Test2());
 
-export const DayanHexo = () => {
-  const { BinaryBen, BinaryBian } = DayanHexoSub(j); // 一些进阶小语法
-  const HexoAllRaw = HexoList[BinaryBen];
-  const NameRaw = HexoAllRaw.slice(0, HexoAllRaw.length - 1);
-  const GraphRaw = HexoAllRaw.slice(-1);
-  const HexoAll = HexoList[BinaryBian];
-  const Name = HexoAll.slice(0, HexoAll.length - 1);
-  const Graph = HexoAll.slice(-1);
-  // 生成輸出
-  const Print1 = [];
-  for (let i = 0; i < 6; i++) {
-    Print1[i] = {
-      title: Num[i],
-      data: [...test[i], result[i], isYangBen[i], isYangBian[i]],
-    };
-  }
-  const Print2 = `<div style="margin:1.5em 0 1em">${Name}</div>`;
-  const Print3 = `<div style="font-size:4em;margin-left:-.12em">${Graph}</div>`;
-  const Print2Raw = `<div style="margin:1.5em 0 1em">${NameRaw}</div>`;
-  const Print3Raw = `<div style="font-size:4em;margin-left:-.12em">${GraphRaw}</div>`;
-  Print1[6] = {
-    title: "",
-    data: ["", "", "", "", Print2Raw, Print2],
-  };
-  Print1[7] = {
-    title: "",
-    data: ["", "", "", "", Print3Raw, Print3],
-  };
-  return Print1;
-};
-
-const Test1 = () => {
+const TestQinghua = () => {
   const output = [];
-  const loop = 100000000;
-  for (let j = 12; j < 40; j++) {
-    let Num6 = 0,
+  const loop = 200000000;
+  for (let j = 2; j < 37; j++) {
+    let Num4 = 0, Num5 = 0, Num6 = 0,
       Num7 = 0,
       Num8 = 0,
       Num9 = 0;
     for (let k = 0; k < loop; k++) {
-      const a = TestSub(j);
-      if (a === 6) {
+      const a = HexoSub(56, 5, j);
+      if (a === 4) {
+        Num4 += 1;
+      } else if (a === 5) {
+        Num5 += 1;
+      } else if (a === 6) {
         Num6 += 1;
       } else if (a === 7) {
         Num7 += 1;
@@ -241,41 +306,23 @@ const Test1 = () => {
         Num9 += 1;
       }
     }
+    const p4 = parseFloat(((Num4 / loop) * 100).toPrecision(4));
+    const p5 = parseFloat(((Num5 / loop) * 100).toPrecision(4));
     const p6 = parseFloat(((Num6 / loop) * 100).toPrecision(4));
     const p7 = parseFloat(((Num7 / loop) * 100).toPrecision(4));
     const p8 = parseFloat(((Num8 / loop) * 100).toPrecision(4));
     const p9 = parseFloat(((Num9 / loop) * 100).toPrecision(4));
-    const d6 = parseFloat((p6 - 6.25).toPrecision(4)); // 1/16
-    const d7 = parseFloat((p7 - 31.25).toPrecision(4)); // 5/16
-    const d8 = parseFloat((p8 - 43.75).toPrecision(4)); // 7/16
-    const d9 = parseFloat((p9 - 18.75).toPrecision(4)); // 3/16
+    const d4 = parseFloat((p4 - 3.125).toPrecision(4)); // 1/32
+    const d5 = parseFloat((p5 - 15.625).toPrecision(4)); // 5/32
+    const d6 = parseFloat((p6 - 31.25).toPrecision(4)); // 10/32
+    const d7 = parseFloat((p7 - 31.25).toPrecision(4)); // 10/32
+    const d8 = parseFloat((p8 - 15.625).toPrecision(4)); // 5/32
+    const d9 = parseFloat((p9 - 3.125).toPrecision(4)); // 1/32
     const sumdelta = parseFloat(
-      (Math.abs(d6) + Math.abs(d7) + Math.abs(d8) + Math.abs(d9)).toPrecision(4)
+      (Math.abs(d4) + Math.abs(d5) + Math.abs(d6) + Math.abs(d7) + Math.abs(d8) + Math.abs(d9)).toPrecision(4)
     ); //为什么绝对值相加？？
-    output[j] =
-      j +
-      "% | " +
-      p6 +
-      "% | " +
-      d6 +
-      "% | " +
-      p7 +
-      "% | " +
-      d7 +
-      "% | " +
-      p8 +
-      "% | " +
-      d8 +
-      "% | " +
-      p9 +
-      "% | " +
-      d9 +
-      "% | " +
-      sumdelta +
-      "% | " +
-      `\n`;
+    output[j] = j + "% | " + p4 + " | " + p5 + " | " + p6 + " | " + p7 + " | " + p8 + " | " + p9 + " | " + sumdelta + " | " + `\n`;
   }
   return output;
 };
-
-// console.log(Test1())
+// console.log(TestQinghua())
