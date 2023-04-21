@@ -23,7 +23,8 @@
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "pack": "webpack"
   },
   "browserslist": {
     "production": [
@@ -38,5 +39,7 @@
     ]
   },
   "devDependencies": {
+    "webpack": "^5.80.0",
+    "webpack-cli": "^5.0.1"
   }
 }
