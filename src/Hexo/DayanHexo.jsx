@@ -1,5 +1,5 @@
 import React from 'react'
-import { DayanHexoPrint } from '../Cal/hexo.mjs'
+import { HexoDayanPrint } from '../Cal/hexo.mjs'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print1 = DayanHexoPrint()
+      const Print1 = HexoDayanPrint()
       this.setState({ output: Print1 })
     } catch (e) {
       alert(e.message)
