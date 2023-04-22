@@ -4,6 +4,7 @@ import rehypeRaw from 'rehype-raw'
 import gfm from 'remark-gfm'
 import md1 from '../note/hexo.md'
 import HexoDayan from './HexoDayan'
+import HexoDayanB from './HexoDayanB'
 import HexoQinghua from './HexoQinghua'
 
 
@@ -26,6 +27,7 @@ export default class Astronomy extends React.Component {
         <section className='modulo'>
           <h2>筮占</h2>
           <HexoDayan />
+          <HexoDayanB />
           <HexoQinghua />
         </section>
         <hr />

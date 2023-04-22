@@ -453,6 +453,10 @@ table td {
   text-align: right;
 }
 
+.bigger {
+  font-size: 1.2em;
+}
+
 .rowline table td {
   border-top: 1px solid var(--shallowgray1);
   margin-top: 1em;

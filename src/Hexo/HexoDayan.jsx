@@ -23,13 +23,12 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 table-vertical' style={{ whiteSpace: "nowrap" }}>
+      <div className='ans table2 table-vertical bigger' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
-            <th>爻</th>            
-            <th>數</th>
+            <th>爻</th>
             <th>本卦</th>
-            <th>變卦</th>
+            <th>之卦</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

@@ -1,4 +1,4 @@
-const HexoList = [
+const HexoList64 = [
   "坤䷁",
   "剝䷖",
   "比䷇",
@@ -64,8 +64,8 @@ const HexoList = [
   "夬䷪",
   "乾䷀",
 ];
-const HexoListB = ["坤☷", "艮☶", "坎☵", "巽☴", "震☳", "離☲", "兌☱", "乾☰"]
-const Num = "初二三四五六";
+const HexoList8 = ["坤☷", "艮☶", "坎☵", "巽☴", "震☳", "離☲", "兌☱", "乾☰"]
+const NumList = "初二三四五六";
 const Random = (n, m) => Math.floor(Math.random() * (m - n + 1)) + n;
 // [n,m] 范围内的随机整数
 // console.log(Random(23,26))
@@ -103,83 +103,133 @@ const HexoQinghua = p => { // 杨胜男、王承略：大衍揲扐法与清华�
 };
 // console.log(HexoQinghua(17))
 const HexoDayan = p => {
-  const result = [],
+  const resultBen = [],
+    resultBian = [],
     isYangBen = [],
     isYangBian = [];
   let BinaryStringBen = '',
     BinaryStringBian = '';
   for (let i = 0; i < 6; i++) {
-    result[i] = HexoSub(49, 3, p);
-    if (result[i] % 2 === 1) isYangBen[i] = 1;
+    resultBen[i] = HexoSub(49, 3, p);
+    resultBian[i] = resultBen[i]
+    if (resultBen[i] % 2 === 1) isYangBen[i] = 1;
     else isYangBen[i] = 0;
-    if (result[i] === 6) isYangBian[i] = 1;
-    else if (result[i] === 9) isYangBian[i] = 0;
+    if (resultBen[i] === 6) {
+      isYangBian[i] = 1;
+      resultBian[i] = 9;
+    } else if (resultBen[i] === 9) {
+      isYangBian[i] = 0;
+      resultBian[i] = 6;
+    }
     else isYangBian[i] = isYangBen[i]
     BinaryStringBen += isYangBen[i];
     BinaryStringBian += isYangBian[i];
   }
   const BinaryBen = parseInt(BinaryStringBen, 2);
   const BinaryBian = parseInt(BinaryStringBian, 2);
-  return { result, BinaryBen, BinaryBian };
+  return { resultBen, resultBian, BinaryBen, BinaryBian, isYangBen, isYangBian };
 };
 // console.log(HexoDayan(17))
 export const HexoDayanPrint = () => {
-  const { result, BinaryBen, BinaryBian } = HexoDayan(17);
-  const HexoAllBen = HexoList[BinaryBen];
+  const { resultBen, resultBian, BinaryBen, BinaryBian, isYangBen, isYangBian } = HexoDayan(17);
+  const HexoAllBen = HexoList64[BinaryBen];
   const NameBen = HexoAllBen.slice(0, HexoAllBen.length - 1);
   const GraphBen = HexoAllBen.slice(-1);
-  const HexoAllBian = HexoList[BinaryBian];
+  const HexoAllBian = HexoList64[BinaryBian];
   const NameBian = HexoAllBian.slice(0, HexoAllBian.length - 1);
   const GraphBian = HexoAllBian.slice(-1);
   const Print1 = [];
+  let NumBian = ''
   for (let i = 0; i < 6; i++) {
+    if (isYangBen[i] !== isYangBian[i]) {
+      NumBian += NumList[i]
+    }
     Print1[i] = {
-      title: Num[i],
-      data: [result[i]],
+      title: NumList[5 - i], // 上下顛倒
+      data: [resultBen[5 - i], resultBian[5 - i]],
     };
   }
-  const Print2Ben = `<div style="margin:1.5em 0 1em">${NameBen}</div>`;
-  const Print3Ben = `<div style="font-size:4em;margin-left:-.12em">${GraphBen}</div>`;
-  const Print2Bian = `<div style="margin:1.5em 0 1em">${NameBian}</div>`;
-  const Print3Bian = `<div style="font-size:4em;margin-left:-.12em">${GraphBian}</div>`;
+  const Print2Ben = NameBen;
+  const Print3Ben = `<div style="font-size:2.5em">${GraphBen}</div>`;
+  const Print2Bian = NameBian;
+  const Print3Bian = `<div style="font-size:2.5em">${GraphBian}</div>`;
   Print1[6] = {
     title: "",
-    data: ["", Print2Ben, Print2Bian],
+    data: [Print2Ben, Print2Bian],
   };
   Print1[7] = {
     title: "",
-    data: ["", Print3Ben, Print3Bian],
+    data: [Print3Ben, Print3Bian],
+  };
+  Print1[8] = {
+    title: "變爻",
+    data: [NumBian],
   };
   return Print1;
 };
 // console.log(HexoDayanPrint())
 
-export const HexoQinghuaPrint = () => {
-  const { result, BinaryA, BinaryB, BinaryC, BinaryD } = HexoQinghua(17);
-  const HexoAllA = HexoListB[BinaryA];
+export const HexoDayanBPrint = () => {
+  const { resultBen: resultA, BinaryBen: BinaryA, isYangBen: isYangA } = HexoDayan(17);
+  const { resultBen: resultB, BinaryBen: BinaryB, isYangBen: isYangB } = HexoDayan(17);
+  const HexoAllA = HexoList64[BinaryA];
   const NameA = HexoAllA.slice(0, HexoAllA.length - 1);
-  const HexoAllB = HexoListB[BinaryB];
+  const GraphA = HexoAllA.slice(-1);
+  const HexoAllB = HexoList64[BinaryB];
   const NameB = HexoAllB.slice(0, HexoAllB.length - 1);
-  const HexoAllC = HexoListB[BinaryC];
-  const NameC = HexoAllC.slice(0, HexoAllC.length - 1);
-  const HexoAllD = HexoListB[BinaryD];
-  const NameD = HexoAllD.slice(0, HexoAllD.length - 1);
+  const GraphB = HexoAllB.slice(-1);
+  const Print1 = [];
+  let NumBian = ''
+  for (let i = 0; i < 6; i++) {
+    if (isYangA[i] !== isYangB[i]) {
+      NumBian += NumList[i]
+    }
+    Print1[i] = {
+      title: NumList[5 - i], // 上下顛倒
+      data: [resultA[5 - i], resultB[5 - i]],
+    };
+  }
+  const Print2A = NameA;
+  const Print3A = `<div style="font-size:2.5em">${GraphA}</div>`;
+  const Print2B = NameB;
+  const Print3B = `<div style="font-size:2.5em">${GraphB}</div>`;
+  Print1[6] = {
+    title: "",
+    data: [Print2A, Print2B],
+  };
+  Print1[7] = {
+    title: "",
+    data: [Print3A, Print3B],
+  };
+  Print1[8] = {
+    title: "變爻",
+    data: [NumBian],
+  };
+  return Print1;
+};
+
+export const HexoQinghuaPrint = () => {
+  const { result, BinaryA, BinaryB, BinaryC, BinaryD } = HexoQinghua(7); // 清華簡算法7%誤差最低
+  const HexoAllA = HexoList8[BinaryA];
+  const HexoAllB = HexoList8[BinaryB];
+  const HexoAllC = HexoList8[BinaryC];
+  const HexoAllD = HexoList8[BinaryD];
   const Print1 = [];
   for (let i = 0; i < 3; i++) {
     Print1[i] = {
-      data: [`<div style="margin:0 2em -.75em 0">${result[11 - i]}</div>`, `<div style="margin:0 2em -.75em 0">${result[5 - i]}</div>`] // 倒序
+      data: [`<div style="margin:0 0 -.5em 0">${result[11 - i]}</div>`, `<div style="margin:0 2em -.5em 0">${result[5 - i]}</div>`] // 倒序
     };
   }
   Print1[3] = {
-    data: ['', '']
+    data: [HexoAllD, HexoAllB]
   }
-  Print1[4] = {
-    data: ['', '']
-  }
-  for (let i = 5; i < 8; i++) {
+  for (let i = 4; i < 7; i++) {
     Print1[i] = {
-      data: [`<div style="margin:0 2em -.75em 0">${result[13 - i]}</div>`, `<div style="margin:0 2em -.75em 0">${result[7 - i]}</div>`], // 倒序
+      data: [`<div style="margin:0 0 -.5em 0">${result[12 - i]}</div>`, `<div style="margin:0 2em -.5em 0">${result[6 - i]}</div>`], // 倒序
     };
+  }
+  Print1[7] = {
+    data: [HexoAllC, HexoAllA]
   }
   return Print1;
 };
@@ -257,7 +307,7 @@ const Test2 = () => {
       errorBen = (Bengua[i] * 100) / loop - 1.5625; // 1/64
       errorBian = Compare(Biangua[i], loop);
       print1[i] =
-        HexoList[i] +
+        HexoList64[i] +
         " | " +
         Bengua[i] +
         " | " +

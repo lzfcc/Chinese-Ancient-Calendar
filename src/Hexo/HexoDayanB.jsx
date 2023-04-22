@@ -1,5 +1,5 @@
 import React from 'react'
-import { HexoQinghuaPrint } from '../Cal/hexo.mjs'
+import { HexoDayanBPrint } from '../Cal/hexo.mjs'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print1 = HexoQinghuaPrint()
+      const Print1 = HexoDayanBPrint()
       this.setState({ output: Print1 })
     } catch (e) {
       alert(e.message)
@@ -26,12 +26,14 @@ export default class Converter extends React.Component {
       <div className='ans table2 table-vertical bigger' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
-            <th>左卦</th>            
-            <th>右卦</th>
+            <th>爻</th>
+            <th>本卦</th>
+            <th>之卦</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
               <tr>
+                <td className='RowTitle'>{row.title}</td>
                 {row.data.map(d => {
                   return (<td style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: d }}></td>)
                 })}
@@ -46,8 +48,8 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h4>清華簡《筮法》</h4>
-        <button onClick={this.handle} className='button4-3'>隨便看看。數字卦</button>
+        <h4>周易筮法B</h4>
+        <button onClick={this.handle} className='button4-3'>以兩卦定變爻</button>
         {this.result()}
       </div>
     )
