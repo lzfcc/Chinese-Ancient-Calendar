@@ -26,10 +26,8 @@ export default class Converter extends React.Component {
       <div className='ans table2 table-vertical' style={{ whiteSpace: "nowrap" }}>
         <table>
           <tr>
-            <th>爻</th>            
-            <th>數</th>
-            <th>本卦</th>
-            <th>變卦</th>
+            <th>左卦</th>            
+            <th>右卦</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -49,7 +47,7 @@ export default class Converter extends React.Component {
     return (
       <div>
         <h4>清華簡《筮法》</h4>
-        <button onClick={this.handle} className='button4-3'>點之前虔誠。解卦靠自己</button>
+        <button onClick={this.handle} className='button4-3'>隨便看看。數字卦</button>
         {this.result()}
       </div>
     )

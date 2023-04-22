@@ -3,8 +3,8 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import gfm from 'remark-gfm'
 import md1 from '../note/hexo.md'
-import HexoDayan from './DayanHexo'
-import HexoQinghua from './DayanQinghua'
+import HexoDayan from './HexoDayan'
+import HexoQinghua from './HexoQinghua'
 
 
 export default class Astronomy extends React.Component {

@@ -167,15 +167,18 @@ export const HexoQinghuaPrint = () => {
   const Print1 = [];
   for (let i = 0; i < 3; i++) {
     Print1[i] = {
-      data: [`<div style="margin:0 2em 0 0">${result[11 - i]}</div>`, result[5 - i]], // 倒序
+      data: [`<div style="margin:0 2em -.75em 0">${result[11 - i]}</div>`, `<div style="margin:0 2em -.75em 0">${result[5 - i]}</div>`] // 倒序
     };
   }
   Print1[3] = {
     data: ['', '']
   }
-  for (let i = 4; i < 7; i++) {
+  Print1[4] = {
+    data: ['', '']
+  }
+  for (let i = 5; i < 8; i++) {
     Print1[i] = {
-      data: [`<div style="margin:0 2em 0 0">${result[12 - i]}</div>`, result[6 - i]], // 倒序
+      data: [`<div style="margin:0 2em -.75em 0">${result[13 - i]}</div>`, `<div style="margin:0 2em -.75em 0">${result[7 - i]}</div>`], // 倒序
     };
   }
   return Print1;
