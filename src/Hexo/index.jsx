@@ -3,8 +3,8 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import gfm from 'remark-gfm'
 import md1 from '../note/hexo.md'
-import HexoDayan from './HexoDayan'
-import HexoDayanB from './HexoDayanB'
+import HexoZhuxi from './HexoZhuxi'
+import HexoZhuxiB from './HexoZhuxiB'
 import HexoQinghua from './HexoQinghua'
 
 
@@ -26,8 +26,8 @@ export default class Astronomy extends React.Component {
       <>
         <section className='modulo'>
           <h2>筮占</h2>
-          <HexoDayan />
-          <HexoDayanB />
+          <HexoZhuxi />
+          <HexoZhuxiB />
           <HexoQinghua />
         </section>
         <hr />

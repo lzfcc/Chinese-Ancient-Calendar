@@ -1,5 +1,5 @@
 import React from 'react'
-import { HexoDayanPrint } from '../Cal/hexo.mjs'
+import { HexoZhuxiBPrint } from '../Cal/hexo.mjs'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print1 = HexoDayanPrint()
+      const Print1 = HexoZhuxiBPrint()
       this.setState({ output: Print1 })
     } catch (e) {
       alert(e.message)
@@ -48,8 +48,8 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h4>周易筮法</h4>
-        <button onClick={this.handle} className='button4-3'>點之前虔誠。解卦靠自己</button>
+        <h4>周易筮法B</h4>
+        <button onClick={this.handle} className='button4-3'>以兩卦定變爻</button>
         {this.result()}
       </div>
     )
