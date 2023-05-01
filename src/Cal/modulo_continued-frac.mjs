@@ -5,11 +5,8 @@ import {
 export const ContinuedFrac = (a, b) => { // https://chaoli.club/index.php/2756/0
     let gcd = big.abs(a)
     let n = big.abs(b)
-    let t = 1
-    let z = []
-    let p = []
-    let q = []
-    let i = 0
+    let t = 1, i = 0
+    const z = [], p = [], q = []
     let Result = []
     while (big(t).gt(0)) {
         t = big.mod(gcd, n)
