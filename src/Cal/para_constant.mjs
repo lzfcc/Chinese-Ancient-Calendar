@@ -1,5 +1,4 @@
 import big from 'decimal.js'
-import big2 from 'decimal.js'
 import frc from 'fraction.js'
 import nzh from 'nzh/hk.js'
 import Para from './para_calendars.mjs'
@@ -10,13 +9,7 @@ big.config({
     toExpPos: 60,
     rounding: 4
 })
-big2.config({
-    precision: 128,
-    toExpNeg: -120,
-    toExpPos: 120,
-    rounding: 4
-})
-export { big, big2, frc, nzh }
+export { big, frc, nzh }
 // nzh = new nzh({
 //     ch: '〇一二三四五六七八九',      // 数字字符
 //     ch_u: '个十百千萬億兆京',       // 数位单位字符，万以下十进制，万以上万进制，个位不能省略
