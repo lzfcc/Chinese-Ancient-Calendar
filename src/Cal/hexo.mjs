@@ -38,6 +38,7 @@ import {
 
 const NumList = "初二三四五六";
 
+// const Random = (n, m) => Math.round(Math.random() * (m - n)) + n; // [n, m] 整数
 const Random = (n, m) => Math.floor(Math.random() * (m - n + 1)) + n;
 const Sigma = (n) => {
   // 標準差
@@ -54,27 +55,37 @@ const Sigma = (n) => {
   const sigma = Math.sqrt(tmp / length);
   return { mean, sigma };
 };
-
-// 阶乘
-const F = (n) => {
-  let result = 1;
-  if (n === 0) {
-    // 定义0!=1
-  } else {
-    while (n > 1) {
-      result *= n;
-      n--;
-    }
+const Sigma1 = (n) => {
+  // 样本標準差
+  const length = n.length;
+  let tmp = 0;
+  for (let i = 0; i < length; i++) {
+    tmp += n[i];
   }
-  return result;
+  const mean = tmp / length;
+  tmp = 0;
+  for (let i = 0; i < length; i++) {
+    tmp += (n[i] - mean) ** 2;
+  }
+  const sigma = Math.sqrt(tmp / (length - 1));
+  return { mean, sigma };
 };
+const xxx = (n) => {
+  let result = [];
+  for (let i = 0; i < n; i++) {
+    result.push(Random(1, 100));
+  }
+  return result.toString();
+};
+// console.log(xxx(100));
 const HexoSub2 = (all, bian, she, gua, isRandomGua, pn, pp) => {
-  // 二分法 // pn: 下限整数，pp：下限比例 .isRandomGua对结果似乎没影响？
+  // 二分法 //
+  //总数，变数，揲數，是否隨機掛左右，pn: 下限整数，pp：下限比例 .isRandomGua对结果似乎没影响。返回最後生成的數字
   for (let k = 0; k < bian; k++) {
     let small = pn;
     if (pp) {
       small = Math.floor((all * pp) / 100);
-      if (small < she) small = she;
+      if (small < she) small = she; // 强制规定下限为4
     }
     const a = Random(small, all - small);
     let l = a;
@@ -94,14 +105,13 @@ const HexoSub2 = (all, bian, she, gua, isRandomGua, pn, pp) => {
       l = a - gua;
       r = all - a;
     }
-    let modL = 0,
-      modR = 0;
-    if (l > 0) modL = l % she || she; // 0=4
-    if (r > 0) modR = r % she || she;
+    const modL = l > 0 ? l % she || she : 0;
+    const modR = r > 0 ? r % she || she : 0;
     all -= modL + modR + gua;
   }
   return all / she;
 };
+// console.log(HexoSub2(49, 3, 4, 1, false, 1, 0));
 
 const HexoSub3 = (all, bian, she, pn, pp) => {
   // pn: 下限整数，pp：下限比例
@@ -152,47 +162,121 @@ const Test1 = (isTriple, all, bian, she, gua, isRandomGua, loop, count) => {
   }
   return p;
 };
-// console.log(Test1(false, 49, 3, 4, 1, false, 100000000, [8, 27])); // 朱熹
-// console.log(Test1(true, 49, 3, 4, 0, true, 100000000, [8, 20])); // 贾连翔
-// console.log(Test1(false, 55, 5, 4, 1, false, 100000000, [8, 20])); // 程浩
-// console.log(Test1(false, 56, 5, 4, 1, false, 100000000, [8, 20])); // 杨胜男
-// console.log(Test1(false, 57, 5, 4, 1, false, 100000000, [8, 20])); // 刘彬58
+// console.log(Test1(false, 49, 3, 4, 1, true, 1000000000, [17, 25])); // 朱熹
+// console.log(Test1(true, 49, 3, 4, 0, true, 1000000000, [8, 20])); // 贾连翔
+// console.log(Test1(false, 55, 5, 4, 1, true, 1000000000, [8, 20])); // 程浩
+// console.log(Test1(false, 56, 5, 4, 1, true, 1000000000, [8, 20])); // 杨胜男
+// console.log(Test1(false, 57, 5, 4, 1, true, 1000000000, [8, 20])); // 刘彬58
 
-// 蒙特卡罗方法计算标准差，实际上不需要，用test6近似公式就可以。例如計算50卦，一共300爻，理論上應該出現95爻八，第一次出現100爻八，第二次90次，一共100000次，求這些次數的標準差
-const Test4 = (isTriple, all, bian, she, gua, p, std, hexo, sample, loop) => {
-  const tmp = sample / 100; // %
-  const n = [[], [], [], [], [], [], [], [], [], []];
-  for (let j = 0; j < loop; j++) {
-    const nums = Array(10).fill(0);
-    for (let k = 0; k < sample; k++) {
-      const result = isTriple
-        ? HexoSub3(all, bian, she, 0, p)
-        : HexoSub2(all, bian, she, gua, true, 0, p);
-      nums[result]++; // result among 4 ~ 9
+// bootstrap计算置信区间。例如計算50卦，一共300爻，理論上應該出現95爻八，第一次出現100爻八，第二次90次，一共100000次，求這些次數的標準差
+const Test4 = (
+  isTriple,
+  all,
+  bian,
+  she,
+  gua,
+  SampleNumList,
+  ListPAll,
+  portion,
+  loop
+) => {
+  const output = [];
+  for (let aa = 0; aa < SampleNumList.length; aa++) {
+    let se4 = [],
+      se5 = [],
+      se6 = [],
+      se7 = [],
+      se8 = [],
+      se9 = [];
+    for (let m = 0; m < portion[1] - portion[0]; m++) {
+      const n = [[], [], [], [], [], [], [], [], [], []];
+      for (let j = 0; j < loop; j++) {
+        const nums = Array(10).fill(0);
+        for (let k = 0; k < SampleNumList[aa]; k++) {
+          const result = isTriple
+            ? HexoSub3(all, bian, she, 0, m + portion[0])
+            : HexoSub2(all, bian, she, gua, true, 0, m + portion[0]);
+          nums[result]++; // result among 4 ~ 9
+        }
+        for (let i = 4; i <= 9; i++) {
+          n[i][j] = nums[i];
+        }
+      }
+      for (let i = 4; i <= 9; i++) {
+        // 标准差法
+        const Fix = (x) => +((x * 100) / SampleNumList[aa]).toFixed(1); // 100万次精确到0.1%，1亿次0.01%
+        let { sigma, mean } = Sigma1(n[i]);
+        sigma = Fix(sigma);
+        mean = Fix(mean);
+        const se = (mean - ListPAll[aa][i - 4]) / sigma;
+        if (i === 4) {
+          se4.push(se);
+        } else if (i === 5) {
+          se5.push(se);
+        } else if (i === 6) {
+          se6.push(se);
+        } else if (i === 7) {
+          se7.push(se);
+        } else if (i === 8) {
+          se8.push(se);
+        } else if (i === 9) {
+          se9.push(se);
+        }
+        // 分位法
+        // const sort = n[i].sort((a, b) => a - b);
+        // const low = (sort[Math.round(0.025 * loop)] * 100) / SampleNumList;
+        // const up = (sort[Math.round(0.975 * loop)] * 100) / SampleNumList;
+      }
     }
+    output[aa] = "| ";
     for (let i = 4; i <= 9; i++) {
-      n[i][j] = nums[i];
+      let seArr = [];
+      if (i === 4) {
+        seArr = se4;
+      } else if (i === 5) {
+        seArr = se5;
+      } else if (i === 6) {
+        seArr = se6;
+      } else if (i === 7) {
+        seArr = se7;
+      } else if (i === 8) {
+        seArr = se8;
+      } else if (i === 9) {
+        seArr = se9;
+      }
+      const { sigma: s, mean: m } = Sigma(seArr);
+      output[aa] +=
+        "[" +
+        (m - 1.645 * s).toFixed(1) +
+        ", " +
+        (m + 1.645 * s).toFixed(1) +
+        "] | "; // 1.645: 90%, 1.96: 95%
     }
   }
-  const sigmas = n.slice(4).map((arr) => Sigma(arr).sigma / tmp); // 减少中间浮点数运算！！！保留整数
-  const d = sigmas.map((s, index) => (std[index] - hexo[index]) / s);
-  let sum = 0;
-  for (let i = 0; i < d.length; i++) {
-    sum += Math.abs(d[i]);
-  }
-  let output = sigmas.map(
-    (s, index) => s.toFixed(2) + " | " + d[index].toFixed(2) + " | "
-  );
-  output = output.concat(sum.toFixed(2));
-  return output.join("");
+  return output.join(`\n`);
 };
-// console.log(Test4(false, 49, 3,4,1, 17, stdZhuxi, ListPI, 100, 10000000)) // 朱熹
-// console.log(Test4(true, 49, 3,4,1, 14, stdA, ListPV, 60, 10000000)) // 贾连翔
-// console.log(Test4(false, 55, 5, 4,1,13, stdB, ListPV, 60, 10000000)) // 程浩
-// console.log(Test4(false, 56, 5,4,1, 12, stdC, ListPV, 60, 10000000)) // 杨胜男
-// console.log(Test4(false, 57, 5, 4,1,12, stdD, ListPV, 60, 10000000)) // 刘彬58
+const SampleNumList = [306, 255, 168, 108, 60, 35, 95, 58, 48, 106];
+// console.log(Test4(true, 49, 3, 4, 1, SampleNumList, ListPAll, [8, 20], 1000000)); // 贾连翔 // 34分20秒100万次
+// 分位法：[0.00, 0.33] | [0.65, 3.59] | [15.36, 24.18] | [35.62, 46.73] | [24.84, 34.97] | [4.58, 10.46]
+// 标准差法：[-0.20, 0.29] | [0.36, 3.40] | [15.19, 24.09] | [35.57, 46.62] | [24.64, 34.88] | [4.42, 10.27]
+// console.log(Test4(false, 55, 5, 4, 1, SampleNumList, ListPAll, [8,20], 1000000)); // 程浩
+// console.log(Test4(false, 56, 5, 4, 1,SampleNumList, ListPAll, [8,20], 1000000)); // 杨胜男
+// console.log(Test4(false, 57, 5, 4, 1,SampleNumList, ListPAll, [8,20], 1000000)); // 刘彬58
 // 精度是數量的平方根！
 
+// 阶乘
+const F = (n) => {
+  let result = 1;
+  if (n === 0) {
+    // 定义0!=1
+  } else {
+    while (n > 1) {
+      result *= n;
+      n--;
+    }
+  }
+  return result;
+};
 // 如果 X~ B (n, p），当 np>5 且 nq>5 时，则使用正态分布近似代替二项分布。mu=np，sigma^2=np(1-p)
 // 如果 n>50 且 p <0.1,教材：n>=20, p<=0.05，则可以使用泊松分布近似代替二项分布
 const Poisson = (lambda, k) => (lambda ** k * Math.E ** -k) / F(k);
