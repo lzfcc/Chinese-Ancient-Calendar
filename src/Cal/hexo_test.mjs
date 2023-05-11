@@ -32,6 +32,7 @@ const Sigma1 = (n) => {
   const sigma = Math.sqrt(tmp / (length - 1));
   return { mean, sigma };
 };
+// 遍历所有可能的筮法
 const Test7 = (Type, loop) => {
   let p4 = "",
     p5 = "",
@@ -76,7 +77,7 @@ const Test7 = (Type, loop) => {
   }
   return p4 + p5 + p6;
 };
-// console.log(Test7(2, 1000000));
+// console.log(Test7(3, 1000000));
 const Test1 = (Type, all, bian, she, gua, isRandomGua, loop, count) => {
   // 算法理论值
   let p = "";
@@ -209,96 +210,3 @@ const F = (n) => {
   }
   return result;
 };
-// 如果 X~ B (n, p），当 np>5 且 nq>5 时，则使用正态分布近似代替二项分布。mu=np，sigma^2=np(1-p)
-// 如果 n>50 且 p <0.1,教材：n>=20, p<=0.05，则可以使用泊松分布近似代替二项分布
-const Poisson = (lambda, k) => (lambda ** k * Math.E ** -k) / F(k);
-const Test6 = (std, x) => {
-  const seSpan = [];
-  for (let m = 0; m < x.length; m++) {
-    // for (let m = 6; m < 7; m++) {
-    const n = x[m][6];
-    const se = [];
-    for (let i = 0; i < 6; i++) {
-      const k = Math.round((n * x[m][i]) / 100); // 实际爻数
-      se[i] = [];
-      for (let j = 0; j < std[i].length; j++) {
-        const p = std[i][j] / 100;
-        if (i === 0 || i === 5) {
-          // 数字四、九用泊松分布。以均值为中心，向两边拓展，如果均值可能性大于0.95，置信区间就是均值自己，如果不是向右加1，可能性相加，如果低于0.95，再向左加1，依次向右左增加。
-          const lambda = n * p; // 样本数量*理论概率
-          let l = Math.round(lambda);
-          const itself = (1 - Poisson(lambda, l)) / 2;
-          let pinP = 0,
-            pinN = 0;
-          if (itself >= 0.95) {
-          } else {
-            let tmpp = itself;
-            for (let i = 1; i < k; i++) {
-              const tmp1 = Poisson(lambda, l + i);
-              let tmp2 = 0;
-              if (l >= i) {
-                tmp2 = Poisson(lambda, l - i);
-              }
-              if (tmp1 >= tmp2) {
-                tmpp += tmp1;
-                pinP++;
-                if (tmpp >= 0.95) {
-                  tmpp -= tmp1;
-                  pinP--;
-                  break;
-                }
-              } else {
-                tmpp += tmp2;
-                pinN++;
-                if (tmpp >= 0.95) {
-                  tmpp -= tmp2;
-                  pinN--;
-                  break;
-                }
-              }
-            }
-          }
-          se[i][j] = [l - pinN, l + pinP];
-        } else {
-          // 五至八用正态分布
-          const mu = n * p;
-          se[i][j] = (k - mu) / Math.sqrt(mu * (1 - p)); // standard error
-        }
-      }
-    }
-    seSpan[m] = [];
-    for (let i = 0; i < 6; i++) {
-      if (i === 0 || i === 5) {
-        let tmp1 = [],
-          tmp2 = [];
-        for (let k = 0; k < se[i].length; k++) {
-          tmp1.push(se[i][k][0]);
-          tmp2.push(se[i][k][1]);
-        }
-        const { sigma: sigma1, mean: mean1 } = Sigma(tmp1);
-        const { sigma: sigma2, mean: mean2 } = Sigma(tmp2);
-        seSpan[m][i] =
-          "[" +
-          +(mean1 - 1.96 * sigma1).toFixed(2) +
-          "–" +
-          +(mean1 + 1.96 * sigma1).toFixed(2) +
-          ", " +
-          +(mean2 - 1.96 * sigma2).toFixed(2) +
-          "–" +
-          +(mean2 + 1.96 * sigma2).toFixed(2) +
-          "]";
-      } else {
-        const { sigma, mean } = Sigma(se[i]);
-        seSpan[m][i] =
-          "[" +
-          (mean - 1.96 * sigma).toFixed(2) +
-          ", " +
-          (mean + 1.96 * sigma).toFixed(2) +
-          "]";
-      }
-    }
-    seSpan[m] += `\n`;
-  }
-  return seSpan;
-};
-// console.log(Test6(stdD, ListPAll));
