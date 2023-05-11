@@ -95,7 +95,7 @@ export const HexoZhouList = {
   4005: ["21111", "866587"],
   4006: ["21111", "787676"],
   5007: ["23111", "765"],
-  6008: ["21211", "776766"],
+  6008: ["21211", "776766"], //76
   6009: ["21211", "678968"],
   6010: ["21211", "677679"],
   7011: ["11111", "116615"],
@@ -287,12 +287,12 @@ export const HexoQinghuaList = [
   "611166 116111",
   "611166 666616",
   "611166 116616",
-  "666166 11661", //？
+  "666166 116161",
   "611111 666166",
   "911911 911966",
   "911911 911866",
   "911911 861866",
-  "911911 96666", //？
+  "911911 966866",
   "666666 666116",
   "666666 666161",
   "666666 666611",
@@ -538,8 +538,9 @@ const Count = (list, screen) => {
   return output.join(" | ");
 };
 // console.log(Count(HexoZhouList, [ListNX]));
+// console.log(Count(HexoZhouList));
 // console.log(Count(HexoChuList, [ListNIII]));
-// console.log(Count(HexoChuList2));
+// console.log(Count(HexoChuList));
 
 function AllDevide(input) {
   // 每個維度的數量

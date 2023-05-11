@@ -9,7 +9,7 @@ const HexoConceive = (isTriple, all, bian, she, gua) => {
   for (let i = 0; i < 12; i++) {
     result[i] = isTriple
       ? HexoSub3(all, bian, she, 0)
-      : HexoSub2(all, bian, she, gua, true, 0);
+      : HexoSub2(all, bian, she, gua, true, 0).r;
     // if (result[i] % 2 === 1) isYang[i] = 1;
     // else isYang[i] = 0;
     BinaryString += result[i] % 2;
@@ -33,7 +33,7 @@ const HexoZhuxi = () => {
   let BinaryStringBen = "",
     BinaryStringBian = "";
   for (let i = 0; i < 6; i++) {
-    result[i] = HexoSub2(49, 3, 4, 1, true, 0);
+    result[i] = HexoSub2(49, 3, 4, 1, true, 0).r;
     resultBian[i] = result[i];
     if (result[i] % 2 === 1) isYangBen[i] = 1;
     else isYangBen[i] = 0;

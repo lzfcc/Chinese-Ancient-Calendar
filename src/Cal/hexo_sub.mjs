@@ -12,6 +12,7 @@ const xxx = (n) => {
 export const HexoSub2 = (all, bian, she, gua, isRandomGua, pn, pp) => {
   // 二分法 //
   //总数，变数，揲數，是否隨機掛左右，pn: 下限整数，pp：下限比例 .isRandomGua对结果似乎没影响。返回最後生成的數字
+  let mod = 0;
   for (let k = 0; k < bian; k++) {
     let small = pn;
     if (pp) {
@@ -39,8 +40,9 @@ export const HexoSub2 = (all, bian, she, gua, isRandomGua, pn, pp) => {
     const modL = l > 0 ? l % she || she : 0;
     const modR = r > 0 ? r % she || she : 0;
     all -= modL + modR + gua;
+    mod += modL + modR + gua;
   }
-  return all / she;
+  return { r: all / she, m: mod };
 };
 // console.log(HexoSub2(49, 3, 4, 1, false, 1, 0));
 
