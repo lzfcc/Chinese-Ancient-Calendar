@@ -44,11 +44,11 @@ const Test7 = (Type, loop) => {
         for (let k = 0; k < loop; k++) {
           let a = 0;
           if (Type === 2) {
-            a = HexoSub2(j, bian, she, 1, true, she).r;
+            a = HexoSub2(j, bian, she, 1, true, she);
           } else if (Type === 3) {
             a = HexoSub3(j, bian, she, she);
           } else if (Type === 4) {
-            a = HexoSub2(j, bian, she, 1, true, she).m;
+            a = j - HexoSub2(j, bian, she, 1, true, she);
           }
           if (Num[a] >= 0) Num[a]++;
           else Num[a] = 0;
@@ -86,11 +86,11 @@ const Test1 = (Type, all, bian, she, gua, isRandomGua, loop, count) => {
     for (let k = 0; k < loop; k++) {
       let a = 0;
       if (Type === 2) {
-        a = HexoSub2(all, bian, she, gua, isRandomGua, 0, j).r;
+        a = HexoSub2(all, bian, she, gua, isRandomGua, she, j);
       } else if (Type === 3) {
-        a = HexoSub3(all, bian, she, 0, j);
+        a = HexoSub3(all, bian, she, she, j);
       } else if (Type === 4) {
-        a = HexoSub2(all, bian, she, gua, isRandomGua, 0, j).m;
+        a = all - HexoSub2(all, bian, she, gua, isRandomGua, 0, j);
       }
       if (Num[a] >= 0) Num[a]++;
       else Num[a] = 0;
@@ -103,11 +103,12 @@ const Test1 = (Type, all, bian, she, gua, isRandomGua, loop, count) => {
   }
   return p;
 };
-// console.log(Test1(2, 49, 3, 4, 1, true, 1000000000, [0, 0])); // 朱熹
-// console.log(Test1(3, 49, 3, 4, 0, true, 1000000000, [8, 20])); // 贾连翔
-// console.log(Test1(2, 55, 5, 4, 1, true, 1000000000, [8, 20])); // 程浩
-// console.log(Test1(2, 56, 5, 4, 1, true, 1000000000, [8, 20])); // 杨胜男
-// console.log(Test1(2, 57, 5, 4, 1, true, 1000000000, [8, 20])); // 刘彬58
+// console.log(Test1(2, 49, 3, 4, 1, true, 100000000, [0, 0])); // 朱熹
+// console.log(Test1(3, 49, 3, 4, 0, true, 100000000, [0, 0])); // 贾连翔
+// console.log(Test1(2, 55, 5, 4, 1, true, 100000000, [0, 0])); // 程浩
+// console.log(Test1(2, 56, 5, 4, 1, true, 100000000, [0, 0])); // 杨胜男
+// console.log(Test1(2, 57, 5, 4, 1, true, 100000000, [0, 0])); // 刘彬58
+// console.log(Test1(2, 53, 4, 4, 1, true, 100000000, [0, 0])); // 李忠林
 // console.log(Test1(2, 45, 4, 4, 1, true, 1000000, [8, 15])) // 五至八
 // console.log(Test1(4, 49, 5, 4, 1, true, 10000000, [0, 0])) // 挂扐法
 
@@ -128,11 +129,11 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
         for (let k = 0; k < ListPAll[aa][6]; k++) {
           let a = 0;
           if (Type === 2) {
-            a = HexoSub2(all, bian, she, gua, true, 0, m + portion[0]).r;
+            a = HexoSub2(all, bian, she, gua, true, 0, m + portion[0]);
           } else if (Type === 3) {
             a = HexoSub3(all, bian, she, 0, m + portion[0]);
           } else if (Type === 4) {
-            a = HexoSub2(all, bian, she, gua, true, 0, m + portion[0]).m;
+            a = all - HexoSub2(all, bian, she, gua, true, 0, m + portion[0]);
           }
           Num[a]++; // result among 4 ~ 9
         }
@@ -195,6 +196,7 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
 // console.log(Test4(2, 55, 5, 4, 1,  ListPAll, [8,20], 1000000)); // 程浩
 // console.log(Test4(2, 56, 5, 4, 1, ListPAll, [8,20], 1000000)); // 杨胜男
 // console.log(Test4(2, 57, 5, 4, 1, ListPAll, [8,20], 1000000)); // 刘彬58
+// console.log(Test4(2, 53, 4, 4, 1, ListPAll, [8, 20], 1000000)); // 李忠林
 // 精度是數量的平方根！
 
 // 阶乘

@@ -15,9 +15,9 @@ const TestTraversalSub2 = (all, bian, she, gua, nums) => {
     nums[all / she]++;
     return;
   }
-  // const tmp = (all - gua) / 2;
-  // for (let small = Math.floor(tmp - (she - 1)); small <= tmp; small++) {
-  for (let small = 0; small <= all; small++) {
+  const tmp = (all - gua) / 2;
+  for (let small = Math.floor(tmp - (she - 1)); small <= tmp; small++) {
+  // for (let small = 0; small <= all; small++) {
     const allNext = HexoSub2B(all, she, gua, small);
     TestTraversalSub2(allNext, bian - 1, she, gua, nums);
   }
@@ -67,7 +67,7 @@ const TestTraversal = (isTriple, all, bian, she, gua) => {
   }
   return p.join("") + sum;
 };
-console.log(TestTraversal(false, 49, 3, 4, 1)); // 朱熹大衍筮法
+// console.log(TestTraversal(false, 49, 3, 4, 1)); // 朱熹大衍筮法
 // 挂一边与卦两边分别加起来概率无差, 即使是随机挂某边，概率依然一样。
 // 6: 3.271568511743184 | 7: 23.946654077658444 | 8: 46.31535465596601 | 9: 26.46642275463236 | 84730 or 169460
 // console.log(TestTraversal(true, 49, 3, 4)); // 算法A
@@ -76,6 +76,7 @@ console.log(TestTraversal(false, 49, 3, 4, 1)); // 朱熹大衍筮法
 // console.log(TestTraversal(false, 55, 5, 4, 1)); // 算法B程浩
 // console.log(TestTraversal(false, 56, 5, 4, 1)); // 算法C
 // console.log(TestTraversal(false, 57, 5, 4, 1)); // 算法D
+// console.log(TestTraversal(false, 53, 4, 4, 1)) // 算法E
 
 // function Fun() {
 //     const res = all % she
