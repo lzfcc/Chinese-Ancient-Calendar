@@ -322,25 +322,26 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
   }
   return output.join(`\n`);
 };
-// console.log(Test4(3, 49, 3, 4, 1, ListPAll, [8, 20], 1000)); // 贾连翔 // 34分20秒100万次
+
 // 分位法：[0.00, 0.33] | [0.65, 3.59] | [15.36, 24.18] | [35.62, 46.73] | [24.84, 34.97] | [4.58, 10.46]
 // 标准差法：[-0.20, 0.29] | [0.36, 3.40] | [15.19, 24.09] | [35.57, 46.62] | [24.64, 34.88] | [4.42, 10.27]
-// console.log(Test4(2, 55, 5, 4, 1,  ListPAll, [8,20], 1000000)); // 程浩
-// console.log(Test4(2, 56, 5, 4, 1, ListPAll, [8,20], 1000000)); // 杨胜男
-// console.log(Test4(2, 57, 5, 4, 1, ListPAll, [8,20], 1000000)); // 刘彬58
-// console.log(Test4(2, 53, 4, 4, 1, ListPAll, [8, 20], 1000000)); // 李忠林
-// 精度是數量的平方根！
+
 // console.log(Test4(2, 39, 4, 3, 1, ListPAll, [8, 20], 1000000));
 // console.log(Test4(2, 40, 4, 3, 1, ListPAll, [8, 20], 1000000));
 // console.log(Test4(2, 51, 4, 4, 1, ListPAll, [8, 20], 1000000));
 // console.log(Test4(2, 52, 4, 4, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 58, 5, 4, 1, ListPAll, [8, 20], 1000000));
+// console.log(Test4(2, 53, 4, 4, 1, ListPAll, [8, 20], 1000000)); // 李忠林
 // console.log(Test4(2, 44, 5, 3, 1, ListPAll, [8, 20], 1000000));
+// console.log(Test4(2, 58, 5, 4, 1, ListPAll, [8, 20], 1000000));
 
 // console.log(Test4(2, 42, 5, 3, 1, ListPAll, [8, 20], 1000000));
 // console.log(Test4(2, 43, 5, 3, 1, ListPAll, [8, 20], 1000000));
+// console.log(Test4(2, 55, 5, 4, 1,  ListPAll, [8,20], 1000000)); // 程浩
+// console.log(Test4(2, 56, 5, 4, 1, ListPAll, [8,20], 1000000)); // 杨胜男
+// console.log(Test4(2, 57, 5, 4, 1, ListPAll, [8,20], 1000000)); // 刘彬58
 
 // console.log(Test4(3, 38, 3, 3, 1, ListPAll, [8, 20], 1000000));
+// console.log(Test4(3, 49, 3, 4, 1, ListPAll, [8, 20], 1000000)); // 贾连翔 
 // console.log(Test4(3, 50, 3, 4, 1, ListPAll, [8, 20], 1000000));
 
 // 阶乘
