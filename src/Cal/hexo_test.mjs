@@ -1,4 +1,4 @@
-import { ListPAll } from "./para_hexo.mjs";
+import { ListPAll, ListPSheleAll } from "./para_hexo.mjs";
 import { HexoSub2, HexoSub3 } from "./hexo_sub.mjs";
 // import { re } from "mathjs";
 
@@ -39,7 +39,11 @@ const Sigma1 = (n) => {
     tmp += (n[i] - mean) ** 2;
   }
   const sigma = Math.sqrt(tmp / (length - 1));
-  return { mean, sigma };
+  const interval90 = [
+    (mean - 1.645 * sigma).toFixed(1),
+    (mean + 1.645 * sigma).toFixed(1),
+  ];
+  return { mean, sigma, interval90 };
 };
 const MaxSecond = (input) => {
   // 排除0。c:一二比, d一二和
@@ -54,11 +58,9 @@ const MaxSecond = (input) => {
   const d = +(max + second).toFixed(1);
   return { c, d };
 };
-const MaxSecondIV = [2.4, 76.9, 5]; // 一二比，一二和，数字数量
-const MaxSecondXIII = [8.0, 65, 5];
-const MaxSecondNull = [999, 999, 0]; // 不想测试某分系就用这个
+
 // 遍历所有可能的筮法
-const Test7 = (Type, b, gua, List, loop) => {
+const Test7 = (Type, b, gua, loop) => {
   let output4 = [],
     output5 = [],
     output6 = [],
@@ -77,7 +79,7 @@ const Test7 = (Type, b, gua, List, loop) => {
           if (Type === 2) {
             a = HexoSub2(j, bian, she, gua, true, she);
           } else if (Type === 3) {
-            a = HexoSub3(j, bian, she, she);
+            a = HexoSub3(j, bian, she, 0);
           } else if (Type === 4) {
             a = j - HexoSub2(j, bian, she, gua, true, she);
           } else if (Type === 5) {
@@ -88,7 +90,6 @@ const Test7 = (Type, b, gua, List, loop) => {
         }
         const NumKey = Object.keys(Num);
         if (
-          List[2] <= 4 &&
           NumKey.length === 4 &&
           NumKey.every((v, i) => v === ["6", "7", "8", "9"][i]) // 判断两个数组相等
         ) {
@@ -101,13 +102,7 @@ const Test7 = (Type, b, gua, List, loop) => {
           const { c, d } = MaxSecond(tmp.slice(1, 5));
           dif4.push(c);
           sum5.push(d);
-          if (
-            //   Math.abs(c - List[0]) < 20 &&
-            //   Math.abs(d - List[1]) < 15 &&
-            //   Math.abs(c - List[0]) + Math.abs(d - List[1]) < 25
-            tmpYang >= 45 &&
-            tmpYang <= 55
-          ) {
+          if (tmpYang >= 45 && tmpYang <= 55) {
             output4.push([
               "四" + j + "变" + bian + "揲" + she,
               c,
@@ -115,9 +110,7 @@ const Test7 = (Type, b, gua, List, loop) => {
               tmpYang.toFixed(1),
             ]);
           }
-          // output4.push(NumKey);
         } else if (
-          List[2] <= 5 &&
           NumKey.length === 5 &&
           NumKey.every((v, i) => v === ["5", "6", "7", "8", "9"][i])
         ) {
@@ -131,13 +124,7 @@ const Test7 = (Type, b, gua, List, loop) => {
           const { c, d } = MaxSecond(tmp.slice(1, 6));
           dif5.push(c);
           sum5.push(d);
-          if (
-            //   Math.abs(c - List[0]) < 20 &&
-            //   Math.abs(d - List[1]) < 15 &&
-            //   Math.abs(c - List[0]) + Math.abs(d - List[1]) < 25
-            tmpYang >= 45 &&
-            tmpYang <= 55
-          ) {
+          if (tmpYang >= 45 && tmpYang <= 55) {
             output5.push([
               "五" + j + "变" + bian + "揲" + she,
               c,
@@ -145,9 +132,7 @@ const Test7 = (Type, b, gua, List, loop) => {
               tmpYang.toFixed(1),
             ]);
           }
-          // output5.push(NumKey);
         } else if (
-          List[2] <= 6 &&
           NumKey.length === 6 &&
           NumKey.every((v, i) => v === ["4", "5", "6", "7", "8", "9"][i])
         ) {
@@ -161,13 +146,7 @@ const Test7 = (Type, b, gua, List, loop) => {
           const { c, d } = MaxSecond(tmp.slice(1, 7));
           dif6.push(c);
           sum6.push(d);
-          if (
-            //   Math.abs(c - List[0]) < 20 &&
-            //   Math.abs(d - List[1]) < 15 &&
-            //   Math.abs(c - List[0]) + Math.abs(d - List[1]) < 25
-            tmpYang >= 45 &&
-            tmpYang <= 55
-          ) {
+          if (tmpYang >= 45 && tmpYang <= 55) {
             output6.push([
               "六" + j + "变" + bian + "揲" + she,
               c,
@@ -175,7 +154,6 @@ const Test7 = (Type, b, gua, List, loop) => {
               tmpYang.toFixed(1),
             ]);
           }
-          // output6.push(NumKey);
         }
       }
     }
@@ -203,16 +181,11 @@ const Test7 = (Type, b, gua, List, loop) => {
   const outputB = [...output4, ...output5, ...output6];
   return outputB.join(`\n`);
 };
-// console.log(Test7(2, [3, 5], 1, MaxSecondNull, 10000000));
-// console.log(Test7(2, [3, 5], 0, MaxSecondNull, 10000000));
-// console.log(Test7(3, [2, 3], 0, MaxSecondNull, 10000000));
-// console.log(Test7(2, [3, 5], 0, MaxSecondIV, 10000000));
-// console.log(Test7(3, [2, 3], 0, MaxSecondIV, 10000000));
-// console.log(Test7(2, [3, 5], 1, MaxSecondXIII, 10000000));
-// console.log(Test7(2, [3, 5], 0, MaxSecondXIII, 10000000));
-// console.log(Test7(3, [2, 3], 0, MaxSecondXIII, 10000000));
+// console.log(Test7(2, [3, 5], 0, 10000000));
+// console.log(Test7(2, [3, 5], 1, 10000000));
+// console.log(Test7(3, [3, 3], 0, 10000000));
 
-const Test1 = (Type, all, bian, she, gua, isRandomGua, loop, count) => {
+const Test1 = (Type, all, bian, she, gua, isRandomGua, count, loop) => {
   // 算法理论值
   let p = "";
   for (let j = count[0]; j <= count[1]; j++) {
@@ -220,42 +193,46 @@ const Test1 = (Type, all, bian, she, gua, isRandomGua, loop, count) => {
     for (let k = 0; k < loop; k++) {
       let a = 0;
       if (Type === 2) {
-        a = HexoSub2(all, bian, she, gua, isRandomGua, she, j);
+        a = HexoSub2(all, bian, she, gua, isRandomGua, 0, j);
       } else if (Type === 3) {
-        a = HexoSub3(all, bian, she, she, j);
+        a = HexoSub3(all, bian, she, 0, j);
       } else if (Type === 4) {
-        a = all - HexoSub2(all, bian, she, gua, isRandomGua, she, j);
+        a = all - HexoSub2(all, bian, she, gua, isRandomGua, 0, j);
       }
       if (Num[a] >= 0) Num[a]++;
       else Num[a] = 0;
     }
-    p += "| " + j + "% | ";
+    // p += "| " + j + "% | ";
+    p += "[";
     for (const [key, value] of Object.entries(Num)) {
-      p += ((value * 100) / loop).toFixed(2) + " | ";
+      p += ((value * 100) / loop).toFixed(2) + " , ";
     }
-    p += `\n`;
+    p += "]" + `\n`;
   }
   return p;
 };
-// console.log(Test1(2, 49, 3, 4, 1, true, 10000000, [0, 0])); // 朱熹
-// console.log(Test1(3, 49, 3, 4, 0, true, 100000000, [0, 0])); // 贾连翔
-// console.log(Test1(2, 55, 5, 4, 1, true, 100000000, [0, 0])); // 程浩
-// console.log(Test1(2, 56, 5, 4, 1, true, 100000000, [0, 0])); // 杨胜男
-// console.log(Test1(2, 57, 5, 4, 1, true, 100000000, [0, 0])); // 刘彬58
-// console.log(Test1(2, 53, 4, 4, 1, true, 100000000, [0, 0])); // 李忠林
-// console.log(Test1(2, 53, 5, 5, 1, true, 10000, [0, 0])); // 李忠林
-// console.log(Test1(2, 52, 4, 4, 1, true, 10000000, [0, 0])); 
-// console.log(Test1(2, 58, 5, 4, 1, true, 10000000, [0, 0])); 
+// console.log(Test1(2, 39, 4, 3, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 40, 4, 3, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 51, 4, 4, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 52, 4, 4, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 53, 4, 4, 1, true, [8, 20], 100000000)); // 李忠林
+// console.log(Test1(2, 44, 5, 3, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 58, 5, 4, 1, true, [8, 20], 100000000));
 
+// console.log(Test1(2, 42, 5, 3, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 43, 5, 3, 1, true, [8, 20], 100000000));
+// console.log(Test1(2, 55, 5, 4, 1, true, [8, 9], 100000000)); // 程浩
+// console.log(Test1(2, 56, 5, 4, 1, true, [8,20], 100000000)); // 杨胜男
+// console.log(Test1(2, 57, 5, 4, 1, true, [8,20], 100000000)); // 刘彬58
 
-// bootstrap计算置信区间。例如計算50卦，一共300爻，理論上應該出現95爻八，第一次出現100爻八，第二次90次，一共100000次，求這些次數的標準差
-const ListPIV = [0, 4.6296, 38.8889, 37.963, 15.7407, 2.7778, 108];
-const ListPIXS = [0, 13.3333, 16.6667, 40.0, 20.0, 10.0, 60];
-const ListPXII = [0, 22.2222, 22.2222, 44.4444, 11.1111, 0, 45];
-const ListPXIII = [0, 16.25, 31.25, 33.75, 15.0, 3.75, 80];
+// console.log(Test1(3, 38, 3, 3, 1, true, [8, 20], 100000000));
+// console.log(Test1(3, 49, 3, 4, 1, true, [8, 20], 100000000)); // 贾连翔
+// console.log(Test1(3, 50, 3, 4, 1, true, [8, 20], 100000000));
+
+// 蒙特卡羅计算置信区间。例如計算50卦，一共300爻，理論上應該出現95爻八，第一次出現100爻八，第二次90次，一共100000次，求這些次數的標準差
 const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
   const output = [];
-  for (let aa = 0; aa < ListPAll.length; aa++) {
+  for (let l = 0; l < ListPAll.length; l++) {
     let se4 = [],
       se5 = [],
       se6 = [],
@@ -266,7 +243,7 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
       const n = [[], [], [], [], [], [], [], [], [], []];
       for (let j = 0; j < loop; j++) {
         const Num = Array(10).fill(0);
-        for (let k = 0; k < ListPAll[aa][6]; k++) {
+        for (let k = 0; k < ListPAll[l][6]; k++) {
           let a = 0;
           if (Type === 2) {
             a = HexoSub2(all, bian, she, gua, true, 0, m + portion[0]);
@@ -281,11 +258,11 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
       }
       for (let i = 4; i <= 9; i++) {
         // 标准差法
-        const Fix = (x) => +((x * 100) / ListPAll[aa][6]).toFixed(1); // 100万次精确到0.1%，1亿次0.01%
+        const Fix = (x) => +((x * 100) / ListPAll[l][6]).toFixed(1);
         let { sigma, mean } = Sigma1(n[i]);
         sigma = Fix(sigma);
         mean = Fix(mean);
-        const se = (mean - ListPAll[aa][i - 4]) / sigma;
+        const se = (mean - ListPAll[l][i - 4]) / sigma;
         if (i === 4) {
           se4.push(se);
         } else if (i === 5) {
@@ -301,7 +278,7 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
         }
       }
     }
-    output[aa] = "| ";
+    output[l] = "| ";
     for (let i = 4; i <= 9; i++) {
       let seArr = [];
       if (i === 4) {
@@ -317,7 +294,7 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
       } else if (i === 9) {
         seArr = se9;
       }
-      output[aa] += Sigma(seArr).interval90 + " | ";
+      output[l] += Sigma(seArr).interval90 + " | ";
     }
   }
   return output.join(`\n`);
@@ -325,24 +302,6 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
 
 // 分位法：[0.00, 0.33] | [0.65, 3.59] | [15.36, 24.18] | [35.62, 46.73] | [24.84, 34.97] | [4.58, 10.46]
 // 标准差法：[-0.20, 0.29] | [0.36, 3.40] | [15.19, 24.09] | [35.57, 46.62] | [24.64, 34.88] | [4.42, 10.27]
-
-// console.log(Test4(2, 39, 4, 3, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 40, 4, 3, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 51, 4, 4, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 52, 4, 4, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 53, 4, 4, 1, ListPAll, [8, 20], 1000000)); // 李忠林
-// console.log(Test4(2, 44, 5, 3, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 58, 5, 4, 1, ListPAll, [8, 20], 1000000));
-
-// console.log(Test4(2, 42, 5, 3, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 43, 5, 3, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(2, 55, 5, 4, 1,  ListPAll, [8,20], 1000000)); // 程浩
-// console.log(Test4(2, 56, 5, 4, 1, ListPAll, [8,20], 1000000)); // 杨胜男
-// console.log(Test4(2, 57, 5, 4, 1, ListPAll, [8,20], 1000000)); // 刘彬58
-
-// console.log(Test4(3, 38, 3, 3, 1, ListPAll, [8, 20], 1000000));
-// console.log(Test4(3, 49, 3, 4, 1, ListPAll, [8, 20], 1000000)); // 贾连翔 
-// console.log(Test4(3, 50, 3, 4, 1, ListPAll, [8, 20], 1000000));
 
 // 阶乘
 const F = (n) => {
@@ -357,3 +316,80 @@ const F = (n) => {
   }
   return result;
 };
+const Random = (n, m) => Math.floor(Math.random() * (m - n + 1)) + n;
+const Boot = (ListP, ListPSheleAll, loop) => {
+  const output = [];
+  for (let m = 0; m < ListPSheleAll.length; m++) {
+    let se5 = [],
+      se6 = [],
+      se7 = [],
+      se8 = [],
+      se9 = [];
+    for (let l = 0; l < ListPSheleAll[m].length; l++) {
+      const ListShele = ListPSheleAll[m][l].slice(-5);
+      for (let i = 0; i < 5; i++) {
+        // 五至九
+        const length = ListP[5];
+        const N1 = Math.round((ListP[i] * length) / 100);
+        const sample = [...Array(N1).fill(1), ...Array(length - N1).fill(0)];
+        let tmp1 = [];
+        for (let j = 0; j < loop; j++) {
+          let tmp = 0;
+          for (let k = 0; k < length; k++) {
+            tmp += sample[Random(0, length - 1)];
+          }
+          tmp1.push(tmp);
+        }
+        const Fix = (x) => +((x * 100) / length).toFixed(1);
+        let { sigma, mean } = Sigma1(tmp1);
+        sigma = Fix(sigma);
+        mean = Fix(mean);
+        const se = (ListShele[i] - mean) / sigma;
+        if (i === 0) {
+          se5.push(se);
+        } else if (i === 1) {
+          se6.push(se);
+        } else if (i === 2) {
+          se7.push(se);
+        } else if (i === 3) {
+          se8.push(se);
+        } else if (i === 4) {
+          se9.push(se);
+        }
+      }
+    }
+    output[m] = "| ";
+    for (let i = 0; i < 5; i++) {
+      let seArr = [];
+      if (i === 0) {
+        seArr = se5;
+      } else if (i === 1) {
+        seArr = se6;
+      } else if (i === 2) {
+        seArr = se7;
+      } else if (i === 3) {
+        seArr = se8;
+      } else if (i === 4) {
+        seArr = se9;
+      }
+      output[m] += Sigma(seArr).interval90 + " | ";
+    }
+  }
+  return output.join(`\n`);
+};
+
+// console.log(
+//   Boot([4.6296, 38.8889, 37.963, 15.7407, 2.7778, 108], ListPSheleAll, 300000) // 8種揲扐法100000次42s
+// );
+// console.log(
+//   Boot([5.81, 42.58, 35.48, 14.84, 1.29, 155], ListPSheleAll, 300000) 
+// );
+// console.log(
+//   Boot([10.84, 38.55, 34.94, 13.25, 2.41, 83], ListPSheleAll, 300000) 
+// );
+// console.log(
+//   Boot([7.02, 21.05, 42.11, 24.56, 5.26, 114], ListPSheleAll, 300000) 
+// );
+// console.log(
+//   Boot([8.3333, 35.6061, 38.6364, 15.9091, 1.5152, 132], ListPSheleAll, 300000) 
+// );
