@@ -1,5 +1,6 @@
 import { ListPAll, ListPSheleAll } from "./para_hexo.mjs";
 import { HexoSub2, HexoSub3 } from "./hexo_sub.mjs";
+import { big } from "./para_constant.mjs";
 // import { re } from "mathjs";
 // 阶乘
 const F = (n) => {
@@ -14,6 +15,22 @@ const F = (n) => {
   }
   return result;
 };
+const FF = (n) => {
+  let result = big(1);
+  if (n === 0) {
+  } else {
+    while (n > 1) {
+      result = big.mul(result, n);
+      n--;
+    }
+  }
+  return result;
+};
+// 组合公式
+const C = (a, b) => {
+  return FF(b).div(FF(a)).div(FF(b - a)).toNumber();
+};
+// console.log(C(10, 75));
 const Random = (n, m) => Math.floor(Math.random() * (m - n + 1)) + n;
 const Sigma = (n) => {
   // 標準差
@@ -36,8 +53,25 @@ const Sigma = (n) => {
     (mean - 1.645 * sigma).toFixed(1),
     (mean + 1.645 * sigma).toFixed(1),
   ];
-  return { mean, sigma, interval90, interval95 };
+  const interval80 = [
+    (mean - 1.28 * sigma).toFixed(1),
+    (mean + 1.28 * sigma).toFixed(1),
+  ];
+  return { mean, sigma, interval90, interval95, interval80 };
 };
+// console.log(
+//   Sigma([
+//     32.36, 32.36, 32.06, 31.89, 31.71, 30.89, 31.25, 31.39, 29.82, 29.83, 31.23,
+//     30.96, 31.45,
+//   ]).interval90
+// ); // ['30.0', '32.6']
+// console.log(
+//   Sigma([
+//     4.07, 4.88, 5.1, 5.26, 5.27, 5.29, 5.29, 5.3, 5.34, 5.34, 5.36, 5.39,
+//     5.42, 5.44, 5.46, 5.47, 5.5, 5.53, 5.55, 5.57, 5.58, 5.61, 5.62, 5.63,
+//     5.65, 5.75, 5.79, 5.85, 5.86,
+//   ]).sigma
+// ); // ['11.4', '26.0']
 
 const Sigma1 = (n) => {
   // 样本標準差
@@ -73,16 +107,10 @@ const MaxSecond = (input) => {
 };
 
 // 遍历所有可能的筮法
-const Test7 = (Type, b, gua, loop) => {
+const AllShele = (Type, b, gua, loop) => {
   let output4 = [],
     output5 = [],
-    output6 = [],
-    dif4 = [],
-    dif5 = [],
-    dif6 = [],
-    sum4 = [],
-    sum5 = [],
-    sum6 = [];
+    output6 = [];
   for (let j = 36; j <= 60; j++) {
     for (let bian = b[0]; bian <= b[1]; bian++) {
       for (let she = 3; she <= 5; she++) {
@@ -116,8 +144,6 @@ const Test7 = (Type, b, gua, loop) => {
             if (key % 2 === 1) tmpYang += (value * 100) / loop;
           }
           const { c, d } = MaxSecond(tmp.slice(1, 5));
-          dif4.push(c);
-          sum5.push(d);
           if (tmpYang >= 45 && tmpYang <= 55) {
             output4.push([
               "四" + j + "变" + bian + "揲" + she,
@@ -138,8 +164,6 @@ const Test7 = (Type, b, gua, loop) => {
             if (key % 2 === 1) tmpYang += (value * 100) / loop;
           }
           const { c, d } = MaxSecond(tmp.slice(1, 6));
-          dif5.push(c);
-          sum5.push(d);
           if (tmpYang >= 45 && tmpYang <= 55) {
             output5.push([
               "五" + j + "变" + bian + "揲" + she,
@@ -160,8 +184,6 @@ const Test7 = (Type, b, gua, loop) => {
             if (key % 2 === 1) tmpYang += (value * 100) / loop;
           }
           const { c, d } = MaxSecond(tmp.slice(1, 7));
-          dif6.push(c);
-          sum6.push(d);
           if (tmpYang >= 45 && tmpYang <= 55) {
             output6.push([
               "六" + j + "变" + bian + "揲" + she,
@@ -174,34 +196,13 @@ const Test7 = (Type, b, gua, loop) => {
       }
     }
   }
-  const sDif4 = Sigma(dif4).interval95;
-  const sDif5 = Sigma(dif5).interval95;
-  const sDif6 = Sigma(dif6).interval95;
-  const sSum4 = Sigma(sum4).interval95;
-  const sSum5 = Sigma(sum5).interval95;
-  const sSum6 = Sigma(sum6).interval95;
-  const outputA =
-    "[" +
-    sDif4 +
-    "] [" +
-    sSum4 +
-    "] | [" +
-    sDif5 +
-    "] [" +
-    sSum5 +
-    "] | [" +
-    sDif6 +
-    "] [" +
-    sSum6 +
-    "]";
-  const outputB = [...output4, ...output5, ...output6];
-  return outputB.join(`\n`);
+  return [...output4, ...output5, ...output6].join(`\n`);
 };
-// console.log(Test7(2, [3, 5], 0, 10000000));
-// console.log(Test7(2, [3, 5], 1, 10000000));
-// console.log(Test7(3, [3, 3], 0, 10000000));
+// console.log(AllShele(2, [3, 5], 0, 10000000));
+// console.log(AllShele(2, [3, 5], 1, 10000000));
+// console.log(AllShele(3, [3, 3], 0, 10000000));
 
-const Test1 = (Type, all, bian, she, gua, isRandomGua, count, loop) => {
+const Theory = (Type, all, bian, she, gua, isRandomGua, count, loop) => {
   // 算法理论值
   let p = "";
   for (let j = count[0]; j <= count[1]; j++) {
@@ -232,27 +233,27 @@ const Test1 = (Type, all, bian, she, gua, isRandomGua, count, loop) => {
   }
   return p;
 };
-// console.log(Test1(2, 49, 3, 4, 1, true, [25, 35], 100000000)); // 朱熹
-// console.log(Test1(2, 39, 4, 3, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 40, 4, 3, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 51, 4, 4, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 52, 4, 4, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 53, 4, 4, 1, true, [8, 20], 100000000)); // 李忠林
-// console.log(Test1(2, 44, 5, 3, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 58, 5, 4, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 49, 3, 4, 1, true, [25, 35], 100000000)); // 朱熹
+// console.log(Theory(2, 39, 4, 3, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 40, 4, 3, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 51, 4, 4, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 52, 4, 4, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 53, 4, 4, 1, true, [8, 20], 100000000)); // 李忠林
+// console.log(Theory(2, 44, 5, 3, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 58, 5, 4, 1, true, [8, 20], 100000000));
 
-// console.log(Test1(2, 42, 5, 3, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 43, 5, 3, 1, true, [8, 20], 100000000));
-// console.log(Test1(2, 55, 5, 4, 1, true, [8, 20], 100000000)); // 程浩
-// console.log(Test1(2, 56, 5, 4, 1, true, [8, 20], 100000000)); // 杨胜男
-// console.log(Test1(2, 57, 5, 4, 1, true, [8, 20], 100000000)); // 刘彬58
+// console.log(Theory(2, 42, 5, 3, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 43, 5, 3, 1, true, [8, 20], 100000000));
+// console.log(Theory(2, 55, 5, 4, 1, true, [8, 20], 100000000)); // 程浩
+// console.log(Theory(2, 56, 5, 4, 1, true, [8, 20], 100000000)); // 杨胜男
+// console.log(Theory(2, 57, 5, 4, 1, true, [8, 20], 100000000)); // 刘彬58
 
-// console.log(Test1(3, 38, 3, 3, 1, true, [8, 20], 100000000));
-// console.log(Test1(3, 49, 3, 4, 1, true, [0, 35], 100000000)); // 贾连翔
-// console.log(Test1(3, 50, 3, 4, 1, true, [8, 20], 108));
+// console.log(Theory(3, 38, 3, 3, 1, true, [8, 20], 100000000));
+// console.log(Theory(3, 49, 3, 4, 1, true, [0, 35], 100000000)); // 贾连翔
+// console.log(Theory(3, 50, 3, 4, 1, true, [8, 20], 108));
 
 // 蒙特卡羅计算置信区间。例如計算50卦，一共300爻，理論上應該出現95爻八，第一次出現100爻八，第二次90次，一共100000次，求這些次數的標準差
-const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
+const MonteCarlo = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
   const output = [];
   for (let l = 0; l < ListPAll.length; l++) {
     let se4 = [],
@@ -325,7 +326,6 @@ const Test4 = (Type, all, bian, she, gua, ListPAll, portion, loop) => {
 // 分位法：[0.00, 0.33] | [0.65, 3.59] | [15.36, 24.18] | [35.62, 46.73] | [24.84, 34.97] | [4.58, 10.46]
 // 标准差法：[-0.20, 0.29] | [0.36, 3.40] | [15.19, 24.09] | [35.57, 46.62] | [24.64, 34.88] | [4.42, 10.27]
 
-
 // bootstrap求均值、标准差，再算差了几个标准差
 const Boot = (ListP, ListPSheleAll, loop) => {
   const output = [];
@@ -388,6 +388,19 @@ const Boot = (ListP, ListPSheleAll, loop) => {
   }
   return output.join(`\n`);
 };
+const Mean = (n) => {
+  const length = n.length;
+  let tmp = 0;
+  for (let i = 0; i < length; i++) {
+    tmp += n[i];
+  }
+  return tmp / length;
+};
+const Reduce = (n) => {
+  n.sort((a, b) => a - b);
+  return [n[1].toFixed(1), n[n.length - 2].toFixed(1)];
+};
+// console.log(Reduce([3, 9, 1, 4])); // 3,4
 
 // bootstrap假设检验
 const BootH = (ListP, ListPSheleAll, loop) => {
@@ -414,15 +427,9 @@ const BootH = (ListP, ListPSheleAll, loop) => {
           for (let k = 0; k < length; k++) {
             tmp[k] = z[Random(0, length - 1)];
           }
-          const tmpMean = Sigma(tmp).mean; // loop个tmpMean的mean就是ListShele[i]
-          if (ListShele[i] > ListP[i]) {
-            if (tmpMean > ListP[i] || tmpMean < -ListP[i]) cc++;
-          } else if (ListShele[i] < ListP[i]) {
-            if (tmpMean < ListP[i] && tmpMean > -ListP[i]) cc++;
-          }
+          if (Mean(tmp) > ListP[i]) cc++; // loop个tmpMean的mean就是ListShele[i]
         }
-        // const se = (cc * 100) / loop;
-        const se = (Math.abs(cc - loop / 2) * 2 * 100) / loop;
+        const se = (Math.min(loop - cc, cc) * 2 * 100) / loop;
         if (i === 0) {
           se5.push(se);
         } else if (i === 1) {
@@ -450,7 +457,7 @@ const BootH = (ListP, ListPSheleAll, loop) => {
       } else if (i === 4) {
         seArr = se9;
       }
-      output[m] += Sigma(seArr).interval90 + " | ";
+      output[m] += Reduce(seArr) + " | ";
     }
   }
   return output.join(`\n`);
@@ -491,10 +498,13 @@ const Jugelizi = (List, u0, loop) => {
     for (let i = 0; i < List.length; i++) {
       tmp[i] = z[Random(0, List.length - 1)];
     }
-    if (Sigma(tmp).mean > mean) k++;
+    const tmpMean = Sigma(tmp).mean;
+    if (tmpMean > mean) k++;
   }
-  return k / loop;
+  // return ((Math.min(loop - k, k) * 2 * 100) / loop).toFixed(1);
+  return ((100 * k) / loop).toFixed(1); // 这样的话，假设值越高，结果越高，假设值越低，结果越低，最接近50%的最准确
 };
+// 教材p279
 // console.log(
 //   Jugelizi(
 //     [
@@ -502,7 +512,7 @@ const Jugelizi = (List, u0, loop) => {
 //       170,
 //     ],
 //     225,
-//     10000
+//     1000000
 //   )
 // );
 // console.log(
@@ -512,7 +522,8 @@ const Jugelizi = (List, u0, loop) => {
 //       5.42, 5.44, 5.46, 5.47, 5.5, 5.53, 5.55, 5.57, 5.58, 5.61, 5.62, 5.63,
 //       5.65, 5.75, 5.79, 5.85, 5.86,
 //     ],
-//     5.51,
-//     100000
+//     5.419655,
+//     10000000
 //   )
 // );
+// mean 5.419655. 5.416:99.1, 5.4155:100.0, 5.415: 99.6, 5.414: 98.3, 5.413: 97.0

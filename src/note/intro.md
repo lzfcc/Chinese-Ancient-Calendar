@@ -309,7 +309,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 - Raw 未經某種處理的變量 Variables before processing in some way
 - V 速度 velocity
-- Corr 修正改正 correction。Tcorr 在躔離計算中爲日月速度改正，在交食計算中位食甚時刻改正。Mcorr 食分修正
+- Corr 修正改正 correction。Tcorr 在躔離計算中爲日月速度改正，在交食計算中爲食甚時刻改正。Mcorr 食分修正
 - DifAccum 日盈縮積、月遲疾積
 - Avg 平均的 average
 - Acr  精確的 accurate

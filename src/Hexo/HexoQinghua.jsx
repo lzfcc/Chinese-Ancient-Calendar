@@ -1,5 +1,5 @@
 import React from 'react'
-import { HexoQinghuaPrint } from '../Cal/hexo.mjs'
+import { HexoQinghuaPrint } from '../Cal/hexo_print.mjs'
 
 export default class Converter extends React.Component {
   constructor(props) {
