@@ -280,7 +280,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 - SmallSur 小餘，干支的小數部分
 - LeapNumTerm 無中氣置閏法的閏月
 - Duskstar 昬中星
-- Accum 積日。OriginAccum 上元至年前冬至積日 AnomaAccum 入轉日 NodeAccum 入交日
+- Accum 積日。WinsolsAccum 上元至年前冬至積日 AnomaAccum 入轉日 NodeAccum 入交日
 
 #### 常量 Constants
 

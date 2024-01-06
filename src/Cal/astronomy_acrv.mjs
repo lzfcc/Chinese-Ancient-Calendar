@@ -567,8 +567,8 @@ export const MoonFormula = (AnomaAccumRaw, CalName) => {
         MoonAcrV = MoonAcrVListA[AnomaAccumPart]
     } else {
         if (CalName === 'Mingtian') {
-            // AnomaAccum = big.div(OriginAccum, Lunar).add(i - 1 + ZhengWinsolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
-            // AnomaAccum[i] = (Math.floor(OriginAccum / Lunar + i - 1 + ZhengWinsolsDif) * 2142887000 % AnomaNumer) / 81120000
+            // AnomaAccum = big.div(WinsolsAccum, Lunar).add(i - 1 + ZhengWinsolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
+            // AnomaAccum[i] = (Math.floor(WinsolsAccum / Lunar + i - 1 + ZhengWinsolsDif) * 2142887000 % AnomaNumer) / 81120000
             const AnomaAccum = AnomaAccumRaw * MoonAvgVDeg
             const T = 92.0927 - Math.abs((AnomaAccumRaw % Anoma50) * MoonAvgVDeg - 92.0927)
             let sign3 = 1

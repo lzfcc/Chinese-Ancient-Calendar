@@ -13,7 +13,7 @@ OriginJdAccum = 2086292 + Math.floor(365.243 * (year - 1000))
 再換算成干支序。另計算該曆冬至積日，兩者相減，卽
 
 ```javascript
-OriginJdDif = (OriginAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
+OriginJdDif = (WinsolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
 ```
 
 最後，

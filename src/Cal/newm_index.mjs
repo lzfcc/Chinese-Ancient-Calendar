@@ -22,12 +22,12 @@ export default (CalName, YearStart, YearEnd) => {
         const WinsolsMon = (1 - ZhengNum + 12) % 12 // 冬至月
         const isLeapPvPt = PrevYear.isLeapPost
         const { isLeapAdvan: isLeapTA, JiScOrder: JiScOrder,
-            OriginAccum, NewmEqua, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgWinsolsDif, TermAcrWinsolsDif, AccumPrint, LeapLimit
+            WinsolsAccum, NewmEqua, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgWinsolsDif, TermAcrWinsolsDif, AccumPrint, LeapLimit
         } = ThisYear
         let { LeapNumTerm: LeapNumTermThis, isLeapPrev: isLeapTPv, isLeapThis: isLeapTT,
             NewmInt, NewmStart, NewmEnd, TermStart, TermEnd,
         } = ThisYear
-        const WinsolsDeci = +(OriginAccum - Math.floor(OriginAccum)).toFixed(5)
+        const WinsolsDeci = +(WinsolsAccum - Math.floor(WinsolsAccum)).toFixed(5)
         let specialStart = 0, specialNewmSyzygyEnd = 0
         if (Type === 1) {
             if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[WinsolsMon] === '')) {
@@ -315,7 +315,7 @@ export default (CalName, YearStart, YearEnd) => {
                         SyzygyCondition = SyzygyDeciPrint[i] < Rise + RangeMoonEcli || SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli
                     }
                     if (NewmCondition) { // 這些數字根據大統，再放寬0.3
-                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
+                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, WinsolsAccum)
                         const NewmStatus = NewmEcliFunc.Status
                         let NewmMagni = 0
                         const NewmStartDeci = NewmEcliFunc.StartDeci ? NewmEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
@@ -335,7 +335,7 @@ export default (CalName, YearStart, YearEnd) => {
                         }
                     }
                     if (SyzygyCondition) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, OriginAccum)
+                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, WinsolsAccum)
                         const SyzygyStatus = SyzygyEcliFunc.Status
                         let SyzygyMagni = 0
                         const SyzygyStartDeci = SyzygyEcliFunc.StartDeci ? SyzygyEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
@@ -379,9 +379,9 @@ export default (CalName, YearStart, YearEnd) => {
             }
             YearInfo += `  大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat((ThisYear.WinsolsAccumMod).toPrecision(6)).toFixed(4)}`
             if (WinsolsOriginDif === -45.65625) {
-                YearInfo += `立春${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
+                YearInfo += `立春${parseFloat(((WinsolsAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             } else if (WinsolsOriginDif === -60.875) {
-                YearInfo += `雨水${parseFloat(((OriginAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
+                YearInfo += `雨水${parseFloat(((WinsolsAccum % 60 + 60) % 60).toPrecision(6)).toFixed(4)}`
             }
             YearInfo += `  閏餘${LeapSur.toFixed(4)}`
             if (ThisYear.LeapNumOriginLeapSur) {
@@ -392,7 +392,7 @@ export default (CalName, YearStart, YearEnd) => {
                 YearInfo += `${ScList[JiScOrder]}紀${ThisYear.JiYear}`
             }
             if (Type <= 10) {
-                YearInfo += (OriginMonNum === 2 ? '雨' : '冬') + ((OriginAccum % 60 + 60) % 60).toFixed(4)
+                YearInfo += (OriginMonNum === 2 ? '雨' : '冬') + ((WinsolsAccum % 60 + 60) % 60).toFixed(4)
             }
             if (Type === 2) {
                 YearInfo += `  平${ThisYear.LeapSurAvgThis}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${LeapLimit}`
@@ -453,7 +453,7 @@ export default (CalName, YearStart, YearEnd) => {
             SyzygyScPrint, SyzygyDeciPrint,
             TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermDuskstarPrint,
             ////////////// 以下用於日書/////////////
-            LeapNumTermThis, OriginAccum,
+            LeapNumTermThis, WinsolsAccum,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
             NewmRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmRaw)),
             NewmAcrRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔

@@ -25,7 +25,7 @@ export default (CalName, year) => {
     const BuScOrder = (1 + BuOrder * BuSkip + (BuScCorr || 0)) % 60 // 蔀（統）的干支序號
     const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsOriginDif || 0) + WinsolsCorr + DayCorr // 冬至積日
     const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
-    const OriginAccum = WinsolsAccumRaw - (WinsolsOriginDif || 0) // 曆元積日
+    const WinsolsAccum = WinsolsAccumRaw - (WinsolsOriginDif || 0) // 曆元積日
     const WinsolsDeci = WinsolsAccumRaw - ~~WinsolsAccumRaw
     const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
     const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
@@ -191,7 +191,7 @@ export default (CalName, year) => {
     }
     return {
         OriginYear, JiOrder, BuYear, BuScOrder, JupiterSc,
-        WinsolsAccumMod, OriginAccum,
+        WinsolsAccumMod, WinsolsAccum,
         NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmAvgDeci,
         SyzygySc, SyzygyDeci,
         TermAvgBare, TermName, TermSc, TermDeci,
