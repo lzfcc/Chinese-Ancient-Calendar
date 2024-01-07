@@ -2840,7 +2840,7 @@ export default {
         ZhengNum: 2,
         WeekCorr: 2,
         OriginMonNum: 0,
-        MansionCorr: 315.1075, // 週應
+        MansionCorr: 315.1075, //
         MansionRaw: [11, 6], //命起赤道虛宿六度外
         MansionFractPosition: 11,
     },
@@ -2866,15 +2866,35 @@ export default {
         Venus: 583.9197207,
         Mercury: 115.8771744,
     },
+    Jiazi: { // 曆象考成
+        Type: 12,
+        ApplyYear: [[1727, 1733]],
+        CloseOriginAd: 1684,
+        Solar: 365.2421875, // 週歲 
+        Sidereal: 1296000, // 360°。
+        Precession: 51 / 3600, // 岁差51″
+        SunAvgV: 3548.3305169, // 每日平行″
+        PeriYearV: 61.16666, // 最卑perihelion每歲平行″，
+        PeriDayV: 0.167469,
+        PeriCorr: 7.1697682963, // 7°10′11″10'''。最卑應
+        // Lunar: ,
+        // Node: ,
+        // Anoma: , // 
+        WinsolsCorr: 7.656374926,
+        MansionDayCorr: 5.656374926, // 宿應，單位日。這是值日，其實和宿度無關。
+        MansionRaw: [28, 3.1666666666667] // 我定的，在箕宿3.166
+    },
     Guimao: { // 曆象考成後編
         Type: 12,
         ApplyYear: [[1734, 1913]],
         CloseOriginAd: 1723,
         Solar: 365.24233442, // 週歲 
         Sidereal: 1296000, // 360°。
+        Precession: 51 / 3600, // 岁差51″
         SunAvgV: 3548.3290897, // 每日平行″
-        PeriV: 62.9975, // 最卑perihelion每歲平行62.9975″，每日0.17248″
-        PeriCorr: 8.1256578519, // 8°7′32″22'''。天正平冬至次日子正初刻最卑過冬至之度分
+        PeriYearV: 62.9975, // 最卑perihelion每歲平行62.9975″，
+        PeriDayV: 0.17248,
+        PeriCorr: 8.1256578519, // 8°7′32″22'''。最卑應：天正平冬至次日子正初刻最卑過冬至之度分
         // Lunar: ,
         // Node: ,
         // Anoma: , // 
@@ -2894,7 +2914,4 @@ export default {
 // ],
 // Shixian2: [ // 康熙永年曆法
 //     [1680, 1726]
-// ],
-// Shixian3: [ // 曆象考成
-//     [1727, 1733]
 // ],

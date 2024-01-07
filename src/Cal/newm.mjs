@@ -245,13 +245,13 @@ export default (CalName, year) => {
             let NewmPlus = 0, SyzygySub = 0, NewmPlusPrint = '', SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
-                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), WinsolsDifRaw[i], WinsolsDeci, CalName) /////進朔/////
+                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), WinsolsDifRaw[i], WinsolsDeci, CalName) // 進朔
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
                 if ((EquaDegAccumList || []).length) {
                     let Eclp2EquaDif = 0
-                    if (Type === 11) { // 授時要黃轉赤
+                    if (Type === 11) { // 授時要黃轉赤 ⚠️ 2024-01 這樣轉可以嗎？？？
                         Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
                     }
                     Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
@@ -267,7 +267,7 @@ export default (CalName, year) => {
                         Plus = -Solar
                     }
                     TermAcrWinsolsDif[i] = AcrTermList[(TermNum3 + 24) % 24] + Plus
-                    TermAcrRaw[i] = WinsolsAccum + TermAcrWinsolsDif[i]
+                    TermAcrRaw[i] = WinsolsAccum + TermAcrWinsolsDif[i] // 定氣距冬至+中積
                 }
             } else {
                 const Func = AutoSyzygySub(Deci[i], WinsolsDifRaw[i], WinsolsDeci, CalName) // 退望

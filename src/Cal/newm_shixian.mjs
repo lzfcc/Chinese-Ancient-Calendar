@@ -79,22 +79,45 @@ const SunCorr = x => {
 
 // 推日躔
 export default (CalName, year) => {
-    const { Type, Sidereal, Anoma, Node, CloseOriginAd, Solar, Lunar, NodeCorr, FirstCorr, AnomaCorr, MansionCorr, WinsolsCorr, PeriCorr, PeriV, SunAvgV } = Para[CalName]
+    const { Type, Sidereal, Anoma, Node, CloseOriginAd, Solar, Precession, Lunar, NodeCorr, FirstCorr, AnomaCorr, MansionDayCorr, WinsolsCorr, PeriCorr, PeriYearV, PeriDayV, SunAvgV } = Para[CalName]
+    const TermLeng = Solar / 24
     const CloseOriginYear = year - CloseOriginAd // 積年
     const OriginAccumThis = CloseOriginYear * Solar // 中積
     const OriginAccumPrev = (CloseOriginYear - 1) * Solar
     const OriginAccumNext = (CloseOriginYear + 1) * Solar
     const WinsolsAccum = OriginAccumThis + WinsolsCorr // 通積分。
-    const WinsolsMod = (WinsolsAccum % 60 + 60 + 1) % 60 // 天正冬至。甲子爲1
-    // 求年根（考成：天正冬至次日子正初刻太陽距冬至之平行經度。天正冬至分：冬至距本日子正初刻後之分數與周日一萬分相減，餘爲冬至距次日子正初刻前之分數，故與每日平行為比例，得次日子正初刻太陽距冬至之平行經度）。一率：週日一萬分，二率：每日平行，三率：以天正冬至分與週日一萬分相減，求得四率爲秒，以分收之得年根。
+    const WinsolsMod = (WinsolsAccum % 60 + 60 + 1) % 60 // 天正冬至。甲子爲1    
     const WinsolsFrac = WinsolsAccum - Math.floor(WinsolsAccum) // 冬至小數
-    const YearRoot = (1 - WinsolsFrac) * SunAvgV / 3600 // 年根。本來是分，我收作度。
-    const WinsolsNextSc = (WinsolsSc + 1) % 60 // 求紀日：以天正冬至干支加一日得紀日。（考成：所求本年天正冬至次日之干支。既有天正冬至干支，可以不用紀日，因用表推算起於年根而不用天正冬至。若無紀日，則無以定干支，且日數自紀日干支起初日，故並用之）
-
+    const YearRoot = (1 - WinsolsFrac) * SunAvgV / 3600 // 求年根（考成：天正冬至次日子正初刻太陽距冬至之平行經度。天正冬至分：冬至距本日子正初刻後之分數與周日一萬分相減，餘爲冬至距次日子正初刻前之分數，故與每日平行為比例，得次日子正初刻太陽距冬至之平行經度）。一率：週日一萬分，二率：每日平行，三率：以天正冬至分與週日一萬分相減，求得四率爲秒，以分收之得年根。// 本來是分，我收作度。
+    const WinsolsNextMod = (WinsolsMod + 1) % 60 // 求紀日：以天正冬至干支加一日得紀日。（考成：所求本年天正冬至次日之干支。既有天正冬至干支，可以不用紀日，因用表推算起於年根而不用天正冬至。若無紀日，則無以定干支，且日數自紀日干支起初日，故並用之）
     // 求值宿
-    const OriginAccumMansion = OriginAccumThis + MansionCorr // 通積宿
+    const OriginAccumMansion = OriginAccumThis + MansionDayCorr // 通積宿
     const Mansion = (OriginAccumMansion % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
-    // 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）。自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
+    // const FirstAccum = WinsolsAccum - LeapSurAvgThis // 待定
+    const AutoNewmSyzygy = isNewm => {
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDifRaw = [], AcrWinsolsDifRaw = [], Equa = []
+        for (let i = 0; i <= 14; i++) {
+            AvgRaw[i] = +(FirstAccum + (2 + i - (isNewm ? 1 : 0.5)) * Lunar)
+            AvgInt[i] = Math.floor(AvgRaw[i])
+            WinsolsDifRaw[i] = ((2 + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - WinsolsAccum + Solar) % Solar
+            const AvgWinsolsLongiDif = (WinsolsDifRaw[i] - (AvgRaw[i] - AvgInt[i])) * SunAvgV / 3600 // 夜半平行：以年根與日數相加，得平行。（要是平朔定朔不在一天怎麼辦）
+            const DayNum = (WinsolsDifRaw[i] - (AvgRaw[i] - AvgInt[i])) * SunAvgV / 3600 - YearRoot // 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。我的求法不一樣。
+            Peri = (PeriYearV * CloseOriginYear + PeriDayV * DayNum) / 3600 + PeriCorr // 朔日最卑平行
+            const AvgPeriLongiDif = (AvgWinsolsLongiDif - Peri) % 360 // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
+            // 求均數。
+            const SunCorr = SunCorr(AvgPeriLongiDif)
+            let flag = 1
+            if (AvgPeriLongiDif > 180) flag = -1
+            const AcrWinsolsLongiDif = AvgWinsolsLongiDif + flag * SunCorr // 夜半實行
+            // AcrWinsolsLongiDif-Precession*(year-1684)⋯⋯ 求宿度：以積年與歲差五十一秒相乘，得數，與癸卯年黃道宿鈐相加，得本年宿鈐。察實行足減某宿度分則減之，餘爲某宿度分。——與古曆算法不同，這是捷法，但是⚠️這是夜半
+            // 推節氣只見於下編。一率：本日實行與次日實行相減，二率：1440分，三率：本日實行與節氣宮度相減。一日之行度:一日之分數=距節氣之度:距子正之分數。
+            // 定氣推平氣法，主要是用於測算，略。
+            // 平氣推定氣法，葉21：以天正冬至日分，各加平氣日率，減一日，各得平氣距天正冬至次日子正初刻日分。又置平氣宮度，減本日最卑行，餘爲本日引數。按法求得本日均數，乃以太陽每日平行三千五百四十八秒三三〇五一六九為一率，周日一萬分爲二率，本日均數爲三率，求得四率與平氣距天正冬至次日子正初刻之日分相加減（均數爲加者則減，均數爲減者則加）。又加本年紀日之數，滿紀法六十去之。
+            TermAvgWinsolsDif[i] = (i + 2 - 1) * TermLeng-1
+            TermAvgWinsolsDif[i] = (i + 2 - 1) * 30 // 平氣宮度
+            // 推節氣用時法（詳日躔曆理時差篇）——好像是已知黃道求赤道？⚠️待補
+            // 推各省節氣時刻法——略。
 
-    // 求平行。以年根與日數相加，得平行
+        }
+    }
 }

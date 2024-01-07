@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
-import { MansionNameList } from './para_constant.mjs' // 賦值解構
+import { MansionNameList, MansionNameListQing } from './para_constant.mjs' // 賦值解構
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
 
 export const Deg2Mansion = (MansionAccum, DegAccumList) => {
@@ -12,7 +12,10 @@ export const Deg2Mansion = (MansionAccum, DegAccumList) => {
             break
         }
     }
-    const MansionName = MansionNameList[MansionOrder]
+    let MansionName = MansionNameList[MansionOrder]
+    if (DegAccumList === EclpDegJiazi) {
+        MansionName = MansionNameListQing[MansionOrder]
+    }
     const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(4)
     return MansionName + MansionDeg
 }
@@ -20,14 +23,13 @@ export const Deg2Mansion = (MansionAccum, DegAccumList) => {
 export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
-export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci, year) => { //上元以來積日，距冬至日數，宿度表，曆法名，冬至小分
+export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDifRaw, WinsolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
     const { Type, SolarRaw, WinsolsCorr, MansionCorr, MansionRaw } = Para[CalName]
     let { Sidereal, Solar } = Para[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
-    if (CalName === 'Shoushi' || CalName === 'Shoushi2') { // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。）
-        // 試了一下，按上面這樣區分1281前後，沒有任何變化
+    if (CalName === 'Shoushi' || CalName === 'Shoushi2') {
         Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
-    }
+    }// 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。） // 試了一下，按上面這樣區分1281前後，沒有任何變化
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? WinsolsCorr : 0
     Accum += MansionCorr || 0
