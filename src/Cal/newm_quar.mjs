@@ -77,7 +77,7 @@ export default (CalName, year) => {
     const LeapNumOriginLeapSur = LeapNumAvgThis ? Math.round(((LeapNumAvgThis + ZhengWinsolsDif + 12) % 12 + 12) % 12.1) : 0
     const EquaDegAccumList = MansionRaw ? AutoDegAccumList(CalName, year) : []
     // 朔望
-    const NewmAvgBare = [], NewmAvgRaw = [], NewmInt = [], NewmAvgSc = [], NewmWinsolsDifRaw = [], NewmAvgDeci = [], NewmEqua = [], SyzygyAvgRaw = [], SyzygyAvgMod = [], SyzygyOrderMod = [], SyzygyDeci = []
+    const NewmAvgBare = [], NewmAvgRaw = [], NewmInt = [], NewmAvgSc = [], NewmWinsolsDif = [], NewmAvgDeci = [], NewmEqua = [], SyzygyAvgRaw = [], SyzygyAvgMod = [], SyzygyOrderMod = [], SyzygyDeci = []
     let SyzygySc = []
     for (let i = 0; i <= 14; i++) { // 本來是1
         NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + WinsolsCorr + DayCorr).toPrecision(14))
@@ -85,7 +85,7 @@ export default (CalName, year) => {
         NewmInt[i] = ~~NewmAvgRaw[i]
         NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]
         NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
-        NewmWinsolsDifRaw[i] = NewmAvgBare[i] - WinsolsAccumRaw
+        NewmWinsolsDif[i] = NewmAvgBare[i] - WinsolsAccumRaw
         if (MansionRaw) {
             NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
         }
@@ -119,8 +119,8 @@ export default (CalName, year) => {
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
-                const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
+                const TermWinsolsDif = TermAvgBare[i] - WinsolsAccumRaw
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDif, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermDuskstar[i] = Func.DuskstarResult
             }
@@ -135,8 +135,8 @@ export default (CalName, year) => {
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
-                const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
+                const TermWinsolsDif = TermAvgBare[i] - WinsolsAccumRaw
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDif, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermDuskstar[i] = Func.DuskstarResult
             }
@@ -164,8 +164,8 @@ export default (CalName, year) => {
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
-                const TermWinsolsDifRaw = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDifRaw, WinsolsDeci)
+                const TermWinsolsDif = TermAvgBare[i] - WinsolsAccumRaw
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDif, WinsolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermDuskstar[i] = Func.DuskstarResult
             }

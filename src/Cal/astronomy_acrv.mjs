@@ -597,11 +597,11 @@ export const MoonFormula = (AnomaAccumRaw, CalName) => {
 }
 // console.log(MoonFormula(12.903, 'Shoushi').MoonAcrV)
 
-export const AutoTcorr = (AnomaAccum, WinsolsDifRaw, CalName, NodeAccum, year) => {
+export const AutoTcorr = (AnomaAccum, WinsolsDif, CalName, NodeAccum, year) => {
     const { Type, SolarRaw, PartRange, Anoma, NodeDenom } = Para[CalName]
     let { Solar } = Para[CalName]
     Solar = Solar || SolarRaw
-    const WinsolsDif = WinsolsDifRaw % Solar
+    const WinsolsDif = WinsolsDif % Solar
     AnomaAccum %= Anoma
     let sunFunc = {}, moonFunc = {}, TcorrFunc = {}
     let SunTcorr2 = 0, SunTcorr1 = 0, MoonTcorr2 = 0, MoonTcorr1 = 0, Tcorr2 = 0, Tcorr1 = 0, NodeAccumCorrA = 0, NodeAccumCorrB = 0, SunDifAccum = 0, MoonDifAccum = 0, SunTcorr = 0, MoonTcorr = 0, MoonAcrV = 0 // Tcorr2二次或三次內插

@@ -95,13 +95,13 @@ export default (CalName, year) => {
     const Mansion = (OriginAccumMansion % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
     // const FirstAccum = WinsolsAccum - LeapSurAvgThis // 待定
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDifRaw = [], AcrWinsolsDifRaw = [], Equa = []
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDif = [], AcrWinsolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (2 + i - (isNewm ? 1 : 0.5)) * Lunar)
             AvgInt[i] = Math.floor(AvgRaw[i])
-            WinsolsDifRaw[i] = ((2 + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - WinsolsAccum + Solar) % Solar
-            const AvgWinsolsLongiDif = (WinsolsDifRaw[i] - (AvgRaw[i] - AvgInt[i])) * SunAvgV / 3600 // 夜半平行：以年根與日數相加，得平行。（要是平朔定朔不在一天怎麼辦）
-            const DayNum = (WinsolsDifRaw[i] - (AvgRaw[i] - AvgInt[i])) * SunAvgV / 3600 - YearRoot // 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。我的求法不一樣。
+            WinsolsDif[i] = ((2 + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - WinsolsAccum + Solar) % Solar
+            const AvgWinsolsLongiDif = (WinsolsDif[i] - (AvgRaw[i] - AvgInt[i])) * SunAvgV / 3600 // 夜半平行：以年根與日數相加，得平行。（要是平朔定朔不在一天怎麼辦）
+            const DayNum = (WinsolsDif[i] - (AvgRaw[i] - AvgInt[i])) * SunAvgV / 3600 - YearRoot // 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。我的求法不一樣。
             Peri = (PeriYearV * CloseOriginYear + PeriDayV * DayNum) / 3600 + PeriCorr // 朔日最卑平行
             const AvgPeriLongiDif = (AvgWinsolsLongiDif - Peri) % 360 // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
             // 求均數。

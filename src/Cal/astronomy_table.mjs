@@ -130,14 +130,14 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
 }
 // console.log(Equa2EclpTable(23, 'Yitian'))
 
-export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
+export const Longi2LatiTable1 = (WinsolsDif, CalName) => {
     const { Solar, NightList, DialList, SunLatiList } = Para[CalName]
     let DawnRange = 0
     if (CalName !== 'Daye') {
         DawnRange = 2.5
     }
     const HalfTermLeng = Solar / 24
-    const WinsolsDif = WinsolsDifRaw % Solar
+    const WinsolsDif = WinsolsDif % Solar
     const TermNum = ~~(WinsolsDif / HalfTermLeng) // 每日所在氣名
     const TermDif = WinsolsDif - TermNum * HalfTermLeng
     const Rise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
@@ -147,10 +147,10 @@ export const Longi2LatiTable1 = (WinsolsDifRaw, CalName) => {
     return { Rise, Dial, Lati1, Lati }
 }
 
-export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
+export const Longi2LatiTable2 = (WinsolsDif, CalName) => {
     const { Type, Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
     } = Para[CalName]
-    const WinsolsDif = WinsolsDifRaw % Solar
+    const WinsolsDif = WinsolsDif % Solar
     let DawnRange = 2.5
     if (CalName === 'Huangji') {
         DawnRange = 2.365
@@ -192,7 +192,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
         const TermDif = WinsolsDif - TermNum * HalfTermLeng
         let TermRange = 0
         if (Type === 6) {// 麟德   
-            if ((WinsolsDifRaw < 6 * HalfTermLeng) || (WinsolsDifRaw >= 18 * HalfTermLeng)) {
+            if ((WinsolsDif < 6 * HalfTermLeng) || (WinsolsDif >= 18 * HalfTermLeng)) {
                 TermRange = TermRangeA // 秋分後
             } else {
                 TermRange = TermRangeS // 春分後
@@ -275,7 +275,7 @@ export const Longi2LatiTable2 = (WinsolsDifRaw, CalName) => {
 // console.log(Longi2LatiTable2(90, 'LindeB').Sunrise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
-const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白轉換//////
+const MoonLongiTable = (WinsolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換//////
     const { Solar } = Para[CalName]
     let { Sidereal } = Para[CalName]
     const Quadrant = AutoNodeCycle(CalName) / 4
@@ -287,7 +287,7 @@ const MoonLongiTable = (WinsolsDifRaw, NodeAccumRaw, CalName) => { ///////赤白
         Longi = Quadrant - Longi
     }
     Sidereal = Sidereal || Solar
-    const WinsolsDif = WinsolsDifRaw - NodeAccum
+    const WinsolsDif = WinsolsDif - NodeAccum
     const WinsolsDifHalf = WinsolsDif % (Solar / 2)
     const EclpLongi = (WinsolsDif + LongiRaw) % Sidereal
     let WhiteLongi = 0

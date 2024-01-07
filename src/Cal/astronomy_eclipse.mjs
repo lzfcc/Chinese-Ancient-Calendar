@@ -556,7 +556,7 @@ const EcliLast2 = (CalName, Magni, TotalDeci, AnomaAccum, Denom) => {
 }
 
 // 春夏秋冬各三月，那麼閏月怎麼辦呢，所以輸入的時候應該用day的noleapmon，閏月還是上一個月
-const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDifRaw, isNewm, CalName, Month, Leap) => {
+const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDif, isNewm, CalName, Month, Leap) => {
     const { Type, Node, Lunar, Anoma, Solar, Denom, NodeDenom } = Para[CalName]
     const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const Node50 = Node / 2
@@ -564,7 +564,7 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDifRaw, isNewm, CalName
     const Solar50 = Solar / 2
     const Solar25 = Solar / 4
     const Solar75 = Solar * 0.75
-    const WinsolsDif = WinsolsDifRaw % Solar
+    const WinsolsDif = WinsolsDif % Solar
     const WinsolsDifHalf = WinsolsDif % Solar50
     const WinsolsDifHalfRev = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
     const SummsolsDif = Math.abs(WinsolsDif - Solar50)

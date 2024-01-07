@@ -15,27 +15,27 @@ import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
 import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
 
-export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
-    WinsolsDifRaw = +WinsolsDifRaw
+export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
+    WinsolsDif = +WinsolsDif
     AnomaAccum = +AnomaAccum
-    if (WinsolsDifRaw > 365.2425 || WinsolsDifRaw < 0) {
+    if (WinsolsDif > 365.2425 || WinsolsDif < 0) {
         throw (new Error('請輸入一回歸年內的日數！'))
     }
     const {
         SunTcorr2: WestSunTcorr,
         MoonTcorr2: WestMoonTcorr,
         NodeAccumCorrA: WestNodeCorr
-    } = AutoTcorr(AnomaAccum, WinsolsDifRaw, 'West', 0, year)
+    } = AutoTcorr(AnomaAccum, WinsolsDif, 'West', 0, year)
     const {
         SunDifAccum: WestSun,
         MoonDifAccum: WestMoon,
-    } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, 'West', year)
+    } = AutoDifAccum(AnomaAccum, WinsolsDif, 'West', year)
     const {
         MoonTcorr2: WestMoonTcorrB,
         NodeAccumCorrA: WestNodeCorrB
-    } = AutoTcorr(AnomaAccum + 13.7772755949, WinsolsDifRaw, 'West', 0, year) // 13.7772755949是應天半轉
+    } = AutoTcorr(AnomaAccum + 13.7772755949, WinsolsDif, 'West', 0, year) // 13.7772755949是應天半轉
     const { MoonDifAccum: WestMoonB,
-    } = AutoDifAccum(AnomaAccum + 13.7772755949, WinsolsDifRaw, 'West', year)
+    } = AutoDifAccum(AnomaAccum + 13.7772755949, WinsolsDif, 'West', year)
 
     let Print1 = [{
         title: '現代近似',
@@ -51,10 +51,10 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
         List1.map(title => {
             let AutoDifAccumFunc = {}
             if (title !== 'Qintian') {
-                AutoDifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
+                AutoDifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, title)
             }
             const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
-            const { SunTcorr, MoonTcorr, MoonAcrV, NodeAccumCorrA } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            const { SunTcorr, MoonTcorr, MoonAcrV, NodeAccumCorrA } = AutoTcorr(AnomaAccum, WinsolsDif, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             let SunTcorrPrint = '-'
             let SunTcorrInacPrint = '-'
@@ -100,9 +100,9 @@ export const BindTcorr = (AnomaAccum, WinsolsDifRaw, year, CalName) => {
     Print2 = Print2.concat(
         List2.map(title => {
             const { SunDifAccum, MoonDifAccum,
-            } = AutoDifAccum(AnomaAccum, WinsolsDifRaw, title)
+            } = AutoDifAccum(AnomaAccum, WinsolsDif, title)
             const { SunTcorr, MoonTcorr, NodeAccumCorrA
-            } = AutoTcorr(AnomaAccum, WinsolsDifRaw, title)
+            } = AutoTcorr(AnomaAccum, WinsolsDif, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             const SunDifAccumPrint = SunDifAccum.toFixed(5)
             const SunDifAccumInacPrint = (SunDifAccum - WestSun).toFixed(4)

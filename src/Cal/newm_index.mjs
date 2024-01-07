@@ -224,8 +224,8 @@ export default (CalName, YearStart, YearEnd) => {
         const NewmSlice = array => array.slice(1 + NewmStart, 13 + NewmEnd)
         const TermSlice = array => array.slice(1 + TermStart, 13 + TermEnd)
         ////////////下爲調整輸出////////////
-        const NewmWinsolsDifRawPrint = ThisYear.NewmWinsolsDifRaw ? NewmSlice(ThisYear.NewmWinsolsDifRaw) : []
-        const NewmAcrWinsolsDifRawPrint = ThisYear.NewmAcrWinsolsDifRaw ? NewmSlice(ThisYear.NewmAcrWinsolsDifRaw) : []
+        const NewmWinsolsDifPrint = ThisYear.NewmWinsolsDif ? NewmSlice(ThisYear.NewmWinsolsDif) : []
+        const NewmAcrWinsolsDifPrint = ThisYear.NewmAcrWinsolsDif ? NewmSlice(ThisYear.NewmAcrWinsolsDif) : []
         const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
         const NewmAvgDeciPrint = NewmSlice(ThisYear.NewmAvgDeci)
         NewmInt = NewmInt.slice(1 + NewmStart)
@@ -292,8 +292,8 @@ export default (CalName, YearStart, YearEnd) => {
                 NewmAnomaAccumNightPrint = NewmSlice(ThisYear.NewmAnomaAccumNight)
                 const SyzygyNodeAccumPrint = NewmSlice(ThisYear.SyzygyNodeAccum)
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
-                const SyzygyWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyWinsolsDifRaw)
-                const SyzygyAcrWinsolsDifRawPrint = NewmSlice(ThisYear.SyzygyAcrWinsolsDifRaw)
+                const SyzygyWinsolsDifPrint = NewmSlice(ThisYear.SyzygyWinsolsDif)
+                const SyzygyAcrWinsolsDifPrint = NewmSlice(ThisYear.SyzygyAcrWinsolsDif)
                 for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTermThis > 0) {
@@ -303,7 +303,7 @@ export default (CalName, YearStart, YearEnd) => {
                             NoleapMon = i
                         }
                     }
-                    let Rise = AutoLongi2Lati(NewmAcrWinsolsDifRawPrint[i], WinsolsDeci, CalName).Rise / 100
+                    let Rise = AutoLongi2Lati(NewmAcrWinsolsDifPrint[i], WinsolsDeci, CalName).Rise / 100
                     let NewmEcliFunc = {}, SyzygyEcliFunc = {}
                     const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(CalName, Type)
                     let NewmCondition = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) && (NewmDeciPrint[i] > Rise - RangeSunEcli && NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
@@ -315,7 +315,7 @@ export default (CalName, YearStart, YearEnd) => {
                         SyzygyCondition = SyzygyDeciPrint[i] < Rise + RangeMoonEcli || SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli
                     }
                     if (NewmCondition) { // 這些數字根據大統，再放寬0.3
-                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifRawPrint[i], NewmWinsolsDifRawPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, WinsolsAccum)
+                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrWinsolsDifPrint[i], NewmWinsolsDifPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, WinsolsAccum)
                         const NewmStatus = NewmEcliFunc.Status
                         let NewmMagni = 0
                         const NewmStartDeci = NewmEcliFunc.StartDeci ? NewmEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
@@ -335,7 +335,7 @@ export default (CalName, YearStart, YearEnd) => {
                         }
                     }
                     if (SyzygyCondition) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifRawPrint[i], SyzygyWinsolsDifRawPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, WinsolsAccum)
+                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrWinsolsDifPrint[i], SyzygyWinsolsDifPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, WinsolsAccum)
                         const SyzygyStatus = SyzygyEcliFunc.Status
                         let SyzygyMagni = 0
                         const SyzygyStartDeci = SyzygyEcliFunc.StartDeci ? SyzygyEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0

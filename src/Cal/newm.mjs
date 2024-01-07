@@ -197,18 +197,18 @@ export default (CalName, year) => {
 
     const EquaDegAccumList = AutoDegAccumList(CalName, year)
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDifRaw = [], AcrWinsolsDifRaw = [], Equa = []
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrWinsolsDif = [], TermAvgWinsolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], WinsolsDif = [], AcrWinsolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScCorr) % 60) + 60) % 60]
             AvgDeci[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
-            WinsolsDifRaw[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - WinsolsAccum + Solar) % Solar
+            WinsolsDif[i] = ((ZhengWinsolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - WinsolsAccum + Solar) % Solar
             let Tcorr1 = 0
             if (Anoma) {
                 AnomaAccum[i] = +((FirstAnomaAccum + (ZhengWinsolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(fixed) // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
                 AnomaAccumNight[i] = ~~AnomaAccum[i]
-                const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDifRaw[i], CalName)
+                const TcorrBindFunc = AutoTcorr(AnomaAccum[i], WinsolsDif[i], CalName)
                 if (Type <= 4) {
                     Tcorr[i] = TcorrBindFunc.Tcorr1
                     Tcorr1 = Tcorr[i]
@@ -245,14 +245,14 @@ export default (CalName, year) => {
             let NewmPlus = 0, SyzygySub = 0, NewmPlusPrint = '', SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
-                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), WinsolsDifRaw[i], WinsolsDeci, CalName) // 進朔
+                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), WinsolsDif[i], WinsolsDeci, CalName) // 進朔
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
                 if ((EquaDegAccumList || []).length) {
                     let Eclp2EquaDif = 0
                     if (Type === 11) { // 授時要黃轉赤 ⚠️ 2024-01 這樣轉可以嗎？？？
-                        Eclp2EquaDif = AutoEqua2Eclp(WinsolsDifRaw[i], CalName).Eclp2EquaDif
+                        Eclp2EquaDif = AutoEqua2Eclp(WinsolsDif[i], CalName).Eclp2EquaDif
                     }
                     Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
                 }
@@ -270,7 +270,7 @@ export default (CalName, year) => {
                     TermAcrRaw[i] = WinsolsAccum + TermAcrWinsolsDif[i] // 定氣距冬至+中積
                 }
             } else {
-                const Func = AutoSyzygySub(Deci[i], WinsolsDifRaw[i], WinsolsDeci, CalName) // 退望
+                const Func = AutoSyzygySub(Deci[i], WinsolsDif[i], WinsolsDeci, CalName) // 退望
                 SyzygySub = Func.SyzygySub
                 SyzygySubPrint = Func.Print
             }
@@ -304,14 +304,14 @@ export default (CalName, year) => {
             if (Tcorr1) {
                 Deci1[i] = Deci1[i].toFixed(4).slice(2, 6)
             }
-            AcrWinsolsDifRaw[i] = WinsolsDifRaw[i] + Tcorr[i]
+            AcrWinsolsDif[i] = WinsolsDif[i] + Tcorr[i]
         }
         return {
             AvgSc, Tcorr, AvgDeci, Int, Raw, Sc, AcrInt, AcrRaw,
             Deci, Deci1, Deci2, Deci3,
             Equa, TermAvgRaw, TermAcrRaw, TermAcrWinsolsDif, TermAvgWinsolsDif,
             /// 交食用到
-            NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, WinsolsDifRaw, AcrWinsolsDifRaw
+            NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, WinsolsDif, AcrWinsolsDif
         }
     }
     const {
@@ -332,10 +332,10 @@ export default (CalName, year) => {
         ///// 交食
         NodeAccum: NewmNodeAccum,
         AnomaAccum: NewmAnomaAccum,
-        WinsolsDifRaw: NewmWinsolsDifRaw,
+        WinsolsDif: NewmWinsolsDif,
         NodeAccumNight: NewmNodeAccumNight,
         AnomaAccumNight: NewmAnomaAccumNight,
-        AcrWinsolsDifRaw: NewmAcrWinsolsDifRaw,
+        AcrWinsolsDif: NewmAcrWinsolsDif,
     } = AutoNewmSyzygy(1)
     const {
         Sc: SyzygySc,
@@ -343,8 +343,8 @@ export default (CalName, year) => {
         AvgDeci: SyzygyAvgDeci,
         NodeAccum: SyzygyNodeAccum,
         AnomaAccum: SyzygyAnomaAccum,
-        WinsolsDifRaw: SyzygyWinsolsDifRaw,
-        AcrWinsolsDifRaw: SyzygyAcrWinsolsDifRaw,
+        WinsolsDif: SyzygyWinsolsDif,
+        AcrWinsolsDif: SyzygyAcrWinsolsDif,
     } = AutoNewmSyzygy(0)
     const LeapSurAcrThis = ZhangRange ? (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange : LeapSurAvgThis - NewmTcorr[1]
     // 中氣
@@ -375,7 +375,7 @@ export default (CalName, year) => {
         NewmStart, NewmEnd, TermStart, TermEnd,
         EquaDegAccumList, NewmEqua, TermAvgWinsolsDif, TermAcrWinsolsDif,
         //////// 交食用
-        NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmWinsolsDifRaw, NewmAcrWinsolsDifRaw,
-        SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygyWinsolsDifRaw, SyzygyAcrWinsolsDifRaw,
+        NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmWinsolsDif, NewmAcrWinsolsDif,
+        SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygyWinsolsDif, SyzygyAcrWinsolsDif,
     }
 }

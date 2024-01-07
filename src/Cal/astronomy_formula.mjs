@@ -262,7 +262,7 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, CalName) => { //
 }
 // console.log(MoonLongiFormula(91, 92, 'Jiyuan').EclpWhiteDif)
 
-export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
+export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDif) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
     const { Node } = Para[CalName]
     const Cycle = AutoNodeCycle(CalName)
     let MoonAvgVDeg = AutoMoonAvgV(CalName) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
@@ -288,7 +288,7 @@ export const MoonLatiFormula = (NodeAccum, CalName, AnomaAccum, WinsolsDifRaw) =
             Lati = f1 - f3
         }
     } else if (CalName === 'Qintian') {
-        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDifRaw, CalName, NodeAccum).NodeAccumCorrA // 欽天用入交定日                
+        NodeAccum += AutoTcorr(AnomaAccum, WinsolsDif, CalName, NodeAccum).NodeAccumCorrA // 欽天用入交定日                
         const NodeAccumHalf = NodeAccum % Cycle50
         Lati = (Node / 2 - NodeAccumHalf) * NodeAccumHalf / (556 / 72)
     } else if (CalName === 'Chongtian') {
