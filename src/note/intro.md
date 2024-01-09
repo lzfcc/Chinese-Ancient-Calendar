@@ -309,7 +309,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 - Raw 未經某種處理的變量 Variables before processing in some way
 - V 速度 velocity
-- Corr 修正改正 correction。Tcorr 在躔離計算中爲日月速度改正，在交食計算中爲食甚時刻改正。Mcorr 食分修正
+- Corr 修正 correction。Tcorr 在躔離計算中爲日月速度改正，在交食計算中爲食甚時刻改正。Mcorr 食分修正
 - DifAccum 日盈縮積、月遲疾積
 - Avg 平均的 average
 - Acr  精確的 accurate
@@ -405,7 +405,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 
 5-20 晚 `0.991.2 1.05.1`
 
-**核心** 1、修復定朔定氣等等缺省的情況，主要針對太乙曆。2、根據一段材料重新構擬占天。3、增補交食參數。觀天入交很奇怪，暫時重新擬一個 node。增加大統交差，似乎是陰曆入交。4、合併 NodeCorr、NodeOrigin、NodeConst，AnomaCorr、AnomaOrigin、AnomaConst。5、酌情改幾部南宋曆的上元宿度，改統天的宿度。6、修復兩半月離曆法在邊界的線性改正問題，比如宣明 865 二月、885 五月線性、二次差了很多，應天 968 四月癸丑 7733、981 三月。7、修復積度宿度轉換的小問題。 **前端** cal 目錄的 package.json 合併到根目錄
+**核心** 1、修復定朔定氣等等缺省的情況，主要針對太乙曆。2、根據一段材料重新構擬占天。3、增補交食參數。觀天入交很奇怪，暫時重新擬一個 node。增加大統交差，似乎是陰曆入交。4、合併 NodeConst、NodeOrigin、NodeConst，AnomaConst、AnomaOrigin、AnomaConst。5、酌情改幾部南宋曆的上元宿度，改統天的宿度。6、修復兩半月離曆法在邊界的線性改正問題，比如宣明 865 二月、885 五月線性、二次差了很多，應天 968 四月癸丑 7733、981 三月。7、修復積度宿度轉換的小問題。 **前端** cal 目錄的 package.json 合併到根目錄
 
 5-22 `0.991.3 1.05.2`
 

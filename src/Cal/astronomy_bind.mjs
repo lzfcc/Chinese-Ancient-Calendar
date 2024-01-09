@@ -24,7 +24,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
     const {
         SunTcorr2: WestSunTcorr,
         MoonTcorr2: WestMoonTcorr,
-        NodeAccumCorrA: WestNodeCorr
+        NodeAccumCorrA: WestNodeConst
     } = AutoTcorr(AnomaAccum, WinsolsDif, 'West', 0, year)
     const {
         SunDifAccum: WestSun,
@@ -32,14 +32,14 @@ export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
     } = AutoDifAccum(AnomaAccum, WinsolsDif, 'West', year)
     const {
         MoonTcorr2: WestMoonTcorrB,
-        NodeAccumCorrA: WestNodeCorrB
+        NodeAccumCorrA: WestNodeConstB
     } = AutoTcorr(AnomaAccum + 13.7772755949, WinsolsDif, 'West', 0, year) // 13.7772755949是應天半轉
     const { MoonDifAccum: WestMoonB,
     } = AutoDifAccum(AnomaAccum + 13.7772755949, WinsolsDif, 'West', year)
 
     let Print1 = [{
         title: '現代近似',
-        data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeCorr.toFixed(4)]
+        data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeConst.toFixed(4)]
     }]
     let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Fengyuan', 'Guantian', 'Zhantian']
@@ -95,7 +95,7 @@ export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
         }))
     let Print2 = [{
         title: '現代近似',
-        data: [WestSun.toFixed(5), 0, '-', WestMoonB.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorrB.toFixed(5), 0, (WestSunTcorr + WestMoonTcorrB).toFixed(4), WestNodeCorrB.toFixed(4)]
+        data: [WestSun.toFixed(5), 0, '-', WestMoonB.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorrB.toFixed(5), 0, (WestSunTcorr + WestMoonTcorrB).toFixed(4), WestNodeConstB.toFixed(4)]
     }]
     Print2 = Print2.concat(
         List2.map(title => {

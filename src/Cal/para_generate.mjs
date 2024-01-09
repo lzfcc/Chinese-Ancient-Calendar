@@ -202,13 +202,13 @@ console.log(Math.log2(1.5))
 // EcliLimit = EcliNumer - Shuowang // 入交限數 乾象先不管
 
 // const EcliJiDif = (JiMon * LunarNumer) % EcliNumer // 景初交會紀差
-// const JiEcli = ((EcliCorr + EcliJiDif * JiOrder) % EcliNumer + EcliNumer) % EcliNumer // 交會差率
-// const JiYinyang = Math.floor((EcliCorr + EcliJiDif * JiOrder) / EcliNumer) % 2 === 0 ? YinyangCorr : -YinyangCorr
+// const JiEcli = ((EcliConst + EcliJiDif * JiOrder) % EcliNumer + EcliNumer) % EcliNumer // 交會差率
+// const JiYinyang = Math.floor((EcliConst + EcliJiDif * JiOrder) / EcliNumer) % 2 === 0 ? YinyangConst : -YinyangConst
 // const NodeJiDif = (JiMon * LunarNumer) % NodeNumer
-// const JiNode = ((EcliCorr + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
-// const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangCorr : -YinyangCorr
+// const JiNode = ((EcliConst + NodeJiDif * JiOrder) % NodeNumer + NodeNumer) % NodeNumer
+// const JiYinyang = JiNode / NodeDenom < Node / 2 ? YinyangConst : -YinyangConst
 // const AnomaJiDif = (JiMon * LunarNumer) % AnomaNumer
-// const JiAnoma = ((AnomaCorr + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
+// const JiAnoma = ((AnomaConst + AnomaJiDif * JiOrder) % AnomaNumer + AnomaNumer) % AnomaNumer
 
 // 下面的放在交食文件
 // 下景初方位

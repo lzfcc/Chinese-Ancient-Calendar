@@ -21,7 +21,7 @@ import { AutoMoonAvgV } from './para_auto-constant.mjs'
 export const CalDay = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, year) => {
-        const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekCorr, MansionDayCorr, ScCorr } = Para[CalName]
+        const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[CalName]
         let { Solar, Sidereal, Lunar } = Para[CalName]
         const { LeapNumTermThis, WinsolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
@@ -31,7 +31,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const HalfTermLeng = Solar / 24
         const HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        const ZhengInt = NewmInt[0] + (ScCorr || 0)
+        const ZhengInt = NewmInt[0] + (ScConst || 0)
         const ZhengWinsolsDif = +(ZhengInt - WinsolsAccum).toFixed(5) // 正月夜半到冬至距離
         const WinsolsDeci = WinsolsAccum - Math.floor(WinsolsAccum)
         /////////// 預處理72候、五行、八卦列表//////////
@@ -281,8 +281,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 // 順序不一樣！立春1，驚蟄2，清明3，立夏4，芒種5，小暑6，立秋7，白露8，寒露9，立冬10，大雪11，小寒12
                 const JieDifInt = ~~((WinsolsDifNight - (JieNum * 2 + 1) * HalfTermLeng + WinsolsDeci + Solar) % Solar)
                 if (Type >= 6) {
-                    const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekCorr || 0)) % 7.1)
-                    const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionDayCorr || 0)) + 28) % 28.1)
+                    const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekConst || 0)) % 7.1)
+                    const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionDayConst || 0)) + 28) % 28.1)
                     Week[i][k] = WeekList[WeekOrder] + NumList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
                 }
                 for (let j = HouOrder; j < 90; j++) { // 氣候 
