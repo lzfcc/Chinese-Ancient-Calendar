@@ -3,33 +3,33 @@ import Para from './para_calendars.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
 export default (CalName, year) => {
-    const { Lunar, Solar, WinsolsOriginDif, WinsolsOriginMon,
+    const { Lunar, Solar, SolsOriginDif, SolsOriginMon,
         OriginAd, OriginYearSc, BuScConst, ZhengNum, OriginMonNum,
         YuanRange, TongRange, isTermLeap, EcliRange, EcliNumer, MansionRaw
     } = Para[CalName]
-    let { JiRange, BuRange, WinsolsConst, DayConst } = Para[CalName]
+    let { JiRange, BuRange, SolsConst, DayConst } = Para[CalName]
     if (CalName === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange
     }
-    WinsolsConst = WinsolsConst || 0
+    SolsConst = SolsConst || 0
     DayConst = DayConst || 0
     const BuSkip = ['Qianzaodu', 'Yuanmingbao'].includes(CalName) ? 365.25 * BuRange % 60 : Solar * BuRange % 60
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
-    const ZhengWinsolsDif = ZhengNum - OriginMonNum // 年首和正月的差
+    const ZhengSolsDif = ZhengNum - OriginMonNum // 年首和正月的差
     let OriginYear = year - OriginAd // 上元積年（算上）
     const JupiterSc = CalName === 'Taichu' ? ScList[(~~(OriginYear % 1728 * 145 / 144) + OriginYearSc) % 60] : '' // 三統曆太歲
     const JiOrder = ~~(OriginYear % YuanRange / JiRange) // 入第幾紀
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
     const BuOrder = ~~(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
     const BuScOrder = (1 + BuOrder * BuSkip + (BuScConst || 0)) % 60 // 蔀（統）的干支序號
-    const WinsolsAccumRaw = (BuYear - 1) * Solar + (WinsolsOriginDif || 0) + WinsolsConst + DayConst // 冬至積日
-    const WinsolsAccumMod = (WinsolsAccumRaw % 60 + 60) % 60
-    const WinsolsAccum = WinsolsAccumRaw - (WinsolsOriginDif || 0) // 曆元積日
-    const WinsolsDeci = WinsolsAccumRaw - ~~WinsolsAccumRaw
-    const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
-    const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
-    const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - ~~(BuYear * 7 / 19) + (WinsolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
+    const SolsAccumRaw = (BuYear - 1) * Solar + (SolsOriginDif || 0) + SolsConst + DayConst // 冬至積日
+    const SolsAccumMod = (SolsAccumRaw % 60 + 60) % 60
+    const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0) // 曆元積日
+    const SolsDeci = SolsAccumRaw - ~~SolsAccumRaw
+    const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
+    const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
+    const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - ~~(BuYear * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
     let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)) // 是否有閏月
     let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11))
     let isLeapAvgNext = LeapSurAvgNext >= parseFloat((12 / 19).toPrecision(11))
@@ -74,23 +74,23 @@ export default (CalName, year) => {
         }
     }
     // 閏餘法閏月
-    const LeapNumOriginLeapSur = LeapNumAvgThis ? Math.round(((LeapNumAvgThis + ZhengWinsolsDif + 12) % 12 + 12) % 12.1) : 0
+    const LeapNumOriginLeapSur = LeapNumAvgThis ? Math.round(((LeapNumAvgThis + ZhengSolsDif + 12) % 12 + 12) % 12.1) : 0
     const EquaDegAccumList = MansionRaw ? AutoDegAccumList(CalName, year) : []
     // 朔望
-    const NewmAvgBare = [], NewmAvgRaw = [], NewmInt = [], NewmAvgSc = [], NewmWinsolsDif = [], NewmAvgDeci = [], NewmEqua = [], SyzygyAvgRaw = [], SyzygyAvgMod = [], SyzygyOrderMod = [], SyzygyDeci = []
+    const NewmAvgBare = [], NewmAvgRaw = [], NewmInt = [], NewmAvgSc = [], NewmSolsDif = [], NewmAvgDeci = [], NewmEqua = [], SyzygyAvgRaw = [], SyzygyAvgMod = [], SyzygyOrderMod = [], SyzygyDeci = []
     let SyzygySc = []
     for (let i = 0; i <= 14; i++) { // 本來是1
-        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + WinsolsConst + DayConst).toPrecision(14))
+        NewmAvgBare[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - 1) * Lunar + SolsConst + DayConst).toPrecision(14))
         NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder
         NewmInt[i] = ~~NewmAvgRaw[i]
         NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]
         NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
-        NewmWinsolsDif[i] = NewmAvgBare[i] - WinsolsAccumRaw
+        NewmSolsDif[i] = NewmAvgBare[i] - SolsAccumRaw
         if (MansionRaw) {
             NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
         }
-        // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdWinsols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
-        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (WinsolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + WinsolsConst).toPrecision(14)) + BuScOrder
+        // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdSols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
+        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + SolsConst).toPrecision(14)) + BuScOrder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
         SyzygyOrderMod[i] = ~~SyzygyAvgMod[i]
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]
@@ -111,7 +111,7 @@ export default (CalName, year) => {
     // const TermJd = []
     if ((isTermLeap && !LeapNumTerm) || (!isTermLeap && ((!isLeapAvgThis && !isLeapAvgNext) || (!isLeapAvgThis && !isAdvance) || (!isLeapAvgThis && isAdvance)))) {
         for (let i = 1; i <= 13; i++) {
-            TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 1) * TermLeng
+            TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScOrder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
             TermOrderMod[i] = ~~TermAvgMod[i]
@@ -119,15 +119,15 @@ export default (CalName, year) => {
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
-                const TermWinsolsDif = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDif, WinsolsDeci)
+                const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermDuskstar[i] = Func.DuskstarResult
             }
         }
     } else {
         for (let i = 1; i <= 12; i++) {
-            TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 1) * TermLeng
+            TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScOrder
             TermAvgMod[i] = parseFloat((((TermAvgRaw[i]) % 60 + 60) % 60).toPrecision(12))
             TermOrderMod[i] = ~~TermAvgMod[i]
@@ -135,8 +135,8 @@ export default (CalName, year) => {
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
-                const TermWinsolsDif = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDif, WinsolsDeci)
+                const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermDuskstar[i] = Func.DuskstarResult
             }
@@ -156,7 +156,7 @@ export default (CalName, year) => {
         }
         // TermJd[LeapNumTerm + 1] = ''
         for (let i = LeapNumTerm + 2; i <= 13; i++) {
-            TermAvgBare[i] = WinsolsAccumRaw + (i + ZhengNum - 2) * TermLeng
+            TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 2) * TermLeng
             TermAvgRaw[i] = TermAvgBare[i] + BuScOrder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
             TermOrderMod[i] = ~~TermAvgMod[i]
@@ -164,8 +164,8 @@ export default (CalName, year) => {
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
-                const TermWinsolsDif = TermAvgBare[i] - WinsolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermWinsolsDif, WinsolsDeci)
+                const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
                 TermEqua[i] = Func.MansionResult
                 TermDuskstar[i] = Func.DuskstarResult
             }
@@ -191,7 +191,7 @@ export default (CalName, year) => {
     }
     return {
         OriginYear, JiOrder, BuYear, BuScOrder, JupiterSc,
-        WinsolsAccumMod, WinsolsAccum,
+        SolsAccumMod, SolsAccum,
         NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmAvgDeci,
         SyzygySc, SyzygyDeci,
         TermAvgBare, TermName, TermSc, TermDeci,

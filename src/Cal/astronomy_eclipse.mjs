@@ -82,7 +82,7 @@ const Eclipse1 = (NodeAccum, CalName) => {
     return { Magni, Status, Node }
 }
 
-const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin, Season, NodeDif, NodeDif12, AnomaAccum, AcrDeci, Denom, WinsolsDif, WinsolsDifHalf, WinsolsDifHalfRev) => {
+const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin, Season, NodeDif, NodeDif12, AnomaAccum, AcrDeci, Denom, SolsDif, SolsDifHalf, SolsDifHalfRev) => {
     let Tcorr1 = 0, Tcorr = 0, QuarDif = 0, TotalDeci = 0
     if (isNewm) {
         if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
@@ -170,11 +170,11 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
                 if (AcrDeci > 0.5) {
                     sign1 = -1
                 }
-                if (WinsolsDif > Solar25 && WinsolsDif < Solar75) {
+                if (SolsDif > Solar25 && SolsDif < Solar75) {
                     sign1 *= -1
                 }
-                if (WinsolsDifHalf < Solar25 - HalfTermLeng || WinsolsDifHalf > Solar25 + HalfTermLeng) {
-                    const k = Math.ceil(WinsolsDifHalfRev / HalfTermLeng) * 2
+                if (SolsDifHalf < Solar25 - HalfTermLeng || SolsDifHalf > Solar25 + HalfTermLeng) {
+                    const k = Math.ceil(SolsDifHalfRev / HalfTermLeng) * 2
                     Tcorr += sign1 * (k + NodeDif12 / 3) / Denom
                 }
             } else {
@@ -205,7 +205,7 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
     return { TotalDeci, NoonDif, Tcorr }
 }
 
-const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci) => {
+const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci) => {
     let Status = 0
     if (isNewm) {
         if (isYin) {
@@ -222,9 +222,9 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                 if (NodeDif >= 13 / 12) {
                     if (NoonDif < 1.5 / 12 && ((Month === 5 && !isBefore) || (Month === 6 && isBefore))) { // 南方三辰                        
                         Status = 0
-                    } else if (WinsolsDif > Solar * 4 / 24 && WinsolsDif < Solar * 8 / 24 && !isFast && TotalDeci > 7 / 12) {
+                    } else if (SolsDif > Solar * 4 / 24 && SolsDif < Solar * 8 / 24 && !isFast && TotalDeci > 7 / 12) {
                         Status = 0
-                    } else if (WinsolsDif > Solar * 16 / 24 && WinsolsDif < Solar * 20 / 24 && isFast && TotalDeci < 5 / 12) {
+                    } else if (SolsDif > Solar * 16 / 24 && SolsDif < Solar * 20 / 24 && isFast && TotalDeci < 5 / 12) {
                         Status = 0
                     }
                 }
@@ -233,11 +233,11 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                     Status = 3
                 } else if (Season === 2 && NodeDif < 2 / 12 && NoonDif < 1.5 / 12) {
                     Status = 3
-                } else if (WinsolsDifHalfRev < 0.5 && NodeDif <= 0.5) {
+                } else if (SolsDifHalfRev < 0.5 && NodeDif <= 0.5) {
                     Status = 3
-                } else if (Math.abs(Solar25 - WinsolsDif) <= 3 && isBefore && NodeDif <= 2 / 12) {
+                } else if (Math.abs(Solar25 - SolsDif) <= 3 && isBefore && NodeDif <= 2 / 12) {
                     Status = 3
-                } else if (Math.abs(Solar75 - WinsolsDif) <= 3 && !isBefore && NodeDif <= 2 / 12) {
+                } else if (Math.abs(Solar75 - SolsDif) <= 3 && !isBefore && NodeDif <= 2 / 12) {
                     Status = 3
                 } else if (!isBefore && isFast && NodeDif > 2 / 12) {
                     Status = 3
@@ -281,11 +281,11 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                     Status = 3
                 } else if (SummsolsDif < 47 && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1 / 12) {
                     Status = 3
-                } else if (WinsolsDif >= HalfTermLeng * 8 && WinsolsDif <= HalfTermLeng * 16 && NoonDif < 1.25 / 12 && NoonDif >= 1 / 12 && NodeDif <= 0.5 / 12) {
+                } else if (SolsDif >= HalfTermLeng * 8 && SolsDif <= HalfTermLeng * 16 && NoonDif < 1.25 / 12 && NoonDif >= 1 / 12 && NodeDif <= 0.5 / 12) {
                     Status = 3
-                } else if (WinsolsDif >= HalfTermLeng * 7 && WinsolsDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24 && NodeDif <= 0.5 / 12) {
+                } else if (SolsDif >= HalfTermLeng * 7 && SolsDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24 && NodeDif <= 0.5 / 12) {
                     Status = 3
-                } else if (WinsolsDif >= HalfTermLeng * 6 && WinsolsDif <= HalfTermLeng * 18 && NoonDif < 1 / 24 && NodeDif <= 0.5 / 12) {
+                } else if (SolsDif >= HalfTermLeng * 6 && SolsDif <= HalfTermLeng * 18 && NoonDif < 1 / 24 && NodeDif <= 0.5 / 12) {
                     Status = 3
                 }
             }
@@ -318,7 +318,7 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
     return Status
 }
 
-const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50, Solar75, Solar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, NodeDif12, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci, Tcorr) => {
+const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50, Solar75, Solar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, NodeDif12, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci, Tcorr) => {
     let Magni = 0, Mcorr = 0, TheNotEcli = 0
     if (Status) {
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
@@ -328,9 +328,9 @@ const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50,
                 const Portion1 = CalName === 'Daye' ? 1500 : 1810
                 const Portion2 = CalName === 'Daye' ? 2000 : 2400
                 const Portion3 = CalName === 'Daye' ? 184000 : 220800
-                if (WinsolsDif > Solar75 || WinsolsDif < Solar * 0.125) {
+                if (SolsDif > Solar75 || SolsDif < Solar * 0.125) {
                     Mcorr = Portion3
-                } else if (WinsolsDif > Solar * 4 / 24 && WinsolsDif < Solar50) {
+                } else if (SolsDif > Solar * 4 / 24 && SolsDif < Solar50) {
                     Mcorr = SummsolsDif * Portion1 // 1511.314
                 } else {
                     Mcorr = SummsolsDif * Portion2 // 2015.08。極值18400
@@ -345,7 +345,7 @@ const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50,
                 }
                 const MoonLimitDenom = isBefore && !isFast ? SynodicNodeDif50 : SynodicNodeDif50 - TheNotEcli
                 const tmp = CalName === 'Daye' ? 10 : 4 // 大業「大寒畢小滿」，按照大業習慣，是小滿這一刻，不包含小滿一氣，戊寅則是說上一氣
-                if (WinsolsDif > Solar * 2 / 24 && WinsolsDif < Solar * tmp / 24 && NodeDif > 5 / 12 && isBefore) {
+                if (SolsDif > Solar * 2 / 24 && SolsDif < Solar * tmp / 24 && NodeDif > 5 / 12 && isBefore) {
                     TheNotEcli -= 1 / 12
                 }
                 Tcorr *= isBefore ? -1 : 1
@@ -467,18 +467,18 @@ const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50,
                 // Mcorr = -(MoonMcorrList[TermNum] + (MoonMcorrList[TermNum + 1] - MoonMcorrList[TermNum]) * TermNewmDif / HalfTermLeng) / 96
                 // Magni = 15 * (SynodicNodeDif50 - NodeDif) / SynodicNodeDif50 + Mcorr 
                 // 「以減望差，乃如月食法」
-                if ((WinsolsDif > Solar25 && WinsolsDif < Solar50) || WinsolsDif > Solar75) {
+                if ((SolsDif > Solar25 && SolsDif < Solar50) || SolsDif > Solar75) {
                     Mcorr = 15 * (3 * ~~(SummsolsDif / HalfTermLeng) + 2 * (10 + NodeDif12)) / SynodicNodeDif50
                 } else {
-                    Mcorr = 15 * (3 * ~~(SummsolsDif / HalfTermLeng) + 2 * (10 + NodeDif12) + 2 * ~~(Solar25 - WinsolsDif % Solar50)) / SynodicNodeDif50
+                    Mcorr = 15 * (3 * ~~(SummsolsDif / HalfTermLeng) + 2 * (10 + NodeDif12) + 2 * ~~(Solar25 - SolsDif % Solar50)) / SynodicNodeDif50
                 }
                 Magni = 15 * (SynodicNodeDif50 - NodeDif) / SynodicNodeDif50 + Mcorr / Denom
             }
         } else if (['LindeA', 'LindeB'].includes(CalName)) { // 下麟德求食分。NodeDif去交前後定分。558、552的不同，《中國古代曆法》頁82說要統一爲552，不過如果用定氣思路來看，興許不用改。
             if (isNewm) {
                 Mcorr = 552 // 食差            
-                if (isYin ? WinsolsDif > Solar25 && WinsolsDif < Solar75 : WinsolsDif < Solar25 || WinsolsDif > Solar75) {
-                    Mcorr *= WinsolsDifHalfRev / Solar25
+                if (isYin ? SolsDif > Solar25 && SolsDif < Solar75 : SolsDif < Solar25 || SolsDif > Solar75) {
+                    Mcorr *= SolsDifHalfRev / Solar25
                 }
                 Mcorr /= Denom
                 let sign = isYin ? -1 : 1
@@ -491,13 +491,13 @@ const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50,
                         } else if (TotalDeci > 0.47 && TotalDeci < 0.53) {
                             TheNotEcli += 1 / 12
                         }
-                    } else if (WinsolsDif > HalfTermLeng * 2 && WinsolsDif < HalfTermLeng * 4) { // 大寒畢立春
+                    } else if (SolsDif > HalfTermLeng * 2 && SolsDif < HalfTermLeng * 4) { // 大寒畢立春
                         if (isBefore && NodeDif > 5 / 12) {
                             TheNotEcli -= 1 / 12
                         } else {
                             TheNotEcli += 1 / 12
                         }
-                    } else if (WinsolsDif > HalfTermLeng * 14 && WinsolsDif < HalfTermLeng * 22) { // 大暑畢立冬
+                    } else if (SolsDif > HalfTermLeng * 14 && SolsDif < HalfTermLeng * 22) { // 大暑畢立冬
                         if (!isBefore && NodeDif > 5 / 12) {
                             TheNotEcli -= 1 / 12
                         } else {
@@ -556,7 +556,7 @@ const EcliLast2 = (CalName, Magni, TotalDeci, AnomaAccum, Denom) => {
 }
 
 // 春夏秋冬各三月，那麼閏月怎麼辦呢，所以輸入的時候應該用day的noleapmon，閏月還是上一個月
-const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDif, isNewm, CalName, Month, Leap) => {
+const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, SolsDif, isNewm, CalName, Month, Leap) => {
     const { Type, Node, Lunar, Anoma, Solar, Denom, NodeDenom } = Para[CalName]
     const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const Node50 = Node / 2
@@ -564,10 +564,10 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDif, isNewm, CalName, M
     const Solar50 = Solar / 2
     const Solar25 = Solar / 4
     const Solar75 = Solar * 0.75
-    const WinsolsDif = WinsolsDif % Solar
-    const WinsolsDifHalf = WinsolsDif % Solar50
-    const WinsolsDifHalfRev = Solar25 - Math.abs(WinsolsDifHalf - Solar25)
-    const SummsolsDif = Math.abs(WinsolsDif - Solar50)
+    const SolsDif = SolsDif % Solar
+    const SolsDifHalf = SolsDif % Solar50
+    const SolsDifHalfRev = Solar25 - Math.abs(SolsDifHalf - Solar25)
+    const SummsolsDif = Math.abs(SolsDif - Solar50)
     const HalfTermLeng = Solar / 24
     const NodeAccumHalf = NodeAccum % Node50
     let NodeDif = Node25 - Math.abs(NodeAccumHalf - Node25) // 麟德去交前後分。百一十二約前後分，爲去交時    
@@ -585,9 +585,9 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDif, isNewm, CalName, M
         Season = 4
     }
     //  下戊寅食甚時刻修正（大業月食食甚無修正）。當然要先算出是否食，再來修正。戊寅時法6503：半日法，時餘：不足半辰的日分數的12倍。離交點越遠，修正值越大
-    const { TotalDeci, NoonDif, Tcorr } = EcliTcorr2(isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin, Season, NodeDif, NodeDif12, AnomaAccum, AcrDeci, Denom, WinsolsDif, WinsolsDifHalf, WinsolsDifHalfRev)
-    let Status = EcliStatus2(isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci)
-    let Magni = EcliMagni2(Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50, Solar75, Solar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, NodeDif12, WinsolsDif, WinsolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci, Tcorr)
+    const { TotalDeci, NoonDif, Tcorr } = EcliTcorr2(isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin, Season, NodeDif, NodeDif12, AnomaAccum, AcrDeci, Denom, SolsDif, SolsDifHalf, SolsDifHalfRev)
+    let Status = EcliStatus2(isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci)
+    let Magni = EcliMagni2(Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50, Solar75, Solar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, NodeDif12, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci, Tcorr)
     const MagniFunc = ExMagni(Magni, Type, CalName, isNewm)
     Magni = MagniFunc.Magni
     Status = MagniFunc.Status
@@ -598,9 +598,9 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, WinsolsDif, isNewm, CalName, M
 
 //////////////////////// 上面的NodeDif是一日，下面的TheNodeDif是日分
 
-const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrV, SunTcorr, NodeDif, AcrWinsolsDif) => {
+const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrV, SunTcorr, NodeDif, AcrSolsDif) => {
     let Tcorr = 0
-    const isSunYin = AcrWinsolsDif > Solar25 && AcrWinsolsDif < Solar75
+    const isSunYin = AcrSolsDif > Solar25 && AcrSolsDif < Solar75
     const isSame = (isYin && isSunYin) || (isYin && isSunYin)
     if (['Dayan', 'Wuji', 'Tsrengyuan'].includes(CalName)) { // 大衍日月食的時差一樣的
         Tcorr = NodeDif * AutoNodePortion(CalName) / 20 / Denom
@@ -686,19 +686,19 @@ const EcliTcorr3 = (isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmN
 }
 
 const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidereal50, Sidereal, Solar125, Solar25, Solar375, Solar50, Solar75, Solar875, Solar, NodeCycle25, NodeCycle50, MoonLimit1, Denom, AcrTermList,
-    isNewm, isYin, isDescend, isSame, AcrWinsolsDif, AvgWinsolsDif, dd, TotalDeci, TheTotalNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, Tcorr, AvgTcorr, WinsolsAccum) => {
-    let TheWinsolsDif = 0
+    isNewm, isYin, isDescend, isSame, AcrSolsDif, AvgSolsDif, dd, TotalDeci, TheTotalNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, Tcorr, AvgTcorr, SolsAccum) => {
+    let TheSolsDif = 0
     if (CalName === 'Chongxuan') { // 「距天正中氣積度」
-        TheWinsolsDif = AvgWinsolsDif + AutoDifAccum(0, AvgWinsolsDif, CalName).SunDifAccum
+        TheSolsDif = AvgSolsDif + AutoDifAccum(0, AvgSolsDif, CalName).SunDifAccum
     } else if (Type === 7 || ['Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].includes(CalName)) {
-        TheWinsolsDif = AcrWinsolsDif
+        TheSolsDif = AcrSolsDif
     } else if (CalName === 'Mingtian' || Type >= 9) {
-        TheWinsolsDif = AvgWinsolsDif + Tcorr + AvgTcorr
-        TheWinsolsDif += AutoDifAccum(0, TheWinsolsDif, CalName).SunDifAccum // 紀元食甚日行積度
+        TheSolsDif = AvgSolsDif + Tcorr + AvgTcorr
+        TheSolsDif += AutoDifAccum(0, TheSolsDif, CalName).SunDifAccum // 紀元食甚日行積度
     }
-    let TheWinsolsDifHalf = TheWinsolsDif % Solar50 // 應天「置朔定積，如一百八十二日⋯⋯以下爲入盈日分；以上者去之，餘爲入縮日分」
-    const TheWinsolsDifHalfRev = Solar25 - Math.abs(TheWinsolsDifHalf - Solar25) // 反減
-    const isSunYin = TheWinsolsDif > Solar25 && TheWinsolsDif < Solar75
+    let TheSolsDifHalf = TheSolsDif % Solar50 // 應天「置朔定積，如一百八十二日⋯⋯以下爲入盈日分；以上者去之，餘爲入縮日分」
+    const TheSolsDifHalfRev = Solar25 - Math.abs(TheSolsDifHalf - Solar25) // 反減
+    const isSunYin = TheSolsDif > Solar25 && TheSolsDif < Solar75
     // 宣明曆創日食三差：【時差Tcorr】食甚時刻改正【氣差McorrTerm刻差McorrClock加差McorrOther】食分改正 
     let Mcorr = 0, YinYangBorder = 0
     let isInside = true, Std1 = 0, Std2 = 0, StatusRaw = 3 // 這五個是崇玄的
@@ -736,7 +736,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                 sign2 = isDescend ? 1 : -1
             }
             sign2 *= TotalDeci >= 0.5 ? -1 : 1 // 定朔還是食甚都沒影響，因為時差加減方向是相合的
-            sign2 *= TheWinsolsDif >= Solar50 ? -1 : 1
+            sign2 *= TheSolsDif >= Solar50 ? -1 : 1
             if (TotalDeci > 0.5) {
                 sign3 = isYin ? -1 : 1
             } else {
@@ -749,73 +749,73 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
             let TermNum = 0
             const McorrBList = [0, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385, 450, 385, 325, 270, 220, 175, 135, 100, 70, 45, 25, 10, 0, 10]
             for (let j = 0; j <= 23; j++) {
-                if (TheWinsolsDif >= AcrTermList[j] && TheWinsolsDif < AcrTermList[j + 1]) {
+                if (TheSolsDif >= AcrTermList[j] && TheSolsDif < AcrTermList[j + 1]) {
                     TermNum = j % 24
                     break
                 }
             }
-            McorrB = Interpolate3(TheWinsolsDif, Make2DPoints(AcrTermList, McorrBList, TermNum)) // 當日差積            
+            McorrB = Interpolate3(TheSolsDif, Make2DPoints(AcrTermList, McorrBList, TermNum)) // 當日差積            
             McorrB *= isYin ? -1 : 1
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
         } else if (CalName === 'Qintian') {
-            const WinsolsDeci = WinsolsAccum - Math.floor(WinsolsAccum)
-            const Lati = Math.abs(AutoLongi2Lati(TheWinsolsDif, WinsolsDeci, 'Chongxuan').Lati)
+            const SolsDeci = SolsAccum - Math.floor(SolsAccum)
+            const Lati = Math.abs(AutoLongi2Lati(TheSolsDif, SolsDeci, 'Chongxuan').Lati)
             McorrA = MoonLimit1 * Lati * Denom / 251300 // 黃道出入食差
             YinYangBorder = McorrA * dd
             YinYangBorder = MoonLimit1 + (isYin ? -1 : 1) * YinYangBorder // 假設lati的單位是經法72，那麼常準在430-2322
-            const tmp = Math.abs(AvgWinsolsDif % Solar25 - Solar125) * 24 // 「置日躔入曆⋯⋯」那就是經朔距冬至日，定朔距冬至日叫「定朔加時入曆」
-            const signtmp = AvgWinsolsDif % Solar50 < Solar125 || AvgWinsolsDif % Solar50 >= Solar * 0.375 ? -1 : 1
+            const tmp = Math.abs(AvgSolsDif % Solar25 - Solar125) * 24 // 「置日躔入曆⋯⋯」那就是經朔距冬至日，定朔距冬至日叫「定朔加時入曆」
+            const signtmp = AvgSolsDif % Solar50 < Solar125 || AvgSolsDif % Solar50 >= Solar * 0.375 ? -1 : 1
             McorrB = 2772 + signtmp * tmp // 黃道斜正食差。範圍1692-3852
             YinYangBorder += McorrB * TheTotalNoonDif / RiseNoonDif
         } else if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
             const isBefore = TheNodeAccumHalf > Node25
             const Max = CalName === 'Wuji' ? 457 : 373
             const step = CalName === 'Wuji' ? 5 : 4 // 本來應該是5，夏至不盡，連續5.00486
-            if (TheWinsolsDif > Solar25 && TheWinsolsDif < Solar75) {
+            if (TheSolsDif > Solar25 && TheSolsDif < Solar75) {
                 McorrB = Max
-            } else if (TheWinsolsDif >= Solar75) {
-                McorrB = Max - step * (TheWinsolsDif - Solar75)
+            } else if (TheSolsDif >= Solar75) {
+                McorrB = Max - step * (TheSolsDif - Solar75)
             } else {
-                McorrB = step * TheWinsolsDif
+                McorrB = step * TheSolsDif
             }
             McorrB = isYin ? Max - McorrB : McorrB // 本來還要再對稱的寫一遍，但是發現這就是陰陽反減，直接把原來的刪掉            
-            if (TheWinsolsDif >= Solar * 10 / 24 && TheWinsolsDif < Solar * 14 / 24) {
+            if (TheSolsDif >= Solar * 10 / 24 && TheSolsDif < Solar * 14 / 24) {
                 if (TotalDeci < 0.5 - 0.08 || TotalDeci > 0.5 + 0.08) {
                     McorrA = -Denom / 12 // 這是加在陰曆、類陽曆上的
                 } else if (TotalDeci > 0.5 - 0.03 && TotalDeci < 0.5 + 0.03) {
                     McorrA = Denom / 12
                 }
             }
-            if (TheWinsolsDif >= Solar * 2 / 24 && TheWinsolsDif < Solar * 4 / 24) {
+            if (TheSolsDif >= Solar * 2 / 24 && TheSolsDif < Solar * 4 / 24) {
                 if (isBefore && TheNodeDif > Denom * 5 / 12) {
                     McorrA -= Denom / 12
                 }
-            } else if (TheWinsolsDif >= Solar * 14 / 24 && TheWinsolsDif < Solar * 22 / 24) {
+            } else if (TheSolsDif >= Solar * 14 / 24 && TheSolsDif < Solar * 22 / 24) {
                 if (!isBefore && TheNodeDif > Denom * 5 / 12) {
                     McorrA -= Denom / 12
                 }
             }
         } else if (CalName === 'Xuanming') {
-            McorrTerm = (2350 - 26 * TheWinsolsDifHalfRev) * dd
+            McorrTerm = (2350 - 26 * TheSolsDifHalfRev) * dd
             McorrTerm = McorrTerm < 0 ? 0 : McorrTerm // 因為26不連續，最後剩了一天<0。連續：25.73618
-            if (TheWinsolsDifHalf < Solar125) {
-                McorrClock = 2.1 * TheWinsolsDifHalf // 連續的話我改成2.06985
-            } else if (TheWinsolsDifHalf < Solar375) {
+            if (TheSolsDifHalf < Solar125) {
+                McorrClock = 2.1 * TheSolsDifHalf // 連續的話我改成2.06985
+            } else if (TheSolsDifHalf < Solar375) {
                 McorrClock = 94.5
             } else {
-                TheWinsolsDifHalf -= Solar375
-                McorrClock = 94.5 - 2.1 * TheWinsolsDifHalf
+                TheSolsDifHalf -= Solar375
+                McorrClock = 94.5 - 2.1 * TheSolsDifHalf
             }
             McorrClock *= McorrClock < 0 ? 0 : TheTotalNoonDif // 應該不用*100
             if (TotalDeci > 0.5) {
-                if (TheWinsolsDif < Solar125) {
-                    McorrOther = 51 - TheWinsolsDif * 17 / HalfTermLeng
-                } else if (TheWinsolsDif > Solar875) {
-                    McorrOther = (TheWinsolsDif - Solar875) * 17 / HalfTermLeng
+                if (TheSolsDif < Solar125) {
+                    McorrOther = 51 - TheSolsDif * 17 / HalfTermLeng
+                } else if (TheSolsDif > Solar875) {
+                    McorrOther = (TheSolsDif - Solar875) * 17 / HalfTermLeng
                 }
             }
         } else if (CalName === 'Chongxuan') {
-            const C = (365.5 - TheWinsolsDif) / 0.3655 // 限心
+            const C = (365.5 - TheSolsDif) / 0.3655 // 限心
             const L = (C - 250 + 1000) % 1000 // 限尾。「滿若不足，加減一千」
             const R = (C + 250 + 1000) % 1000 // 限首            
             TotalDeci *= 1000
@@ -852,100 +852,100 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                 }
             }
         } else if (CalName === 'Yingtian') {
-            McorrTerm = (374 - 4 * TheWinsolsDifHalfRev) * dd // 藤豔輝頁101：最大值52.41分鐘
-            if (TheWinsolsDifHalf > 45 && TheWinsolsDifHalf < 137) { // 最大值0.075日
+            McorrTerm = (374 - 4 * TheSolsDifHalfRev) * dd // 藤豔輝頁101：最大值52.41分鐘
+            if (TheSolsDifHalf > 45 && TheSolsDifHalf < 137) { // 最大值0.075日
                 McorrClock = 1500 * TheTotalNoonDif
             } else {
-                if (TheWinsolsDifHalf < 45) {
-                    TheWinsolsDifHalf = 45 - TheWinsolsDifHalf
-                    McorrClock = 33.5 * TheWinsolsDifHalf * TheTotalNoonDif
+                if (TheSolsDifHalf < 45) {
+                    TheSolsDifHalf = 45 - TheSolsDifHalf
+                    McorrClock = 33.5 * TheSolsDifHalf * TheTotalNoonDif
                 } else {
-                    TheWinsolsDifHalf -= 137
-                    McorrClock = (1500 - 33.5 * TheWinsolsDifHalf) * TheTotalNoonDif
+                    TheSolsDifHalf -= 137
+                    McorrClock = (1500 - 33.5 * TheSolsDifHalf) * TheTotalNoonDif
                 }
             }
         } else if (CalName === 'Qianyuan') {
-            if (TheWinsolsDifHalf < 90) {
-                McorrTerm = 9.1 * TheWinsolsDifHalf
+            if (TheSolsDifHalf < 90) {
+                McorrTerm = 9.1 * TheSolsDifHalf
             } else {
-                TheWinsolsDifHalf -= 90
-                McorrTerm = (819 - 9.1 * TheWinsolsDifHalf)  // 《中國古代曆法》頁96說二至前是二至後的10倍，寫錯了吧？ // 藤豔輝頁101說乾元刻差極值15.2小時，沒對吧
+                TheSolsDifHalf -= 90
+                McorrTerm = (819 - 9.1 * TheSolsDifHalf)  // 《中國古代曆法》頁96說二至前是二至後的10倍，寫錯了吧？ // 藤豔輝頁101說乾元刻差極值15.2小時，沒對吧
             }
             McorrTerm *= dd > 0 ? dd : 1
-            if (TheWinsolsDifHalf >= 45 && TheWinsolsDifHalf < 137) {
+            if (TheSolsDifHalf >= 45 && TheSolsDifHalf < 137) {
                 McorrClock = 333 // 單位是刻分。極值0.11日
             } else {
-                if (TheWinsolsDifHalf < 45) {
-                    McorrClock = 7.4 * TheWinsolsDifHalf
+                if (TheSolsDifHalf < 45) {
+                    McorrClock = 7.4 * TheSolsDifHalf
                 } else {
-                    TheWinsolsDifHalf -= 137
-                    McorrClock = 333 - 7.4 * TheWinsolsDifHalf
+                    TheSolsDifHalf -= 137
+                    McorrClock = 333 - 7.4 * TheSolsDifHalf
                 }
             }
             McorrClock *= TheTotalNoonDif
         } else if (CalName === 'Yitian') {
             const { QuarA, QuarB } = AutoQuar(CalName)
-            McorrTerm = TheWinsolsDifHalfRev * 2826 / (TheWinsolsDif >= QuarA && TheWinsolsDif < Solar50 + 946785.5 / Denom ? QuarB : QuarA)
-            McorrTerm = 2826 - 30.15 * TheWinsolsDifHalfRev
+            McorrTerm = TheSolsDifHalfRev * 2826 / (TheSolsDif >= QuarA && TheSolsDif < Solar50 + 946785.5 / Denom ? QuarB : QuarA)
+            McorrTerm = 2826 - 30.15 * TheSolsDifHalfRev
             McorrTerm *= dd > 0 ? dd : 1
-            if (TheWinsolsDif < Solar125) {
-                McorrClock = 100 * TheWinsolsDif * Denom / 442384 // 藤豔輝頁100說二至前後205日分，其餘13.5小時，這也太扯淡，我這樣處理一下，能夠大致連續，但跟原文差得有點多
-            } else if (TheWinsolsDif < Solar375) {
+            if (TheSolsDif < Solar125) {
+                McorrClock = 100 * TheSolsDif * Denom / 442384 // 藤豔輝頁100說二至前後205日分，其餘13.5小時，這也太扯淡，我這樣處理一下，能夠大致連續，但跟原文差得有點多
+            } else if (TheSolsDif < Solar375) {
                 McorrClock = 113.625
-            } else if (TheWinsolsDif < Solar50) {
-                TheWinsolsDif -= Solar375
-                McorrClock = 164.57 - TheWinsolsDif * Denom / 279858
-            } else if (TheWinsolsDif < Solar50 + Solar125) {
-                McorrClock = TheWinsolsDifHalf * Denom / 279858
-            } else if (TheWinsolsDif < Solar50 + Solar375) {
+            } else if (TheSolsDif < Solar50) {
+                TheSolsDif -= Solar375
+                McorrClock = 164.57 - TheSolsDif * Denom / 279858
+            } else if (TheSolsDif < Solar50 + Solar125) {
+                McorrClock = TheSolsDifHalf * Denom / 279858
+            } else if (TheSolsDif < Solar50 + Solar375) {
                 McorrClock = 113.625
             } else {
-                TheWinsolsDif -= Solar875
-                McorrClock = 104.1 - TheWinsolsDif * Denom / 442384
+                TheSolsDif -= Solar875
+                McorrClock = 104.1 - TheSolsDif * Denom / 442384
             }
             McorrClock *= TheTotalNoonDif * 10
             if (TotalDeci > 0.5) {
-                if (TheWinsolsDif < Solar125) {
-                    McorrOther = 61.32 - TheWinsolsDifHalf * 20.44 / HalfTermLeng
-                } else if (TheWinsolsDif > Solar875) {
-                    TheWinsolsDif -= Solar875
-                    McorrOther = TheWinsolsDif * 20.44 / HalfTermLeng
+                if (TheSolsDif < Solar125) {
+                    McorrOther = 61.32 - TheSolsDifHalf * 20.44 / HalfTermLeng
+                } else if (TheSolsDif > Solar875) {
+                    TheSolsDif -= Solar875
+                    McorrOther = TheSolsDif * 20.44 / HalfTermLeng
                 }
             }
         } else if (CalName === 'Mingtian') { // 藤豔輝頁103 兩個食差最大值均為508分=5.08度=9.12小時 // 明天的日躔盈縮度是平分的，不像儀天是定氣，同樣需要反減
             const QuarA = 60.875 // 交食的盈初縮末
             const QuarB = 121.75 // 縮初盈末
-            let TheRev = TheWinsolsDifHalf
+            let TheRev = TheSolsDifHalf
             TheRev = TheRev > QuarA ? Solar50 - TheRev : TheRev
-            const Portion12 = TheWinsolsDifHalf < QuarA || TheWinsolsDifHalf >= Solar50 + QuarB ? 2 : 1 // 不太明白這樣前後一拉一申有什麼區別
+            const Portion12 = TheSolsDifHalf < QuarA || TheSolsDifHalf >= Solar50 + QuarB ? 2 : 1 // 不太明白這樣前後一拉一申有什麼區別
             const tmp = 4 * Math.abs(0.25 - TheTotalNoonDif)
             McorrClock = (106 / 3093) * (243.5 - Portion12 * TheRev) * Portion12 * TheRev // 東西差
             McorrTerm = (508 - McorrClock) * tmp // 南北差
             McorrClock *= 1 - tmp
         } else if (CalName === 'Guantian') {
             const { QuarA, QuarB } = AutoQuar(CalName, Type)
-            if (TheWinsolsDif < Solar50) {
-                if (TheWinsolsDifHalf > QuarA) {
-                    TheWinsolsDifHalf = Solar50 - TheWinsolsDifHalf
+            if (TheSolsDif < Solar50) {
+                if (TheSolsDifHalf > QuarA) {
+                    TheSolsDifHalf = Solar50 - TheSolsDifHalf
                 }
-            } else if (TheWinsolsDif > Solar50) {
-                if (TheWinsolsDifHalf > QuarB) {
-                    TheWinsolsDifHalf = Solar50 - TheWinsolsDifHalf
+            } else if (TheSolsDif > Solar50) {
+                if (TheSolsDifHalf > QuarB) {
+                    TheSolsDifHalf = Solar50 - TheSolsDifHalf
                 }
             }
-            if (TheWinsolsDif < QuarA || TheWinsolsDif > Solar50 + QuarB) {
-                McorrTerm = (4010 - TheWinsolsDifHalf ** 2 / 1.97) * dd
+            if (TheSolsDif < QuarA || TheSolsDif > Solar50 + QuarB) {
+                McorrTerm = (4010 - TheSolsDifHalf ** 2 / 1.97) * dd
             } else {
-                McorrTerm = (4010 - TheWinsolsDifHalf ** 2 / 2.19) * dd
+                McorrTerm = (4010 - TheSolsDifHalf ** 2 / 2.19) * dd
             }
-            McorrClock = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / 2.09
+            McorrClock = (Solar50 - TheSolsDifHalf) * TheSolsDifHalf / 2.09
             McorrClock *= TheTotalNoonDif * Denom / 3700.5 // 單位 午前後分
         } else { // 崇天、紀元、遼金、授時
             const Portion = Type === 11 ? 1870 : +(3.43 * 7290 / Denom).toFixed(2) // 3*Solar25**2 ，以紀元爲準。紀元3.43，崇天2.36，大明庚午4.78
             const McorrTermMax = Type === 11 ? 4.46 : Math.round(91.31 ** 2 / (Portion + 0.0005)) // 崇天3533，紀元2430，大明庚午1744            
-            McorrTerm = (McorrTermMax - TheWinsolsDifHalfRev ** 2 / Portion) // 氣差
+            McorrTerm = (McorrTermMax - TheSolsDifHalfRev ** 2 / Portion) // 氣差
             McorrTerm *= dd // 氣差定數 置日食甚日行積度。紀元是午前後分，崇天是距午定分。紀元最後有「如半晝分而一，所得，在氣差已上者，即以氣差覆減之，余應加者為減，減者為加。」崇天「如不及減者，覆減爲定數，應加者減之⋯⋯」那就什麼都不用處理
-            const McorrClockRaw = (Solar50 - TheWinsolsDifHalf) * TheWinsolsDifHalf / Portion
+            const McorrClockRaw = (Solar50 - TheSolsDifHalf) * TheSolsDifHalf / Portion
             McorrClock = McorrClockRaw * TheTotalNoonDif * 4
             if (Type === 9 || Type === 11) { // 只有紀元授時有這種處理。如果崇天用這個，1042食分從5.02變成4.96
                 McorrClock = McorrClock > McorrClockRaw ? McorrClockRaw * 2 - McorrClock : McorrClock // 紀元「以午前後分乘而倍之，如半法而一」後面又來一句「⋯⋯如半法而一，所得，在刻差已上者，卽倍刻差，以所得之數減之，餘爲刻差定數，依其加減」 授時「若在泛差以上者，倍泛差減之，餘爲定差」，卽如果定朔在日出前日落後
@@ -976,12 +976,12 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
             }
             let TermNum = 0
             for (let j = 0; j <= 23; j++) {
-                if (TheWinsolsDif >= AcrTermList[j] && TheWinsolsDif < AcrTermList[j + 1]) {
+                if (TheSolsDif >= AcrTermList[j] && TheSolsDif < AcrTermList[j + 1]) {
                     TermNum = j % 24
                     break
                 }
             }
-            McorrB = Interpolate3(TheWinsolsDif, Make2DPoints(AcrTermList, McorrBList, TermNum))
+            McorrB = Interpolate3(TheSolsDif, Make2DPoints(AcrTermList, McorrBList, TermNum))
             if (isSame) {
                 McorrB *= !isBefore ? -1 : 1
             } else {
@@ -991,18 +991,18 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
         }
     }
     if (CalName === 'Mingtian') {
-        let position = AcrWinsolsDif + Tcorr + AvgTcorr + Mcorr
+        let position = AcrSolsDif + Tcorr + AvgTcorr + Mcorr
         const TheDif = frc('9901159/184270880') // 每日交點退行
         const SiderealFrc = frc('365 1600447/6240000')
-        let NodeDeg = SiderealFrc.sub(TheDif.mul(frc(AvgWinsolsDif + WinsolsAccum)).mod(SiderealFrc)).toString() // 這應該是正交度
+        let NodeDeg = SiderealFrc.sub(TheDif.mul(frc(AvgSolsDif + SolsAccum)).mod(SiderealFrc)).toString() // 這應該是正交度
         NodeDeg = +NodeDeg
         position += position < NodeDeg ? Sidereal : 0
         TheNodeAccum = position - NodeDeg
         isDescend = TheNodeAccum < 20 || TheNodeAccum > 340
         TheNodeDif = (Sidereal25 - Math.abs(TheNodeAccum % Sidereal50 - Sidereal25)) * 100 // 交前後分「其度以百通之爲分」。我直接加上食差來判斷，就不用先判斷陰陽曆，加上食差再判斷陰陽曆
     } else if (Type === 11) {
-        TheNodeAccum = AvgNodeAccum * 13.36875 + AutoDifAccum(0, AvgWinsolsDif, CalName).SunDifAccum + Mcorr
-        TheNodeDif = NodeCycle25 - Math.abs(TheNodeAccum % NodeCycle50 - NodeCycle25) // 本來是AutoDifAccum(0, TheWinsolsDif, CalName).SunDifAccum
+        TheNodeAccum = AvgNodeAccum * 13.36875 + AutoDifAccum(0, AvgSolsDif, CalName).SunDifAccum + Mcorr
+        TheNodeDif = NodeCycle25 - Math.abs(TheNodeAccum % NodeCycle50 - NodeCycle25) // 本來是AutoDifAccum(0, TheSolsDif, CalName).SunDifAccum
     } else if (!['Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan'].includes(CalName)) {
         if (isNewm) {
             if (Type === 9) {
@@ -1319,14 +1319,14 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
     return { StartDeci, EndDeci, Last } // 這個last是半食延，0.xxxx
 }
 
-const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, WinsolsAccum, isNewm, CalName) => {
+const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, SolsAccum, isNewm, CalName) => {
     const { Type, SolarRaw, Sidereal, Node, Anoma, MoonAcrVList, Denom, AcrTermList,
         SunLimitNone, MoonLimitNone, SunLimitNoneYang, SunLimitNoneYin, SunLimitYang, SunLimitYin
     } = Para[CalName]
     let { Solar, MoonLimit1, MoonLimitDenom } = Para[CalName]
     Solar = Solar || SolarRaw
-    AcrWinsolsDif %= Solar // 注意，AcrWinsolsDif是定朔距冬至日，而非積度
-    AvgWinsolsDif %= Solar
+    AcrSolsDif %= Solar // 注意，AcrSolsDif是定朔距冬至日，而非積度
+    AvgSolsDif %= Solar
     let Node50 = Node / 2
     const Node25 = Node / 4
     const Anoma50 = Anoma / 2
@@ -1343,7 +1343,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     const NodeCycle50 = NodeCycle / 2
     const NodeCycle25 = NodeCycle / 4
     const { Tcorr2: AvgTcorr, SunTcorr, MoonAcrV, MoonTcorr: AvgMoonTcorr, NodeAccumCorrA: AvgNodeTcorr
-    } = AutoTcorr(AvgAnomaAccum, AvgWinsolsDif, CalName) // 經朔修正    
+    } = AutoTcorr(AvgAnomaAccum, AvgSolsDif, CalName) // 經朔修正    
     const AcrAnomaAccum = (AvgAnomaAccum + AvgTcorr) % Anoma // 定朔入轉
     const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 入交常日    
     const AcrNodeAccum = AvgNodeAccum + AvgNodeTcorr // 入交定日
@@ -1367,10 +1367,10 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
     const RiseNoonDif = 0.5 - Rise // 日出沒辰刻距午正刻數/100，卽半晝分    
     ////////////////////// 時差
     const NodeDif = Type === 7 ? Denom * (Node25 - Math.abs(AcrNodeAccum % Node50 - Node25)) : 0
-    const { Tcorr, TotalDeci, TheTotalNoonDif, dd, isSame } = EcliTcorr3(isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrV, SunTcorr, NodeDif, AcrWinsolsDif)
+    const { Tcorr, TotalDeci, TheTotalNoonDif, dd, isSame } = EcliTcorr3(isNewm, isYin, CalName, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrV, SunTcorr, NodeDif, AcrSolsDif)
     ////////////////////// 食差
     const { TheNodeAccum, TheNodeDif: TheNodeDifRaw, Std1, Std2, StatusRaw, YinYangBorder, McorrA, McorrB } = EcliMcorr3(CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidereal50, Sidereal, Solar125, Solar25, Solar375, Solar50, Solar75, Solar875, Solar, NodeCycle25, NodeCycle50, MoonLimit1, Denom, AcrTermList,
-        isNewm, isYin, isDescend, isSame, AcrWinsolsDif, AvgWinsolsDif, dd, TotalDeci, TheTotalNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, Tcorr, AvgTcorr, WinsolsAccum)
+        isNewm, isYin, isDescend, isSame, AcrSolsDif, AvgSolsDif, dd, TotalDeci, TheTotalNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, Tcorr, AvgTcorr, SolsAccum)
     isYin = TheNodeAccum > Node50
     ////////////////////// 食分
     let { Magni, Status, Last, TheNotEcli, TheNodeDif } = EcliMagni3(CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, MoonAcrVList, SunLimitYang, SunLimitYin, SunLimitNone, SunLimitNoneYang, SunLimitNoneYin, MoonLimitDenom, MoonLimitNone, MoonLimit1,
@@ -1383,33 +1383,33 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, 
 // console.log(Eclipse3(12.85874, 0.3524, 0.83546, 0.79093, 156.3253, 156.2809, 0, 0, 'Datong').Magni) // 2021年四月望
 // console.log(Eclipse3(13.81, 22, 0.674916, 0.22, 22.4549, 22, 8194819414.14, 1, 'Chongxuan')) // 這種情況其他曆都不食，只有授時食，這是月盈縮差帶來的，應該正常
 // console.log(Eclipse3(26 + 5644.4277 / 10590, 22.052297, 0.4495401228, 0.8172804533, 175.6583788196 + 0.02675303116, 175.6583788196, 0, 1, 'Chongtian')) // 1024年崇天曆日食，藤豔輝論文
-// (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, WinsolsAccum, isNewm, CalName)
-export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, isNewm, CalName, Month, Leap, WinsolsAccum, WinsolsDeci) => { // 這就不用%solar了，後面都模了的
+// (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, SolsAccum, isNewm, CalName)
+export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, isNewm, CalName, Month, Leap, SolsAccum, SolsDeci) => { // 這就不用%solar了，後面都模了的
     const { Type } = Para[CalName]
     let Eclipse = {}
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         Eclipse = Eclipse1(NodeAccum, CalName)
     } else {
         if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'Daye', NodeAccum).NodeAccumCorrA
-            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'Daye', Month, Leap)
+            NodeAccum += AutoTcorr(AnomaAccum, AvgSolsDif, 'Daye', NodeAccum).NodeAccumCorrA
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgSolsDif, isNewm, 'Daye', Month, Leap)
         } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, 'LindeA', NodeAccum).NodeAccumCorrA
-            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, 'LindeA', Month, Leap)
+            NodeAccum += AutoTcorr(AnomaAccum, AvgSolsDif, 'LindeA', NodeAccum).NodeAccumCorrA
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgSolsDif, isNewm, 'LindeA', Month, Leap)
         } else if (Type <= 6) {
-            NodeAccum += AutoTcorr(AnomaAccum, AvgWinsolsDif, CalName, NodeAccum).NodeAccumCorrA
-            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgWinsolsDif, isNewm, CalName, Month, Leap)
+            NodeAccum += AutoTcorr(AnomaAccum, AvgSolsDif, CalName, NodeAccum).NodeAccumCorrA
+            Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgSolsDif, isNewm, CalName, Month, Leap)
         } else {
-            WinsolsDeci = WinsolsDeci || WinsolsAccum - Math.floor(WinsolsAccum)
-            const Rise = AutoLongi2Lati(AcrWinsolsDif, WinsolsDeci, CalName).Rise / 100
+            SolsDeci = SolsDeci || SolsAccum - Math.floor(SolsAccum)
+            const Rise = AutoLongi2Lati(AcrSolsDif, SolsDeci, CalName).Rise / 100
             if (['Fengyuan', 'Zhantian'].includes(CalName)) {
-                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, 0, isNewm, 'Guantian')
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, 0, isNewm, 'Guantian')
             } else if (['Chunyou', 'Huitian'].includes(CalName)) {
-                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, 0, isNewm, 'Chengtian')
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, 0, isNewm, 'Chengtian')
             } else if (['Daming1', 'Daming2', 'Yiwei'].includes(CalName)) {
-                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, 0, isNewm, 'Daming3')
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, 0, isNewm, 'Daming3')
             } else if (Type <= 11) {
-                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, Rise, WinsolsAccum, isNewm, CalName)
+                Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, SolsAccum, isNewm, CalName)
             }
         }
     }

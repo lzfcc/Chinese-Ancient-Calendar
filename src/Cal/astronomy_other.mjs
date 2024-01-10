@@ -23,15 +23,15 @@ export const Deg2Mansion = (MansionAccum, DegAccumList) => {
 export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
 
-export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDif, WinsolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
-    const { Type, SolarRaw, WinsolsConst, MansionConst, MansionRaw } = Para[CalName]
+export const Accum2Mansion = (Accum, DegAccumList, CalName, SolsDif, SolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
+    const { Type, SolarRaw, SolsConst, MansionConst, MansionRaw } = Para[CalName]
     let { Sidereal, Solar } = Para[CalName]
     Sidereal = Sidereal || (Solar || SolarRaw)
     if (CalName === 'Shoushi' || CalName === 'Shoushi2') {
         Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
     }// 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。） // 試了一下，按上面這樣區分1281前後，沒有任何變化
     const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
-    Accum -= Type === 11 ? WinsolsConst : 0
+    Accum -= Type === 11 ? SolsConst : 0
     Accum += MansionConst || 0
     let MansionOrder = 0
     const MansionAccum = ((Mansion + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
@@ -49,10 +49,10 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, WinsolsDif, WinsolsD
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
     let DuskstarResult = ''
     const LightRange = AutoLightRange(CalName)
-    if (WinsolsDeci >= 0) { // 一個小坑，四分曆存在WinsolsDeci===0的情況，所以要加上>=0，只保留undefined
+    if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
         let DuskstarOrder = 0
         let MorningstarOrder = 0
-        const Rise = AutoLongi2Lati(WinsolsDif, WinsolsDeci, CalName).Rise / 100
+        const Rise = AutoLongi2Lati(SolsDif, SolsDeci, CalName).Rise / 100
         const HalfLight = 0.5 - Rise + LightRange // 半晝漏
         const HalfNight = Rise - LightRange
         // 大衍只考慮了昬時距午度
@@ -103,11 +103,11 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
     return LeapNumTerm
 }
 
-export const AutoNewmPlus = (Deci, WinsolsDif, WinsolsDeci, CalName) => { // 朔小分
+export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, CalName) => { // 朔小分
     const { Solar } = Para[CalName]
     const Solar25 = Solar / 4
-    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, WinsolsDeci, CalName).Rise / 100
-    let { Rise, Sunrise1 } = AutoLongi2Lati(WinsolsDif, WinsolsDeci, CalName)
+    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, SolsDeci, CalName).Rise / 100
+    let { Rise, Sunrise1 } = AutoLongi2Lati(SolsDif, SolsDeci, CalName)
     Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(CalName)
     let standard = 0.75
@@ -123,7 +123,7 @@ export const AutoNewmPlus = (Deci, WinsolsDif, WinsolsDeci, CalName) => { // 朔
         standard = Math.max(0.725, 1 - Rise + LightRange)
     } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) { // 欽天日入後則進一日
         standard = 1 - Rise // 冬至0.7，夏至0.8
-    } else if (WinsolsDif > Solar25 && WinsolsDif < Solar * 0.75) {
+    } else if (SolsDif > Solar25 && SolsDif < Solar * 0.75) {
         standard = 0.75 + (Rise - SpringequinoxSunrise) / Portion
     }
     let NewmPlus = 0
@@ -136,10 +136,10 @@ export const AutoNewmPlus = (Deci, WinsolsDif, WinsolsDeci, CalName) => { // 朔
 }
 // console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
-export const AutoSyzygySub = (Deci, WinsolsDif, WinsolsDeci, CalName) => {
+export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, CalName) => {
     const { Type } = Para[CalName]
     const LightRange = AutoLightRange(CalName)
-    const Rise = AutoLongi2Lati(WinsolsDif, WinsolsDeci, CalName).Rise / 100
+    const Rise = AutoLongi2Lati(SolsDif, SolsDeci, CalName).Rise / 100
     let standard = Rise - LightRange
     if (Type >= 8 || CalName === 'Qintian') {
         standard = Rise
@@ -153,7 +153,7 @@ export const AutoSyzygySub = (Deci, WinsolsDif, WinsolsDeci, CalName) => {
     return { SyzygySub, Print }
 }
 
-export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九道法
+export const AutoNineOrbit = (NodeAccum, SolsDif, CalName) => { // 月行九道法
     const { Type, SolarRaw, Node, LunarRaw } = Para[CalName]
     let { Solar, Lunar
     } = Para[CalName]
@@ -162,7 +162,7 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九�
     const Node50 = Node / 2
     const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
-    const WinsolsDif = WinsolsDif + (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
+    const SolsDif = SolsDif + (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
     let Print = ''
     if (Type <= 6) {
         if ((NodeAccum > Node50 - SynodicNodeDif50 && NodeAccum < Node50) || NodeAccum < SynodicNodeDif50 || (NodeAccum > Node50 && NodeAccum < Node50 + SynodicNodeDif50) || (NodeAccum > Node - SynodicNodeDif50)) {
@@ -173,19 +173,19 @@ export const AutoNineOrbit = (NodeAccum, WinsolsDif, CalName) => { // 月行九�
             Print = `<span class='lati-yin'>陰</span>`
         }
     } else if (Type >= 7 && Type <= 10) { // 月行九道
-        if (WinsolsDif < 3 * HalfTermLeng || WinsolsDif >= 21 * HalfTermLeng) { // 冬
+        if (SolsDif < 3 * HalfTermLeng || SolsDif >= 21 * HalfTermLeng) { // 冬
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`
             } else {
                 Print = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
             }
-        } else if (WinsolsDif >= 3 * HalfTermLeng && WinsolsDif < 9 * HalfTermLeng) {
+        } else if (SolsDif >= 3 * HalfTermLeng && SolsDif < 9 * HalfTermLeng) {
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-red'>朱</span><span class='lati-yang'>陽</span>`
             } else {
                 Print = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
             }
-        } else if (WinsolsDif >= 9 * HalfTermLeng && WinsolsDif < 15 * HalfTermLeng) {
+        } else if (SolsDif >= 9 * HalfTermLeng && SolsDif < 15 * HalfTermLeng) {
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-green'>靑</span><span class='lati-yang'>陽</span>`
             } else {

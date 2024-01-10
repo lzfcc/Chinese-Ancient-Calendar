@@ -270,7 +270,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 #### 變量 Variables
 
 - Origin 上元以來的
-- Winsols 冬至 winter solstice
+- Sols 冬至 winter solstice
 - Newm 朔 new moon
 - Syzygy 望 syzygy
 - First 天正月，卽冬至所在月 The month in which the winter solstice falls
@@ -280,7 +280,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 - SmallSur 小餘，干支的小數部分
 - LeapNumTerm 無中氣置閏法的閏月
 - Duskstar 昬中星
-- Accum 積日。WinsolsAccum 上元至年前冬至積日 AnomaAccum 入轉日 NodeAccum 入交日
+- Accum 積日。SolsAccum 上元至年前冬至積日 AnomaAccum 入轉日 NodeAccum 入交日
 
 #### 常量 Constants
 
@@ -315,7 +315,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 - Acr  精確的 accurate
 - Deg 度數 degree
 - Dif 兩個數之差 The difference between constants A and B.
-- WinsolsDif 某日距離年前冬至的日數
+- SolsDif 某日距離年前冬至的日數
 - ZoneDif <v>庚午元曆</v>里差<n>地理經度時差</n>
 - xxx50 某常量的 50%，xxx125 某常量的 12.5%
 - xxxHalf 某變量的一半 Half of a variable
@@ -499,7 +499,7 @@ a = [0, ...a]
 
 #### 6-19 `1.02`
 
- **核心** 明晰授時系的區別：授時、大統通軌<n>實行</n>、大統曆志。將大統晨昏分換成應天晷刻。徹底解決授時系交食：交定度、月食食分、食延、TheWinsolsDif 定義。修改授時系限行度，躔離改正完全沒問題了。修復閏月調整問題：本來是 `LeapNumTerm >= 2`，換成 1。修改步軌漏夜半的定義。 **文字** 凡五萬九千字。
+ **核心** 明晰授時系的區別：授時、大統通軌<n>實行</n>、大統曆志。將大統晨昏分換成應天晷刻。徹底解決授時系交食：交定度、月食食分、食延、TheSolsDif 定義。修改授時系限行度，躔離改正完全沒問題了。修復閏月調整問題：本來是 `LeapNumTerm >= 2`，換成 1。修改步軌漏夜半的定義。 **文字** 凡五萬九千字。
 
 #### 6-21 `前端 1.06`
 

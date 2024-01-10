@@ -1,5 +1,5 @@
 import React from "react";
-import { MeasureWinsols } from "../Cal/equa_sn";
+import { MeasureSols } from "../Cal/equa_sn";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
@@ -29,7 +29,7 @@ export default class Equa extends React.Component {
       for (let i = 0; i < arr.length; i++) {
         arr[i] = Number(arr[i])
       }
-      const Print = MeasureWinsols(arr)
+      const Print = MeasureSols(arr)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

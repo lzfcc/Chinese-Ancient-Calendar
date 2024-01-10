@@ -15,27 +15,27 @@ import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
 import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
 
-export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
-    WinsolsDif = +WinsolsDif
+export const BindTcorr = (AnomaAccum, SolsDif, year, CalName) => {
+    SolsDif = +SolsDif
     AnomaAccum = +AnomaAccum
-    if (WinsolsDif > 365.2425 || WinsolsDif < 0) {
+    if (SolsDif > 365.2425 || SolsDif < 0) {
         throw (new Error('請輸入一回歸年內的日數！'))
     }
     const {
         SunTcorr2: WestSunTcorr,
         MoonTcorr2: WestMoonTcorr,
         NodeAccumCorrA: WestNodeConst
-    } = AutoTcorr(AnomaAccum, WinsolsDif, 'West', 0, year)
+    } = AutoTcorr(AnomaAccum, SolsDif, 'West', 0, year)
     const {
         SunDifAccum: WestSun,
         MoonDifAccum: WestMoon,
-    } = AutoDifAccum(AnomaAccum, WinsolsDif, 'West', year)
+    } = AutoDifAccum(AnomaAccum, SolsDif, 'West', year)
     const {
         MoonTcorr2: WestMoonTcorrB,
         NodeAccumCorrA: WestNodeConstB
-    } = AutoTcorr(AnomaAccum + 13.7772755949, WinsolsDif, 'West', 0, year) // 13.7772755949是應天半轉
+    } = AutoTcorr(AnomaAccum + 13.7772755949, SolsDif, 'West', 0, year) // 13.7772755949是應天半轉
     const { MoonDifAccum: WestMoonB,
-    } = AutoDifAccum(AnomaAccum + 13.7772755949, WinsolsDif, 'West', year)
+    } = AutoDifAccum(AnomaAccum + 13.7772755949, SolsDif, 'West', year)
 
     let Print1 = [{
         title: '現代近似',
@@ -51,10 +51,10 @@ export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
         List1.map(title => {
             let AutoDifAccumFunc = {}
             if (title !== 'Qintian') {
-                AutoDifAccumFunc = AutoDifAccum(AnomaAccum, WinsolsDif, title)
+                AutoDifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, title)
             }
             const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
-            const { SunTcorr, MoonTcorr, MoonAcrV, NodeAccumCorrA } = AutoTcorr(AnomaAccum, WinsolsDif, title)
+            const { SunTcorr, MoonTcorr, MoonAcrV, NodeAccumCorrA } = AutoTcorr(AnomaAccum, SolsDif, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             let SunTcorrPrint = '-'
             let SunTcorrInacPrint = '-'
@@ -100,9 +100,9 @@ export const BindTcorr = (AnomaAccum, WinsolsDif, year, CalName) => {
     Print2 = Print2.concat(
         List2.map(title => {
             const { SunDifAccum, MoonDifAccum,
-            } = AutoDifAccum(AnomaAccum, WinsolsDif, title)
+            } = AutoDifAccum(AnomaAccum, SolsDif, title)
             const { SunTcorr, MoonTcorr, NodeAccumCorrA
-            } = AutoTcorr(AnomaAccum, WinsolsDif, title)
+            } = AutoTcorr(AnomaAccum, SolsDif, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             const SunDifAccumPrint = SunDifAccum.toFixed(5)
             const SunDifAccumInacPrint = (SunDifAccum - WestSun).toFixed(4)
@@ -321,11 +321,11 @@ export const BindMansion2Deg = (Mansion, CalName) => {
     return Print
 }
 
-export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
+export const AutoLongi2Lati = (LongiRaw, SolsDeci, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
     const { Type, Solar, SolarRaw } = Para[CalName]
     let special = 0, Plus1 = 0, Plus2 = 0
-    LongiRaw = ~~(LongiRaw + WinsolsDeci) - WinsolsDeci
-    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 WinsolsDeci 0.3, LongiRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LongiRaw 2.8，該日3.1，去掉小數點是3
+    LongiRaw = ~~(LongiRaw + SolsDeci) - SolsDeci
+    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci 0.3, LongiRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LongiRaw 2.8，該日3.1，去掉小數點是3
     } else if (CalName === 'Chongxuan') { // 崇玄「昏後夜半」
         Plus1 = 1
         Plus2 = 0.5
@@ -401,10 +401,10 @@ export const AutoLongi2Lati = (LongiRaw, WinsolsDeci, CalName, isBare) => { // �
 }
 // console.log (AutoLongi2Lati (53.6, 0, 'Chongxuan'))
 
-export const BindLongi2Lati = (LongiRaw, WinsolsDeci, f, Sidereal, year) => {
+export const BindLongi2Lati = (LongiRaw, SolsDeci, f, Sidereal, year) => {
     Sidereal = +Sidereal
     LongiRaw = +LongiRaw
-    WinsolsDeci = +('0.' + WinsolsDeci)
+    SolsDeci = +('0.' + SolsDeci)
     f = +f
     year = +year
     if (LongiRaw >= Sidereal || LongiRaw < 0) {
@@ -439,7 +439,7 @@ export const BindLongi2Lati = (LongiRaw, WinsolsDeci, f, Sidereal, year) => {
             let DialInacPrint1 = '-'
             let DialInacPrint2 = '-'
             const { Lati1, Lati, Rise, Dial
-            } = AutoLongi2Lati(LongiRaw, WinsolsDeci, title)
+            } = AutoLongi2Lati(LongiRaw, SolsDeci, title)
             if (Lati1) {
                 Lati1Print = Lati1.toFixed(4)
                 LatiPrint = Lati.toFixed(4)
@@ -507,10 +507,10 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     // const NodeAnomaAccum = (AnomaAccumNight + tmp2) % Anoma // 每日夜半平交入轉
     const tmp3 = Node - NodeAccum // 距後日
     const tmp4 = tmp3 * MoonAvgVDeg // 距後度
-    // let NodeWinsolsDifDay = WinsolsDif + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
+    // let NodeSolsDifDay = SolsDif + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
     const NodeEclp = (MoonEclp + tmp4) % Sidereal // 正交距冬至度數 // 算出來好迷啊，莫名其妙
-    // const NodeWinsolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, WinsolsDif, CalName, NodeAccum).MoonTcorr // 遲加疾減
-    // NodeWinsolsDifDay = (NodeWinsolsDifDay + NodeWinsolsDifMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
+    // const NodeSolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, SolsDif, CalName, NodeAccum).MoonTcorr // 遲加疾減
+    // NodeSolsDifDay = (NodeSolsDifDay + NodeSolsDifMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
     const MoonNodeDif = MoonEclp - NodeEclp
     const MoonNodeDifHalf = MoonNodeDif % (Quadrant * 2)
     const MoonNodeDifQuar = MoonNodeDif % Quadrant // 所入初末限：置黃道宿積度，滿交象度（90多那個）去之，在半交象已下爲初限
@@ -558,7 +558,7 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
     let Print = []
     Print = Print.concat(
         ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
-            let NodeWinsolsDifDegPrint = '-'
+            let NodeSolsDifDegPrint = '-'
             let WhiteLongiPrint = '-'
             let EquaLongiPrint = '-'
             let EclpWhiteDifPrint = '-'
@@ -572,7 +572,7 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
             const { MoonEclpLati1, MoonEclpLati,
             } = AutoMoonLati(NodeAccum, title)
             if (NodeEclp) {
-                NodeWinsolsDifDegPrint = NodeEclp.toFixed(4)
+                NodeSolsDifDegPrint = NodeEclp.toFixed(4)
             }
             if (EquaWhiteDif) {
                 EquaLongiPrint = EquaLongi.toFixed(4)
@@ -591,19 +591,19 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
             }
             return {
                 title: CalNameList[title],
-                data: [NodeWinsolsDifDegPrint, EquaLongiPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
+                data: [NodeSolsDifDegPrint, EquaLongiPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
             }
         }))
     return Print
 }
 // console.log(BindMoonLongiLati(2.252, 55.71))
 
-export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, WinsolsDeci) => {
+export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     AvgDeci = +('0.' + AvgDeci)
-    AvgWinsolsDif = +AvgWinsolsDif
-    WinsolsDeci = +('0.' + WinsolsDeci)
+    AvgSolsDif = +AvgSolsDif
+    SolsDeci = +('0.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -615,7 +615,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, Wi
     // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
-        if (AvgWinsolsDif >= j * HalfTermLeng && AvgWinsolsDif < (j + 1) * HalfTermLeng) {
+        if (AvgSolsDif >= j * HalfTermLeng && AvgSolsDif < (j + 1) * HalfTermLeng) {
             i = (j - 2 + 12) % 12
         }
         break
@@ -623,11 +623,11 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, Wi
     let Print1 = []
     Print1 = Print1.concat(
         ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
+            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0, 0, WinsolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 1, title, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -653,11 +653,11 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, Wi
     let Print2 = []
     Print2 = Print2.concat(
         ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
+            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 1, title, i + 1, 0, 0, WinsolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 1, title, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -684,12 +684,12 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, Wi
 }
 // console.log(BindSunEclipse(0.1, 14, 3355, 14, 5))
 
-export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, WinsolsDeci) => {
+export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     AvgDeci = +('0.' + AvgDeci)
-    AvgWinsolsDif = +AvgWinsolsDif
-    WinsolsDeci = +('0.' + WinsolsDeci)
+    AvgSolsDif = +AvgSolsDif
+    SolsDeci = +('0.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -701,7 +701,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, W
     // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
-        if (AvgWinsolsDif >= j * HalfTermLeng && AvgWinsolsDif < (j + 1) * HalfTermLeng) {
+        if (AvgSolsDif >= j * HalfTermLeng && AvgSolsDif < (j + 1) * HalfTermLeng) {
             i = (j - 2 + 12) % 12
         }
         break
@@ -709,11 +709,11 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, W
     let Print1 = []
     Print1 = Print1.concat(
         ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong', 'Datong2'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
+            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0, 0, WinsolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 0, title, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -739,11 +739,11 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, W
     let Print2 = []
     Print2 = Print2.concat(
         ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgWinsolsDif, title)
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrWinsolsDif = AvgWinsolsDif + (Tcorr2 || Tcorr1)
+            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrWinsolsDif, AvgWinsolsDif, 0, title, i + 1, 0, 0, WinsolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 0, title, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -772,7 +772,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgWinsolsDif, W
 
 const InacPrintAnaly_SunTcorr = (CalName, AnomaAccum, year) => {
     let SunTcorrInac = []
-    for (let i = 0; i <= 365; i++) {// i:AvgWinsolsDif
+    for (let i = 0; i <= 365; i++) {// i:AvgSolsDif
         SunTcorrInac[i] = BindTcorr(AnomaAccum, i, year, CalName).SunTcorrInac
     }
     return SunTcorrInac

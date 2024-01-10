@@ -6,7 +6,7 @@ export default {
         Solar: 365.25, // 歲實
         OriginAd: -2760366, // 上元積年的公曆。近距-1566
         // JdOrigin: 1704250.5,
-        JdWinsols: 1704250.5 + 46 * 365.25,
+        JdSols: 1704250.5 + 46 * 365.25,
         OriginYearSc: 51, // 上元年干支甲寅
         ZhengNum: 0, // 年首子月。這兩個一定要記得一起調
         OriginMonNum: 0, // 正月建子
@@ -24,7 +24,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2760423, // -1623
         // JdOrigin: 1683430.5,
-        JdWinsols: 1721051.25,
+        JdSols: 1721051.25,
         OriginYearSc: 54,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -41,7 +41,7 @@ export default {
         Lunar: 27759 / 940,
         Solar: 365.25,
         // JdOrigin: 1783510.5,
-        JdWinsols: 1721052.75,
+        JdSols: 1721052.75,
         OriginAd: -2760149, // -1349
         OriginYearSc: 28,
         ZhengNum: 0,
@@ -61,7 +61,7 @@ export default {
         OriginAd: -2763680, // -4880
         // OriginAd: -2763680 + 2880, // 經學與曆學的貫通p155錯誤積年
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -78,7 +78,7 @@ export default {
         Lunar: 27759 / 940,
         Solar: 365.25,
         OriginAd: -2763680,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 1,
         OriginMonNum: 1,
@@ -97,7 +97,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 1,
         OriginMonNum: 1, // 隱元建丑
@@ -105,7 +105,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 539 / 940,
+        SolsConst: 539 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -117,7 +117,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0, // 隱元建丑
@@ -125,7 +125,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 539 / 940,
+        SolsConst: 539 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -137,7 +137,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -145,7 +145,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 469 / 940,
+        SolsConst: 469 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -157,7 +157,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -165,7 +165,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 403 / 940,
+        SolsConst: 403 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -177,7 +177,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -185,7 +185,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 348 / 940,
+        SolsConst: 348 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -197,7 +197,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -205,7 +205,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 280 / 940,
+        SolsConst: 280 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -217,7 +217,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -225,7 +225,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 213 / 940,
+        SolsConst: 213 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -237,7 +237,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2763680,
         // JdOrigin: 1604170.5,
-        JdWinsols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+        JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
         OriginYearSc: 37,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -245,7 +245,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 147 / 940,
+        SolsConst: 147 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -256,7 +256,7 @@ export default {
         Solar: 365.25,
         OriginAd: -2759875, // -1075
         // JdOrigin: 1883590.5,
-        JdWinsols: 1721054.25,
+        JdSols: 1721054.25,
         OriginYearSc: 2,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -272,11 +272,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -60.875, // 冬至距雨水日數
-        WinsolsOriginMon: -(2 + 7 / 114), // 冬至距雨水閏餘
+        SolsOriginDif: -60.875, // 冬至距雨水日數
+        SolsOriginMon: -(2 + 7 / 114), // 冬至距雨水閏餘
         OriginAd: -2759875,
         // JdOrigin: 1883650.5,
-        JdWinsols: 1721053.375,
+        JdSols: 1721053.375,
         OriginYearSc: 2,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -308,11 +308,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305, // -1505
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52, // 曆元距甲子日數
         BuScConst: 5,
         ZhengNum: 2, // 十月爲年首
@@ -331,11 +331,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305, // -1505
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52, // 曆元距甲子日數
         BuScConst: 5,
         ZhengNum: 2, // 十月爲年首
@@ -353,11 +353,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScConst: 5,
         ZhengNum: -1,
@@ -375,11 +375,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScConst: 5,
         ZhengNum: -1,
@@ -388,7 +388,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 3 / 4,
+        SolsConst: 3 / 4,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -398,11 +398,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScConst: 5,
         ZhengNum: -1,
@@ -411,7 +411,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 0,
-        WinsolsConst: 3 / 4 - 210 / 940,
+        SolsConst: 3 / 4 - 210 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -421,11 +421,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScConst: 5,
         ZhengNum: -1,
@@ -434,7 +434,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 1,
-        WinsolsConst: 3 / 4 - 210 / 940,
+        SolsConst: 3 / 4 - 210 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -444,11 +444,11 @@ export default {
         Denom: 940,
         Lunar: 27759 / 940,
         Solar: 365.25,
-        WinsolsOriginDif: -45.65625, // 立春爲曆元
-        WinsolsOriginMon: -(1 + 83 / 152),
+        SolsOriginDif: -45.65625, // 立春爲曆元
+        SolsOriginMon: -(1 + 83 / 152),
         OriginAd: -2760305,
         // JdOrigin: 1726575.5,
-        JdWinsols: 1721051 + 3 / 32,
+        JdSols: 1721051 + 3 / 32,
         OriginYearSc: 52,
         BuScConst: 5,
         ZhengNum: -1,
@@ -457,7 +457,7 @@ export default {
         JiRange: 1520,
         BuRange: 76,
         isTermLeap: 1,
-        WinsolsConst: 3 / 4 - 235 / 940,
+        SolsConst: 3 / 4 - 235 / 940,
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -483,7 +483,7 @@ export default {
         Solar: 365.25, // 歲實
         OriginAd: -1566, // 上元積年的公曆
         // JdOrigin: 1704249.75,
-        JdWinsols: 1704249.75 + 46 * 365.25,
+        JdSols: 1704249.75 + 46 * 365.25,
         EcliRange: 135 / 23,
         EcliNumer: 513,
         Node: 27.212729649262943,
@@ -494,7 +494,7 @@ export default {
         JiRange: 1520, // 紀
         BuRange: 76, // 蔀
         isTermLeap: 1, // 是否用無中氣置閏法
-        WinsolsConst: -0.75, // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
+        SolsConst: -0.75, // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
         EcliRange: 135 / 23,
         EcliNumer: 513,
     },
@@ -507,7 +507,7 @@ export default {
         OriginAd: -143230,
         OriginCloseAd: -103,
         // JdOrigin: 1683430.5,
-        JdWinsols: 1683430.5 + 103 * 365.25,
+        JdSols: 1683430.5 + 103 * 365.25,
         OriginYearSc: 13,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -528,7 +528,7 @@ export default {
         Solar: 365 + 385 / 1539,
         OriginAd: -2760366,
         // JdOrigin: 1704250.5,
-        JdWinsols: 1721052,
+        JdSols: 1721052,
         OriginYearSc: 51,
         ZhengNum: 0,
         OriginMonNum: 0,
@@ -564,7 +564,7 @@ export default {
         OriginAd: -2760480,
         OriginCloseAd: -160,
         // JdOrigin: 1662610.5,
-        JdWinsols: 1662610.5 + 160 * 365.25,
+        JdSols: 1662610.5 + 160 * 365.25,
         OriginYearSc: 17,
         ZhengNum: 2,
         OriginMonNum: 2,
@@ -1731,7 +1731,7 @@ export default {
         OriginYearSc: 54, // 657年丁巳
         OriginMonNum: 3, // 春分朔
         ZhengNum: 3, // 建卯
-        WinsolsConst: 55,
+        SolsConst: 55,
         FirstConst: 32.5, //
         AnomaConst: 15,
     },
@@ -1751,7 +1751,7 @@ export default {
         // JdOrigin:1962108.6259, // 冬至
         OriginMonNum: 2, // 雨水元
         ZhengNum: 2,
-        WinsolsConst: 39, // 經朔癸卯朔旦雨水
+        SolsConst: 39, // 經朔癸卯朔旦雨水
         FirstConst: -9.4694,
         AnomaConst: 18,
     },
@@ -2342,7 +2342,7 @@ export default {
         AnomaNumer: 330655, // 轉實
         Node: 27.21225,
         NodeNumer: 326547, // 交實      
-        WinsolsConst: -237811 / 12000, // 氣差
+        SolsConst: -237811 / 12000, // 氣差
         FirstConst: -21704 / 12000, // 閏差
         AnomaConst: -188800, // 轉差
         NodeConst: 80298 / 12000, // 交差
@@ -2668,7 +2668,7 @@ export default {
         Anoma: 27.5546, // 轉終：近點月
         AnomaConst: 13.1904, // 轉應：曆元前冬至距月過近地點
         NodeConst: 26.018786,
-        WinsolsConst: 55.06, // 氣應：曆元前冬至日分
+        SolsConst: 55.06, // 氣應：曆元前冬至日分
         FirstConst: 20.1850, // 閏應：曆元前冬至月齡，即冬至距天正平朔的長度
         PartRange: 0.082, // 限法
         AcrTermList: [0, 14.495311, 29.111126, 43.853999, 58.730488, 73.747147, 88.911421, 104.221466, 119.662429, 135.228598, 150.914265, 166.713719, 182.62125, 198.528781, 214.328235, 230.013902, 245.580071, 261.021034, 276.331079, 291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425],
@@ -2695,7 +2695,7 @@ export default {
         MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
-        WinsolsConst: 55.06, // 氣應：曆元前冬至日分
+        SolsConst: 55.06, // 氣應：曆元前冬至日分
         FirstConst: 20.205, // 閏應：曆元前冬至月齡
         AnomaConst: 13.0205, // 轉應：曆元前冬至距月過近地點
         NodeConst: 26.0388,
@@ -2724,7 +2724,7 @@ export default {
         MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         Anoma: 27.5546, // 轉終：近點月
-        WinsolsConst: 55.06, // 氣應：曆元前冬至日分
+        SolsConst: 55.06, // 氣應：曆元前冬至日分
         FirstConst: 20.205, // 閏應：曆元前冬至月齡
         AnomaConst: 13.0205, // 轉應：曆元前冬至距月過近地點
         NodeConst: 26.0388,
@@ -2753,7 +2753,7 @@ export default {
         SunLimitYin: 8,
         MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
-        WinsolsConst: 55.0375, // 氣應
+        SolsConst: 55.0375, // 氣應
         FirstConst: 18.20708, // 閏應
         AnomaConst: 20.969, // 轉應
         NodeConst: 11.510508, // 曆五·大統曆法三上 
@@ -2782,8 +2782,8 @@ export default {
         MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
         NodeConst: 20.4734,
-        WinsolsConst: -55.6089,
-        // WinsolsConst: 59.061186, // 氣應：曆元前冬至日分
+        SolsConst: -55.6089,
+        // SolsConst: 59.061186, // 氣應：曆元前冬至日分
         FirstConst: -19.3619,
         AnomaConst: 7.5034,
         PartRange: 0.082, // 限法
@@ -2810,7 +2810,7 @@ export default {
         SunLimitYin: 8,
         MoonLimitNone: 13.05,
         MoonLimitDenom: 0.87,
-        WinsolsConst: 20.599599, // 氣應
+        SolsConst: 20.599599, // 氣應
         FirstConst: 23.1559026, // 閏應 20.599599 - 57.4436964 +60 
         AnomaConst: 5.4550016 + 23.1559026, // 轉應
         NodeConst: 10.2330428 + 23.1559026,
@@ -2834,7 +2834,7 @@ export default {
         Sidereal: 365.25636042,
         LunarRaw: 29.53058885, // 29.53058885+0.0000000022*(year-2000)
         Anoma: 27.554551,
-        WinsolsConst: 55.08125,
+        SolsConst: 55.08125,
         FirstConst: 20.2,
         AnomaConst: 13.17,
         ZhengNum: 2,
@@ -2880,7 +2880,7 @@ export default {
         // Lunar: ,
         // Node: ,
         // Anoma: , // 
-        WinsolsConst: 7.656374926,
+        SolsConst: 7.656374926,
         MansionDayConst: 5.656374926, // 宿應，單位日。這是值日，其實和宿度無關。
         MansionRaw: [28, 3.1666666666667] // 我定的，在箕宿3.166
     },
@@ -2902,7 +2902,7 @@ export default {
         NodeDV: 190.63863 / 3600,
         MoonPLUSNodeDV: 13.2293505663, // 太陰每日距交平行 13+13/60+45/3600+39/216000+43/216000/60+20/216000/3600+34/216000/216000
         MoonNodeMS: 110413.92441334 / 3600, // 太陰交周朔策（太阴交周在一个“朔策”里面运行的距离）。MoonPLUSNodeDV*Lunar-360=30.6705345506
-        WinsolsConst: 32.12254, // 氣應，丙申日丑正三刻十一分有奇。推測惟憑春秋分，而推測之法，則以所測之視高度，減蒙氣差，加地半徑差，而得太陽之實高度。然後以距緯求其經度，而得節氣時刻。上編謂春秋分太陽高五十度，無蒙氣差，而加地半徑差一分五十六秒。今法謂地半徑差甚微，可以不計，而減蒙氣差五十秒，故所測視高度雖同，而所推實高度恆低二分四十六秒，則經度必差六分五十八秒。⋯⋯然今所測之視高度，春分又比前低二十七秒⋯⋯則經度又差一分十四秒
+        SolsConst: 32.12254, // 氣應，丙申日丑正三刻十一分有奇。推測惟憑春秋分，而推測之法，則以所測之視高度，減蒙氣差，加地半徑差，而得太陽之實高度。然後以距緯求其經度，而得節氣時刻。上編謂春秋分太陽高五十度，無蒙氣差，而加地半徑差一分五十六秒。今法謂地半徑差甚微，可以不計，而減蒙氣差五十秒，故所測視高度雖同，而所推實高度恆低二分四十六秒，則經度必差六分五十八秒。⋯⋯然今所測之視高度，春分又比前低二十七秒⋯⋯則經度又差一分十四秒
         ChouConst: 15.12633, // 朔應：癸卯年首朔距天正冬至次日子正初刻之日=日月相距/月距日一日之平行。首朔：十二月
         MoonConst: 5 * 30 + 26 + 27 / 60 + 48 / 3600 + 53 / 216000, // 太陰平行應：冬至次日子正太陰平行宮
         MoonPeriConst: 8 * 30 + 1 + 15 / 60 + 45 / 3600 + 38 / 216000, // 最高應

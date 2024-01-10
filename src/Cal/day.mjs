@@ -23,7 +23,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
     const Day = (CalName, year) => {
         const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[CalName]
         let { Solar, Sidereal, Lunar } = Para[CalName]
-        const { LeapNumTermThis, WinsolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
+        const { LeapNumTermThis, SolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
         Lunar = Lunar || LunarRaw
@@ -32,8 +32,8 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const HexagramLeng = Solar / 60
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const ZhengInt = NewmInt[0] + (ScConst || 0)
-        const ZhengWinsolsDif = +(ZhengInt - WinsolsAccum).toFixed(5) // 正月夜半到冬至距離
-        const WinsolsDeci = WinsolsAccum - Math.floor(WinsolsAccum)
+        const ZhengSolsDif = +(ZhengInt - SolsAccum).toFixed(5) // 正月夜半到冬至距離
+        const SolsDeci = SolsAccum - Math.floor(SolsAccum)
         /////////// 預處理72候、五行、八卦列表//////////
         let HouList = [], Hexagram64List = [], HexagramSymbolList = [], FiveAccumList = [], HexagramAccumList = [], HouAccum = []
         if (Type < 7) {
@@ -103,24 +103,24 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const EquaDegAccumList = AutoDegAccumList(CalName, year)
         const EclpDegAccumList = AutoDegAccumList(CalName, year, 1)
         ////// 沒滅
-        const MoWinsolsDif = [], MieWinsolsDif = []
+        const MoSolsDif = [], MieSolsDif = []
         const MoLeng = Solar / (Solar - 360)
-        const FirstMo = Math.ceil(WinsolsAccum / MoLeng) * MoLeng // floor在冬至之前，ceil在之後
+        const FirstMo = Math.ceil(SolsAccum / MoLeng) * MoLeng // floor在冬至之前，ceil在之後
         for (let i = 0; i <= 6; i++) {
-            MoWinsolsDif[i] = parseFloat((FirstMo + i * MoLeng).toPrecision(14)) // 距冬至日數
-            if (Type <= 6 && MoWinsolsDif[i] === ~~MoWinsolsDif[i]) {
-                MieWinsolsDif[i] = MoWinsolsDif[i]
+            MoSolsDif[i] = parseFloat((FirstMo + i * MoLeng).toPrecision(14)) // 距冬至日數
+            if (Type <= 6 && MoSolsDif[i] === ~~MoSolsDif[i]) {
+                MieSolsDif[i] = MoSolsDif[i]
             }
-            MoWinsolsDif[i] = parseFloat((MoWinsolsDif[i] - WinsolsAccum).toPrecision(14))
-            if (MieWinsolsDif[i]) {
-                MieWinsolsDif[i] = parseFloat((MieWinsolsDif[i] - WinsolsAccum).toPrecision(14))
+            MoSolsDif[i] = parseFloat((MoSolsDif[i] - SolsAccum).toPrecision(14))
+            if (MieSolsDif[i]) {
+                MieSolsDif[i] = parseFloat((MieSolsDif[i] - SolsAccum).toPrecision(14))
             }
         }
         if (Type >= 7) { // 大衍改革滅
             const MieLeng = Lunar / (30 - Lunar)
-            const FirstMie = Math.ceil(WinsolsAccum / MieLeng) * MieLeng
+            const FirstMie = Math.ceil(SolsAccum / MieLeng) * MieLeng
             for (let i = 0; i <= 7; i++) {
-                MieWinsolsDif[i] = parseFloat((FirstMie + i * MieLeng - WinsolsAccum).toPrecision(14))
+                MieSolsDif[i] = parseFloat((FirstMie + i * MieLeng - SolsAccum).toPrecision(14))
             }
         }
         ////////
@@ -138,10 +138,10 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const YearColor = YearColorConvert(YuanYear)
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
         const OriginJdAccum = 2086292 + ~~(365.2423 * (year - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
-        const OriginJdDif = (WinsolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
+        const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
         const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], Eclp = [], Duskstar = [], MoonEclp = [], MoonEclpLati = [], Rise = [], Dial = [], Lati = [], HouName = [], HexagramName = [], FiveName = [], ManGod = [], Luck = []
         let DayAccum = 0, JieAccum = 0, SummsolsDayAccum = 0, AutumnDayAccum = 0 // 各節積日 // 夏至積日// 立秋積日
-        let JianchuDayAccum = ZhengInt - Math.floor(WinsolsAccum) // 建除
+        let JianchuDayAccum = ZhengInt - Math.floor(SolsAccum) // 建除
         let HuangheiDayAccum = JianchuDayAccum
         let JianchuOrigin = 0, HuangheiOrigin = 0, Fu1DayAccum = 0, Fu2DayAccum = 0, Fu3DayAccum = 0, HouOrder = 0, FiveOrder = 0, HexagramOrder = 0
         for (let i = 1; i <= 12 + (LeapNumTermThis > 0 ? 1 : 0); i++) { // 有閏就13             
@@ -161,20 +161,20 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)
             MonInfo[i] = MonColorFunc.MonInfo
             MonColor[i] = MonColorFunc.MonColor
-            let MoonEclpLongiNewmNight = 0, SunEclpLongiNewm = 0, AnomaCycle = 0, MoonAcrSNewm = 0, WinsolsDifNewm = 0
+            let MoonEclpLongiNewmNight = 0, SunEclpLongiNewm = 0, AnomaCycle = 0, MoonAcrSNewm = 0, SolsDifNewm = 0
             if (Type < 4) {
-                WinsolsDifNewm = NewmRaw[i - 1] - WinsolsAccum // 合朔加時 
+                SolsDifNewm = NewmRaw[i - 1] - SolsAccum // 合朔加時 
             } else {
-                WinsolsDifNewm = NewmAcrRaw[i - 1] - WinsolsAccum
+                SolsDifNewm = NewmAcrRaw[i - 1] - SolsAccum
             }
             if (Type > 1) {
                 const AnomaAccumNewm = NewmAnomaAccumPrint[i - 1] // 加時入轉。這個求月行遲疾修正的步驟是我假設的
-                const SunDifAccumNewm = AutoDifAccum(AnomaAccumNewm, WinsolsDifNewm, CalName).SunDifAccum
+                const SunDifAccumNewm = AutoDifAccum(AnomaAccumNewm, SolsDifNewm, CalName).SunDifAccum
                 if (Type < 11) {
-                    const SunEquaLongiNewm = WinsolsDifNewm + SunDifAccumNewm
+                    const SunEquaLongiNewm = SolsDifNewm + SunDifAccumNewm
                     SunEclpLongiNewm = AutoEqua2Eclp(SunEquaLongiNewm, CalName).Equa2Eclp
                 } else { // 授時直接以黃道為準                
-                    SunEclpLongiNewm = WinsolsDifNewm + SunDifAccumNewm
+                    SunEclpLongiNewm = SolsDifNewm + SunDifAccumNewm
                 }
                 if (Type < 4) {
                     MoonEclpLongiNewmNight = SunEclpLongiNewm - (NewmRaw[i - 1] - (NewmInt[i - 1])) * MoonAvgVDeg
@@ -204,57 +204,57 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
             ManGod[i] = []
             Luck[i] = []
             for (let k = 1; k <= NewmInt[i] - NewmInt[i - 1]; k++) { // 每月日數                
-                const WinsolsDifNight = ZhengWinsolsDif + DayAccum // 每日夜半距冬至日數
-                const WinsolsDifInt = ZhengInt - Math.floor(WinsolsAccum) + DayAccum // 冬至當日爲0
-                const WinsolsDifNoon = WinsolsDifNight + 0.5 // 每日正午                
+                const SolsDifNight = ZhengSolsDif + DayAccum // 每日夜半距冬至日數
+                const SolsDifInt = ZhengInt - Math.floor(SolsAccum) + DayAccum // 冬至當日爲0
+                const SolsDifNoon = SolsDifNight + 0.5 // 每日正午                
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 let SunEquaLongi = 0, SunEquaLongiAccum = 0, SunEclpLongi = 0, SunEclpLongiAccum = 0, SunEquaLongiNoon = 0, SunEclpLongiNoon = 0, MoonEclpLongi = 0, MoonEclpLongiAccum = 0, AnomaAccumNight = 0, NodeAccumNight = 0, MoonLongiLatiFunc = {}
                 if (Type === 1) {
-                    SunEquaLongiAccum = WinsolsDifNight + WinsolsAccum
-                    SunEclpLongi = AutoEqua2Eclp(WinsolsDifNight, CalName).Equa2Eclp
-                    SunEclpLongiAccum = SunEclpLongi + WinsolsAccum
+                    SunEquaLongiAccum = SolsDifNight + SolsAccum
+                    SunEclpLongi = AutoEqua2Eclp(SolsDifNight, CalName).Equa2Eclp
+                    SunEclpLongiAccum = SunEclpLongi + SolsAccum
                     MoonEclpLongiAccum = SunEquaLongiAccum * MoonAvgVDeg
                 } else {
                     NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node
                     AnomaAccumNight = (NewmAnomaAccumNightPrint[i - 1] + k - 1) % Anoma
                     const AnomaAccumNoon = (AnomaAccumNight + 0.5) % Anoma // 正午入轉                    
-                    NodeAccumNight = (NodeAccumNight + AutoTcorr(AnomaAccumNight, WinsolsDifNight, CalName, NodeAccumNight).NodeAccumCorrA) % Node
-                    const SunDifAccumNight = AutoDifAccum(AnomaAccumNight, WinsolsDifNight, CalName).SunDifAccum
-                    const SunDifAccumNoon = AutoDifAccum(AnomaAccumNoon, WinsolsDifNoon, CalName).SunDifAccum
+                    NodeAccumNight = (NodeAccumNight + AutoTcorr(AnomaAccumNight, SolsDifNight, CalName, NodeAccumNight).NodeAccumCorrA) % Node
+                    const SunDifAccumNight = AutoDifAccum(AnomaAccumNight, SolsDifNight, CalName).SunDifAccum
+                    const SunDifAccumNoon = AutoDifAccum(AnomaAccumNoon, SolsDifNoon, CalName).SunDifAccum
                     if (Type < 11) {
-                        SunEquaLongi = WinsolsDifNight + SunDifAccumNight
-                        SunEquaLongiAccum = SunEquaLongi + WinsolsAccum
-                        SunEquaLongiNoon = WinsolsDifNoon + SunDifAccumNoon
+                        SunEquaLongi = SolsDifNight + SunDifAccumNight
+                        SunEquaLongiAccum = SunEquaLongi + SolsAccum
+                        SunEquaLongiNoon = SolsDifNoon + SunDifAccumNoon
                         SunEclpLongi = AutoEqua2Eclp(SunEquaLongi, CalName).Equa2Eclp
-                        SunEclpLongiAccum = SunEclpLongi + WinsolsAccum
+                        SunEclpLongiAccum = SunEclpLongi + SolsAccum
                     } else { // 授時直接以黃道為準
-                        SunEclpLongi = WinsolsDifNight + SunDifAccumNight
-                        SunEclpLongiAccum = SunEclpLongi + WinsolsAccum
+                        SunEclpLongi = SolsDifNight + SunDifAccumNight
+                        SunEclpLongiAccum = SunEclpLongi + SolsAccum
                         SunEquaLongi = AutoEqua2Eclp(SunEclpLongi, CalName).Eclp2Equa
-                        SunEquaLongiAccum = SunEquaLongi + WinsolsAccum
-                        SunEclpLongiNoon = WinsolsDifNoon + SunDifAccumNoon
+                        SunEquaLongiAccum = SunEquaLongi + SolsAccum
+                        SunEclpLongiNoon = SolsDifNoon + SunDifAccumNoon
                     }
                     // 元嘉開始計算月度就有計入遲疾的方法，大業就完全是定朔，但又是平朔注曆，這樣會衝突，我只能把麟德以前全部求平行度。
                     // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
                     if (Type < 4) {
                         MoonEclpLongi = MoonEclpLongiNewmNight + (k - 1) * MoonAvgVDeg
-                        MoonEclpLongiAccum = MoonEclpLongi + WinsolsAccum
+                        MoonEclpLongiAccum = MoonEclpLongi + SolsAccum
                     } else {
                         const MoonAcrSNight = AutoMoonAcrS(AnomaAccumNight, CalName).MoonAcrS
                         MoonEclpLongi = SunEclpLongiNewm + (MoonAcrSNight - MoonAcrSNewm + AnomaCycle) % AnomaCycle
-                        MoonEclpLongiAccum = MoonEclpLongi + WinsolsAccum
+                        MoonEclpLongiAccum = MoonEclpLongi + SolsAccum
                     }
                     if (Type < 11) {
                         MoonLongiLatiFunc = AutoMoonLati(NodeAccumNight, CalName)
-                        MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, WinsolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
+                        MoonEclpLati[i][k] = AutoNineOrbit(NodeAccumNight, SolsDifNight, CalName) + MoonLongiLatiFunc.MoonEclpLati.toFixed(3) + '度'
                     }
                 }
-                const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, WinsolsDeci)
+                const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, SolsDeci)
                 Equa[i][k] = EquaFunc.MansionResult
                 Duskstar[i][k] = EquaFunc.DuskstarResult
                 Eclp[i][k] = Accum2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
-                const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, WinsolsDeci, CalName)
+                const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, SolsDeci, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Rise[i][k] = Longi2LatiFunc.Rise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
@@ -273,27 +273,27 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 ///////////具注曆////////////
                 const ScOrder = (ZhengInt % 60 + 60 + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]
-                Jd[i][k] = parseInt(OriginJdAccum + OriginJdDif + WinsolsDifInt + 1)
+                Jd[i][k] = parseInt(OriginJdAccum + OriginJdDif + SolsDifInt + 1)
                 Jd[i][k] += ' ' + Jd2Date1(Jd[i][k]).Mmdd
                 const Stem = StemList.indexOf(Sc[i][k][0])
                 const Branch = BranchList.indexOf(Sc[i][k][1])
-                const JieNum = Math.round((Math.ceil(~~(WinsolsDifNight / HalfTermLeng) / 2) + 11) % 12.1)
+                const JieNum = Math.round((Math.ceil(~~(SolsDifNight / HalfTermLeng) / 2) + 11) % 12.1)
                 // 順序不一樣！立春1，驚蟄2，清明3，立夏4，芒種5，小暑6，立秋7，白露8，寒露9，立冬10，大雪11，小寒12
-                const JieDifInt = ~~((WinsolsDifNight - (JieNum * 2 + 1) * HalfTermLeng + WinsolsDeci + Solar) % Solar)
+                const JieDifInt = ~~((SolsDifNight - (JieNum * 2 + 1) * HalfTermLeng + SolsDeci + Solar) % Solar)
                 if (Type >= 6) {
                     const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekConst || 0)) % 7.1)
                     const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionDayConst || 0)) + 28) % 28.1)
                     Week[i][k] = WeekList[WeekOrder] + NumList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
                 }
                 for (let j = HouOrder; j < 90; j++) { // 氣候 
-                    if (HouAccum[j] >= WinsolsDifNight && HouAccum[j] < WinsolsDifNight + 1) {
+                    if (HouAccum[j] >= SolsDifNight && HouAccum[j] < SolsDifNight + 1) {
                         HouOrder = j % 72
                         const TermOrder = HouOrder % 3 ? -1 : (Math.round(HouOrder / 3)) % 24
                         HouName[i][k] = TermOrder >= 0 ? `<span class='term'>${HalfTermList[TermOrder]}</span>` : ''
                         if (Type >= 3) {
-                            HouName[i][k] += HouList[HouOrder] + ((HouAccum[j] + WinsolsAccum - Math.floor(HouAccum[j] + WinsolsAccum)).toFixed(4)).slice(2, 6)
+                            HouName[i][k] += HouList[HouOrder] + ((HouAccum[j] + SolsAccum - Math.floor(HouAccum[j] + SolsAccum)).toFixed(4)).slice(2, 6)
                         } else if (TermOrder >= 0) {
-                            HouName[i][k] += ((HouAccum[j] + WinsolsAccum - Math.floor(HouAccum[j] + WinsolsAccum)).toFixed(4)).slice(2, 6)
+                            HouName[i][k] += ((HouAccum[j] + SolsAccum - Math.floor(HouAccum[j] + SolsAccum)).toFixed(4)).slice(2, 6)
                         }
                         if (j % 6 === 3) { // 立春等節
                             JieAccum = DayAccum
@@ -309,9 +309,9 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     }
                 }
                 if (DayAccum === 1) {
-                    const XiaohanDifInt = ZhengInt - Math.floor(WinsolsAccum) - HalfTermLeng + DayAccum
-                    const tmp = ~~((WinsolsDifInt + 1 - XiaohanDifInt) / 12)
-                    const tmp1 = WinsolsDifInt + 1 - tmp * 12 - Branch
+                    const XiaohanDifInt = ZhengInt - Math.floor(SolsAccum) - HalfTermLeng + DayAccum
+                    const tmp = ~~((SolsDifInt + 1 - XiaohanDifInt) / 12)
+                    const tmp1 = SolsDifInt + 1 - tmp * 12 - Branch
                     JianchuOrigin = tmp1 + 2 // 小寒後第一個丑開始建除
                     HuangheiOrigin = tmp1 + 12 // 小寒後第一個戌開始黃黑道
                 }
@@ -344,27 +344,27 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 Nayin[i][k] = NayinList[Math.ceil(ScOrder / 2)] + Jianchu + Huanghei
                 HouName[i][k] += Fu
                 for (let j = 0; j < 7; j++) {
-                    if (MieWinsolsDif[j] >= WinsolsDifNight && MieWinsolsDif[j] < WinsolsDifNight + 1) {
-                        HouName[i][k] += `<span class='momie'>滅</span>` + (MieWinsolsDif[j] + WinsolsAccum - Math.floor(MieWinsolsDif[j] + WinsolsAccum)).toFixed(4).slice(2, 6)
+                    if (MieSolsDif[j] >= SolsDifNight && MieSolsDif[j] < SolsDifNight + 1) {
+                        HouName[i][k] += `<span class='momie'>滅</span>` + (MieSolsDif[j] + SolsAccum - Math.floor(MieSolsDif[j] + SolsAccum)).toFixed(4).slice(2, 6)
                         break
-                    } else if (MoWinsolsDif[j] >= WinsolsDifNight && MoWinsolsDif[j] < WinsolsDifNight + 1) {
-                        HouName[i][k] += `<span class='momie'>沒</span>` + (MoWinsolsDif[j] + WinsolsAccum - Math.floor(MoWinsolsDif[j] + WinsolsAccum)).toFixed(4).slice(2, 6)
+                    } else if (MoSolsDif[j] >= SolsDifNight && MoSolsDif[j] < SolsDifNight + 1) {
+                        HouName[i][k] += `<span class='momie'>沒</span>` + (MoSolsDif[j] + SolsAccum - Math.floor(MoSolsDif[j] + SolsAccum)).toFixed(4).slice(2, 6)
                         break
                     }
                 }
                 for (let l = 0; l < 10; l++) { // 8個五行
-                    if (WinsolsDifNight >= FiveAccumList[l] && WinsolsDifNight < FiveAccumList[l] + 1) {
+                    if (SolsDifNight >= FiveAccumList[l] && SolsDifNight < FiveAccumList[l] + 1) {
                         FiveOrder = l % 8
-                        const FiveDeci = (WinsolsDifNight - FiveAccumList[l]).toFixed(4).slice(2, 6)
+                        const FiveDeci = (SolsDifNight - FiveAccumList[l]).toFixed(4).slice(2, 6)
                         FiveName[i][k] = `<span class='FiveNameSymbol'>` + FiveList2[FiveOrder] + `</span>` + FiveDeci
                         break
                     }
                 }
                 if (Type < 11) { // 授時不算64卦
                     for (let m = HexagramOrder; m < 80; m++) {
-                        if (WinsolsDifNight >= HexagramAccumList[m] && WinsolsDifNight < HexagramAccumList[m] + 1) {
+                        if (SolsDifNight >= HexagramAccumList[m] && SolsDifNight < HexagramAccumList[m] + 1) {
                             HexagramOrder = m % (Hexagram64List === Hexagram64ListA ? 64 : 60)
-                            const HexagramDeci = (WinsolsDifNight - HexagramAccumList[m]).toFixed(4).slice(2, 6)
+                            const HexagramDeci = (SolsDifNight - HexagramAccumList[m]).toFixed(4).slice(2, 6)
                             HexagramName[i][k] = Hexagram64List[HexagramOrder] + `<span class='HexagramSymbol'>` + HexagramSymbolList[HexagramOrder] + `</span>` + HexagramDeci
                             break
                         } else {

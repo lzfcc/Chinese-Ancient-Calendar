@@ -238,7 +238,7 @@ const Interpolate3_big_Pre = (n, initial) => {
 // console.log(Interpolate3_big_Pre(2.5, '1,2;2,4;3,8'))
 // console.log(Interpolate3(12.1, '1.124,1.27；2.5873,4.38882；3.93,9.63882;7.98,64.899;12.68,565'))
 
-export const MeasureWinsols = List => {
+export const MeasureSols = List => {
     if (List.length !== 6) {
         throw (new Error('請輸入d1,l1,d2,l2,d3,l3'))
     }
@@ -275,7 +275,7 @@ export const MeasureWinsols = List => {
     }
     return `f (${mid.toNumber()}) = ${Interpolate3_big(mid, List).f.toNumber()}`
 }
-// console.log(MeasureWinsols([-1, -5, 6, -12, 7, -21])) // (4-x)x
+// console.log(MeasureSols([-1, -5, 6, -12, 7, -21])) // (4-x)x
 
 // const avg = () => {
 //     const a = (7830.337642585551 + 7830.330890052356 + 7830.347896627651 + 7830.333308480895 + 7830.320788807215 + 7830.323408937259) / 6

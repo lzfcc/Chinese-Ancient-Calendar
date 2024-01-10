@@ -41,13 +41,13 @@ export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUppe
     const Lunar = 29 + LunarNumer / Denom
     let i = 100000
     let year = ''
-    let WinsolsAccum = 0
+    let SolsAccum = 0
     let FirstAccum = 0
     while (i < 100000000) {
-        WinsolsAccum = i * Solar
-        FirstAccum = (WinsolsAccum - WinsolsAccum % Lunar) % 60
-        WinsolsAccum %= 60
-        if (WinsolsAccum > OriginLower && WinsolsAccum < OriginUpper) {
+        SolsAccum = i * Solar
+        FirstAccum = (SolsAccum - SolsAccum % Lunar) % 60
+        SolsAccum %= 60
+        if (SolsAccum > OriginLower && SolsAccum < OriginUpper) {
             if (FirstAccum > FirstLower && FirstAccum < FirstUpper) {
                 year += i + ', '
             }
@@ -65,7 +65,7 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper, step
     Denom = parseInt(Denom)
     year = parseInt(year)
     const Solar = 365 + SolarNumer / Denom
-    const WinsolsAccum = year * Solar
+    const SolsAccum = year * Solar
     x = String(x)
     const x1 = +('0.' + x.split('.')[1])
     const FracInt = ~~(Denom * x1)
@@ -78,17 +78,17 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper, step
     let result = ''
     for (let i = 1; i <= 20000; i++) {
         const Anoma = Int + (FracInt + i * step) / Denom
-        const c = WinsolsAccum % Anoma
+        const c = SolsAccum % Anoma
         if (c > lower && c < upper) {
             if (Anoma > x - Range && Anoma < x + Range) {
-                result += Int + '+' + (FracInt + i * step).toFixed(4) + '/' + Denom + ' ≒ ' + (Int + (FracInt + i * step).toFixed(4) / Denom).toFixed(8) + ' 入日' + (WinsolsAccum % (Int + (FracInt + i * step) / Denom)).toFixed(4) + `\n`
+                result += Int + '+' + (FracInt + i * step).toFixed(4) + '/' + Denom + ' ≒ ' + (Int + (FracInt + i * step).toFixed(4) / Denom).toFixed(8) + ' 入日' + (SolsAccum % (Int + (FracInt + i * step) / Denom)).toFixed(4) + `\n`
             }
         }
     }
     if (result === '') {
         return '沒有符合條件的參數'
     }
-    result = '冬至積日' + WinsolsAccum.toFixed(4) + `\n` + result
+    result = '冬至積日' + SolsAccum.toFixed(4) + `\n` + result
     return result
 }
 // console.log(ExhauConst(2364, 9740, 75638987, 27.21222, 0.00005, 24.798, 24.8))
