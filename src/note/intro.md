@@ -178,7 +178,7 @@
 
 - 计算程序采用 JavaScript 编写
 - 前端框架采用 React
-- 本地框架为 Node。在本地运行本程序，需要安装 Node 13.2 以上版本
+- 本地框架为 Node.js
 - 朔闰表、历书采用 Web Worker，实现 UI 线程与计算线程分离
 - 朔闰表采用懒加载，大幅压缩渲染时间
 - 采用 WebPack 打包
@@ -257,7 +257,7 @@ webpack ./src/Cal/output_frontend-worker.mjs -o ./public
 - Sidereal 恆星年 sidereal year
 - Lunar 朔望月 Synodic month
 - Anoma 近點月 anoma month
-- Node 交點月 node month
+- Node 交點月 nodical month
 - SunLimit 日食食限。SunLimitYang 陽曆食限，SunLimitYin 陰曆食限，SunLimitNone 不偏食限
 - MoonLimit 月食食限。MoonLimit1 月全食限，MoonLimit2 必偏食限，MoonLimitNone 不偏食限
 - LeapLimit 閏限 The limit for arranging a leap
