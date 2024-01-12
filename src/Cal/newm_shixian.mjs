@@ -2,26 +2,27 @@ import Para from './para_calendars.mjs'
 const pi = Math.PI
 const d2r = d => d * pi / 180
 const r2d = r => r * 180 / pi
-const sin = x => Math.sin(d2r(x))
-const cos = x => Math.cos(d2r(x))
-const tan = x => Math.tan(d2r(x))
-const asin = x => r2d(Math.asin(x))
-const acos = x => r2d(Math.acos(x))
-const atan = x => r2d(Math.atan(x))
-const versin = x => 1 - Math.cos(d2r(x)) // 正矢
+const sin = x => +Math.sin(d2r(x)).toFixed(7) // 數理精蘊附八線表用的是七位小數
+const cos = x => +Math.cos(d2r(x)).toFixed(7)
+const tan = x => +Math.tan(d2r(x)).toFixed(7)
+const asin = x => +r2d(Math.asin(x)).toFixed(7)
+const acos = x => +r2d(Math.acos(x)).toFixed(7)
+const atan = x => +r2d(Math.atan(x)).toFixed(7)
+const versin = x => +(1 - Math.cos(d2r(x))).toFixed(7) // 正矢
+const sqr = x => +Math.sqrt(x).toFixed(7)
 const atmos = h => {
-    const a = Math.tan(d2r(90 - h)) ** 2 + 1
+    const a = tan(90 - h) ** 2 + 1
     const delta = 4 + 4 * a * 2.0006095 * 0.0006095
-    const x = (-2 + Math.sqrt(delta)) / (2 * a) // 根據公式1 ，一元二次方程求根公式
-    const ang1 = r2d(Math.asin((1 + x) / 1.0006095)) - h
-    const ang2 = r2d(Math.asin(Math.sin(d2r(ang1)) * 1.0002841))
+    const x = (-2 + sqr(delta)) / (2 * a) // 根據公式1 ，一元二次方程求根公式
+    const ang1 = asin((1 + x) / 1.0006095) - h
+    const ang2 = asin(sin(ang1) * 1.0002841)
     return ang2 - ang1
 }
 // console.log(atmos(20)) // 0.04453873130688635
 const OppositeAngle = (a, b, x) => { // 已知邊角邊，求得第三邊，作垂線，求得第三角（a邊對角）⚠️注意a、b順序，要輸入未%180的    
-    const vertical = a * Math.sin(d2r(x %= 180))
-    const c = Math.sqrt(a ** 2 + b ** 2 - 2 * a * b * Math.cos(d2r(180 - Math.abs(180 - x))))
-    return r2d(Math.asin(vertical / c))
+    const vertical = a * sin(x % 180)
+    const c = sqr(a ** 2 + b ** 2 - 2 * a * b * cos(180 - Math.abs(180 - x)))
+    return asin(vertical / c)
 }
 // A角angle，L线段line segment，E椭圆的一部分ellipse，C圆的一部分circle，S面积
 const SunCorrGuimao = xRaw => {
@@ -30,10 +31,10 @@ const SunCorrGuimao = xRaw => {
     const xMirror = 90 - Math.abs(90 - x)
     const a = 1, a2 = 2, b = 0.999857185, mid = 0.999928589, c = 0.0169000, c2 = 0.0338000, aSUBc = 0.9831000, aDIVb = 0.999857185 // 大小徑、avg中率、兩心差（焦距）。中距盈縮差1°56′12″。
     // 求對甲丙倍差之午角：作輔助線延長丙午到寅。丙寅=甲午+丙午=2a，甲丙^2+丙寅^2-2甲丙*丙寅*cos甲丙寅=甲寅^2，求得甲寅。同理求得∠寅，∠午=2*∠寅。
-    const Ljiayin = Math.sqrt((c2 ** 2 + a2 ** 2 - 2 * a2 * c2 * Math.cos(d2r(x))))
-    const Awu = 2 * r2d(Math.acos((Ljiayin ** 2 + a2 ** 2 - c2 ** 2) / (2 * Ljiayin * a2)))
+    const Ljiayin = sqr((c2 ** 2 + a2 ** 2 - 2 * a2 * c2 * cos(x)))
+    const Awu = 2 * acos((Ljiayin ** 2 + a2 ** 2 - c2 ** 2) / (2 * Ljiayin * a2))
     // 求橢圓差角未丙午，見上文葉37條    
-    const Aweibingwu = xMirror - r2d(Math.atan(aDIVb * Math.tan(d2r(xMirror))))
+    const Aweibingwu = xMirror - atan(aDIVb * tan(xMirror))
     let flag1 = 1, flag2 = 1
     if (x > 90) flag1 = -1
     if (xRaw > 180) flag2 = -1
@@ -90,30 +91,30 @@ const cal = (CalName, year) => {
         const SunMoonapoDif = (AcrSun - AvgMoonapo + 360) % 360 // 日距月最高
         const SunNodeDif = (AcrSun - AvgNode + 360) % 360 // 日距正交                
         // 日距地心。(SunOrbitdeg+SunCorr)=太陽實引。我用自己的算法，不懂原文什麼意思，https://zhuanlan.zhihu.com/p/527394104 有算式但沒解釋。像日躔曆理以角求積那樣，日在辛，地在甲，另一焦點丙，延長辛甲到壬，丙壬⊥辛壬。甲辛=x，(20000000-x)^2=丙壬^2+(甲壬+x)^2。
-        const jiaren = Math.cos(d2r(SunOrbitdeg + SunCorr)) * 0.0338000
-        const bingren = Math.sin(d2r(SunOrbitdeg + SunCorr)) * 0.0338000
+        const jiaren = cos(SunOrbitdeg + SunCorr) * 0.0338000
+        const bingren = sin(SunOrbitdeg + SunCorr) * 0.0338000
         const SunCoreDis = (4 - bingren ** 2 - jiaren ** 2) / (2 * jiaren + 4)
         const TubedDif = 0.10169000 ** 3 - SunCoreDis ** 3 // 求立方較,太阳最高距地心数之立方
-        const AvgMoonCorr2Apogee = Math.sin(d2r(SunMoonapoDif * 2)) * AvgMoonCorr2ApogeeMax // 太陽在最高時日距月最高之二平均
-        const AvgMoonCorr2Perigee = Math.sin(d2r(SunMoonapoDif * 2)) * AvgMoonCorr2PerigeeMax
+        const AvgMoonCorr2Apogee = sin(SunMoonapoDif * 2) * AvgMoonCorr2ApogeeMax // 太陽在最高時日距月最高之二平均
+        const AvgMoonCorr2Perigee = sin(SunMoonapoDif * 2) * AvgMoonCorr2PerigeeMax
         let flag1 = -1 // 日距月最高倍度不及半周为减，过半周为加。
         if (SunMoonapoDif * 2 > 180) flag1 = 1
         const AvgMoonCorr2 = flag1 * (Math.abs(AvgMoonCorr2Apogee - AvgMoonCorr2Perigee) * TubedDif / 0.101410 + AvgMoonCorr2Apogee) // 本時之二平均。太陽高卑距地之立方大較 (10000000+169000)**3-(10000000-169000)**3
-        const AvgMoonCorr3 = Math.sin(d2r(2 * SunNodeDif)) * AvgMoonCorr3Max // 日距正交倍度不及半周为减，过半周为加。
+        const AvgMoonCorr3 = sin(2 * SunNodeDif) * AvgMoonCorr3Max // 日距正交倍度不及半周为减，过半周为加。
         const AvgMoon = AvgMoon2 + AvgMoonCorr2 - AvgMoonCorr3 // 用平行        
         const AcrMoonapoCorr = OppositeAngle(0.0117315, 0.0550505, SunMoonapoDif * 2) // 求最高實均。最高本輪半徑550505，最高均輪半徑117315。日距月最高之倍度与半周相减，馀为所夹之角。日距月最高倍度不及半周者，与半周相减。过半周者，减半周。
-        const MoonLco = 0.0117315 * Math.sin(d2r(SunMoonapoDif * 2)) / Math.sin(d2r(AcrMoonapoCorr)) // 本天心距地：本時兩心差
+        const MoonLco = 0.0117315 * sin(SunMoonapoDif * 2) / sin(AcrMoonapoCorr) // 本天心距地：本時兩心差
         const AcrMoonapo = AvgMoonapo + AcrMoonapoCorr // 最高實行
         const MoonOrbitdeg = AvgMoon - AcrMoonapo // 太陰引數=用平行-最高實行
         ///////////////////////////////////
         // 求初均（見月離曆理葉28）        
         const Ajiagengyi = OppositeAngle(MoonLco, 1, MoonOrbitdeg) // 对两心差之小角        
         const Ayijiasi = OppositeAngle(1, MoonLco, Ajiagengyi + MoonOrbitdeg) // 对半径之大角，为平圆引数    
-        const MoonCorr1 = r2d(Math.atan(Math.sqrt(1 - MoonLco ** 2) * Math.tan(d2r(Ayijiasi)))) - (90 - Math.abs(MoonOrbitdeg % 180 - 90)) // 比例得實引，實引-太陰引數=初均   
+        const MoonCorr1 = atan(sqr(1 - MoonLco ** 2) * tan(Ayijiasi)) - (90 - Math.abs(MoonOrbitdeg % 180 - 90)) // 比例得實引，實引-太陰引數=初均   
         const AcrMoon1 = AvgMoon + MoonCorr1 // 初實行
         const MoonSunDif = (AcrMoon1 - AcrSun + 360) % 360 // 月距日
-        const MoonCorr2Apogee = Math.sin(d2r(MoonSunDif * 2)) * MoonCorr2ApogeeMax // 太陽最高時月距日之二均
-        const MoonCorr2Perigee = Math.sin(d2r(MoonSunDif * 2)) * MoonCorr2PerigeeMax // 太陽最卑時月距日之二均
+        const MoonCorr2Apogee = sin(MoonSunDif * 2) * MoonCorr2ApogeeMax // 太陽最高時月距日之二均
+        const MoonCorr2Perigee = sin(MoonSunDif * 2) * MoonCorr2PerigeeMax // 太陽最卑時月距日之二均
         let flag2 = 1 // 月距日倍度不及半周为加，过半周为减。
         if (MoonSunDif * 2 > 180) flag2 = -1
         const MoonCorr2 = flag2 * (Math.abs(MoonCorr2Apogee - MoonCorr2Perigee) * TubedDif / 0.101410 + MoonCorr2Apogee) // 本時之二均
@@ -121,15 +122,15 @@ const cal = (CalName, year) => {
         const AcrMoonSunDif = MoonSunDif + MoonCorr2 // 實月距日
         const SunMoonApoDif = (AcrMoonapo - (Sunperi + 180) + 360) % 360 // 日月最高相距
         const SunMoonDifSum = (AcrMoonSunDif + SunMoonApoDif) % 360 // 相距總數
-        const MoonCorr3 = Math.sin(d2r(SunMoonDifSum)) * MoonCorr3Max // 三均。总数初宫至五宫为加，六宫至十一宫为减。
+        const MoonCorr3 = sin(SunMoonDifSum) * MoonCorr3Max // 三均。总数初宫至五宫为加，六宫至十一宫为减。
         const AcrMoon3 = AcrMoon2 + MoonCorr3 // 三實行        
         const Dif90 = (90 - Math.abs(90 - SunMoonApoDif % 180)) / 10
         const Dif90Int = Math.floor(Dif90)
         const MoonCorr4Max = (Dif90 - Dif90Int) * (MoonCorr4MaxList[Dif90Int + 1] - MoonCorr4MaxList[Dif90Int]) + MoonCorr4MaxList[Dif90Int] // 兩弦最大末均
-        const MoonCorr4 = -Math.sin(d2r(AcrMoonSunDif)) * MoonCorr4Max // 末均。实月距日初宫至五宫为减，六宫至十一宫为加。
+        const MoonCorr4 = -sin(AcrMoonSunDif) * MoonCorr4Max // 末均。实月距日初宫至五宫为减，六宫至十一宫为加。
         const AcrMoonWhite = AcrMoon3 + MoonCorr4 // 白道實行moon's path
         ////////////////////
-        // const AcrNodeCorr = r2d(Math.atan(Math.tan(d2r(SunNodeDif) * 56 / 59))) // 正交實均
+        // const AcrNodeCorr = atan(tan(SunNodeDif * 56 / 59)) // 正交實均
     }
     const AutoNewmSyzygy = isNewm => {
         const MoonNodeDif = [], AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Corr = [], AcrRaw = [], AcrMod = [], Sc = [], SolsmorrowDif = [], AcrSolsDif = [], Equa = []
@@ -190,4 +191,3 @@ const cal = (CalName, year) => {
 // 6+7/60+27/3600=6.1241666667 -0.0044444444。6.1281666667
 // 13,315/117315=0.1134978477。6.1281666667-4.8035277778=1.3246388889，4.8035277778+1.3246388889*0.1134978477=4.9538714407
 // console.log(MoonCorr1(0.0455941, 108 + 43 / 60)) // 考成後編表
-console.log(versin(60))
