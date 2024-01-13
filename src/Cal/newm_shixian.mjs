@@ -16,6 +16,16 @@ const atan = x => +r2d(Math.atan(x)).toFixed(7)
 const versin = x => +(1 - Math.cos(d2r(x))).toFixed(7) // 正矢
 const sqr = x => +Math.sqrt(x).toFixed(7)
 const m = x => (x % 360 + 360) % 360
+const f1 = x => { // 不及半周为减，过半周为加。
+    let flag = -1
+    if (x > 180) flag = 1
+    return flag
+}
+const f2 = x => {
+    let flag = 1
+    if (x > 180) flag = -1
+    return flag
+}
 // 蒙氣差
 const atmos = h => {
     const a = tan(90 - h) ** 2 + 1
@@ -91,53 +101,50 @@ const cal = (CalName, year) => {
         const Sunperi = SunperiThisyear + SunperiDV * SolsmorrowDifToday + SunperiConst // 最卑平行
         const SunOrbitdeg = m(AvgSunToday - Sunperi) // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
         const SunCorr = SunCorrGuimao(SunOrbitdeg)
-        const AcrSunSolsDif = AvgSunToday + SunCorr // 今天夜半實行
-        const SunLongi = m(AcrSunSolsDif - 90) // 黃道度
-        // AcrSunSolsDif-Precession*(year-1684)⋯⋯ 求宿度：以積年與歲差五十一秒相乘，得數，與癸卯年黃道宿鈐相加，得本年宿鈐。察實行足減某宿度分則減之，餘爲某宿度分。——與古曆算法不同，這是捷法，但是⚠️這是夜半
-        return { SolsmorrowDifToday, SunOrbitdeg, SunCorr, SunLongi, Sunperi }
-    }    
+        const AcrSunToday = AvgSunToday + SunCorr // 今天夜半實行
+        const SunLongi = m(AcrSunToday - 90) // 黃道度
+        // AcrSunToday-Precession*(year-1684)⋯⋯ 求宿度：以積年與歲差五十一秒相乘，得數，與癸卯年黃道宿鈐相加，得本年宿鈐。察實行足減某宿度分則減之，餘爲某宿度分。——與古曆算法不同，這是捷法，但是⚠️這是夜半
+        return { SolsmorrowDifToday, SunOrbitdeg, SunCorr, SunLongi, AcrSunToday, Sunperi }
+    }
     /////////// 推月離 //////////
-    const MoonGuimao = (SolsmorrowDifToday, SunOrbitdeg, SunCorr, SunLongi, Sunperi) => {
-        const AvgMoon1 = m(MoonRoot + SolsmorrowDifToday * MoonAvgDV) // 太陰平行
+    const MoonGuimao = (SolsmorrowDifToday, SunOrbitdeg, SunCorr, AcrSunToday, Sunperi) => {
+        ///////////////////  求平行
+        const AvgMoon1 = m(MoonRoot + SolsmorrowDifToday * MoonAvgDV) // 太陰平行        
         const AvgMoonapo1 = m(MoonapoRoot + SolsmorrowDifToday * MoonapoDV) // 最高平行
-        const AvgNode1 = m(NodeRoot - SolsmorrowDifToday * NodeDV) // 正交平行                        
-        let flagSunCorr = 1
-        if (SunOrbitdeg > 180) flagSunCorr = -1
-        const AvgMoon2 = AvgMoon1 - flagSunCorr * SunCorr / SunCorrMax * AvgMoonCorr1Max // 二平行=太陰平行+-一平均：子正初刻用時之太陰平行。一平均（考慮地球自轉的時間）已有均數時差，而止就黃道算，故不用升度時差。一平均：太阳均数加者为减，减者为加。
-        const AvgMoonapo = AvgMoonapo1 + flagSunCorr * SunCorr / SunCorrMax * AvgMoonapoCorrMax  // 用最高=最高平行+-最高平均
-        const AvgNode = AvgNode1 - flagSunCorr * SunCorr / SunCorrMax * AvgNodeCorrMax// 用正交=正交平行+-正交平均
-        const SunMoonapoDif = m(SunLongi - AvgMoonapo) // 日距月最高
-        const SunNodeDif = m(SunLongi - AvgNode) // 日距正交                
-        // 日距地心。(SunOrbitdeg+SunCorr)=太陽實引。我用自己的算法，不懂原文什麼意思，https://zhuanlan.zhihu.com/p/527394104 有算式但沒解釋。像日躔曆理以角求積那樣，日在辛，地在甲，另一焦點丙，延長辛甲到壬，丙壬⊥辛壬。甲辛=x，(2-x)^2=丙壬^2+(甲壬+x)^2。
-        const jiaren = cos(SunOrbitdeg + SunCorr) * 0.0338000
-        const bingren = sin(SunOrbitdeg + SunCorr) * 0.0338000
-        const SunCoreDis = (4 - bingren ** 2 - jiaren ** 2) / (2 * jiaren + 4)
-        const TubedDif = 0.10169000 ** 3 - SunCoreDis ** 3 // 求立方較,太阳最高距地心数之立方
-        const AvgMoonCorr2Apogee = sin(SunMoonapoDif * 2) * AvgMoonCorr2ApogeeMax // 太陽在最高時日距月最高之二平均
-        const AvgMoonCorr2Perigee = sin(SunMoonapoDif * 2) * AvgMoonCorr2PerigeeMax
-        let flag1 = -1 // 日距月最高倍度不及半周为减，过半周为加。
-        if (SunMoonapoDif * 2 > 180) flag1 = 1
-        const AvgMoonCorr2 = flag1 * (Math.abs(AvgMoonCorr2Apogee - AvgMoonCorr2Perigee) * TubedDif / 0.101410 + AvgMoonCorr2Apogee) // 本時之二平均。太陽高卑距地之立方大較 (10000000+169000)**3-(10000000-169000)**3
-        const AvgMoonCorr3 = sin(2 * SunNodeDif) * AvgMoonCorr3Max // 日距正交倍度不及半周为减，过半周为加。
-        const AvgMoon = AvgMoon2 + AvgMoonCorr2 - AvgMoonCorr3 // 用平行                
-        const AcrMoonapoCorr = OppositeAngle(0.0117315, 0.0550505, Math.abs(180 - SunMoonapoDif * 2)).Ashort // 求最高實均。最高本輪半徑550505，最高均輪半徑117315。日距月最高之倍度与半周相减，馀为所夹之角。日距月最高倍度不及半周者，与半周相减。过半周者，减半周。
-        const MoonLco = 0.0117315 * sin(Math.min(SunMoonapoDif * 2, 360 - SunMoonapoDif * 2)) / sin(AcrMoonapoCorr) // 本天心距地：本時兩心差
+        const AvgNode1 = m(NodeRoot - SolsmorrowDifToday * NodeDV) // 正交平行
+        const AvgMoon2 = AvgMoon1 - SunCorr / SunCorrMax * AvgMoonCorr1Max // 二平行=太陰平行+-一平均：子正初刻用時之太陰平行。一平均（考慮地球自轉的時間）已有均數時差，而止就黃道算，故不用升度時差。一平均：太阳均数加者为减，减者为加。
+        const AvgMoonapo = AvgMoonapo1 + SunCorr / SunCorrMax * AvgMoonapoCorrMax  // 用最高=最高平行+-最高平均
+        const AvgNode = AvgNode1 - SunCorr / SunCorrMax * AvgNodeCorrMax// 用正交=正交平行+-正交平均
+        const SunMoonapoDif = m(AcrSunToday - AvgMoonapo) // 日距月最高
+        const SunNodeDif = m(AcrSunToday - AvgNode) // 日距正交                
+        // 日距地心。(SunOrbitdeg+SunCorr)=太陽實引。像日躔曆理以角求積那樣，日在辛，地在甲，另一焦點丙，延長辛甲到壬，丙壬⊥辛壬。甲辛=x，(2-x)^2=丙壬^2+(甲壬+x)^2。
+        const jiaren = cos(SunOrbitdeg + SunCorr) * 0.0338000 // 分股
+        const bingren = sin(SunOrbitdeg + SunCorr) * 0.0338000 // 勾
+        // const SunCoreDis = (4 - bingren ** 2 - jiaren ** 2) / (2 * jiaren + 4) // 我自己的算法
+        const gouxianSum = 2 + jiaren // 勾弦和
+        const gouxianDif = bingren ** 2 / gouxianSum // 勾弦較
+        const xian = (gouxianSum + gouxianDif) / 2 // 弦
+        const SunCoreDis = 2 - xian
+        const TubedDif = 1.0169000 ** 3 - SunCoreDis ** 3 // 求立方較,太阳最高距地心数之立方
+        const AvgMoonCorr2Apogee = Math.abs(sin(SunMoonapoDif * 2) * AvgMoonCorr2ApogeeMax) // 太陽在最高時日距月最高之二平均
+        const AvgMoonCorr2Perigee = Math.abs(sin(SunMoonapoDif * 2) * AvgMoonCorr2PerigeeMax)
+        const AvgMoonCorr2 = f1(SunMoonapoDif * 2) * (Math.abs(AvgMoonCorr2Apogee - AvgMoonCorr2Perigee) * TubedDif / 0.101410 + AvgMoonCorr2Apogee) // 本時之二平均。太陽高卑距地之立方大較 (10000000+169000)**3-(10000000-169000)**3。日距月最高倍度不及半周为减，过半周为加。
+        const AvgMoonCorr3 = -sin(2 * SunNodeDif) * AvgMoonCorr3Max // 日距正交倍度不及半周为减，过半周为加。
+        const AvgMoon = AvgMoon2 + AvgMoonCorr2 + AvgMoonCorr3 // 用平行                
+        const AcrMoonapoCorr = f2(SunMoonapoDif * 2) * OppositeAngle(0.0117315, 0.0550505, Math.abs(180 - SunMoonapoDif * 2)).Ashort // 求最高實均。最高本輪半徑550505，最高均輪半徑117315。日距月最高之倍度与半周相减，馀为所夹之角。日距月最高倍度不及半周者，与半周相减。过半周者，减半周。日距月最高倍度不及半周为加，过半周为减。
+        const MoonLco = Math.abs(0.0117315 * sin(Math.min(SunMoonapoDif * 2, 360 - SunMoonapoDif * 2)) / sin(AcrMoonapoCorr)) // 本天心距地：本時兩心差
         const AcrMoonapo = AvgMoonapo + AcrMoonapoCorr // 最高實行
         const MoonOrbitdeg = AvgMoon - AcrMoonapo // 太陰引數=用平行-最高實行
-        ///////////////////////////////////
+        ///////////////////////// 求實行
         // 求初均（見月離曆理葉28）
         const Ajiagengyi = OppositeAngle(MoonLco, 1, Math.abs(180 - MoonOrbitdeg)).Ashort // 对两心差之小角.引数不及半周者，与半周相减。过半周者，则减半周。
-        const Ayijiasi = OppositeAngle(MoonLco, 1, Ajiagengyi + Math.abs(180 - MoonOrbitdeg)).Along // 对半径之大角，为平圆引数    
-        let flagMoonCorr1 = -1 // 引数初宫至五宫为减，六宫至十一宫为加。
-        if (MoonOrbitdeg > 180) flagMoonCorr1 = 1
-        const MoonCorr1 = flagMoonCorr1 * (atan(sqr(1 - MoonLco ** 2) * tan(90 - Math.abs(90 - Ayijiasi % 180))) - (90 - Math.abs(90 - MoonOrbitdeg % 180))) // 比例得實引，實引-太陰引數=初均        
+        const Ayijiasi = OppositeAngle(MoonLco, 1, Ajiagengyi + Math.abs(180 - MoonOrbitdeg)).Along // 对半径之大角，为平圆引数
+        const MoonCorr1 = f1(MoonOrbitdeg) * (atan(sqr(1 - MoonLco ** 2) * tan(90 - Math.abs(90 - Ayijiasi % 180))) - (90 - Math.abs(90 - MoonOrbitdeg % 180))) // 比例得實引，實引-太陰引數=初均。引数初宫至五宫为减，六宫至十一宫为加。
         const AcrMoon1 = AvgMoon + MoonCorr1 // 初實行
-        const MoonSunDif = m(AcrMoon1 - SunLongi) // 月距日
+        const MoonSunDif = m(AcrMoon1 - AcrSunToday) // 月距日
         const MoonCorr2Apogee = sin(MoonSunDif * 2) * MoonCorr2ApogeeMax // 太陽最高時月距日之二均
-        const MoonCorr2Perigee = sin(MoonSunDif * 2) * MoonCorr2PerigeeMax // 太陽最卑時月距日之二均
-        let flag2 = 1 // 月距日倍度不及半周为加，过半周为减。
-        if (MoonSunDif * 2 > 180) flag2 = -1
-        const MoonCorr2 = flag2 * (Math.abs(MoonCorr2Apogee - MoonCorr2Perigee) * TubedDif / 0.101410 + MoonCorr2Apogee) // 本時之二均
+        const MoonCorr2Perigee = sin(MoonSunDif * 2) * MoonCorr2PerigeeMax // 太陽最卑時月距日之二均        
+        const MoonCorr2 = f2(MoonSunDif * 2) * (Math.abs(MoonCorr2Apogee - MoonCorr2Perigee) * TubedDif / 0.101410 + MoonCorr2Apogee) // 本時之二均。月距日倍度不及半周为加，过半周为减。
         const AcrMoon2 = AcrMoon1 + MoonCorr2 // 二實行
         const AcrMoonSunDif = MoonSunDif + MoonCorr2 // 實月距日
         const SunMoonApoDif = m(AcrMoonapo - (Sunperi + 180)) // 日月最高相距
@@ -149,10 +156,8 @@ const cal = (CalName, year) => {
         const MoonCorr4Max = (Dif90 - Dif90Int) * (MoonCorr4MaxList[Dif90Int + 1] - MoonCorr4MaxList[Dif90Int]) + MoonCorr4MaxList[Dif90Int] // 兩弦最大末均
         const MoonCorr4 = -sin(AcrMoonSunDif) * MoonCorr4Max // 末均。实月距日初宫至五宫为减，六宫至十一宫为加。
         const AcrMoonWhite = AcrMoon3 + MoonCorr4 // 白道實行moon's path
-        ////////////////////
-        let flagAcrNodeCorr = 1
-        if (SunNodeDif * 2 > 180) flagAcrNodeCorr = -1
-        const AcrNodeCorr = flagAcrNodeCorr * OppositeAngle(57.5, 1.5, Math.abs(180 - SunNodeDif * 2)).Ashort // 正交實均。日距正交倍度过半周者，与半周相减，用其馀。日距正交倍度不及半周为加，过半周为减。
+        ///////////////////// 求黃白差
+        const AcrNodeCorr = f2(SunNodeDif * 2) * OppositeAngle(57.5, 1.5, Math.abs(180 - SunNodeDif * 2)).Ashort // 正交實均。日距正交倍度过半周者，与半周相减，用其馀。日距正交倍度不及半周为加，过半周为减。
         const AcrNode = AvgNode + AcrNodeCorr // 正交實行
         const MoonNodeDif = m(AcrMoonWhite - AcrNode) // 月距正交
         const versinSunNodeDif = versin(Math.min(SunNodeDif * 2, 360 - SunNodeDif * 2))  // 日距正交倍度之正矢
@@ -162,20 +167,21 @@ const cal = (CalName, year) => {
         const ObliqmoonCorrAcrMoonSunDif = ObliqmoonCorrSunNodeDif / 2 * versin(Math.min(AcrMoonSunDif * 2, 360 - AcrMoonSunDif * 2)) // 距日加分
         const Obliqmoon = ObliqmoonLimit + ObliqmoonCorrAcrMoonSunDif // 黃白大距
         const MoonLati = asin(sin(Obliqmoon) * sin(MoonNodeDif)) // 黃道緯度。月距正交过一象限者与半周相减，过半周者减半周，过三象限者与全周相减
-        const WhiteEclpDif = atan(cos(Obliqmoon) * tan(MoonNodeDif)) - MoonNodeDif // 升度差=月距正交之黃道度-月距正交。月距正交初、一、二、六、七、八宫为交后，为减。三、四、五、九、十、十一宫为交前，为加。
-        const MoonLongi = AcrMoonWhite + WhiteEclpDif
+        const WhiteEclpDif = atan(cos(Obliqmoon) * tan(MoonNodeDif)) - MoonNodeDif % 180 // 升度差=月距正交之黃道度-月距正交。月距正交初、一、二、六、七、八宫为交后，为减。三、四、五、九、十、十一宫为交前，为加。之所以%180，因為tan(20)=tan(200)
+        const AcrMoonToday = AcrMoonWhite + WhiteEclpDif
+        const MoonLongi = m(AcrMoonToday - 90)
         // 最後：求黃道宿度。用到黃道宿鈐。待定。
-        return { MoonLongi, MoonLati }
+        return { AcrMoonToday, MoonLongi, MoonLati }
     }
     const AutoNewmSyzygy = isNewm => {
         const MoonNodeDif = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], AcrInt = [], Int = [], Raw = [], Corr = [], AcrRaw = [], AcrMod = [], Sc = [], SolsmorrowDif = [], AcrSolsDif = [], Equa = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。 
-        for (let i = 0; i <= 14; i++) {            
+        for (let i = 0; i <= 14; i++) {
             const SolsmorrowDif = ChouSolsmorrowDif + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月到冬至次日子正日分
             AvgSc[i] = ScList[Math.floor(SolsmorrowScOrder + SolsmorrowDif)]
             AvgDeci[i] = SolsmorrowDif - Math.floor(SolsmorrowDif)
-            const { SolsmorrowDifToday, SunOrbitdeg, SunCorr, SunLongi, Sunperi } = SunGuimao(SolsmorrowDif)
-            const { MoonLongi } = MoonGuimao(SolsmorrowDifToday, SunOrbitdeg, SunCorr, SunLongi, Sunperi)
+            const { SolsmorrowDifToday, SunOrbitdeg, SunCorr, SunLongi, AcrSunToday, Sunperi } = SunGuimao(SolsmorrowDif)
+            const { MoonLongi } = MoonGuimao(SolsmorrowDifToday, SunOrbitdeg, SunCorr, AcrSunToday, Sunperi)
 
             // 推節氣只見於下編。一率：本日實行與次日實行相減，二率：1440分，三率：本日實行與節氣宮度相減。一日之行度:一日之分數=距節氣之度:距子正之分數。——不知道什麼意思，沒用。
             // 定氣推平氣法，似乎是用於測算，略。
@@ -208,9 +214,18 @@ const cal = (CalName, year) => {
         AvgDeci: NewmAvgDeci
     } = AutoNewmSyzygy(1)
 }
-// console.log(cal("Guimao", 1889)) 
+// console.log(cal("Guimao", 1889))
 // console.log(SunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：SolsmorrowDif=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
+// 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
+// SunOrbitdeg = 298 + 6 / 60 + 9.329 / 3600
+// AvgMoon1 = 295.5279086111
+// AvgMoonapo1 = 100.82456
+// AvgNode1 = 95 + 42 / 60 + 47.522 / 3600
+// SunCorr = -(1 + 43 / 60 + 6.462 / 3600)
+// SunLongi = 217 + 25 / 60 + 46.766 / 3600
+// Sunperi = 281 + 2 / 60 + 43.899 / 3600 - 270
 
+// 以下是三條月亮初均驗算
 // console.log(MoonCorr1(0.04904625, 206 + 22 / 60 + 21.88 / 3600))
 // 小均 4331900  +572,725
 // 2+13/60+57/3600=2.2325// 6宮26度20分
