@@ -1,7 +1,8 @@
 import N1 from './newm_quar.mjs'
 import N2 from './newm.mjs'
-import Para from './para_calendars.mjs'
 // import N3 from './newm_huihui.mjs'
+import N4 from './newm_shixian.mjs'
+import Para from './para_calendars.mjs'
 import { TermList, ScList, ThreeList, CalNameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Accum2Mansion, LeapAdjust } from './astronomy_other.mjs'
@@ -9,15 +10,20 @@ import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
 
 export default (CalName, YearStart, YearEnd) => {
-    const Bind = CalName => Para[CalName].Type === 1 ? N1 : N2
+    const Bind = CalName => {
+        const type = Para[CalName].Type
+        if (type === 1) return N1
+        else if (type === 13) return N4
+        else return N2
+    }
     const AutoNewm = Bind(CalName)
     const { Type, OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, SolsOriginDif, MansionRaw } = Para[CalName]
     let { ScConst } = Para[CalName]
     const isExcl = Type >= 4
     ScConst = ScConst || 0
-    const YearMemo = []
+    const Memo = []
     const calculate = year => {
-        const [PrevYear, ThisYear, NextYear] = YearMemo
+        const [PrevYear, ThisYear, NextYear] = Memo
         const ZhengSolsDif = ZhengNum - OriginMonNum
         const SolsMon = (1 - ZhengNum + 12) % 12 // 冬至月
         const isLeapPvPt = PrevYear.isLeapPost
@@ -464,15 +470,15 @@ export default (CalName, YearStart, YearEnd) => {
             NewmAnomaAccumNightPrint
         }
     }
-    YearMemo[0] = AutoNewm(CalName, YearStart - 1) // 去年
-    YearMemo[1] = AutoNewm(CalName, YearStart) // 今年
+    Memo[0] = AutoNewm(CalName, YearStart - 1) // 去年
+    Memo[1] = AutoNewm(CalName, YearStart) // 今年
     const result = []
     YearEnd = YearEnd === undefined ? YearStart : YearEnd
     for (let year = YearStart; year <= YearEnd; year++) {
-        YearMemo[2] = AutoNewm(CalName, year + 1) // 明年
+        Memo[2] = AutoNewm(CalName, year + 1) // 明年
         result.push(calculate(year))
-        YearMemo[0] = YearMemo[1] // 数组滚动，避免重复运算
-        YearMemo[1] = YearMemo[2]
+        Memo[0] = Memo[1] // 数组滚动，避免重复运算
+        Memo[1] = Memo[2]
     }
     return result
 }
