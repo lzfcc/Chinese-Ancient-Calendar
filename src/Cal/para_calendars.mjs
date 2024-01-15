@@ -2866,7 +2866,7 @@ export default {
         Venus: 583.9197207,
         Mercury: 115.8771744,
     },
-    Jiazi: { // 曆象考成
+    Jiazi: { // 曆象考成。
         Type: 13,
         ApplyYear: [[1727, 1733]],
         CloseOriginAd: 1684,
@@ -2884,7 +2884,7 @@ export default {
         MansionDayConst: 5.656374926, // 宿應，單位日。這是值日，其實和宿度無關。
         MansionRaw: [28, 3.1666666666667] // 我定的，在箕宿3.166
     },
-    Guimao: { // 曆象考成後編
+    Guimao: { // 曆象考成後編。
         Type: 13,
         ApplyYear: [[1734, 1913]],
         CloseOriginAd: 1723,
