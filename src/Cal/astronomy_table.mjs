@@ -1,5 +1,6 @@
 import Para from './para_calendars.mjs'
 import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
+import { deci } from './para_constant.mjs'
 import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 
 // /////乾象魏晉黃赤轉換//////
@@ -51,11 +52,11 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     let Equa2Eclp = 0
     let Range = []
     if (Type <= 4) {
-        Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + Sidereal / 4 - ~~(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
+        Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + deci(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
     } else if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + Sidereal / 4 - ~~(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + deci(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
@@ -176,7 +177,7 @@ export const Longi2LatiTable2 = (SolsDif, CalName) => {
         const TermAcrNoonDeciDif = [] // 中前後分。「冬至後，中前以差減，中後以差加⋯⋯冬至一日有減無加，夏至一日有加無減。」
         for (let i = 0; i <= 23; i++) {
             const TermAcrRaw = AcrTermList[i]
-            const TermAcrDeci = TermAcrRaw - ~~TermAcrRaw
+            const TermAcrDeci = deci(TermAcrRaw)
             TermAcrNoonDeciDif[i] = TermAcrDeci - 0.5 // 定氣與正午的距離
         }
         const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
@@ -203,7 +204,7 @@ export const Longi2LatiTable2 = (SolsDif, CalName) => {
         const TermAvgNoonDeciDif = []
         for (let i = 0; i <= 23; i++) {
             const TermAvgRaw = i * HalfTermLeng
-            const TermAvgDeci = TermAvgRaw - ~~TermAvgRaw // 各平氣小數點
+            const TermAvgDeci = deci(TermAvgRaw) // 各平氣小數點
             TermAvgNoonDeciDif[i] = TermAvgDeci - 0.5 // 平氣與正午的距離
         }
         const nAvg = 1 + (TermDif + TermAvgNoonDeciDif[TermNum]) / TermRange

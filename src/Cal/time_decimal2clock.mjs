@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import {
-    BranchList, HalfList, StemList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh,
+    BranchList, HalfList, StemList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh, deci,
 } from './para_constant.mjs'
 
 const ClockWest = Deci => {
@@ -63,7 +63,7 @@ const ClockTmp = (Deci, Mode) => { // 我假設：每日96刻，子初夜半，�
     const KeRaw = Deci * Portion1
     const ClockOrder = ~~(KeRaw / Portion2)
     const QuarOrder = ~~(KeRaw - ClockOrder * Portion2)
-    // const MinOrder = ~~((KeRaw - ~~KeRaw) * 100)
+    // const MinOrder = ~~(deci(KeRaw) * 100)
     return BranchList[ClockOrder + 1] + '時' + QuarList[QuarOrder % 8] + '刻' // + nzh.encodeS(MinOrder) +'分'
 }
 
@@ -117,7 +117,7 @@ const ClockQing = Deci => { // 清代96刻
     const ClockOrder = ~~(KeRaw / 8)
     const HalfOrder = ~~((KeOrder - ClockOrder * 8) / 4)
     const QuarOrder = KeOrder - (ClockOrder * 8 + HalfOrder * 4)
-    const MinOrder = ~~((KeRaw - ~~(KeRaw)) * 15) % 15
+    const MinOrder = ~~(deci(KeRaw) * 15) % 15
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
 }
 

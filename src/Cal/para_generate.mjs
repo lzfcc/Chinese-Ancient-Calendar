@@ -144,10 +144,10 @@ const GenSolar = () => {
         let { Solar, SolarRaw, CloseOriginAd } = Para[name]
         Solar = Solar || SolarRaw
         if (CloseOriginAd) {
-            const Frac = Solar - ~~Solar
-            if (Frac < 0.2425 - 1e-12 || Frac > 0.2425 + 1e-12) {
-                Change.push((0.2425 - Frac) / ((1281 - CloseOriginAd) / 100))
-                SolarList.push([CloseOriginAd, Frac, CalNameList[name]])
+            const Deci = Solar - ~~Solar
+            if (Deci < 0.2425 - 1e-12 || Deci > 0.2425 + 1e-12) {
+                Change.push((0.2425 - Deci) / ((1281 - CloseOriginAd) / 100))
+                SolarList.push([CloseOriginAd, Deci, CalNameList[name]])
             }
         }
     })

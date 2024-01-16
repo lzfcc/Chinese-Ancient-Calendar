@@ -4,7 +4,7 @@ import {
     WeekList, MansionNameList, MansionAnimalNameList,
     ManGodList, JianchuList, HuangheiList, YuanList,
     HalfTermList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
-    nzh, AutoDegAccumList, NumList, MonNumList1,
+    nzh, AutoDegAccumList, NumList, MonNumList1, deci
 } from './para_constant.mjs'
 import {
     YearGodConvert, YearColorConvert, MonColorConvert, WangwangConvert, FubaoConvert, LsStarConvert, BloodConvert, TouringGodConvert
@@ -33,7 +33,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         const MoonAvgVDeg = AutoMoonAvgV(CalName)
         const ZhengInt = NewmInt[0] + (ScConst || 0)
         const ZhengSolsDif = +(ZhengInt - SolsAccum).toFixed(5) // 正月夜半到冬至距離
-        const SolsDeci = SolsAccum - Math.floor(SolsAccum)
+        const SolsDeci = deci(SolsAccum)
         /////////// 預處理72候、五行、八卦列表//////////
         let HouList = [], Hexagram64List = [], HexagramSymbolList = [], FiveAccumList = [], HexagramAccumList = [], HouAccum = []
         if (Type < 7) {
@@ -291,9 +291,9 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                         const TermOrder = HouOrder % 3 ? -1 : (Math.round(HouOrder / 3)) % 24
                         HouName[i][k] = TermOrder >= 0 ? `<span class='term'>${HalfTermList[TermOrder]}</span>` : ''
                         if (Type >= 3) {
-                            HouName[i][k] += HouList[HouOrder] + ((HouAccum[j] + SolsAccum - Math.floor(HouAccum[j] + SolsAccum)).toFixed(4)).slice(2, 6)
+                            HouName[i][k] += HouList[HouOrder] + deci(HouAccum[j] + SolsAccum).toFixed(4).slice(2, 6)
                         } else if (TermOrder >= 0) {
-                            HouName[i][k] += ((HouAccum[j] + SolsAccum - Math.floor(HouAccum[j] + SolsAccum)).toFixed(4)).slice(2, 6)
+                            HouName[i][k] += deci(HouAccum[j] + SolsAccum).toFixed(4).slice(2, 6)
                         }
                         if (j % 6 === 3) { // 立春等節
                             JieAccum = DayAccum
@@ -345,10 +345,10 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                 HouName[i][k] += Fu
                 for (let j = 0; j < 7; j++) {
                     if (MieSolsDif[j] >= SolsDifNight && MieSolsDif[j] < SolsDifNight + 1) {
-                        HouName[i][k] += `<span class='momie'>滅</span>` + (MieSolsDif[j] + SolsAccum - Math.floor(MieSolsDif[j] + SolsAccum)).toFixed(4).slice(2, 6)
+                        HouName[i][k] += `<span class='momie'>滅</span>` + deci(MieSolsDif[j] + SolsAccum).toFixed(4).slice(2, 6)
                         break
                     } else if (MoSolsDif[j] >= SolsDifNight && MoSolsDif[j] < SolsDifNight + 1) {
-                        HouName[i][k] += `<span class='momie'>沒</span>` + (MoSolsDif[j] + SolsAccum - Math.floor(MoSolsDif[j] + SolsAccum)).toFixed(4).slice(2, 6)
+                        HouName[i][k] += `<span class='momie'>沒</span>` + deci(MoSolsDif[j] + SolsAccum).toFixed(4).slice(2, 6)
                         break
                     }
                 }

@@ -1,4 +1,4 @@
-import { ScList, TermList, AutoDegAccumList } from './para_constant.mjs'
+import { ScList, TermList, AutoDegAccumList, deci } from './para_constant.mjs'
 import Para from './para_calendars.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
@@ -26,10 +26,10 @@ export default (CalName, year) => {
     const SolsAccumRaw = (BuYear - 1) * Solar + (SolsOriginDif || 0) + SolsConst + DayConst // 冬至積日
     const SolsAccumMod = (SolsAccumRaw % 60 + 60) % 60
     const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0) // 曆元積日
-    const SolsDeci = SolsAccumRaw - ~~SolsAccumRaw
-    const LeapSurAvgThis = parseFloat(((((BuYear - 1) * 7 / 19 - ~~((BuYear - 1) * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
-    const LeapSurAvgPrev = parseFloat(((((BuYear - 2) * 7 / 19 - ~~((BuYear - 2) * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
-    const LeapSurAvgNext = parseFloat((((BuYear * 7 / 19 - ~~(BuYear * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
+    const SolsDeci = deci(SolsAccumRaw)
+    const LeapSurAvgThis = parseFloat((((deci((BuYear - 1) * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 今年閏餘
+    const LeapSurAvgPrev = parseFloat((((deci((BuYear - 2) * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11)) // 上年閏餘
+    const LeapSurAvgNext = parseFloat((((deci(BuYear * 7 / 19) + (SolsOriginMon || 0)) % 1 + 1) % 1).toPrecision(11))
     let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)) // 是否有閏月
     let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11))
     let isLeapAvgNext = LeapSurAvgNext >= parseFloat((12 / 19).toPrecision(11))
@@ -99,7 +99,7 @@ export default (CalName, year) => {
     // 月食
     let EcliAccum = 0
     if (EcliNumer) {
-        EcliAccum = EcliRange * ((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange - ~~((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange))
+        EcliAccum = EcliRange * deci((OriginYear % EcliNumer) * (Solar / Lunar) / EcliRange)
         for (let k = 1; k <= 3; k++) {
             // NewmAvgSc[~~(EcliRange * k - EcliAccum)] += `<span class='eclipse-symbol'>◐</span>`
             SyzygySc[~~(EcliRange * k - EcliAccum)] += `<span class='eclipse-symbol'>◐</span>`

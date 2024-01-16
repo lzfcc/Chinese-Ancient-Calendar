@@ -1,5 +1,6 @@
+// 可參考廖育棟的時憲曆日月氣朔網站 http://ytliu.epizy.com/Shixian/index_chinese.html ，有一分很漂亮的公式說明。
 import Para from './para_calendars.mjs'
-import { ScList } from './para_constant.mjs'
+import { ScList, deci } from './para_constant.mjs'
 const pi = Math.PI
 const d2r = d => d * pi / 180
 const r2d = r => r * 180 / pi
@@ -20,17 +21,15 @@ const t2 = x => Math.min(x, 360 - x) // x不及半周者，仍之；過半周者
 const t3 = x => 90 - Math.abs(90 - x % 180) // x过一象限者，与半周相减；过半周者，减半周；过三象限者，与全周相减。——與0、180的距離
 const f1 = x => x > 180 ? 1 : -1// 不及半周为减，过半周为加。
 const f2 = x => x > 180 ? -1 : 1
-const f3 = x => x % 180 > 90 ? 1 : -1 // 一、三象限減，二、四象限加
+const f3 = x => x % 180 < 90 ? 1 : -1 // 一、三象限加，二、四象限減
 // 蒙氣差
-const atmos = h => {
-    const a = tan(90 - h) ** 2 + 1
-    const delta = 4 + 4 * a * 2.0006095 * 0.0006095
-    const x = (-2 + sqr(delta)) / (2 * a) // 根據公式1 ，一元二次方程求根公式
-    const ang1 = asin((1 + x) / 1.0006095) - h
-    const ang2 = asin(sin(ang1) * 1.0002841)
-    return ang2 - ang1
-}
-// console.log(atmos(20)) // 0.04453873130688635
+// const TwoOrbitDif = (Obliq, Longi) => (Longi % 180 < 90 ? -1 : 1) * Math.abs(atan(cos(Obliq) * tan(Longi)) - Longi % 180) // 升度差。白道轉黃道，交後爲減，交前爲加。
+const OrbitHigh2Low = (e, x) => ~~(Math.ceil(x / 90) / 2) * 180 + atan(cos(e) * tan(x)) // 傾角、經度，用於黃轉赤，白轉黃
+const OrbitLow2High = (e, x) => Math.ceil(Math.ceil(x / 90) / 2) * 180 - 90 - atan(cos(e) * cot(x)) // 赤轉黃，黃轉白
+const Longi2Lati = (Obliq, Longi) => asin(sin(Obliq) * sin(Longi))
+// console.log(Longi2Lati(5, 300))
+// console.log(OrbitHigh2Low(23.9, 240))
+// console.log(OrbitLow2High(23.9, 237.72764))
 // 切線分外角法，見梅文鼎三角法舉要卷二。兩邊的輸入順序無所謂。已知邊角邊，求另外兩角。
 const OppositeAngle = (a, b, x) => {
     x = t2(x)
@@ -49,7 +48,18 @@ const OppositeAngle = (a, b, x) => {
 // 121.5759805556
 // console.log(OppositeAngle(57.5, 1.5, Math.abs(180 -  121.5759805556 * 2)).Ashort)
 // console.log(OppositeAngle(0.0117315, 0.0550505,  53.812).Ashort)
+
 // A角angle，L线段line segment，E椭圆的一部分ellipse，C圆的一部分circle，S面积
+const atmos = h => {
+    const a = tan(90 - h) ** 2 + 1
+    const delta = 4 + 4 * a * 2.0006095 * 0.0006095
+    const x = (-2 + sqr(delta)) / (2 * a) // 根據公式1 ，一元二次方程求根公式
+    const ang1 = asin((1 + x) / 1.0006095) - h
+    const ang2 = asin(sin(ang1) * 1.0002841)
+    return ang2 - ang1
+}
+// console.log(atmos(20)) // 0.04453873130688635
+
 const CoreDis = (deg, c2) => { // 已知橢圓某點角度、橢圓倍兩心差，求短邊長，即距地心長度。像日躔曆理以角求積那樣，日在辛，地在甲，另一焦點丙，延長辛甲到壬，丙壬⊥辛壬。甲辛=x，(2-x)^2=丙壬^2+(甲壬+x)^2。
     const jiaren = cos(deg) * c2 // 分股
     const bingren = sin(deg) * c2 // 勾    
@@ -73,20 +83,19 @@ const SunCorrGuimao = xRaw => {
     if (xRaw > 180) flag2 = -1
     return flag2 * (Awu + flag1 * Aweibingwu)
 }
-const TwoOrbitDif = (Obliq, Longi) => (Longi % 180 < 90 ? -1 : 1) * Math.abs(atan(cos(Obliq) * tan(Longi)) - Longi % 180) // 白道轉黃道，交後爲減，交前爲加。
 // export default (CalName, year) => {
 const cal = (CalName, year) => {
-    const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, MansionDayConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, MoonNodeMS, ChouWhitelongiConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYin, SunLimitYang, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin } = Para[CalName]
+    const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, MansionDayConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, MoonNodeMS, ChouWhitelongiConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin } = Para[CalName]
     const TermLeng = Solar / 12
     const CloseOriginYear = year - CloseOriginAd // 積年
     const OriginAccum = CloseOriginYear * Solar // 中積
     const OriginAccumPrev = (CloseOriginYear - 1) * Solar
     const OriginAccumNext = (CloseOriginYear + 1) * Solar
     const SolsAccum = OriginAccum + SolsConst // 通積分。
-    const SolsFrac = SolsAccum - ~~SolsAccum // 冬至小數
-    const SolsmorScOrder = (~~SolsAccum + 2) % 60 // 本年紀日：以天正冬至干支加一日得紀日。（考成：所求本年天正冬至次日之干支。既有天正冬至干支，可以不用紀日，因用表推算起於年根而不用天正冬至。若無紀日，則無以定干支，且日數自紀日干支起初日，故並用之）    
+    const SolsFrac = deci(SolsAccum) // 冬至小數
+    const SolsmorScOrder = (~~SolsAccum + 2) % 60 // 本年紀日：以天正冬至干支加一日得紀日。（考成：所求本年天正冬至次日之干支。既有天正冬至干支，可以不用紀日，因用表推算起於年根而不用天正冬至。若無紀日，則無以定干支，且日數自紀日干支起初日，故並用之）Solsmor: winter solstice tomorrow 冬至次日子正初刻
     const SunRoot = (1 - SolsFrac) * SunAvgDV // 年根（考成：天正冬至次日子正初刻太陽距冬至之平行經度。天正冬至分：冬至距本日子正初刻後之分數與周日一萬分相減，餘爲冬至距次日子正初刻前之分數，故與每日平行為比例，得次日子正初刻太陽距冬至之平行經度）。一率：週日一萬分，二率：每日平行，三率：以天正冬至分與週日一萬分相減，求得四率爲秒，以分收之得年根。// 本來是分，我收作度。    
-    const DayAccum = OriginAccum + (SolsConst - ~~SolsConst) - SolsFrac // 積日（曆元冬至次日到所求天正冬至次日的日數，等於算式的曆元冬至當日到所求冬至當日日數）
+    const DayAccum = OriginAccum + deci(SolsConst) - SolsFrac // 積日（曆元冬至次日到所求天正冬至次日的日數，等於算式的曆元冬至當日到所求冬至當日日數）
     const ChouAccum = DayAccum - ChouConst // 通朔
     const LunarNum = ~~(ChouAccum / Lunar) + 1 // 積朔。似乎+1是為了到十二月首朔
     const ChouSolsmorDif = (Lunar - ChouAccum % Lunar) % Lunar // 首朔（十二月朔距冬至次日子正）：通朔以朔策除之，得數加一爲積朔，餘數與朔策相減爲首朔。上考則通朔以朔策除之爲積朔，餘數爲首朔
@@ -106,7 +115,7 @@ const cal = (CalName, year) => {
         const SunOrbit = t(AvgSun - Sunperi) // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
         const SunCorr = SunCorrGuimao(SunOrbit)
         const SunGong = t(AvgSun + SunCorr) // 實行
-        const SunLongi = t(SunGong - 90) // 黃道度
+        const SunLongi = (SunGong + 270) % 360 // 黃道度
         // SunGong-Precession*(year-1684)⋯⋯ 求宿度：以積年與歲差五十一秒相乘，得數，與癸卯年黃道宿鈐相加，得本年宿鈐。察實行足減某宿度分則減之，餘爲某宿度分。——與古曆算法不同，這是捷法，但是⚠️這是夜半
         return { SunOrbit, SunCorr, SunLongi, SunGong, Sunperi }
     }
@@ -156,7 +165,7 @@ const cal = (CalName, year) => {
         const Whitegong = AcrMoon3 + MoonCorr4 // 白道實行moon's path
         ///////////////////// 求黃白差
         const AcrNodeCorr = f2(SunNodeDif * 2) * OppositeAngle(57.5, 1.5, t1(SunNodeDif * 2)).Ashort // 正交實均。日距正交倍度过半周者，与半周相减，用其馀。日距正交倍度不及半周为加，过半周为减。
-        const AcrNode = AvgNode + AcrNodeCorr // 正交實行
+        const AcrNode = t(AvgNode + AcrNodeCorr) // 正交實行
         const Whitelongi = t(Whitegong - AcrNode) // 月距正交。——我把正交定為白經0度
         const versinSunNodeDif = versin(t2(SunNodeDif * 2))  // 日距正交倍度之正矢
         const ObliqmoonLimitCorr = versinSunNodeDif * (ObliqmoonMax - ObliqmoonMin) / 2 // 交角減分。黄白大距半較8分52秒半。凡日距正交倍度过半周者，则与全周相减，馀为距交倍度。
@@ -165,72 +174,105 @@ const cal = (CalName, year) => {
         const ObliqmoonCorrAcrMoonSunDif = ObliqmoonCorrSunNodeDif / 2 * versin(t2(AcrMoonSunDif * 2)) // 距日加分
         const Obliqmoon = ObliqmoonLimit + ObliqmoonCorrAcrMoonSunDif // 黃白大距
         const MoonLati = asin(sin(Obliqmoon) * sin(Whitelongi)) // 黃道緯度。月距正交过一象限者与半周相减，过半周者减半周，过三象限者与全周相减
-        const EclpWhiteDif = TwoOrbitDif(Obliqmoon, Whitelongi) // 升度差=月距正交之黃道度-月距正交。月距正交初、一、二、六、七、八宫为交后，为减。三、四、五、九、十、十一宫为交前，为加。之所以%180，因為tan(20)=tan(200)        
-        const MoonGong = t(Whitegong + EclpWhiteDif)
-        const MoonLongi = t(MoonGong - 90)
+        // const EclpWhiteDif = TwoOrbitDif(Obliqmoon, Whitelongi) // 升度差=月距正交之黃道度-月距正交。月距正交初、一、二、六、七、八宫为交后，为减。三、四、五、九、十、十一宫为交前，为加。之所以%180，因為tan(20)=tan(200)
+        // const MoonGong = t(Whitegong + EclpWhiteDif)
+        const MoonGong = (OrbitHigh2Low(Obliqmoon, Whitelongi) + AcrNode) % 360
+        const MoonLongi = (MoonGong + 270) % 360
         // 最後：求黃道宿度。用到黃道宿鈐。待定。
-        return { Whitegong, Whitelongi, MoonGong, MoonLongi, MoonLati, Obliqmoon, SunCoreDis, MoonCoreDis }
+        return { AcrNode, Whitegong, Whitelongi, MoonGong, MoonLongi, MoonLati, Obliqmoon, SunCoreDis, MoonCoreDis }
     }
-    const MoonEcliGuimao = (AcracrSunCorr, AcracrSunLongi) => {
-        //////// 【一】實望用時
+    const TcorrSum = (AcracrSunCorr, AcracrSunLongi) => {
         const SunCorrTcorr = -AcracrSunCorr / 15 // 均數時差。以實望太陽均數變時。均數加者則爲減。
         const EclpEquaDifTcorr = f3(AcracrSunLongi) * Math.abs(atan(cos(Obliquity) * tan(t3(AcracrSunLongi))) - t3(AcracrSunLongi)) / 15 // 升度時差。二分後爲加，二至後爲減。
-        const TcorrSum = SunCorrTcorr + EclpEquaDifTcorr // 時差總
-        const SolsmorDifNow = AcracrSolsmorDif + TcorrSum // 實望用時=實望實時+-時差總
-        if (SolsmorDifNow - ~~SolsmorDifNow > Rise + 9 / 96 && SolsmorDifNow - ~~SolsmorDifNow < 1 - Rise - 9 / 96) return // 日出入前後9刻以內入算
+        return SunCorrTcorr + EclpEquaDifTcorr
+    }
+    const SunEcliGuimao = (AcracrSunOrbit, AcracrSunCorr, AcracrSunLongi) => {
+        //////// 【一】實朔用時。用時的英語暫且用Now
+        const SolsmorDifNow = AcracrSolsmorDif + TcorrSum(AcracrSunCorr, AcracrSunLongi) // 實朔用時=實望實時+-時差總        
+        if (deci(SolsmorDifNow) < Rise - 5 / 96 && deci(SolsmorDifNow) > 1 - Rise + 5 / 96) return // 日出前日入後五刻以內可以見食
         else {
-            //////// 【二】食甚實緯、食甚時刻
-            // 斜距交角差。本時此時二月離白道實行相減，得一小時太陰白道實行——「本時」應該是實望用時
+            //////// 【二】食甚實緯、食甚用時。這一段日月食都一樣
             const SunNow = SunGuimao(SolsmorDifNow)
             const SunOnehAft = SunGuimao(SolsmorDifNow + 1 / 24)
             const MoonNow = MoonGuimao(SolsmorDifNow, SunNow.Sunperi, SunNow.SunOrbit, SunNow.SunCorr, SunNow.SunGong)
             const MoonOnehAft = MoonGuimao(SolsmorDifNow + 1 / 24, SunOnehAft.Sunperi, SunOnehAft.SunOrbit, SunOnehAft.SunCorr, SunOnehAft.SunGong)
+            // 斜距交角差。本時此時二月離白道實行相減，得一小時太陰白道實行——「本時」應該是實望用時
             const AngEquilibriumWhite = OppositeAngle(SunOnehAft.SunGong - SunNow.SunGong, MoonOnehAft.Whitegong - MoonNow.Whitegong, MoonNow.Obliqmoon).Ashort // 斜距交角差（斜距黃道交角與黃白交角之差，也就是斜距與白道交角。暫且將斜距稱為equilibrium）
-            const AngEquilibriumEclp = MoonNow.Obliqmoon + AngEquilibriumWhite // 斜距黃道交角            
-            const ArcNowTotal = Math.abs(sin(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚距弧
+            const AngEquilibriumEclp = MoonNow.Obliqmoon + AngEquilibriumWhite // 斜距黃道交角
             const TotalMoonSunDis = Math.abs(cos(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚實緯，即食甚兩心實相距，南北與兩心實望黃道實緯同。
-            const EquilibriumOnehLeng = (SunOnehAft.SunGong - SunNow.SunGong) * sin(MoonNow.Obliqmoon) / sin(AngEquilibriumWhite)  // 一小時兩經斜距. 已知邊角邊，求另一邊c：sinA=h/c, sinC=h/a, 得c=asinC/sinA
-            const TotalNowDif = (MoonNow.Whitelongi % 180 < 90 ? -1 : 1) * ArcNowTotal / EquilibriumOnehLeng // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
-            const TotalTime = SolsmorDifNow + TotalNowDif // 食甚時刻
+            const EquilibriumOnehLeng = (SunOnehAft.SunGong - SunNow.SunGong) * sin(MoonNow.Obliqmoon) / sin(AngEquilibriumWhite)  // 一小時兩經斜距. 已知邊角邊，求另一邊c：sinA=h/c, sinC=h/a, 得c=asinC/sinA                    
+            const ArcTotalNow = Math.abs(sin(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚距弧
+            const TotalNowDif = (MoonNow.Whitelongi % 180 < 90 ? -1 : 1) * ArcTotalNow / EquilibriumOnehLeng / 24 // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
+            const TotalAvg = SolsmorDifNow + TotalNowDif // 食甚用時
+            //////// 【三】地平高下差、日月視徑
+            const HorizonParallax = MoonNow.MoonCoreDis * (57 / 60 + 30 / 3600) - 10 / 3600 // 地平高下差=太陰在地平上最大地半徑差-太陽地半徑差
+            const SunAcrRadius = MoonNow.SunCoreDis * (16 / 60 + 6 / 3600) - 15 / 3600 // 太陽實半徑=太陽視半徑-光分15秒
+            const MoonRadius = MoonNow.MoonCoreDis * (15 / 60 + 40 / 3600 + 30 / 216000) // 太陰視半徑
+            const RadiusSum = SunAcrRadius + MoonRadius // 併徑
+            //////// 【四】食甚太陽黃赤經緯宿度、黃赤二經交角            
+            const TotalSunLongi = t(SunNow.SunLongi + TotalNowDif * (SunOnehAft.SunGong - SunNow.SunGong) * 24) // 食甚太陽黃道經度=實朔太陽黃道實行+距時日實行
+            const TotalSunEquaLongi = OrbitHigh2Low(Obliquity, TotalSunLongi)
+            const TotalSunEquaGong = (TotalSunEquaLongi + 90) % 360 // 自冬至初宮起算，得食甚太陽赤道經度。
+            const TotalSunEquaLati = Longi2Lati(Obliquity, TotalSunEquaLongi) // 食甚太陽赤道緯度
+            const AngSunNor = 90 + TotalSunEquaLati // 太陽距北極
+            const AngEclpEquaLongi = (TotalSunEquaGong < 180 ? -1 : 1) * acot(cot(Obliquity) * cos(t3(TotalSunLongi))) // 黃赤二經交角。冬至後黃經在赤經西，夏至後黃經在赤經東。——我定義東正西負
+            const AngEclpWhiteLongi = (MoonNow.Whitelongi < 90 || MoonNow.Whitelongi > 270 ? -1 : 1) * AngEquilibriumEclp // 實朔月距正交初宮十一宮，白經在黃經西，五宮六宮白經在黃經東
+            const AngEquaWhiteLongi = AngEclpEquaLongi + AngEclpWhiteLongi // 赤白二經交角。所得爲白經在赤經之東西。
+            //////// 【五】食甚用時兩心視相距
+            // const Now Math.abs(0.5 - NowFrac) * 15   // 用時太陽距午赤道度
+        }
+    }
+    const MoonEcliGuimao = (AcracrSolsmorDif, AcracrSunCorr, AcracrSunLongi) => {
+        //////// 【一】實望用時
+        const SolsmorDifNow = AcracrSolsmorDif + TcorrSum(AcracrSunCorr, AcracrSunLongi) // 實望用時=實望實時+-時差總
+        if (deci(SolsmorDifNow) > Rise + 9 / 96 && deci(SolsmorDifNow) < 1 - Rise - 9 / 96) return // 日出入前後9刻以內入算
+        else {
+            //////// 【二】食甚實緯、食甚時刻
+            const SunNow = SunGuimao(SolsmorDifNow)
+            const SunOnehAft = SunGuimao(SolsmorDifNow + 1 / 24)
+            const MoonNow = MoonGuimao(SolsmorDifNow, SunNow.Sunperi, SunNow.SunOrbit, SunNow.SunCorr, SunNow.SunGong)
+            const MoonOnehAft = MoonGuimao(SolsmorDifNow + 1 / 24, SunOnehAft.Sunperi, SunOnehAft.SunOrbit, SunOnehAft.SunCorr, SunOnehAft.SunGong)
+            // 斜距交角差。本時此時二月離白道實行相減，得一小時太陰白道實行——「本時」應該是實望用時
+            const AngEquilibriumWhite = OppositeAngle(SunOnehAft.SunGong - SunNow.SunGong, MoonOnehAft.Whitegong - MoonNow.Whitegong, MoonNow.Obliqmoon).Ashort // 斜距交角差（斜距黃道交角與黃白交角之差，也就是斜距與白道交角。暫且將斜距稱為equilibrium）
+            const AngEquilibriumEclp = MoonNow.Obliqmoon + AngEquilibriumWhite // 斜距黃道交角
+            const TotalMoonSunDis = Math.abs(cos(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚實緯，即食甚兩心實相距，南北與兩心實望黃道實緯同。
+            const EquilibriumOnehLeng = (SunOnehAft.SunGong - SunNow.SunGong) * sin(MoonNow.Obliqmoon) / sin(AngEquilibriumWhite)  // 一小時兩經斜距. 已知邊角邊，求另一邊c：sinA=h/c, sinC=h/a, 得c=asinC/sinA                    
+            const ArcTotalNow = Math.abs(sin(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚距弧
+            const TotalNowDif = (MoonNow.Whitelongi % 180 < 90 ? -1 : 1) * ArcTotalNow / EquilibriumOnehLeng / 24 // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
+            const Total = deci(SolsmorDifNow + TotalNowDif) // 食甚時刻
             //////// 【三】食分                                  
             const MoonParallax = MoonNow.MoonCoreDis * (57 / 60 + 30 / 3600) // 太陰地半徑差。中距最大地半徑差 57分30秒。此一弧度代正弦算。
             const SunRadius = MoonNow.SunCoreDis * (16 / 60 + 6 / 3600) // 太陽視半徑。中距太陽視半徑16分6秒
             const ShadowRadius = MoonParallax + 10 / 3600 - SunRadius + MoonParallax / 69 // 實影半徑=月半徑差+日半徑差-日半徑+影差。太陽地半徑差10秒。
             const MoonRadius = MoonNow.MoonCoreDis * (15 / 60 + 40 / 3600 + 30 / 216000) // 太陰視半徑
-            const RadiusSum = MoonRadius + ShadowRadius //併徑——也就是出現月食的最大極限
+            const RadiusSum = MoonRadius + ShadowRadius // 併徑——也就是出現月食的最大極限
             // const RadiusDif = MoonRadius - ShadowRadius // 兩徑較                    
             const Magni = (RadiusSum - TotalMoonSunDis) / (MoonRadius * 2) // 若食甚實緯大於併徑，則月與地影不相切，則不食，即不必算。上編卷七：併徑大於距緯之較，即爲月食之分
             if (Magni < 0) return
             //////// 【四】初虧復圓時刻
             const StarttoendArc = sqr((RadiusSum + TotalMoonSunDis) * (RadiusSum - TotalMoonSunDis)) // 初虧復圓距弧。就是直角三角形已知兩邊。
             const StarttoendTime = StarttoendArc / EquilibriumOnehLeng / 24 // 初虧復圓距時
-            const StartTime = TotalTime - StarttoendTime
-            const EndTime = TotalTime + StarttoendTime //復圓時刻
+            const Start = (Total - StarttoendTime + 1) % 1
+            const End = Total + StarttoendTime //復圓時刻
             //////// 【五】食既生光時刻
             //////// 【六】食甚太陰黃道經緯宿度
-            const TotalNowWhitegongDif = TotalNowDif / (MoonOnehAft.Whitegong - MoonNow.Whitegong) // 距時月實行
-            const TotalWhitegong = MoonNow.Whitegong + TotalNowWhitegongDif // 食甚太陰白道經度
+            const TotalNowWhitegongDif = Equilibrium.TotalNowDif / (MoonOnehAft.Whitegong - MoonNow.Whitegong) // 距時月實行
             const TotalWhitelongi = MoonNow.Whitelongi + TotalNowWhitegongDif // 食甚月距正交
-            const TotalEclpWhiteDif = TwoOrbitDif(MoonNow.Obliqmoon, TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加，減者亦爲減。⚠️我這裡符號用的食甚的月距正交，而非食甚距時所用的實望的月距正交。
-            const TotalMoonGong = t(TotalWhitegong + TotalEclpWhiteDif) // 食甚太陰黃道經度
-            const TotalMoonLongi = t(TotalMoonGong - 90)
-            const TotalMoonLati = asin(sin(MoonNow.Obliqmoon) * sin(TotalWhitelongi)) // 食甚太陰黃道緯度，南北與食甚實緯同
+            // const TotalEclpWhiteDif = TwoOrbitDif(MoonNow.Obliqmoon, TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加，減者亦爲減。⚠️我這裡符號用的食甚的月距正交，而非食甚距時所用的實望的月距正交。
+            const TotalMoonGong = (OrbitHigh2Low(MoonNow.Obliqmoon, TotalWhitelongi) + MoonNow.AcrNode) % 360 // 食甚太陰黃道經度
+            const TotalMoonLongi = (TotalMoonGong + 270) % 360
+            const TotalMoonLati = Longi2Lati(MoonNow.Obliqmoon, TotalWhitelongi) // 食甚太陰黃道緯度，南北與食甚實緯同
             // const TotalMoonLati = sin(90 - AngEquilibriumEclp) * TotalMoonSunDis // 這是食甚實緯之南北。
             //////// 【七】食甚太陰赤道經緯宿度
-            const AngMoonEquinoxEclp = (TotalMoonLati > 0 ? 1 : -1) * t3(acot(sin(t3(TotalMoonLongi)) * cot(TotalMoonLati))) // 太陰距二分弧與黃道交角——近似成平面三角就可以了 sinAcotB=cotC，也就是a/r·r/h=a/h。正負判斷待定
-            const AngMoonEquinoxEqua = Obliquity + AngMoonEquinoxEclp // 太陰距二分弧與赤道交角
-            const tanArcMoonEquinox = Math.abs(cos(AngMoonEquinoxEclp) * tan(t3(TotalMoonLongi))) // 太陰距二分弧之正切線
-            const TotalMoonEquinoxEquaLongiDif = atan(cos(Math.abs(AngMoonEquinoxEqua)) * tanArcMoonEquinox) // 太陰距春秋分赤道經度                    
-            let TotalMoonEquaLongi = TotalMoonEquinoxEquaLongiDif
-            if (TotalMoonLongi < 90) { }
-            else if (TotalMoonLongi < 180) {
-                TotalMoonEquaLongi = 180 - TotalMoonEquinoxEquaLongiDif
-            } else if (TotalMoonLongi < 270) {
-                TotalMoonEquaLongi = 180 + TotalMoonEquinoxEquaLongiDif
-            } else TotalMoonEquaLongi = 360 - TotalMoonEquinoxEquaLongiDif
-            const TotalMoonEquaLati = atan(tan(AngMoonEquinoxEqua) * sin(TotalMoonEquinoxEquaLongiDif))
+            const ObliqMoonEclp = (TotalMoonLati > 0 ? 1 : -1) * t3(acot(sin(t3(TotalMoonLongi)) * cot(TotalMoonLati))) // 太陰距二分弧與黃道交角。單獨算沒問題。近似成平面三角就可以了 sinAcotB=cotC，也就是a/r·r/h=a/h
+            const ObliqMoonEqua = Obliquity + ObliqMoonEclp // 太陰距二分弧與赤道交角
+            // 思路：黃轉白，白轉赤。
+            const tanArcMoonEquinox = cos(ObliqMoonEclp) * tan(TotalMoonLongi) // 太陰距二分弧之正切線
+            const TotalMoonEquaLongi = ~~(Math.ceil(x / 90) / 2) * 180 + atan(cos(ObliqMoonEqua) * tanArcMoonEquinox) // 太陰距二分赤道經度
+            const TotalMoonEquaGong = (TotalMoonEquaLongi + 90) % 360
+            const TotalMoonEquaLati = atan(tan(ObliqMoonEqua) * sin(t3(TotalMoonEquaLongi)))
             //////// 【八】推月食方位
-            return { StartTime, TotalTime, EndTime, Magni, TotalMoonLongi, TotalMoonLati, TotalMoonEquaLongi, TotalMoonEquaLati }
+            return { Start, Total, End, Magni, TotalMoonLongi, TotalMoonLati, TotalMoonEquaLongi, TotalMoonEquaLati }
         }
     }
     const AutoNewmSyzygy = isNewm => {
@@ -281,15 +323,8 @@ const cal = (CalName, year) => {
             /////////////////// 推交食
             let isEclipse = false // 入食限可以入算
             const tmp = t3(AcracrWhitelongi) // 距離0、180的度數            
-            if (isNewm) {
-                if (AcracrWhitelongi % 180 < 180) {
-                    if (tmp < SunLimitYin) isEclipse = true
-                } else {
-                    if (tmp < SunLimitYang) isEclipse = true
-                }
-            } else {
-                if (tmp < MoonLimit) isEclipse = true
-            }
+            if (isNewm) isEclipse = AcracrWhitelongi % 180 < 180 ? tmp < SunLimitYinAcr : tmp < SunLimitYangAcr
+            else isEclipse = tmp < MoonLimit
             if (isEclipse) {
                 if (isNewm) {
 
@@ -302,11 +337,11 @@ const cal = (CalName, year) => {
             if (isNewm) {
                 const AvgTermSolsmorDif = SolsFrac + i * TermLeng - 1
                 TermSc[i] = ScList[(SolsmorScOrder + ~~AvgTermSolsmorDif) % 60]
-                TermDeci[i] = AvgTermSolsmorDif - ~~AvgTermSolsmorDif
+                TermDeci[i] = deci(AvgTermSolsmorDif)
                 const TermSunperiMidn = SunperiThisyear + SunperiDV * ~~AvgTermSolsmorDif + SunperiConst
                 const TermSunCorr = SunCorrGuimao(i * 30 - TermSunperiMidn)
                 const AvgacrTermSolsmorDif = AvgTermSolsmorDif - TermSunCorr / SunAvgDV
-                TermAcrDeci[i] = AvgacrTermSolsmorDif - ~~AvgacrTermSolsmorDif
+                TermAcrDeci[i] = deci(AvgacrTermSolsmorDif)
                 TermAcrSc[i] = ScList[(SolsmorScOrder + ~~AvgacrTermSolsmorDif) % 60]
                 // const AvgacrTermSun = SunGuimao(AvgacrTermSolsmorDif).SunGong
                 // const AcracrTermSolsmorDif = AvgacrTermSolsmorDif + ((i * 30 - AvgacrTermSun) / SunAvgDV)  // 1889年1月20日大寒定氣，現代精確丙申1507，癸卯元曆算得丙申1354（誤差1.5刻），如果再加上我的迭代一步，得1566（誤差0.5刻）                
@@ -353,3 +388,4 @@ const cal = (CalName, year) => {
 // 13,315/117315=0.1134978477。6.1281666667-4.8035277778=1.3246388889，4.8035277778+1.3246388889*0.1134978477=4.9538714407
 // console.log(MoonCorr1(0.0455941, 108 + 43 / 60)) // 考成後編表
 
+// console.log(atan(cos(23.9) * tan((340))))

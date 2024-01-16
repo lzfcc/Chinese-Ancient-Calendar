@@ -15,6 +15,10 @@ export { big, frc, nzh };
 //     ch: '〇一二三四五六七八九',      // 数字字符
 //     ch_u: '个十百千萬億兆京',       // 数位单位字符，万以下十进制，万以上万进制，个位不能省略
 // });
+
+export const deci = x => +('.' + (x.toString().split('.')[1])) || 0 // 截取小數
+// console.log(4999999999999.14%1) // = 0.1396484375
+// console.log(4999999999999.14-Math.floor(4999999999999.14)) // = 0.1396484375
 export const debounce = (fn, delay) => {
   let timer = 100; // 返回一个函数，这个函数会在一个时间区间结束后的 delay 毫秒时执行 fn 函数
   return (...args) => {

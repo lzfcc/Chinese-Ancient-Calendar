@@ -1,7 +1,5 @@
 import {
-    big,
-    ScList,
-    WeekList1
+    big, ScList, WeekList1
 } from './para_constant.mjs'
 /**
  * 把儒略日轉換成儒略曆或格里高利曆 ported from https://ytliu0.github.io/ChineseCalendar/Julian.js by 廖育棟

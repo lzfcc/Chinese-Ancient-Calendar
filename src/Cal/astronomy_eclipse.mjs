@@ -1,5 +1,5 @@
 import Para from './para_calendars.mjs'
-import { frc } from './para_constant.mjs'
+import { frc, deci } from './para_constant.mjs'
 import { AutoTcorr, AutoDifAccum, MoonFormula } from './astronomy_acrv.mjs'
 import { Interpolate3, Make2DPoints } from './equa_sn.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
@@ -533,14 +533,14 @@ const EcliLast2 = (CalName, Magni, TotalDeci, AnomaAccum, Denom) => {
     let Last = 0
     if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
         const LastList = [0, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 22, 22] // 月食刻數。最後加一個22，方便程序
-        Last = LastList[~~Magni] + (Magni - ~~Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
+        Last = LastList[~~Magni] + deci(Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
     } else if (CalName === 'Huangji') {
         // const LastList = [0, 19, 6, 8, 4, 18, 16, 14, 12, 10, 8, 6, 4, 2, 1, 0] // 實在無法理解，暫時案麟德
         const LastList = [0, 1, 2, 3, 6, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 20]
-        Last = LastList[~~Magni] + (Magni - ~~Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
+        Last = LastList[~~Magni] + deci(Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
     } else if (['LindeA', 'LindeB'].includes(CalName)) {
         const LastList = [0, 1, 2, 3, 6, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 20]
-        Last = LastList[~~Magni] + (Magni - ~~Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
+        Last = LastList[~~Magni] + deci(Magni) * (LastList[~~Magni + 1] - LastList[~~Magni])
         const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AnomaAccum, CalName) // 紀元：食甚加時入轉算外損益率。應朒者依其損益，應朏者益減損加其副
         Last *= 1 + MoonTcorrDif / TheDenom / Denom // 舊唐「以乘所入變增減率，總法而一，應速：增損減加，應遲：依其增減副」
     }
@@ -758,7 +758,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
             McorrB *= isYin ? -1 : 1
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
         } else if (CalName === 'Qintian') {
-            const SolsDeci = SolsAccum - Math.floor(SolsAccum)
+            const SolsDeci = deci(SolsAccum)
             const Lati = Math.abs(AutoLongi2Lati(TheSolsDif, SolsDeci, 'Chongxuan').Lati)
             McorrA = MoonLimit1 * Lati * Denom / 251300 // 黃道出入食差
             YinYangBorder = McorrA * dd
@@ -1400,7 +1400,7 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif,
             NodeAccum += AutoTcorr(AnomaAccum, AvgSolsDif, CalName, NodeAccum).NodeAccumCorrA
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgSolsDif, isNewm, CalName, Month, Leap)
         } else {
-            SolsDeci = SolsDeci || SolsAccum - Math.floor(SolsAccum)
+            SolsDeci = SolsDeci || deci(SolsAccum)
             const Rise = AutoLongi2Lati(AcrSolsDif, SolsDeci, CalName).Rise / 100
             if (['Fengyuan', 'Zhantian'].includes(CalName)) {
                 Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, 0, isNewm, 'Guantian')

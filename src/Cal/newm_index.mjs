@@ -3,7 +3,7 @@ import N2 from './newm.mjs'
 // import N3 from './newm_huihui.mjs'
 import N4 from './newm_shixian.mjs'
 import Para from './para_calendars.mjs'
-import { TermList, ScList, ThreeList, CalNameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
+import { TermList, ScList, ThreeList, CalNameList, MonNumList1, MonNumListChuA, MonNumListChuB, deci } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Accum2Mansion, LeapAdjust } from './astronomy_other.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
@@ -33,7 +33,7 @@ export default (CalName, YearStart, YearEnd) => {
         let { LeapNumTerm: LeapNumTermThis, isLeapPrev: isLeapTPv, isLeapThis: isLeapTT,
             NewmInt, NewmStart, NewmEnd, TermStart, TermEnd,
         } = ThisYear
-        const SolsDeci = +(SolsAccum - Math.floor(SolsAccum)).toFixed(5)
+        const SolsDeci = +deci(SolsAccum).toFixed(5)
         let specialStart = 0, specialNewmSyzygyEnd = 0
         if (Type === 1) {
             if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[SolsMon] === '')) {

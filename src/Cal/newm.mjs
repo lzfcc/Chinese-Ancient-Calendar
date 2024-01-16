@@ -1,5 +1,5 @@
 import Para from './para_calendars.mjs'
-import { ScList, AutoDegAccumList } from './para_constant.mjs'
+import { ScList, AutoDegAccumList, deci } from './para_constant.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
 import { ConstWest } from './astronomy_west.mjs'
 import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub, LeapAdjust } from './astronomy_other.mjs'
@@ -127,7 +127,7 @@ export default (CalName, year) => {
         LeapSurAvgPrev = parseFloat(((LeapAccumPrev % Lunar + Lunar) % Lunar).toPrecision(14))
         LeapSurAvgNext = parseFloat(((LeapAccumNext % Lunar + Lunar) % Lunar).toPrecision(14))
     }
-    const SolsDeci = +(SolsAccum - Math.floor(SolsAccum)).toFixed(fixed)
+    const SolsDeci = deci(SolsAccum) //.toFixed(fixed)
     let FirstAccum = 0, FirstAnomaAccum = 0, FirstNodeAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
@@ -202,7 +202,7 @@ export default (CalName, year) => {
             AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScConst) % 60) + 60) % 60]
-            AvgDeci[i] = AvgRaw[i] - Math.floor(AvgRaw[i])
+            AvgDeci[i] = deci(AvgRaw[i])
             SolsDif[i] = ((ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - SolsAccum + Solar) % Solar
             let Tcorr1 = 0
             if (Anoma) {
@@ -227,16 +227,16 @@ export default (CalName, year) => {
                 AcrMod[i] = (AcrRaw[i] % 60 + 60) % 60
                 AcrInt[i] = Math.floor(AcrRaw[i])
                 if (Type <= 4) {
-                    Deci[i] = AcrRaw[i] - AcrInt[i]
+                    Deci[i] = deci(AcrRaw[i])
                     Deci1[i] = Deci[i]
                 } else if (Type < 11) {
-                    Deci[i] = AcrRaw[i] - AcrInt[i]
+                    Deci[i] = deci(AcrRaw[i])
                     Deci2[i] = Deci[i].toFixed(4).slice(2, 6)
                     if (Tcorr1) {
-                        Deci1[i] = AvgRaw[i] + Tcorr1 - Math.floor(AvgRaw[i] + Tcorr1)
+                        Deci1[i] = deci(AvgRaw[i] + Tcorr1)
                     }
                 } else if (Type === 11) {
-                    Deci[i] = AcrRaw[i] - AcrInt[i]
+                    Deci[i] = deci(AcrRaw[i])
                     Deci3[i] = Deci[i].toFixed(4).slice(2, 6)
                 }
             } else {
