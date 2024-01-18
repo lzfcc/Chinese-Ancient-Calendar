@@ -28,6 +28,7 @@ const LongiHigh2Low = (e, x) => ~~(Math.ceil(x / 90) / 2) * 180 + atan(cos(e) * 
 const LongiLow2High = (e, x) => Math.ceil(Math.ceil(x / 90) / 2) * 180 - 90 - atan(cos(e) * cot(x)) // 赤轉黃，黃轉白
 const HighLongi2LowLati = (e, x) => asin(sin(e) * sin(x)) // 月距正交轉黃緯
 const LowLongi2LowLati = (e, x) => atan(tan(e) * sin(x)) // 求赤經高弧交角用到這個的變形
+const riseDif = (SunLati, LocationLati) => asin(tan(Math.abs(SunLati) * tan(LocationLati))) / 15 / 24
 // const LowLati2HighLongi = (e, x) => // 已知太陽赤緯轉黃經
 // console.log(HighLongi2LowLati(23 + 29 / 60,112.28487818))
 // console.log(LowLati2HighLongi(23 + 29 / 60, 11.49258677))
@@ -200,9 +201,9 @@ const cal = (CalName, year) => {
         const EclpEquaDifTcorr = (Acr1SunLongi - LongiHigh2Low(Obliquity, Acr1SunLongi)) / 15 / 24 // 升度時差。二分後爲加，二至後爲減。
         return SunCorrTcorr + EclpEquaDifTcorr
     }
-    const sunEcliGuimao = NowSolsmorDif => {
+    const sunEcliGuimao = (NowSolsmorDif, Acr1SunLongi) => {
         //////// 【一】實朔用時。用時的英語暫且用Now
-        const Rise = 0.25 // ⚠️⚠️⚠️⚠️⚠️⚠️
+        const Rise = 0.25 + (Acr1SunLongi < 180 ? -1 : 1) * riseDif(HighLongi2LowLati(Obliquity, Acr1SunLongi), BeijingLati)
         if (deci(NowSolsmorDif) < Rise - 5 / 96 && deci(NowSolsmorDif) > 1 - Rise + 5 / 96) return // 日出前日入後五刻以內可以見食
         else {
             //////// 【二】食甚實緯、食甚用時。這一段日月食都一樣
@@ -261,8 +262,9 @@ const cal = (CalName, year) => {
             // 設時赤經高弧交角
         }
     }
-    const moonEcliGuimao = NowSolsmorDif => {
+    const moonEcliGuimao = (NowSolsmorDif, Acr1SunLongi) => {
         //////// 【一】實望用時
+        const Rise = 0.25 + (Acr1SunLongi < 180 ? -1 : 1) * riseDif(HighLongi2LowLati(Obliquity, Acr1SunLongi), BeijingLati)
         if (deci(NowSolsmorDif) > Rise + 9 / 96 && deci(NowSolsmorDif) < 1 - Rise - 9 / 96) return // 日出入前後9刻以內入算
         else {
             //////// 【二】食甚實緯、食甚時刻
@@ -334,14 +336,13 @@ const cal = (CalName, year) => {
     const AutoNewmSyzygy = isNewm => {
         const AvgSc = [], AvgDeci = [], Acr1Sc = [], Acr1Deci = [], TermSc = [], TermDeci = [], Equa = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 10; i <= 14; i++) {
-            /////////////////// 推朔望
-            //// 平朔望
+        for (let i = 8; i <= 14; i++) {
+            //////// 平朔望
             const AvgSolsmorDif = ChouSolsmorDif + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSolsmorDifMidn = ~~AvgSolsmorDif
             AvgSc[i] = ScList[(SolsmorScOrder + AvgSolsmorDifMidn) % 60]
             AvgDeci[i] = deci(AvgSolsmorDif - AvgSolsmorDifMidn).toFixed(4).slice(2, 6)
-            //// 實朔望泛時
+            //////// 實朔望泛時
             let { Sunperi: SunperiMidnToday, SunOrbit: SunOrbitMidnToday, SunCorr: SunCorrMidnToday, SunLongi: SunLongiMidnToday, SunGong: SunGongMidnToday } = sunGuimao(AvgSolsmorDifMidn)
             const { MoonLongi: MoonLongiMidnToday } = moonGuimao(AvgSolsmorDifMidn, SunperiMidnToday, SunOrbitMidnToday, SunCorrMidnToday, SunGongMidnToday)
             SunLongiMidnToday += isNewm ? 0 : 180
@@ -362,25 +363,25 @@ const cal = (CalName, year) => {
                 Acr0SolsmorDifMidn = AvgSolsmorDifMidn - 1
                 Acr0Deci = 1 - (MoonLongiMidnToday - SunLongiMidnToday) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday))
             }
-            //// 實朔望實時
+            //////// 實朔望實時
             const Acr1SolsmorDif = iteration(Acr0SolsmorDifMidn + Acr0Deci, 0.5 / 24, isNewm)
             // const Acr2Deci = deci(Acr2SolsmorDif)
             // const Acr2SolsmorDif = iteration(Acr1SolsmorDif, 0.1 / 24, isNewm)
-            const { Sunperi: Acr1Sunperi, SunOrbit: Acr1SunOrbit, SunCorr: Acr1SunCorr, SunGong: Acr1SunGong, SunLongi: Acr1SunLongi } = sunGuimao(Acr1SolsmorDif)
+            const { Sunperi: Acr1Sunperi, SunOrbit: Acr1SunOrbit, SunCorr: Acr1SunCorr, SunGong: Acr1SunGong, SunLongi: Acr1SunLongi, sunlati } = sunGuimao(Acr1SolsmorDif)
             const { Whitelongi: Acr1Whitelongi } = moonGuimao(Acr1SolsmorDif, Acr1Sunperi, Acr1SunOrbit, Acr1SunCorr, Acr1SunGong)
             const NowSolsmorDif = Acr1SolsmorDif + timeDif(Acr1SunCorr, Acr1SunLongi)
             Acr1Deci[i] = deci(NowSolsmorDif).toFixed(4).slice(2, 6)
             Acr1Sc[i] = ScList[(SolsmorScOrder + ~~NowSolsmorDif) % 60]
-            /////////////////// 推交食
+            //////// 交食
             let isEclipse = false // 入食限可以入算
             const tmp = t3(Acr1Whitelongi) // 距離0、180的度數            
             if (isNewm) isEclipse = Acr1Whitelongi % 180 < 180 ? tmp < SunLimitYinAcr : tmp < SunLimitYangAcr
             else isEclipse = tmp < MoonLimit
             if (isEclipse) {
-                if (isNewm) sunEcliGuimao(NowSolsmorDif)
-                else moonEcliGuimao(NowSolsmorDif)
+                if (isNewm) sunEcliGuimao(NowSolsmorDif, Acr1SunLongi)
+                else moonEcliGuimao(NowSolsmorDif, Acr1SunLongi)
             }
-            ///////////////////// 推節氣。用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書估計用的本日次日度比例法，區別少部分密合，大部分相差5-15分鐘。輸出的是視時。
+            //////// 節氣。用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書估計用的本日次日度比例法，區別少部分密合，大部分相差5-15分鐘。輸出的是視時。
             if (isNewm) {
                 const AvgTermSolsmorDif = (i + 1) * TermLeng - (1 - SolsDeci)
                 const TermSunperiMidn = SunperiConst + SunperiThisyear + SunperiDV * ~~AvgTermSolsmorDif
