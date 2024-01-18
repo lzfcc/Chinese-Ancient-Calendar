@@ -17,11 +17,11 @@ const versin = x => +(1 - Math.cos(d2r(x))).toFixed(8) // 正矢
 const sqr = x => +Math.sqrt(x)
 const t = x => (x % 360 + 360) % 360
 const t1 = x => Math.abs(180 - x % 360) // x不及半周者，与半周相减；过半周者，减半周。——與180的距離
-const t2 = x => Math.min(x, 360 - x) // x不及半周者，仍之；過半周者，與全周相減。——與0的距離
+const t2 = x => Math.min(x % 360, 360 - x % 360) // x不及半周者，仍之；過半周者，與全周相減。——與0的距離
 const t3 = x => 90 - Math.abs(90 - x % 180) // x过一象限者，与半周相减；过半周者，减半周；过三象限者，与全周相减。——與0、180的距離
-const f1 = x => x > 180 ? 1 : -1// 不及半周为减，过半周为加。
-const f2 = x => x > 180 ? -1 : 1
-const f3 = x => x % 180 < 90 ? 1 : -1 // 一、三象限加，二、四象限減
+const f1 = x => x % 360 > 180 ? 1 : -1// 不及半周为减，过半周为加。
+const f2 = x => x % 360 > 180 ? -1 : 1
+const f3 = x => x % 360 % 180 > 90 ? 1 : -1 // 一、三象限加，二、四象限減
 // 蒙氣差
 // const TwoOrbitDif = (Obliq, Longi) => (Longi % 180 < 90 ? -1 : 1) * Math.abs(atan(cos(Obliq) * tan(Longi)) - Longi % 180) // 升度差。白道轉黃道，交後爲減，交前爲加。
 const LongiHigh2Low = (e, x) => ~~(Math.ceil(x / 90) / 2) * 180 + atan(cos(e) * tan(x)) // 傾角、經度，用於黃轉赤，白轉黃
@@ -196,8 +196,8 @@ const cal = (CalName, year) => {
         return { AcrNode, Whitegong, Whitelongi, MoonGong, MoonLongi, MoonLati, Obliqmoon, MoonOrbit, MoonCorr1, MoonLco }
     }
     const TcorrSum = (Acr1SunCorr, Acr1SunLongi) => { // 時差總
-        const SunCorrTcorr = -Acr1SunCorr / 15 // 均數時差。以實望太陽均數變時。均數加者則爲減。
-        const EclpEquaDifTcorr = (Acr1SunLongi - LongiHigh2Low(Obliquity, Acr1SunLongi)) / 15 // 升度時差。二分後爲加，二至後爲減。
+        const SunCorrTcorr = -Acr1SunCorr / 15 / 24 // 均數時差。以實望太陽均數變時。均數加者則爲減。
+        const EclpEquaDifTcorr = (Acr1SunLongi - LongiHigh2Low(Obliquity, Acr1SunLongi)) / 15 / 24 // 升度時差。二分後爲加，二至後爲減。
         return SunCorrTcorr + EclpEquaDifTcorr
     }
     const SunEcliGuimao = (Acr1SunCorr, Acr1SolsmorDif, Acr1SunLongi) => {
@@ -217,7 +217,7 @@ const cal = (CalName, year) => {
             const AvgDistReal = Math.abs(cos(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚實緯，即食甚兩心實相距，南北與兩心實望黃道實緯同。
             const EquilibriumOnehLeng = (SunOnehAft.SunGong - SunNow.SunGong) * sin(MoonNow.Obliqmoon) / sin(AngEquilibriumWhite)  // 一小時兩經斜距. 已知邊角邊，求另一邊c：sinA=h/c, sinC=h/a, 得c=asinC/sinA                    
             const ArcTotalNow = Math.abs(sin(AngEquilibriumEclp) * MoonNow.MoonLati) // 食甚距弧
-            const TotalNowDif = (MoonNow.Whitelongi % 180 < 90 ? -1 : 1) * ArcTotalNow / EquilibriumOnehLeng / 24 // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
+            const TotalNowDif = f3(MoonNow.Whitelongi) * ArcTotalNow / EquilibriumOnehLeng / 24 // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
             const SolsmorDifAvg = SolsmorDifNow + TotalNowDif // 食甚用時
             const SunAvg = SunGuimao(SolsmorDifAvg)
             const MoonAvg = MoonGuimao(SolsmorDifAvg, SunAvg.Sunperi, SunAvg.SunOrbit, SunAvg.SunCorr, SunAvg.SunGong)
@@ -336,11 +336,11 @@ const cal = (CalName, year) => {
     const AutoNewmSyzygy = isNewm => {
         const AvgSc = [], AvgDeci = [], Acr0Sc = [], Acr0Deci = [], Acr1Deci = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], Equa = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 3; i <= 14; i++) {
+        for (let i = 5; i <= 14; i++) {
             /////////////////// 推朔望
             //// 平朔望
             const AvgSolsmorDif = ChouSolsmorDif + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
-            // const AvgSolsmorDif = 101
+            // const AvgSolsmorDif = 278
             const AvgSolsmorDifMidn = ~~AvgSolsmorDif
             AvgSc[i] = ScList[(SolsmorScOrder + AvgSolsmorDifMidn) % 60]
             AvgDeci[i] = AvgSolsmorDif - AvgSolsmorDifMidn
@@ -368,11 +368,12 @@ const cal = (CalName, year) => {
             Acr0Sc[i] = ScList[(SolsmorScOrder + Acr0SolsmorDifMidn) % 60]
             //// 實朔望實時
             const Acr1SolsmorDif = iteration(Acr0SolsmorDifMidn + Acr0Deci[i], 0.5 / 24, isNewm)
-            Acr1Deci[i] = deci(Acr1SolsmorDif)
-            // const Acr2SolsmorDif = iteration(Acr1SolsmorDif, 0.1 / 24, isNewm)
+            // const Acr2SolsmorDif = iteration(Acr1SolsmorDif, 0.5 / 24, isNewm)
             // const Acr2Deci = deci(Acr2SolsmorDif)
             const { Sunperi: Acr1Sunperi, SunOrbit: Acr1SunOrbit, SunCorr: Acr1SunCorr, SunGong: Acr1SunGong, SunLongi: Acr1SunLongi } = SunGuimao(Acr1SolsmorDif)
             const { Whitelongi: Acr1Whitelongi, MoonLongi: Acr1MoonLongi } = MoonGuimao(Acr1SolsmorDif, Acr1Sunperi, Acr1SunOrbit, Acr1SunCorr, Acr1SunGong)
+            const T=TcorrSum(Acr1SunCorr, Acr1SunLongi)
+            Acr1Deci[i] = deci(Acr1SolsmorDif + TcorrSum(Acr1SunCorr, Acr1SunLongi))
             /////////////////// 推交食
             let isEclipse = false // 入食限可以入算
             const tmp = t3(Acr1Whitelongi) // 距離0、180的度數            
