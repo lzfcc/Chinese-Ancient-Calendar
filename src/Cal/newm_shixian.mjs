@@ -111,7 +111,7 @@ const sunCorrGuimao = xRaw => {
 }
 // export default (CalName, year) => {
 const cal = (CalName, year) => {
-    const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, ChouWhitelongiConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
+    const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
     const TermLeng = Solar / 12
     const CloseOriginYear = abs(year - CloseOriginAd) // 積年
     const OriginAccum = +(CloseOriginYear * Solar).toFixed(9) // 中積
@@ -147,7 +147,7 @@ const cal = (CalName, year) => {
     }
     /////////// 推月離 //////////
     const moonGuimao = (Sd, Sunperi, SunOrbit, SunCorr, SunGong) => {
-        ///////////////////  求平行
+        //////// 平行
         const AvgMoon1 = t(MoonRoot + Sd * MoonAvgDV) // 太陰平行        
         const AvgMoonapo1 = t(MoonapoRoot + Sd * MoonapoDV) // 最高平行
         const AvgNode1 = t(NodeRoot - Sd * NodeDV) // 正交平行
@@ -167,11 +167,11 @@ const cal = (CalName, year) => {
         const MoonLco = abs(0.0117315 * sin(t2(SunMoonapoDif * 2)) / sin(AcrMoonapoCorr)) // 本天心距地：本時兩心差        
         const AcrMoonapo = AvgMoonapo + AcrMoonapoCorr // 最高實行
         const MoonOrbit = t(AvgMoon - AcrMoonapo) // 太陰引數=用平行-最高實行
-        ///////////////////////// 求實行
+        //////// 實行
         // 求初均（見月離曆理葉28）
-        const Ajiagengyi = qiexian(MoonLco, 1, t1(MoonOrbit)).Ashort // 对两心差之小角.引数不及半周者，与半周相减。过半周者，则减半周。
-        const Ayijiasi = qiexian(MoonLco, 1, Ajiagengyi + t1(MoonOrbit)).Along // 对半径之大角，为平圆引数
-        const MoonCorr1 = abs(atan(sqr(1 - MoonLco ** 2) * tan(t3(Ayijiasi))) - t3(MoonOrbit)) * f1(MoonOrbit) // 初均。比例得實引，實引-太陰引數=初均。引数初宫至五宫为减，六宫至十一宫为加。        
+        const Ajiagengyi = qiexianA(MoonLco, 1, t1(MoonOrbit)) // 对两心差之小角.引数不及半周者，与半周相减。过半周者，则减半周。
+        const Ayijiasi = qiexianA(1, MoonLco, Ajiagengyi + t1(MoonOrbit)) // 对半径之大角，为平圆引数        
+        const MoonCorr1 = abs((atan(sqr(1 - MoonLco ** 2) * tan(Ayijiasi)) + 180) % 180 - t2(MoonOrbit)) * f1(MoonOrbit) // 初均。比例得實引，實引-太陰引數=初均。引数初宫至五宫为减，六宫至十一宫为加。        
         const AcrMoon1 = AvgMoon + MoonCorr1 // 初實行
         const MoonSunDif = t(AcrMoon1 - SunGong) // 月距日
         const MoonCorr2Apogee = abs(sin(MoonSunDif * 2) * MoonCorr2ApogeeMax) // 太陽最高時月距日之二均
@@ -188,7 +188,7 @@ const cal = (CalName, year) => {
         const MoonCorr4Max = (Dif90 - Dif90Int) * (MoonCorr4MaxList[Dif90Int + 1] - MoonCorr4MaxList[Dif90Int]) + MoonCorr4MaxList[Dif90Int] // 兩弦最大末均
         const MoonCorr4 = -sin(AcrMoonSunDif) * MoonCorr4Max // 末均。实月距日初宫至五宫为减，六宫至十一宫为加。
         const Whitegong = AcrMoon3 + MoonCorr4 // 白道實行moon's path
-        ///////////////////// 求黃白差
+        //////// 黃白差
         const AcrNodeCorr = f2(SunNodeDif * 2) * qiexian(57.5, 1.5, t1(SunNodeDif * 2)).Ashort // 正交實均。日距正交倍度过半周者，与半周相减，用其馀。日距正交倍度不及半周为加，过半周为减。
         const AcrNode = t(AvgNode + AcrNodeCorr) // 正交實行
         const Whitelongi = t(Whitegong - AcrNode) // 月距正交。——我把正交定為白經0度
@@ -203,7 +203,7 @@ const cal = (CalName, year) => {
         // const MoonGong = t(Whitegong + EclpWhiteDif)
         const MoonGong = (LongiHigh2Low(Obliqmoon, Whitelongi) + AcrNode) % 360
         const MoonLongi = (MoonGong + 270) % 360
-        // 最後：求黃道宿度。用到黃道宿鈐。待定。
+        //////// 黃道宿度。用到黃道宿鈐。待定。
         return { AcrNode, Whitegong, Whitelongi, MoonGong, MoonLongi, MoonLati, Obliqmoon, MoonOrbit, MoonCorr1, MoonLco }
     }
     const timeDif = (AcrSunCorr, AcrSunLongi) => { // 時差總
@@ -212,7 +212,7 @@ const cal = (CalName, year) => {
         return SunCorrTcorr + EclpEquaDifTcorr
     }
     const sunEcliGuimao = (NowSd, AcrSunLongi) => {
-        // NowSd = 205.528185 // ⚠️臨時
+        // NowSd = 205.528185 // ⚠️1730算例臨時
         //////// 【一】實朔用時。用時的英語暫且用Now
         const Rise = 0.25 + (AcrSunLongi < 180 ? -1 : 1) * riseDif(HighLongi2LowLati(Obliquity, AcrSunLongi), BeijingLati)
         if (deci(NowSd) < Rise - 5 / 96 && deci(NowSd) > 1 - Rise + 5 / 96) return // 日出前日入後五刻以內可以見食
@@ -284,7 +284,7 @@ const cal = (CalName, year) => {
                 }
                 return flag
             } // 見符號7
-            const distappa = (Sd, Distreal, AngArc) => {
+            const distAppa = (Sd, Distreal, AngArc) => {
                 AngArc = abs(AngArc) || 0
                 const { AngA: AngEquaHigharc, c: AngSunZenith } = qiexianSphere(AngZenithPolar, AngSunPolar, Sd)   // 赤經高弧交角
                 const Parallax = HorizonParallax * sin(AngSunZenith) // 高下差
@@ -314,7 +314,7 @@ const cal = (CalName, year) => {
                 const Distappa = abs(sin(AngDistappa) * Distreal / sin(AngDistreal)) // 兩心視距
                 return { AngWhiteHigharc, FlagDistreal, AngDistreal, Distappa }
             }
-            const distappa2 = (Sd, Distreal, AngArc, flag) => {
+            const distAppa2 = (Sd, Distreal, AngArc, flag) => {
                 AngArc = abs(AngArc) || 0
                 const { AngA: AngEquaHigharc, c: AngSunZenith } = qiexianSphere(AngZenithPolar, AngSunPolar, Sd)   // 赤經高弧交角
                 const Parallax = HorizonParallax * sin(AngSunZenith) // 高下差
@@ -340,7 +340,7 @@ const cal = (CalName, year) => {
                 const AngDistreal = qiexianA(Distreal, Parallax, AngDistappa) // 對兩心實距角
                 return abs(sin(AngDistappa) * Distreal / sin(AngDistreal)) // 兩心視距
             }
-            const { AngWhiteHigharc: AngWhiteHigharcAvg, FlagDistreal: FlagDistrealAvg, AngDistreal: AngDistrealAvg, Distappa: DistappaAvg } = distappa(SdAvg, DistrealAvg) // 見符號3
+            const { AngWhiteHigharc: AngWhiteHigharcAvg, FlagDistreal: FlagDistrealAvg, AngDistreal: AngDistrealAvg, Distappa: DistappaAvg } = distAppa(SdAvg, DistrealAvg) // 見符號3
             //////// 【六】食甚設時兩心視距、食甚真時
             const AsmAvgDif = -(AngWhiteHigharcAvg / 180 * 8.8 / 96 + 0.2 / 96) // 設時距分
             // const AsmAvgDif = (20 / 60 + 1.05 / 3600) / 24 // ⚠️
@@ -349,7 +349,7 @@ const cal = (CalName, year) => {
             const ArcAvgAsm = EquilibriumDV * AsmAvgDif // 設時距弧
             const AngArcAvgAsm = atan(ArcAvgAsm / DistrealAvg) // 設時對距弧角
             const DistrealAsm = abs(ArcAvgAsm / sin(AngArcAvgAsm)) // 設時兩心實距            
-            const { AngWhiteHigharc: AngWhiteHigharcAsm, FlagDistreal: FlagDistrealAsm, AngDistreal: AngDistrealAsm, Distappa: DistappaAsm } = distappa(SdAsm, DistrealAsm, AngArcAvgAsm) // 見符號4
+            const { AngWhiteHigharc: AngWhiteHigharcAsm, FlagDistreal: FlagDistrealAsm, AngDistreal: AngDistrealAsm, Distappa: DistappaAsm } = distAppa(SdAsm, DistrealAsm, AngArcAvgAsm) // 見符號4
             const AngHigharcAsm_DistappaAvg = abs(abs(AngWhiteHigharcAsm - AngWhiteHigharcAvg) + (SunAvg.SunLongi < 180 ? -1 : 1) * AngDistrealAvg) // 設時高弧交用時視距角
             let flag2 = 1, flag4 = 1, flag5 = 1, flag6 = 1
             if (FlagDistrealAsm === FlagDistrealAvg) flag2 = -1 // 見符號5
@@ -363,7 +363,7 @@ const cal = (CalName, year) => {
             const ArcAcr0AvgDif = Acr0AvgDif * EquilibriumDV // 真時距弧            
             const AngArcAvgAcr0 = atan(ArcAcr0AvgDif / DistrealAvg) // 真時對距弧角
             const DistrealAcr0 = abs(ArcAcr0AvgDif / sin(AngArcAvgAcr0)) // 真時兩心實距
-            const { AngWhiteHigharc: AngWhiteHigharcAcr0, FlagDistreal: FlagDistrealAcr0, AngDistreal: AngDistrealAcr0, Distappa: DistappaAcr1 } = distappa(SdAcr0, DistrealAcr0, AngArcAvgAcr0) // 真時對視距角法與設時同
+            const { AngWhiteHigharc: AngWhiteHigharcAcr0, FlagDistreal: FlagDistrealAcr0, AngDistreal: AngDistrealAcr0, Distappa: DistappaAcr1 } = distAppa(SdAcr0, DistrealAcr0, AngArcAvgAcr0) // 真時對視距角法與設時同
             const AngHigharcAcr0_DistappaAsm = abs(abs(AngWhiteHigharcAcr0 - AngWhiteHigharcAsm) + flag3(AngWhiteHigharcAcr0, FlagDistrealAsm, FlagDistrealAcr0, AngWhiteHigharcAsm, AngDistrealAsm) * AngDistrealAsm) // 真時高弧交設時視距角
             if (FlagDistrealAcr0 === FlagDistrealAsm) flag4 = -1
             const AngDistMovingAcr1 = t2(abs(AngHigharcAcr0_DistappaAsm + flag4 * AngDistrealAcr0)) // 對考真時視行角
@@ -394,7 +394,7 @@ const cal = (CalName, year) => {
                 let flagAngArcBefStartAsm = 1
                 if (SdBefStartAsm < SdAvg) flagAngArcBefStartAsm = -1 // 初虧前設時在食甚用時前為西
                 const DistrealBefStartAsm = ArcBefStartAsm / sin(AngArcBefStartAsm) // 初虧前設時兩心實距
-                const DistappaBefStartAsm = distappa2(SdBefStartAsm, DistrealBefStartAsm, AngArcBefStartAsm, flagAngArcBefStartAsm) // 見符號8
+                const DistappaBefStartAsm = distAppa2(SdBefStartAsm, DistrealBefStartAsm, AngArcBefStartAsm, flagAngArcBefStartAsm) // 見符號8
                 //////// 【九】初虧後設時兩心視距
                 if (DistappaBefStartAsm < RadiusSum) flag6 = -1
                 const SdAftStartAsm = SdBefStartAsm + flag6 * (abs(DistappaBefStartAsm - RadiusSum) / EquilibriumDV + 0.003) // 初虧後設時
@@ -405,7 +405,7 @@ const cal = (CalName, year) => {
                 let flagAngArcAftStartAsm = 1
                 if (SdAftStartAsm < SdAvg) flagAngArcAftStartAsm = -1 // 初虧前設時在食甚用時前為西
                 const DistrealAftStartAsm = ArcAftStartAsm / sin(AngArcAftStartAsm) // 初虧前設時兩心實距
-                const DistappaAftStartAsm = distappa2(SdAftStartAsm, DistrealAftStartAsm, AngArcAftStartAsm, flagAngArcAftStartAsm)
+                const DistappaAftStartAsm = distAppa2(SdAftStartAsm, DistrealAftStartAsm, AngArcAftStartAsm, flagAngArcAftStartAsm)
                 //////// 【十】初虧考定真時
                 const StartDistappaDif = abs(DistappaBefStartAsm - DistappaAftStartAsm) // 初虧視距較
                 const StartBefAftDif = abs(AvgBefStartAsmDif - AvgAftStartAsmDif) // 初虧設時較
@@ -492,7 +492,7 @@ const cal = (CalName, year) => {
     const AutoNewmSyzygy = isNewm => {
         const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], TermSc = [], TermDeci = [], Equa = [], Ecli = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 0; i <= 13; i++) {
+        for (let i = 7; i <= 7; i++) { // 0—13
             //////// 平朔望
             const AvgSd = ChouSd + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSdMidn = ~~AvgSd
@@ -531,7 +531,7 @@ const cal = (CalName, year) => {
             let isEclipse = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            
             if (isNewm) isEclipse = AcrWhitelongi % 180 < 180 ? tmp < SunLimitYinAcr : tmp < SunLimitYangAcr
-            else isEclipse = tmp < MoonLimit            
+            else isEclipse = tmp < MoonLimit
             if (isEclipse) {
                 if (isNewm) {
                     Ecli[i] = sunEcliGuimao(NowSd, AcrSunLongi)
@@ -562,8 +562,8 @@ const cal = (CalName, year) => {
     } = AutoNewmSyzygy(false)
     return { NewmAvgSc, NewmAvgDeci, NewmAcrSc, NewmAcrDeci, TermSc, TermDeci, SyzygySc, SyzygyDeci, NewmEcli, SyzygyEcli }
 }
-console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
-
+// console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+console.log(cal("Guimao", 1914))
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbit = 298 + 6 / 60 + 9.329 / 3600
