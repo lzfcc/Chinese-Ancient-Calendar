@@ -418,10 +418,7 @@ const cal = (CalName, year) => {
             const SdStart = startEnd(SdBefStartAsm, false)
             //////// 【十一】復圓前設時兩心視距
             const SdEnd = startEnd(SdBefEndAsm, true)
-            const Start = deci(SdStart).toFixed(4).slice(2, 6)
-            const End = deci(SdEnd).toFixed(4).slice(2, 6)
-            const Total = deci(SdAcr).toFixed(4).slice(2, 6)
-            return { Start, Total, End, Magni }
+            return { Start: deci(SdStart).toFixed(4).slice(2, 6), Total: deci(SdAcr).toFixed(4).slice(2, 6), End: deci(SdEnd).toFixed(4).slice(2, 6), Magni }
         }
     }
     const moonEcliGuimao = (NowSd, AcrSunLongi) => {
@@ -446,8 +443,8 @@ const cal = (CalName, year) => {
             const SunTotal = sunGuimao(SdTotal)
             const MoonTotal = moonGuimao(SdTotal, SunTotal.Sunperi, SunTotal.SunOrbit, SunTotal.SunCorr, SunTotal.SunGong)
             //////// 【三】食分
-            AcrMoonOrbit = MoonNow.MoonOrbit + MoonTotal.MoonCorr1
-            AcrSunOrbit = SunNow.SunOrbit + SunTotal.SunCorr
+            const AcrMoonOrbit = MoonNow.MoonOrbit + MoonTotal.MoonCorr1
+            const AcrSunOrbit = SunNow.SunOrbit + SunTotal.SunCorr
             const MoonDist = dist(AcrMoonOrbit, MoonNow.MoonLco * 2)
             const MoonParallax = MoonDist * (57 / 60 + 30 / 3600) // 太陰地半徑差。中距最大地半徑差 57分30秒。此一弧度代正弦算。
             const SunRadius = dist(AcrSunOrbit, 0.0338000) * (16 / 60 + 6 / 3600) // 太陽視半徑。中距太陽視半徑16分6秒
@@ -459,14 +456,11 @@ const cal = (CalName, year) => {
             if (Magni < 0) return
             //////// 【四】初虧復圓時刻
             const ArcStartend = sqr((RadiusSum + Dist) * (RadiusSum - Dist)) // 初虧復圓距弧。就是直角三角形已知兩邊。
-            const StarttoendTime = ArcStartend / EquilibriumDV // 初虧復圓距時
-            const Start = deci((Total - StarttoendTime + 1) % 1).toFixed(4).slice(2, 6)
-            const End = deci(Total + StarttoendTime).toFixed(4).slice(2, 6) //復圓時刻
-            Total = Total.toFixed(4).slice(2, 6)
+            const StarttoendTime = ArcStartend / EquilibriumDV // 初虧復圓距時            
             //////// 【五】食既生光時刻
             //////// 【六】食甚太陰黃道經緯宿度
-            const TotalNowWhitegongDif = TotalNowDif * (MoonOnehAft.Whitegong - MoonNow.Whitegong) * 24 // 距時月實行 ⚠️ 待核驗
-            const TotalWhitelongi = MoonNow.Whitelongi + TotalNowWhitegongDif // 食甚月距正交
+            const LengTotalNow = TotalNowDif * (MoonOnehAft.Whitegong - MoonNow.Whitegong) * 24 // 距時月實行
+            const TotalWhitelongi = MoonNow.Whitelongi + LengTotalNow // 食甚月距正交
             // const TotalEclpWhiteDif = TwoOrbitDif(MoonNow.Obliqmoon, TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加，減者亦爲減。⚠️我這裡符號用的食甚的月距正交，而非食甚距時所用的實望的月距正交。
             const TotalMoonGong = (LongiHigh2Low(MoonNow.Obliqmoon, TotalWhitelongi) + MoonNow.AcrNode) % 360 // 食甚太陰黃道經度
             const TotalMoonLongi = (TotalMoonGong + 270) % 360
@@ -477,10 +471,10 @@ const cal = (CalName, year) => {
             const ObliqMoonEqua = Obliquity + ObliqMoonEclp // 太陰距二分弧與赤道交角
             // 思路：黃轉白，白轉赤。
             const tanArcMoonEquinox = cos(ObliqMoonEclp) * tan(TotalMoonLongi) // 太陰距二分弧之正切線
-            const TotalMoonEquaLongi = ~~(Math.ceil(x / 90) / 2) * 180 + atan(cos(ObliqMoonEqua) * tanArcMoonEquinox) // 太陰距二分赤道經度
+            const TotalMoonEquaLongi = ~~(Math.ceil(TotalMoonLongi / 90) / 2) * 180 + atan(cos(ObliqMoonEqua) * tanArcMoonEquinox) // 太陰距二分赤道經度
             const TotalMoonEquaGong = (TotalMoonEquaLongi + 90) % 360
             const TotalMoonEquaLati = atan(tan(ObliqMoonEqua) * sin(t3(TotalMoonEquaLongi)))
-            return { Start, Total, End, Magni, TotalMoonLongi, TotalMoonLati, TotalMoonEquaLongi, TotalMoonEquaLati }
+            return { Start: deci((Total - StarttoendTime + 1) % 1).toFixed(4).slice(2, 6), End: deci(Total + StarttoendTime).toFixed(4).slice(2, 6), Total: Total.toFixed(4).slice(2, 6), Magni, TotalMoonLongi, TotalMoonLati, TotalMoonEquaLongi, TotalMoonEquaLati }
         }
     }
     const iteration = (x, step, isNewm) => { // 迭代求實朔實時
@@ -496,9 +490,9 @@ const cal = (CalName, year) => {
         return ~~x + Deci // 實朔實時距冬至次日的時間
     }
     const AutoNewmSyzygy = isNewm => {
-        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], TermSc = [], TermDeci = [], Equa = []
+        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], TermSc = [], TermDeci = [], Equa = [], Ecli = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 6; i <= 14; i++) {
+        for (let i = 0; i <= 13; i++) {
             //////// 平朔望
             const AvgSd = ChouSd + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSdMidn = ~~AvgSd
@@ -527,7 +521,6 @@ const cal = (CalName, year) => {
             }
             //////// 實朔望實時
             const AcrSd = iteration(Acr0SdMidn + Acr0Deci, 0.5 / 24, isNewm)
-            // const Acr2Deci = deci(Acr2Sd)
             // const Acr2Sd = iteration(AcrSd, 0.1 / 24, isNewm)
             const { Sunperi: AcrSunperi, SunOrbit: AcrSunOrbit, SunCorr: AcrSunCorr, SunGong: AcrSunGong, SunLongi: AcrSunLongi } = sunGuimao(AcrSd)
             const { Whitelongi: AcrWhitelongi } = moonGuimao(AcrSd, AcrSunperi, AcrSunOrbit, AcrSunCorr, AcrSunGong)
@@ -538,12 +531,14 @@ const cal = (CalName, year) => {
             let isEclipse = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            
             if (isNewm) isEclipse = AcrWhitelongi % 180 < 180 ? tmp < SunLimitYinAcr : tmp < SunLimitYangAcr
-            else isEclipse = tmp < MoonLimit
+            else isEclipse = tmp < MoonLimit            
             if (isEclipse) {
-                if (isNewm) sunEcliGuimao(NowSd, AcrSunLongi)
-                else moonEcliGuimao(NowSd, AcrSunLongi)
+                if (isNewm) {
+                    Ecli[i] = sunEcliGuimao(NowSd, AcrSunLongi)
+                }
+                else Ecli[i] = moonEcliGuimao(NowSd, AcrSunLongi)
             }
-            //////// 節氣。用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書估計用的本日次日度比例法，區別少部分密合，大部分相差5-15分鐘。輸出的是視時。
+            //////// 節氣。用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書可能用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時。
             if (isNewm) {
                 const AvgTermSd = (i + 1) * TermLeng - (1 - SolsDeci)
                 const TermSunperiMidn = SunperiConst + SunperiThisyear + SunperiDV * ~~AvgTermSd
@@ -556,14 +551,18 @@ const cal = (CalName, year) => {
                 TermDeci[i] = deci(NowTermSd).toFixed(4).slice(2, 6)
             }
         }
-        return { AvgSc, AvgDeci, AcrSc, AcrDeci, TermSc, TermDeci }
+        return { AvgSc, AvgDeci, AcrSc, AcrDeci, TermSc, TermDeci, Ecli }
+        // const { Start, Total, End, Magni } = Ecli
     }
     const {
-        AvgSc, AvgDeci, AcrSc, AcrDeci, TermSc, TermDeci,
+        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmAcrSc, AcrDeci: NewmAcrDeci, Ecli: NewmEcli, TermSc, TermDeci,
     } = AutoNewmSyzygy(true)
-    return
+    const {
+        AcrSc: SyzygySc, AcrDeci: SyzygyDeci, Ecli: SyzygyEcli
+    } = AutoNewmSyzygy(false)
+    return { NewmAvgSc, NewmAvgDeci, NewmAcrSc, NewmAcrDeci, TermSc, TermDeci, SyzygySc, SyzygyDeci, NewmEcli, SyzygyEcli }
 }
-console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》，葉64：雍正八年庚戌（1730）六月戊戌朔，太陰實引初宮8°47′31.40″，地平地半徑差53′59.90秒，本日地平高下差53′49.90″。本時日距緯21°38′12.02″。本時黃赤二經交角9°21′20.57″。食甚用時午正2刻9′58.95″=0.527765625。用時赤經高弧交角22°43′8.39″。
+console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104

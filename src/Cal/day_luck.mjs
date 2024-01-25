@@ -21,34 +21,17 @@ export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，
     const FemaleGong = Math.round(((5 + YuanYear) % 9 + 9) % 9.1)
     const MaleFemale = '男' + NumList[MaleGong] + '宮女' + NumList[FemaleGong] + '宮'
     let SuixingOrder = 4
-    if (b === 2) {
-        SuixingOrder = 11
-
-    } else if (b === 3) {
-        SuixingOrder = 6
-
-    } else if (b === 4) {
-        SuixingOrder = 1
-
-    } else if (b === 5) {
-        SuixingOrder = 5
-
-    } else if (b === 6) {
-        SuixingOrder = 9
-
-    } else if (b === 7) {
-        SuixingOrder = 7
-    } else if (b === 8) {
-        SuixingOrder = 2
-    } else if (b === 9) {
-        SuixingOrder = 3
-    } else if (b === 10) {
-        SuixingOrder = 10
-    } else if (b === 11) {
-        SuixingOrder = 8
-    } else if (b === 12) {
-        SuixingOrder = 12
-    }
+    if (b === 2) SuixingOrder = 11
+    else if (b === 3) SuixingOrder = 6
+    else if (b === 4) SuixingOrder = 1
+    else if (b === 5) SuixingOrder = 5
+    else if (b === 6) SuixingOrder = 9
+    else if (b === 7) SuixingOrder = 7
+    else if (b === 8) SuixingOrder = 2
+    else if (b === 9) SuixingOrder = 3
+    else if (b === 10) SuixingOrder = 10
+    else if (b === 11) SuixingOrder = 8
+    else if (b === 12) SuixingOrder = 12
     const Suixing = BranchList[SuixingOrder]
     const Sangmen = BranchList[Math.round((b + 2) % 12.1)]
     const Guanfu = BranchList[Math.round((b + 4) % 12.1)]
@@ -107,13 +90,9 @@ export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，
     const Zaisha = BranchList[tmp9 - 1]
     const Suisha = BranchList[tmp9]
     let DashaOrder = 1
-    if (Four === 2) {
-        DashaOrder = 10
-    } else if (Four === 3) {
-        DashaOrder = 7
-    } else if (Four === 4) {
-        DashaOrder = 4
-    }
+    if (Four === 2) DashaOrder = 10
+    else if (Four === 3) DashaOrder = 7
+    else if (Four === 4) DashaOrder = 4
     const Dasha = BranchList[DashaOrder]
     const Bingfu = BranchList[tmp]
     const Sifu = Suide
@@ -203,31 +182,19 @@ export const WangwangConvert = (i, Stem, Branch, JieNum, JieDifInt) => {
     const Three2 = Math.ceil(i / 3)
     let Dashi = 0
     let Xiaoshi = 0
-    if (Math.round((i + 2) % 12.1) === Branch) {
-        Xiaoshi = 1
-    }
+    if (Math.round((i + 2) % 12.1) === Branch) Xiaoshi = 1
     if (Three2 === 1) {
-        if (Branch === 4) {
-            Dashi = 1
-        }
+        if (Branch === 4) Dashi = 1
     } else if (Three2 === 2) {
-        if (Branch === 1) {
-            Dashi = 1
-        }
+        if (Branch === 1) Dashi = 1
     } else if (Three2 === 3) {
-        if (Branch === 10) {
-            Dashi = 1
-        }
+        if (Branch === 10) Dashi = 1
     } else if (Three2 === 4) {
-        if (Branch === 7) {
-            Dashi = 1
-        }
+        if (Branch === 7) Dashi = 1
     }
     const Three3 = Math.round(((i + 1) % 3 + 3) % 3.1)
     let Guiji = 0
-    if (Stem === Three3 || Branch === Three3) {
-        Guiji = 1
-    }
+    if (Stem === Three3 || Branch === Three3) Guiji = 1
     return (Branch === End1 ? '往亡' : '') + (JieDifInt === End2 ? '氣亡' : '') + (Dashi ? '大時' : '') + (Xiaoshi ? '小時' : '') + (Guiji ? '歸忌' : '') + (Stem === 1 + (Four - 1) * 3 ? '天李' : '') + (Branch % 6 === 0 ? '重日' : '')
 }
 
@@ -238,21 +205,13 @@ export const FubaoConvert = (iRaw, Stem) => { // 復日（報日、重日）
     if (iRaw % 3 === 0 && (Stem === 5 || Stem === 6)) {
         Fu1 = 1
     } else {
-        if (i < 3 && (Stem === i || Stem === i + 6)) {
-            Fu1 = 1
-        } else if (Stem === i - 1 || Stem === i + 5) {
-            Fu1 = 1
-        }
+        if (i < 3 && (Stem === i || Stem === i + 6)) Fu1 = 1
+        else if (Stem === i - 1 || Stem === i + 5) Fu1 = 1
     }
-    if (i <= 2 && Stem === iRaw) {
-        Fu2 = 1
-    } else if (i === 6 && Stem === 6) {
-        Fu2 = 1
-    } else if (i === 3 && Stem === 5) {
-        Fu2 = 1
-    } else if (Stem === iRaw - 1) {
-        Fu2 = 1
-    }
+    if (i <= 2 && Stem === iRaw) Fu2 = 1
+    else if (i === 6 && Stem === 6) Fu2 = 1
+    else if (i === 3 && Stem === 5) Fu2 = 1
+    else if (Stem === iRaw - 1) Fu2 = 1
     return (Fu1 ? '復一' : '') + (Fu2 ? '復二' : '')
 }
 
@@ -260,77 +219,41 @@ export const LsStarConvert = (i, k) => {
     let LsStar1 = 0
     let LsStar2 = 0
     if (i === 1) {
-        if (k === 7) {
-            LsStar1 = 1
-        } else if (k === 21) {
-            LsStar2 = 1
-        }
+        if (k === 7) LsStar1 = 1
+        else if (k === 21) LsStar2 = 1
     } else if (i === 2) {
-        if (k === 4) {
-            LsStar1 = 1
-        } else if (k === 19) {
-            LsStar2 = 1
-        }
+        if (k === 4) LsStar1 = 1
+        else if (k === 19) LsStar2 = 1
     } else if (i === 3) {
-        if (k === 1) {
-            LsStar1 = 1
-        } else if (k === 16) {
-            LsStar2 = 1
-        }
+        if (k === 1) LsStar1 = 1
+        else if (k === 16) LsStar2 = 1
     } else if (i === 4) {
-        if (k === 9) {
-            LsStar1 = 1
-        } else if (k === 25) {
-            LsStar2 = 1
-        }
+        if (k === 9) LsStar1 = 1
+        else if (k === 25) LsStar2 = 1
     } else if (i === 5) {
-        if (k === 15) {
-            LsStar1 = 1
-        } else if (k === 25) {
-            LsStar2 = 1
-        }
+        if (k === 15) LsStar1 = 1
+        else if (k === 25) LsStar2 = 1
     } else if (i === 6) {
-        if (k === 10) {
-            LsStar1 = 1
-        } else if (k === 20) {
-            LsStar2 = 1
-        }
+        if (k === 10) LsStar1 = 1
+        else if (k === 20) LsStar2 = 1
     } else if (i === 7) {
-        if (k === 8) {
-            LsStar1 = 1
-        } else if (k === 22) {
-            LsStar2 = 1
-        }
+        if (k === 8) LsStar1 = 1
+        else if (k === 22) LsStar2 = 1
     } else if (i === 8) {
-        if (k === 2 || k === 5) {
-            LsStar1 = 1
-        } else if (k === 18 || k === 19) {
-            LsStar2 = 1
-        }
+        if (k === 2 || k === 5) LsStar1 = 1
+        else if (k === 18 || k === 19) LsStar2 = 1
     } else if (i === 9) {
-        if (k === 3 || k === 4) {
-            LsStar1 = 1
-        } else if (k === 16 || k === 17) {
-            LsStar2 = 1
-        }
+        if (k === 3 || k === 4) LsStar1 = 1
+        else if (k === 16 || k === 17) LsStar2 = 1
     } else if (i === 10) {
-        if (k === 1) {
-            LsStar1 = 1
-        } else if (k === 14) {
-            LsStar2 = 1
-        }
+        if (k === 1) LsStar1 = 1
+        else if (k === 14) LsStar2 = 1
     } else if (i === 11) {
-        if (k === 11) {
-            LsStar1 = 1
-        } else if (k === 22) {
-            LsStar2 = 1
-        }
+        if (k === 11) LsStar1 = 1
+        else if (k === 22) LsStar2 = 1
     } else if (i === 12) {
-        if (k === 9) {
-            LsStar1 = 1
-        } else if (k === 25) {
-            LsStar2 = 1
-        }
+        if (k === 9) LsStar1 = 1
+        else if (k === 25) LsStar2 = 1
     }
     const Fanzhi = Math.round((13 - Math.ceil((i + 2) / 2)) % 6.1)
     return (LsStar1 ? '長星' : '') + (LsStar2 ? '短星' : '') + (k === Fanzhi ? '反支' : '')
@@ -342,97 +265,51 @@ export const BloodConvert = (i, Branch, k) => {
     let Blood = 0
     let Lin = 0
     if (i === 1) {
-        if (Branch === 2) {
-            Blood = '血支血忌'
-        } else if (Branch === 7 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 2) Blood = '血支血忌'
+        else if (Branch === 7 && k <= 10) Lin = 1
     } else if (i === 2) {
-        if (Branch === 3) {
-            Blood = '血支'
-        } else if (Branch === 8) {
-            Blood = '血忌'
-        } else if (Branch === 12 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 3) Blood = '血支'
+        else if (Branch === 8) Blood = '血忌'
+        else if (Branch === 12 && k <= 10) Lin = 1
     } else if (i === 3) {
-        if (Branch === 4) {
-            Blood = '血支'
-        } else if (Branch === 3) {
-            Blood = '血忌'
-        } else if (Branch === 9 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 4) Blood = '血支'
+        else if (Branch === 3) Blood = '血忌'
+        else if (Branch === 9 && k <= 10) Lin = 1
     } else if (i === 4) {
-        if (Branch === 5) {
-            Blood = '血支'
-        } else if (Branch === 9) {
-            Blood = '血忌'
-        } else if (Branch === 2 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 5) Blood = '血支'
+        else if (Branch === 9) Blood = '血忌'
+        else if (Branch === 2 && k <= 10) Lin = 1
     } else if (i === 5) {
-        if (Branch === 6) {
-            Blood = '血支'
-        } else if (Branch === 4) {
-            Blood = '血忌'
-        } else if (Branch === 11 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 6) Blood = '血支'
+        else if (Branch === 4) Blood = '血忌'
+        else if (Branch === 11 && k <= 10) Lin = 1
     } else if (i === 6) {
-        if (Branch === 7) {
-            Blood = '血支'
-        } else if (Branch === 10) {
-            Blood = '血忌'
-        } else if (Branch === 4 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 7) Blood = '血支'
+        else if (Branch === 10) Blood = '血忌'
+        else if (Branch === 4 && k <= 10) Lin = 1
     } else if (i === 7) {
-        if (Branch === 8) {
-            Blood = '血支'
-        } else if (Branch === 5) {
-            Blood = '血忌'
-        } else if (Branch === 1 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 8) Blood = '血支'
+        else if (Branch === 5) Blood = '血忌'
+        else if (Branch === 1 && k <= 10) Lin = 1
     } else if (i === 8) {
-        if (Branch === 9) {
-            Blood = '血支'
-        } else if (Branch === 11) {
-            Blood = '血忌'
-        } else if (Branch === 6 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 9) Blood = '血支'
+        else if (Branch === 11) Blood = '血忌'
+        else if (Branch === 6 && k <= 10) Lin = 1
     } else if (i === 9) {
-        if (Branch === 10) {
-            Blood = '血支'
-        } else if (Branch === 6) {
-            Blood = '血忌'
-        } else if (Branch === 3 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 10) Blood = '血支'
+        else if (Branch === 6) Blood = '血忌'
+        else if (Branch === 3 && k <= 10) Lin = 1
     } else if (i === 10) {
-        if (Branch === 11) {
-            Blood = '血支'
-        } else if (Branch === 12) {
-            Blood = '血忌'
-        } else if (Branch === 8 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 11) Blood = '血支'
+        else if (Branch === 12) Blood = '血忌'
+        else if (Branch === 8 && k <= 10) Lin = 1
     } else if (i === 11) {
-        if (Branch === 12) {
-            Blood = '血支'
-        } else if (Branch === 7) {
-            Blood = '血忌'
-        } else if (Branch === 5 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 12) Blood = '血支'
+        else if (Branch === 7) Blood = '血忌'
+        else if (Branch === 5 && k <= 10) Lin = 1
     } else if (i === 12) {
-        if (Branch === 1) {
-            Blood = '血支血忌'
-        } else if (Branch === 10 && k <= 10) {
-            Lin = 1
-        }
+        if (Branch === 1) Blood = '血支血忌'
+        else if (Branch === 10 && k <= 10) Lin = 1
     }
     return {
         Blood,
@@ -443,16 +320,10 @@ export const BloodConvert = (i, Branch, k) => {
 // 日遊神
 export const TouringGodConvert = ScOrder => {
     let TouringGod = ''
-    if (ScOrder % 10 === 5 || ScOrder % 10 === 6) {
-        TouringGod = '房內中'
-    } else if (ScOrder >= 30 && ScOrder <= 34) {
-        TouringGod = '房內北'
-    } else if (ScOrder >= 37 && ScOrder <= 39) {
-        TouringGod = '房內南'
-    } else if (ScOrder === 40) {
-        TouringGod = '房內西'
-    } else if (ScOrder >= 41 && ScOrder <= 44) {
-        TouringGod = '房內東'
-    }
+    if (ScOrder % 10 === 5 || ScOrder % 10 === 6) TouringGod = '房內中'
+    else if (ScOrder >= 30 && ScOrder <= 34) TouringGod = '房內北'
+    else if (ScOrder >= 37 && ScOrder <= 39) TouringGod = '房內南'
+    else if (ScOrder === 40) TouringGod = '房內西'
+    else if (ScOrder >= 41 && ScOrder <= 44) TouringGod = '房內東'
     return TouringGod
 }

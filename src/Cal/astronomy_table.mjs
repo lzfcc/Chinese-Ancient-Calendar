@@ -134,9 +134,7 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
 export const Longi2LatiTable1 = (SolsDif, CalName) => {
     const { Solar, NightList, DialList, SunLatiList } = Para[CalName]
     let DawnRange = 0
-    if (CalName !== 'Daye') {
-        DawnRange = 2.5
-    }
+    if (CalName !== 'Daye') DawnRange = 2.5
     const HalfTermLeng = Solar / 24
     const SolsDif = SolsDif % Solar
     const TermNum = ~~(SolsDif / HalfTermLeng) // 每日所在氣名
@@ -153,11 +151,8 @@ export const Longi2LatiTable2 = (SolsDif, CalName) => {
     } = Para[CalName]
     const SolsDif = SolsDif % Solar
     let DawnRange = 2.5
-    if (CalName === 'Huangji') {
-        DawnRange = 2.365
-    } else if (['LindeA', 'LindeB', 'Daming3'].includes(CalName)) {
-        DawnRange = 0
-    }
+    if (CalName === 'Huangji') DawnRange = 2.365
+    else if (['LindeA', 'LindeB', 'Daming3'].includes(CalName)) DawnRange = 0
     const f = 34.475 // 大衍地理緯度
     const HalfTermLeng = Solar / 24
     let Dial = 0
@@ -198,9 +193,7 @@ export const Longi2LatiTable2 = (SolsDif, CalName) => {
             } else {
                 TermRange = TermRangeS // 春分後
             }
-        } else {
-            TermRange = HalfTermLeng
-        }
+        } else TermRange = HalfTermLeng
         const TermAvgNoonDeciDif = []
         for (let i = 0; i <= 23; i++) {
             const TermAvgRaw = i * HalfTermLeng
@@ -348,9 +341,7 @@ const MoonLongiTable = (SolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換
         }
     }
     EclpWhiteDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
-    if (CalName !== 'Huangji') {
-        EclpWhiteDif /= 2
-    }
+    if (CalName !== 'Huangji') EclpWhiteDif /= 2
     let EquaWhiteDif = 0
     if (['Dayan', 'Xuanming'].includes(CalName)) {
         EquaWhiteDif = SolsDifHalf / (Solar / 72) / 18
@@ -380,21 +371,13 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
     let { MoonLatiDifList } = Para[CalName]
     ///////預處理陰陽曆////////
     let Portion = 10
-    if (Type <= 4) {
-        Portion = 12
-    } else if (CalName === 'Dayan') {
-        Portion = 120
-    } else if (CalName === 'Wuji') { // 五紀正元找不到比例，瞎填
-        Portion = 50 / 3
-    } else if (CalName === 'Tsrengyuan') {
-        Portion = 219 / 4
-    }
+    if (Type <= 4) Portion = 12
+    else if (CalName === 'Dayan') Portion = 120
+    else if (CalName === 'Wuji') Portion = 50 / 3 // 五紀正元找不到比例，瞎填
+    else if (CalName === 'Tsrengyuan') Portion = 219 / 4
     const NodeAccumHalf = NodeAccum % (Node / 2)
     const NodeAccumHalfInt = ~~NodeAccumHalf
-    let Yinyang = -1
-    if (NodeAccum > Node / 2) {
-        Yinyang = 1
-    }
+    const Yinyang = NodeAccum > Node / 2 ? 1 : -1
     let Lati = 0
     if (Type < 6) {
         Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDifList[NodeAccumHalfInt] / Portion)
@@ -425,11 +408,7 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
         } else if (!End) {
             End = MoonLatiDifList[k] * 2 / l - Start
         }
-        let sign = 1
-        if (Longi < 90) {
-            sign = -1
-        }
-        const D = sign * Math.abs((End - Start) / l) // 度差
+        const D = (Longi < 90 ? -1 : 1) * Math.abs((End - Start) / l) // 度差
         const G1 = Start + D / 2 // 定初率。「以加減初率（少象減之，老象加之）」
         const Gn = G1 + (Frac - 1) * D // 「以度差累加減之（少象以差減，老象以差加）」
         const G = (G1 + Gn) * Frac / 2

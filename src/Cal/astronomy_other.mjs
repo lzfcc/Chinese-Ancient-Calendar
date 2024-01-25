@@ -141,9 +141,7 @@ export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, CalName) => {
     const LightRange = AutoLightRange(CalName)
     const Rise = AutoLongi2Lati(SolsDif, SolsDeci, CalName).Rise / 100
     let standard = Rise - LightRange
-    if (Type >= 8 || CalName === 'Qintian') {
-        standard = Rise
-    }
+    if (Type >= 8 || CalName === 'Qintian') standard = Rise
     let SyzygySub = 0
     let Print = ''
     if (Deci < standard) { // 晨前刻、晨初餘數
@@ -169,34 +167,24 @@ export const AutoNineOrbit = (NodeAccum, SolsDif, CalName) => { // 月行九道�
             Print = `<span class='lati-yellow'>黃</span>`
         } else if (NodeAccum < Node50) {
             Print = `<span class='lati-yang'>陽</span>`
-        } else {
-            Print = `<span class='lati-yin'>陰</span>`
-        }
+        } else Print = `<span class='lati-yin'>陰</span>`
     } else if (Type >= 7 && Type <= 10) { // 月行九道
         if (SolsDif < 3 * HalfTermLeng || SolsDif >= 21 * HalfTermLeng) { // 冬
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-white'>白</span><span class='lati-yang'>陽</span>`
-            } else {
-                Print = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
-            }
+            } else Print = `<span class='lati-green'>靑</span><span class='lati-yin'>陰</span>`
         } else if (SolsDif >= 3 * HalfTermLeng && SolsDif < 9 * HalfTermLeng) {
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-red'>朱</span><span class='lati-yang'>陽</span>`
-            } else {
-                Print = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
-            }
+            } else Print = `<span class='lati-black'>黑</span><span class='lati-yin'>陰</span>`
         } else if (SolsDif >= 9 * HalfTermLeng && SolsDif < 15 * HalfTermLeng) {
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-green'>靑</span><span class='lati-yang'>陽</span>`
-            } else {
-                Print = `<span class='lati-white'>白</span><span class='lati-yin'>陰</span>`
-            }
+            } else Print = `<span class='lati-white'>白</span><span class='lati-yin'>陰</span>`
         } else {
             if (NodeAccum < Node50) {
                 Print = `<span class='lati-black'>黑</span><span class='lati-yang'>陽</span>`
-            } else {
-                Print = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
-            }
+            } else Print = `<span class='lati-red'>朱</span><span class='lati-yin'>陰</span>`
         }
         if ((NodeAccum > Node50 - SynodicNodeDif50 && NodeAccum < Node50) || NodeAccum < SynodicNodeDif50) {
             Print = `<span class='lati-yellow'>黃</span><span class='lati-yang'>陽</span>`

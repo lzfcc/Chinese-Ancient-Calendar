@@ -5,14 +5,10 @@ import {
 // 暴力求日法
 export const ExhauDenom = (lower, upper, End) => {
     End = parseInt(End)
-    if (End !== 1 && End !== 10 && End !== 100 && End !== 1000) {
-        throw (new Error('請輸入 1, 10, 100, 1000'))
-    }
+    if (End !== 1 && End !== 10 && End !== 100 && End !== 1000) throw new Error('請輸入 1, 10, 100, 1000')
     lower = +lower
     upper = +upper
-    if (lower > upper) {
-        throw (new Error('lower > upper !'))
-    }
+    if (lower > upper) throw new Error('lower > upper !')
     let i = 500
     let Denom = ''
     while (i < 40000) {
@@ -37,7 +33,6 @@ export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUppe
     OriginUpper = +OriginUpper
     FirstLower = +FirstLower
     FirstUpper = +FirstUpper
-
     const Lunar = 29 + LunarNumer / Denom
     let i = 100000
     let year = ''
@@ -48,15 +43,11 @@ export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUppe
         FirstAccum = (SolsAccum - SolsAccum % Lunar) % 60
         SolsAccum %= 60
         if (SolsAccum > OriginLower && SolsAccum < OriginUpper) {
-            if (FirstAccum > FirstLower && FirstAccum < FirstUpper) {
-                year += i + ', '
-            }
+            if (FirstAccum > FirstLower && FirstAccum < FirstUpper) year += i + ', '
         }
         i++
     }
-    if (year === '') {
-        return '沒有符合條件的上元'
-    }
+    if (year === '') return '沒有符合條件的上元'
     return '該年積年 ' + year + '歲實 365+' + SolarNumer + '/' + Denom
 }
 
@@ -85,9 +76,7 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper, step
             }
         }
     }
-    if (result === '') {
-        return '沒有符合條件的參數'
-    }
+    if (result === '') return '沒有符合條件的參數'
     result = '冬至積日' + SolsAccum.toFixed(4) + `\n` + result
     return result
 }

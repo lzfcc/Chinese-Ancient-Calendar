@@ -23,11 +23,8 @@ export const ContinuedFrac = (a, b) => { // https://chaoli.club/index.php/2756/0
             p[i] = big.mul(z[i], p[i - 1]).add(p[i - 2])
             q[i] = big.mul(z[i], q[i - 1]).add(q[i - 2])
         }
-        if (i === 0) {
-            Result = big(p[i]) + `\n`
-        } else {
-            Result = Result + '　(' + i + ') ' + p[i] + '/' + q[i] + `\n`
-        }
+        if (i === 0) Result = big(p[i]) + `\n`
+        else Result = Result + '　(' + i + ') ' + p[i] + '/' + q[i] + `\n`
         i++
     }
     const zPrint = a + '/' + b + ' = [' + z + ']'

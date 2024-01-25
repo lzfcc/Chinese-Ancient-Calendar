@@ -12,23 +12,18 @@ const ExMagni = (Magni, Type, CalName, isNewm) => {
             Magni = 0
             Status = 0
         } else if (Magni < 5) {
-        } else if (Magni < 12.417) {
-            Status = 2
-        } else { // NodeDif < 1 / 12
+        } else if (Magni < 12.417) Status = 2
+        else { // NodeDif < 1 / 12
             Status = 1
-            if (Magni > 14.9999) {
-                Magni = 15
-            }
+            if (Magni > 14.9999) Magni = 15
         }
     } else if (Type <= 7 && CalName !== 'Qintian') {
         if (Magni <= 1e-12) {
             Magni = 0
             Status = 0
-        } else if (Magni < 3) { // 大衍月食去交13度以上或不見食，算下來是3.1度
-            Status = 3
-        } else if (Magni < 14.9999) {
-            Status = 2
-        } else {
+        } else if (Magni < 3) Status = 3 // 大衍月食去交13度以上或不見食，算下來是3.1度
+        else if (Magni < 14.9999) Status = 2
+        else {
             Magni = 15
             Status = 1
         }
@@ -36,11 +31,9 @@ const ExMagni = (Magni, Type, CalName, isNewm) => {
         if (Magni <= 1e-12) {
             Magni = 0
             Status = 0
-        } else if (Magni <= 5) {
-            Status = 3
-        } else if (Magni < 9.9999) {
-            Status = 2
-        } else {
+        } else if (Magni <= 5) Status = 3
+        else if (Magni < 9.9999) Status = 2
+        else {
             Magni = 10
             Status = 1
         }
@@ -48,17 +41,12 @@ const ExMagni = (Magni, Type, CalName, isNewm) => {
         if (Magni <= 1e-12) {
             Magni = 0
             Status = 0
-        } else if (Magni <= 1) { // 崇玄「其蝕五分已下者，為或食；已上為的蝕。」庚午「其一分以下者，涉交太淺，太陽光盛，或不見食」紀元「其食不及大分者，⋯⋯」
-            Status = 3
-        } else if (Magni < 9.9999) {
-            Status = 2
-        } else {
+        } else if (Magni <= 1) Status = 3 // 崇玄「其蝕五分已下者，為或食；已上為的蝕。」庚午「其一分以下者，涉交太淺，太陽光盛，或不見食」紀元「其食不及大分者，⋯⋯」
+        else if (Magni < 9.9999) Status = 2
+        else {
             Status = 1
-            if (isNewm) {
-                Magni = 10
-            } else if (Magni > 14.9999) {
-                Magni = 15
-            }
+            if (isNewm) Magni = 10
+            else if (Magni > 14.9999) Magni = 15
         }
     }
     return { Magni, Status }
@@ -87,59 +75,38 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
     if (isNewm) {
         if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
             if (CalName === 'Daye' && isYin) {
-                if (Season === 1 && NodeDif >= 7 / 12) {
-                    Tcorr1 = 24
-                } else if (Season === 3) {
-                    if (NodeDif >= 1) {
-                        Tcorr1 = 48
-                    } else if (NodeDif >= 8 / 12) {
-                        Tcorr1 = 24
-                    }
+                if (Season === 1 && NodeDif >= 7 / 12) Tcorr1 = 24
+                else if (Season === 3) {
+                    if (NodeDif >= 1) Tcorr1 = 48
+                    else if (NodeDif >= 8 / 12) Tcorr1 = 24
                 }
             } else if (['WuyinA', 'WuyinB'].includes(CalName)) {
                 if (AnomaAccum < 1) {
                     Tcorr1 = -280 // (isNewm ? 300 : 280)但是新唐根本沒有300
                 } else if (AnomaAccum < 13) {
-                } else if (AnomaAccum < 14) {
-                    Tcorr1 = 550
-                } else if (AnomaAccum < 15) {
-                    Tcorr1 = 280
-                } else if (AnomaAccum < 27) {
-                } else {
-                    Tcorr1 = -550
-                }
+                } else if (AnomaAccum < 14) Tcorr1 = 550
+                else if (AnomaAccum < 15) Tcorr1 = 280
+                else if (AnomaAccum < 27) {
+                } else Tcorr1 = -550
                 if (isYin) {
                     if (Season === 1) {
                         if (NodeDif > 1 / 3) {
-                            if (AnomaAccum > 1 && AnomaAccum < 13) {
-                                Tcorr1 = 280
-                            } else if (AnomaAccum > 15 && AnomaAccum < 27) {
-                                Tcorr1 = -280
-                            }
+                            if (AnomaAccum > 1 && AnomaAccum < 13) Tcorr1 = 280
+                            else if (AnomaAccum > 15 && AnomaAccum < 27) Tcorr1 = -280
                         }
                     } else if (Season === 2) {
-                        if (AnomaAccum > 1 && AnomaAccum < 13) {
-                            Tcorr1 = 280
-                        } else if (AnomaAccum > 15 && AnomaAccum < 27) {
-                            Tcorr1 = -280
-                        }
+                        if (AnomaAccum > 1 && AnomaAccum < 13) Tcorr1 = 280
+                        else if (AnomaAccum > 15 && AnomaAccum < 27) Tcorr1 = -280
                     } else if (Season === 3) {
                         if (NodeDif < 11 / 12) {
-                            if (AnomaAccum > 1 && AnomaAccum < 13) {
-                                Tcorr1 = 280
-                            }
+                            if (AnomaAccum > 1 && AnomaAccum < 13) Tcorr1 = 280
                         } else {
-                            if (AnomaAccum > 1 && AnomaAccum < 13) {
-                                Tcorr1 = 550
-                            } else if (AnomaAccum > 15 && AnomaAccum < 27) {
-                                Tcorr1 = 280
-                            }
+                            if (AnomaAccum > 1 && AnomaAccum < 13) Tcorr1 = 550
+                            else if (AnomaAccum > 15 && AnomaAccum < 27) Tcorr1 = 280
                         }
                     } else if (Season === 4) {
                         if (NodeDif < 5 / 12) {
-                            if (AnomaAccum > 1 && AnomaAccum < 13) {
-                                Tcorr1 = 280
-                            }
+                            if (AnomaAccum > 1 && AnomaAccum < 13) Tcorr1 = 280
                         }
                     }
                 }
@@ -147,19 +114,13 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
             TotalDeci = AcrDeci + Tcorr1 / Denom
             QuarDif = 0.125 - Math.abs(TotalDeci % 0.25 - 0.125) // 差率QuarDif
             let tmp3 = NodeDif // 修正三
-            if (NodeDif <= 3 / 12) {
-                tmp3 += 3 / 12
-            } else if (NodeDif <= 6 / 12) {
-                tmp3 += 2 / 12
-            } else if (NodeDif <= 9 / 12) {
-                tmp3 += 1 / 12
-            } else if (NodeDif <= 1) { } else {
-                tmp3 = 1
-            }
+            if (NodeDif <= 3 / 12) tmp3 += 3 / 12
+            else if (NodeDif <= 6 / 12) tmp3 += 2 / 12
+            else if (NodeDif <= 9 / 12) tmp3 += 1 / 12
+            else if (NodeDif <= 1) {
+            } else tmp3 = 1
             Tcorr = -tmp3 * QuarDif / (14 / 12) // 時差
-            if (TotalDeci <= 0.25 || (TotalDeci > 0.5 && TotalDeci <= 0.75)) {
-                Tcorr = -Tcorr
-            }
+            if (TotalDeci <= 0.25 || (TotalDeci > 0.5 && TotalDeci <= 0.75)) Tcorr = -Tcorr
             TotalDeci += Tcorr // 戊寅時差極值2.57小時=0.107       
         } else if (Type === 6) { // 麟德月食食甚時刻卽定望，皇極以後纔有日食時差
             QuarDif = 0.125 - Math.abs(AcrDeci % 0.25 - 0.125)
@@ -167,12 +128,8 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
             if (isYin) { // 月在內道
                 Tcorr = QuarDif * (10 + NodeDif12) / 42 // 差            
                 let sign1 = 1
-                if (AcrDeci > 0.5) {
-                    sign1 = -1
-                }
-                if (SolsDif > Solar25 && SolsDif < Solar75) {
-                    sign1 *= -1
-                }
+                if (AcrDeci > 0.5) sign1 = -1
+                if (SolsDif > Solar25 && SolsDif < Solar75) sign1 *= -1
                 if (SolsDifHalf < Solar25 - HalfTermLeng || SolsDifHalf > Solar25 + HalfTermLeng) {
                     const k = Math.ceil(SolsDifHalfRev / HalfTermLeng) * 2
                     Tcorr += sign1 * (k + NodeDif12 / 3) / Denom
@@ -185,19 +142,12 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
         }
     } else {
         if (['WuyinA', 'WuyinB'].includes(CalName)) {
-            if (AnomaAccum < 1) {
-                Tcorr1 = -280 // (isNewm ? 300 : 280)但是新唐根本沒有300
-            } else if (AnomaAccum < 13) {
-                Tcorr1 = 280
-            } else if (AnomaAccum < 14) {
-                Tcorr1 = 550
-            } else if (AnomaAccum < 15) {
-                Tcorr1 = 280
-            } else if (AnomaAccum < 27) {
-                Tcorr1 = -280
-            } else {
-                Tcorr1 = -550
-            }
+            if (AnomaAccum < 1) Tcorr1 = -280 // (isNewm ? 300 : 280)但是新唐根本沒有300
+            else if (AnomaAccum < 13) Tcorr1 = 280
+            else if (AnomaAccum < 14) Tcorr1 = 550
+            else if (AnomaAccum < 15) Tcorr1 = 280
+            else if (AnomaAccum < 27) Tcorr1 = -280
+            else Tcorr1 = -550
         }
         TotalDeci = AcrDeci + Tcorr1 / Denom
     }
@@ -208,84 +158,56 @@ const EcliTcorr2 = (isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin
 const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci) => {
     let Status = 0
     if (isNewm) {
-        if (isYin) {
-            Status = NodeDif <= SynodicNodeDif50 ? 3 : 0
-        } else {
-            Status = 0
-        }
-    } else {
-        Status = NodeDif <= SynodicNodeDif50 ? 3 : 0
-    }
+        if (isYin) Status = NodeDif <= SynodicNodeDif50 ? 3 : 0
+        else Status = 0
+    } else Status = NodeDif <= SynodicNodeDif50 ? 3 : 0
     if (isNewm) {
         if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) { // 《劉洪濤》頁458。最後有個條件是五星伏見，目前沒辦法加上去
             if (isYin) {
                 if (NodeDif >= 13 / 12) {
-                    if (NoonDif < 1.5 / 12 && ((Month === 5 && !isBefore) || (Month === 6 && isBefore))) { // 南方三辰                        
-                        Status = 0
-                    } else if (SolsDif > Solar * 4 / 24 && SolsDif < Solar * 8 / 24 && !isFast && TotalDeci > 7 / 12) {
-                        Status = 0
-                    } else if (SolsDif > Solar * 16 / 24 && SolsDif < Solar * 20 / 24 && isFast && TotalDeci < 5 / 12) {
+                    if ((NoonDif < 1.5 / 12 && ((Month === 5 && !isBefore) || (Month === 6 && isBefore))) ||
+                        (SolsDif > Solar * 4 / 24 && SolsDif < Solar * 8 / 24 && !isFast && TotalDeci > 7 / 12) ||
+                        (SolsDif > Solar * 16 / 24 && SolsDif < Solar * 20 / 24 && isFast && TotalDeci < 5 / 12)) { // 南方三辰
                         Status = 0
                     }
                 }
             } else {
-                if (NodeDif <= 1 / 12) {
-                    Status = 3
-                } else if (Season === 2 && NodeDif < 2 / 12 && NoonDif < 1.5 / 12) {
-                    Status = 3
-                } else if (SolsDifHalfRev < 0.5 && NodeDif <= 0.5) {
-                    Status = 3
-                } else if (Math.abs(Solar25 - SolsDif) <= 3 && isBefore && NodeDif <= 2 / 12) {
-                    Status = 3
-                } else if (Math.abs(Solar75 - SolsDif) <= 3 && !isBefore && NodeDif <= 2 / 12) {
-                    Status = 3
-                } else if (!isBefore && isFast && NodeDif > 2 / 12) {
-                    Status = 3
-                } else if (isBefore && !isFast && NodeDif > 2 / 12) {
+                if ((NodeDif <= 1 / 12) ||
+                    (Season === 2 && NodeDif < 2 / 12 && NoonDif < 1.5 / 12) ||
+                    (SolsDifHalfRev < 0.5 && NodeDif <= 0.5) ||
+                    (Math.abs(Solar25 - SolsDif) <= 3 && isBefore && NodeDif <= 2 / 12) ||
+                    (Math.abs(Solar75 - SolsDif) <= 3 && !isBefore && NodeDif <= 2 / 12) ||
+                    (!isBefore && isFast && NodeDif > 2 / 12) ||
+                    (isBefore && !isFast && NodeDif > 2 / 12)) {
                     Status = 3
                 }
             }
         } else if (CalName === 'Huangji') {
             if (isYin) {
                 if (NoonDif < 0.125) { // 加南三辰
-                    if (SummsolsDif < 11 && NodeDif > 12.25 / 12) {
-                        Status = 0
-                    } else if (SummsolsDif < 21 && NodeDif >= 12.5 / 12) {
-                        Status = 0
-                    } else if (SummsolsDif <= Lunar && NodeDif >= 12.75 / 12) {
-                        Status = 0
-                    } else if ((Month === 6 || (Leap === 4 && Month === 4)) && NodeDif >= 13 / 12) {
-                        Status = 0
-                    } else if (SummsolsDif < Solar * 4 / 24) {
+                    if ((SummsolsDif < 11 && NodeDif > 12.25 / 12) ||
+                        (SummsolsDif < 21 && NodeDif >= 12.5 / 12) ||
+                        (SummsolsDif <= Lunar && NodeDif >= 12.75 / 12) ||
+                        ((Month === 6 || (Leap === 4 && Month === 4)) && NodeDif >= 13 / 12) ||
+                        (SummsolsDif < Solar * 4 / 24)) {
                         Status = 0
                     }
                 } else if (NoonDif < 2 / 12 && NodeDif >= 13 / 12) {
-                    if (SummsolsDif <= 20) {
-                        Status = 0
-                    } else if ((Month === 6 || (Leap === 4 && Month === 4))) {
+                    if ((SummsolsDif <= 20) ||
+                        ((Month === 6 || (Leap === 4 && Month === 4)))) {
                         Status = 0
                     }
-                } else if (NoonDif < 1 / 12 && SummsolsDif < Solar * 5 / 24) {
-                    Status = 0
-                } else if (NoonDif < 1 / 12 && SummsolsDif < Solar25) {
-                    Status = 0
-                } else if (NodeDif > 13.5 / 12) {
-                    Status = 0
-                }
+                } else if (NoonDif < 1 / 12 && SummsolsDif < Solar * 5 / 24) Status = 0
+                else if (NoonDif < 1 / 12 && SummsolsDif < Solar25) Status = 0
+                else if (NodeDif > 13.5 / 12) Status = 0
             } else { // 這塊沿用原來的
-                if (SummsolsDif <= Lunar && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 2 / 12) {
-                    Status = 3
-                } else if (SummsolsDif <= Lunar && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1.5 / 12) {
-                    Status = 3
-                } else if (SummsolsDif < 47 && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 1.5 / 12) {
-                    Status = 3
-                } else if (SummsolsDif < 47 && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1 / 12) {
-                    Status = 3
-                } else if (SolsDif >= HalfTermLeng * 8 && SolsDif <= HalfTermLeng * 16 && NoonDif < 1.25 / 12 && NoonDif >= 1 / 12 && NodeDif <= 0.5 / 12) {
-                    Status = 3
-                } else if (SolsDif >= HalfTermLeng * 7 && SolsDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24 && NodeDif <= 0.5 / 12) {
-                    Status = 3
-                } else if (SolsDif >= HalfTermLeng * 6 && SolsDif <= HalfTermLeng * 18 && NoonDif < 1 / 24 && NodeDif <= 0.5 / 12) {
+                if ((SummsolsDif <= Lunar && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 2 / 12) ||
+                    (SummsolsDif <= Lunar && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1.5 / 12) ||
+                    (SummsolsDif < 47 && NoonDif >= 1 / 24 && NoonDif < 1 / 12 && NodeDif <= 1.5 / 12) ||
+                    (SummsolsDif < 47 && NoonDif >= 1 / 12 && NoonDif < 0.125 && NodeDif <= 1 / 12) ||
+                    (SolsDif >= HalfTermLeng * 8 && SolsDif <= HalfTermLeng * 16 && NoonDif < 1.25 / 12 && NoonDif >= 1 / 12 && NodeDif <= 0.5 / 12) ||
+                    (SolsDif >= HalfTermLeng * 7 && SolsDif <= HalfTermLeng * 17 && NoonDif < 1 / 12 && NoonDif >= 1 / 24 && NodeDif <= 0.5 / 12) ||
+                    (SolsDif >= HalfTermLeng * 6 && SolsDif <= HalfTermLeng * 18 && NoonDif < 1 / 24 && NodeDif <= 0.5 / 12)) {
                     Status = 3
                 }
             }
@@ -295,23 +217,16 @@ const EcliStatus2 = (isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, Hal
                     const StdBian = (1373 + SummsolsDif * 1.5) / Denom // 變準
                     const StdKe = SummsolsDif * 0.15 / Denom // 刻準
                     const StdShi = 0.18 - StdKe // 時準
-                    if (NodeDif > StdBian && TotalDeci > 0.5 - StdShi && TotalDeci < 0.5 + StdShi) {
-                        Status = 0
-                    }
+                    if (NodeDif > StdBian && TotalDeci > 0.5 - StdShi && TotalDeci < 0.5 + StdShi) Status = 0
                 }
             } else { // 不應食而食有三組情況，滿足一組即可
                 if (SummsolsDif < 94) {
                     const StdBian = (248 - SummsolsDif * 2)
                     const StdKe = (StdBian - 60) / 18 / Denom
                     const StdShi = 0.07 + StdKe
-                    if (NodeDif < StdBian / Denom && TotalDeci > 0.43 && TotalDeci < 0.57) {
-                        Status = 3
-                    } else if (NodeDif < 60 / Denom && TotalDeci > 0.5 - StdShi && TotalDeci < 0.5 + StdShi) {
-                        Status = 3
-                    }
-                } else if (NodeDif < 60 / Denom && TotalDeci > 0.375 && TotalDeci < 0.625) {
-                    Status = 3
-                }
+                    if (NodeDif < StdBian / Denom && TotalDeci > 0.43 && TotalDeci < 0.57) Status = 3
+                    else if (NodeDif < 60 / Denom && TotalDeci > 0.5 - StdShi && TotalDeci < 0.5 + StdShi) Status = 3
+                } else if (NodeDif < 60 / Denom && TotalDeci > 0.375 && TotalDeci < 0.625) Status = 3
             }
         }
     }
@@ -337,11 +252,8 @@ const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50,
                 }
                 TheNotEcli = NodeDif - Mcorr / NodeDenom
                 if (TheNotEcli < 0) {
-                    if (CalName === 'Daye') {
-                        TheNotEcli = (Portion3 - Mcorr) / NodeDenom
-                    } else {
-                        TheNotEcli = -TheNotEcli
-                    }
+                    if (CalName === 'Daye') TheNotEcli = (Portion3 - Mcorr) / NodeDenom
+                    else TheNotEcli = -TheNotEcli
                 }
                 const MoonLimitDenom = isBefore && !isFast ? SynodicNodeDif50 : SynodicNodeDif50 - TheNotEcli
                 const tmp = CalName === 'Daye' ? 10 : 4 // 大業「大寒畢小滿」，按照大業習慣，是小滿這一刻，不包含小滿一氣，戊寅則是說上一氣
@@ -350,29 +262,18 @@ const EcliMagni2 = (Status, isNewm, CalName, Denom, NodeDenom, Solar25, Solar50,
                 }
                 Tcorr *= isBefore ? -1 : 1
                 TheNotEcli += Tcorr
-                if (TheNotEcli < 0) {
-                    Magni = 15
-                } else {
-                    Magni = 15 * (1 - TheNotEcli / MoonLimitDenom)
-                }
+                if (TheNotEcli < 0) Magni = 15
+                else Magni = 15 * (1 - TheNotEcli / MoonLimitDenom)
             } else {
                 if (CalName === 'Daye') {
-                    if ((Season === 1 && isBefore) || (Season === 3 && !isBefore) || (Season === 4 && isBefore)) {
-                        Mcorr = 1 / 12
-                    }
+                    if ((Season === 1 && isBefore) || (Season === 3 && !isBefore) || (Season === 4 && isBefore)) Mcorr = 1 / 12
                 } else {
-                    if ((Season === 1 && !isBefore) || (Season === 3 && isBefore)) { // 春先交，秋後交
-                        Mcorr = 1 / 24
-                    } else if ((Season === 1 && isBefore) || (Season === 3 && !isBefore)) { // 春後交，秋先交
-                        Mcorr = 2 / 12
-                    } else if (Season === 4) {
-                        Mcorr = 2 / 12
-                    }
+                    if ((Season === 1 && !isBefore) || (Season === 3 && isBefore)) Mcorr = 1 / 24 // 春先交，秋後交
+                    else if ((Season === 1 && isBefore) || (Season === 3 && !isBefore)) Mcorr = 2 / 12 // 春後交，秋先交
+                    else if (Season === 4) Mcorr = 2 / 12
                 }
                 TheNotEcli = NodeDif - Mcorr
-                if (TheNotEcli < 0) {
-                    Magni = 15
-                }
+                if (TheNotEcli < 0) Magni = 15
                 Magni = 15 - TheNotEcli * MoonAvgVDeg
             }
         } else if (CalName === 'Huangji') {
@@ -577,13 +478,9 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, SolsDif, isNewm, CalName, Mont
     const isFast = AnomaAccum < Anoma / 2 // AnomaAccum > Anoma * 0.25 && AnomaAccum <= Anoma75    
     let Season = 1
     if (Month >= 1 && Month <= 3) {
-    } else if (Month >= 4 && Month <= 6) {
-        Season = 2
-    } else if (Month >= 7 && Month <= 9) {
-        Season = 3
-    } else {
-        Season = 4
-    }
+    } else if (Month >= 4 && Month <= 6) Season = 2
+    else if (Month >= 7 && Month <= 9) Season = 3
+    else Season = 4
     //  下戊寅食甚時刻修正（大業月食食甚無修正）。當然要先算出是否食，再來修正。戊寅時法6503：半日法，時餘：不足半辰的日分數的12倍。離交點越遠，修正值越大
     const { TotalDeci, NoonDif, Tcorr } = EcliTcorr2(isNewm, CalName, Type, Solar25, Solar75, HalfTermLeng, isYin, Season, NodeDif, NodeDif12, AnomaAccum, AcrDeci, Denom, SolsDif, SolsDifHalf, SolsDifHalfRev)
     let Status = EcliStatus2(isNewm, CalName, Denom, Solar25, Solar75, Solar, Lunar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, Month, Leap, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci)
@@ -725,23 +622,16 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
         } else {
             if (['Xuanming', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName) || Type === 10) {
                 sign1 = isYin ? -1 : 1
-            } else {
-                sign1 = isDescend ? 1 : -1
-            }
+            } else sign1 = isDescend ? 1 : -1
             sign1 *= isSunYin ? -1 : 1
             sign1 *= Math.abs(TotalDeci - 0.5) > Math.abs(RiseNoonDif) ? -1 : 1
             if (['Xuanming', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName) || Type === 10) {
                 sign2 = isYin ? -1 : 1
-            } else {
-                sign2 = isDescend ? 1 : -1
-            }
+            } else sign2 = isDescend ? 1 : -1
             sign2 *= TotalDeci >= 0.5 ? -1 : 1 // 定朔還是食甚都沒影響，因為時差加減方向是相合的
             sign2 *= TheSolsDif >= Solar50 ? -1 : 1
-            if (TotalDeci > 0.5) {
-                sign3 = isYin ? -1 : 1
-            } else {
-                sign3 = 0
-            }
+            if (TotalDeci > 0.5) sign3 = isYin ? -1 : 1
+            else sign3 = 0
         }
         let McorrTerm = 0, McorrClock = 0, McorrOther = 0
         let Mcorr0 = 0 // 這個是紀元、授時的。視白道比眞白道低，所以陽曆：視月亮距交大於眞月亮，陰曆：小於        
@@ -847,9 +737,7 @@ const EcliMcorr3 = (CalName, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sid
                 if (isYin) {
                     TheNodeDif -= McorrYin // 這樣加減之後就是「去交定分」
                     StatusRaw *= TheNodeDif < 0 ? 0 : 1
-                } else {
-                    StatusRaw = 0
-                }
+                } else StatusRaw = 0
             }
         } else if (CalName === 'Yingtian') {
             McorrTerm = (374 - 4 * TheSolsDifHalfRev) * dd // 藤豔輝頁101：最大值52.41分鐘
@@ -1107,9 +995,7 @@ const EcliMagni3 = (CalName, Type, isNewm, isYin, Denom, Sidereal50, Node50, Moo
                 TheNodeDif += McorrA
                 if (TheNodeDif < 0) {
                     Magni = MagniMax
-                } else {
-                    Magni = 15 - TheNodeDif / Dingfa
-                }
+                } else Magni = 15 - TheNodeDif / Dingfa
             } else {
                 TheNodeDif += McorrB + (isBefore ? Denom / 12 : -Denom / 12)
                 Magni = (MoonLimitNone - TheNodeDif) / (CalName === 'Wuji' ? 104 : 85)
@@ -1227,9 +1113,7 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
                     Last = 647 - (4780 - TheNotEcli) ** 2 / 63272
                 } else if (TheNotEcli < 956) {
                     Last = 517 - (1912 - TheNotEcli) / 7.35
-                } else {
-                    Last = 387 - TheNotEcli ** 2 / 2362
-                }
+                } else Last = 387 - TheNotEcli ** 2 / 2362
             } else {
                 if (TheNotEcli > 2104) {
                     Last = 711 - (5260 - TheNotEcli) ** 2 / 69169
@@ -1263,9 +1147,7 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
         } else if (CalName === 'Mingtian') {
             if (isNewm) {
                 Last = (1952 - TheNodeDif) * TheNodeDif / 271 // f(976)達到極值3515
-            } else {
-                Last = isDescend ? 3900 - TheNodeDif ** 2 / 459 : 3315 - TheNodeDif ** 2 / 540 // 1338降到0
-            }
+            } else Last = isDescend ? 3900 - TheNodeDif ** 2 / 459 : 3315 - TheNodeDif ** 2 / 540 // 1338降到0
         }
         else if (['Chongtian', 'Guantian'].includes(CalName)) { // 藤豔輝《崇天曆的日食推步術》
             const tmp = TheNodeDif / (TheNodeDif < SunLimitYang ? SunLimitYang : SunLimitYin)
@@ -1276,19 +1158,13 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
             const LastDenomSunYang = ~~((SunLimitYang ** 2 / LastMaxSun) / 100) * 100
             const LastMaxMoon = Math.round(Denom * 656 / 7290)
             const LastDenomMoon = ~~((MoonLimitNone ** 2 / (Denom * 656 / 7290)) / 100) * 100
-            if (isNewm) {
-                Last = isYin ? LastMaxSun - TheNodeDif ** 2 / LastDenomSunYin : LastMaxSun - TheNodeDif ** 2 / LastDenomSunYang
-            } else {
-                Last = LastMaxMoon - TheNodeDif ** 2 / LastDenomMoon
-            }
+            if (isNewm) Last = isYin ? LastMaxSun - TheNodeDif ** 2 / LastDenomSunYin : LastMaxSun - TheNodeDif ** 2 / LastDenomSunYang
+            else Last = LastMaxMoon - TheNodeDif ** 2 / LastDenomMoon
             const { MoonTcorrDifNeg: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif((AvgAnomaAccum + Tcorr + AvgTcorr) % Anoma, CalName) // 食甚加時入轉算外損益率。應朒者依其損益，應朏者益減損加其副
             Last *= 1 + MoonTcorrDif / TheDenom / Denom
         } else if (Type === 10) {
-            if (isNewm) {
-                Last = Magni * (30 - Magni) * 2450 / MoonAcrVList[~~AcrAnomaAccum]
-            } else {
-                Last = Magni * (35 - Magni) * 2100 / MoonAcrVList[~~AcrAnomaAccum]
-            }
+            if (isNewm) Last = Magni * (30 - Magni) * 2450 / MoonAcrVList[~~AcrAnomaAccum]
+            else Last = Magni * (35 - Magni) * 2100 / MoonAcrVList[~~AcrAnomaAccum]
         } else if (Type === 11) {
             Last = Math.sqrt(((isNewm ? 20 : 30) - Magni) * Magni)
                 * (['Datong', 'Datong2'].includes(CalName) && !isNewm ? 0.00492 : 0.00574)
@@ -1297,11 +1173,8 @@ const EcliLast3 = (CalName, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tc
         if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
             let Portion = 0.5
             if (isNewm) {
-                if (TotalDeci < 1 / 3) {
-                    Portion = 0.4
-                } else if (TotalDeci > 5 / 12) {
-                    Portion = 0.6
-                }
+                if (TotalDeci < 1 / 3) Portion = 0.4
+                else if (TotalDeci > 5 / 12) Portion = 0.6
             }
             StartDeci = (TotalDeci - Last * Portion / 100 + 1) % 1
             EndDeci = (TotalDeci + Last * (1 - Portion) / 100 + 1) % 1

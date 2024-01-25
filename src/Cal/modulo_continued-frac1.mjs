@@ -55,7 +55,6 @@ Fraction.prototype.add = function (frac) {
     let numx = this.x * (frac.y / gcd)
     let numy = frac.x * (this.y / gcd)
     let deno = (frac.y / gcd) * this.y
-
     this.x = numx + numy
     this.y = deno
     return this
@@ -75,14 +74,14 @@ Fraction.prototype.mul = function (frac) {
 Fraction.prototype.div = function (frac) {
     frac = this._validateArgument(frac)
     if (!frac.x) {
-        throw (Error('除0錯誤'))
+        throw new Error('除0錯誤')
     }
     return this.mul(frac.inverse())
 }
 
 const BigFloat = function (s) {
     if (!/^\-?((\d+[.]\d+)|\d+)$/.test(s)) {
-        throw Error(`"${s}" is invalid!`)
+        throw new Error(`"${s}" is invalid!`)
     }
     s = String(s)
     if (s.indexOf('.') > 0) {

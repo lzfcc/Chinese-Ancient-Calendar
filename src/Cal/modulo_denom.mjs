@@ -16,9 +16,9 @@ export const DecomposePrimeFactor = (a, b, BigNumer, BigDenom) => { // 「累強
     BigNumer = +BigNumer
     BigDenom = +BigDenom
     if (a / b > BigNumer / BigDenom) {
-        throw (new Error('大於彊率，無法求解！'))
+        throw new Error('大於彊率，無法求解！')
     } else if (a / b < SmallNumer / SmallDenom && a / b > 0) {
-        throw (new Error('小於弱率，無法求解！'))
+        throw new Error('小於弱率，無法求解！')
     }
     if (~~a !== a) { //這行是處理小數。輸入的一般都是整數，萬一有小數，一位*10，兩位*100
         a *= 10
