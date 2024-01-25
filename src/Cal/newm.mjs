@@ -194,7 +194,6 @@ export default (CalName, year) => {
             isAdvance = 1
         }
     }
-
     const EquaDegAccumList = AutoDegAccumList(CalName, year)
     const AutoNewmSyzygy = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
@@ -323,7 +322,7 @@ export default (CalName, year) => {
         AcrInt: NewmAcrInt,
         AcrRaw: NewmAcrRaw,
         Sc: NewmSc,
-        Deci: NewmDeci,
+        Deci: NewmDeci, // 最精確的那個數字
         Deci1: NewmDeci1,
         Deci2: NewmDeci2,
         Deci3: NewmDeci3,

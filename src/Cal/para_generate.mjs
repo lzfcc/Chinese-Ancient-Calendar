@@ -213,32 +213,32 @@ console.log(Math.log2(1.5))
 // 下面的放在交食文件
 // 下景初方位
 // const Ecli1c = (isEcliNewm, isEcliSyzygy, NewmYinyang) => {
-//     const NewmEcliDirc = []
-//     const SyzygyEcliDirc = []
+//     const SunEcliDirc = []
+//     const MoonEcliDirc = []
 //     for (let i = 1; i <= 14; i++) {
 //         if (NewmYinyang === 1) {
 //             if (isEcliSyzygy[i - 1] && isEcliNewm[i]) {
-//                 NewmEcliDirc = '起西南'
+//                 SunEcliDirc = '起西南'
 //             } else if (isEcliSyzygy[i] && isEcliNewm[i + 1]) {
-//                 SyzygyEcliDirc = '起東北'
+//                 MoonEcliDirc = '起東北'
 //             } else if (isEcliNewm[i] && isEcliSyzygy[i]) {
-//                 NewmEcliDirc = '起東南'
-//                 SyzygyEcliDirc = '起西北'
+//                 SunEcliDirc = '起東南'
+//                 MoonEcliDirc = '起西北'
 //             }
 //         } else {
 //             if (isEcliSyzygy[i - 1] && isEcliNewm[i]) {
-//                 NewmEcliDirc = '起西北'
+//                 SunEcliDirc = '起西北'
 //             } else if (isEcliSyzygy[i] && isEcliNewm[i + 1]) {
-//                 SyzygyEcliDirc = '起東南'
+//                 MoonEcliDirc = '起東南'
 //             } else if (isEcliNewm[i] && isEcliSyzygy[i]) {
-//                 NewmEcliDirc = '起東北'
-//                 SyzygyEcliDirc = '起西南'
+//                 SunEcliDirc = '起東北'
+//                 MoonEcliDirc = '起西南'
 //             }
 //         }
 //     }
 //     return {
-//         NewmEcliDirc,
-//         SyzygyEcliDirc
+//         SunEcliDirc,
+//         MoonEcliDirc
 //     }
 // }
 //////// 乾象入陰陽曆

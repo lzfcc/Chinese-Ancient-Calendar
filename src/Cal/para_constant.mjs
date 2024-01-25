@@ -133,26 +133,20 @@ export const CalNameList = {
   // Wannian: '聖壽萬年',
   // Huangzhong: '黃鐘',
   // Huihui: '回回',
-  Jiazi: "曆象考成",
+  // Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
-  // West: '現代近似',
 };
 export const CalNameDayList = {
   // 可計算日書的曆法
-  // West: '現代近似',
   Easthan: "後漢四分",
   Qianxiang: "乾象",
   Jingchu: "景初",
   Sanji: "三紀",
-  Xuanshi: "玄始(擬)",
   Yuanjia: "元嘉",
   Daming: "大明",
   Tsrengguang: "正光",
   Xinghe: "興和",
   Tianbao: "天保",
-  Tianhe: "天和(擬)",
-  Daxiang: "大象(擬)",
-  Kaihuang: "開皇(擬)",
   Daye: "大業",
   Huangji: "皇極",
   WuyinA: "戊寅(定)",
@@ -160,7 +154,6 @@ export const CalNameDayList = {
   LindeA: "麟德(不進朔)",
   LindeB: "麟德(進朔)",
   Dayan: "大衍",
-  // Zhide: '至德(擬)',
   Wuji: "五紀",
   Tsrengyuan: "正元",
   Xuanming: "宣明",
@@ -171,9 +164,7 @@ export const CalNameDayList = {
   Yitian: "儀天",
   Chongtian: "崇天",
   Mingtian: "明天",
-  Fengyuan: "奉元(擬)",
   Guantian: "觀天",
-  Zhantian: "占天(擬)",
   Jiyuan: "紀元",
   Tongyuan: "統元",
   Qiandao: "乾道",
@@ -181,17 +172,14 @@ export const CalNameDayList = {
   Huiyuan: "會元",
   Tongtian: "統天",
   Kaixi: "開禧",
-  Chunyou: "淳祐(擬)",
   Huitian: "會天(擬)",
   Chengtian: "成天",
-  Daming2: "楊級大明(擬)",
   Daming3: "重修大明",
   Gengwu: "庚午",
   Shoushi: "授時(曆經)",
   Shoushi2: "授時(通軌)",
   Datong: "大統(通軌)",
   Datong2: "大統(曆志)",
-  // Xufa: '徐發天元曆',
 };
 
 export const ScList = [
@@ -905,7 +893,7 @@ export const NumList = [
   "卅",
 ];
 export const MonNumList1 = [
-  "",
+  "十二",
   "正",
   "二",
   "三",
@@ -920,7 +908,7 @@ export const MonNumList1 = [
   "十二",
 ];
 export const MonNumListChuA = [
-  "",
+  "獻馬(戌)",
   "冬夕(亥)",
   "屈夕(子)",
   "援夕(丑)",
@@ -935,7 +923,7 @@ export const MonNumListChuA = [
   "獻馬(戌)",
 ]; // 大正
 export const MonNumListChuB = [
-  "",
+  "塗(丑)",
   "取(寅)",
   "如(卯)",
   "秉(辰)",
@@ -1075,35 +1063,35 @@ const EclpDegShoushi = [
   0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34, 17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28, 31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75,
 ]; // 黃道度
 // 甲子元曆黃道宿鈐。暫時沒在曆象考成找到，用的五禮通考卷195，p9167
-const EclpDegJiazi = [0,
-  0 * 30 + 5 + 50 / 60, // 斗
-  0 * 30 + 29 + 27 / 60,
-  1 * 30 + 7 + 23 / 60,
-  1 * 30 + 19 + 1 / 60,
-  1 * 30 + 29 + 0 / 60,
-  2 * 30 + 19 + 7 / 60,
-  3 * 30 + 4 + 48 / 60,
-  3 * 30 + 17 + 54 / 60, // 奎
-  3 * 30 + 29 + 33 / 60,
-  4 * 30 + 12 + 33 / 60,
-  4 * 30 + 24 + 48 / 60,
-  5 * 30 + 4 + 3 / 60,
-  5 * 30 + 18 + 1 / 60, // 參
-  5 * 30 + 19 + 22 / 60, // 觜。參觜顛倒
-  6 * 30 + 0 + 55 / 60,
-  7 * 30 + 1 + 20 / 60,
-  7 * 30 + 5 + 52 / 60,
-  7 * 30 + 22 + 56 / 60,
-  8 * 30 + 1 + 19 / 60,
-  8 * 30 + 19 + 23 / 60,
-  9 * 30 + 6 + 23 / 60,
-  9 * 30 + 19 + 26 / 60, // 角
-  10 * 30 + 0 + 3 / 60,
-  10 * 30 + 10 + 41 / 60,
-  10 * 30 + 28 + 31 / 60,
-  11 * 30 + 3 + 21 / 60,
-  11 * 30 + 10 + 54 / 60,
-  11 * 30 + 26 + 50 / 60]
+// const EclpDegJiazi = [0,
+//   0 * 30 + 5 + 50 / 60, // 斗
+//   0 * 30 + 29 + 27 / 60,
+//   1 * 30 + 7 + 23 / 60,
+//   1 * 30 + 19 + 1 / 60,
+//   1 * 30 + 29 + 0 / 60,
+//   2 * 30 + 19 + 7 / 60,
+//   3 * 30 + 4 + 48 / 60,
+//   3 * 30 + 17 + 54 / 60, // 奎
+//   3 * 30 + 29 + 33 / 60,
+//   4 * 30 + 12 + 33 / 60,
+//   4 * 30 + 24 + 48 / 60,
+//   5 * 30 + 4 + 3 / 60,
+//   5 * 30 + 18 + 1 / 60, // 參
+//   5 * 30 + 19 + 22 / 60, // 觜。參觜顛倒
+//   6 * 30 + 0 + 55 / 60,
+//   7 * 30 + 1 + 20 / 60,
+//   7 * 30 + 5 + 52 / 60,
+//   7 * 30 + 22 + 56 / 60,
+//   8 * 30 + 1 + 19 / 60,
+//   8 * 30 + 19 + 23 / 60,
+//   9 * 30 + 6 + 23 / 60,
+//   9 * 30 + 19 + 26 / 60, // 角
+//   10 * 30 + 0 + 3 / 60,
+//   10 * 30 + 10 + 41 / 60,
+//   10 * 30 + 28 + 31 / 60,
+//   11 * 30 + 3 + 21 / 60,
+//   11 * 30 + 10 + 54 / 60,
+//   11 * 30 + 26 + 50 / 60]
 
 export const AutoDegAccumList = (CalName, year, isEclp) => {
   // isEclp===1，是黃道度
@@ -1112,9 +1100,10 @@ export const AutoDegAccumList = (CalName, year, isEclp) => {
   let { Sidereal } = Para[CalName];
   let DegListRaw = []; // 不同時期用不同的宿度
   if (isEclp) {
-    if (year >= 1684) {
-      DegListRaw = EclpDegJiazi;
-    } else if (year >= 1281) {
+    // if (year >= 1684) {
+    //   DegListRaw = EclpDegJiazi;
+    // } else 
+    if (year >= 1281) {
       DegListRaw = EclpDegShoushi;
     } else if (Type === 10 && year >= 1180 && year <= 1280) {
       // 'Daming3'

@@ -13,9 +13,9 @@ export const Deg2Mansion = (MansionAccum, DegAccumList) => {
         }
     }
     let MansionName = MansionNameList[MansionOrder]
-    if (DegAccumList === EclpDegJiazi) {
-        MansionName = MansionNameListQing[MansionOrder]
-    }
+    // if (DegAccumList === EclpDegJiazi) {
+    //     MansionName = MansionNameListQing[MansionOrder]
+    // }
     const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(4)
     return MansionName + MansionDeg
 }
@@ -160,7 +160,7 @@ export const AutoNineOrbit = (NodeAccum, SolsDif, CalName) => { // 月行九道�
     const Node50 = Node / 2
     const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
-    const SolsDif = SolsDif + (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
+    SolsDif += (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
     let Print = ''
     if (Type <= 6) {
         if ((NodeAccum > Node50 - SynodicNodeDif50 && NodeAccum < Node50) || NodeAccum < SynodicNodeDif50 || (NodeAccum > Node50 && NodeAccum < Node50 + SynodicNodeDif50) || (NodeAccum > Node - SynodicNodeDif50)) {

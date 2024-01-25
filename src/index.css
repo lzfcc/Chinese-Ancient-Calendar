@@ -194,13 +194,12 @@ u {
 
 .updot1 {
   text-emphasis: dot;
-  text-emphasis-position: over;
-  -webkit-text-emphasis-position: over;
+  text-emphasis-position: over left;
 }
 
 .dndot1 {
   text-emphasis: dot;
-  text-emphasis-position: under;
+  text-emphasis-position: under left;
 }
 
 p {
@@ -340,10 +339,6 @@ h2 {
   font-weight: bold;
   font-size: 1.2em;
   font-family: var(--serif);
-}
-
-.eclipse-wrap {
-  margin: auto 1em auto 2em;
 }
 
 .eclipse {

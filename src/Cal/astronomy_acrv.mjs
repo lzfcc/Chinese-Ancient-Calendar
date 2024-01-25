@@ -562,7 +562,7 @@ export const AutoTcorr = (AnomaAccum, SolsDif, CalName, NodeAccum, year) => {
     const { Type, SolarRaw, PartRange, Anoma, NodeDenom } = Para[CalName]
     let { Solar } = Para[CalName]
     Solar = Solar || SolarRaw
-    const SolsDif = SolsDif % Solar
+    SolsDif %= Solar
     AnomaAccum %= Anoma
     let sunFunc = {}, moonFunc = {}, TcorrFunc = {}
     let SunTcorr2 = 0, SunTcorr1 = 0, MoonTcorr2 = 0, MoonTcorr1 = 0, Tcorr2 = 0, Tcorr1 = 0, NodeAccumCorrA = 0, NodeAccumCorrB = 0, SunDifAccum = 0, MoonDifAccum = 0, SunTcorr = 0, MoonTcorr = 0, MoonAcrV = 0 // Tcorr2二次或三次內插

@@ -8,7 +8,7 @@ import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Accum2Mansion, LeapAdjust } from './astronomy_other.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
-
+// const Index = (CalName, YearStart, YearEnd) => {
 export default (CalName, YearStart, YearEnd) => {
     const Bind = CalName => {
         const type = Para[CalName].Type
@@ -33,7 +33,15 @@ export default (CalName, YearStart, YearEnd) => {
         let { LeapNumTerm: LeapNumTermThis, isLeapPrev: isLeapTPv, isLeapThis: isLeapTT,
             NewmInt, NewmStart, NewmEnd, TermStart, TermEnd,
         } = ThisYear
-        const SolsDeci = +deci(SolsAccum).toFixed(5)
+        NewmInt = NewmInt || []
+        if (Type === 13) {
+            NewmStart = 0
+            TermStart = 0
+            NewmEnd = LeapNumTermThis ? 1 : 0
+            TermEnd = NewmEnd
+        }
+        if (Type === 13) isLeapTT = LeapNumTermThis ? true : false
+        const SolsDeci = +deci(SolsAccum || 0).toFixed(5)
         let specialStart = 0, specialNewmSyzygyEnd = 0
         if (Type === 1) {
             if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[SolsMon] === '')) {
@@ -51,7 +59,7 @@ export default (CalName, YearStart, YearEnd) => {
             NewmEnd += specialNewmSyzygyEnd
             TermStart += specialStart
             LeapNumTermThis -= NewmStart
-        } else {
+        } else if (Type <= 11) {
             if (ThisYear.isLeapPost) {
                 NewmEnd = 0
                 TermEnd = 0
@@ -82,7 +90,33 @@ export default (CalName, YearStart, YearEnd) => {
         }
         const TermAvgMod = [], TermOrderMod = [], TermSc = [], TermName = [], TermDeci = [], TermEqua = [], TermDuskstar = []
         let TermAcrSc = [], TermAcrDeci = [], TermAcrMod = [], TermAcrOrderMod = []
-        if (Type >= 2) {
+        if (Type === 13) {
+            for (let i = 1; i <= 12; i++) {
+                TermName[i] = TermList[(i + 2) % 12]
+                TermSc[i] = ThisYear.TermSc[i]
+                TermDeci[i] = ThisYear.TermDeci[i]
+                TermAcrSc[i] = ThisYear.TermAcrSc[i]
+                TermAcrDeci[i] = ThisYear.TermAcrDeci[i]
+            }
+            if (LeapNumTermThis) {
+                TermName[LeapNumTermThis + 1] = '无'
+                TermSc[LeapNumTermThis + 1] = ''
+                TermDeci[LeapNumTermThis + 1] = ''
+                TermAcrSc[LeapNumTermThis + 1] = ''
+                TermAcrDeci[LeapNumTermThis + 1] = ''
+                TermEqua[LeapNumTermThis + 1] = ''
+                TermDuskstar[LeapNumTermThis + 1] = ''
+                for (let i = LeapNumTermThis + 2; i <= 13; i++) {
+                    TermName[i] = TermList[(i + 1) % 12]
+                    TermSc[i] = ThisYear.TermSc[i - 1]
+                    TermDeci[i] = ThisYear.TermDeci[i - 1]
+                    TermAcrSc[i] = ThisYear.TermAcrSc[i - 1]
+                    TermAcrDeci[i] = ThisYear.TermAcrDeci[i - 1]
+                    TermEqua[i] = 0
+                    TermDuskstar[i] = 0
+                }
+            }
+        } else if (Type > 1) {
             for (let i = 0; i <= 13; i++) {
                 TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
                 TermOrderMod[i] = Math.floor(TermAvgMod[i])
@@ -136,65 +170,39 @@ export default (CalName, YearStart, YearEnd) => {
         }
         LeapNumTermThis -= NewmStart
         // 月序
-        const Month = [], MonthName = []
+        const MonthName = []
         let MonNumList = MonNumList1
-        if (CalName === 'Zhuanxu1') {
-            MonNumList = MonNumListChuA
-        } else if (CalName === 'Zhuanxu2') {
-            MonNumList = MonNumListChuB
-        }
+        if (CalName === 'Zhuanxu1') MonNumList = MonNumListChuA
+        else if (CalName === 'Zhuanxu2') MonNumList = MonNumListChuB
         if (Type === 1) {
             if (isTermLeap) {
                 if (LeapNumTermThis && (ThisYear.isLeapAvgThis || specialNewmSyzygyEnd)) { // || (ThisYear.isLeapAvgNext && ThisYear.isAdvance)))
                     for (let i = 1; i <= 13; i++) {
                         if (i <= LeapNumTermThis) {
-                            Month[i] = (i + ZhengSolsDif + 12) % 12
-                            MonthName[i] = MonNumList[Month[i]]
+                            MonthName[i] = MonNumList[(i + ZhengSolsDif + 12) % 12]
                         } else if (i === LeapNumTermThis + 1) {
-                            Month[i] = '氣閏'
-                            MonthName[i] = Month[i]
+                            MonthName[i] = '氣閏'
                         } else {
-                            Month[i] = (i + ZhengSolsDif + 11) % 12
-                            MonthName[i] = MonNumList[Month[i]]
-                        }
-                        if (Month[i] === 0) {
-                            Month[i] = 12
-                            MonthName[i] = MonNumList[Month[i]]
+                            MonthName[i] = MonNumList[(i + ZhengSolsDif + 11) % 12]
                         }
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
-                        Month[i] = (i + ZhengSolsDif + 12) % 12
-                        MonthName[i] = MonNumList[Month[i]]
-                        if (Month[i] === 0) {
-                            Month[i] = 12
-                            MonthName[i] = MonNumList[Month[i]]
-                        }
+                        MonthName[i] = MonNumList[(i + ZhengSolsDif + 12) % 12]
                     }
                 }
             } else {
                 if ((ThisYear.isLeapAvgFix || specialNewmSyzygyEnd) && !specialStart) {
                     for (let i = 1; i <= 13; i++) {
                         if (i <= 12) {
-                            Month[i] = (i + ZhengSolsDif + 12) % 12
-                            MonthName[i] = MonNumList[Month[i]]
+                            MonthName[i] = MonNumList[(i + ZhengSolsDif + 12) % 12]
                         } else {
-                            Month[i] = '固閏'
-                            MonthName[i] = Month[i]
-                        }
-                        if (Month[i] === 0) {
-                            Month[i] = 12
-                            MonthName[i] = MonNumList[Month[i]]
+                            MonthName[i] = '固閏'
                         }
                     }
                 } else {
                     for (let i = 1; i <= 12; i++) {
-                        Month[i] = (i + ZhengSolsDif + 12) % 12
-                        MonthName[i] = MonNumList[Month[i]]
-                        if (Month[i] === 0) {
-                            Month[i] = 12
-                            MonthName[i] = MonNumList[Month[i]]
-                        }
+                        MonthName[i] = MonNumList[(i + ZhengSolsDif + 12) % 12]
                     }
                 }
             }
@@ -202,28 +210,16 @@ export default (CalName, YearStart, YearEnd) => {
             if (isLeapTT) {
                 for (let i = 1; i <= 13; i++) {
                     if (i <= LeapNumTermThis) {
-                        Month[i] = (i + 12) % 12
-                        MonthName[i] = MonNumList[Month[i]]
+                        MonthName[i] = MonNumList[i]
                     } else if (i === LeapNumTermThis + 1) {
-                        Month[i] = '閏' + LeapNumTermThis
                         MonthName[i] = '閏' + MonNumList[LeapNumTermThis]
                     } else {
-                        Month[i] = (i + 11) % 12
-                        MonthName[i] = MonNumList[Month[i]]
-                    }
-                    if (Month[i] === 0) {
-                        Month[i] = 12
-                        MonthName[i] = MonNumList[Month[i]]
+                        MonthName[i] = MonNumList[i - 1]
                     }
                 }
             } else {
                 for (let i = 1; i <= 12; i++) {
-                    Month[i] = (i + 12) % 12
-                    MonthName[i] = MonNumList[Month[i]]
-                    if (Month[i] === 0) {
-                        Month[i] = 12
-                        MonthName[i] = MonNumList[Month[i]]
-                    }
+                    MonthName[i] = MonNumList[i]
                 }
             }
         }
@@ -241,19 +237,21 @@ export default (CalName, YearStart, YearEnd) => {
             ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmStart] - NewmInt[0]) * Denom).toPrecision(5))
         }
         const MonthPrint = MonthName.slice(1)
-        let NewmScPrint = [], NewmDeci3Print = [], NewmDeci2Print = [], NewmDeci1Print = []
+        let NewmScPrint = [], NewmDeci3Print = [], NewmDeci2Print = [], NewmDeci1Print = [], NewmDeciAcrPrint = []
         if (Type >= 2) {
             NewmScPrint = NewmSlice(ThisYear.NewmSc)
-            if (Type <= 10 && ThisYear.NewmDeci1) {
+            if (Type <= 10 && ThisYear.NewmDeci1) { // 線性內插
                 NewmDeci1Print = NewmSlice(ThisYear.NewmDeci1)
-            } else if (Type === 11) {
+            } else if (Type === 11) { // 三次內插
                 NewmDeci3Print = NewmSlice(ThisYear.NewmDeci3)
+            } else if (Type === 13) { // 實朔實時
+                NewmDeciAcrPrint = NewmSlice(ThisYear.NewmDeci)
             }
         }
         if (Type >= 5 && Type <= 10 && ThisYear.NewmDeci2) {
             NewmDeci2Print = NewmSlice(ThisYear.NewmDeci2)
         }
-        const NewmEquaPrint = NewmSlice(NewmEqua)
+        const NewmEquaPrint = NewmSlice(NewmEqua || [])
         const SyzygyScPrint = NewmSlice(ThisYear.SyzygySc)
         const SyzygyDeciPrint = NewmSlice(ThisYear.SyzygyDeci)
         let NewmDeciPrint = [], TermNamePrint = [], TermScPrint = [], TermDeciPrint = [], TermAcrScPrint = [], TermAcrDeciPrint = [], TermEquaPrint = [], TermDuskstarPrint = []
@@ -285,10 +283,9 @@ export default (CalName, YearStart, YearEnd) => {
             TermEquaPrint = TermSlice(TermEqua)
             TermDuskstarPrint = TermSlice(TermDuskstar)
         }
-
-        ////////// 下調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
-        let NewmEcli = [], SyzygyEcli = [], NewmNodeAccumPrint = [], NewmNodeAccumNightPrint = [], NewmAnomaAccumPrint = [], NewmAnomaAccumNightPrint = []
-        if (Type > 1) {
+        ////////// 調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
+        let SunEcli = [], MoonEcli = [], NewmNodeAccumPrint = [], NewmNodeAccumNightPrint = [], NewmAnomaAccumPrint = [], NewmAnomaAccumNightPrint = []
+        if (Type > 1 && Type <= 11) {
             NewmDeciPrint = NewmSlice(ThisYear.NewmDeci)
             const SyzygyAvgDeciPrint = NewmSlice(ThisYear.SyzygyAvgDeci)
             if (Node) {
@@ -300,81 +297,80 @@ export default (CalName, YearStart, YearEnd) => {
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
                 const SyzygySolsDifPrint = NewmSlice(ThisYear.SyzygySolsDif)
                 const SyzygyAcrSolsDifPrint = NewmSlice(ThisYear.SyzygyAcrSolsDif)
-                for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+                for (let i = 7; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTermThis > 0) {
-                        if (i === LeapNumTermThis) {
-                            NoleapMon = i
-                        } else if (i >= LeapNumTermThis + 1) {
-                            NoleapMon = i
-                        }
+                        if (i === LeapNumTermThis) NoleapMon = i
+                        else if (i > LeapNumTermThis) NoleapMon = i
                     }
                     let Rise = AutoLongi2Lati(NewmAcrSolsDifPrint[i], SolsDeci, CalName).Rise / 100
-                    let NewmEcliFunc = {}, SyzygyEcliFunc = {}
+                    let SunEcliFunc = {}, MoonEcliFunc = {}
                     const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(CalName, Type)
-                    let NewmCondition = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) && (NewmDeciPrint[i] > Rise - RangeSunEcli && NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
-                    let SyzygyCondition = (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) && (SyzygyDeciPrint[i] < Rise + RangeMoonEcli || SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli) // 大統月食八刻二十分
+                    let isSunEcli = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&
+                        ((NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli))
+                    let isMoonEcli = (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) &&
+                        ((SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)) // 大統月食八刻二十分
                     const Sunset = (1 - Rise).toFixed(4).slice(2, 6)
                     Rise = Rise.toFixed(4).slice(2, 6)
                     if (CalName === 'Mingtian') {
-                        NewmCondition = NewmDeciPrint[i] > Rise - RangeSunEcli && NewmDeciPrint[i] < 1 - Rise + RangeSunEcli
-                        SyzygyCondition = SyzygyDeciPrint[i] < Rise + RangeMoonEcli || SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli
+                        isSunEcli = (NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
+                        isMoonEcli = (SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)
                     }
-                    if (NewmCondition) { // 這些數字根據大統，再放寬0.3
-                        NewmEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSolsDifPrint[i], NewmSolsDifPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, SolsAccum)
-                        const NewmStatus = NewmEcliFunc.Status
+                    if (isSunEcli) { // 這些數字根據大統，再放寬0.3
+                        SunEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSolsDifPrint[i], NewmSolsDifPrint[i], 1, CalName, NoleapMon, LeapNumTermThis, SolsAccum)
+                        const SunEcliStatus = SunEcliFunc.Status
                         let NewmMagni = 0
-                        const NewmStartDeci = NewmEcliFunc.StartDeci ? NewmEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
-                        const NewmTotalDeci = NewmEcliFunc.TotalDeci ? NewmEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
-                        const NewmEndDeci = NewmEcliFunc.EndDeci ? NewmEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
-                        if (NewmStatus) {
-                            NewmMagni = NewmEcliFunc.Magni.toFixed(2)
-                            NewmEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                            NewmEcli[i] += '出' + Rise + ' 分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '') + ' 入' + Sunset
-                            if (NewmStatus === 1) {
+                        const NewmStartDeci = SunEcliFunc.StartDeci ? SunEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
+                        const NewmTotalDeci = SunEcliFunc.TotalDeci ? SunEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
+                        const NewmEndDeci = SunEcliFunc.EndDeci ? SunEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
+                        if (SunEcliStatus) {
+                            NewmMagni = SunEcliFunc.Magni.toFixed(2)
+                            SunEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
+                            SunEcli[i] += '出' + Rise + ' 分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '') + ' 入' + Sunset
+                            if (SunEcliStatus === 1) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                            } else if (NewmStatus === 2) {
+                            } else if (SunEcliStatus === 2) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                            } else if (NewmStatus === 3) {
+                            } else if (SunEcliStatus === 3) {
                                 NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
                             }
                         }
                     }
-                    if (SyzygyCondition) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                        SyzygyEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrSolsDifPrint[i], SyzygySolsDifPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, SolsAccum)
-                        const SyzygyStatus = SyzygyEcliFunc.Status
+                    if (isMoonEcli) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
+                        MoonEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrSolsDifPrint[i], SyzygySolsDifPrint[i], 0, CalName, NoleapMon, LeapNumTermThis, SolsAccum)
+                        const MoonEcliStatus = MoonEcliFunc.Status
                         let SyzygyMagni = 0
-                        const SyzygyStartDeci = SyzygyEcliFunc.StartDeci ? SyzygyEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
-                        const SyzygyTotalDeci = SyzygyEcliFunc.TotalDeci ? SyzygyEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
-                        const SyzygyEndDeci = SyzygyEcliFunc.EndDeci ? SyzygyEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
-                        if (SyzygyStatus) {
-                            SyzygyMagni = SyzygyEcliFunc.Magni.toFixed(2)
-                            SyzygyEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                            SyzygyEcli[i] += '出' + Rise + ' 分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '') + ' 入' + Sunset
-                            if (SyzygyStatus === 1) {
+                        const SyzygyStartDeci = MoonEcliFunc.StartDeci ? MoonEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
+                        const SyzygyTotalDeci = MoonEcliFunc.TotalDeci ? MoonEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
+                        const SyzygyEndDeci = MoonEcliFunc.EndDeci ? MoonEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
+                        if (MoonEcliStatus) {
+                            SyzygyMagni = MoonEcliFunc.Magni.toFixed(2)
+                            MoonEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
+                            MoonEcli[i] += '入' + Sunset + ' 分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '') + ' 出' + Rise
+                            if (MoonEcliStatus === 1) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                            } else if (SyzygyStatus === 2) {
+                            } else if (MoonEcliStatus === 2) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                            } else if (SyzygyStatus === 3) {
+                            } else if (MoonEcliStatus === 3) {
                                 SyzygyScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
                             }
                         }
                     }
                 }
             }
-        }
-        for (let i = 0; i < NewmDeciPrint.length; i++) {
-            NewmDeciPrint[i] = NewmDeciPrint[i].toFixed(4).slice(2, 6)
-            NewmAvgDeciPrint[i] = NewmAvgDeciPrint[i] ? NewmAvgDeciPrint[i].toFixed(4).slice(2, 6) : 0
-            SyzygyDeciPrint[i] = SyzygyDeciPrint[i].toFixed(4).slice(2, 6)
+            for (let i = 0; i < NewmDeciPrint.length; i++) {
+                NewmDeciPrint[i] = NewmDeciPrint[i].toFixed(4).slice(2, 6)
+                NewmAvgDeciPrint[i] = NewmAvgDeciPrint[i].toFixed(4).slice(2, 6)
+                SyzygyDeciPrint[i] = SyzygyDeciPrint[i].toFixed(4).slice(2, 6)
+            }
+        } else if (Type === 13) {
+            SunEcli = ThisYear.SunEcli
+            MoonEcli = ThisYear.MoonEcli
         }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year
-        if (year > 0) {
-            Era = `公元 ${year} 年 ${YearSc}`
-        } else {
-            Era = `公元前 ${1 - year} 年 ${YearSc}`
-        }
+        if (year > 0) Era = `公元 ${year} 年 ${YearSc}`
+        else Era = `公元前 ${1 - year} 年 ${YearSc}`
         let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 上元${year - (OriginAd || CloseOriginAd)} `
         if (Type === 1) {
             const LeapSur = isTermLeap ? ThisYear.LeapSurAvgThis : ThisYear.LeapSurAvgFix
@@ -406,63 +402,54 @@ export default (CalName, YearStart, YearEnd) => {
                 YearInfo += `  平${Math.round((ThisYear.LeapSurAvgThis) * ZhangRange)}定${((ThisYear.LeapSurAcrThis) * ZhangRange).toFixed(2)}準${Math.round((LeapLimit) * ZhangRange)}`
             } else if (Type <= 7) {
                 YearInfo += `  平${parseFloat((ThisYear.LeapSurAvgThis).toPrecision(8))}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(LeapLimit)}`
-            } else {
+            } else if (Type <= 11) {
                 YearInfo += `  平${(ThisYear.LeapSurAvgThis).toFixed(2)}定${(ThisYear.LeapSurAcrThis).toFixed(2)}準${(LeapLimit).toFixed(2)}`
             }
         }
-        if (AccumPrint) {
-            YearInfo += ` ${AccumPrint}`
-        }
-        let NewmEcliPrint = [], SyzygyEcliPrint = []
-        if ((NewmEcli || []).length) {
-            NewmEcliPrint = NewmEcli.join('')
-            YearInfo += `\n${NewmEcliPrint}`
-        }
-        if ((SyzygyEcli || []).length) {
-            SyzygyEcliPrint = `<span class='eclipse-wrap'>${SyzygyEcli.join('')}</span>`
-            if ((NewmEcli || []).length > 0) {
-                YearInfo += SyzygyEcliPrint
-            } else {
-                YearInfo += `\n${SyzygyEcliPrint}`
+        if (AccumPrint) YearInfo += ` ${AccumPrint}`
+        let EcliPrint = []
+        if ((SunEcli || []).length) EcliPrint = SunEcli.join('')
+        if ((MoonEcli || []).length) EcliPrint += MoonEcli.join('')
+        if (EcliPrint) YearInfo += `\n${EcliPrint}`
+        if (Type < 13) {
+            const step = []
+            let NewmIntLong = NewmInt.concat(NextYear.NewmInt)
+            NewmIntLong = Array.from(new Set(NewmIntLong))
+            for (let i = 0; i < 18; i++) {
+                step[i] = NewmIntLong[i + 1] - NewmIntLong[i]
             }
-        }
-        const step = []
-        let NewmIntLong = NewmInt.concat(NextYear.NewmInt)
-        NewmIntLong = Array.from(new Set(NewmIntLong))
-        for (let i = 0; i < 18; i++) {
-            step[i] = NewmIntLong[i + 1] - NewmIntLong[i]
-        }
-        // const checkStep = (num, time, array) => array.reduce(function (p, c) { c === num ? p + 1 : (p < time ? 0 : p) }, 0) >= time
-        // const sdfsdg = checkStep(30, 2, [30, 29, 30, 30, 30])
-        let tmp30 = 0, tmp29 = 0
-        for (let i = 0; i < step.length - 1; i++) {
-            if (step[i] === 30 && step[i + 1] === 30 && step[i + 2] === 30 && step[i + 3] === 30) {
-                tmp30 = 4
-                break
+            // const checkStep = (num, time, array) => array.reduce(function (p, c) { c === num ? p + 1 : (p < time ? 0 : p) }, 0) >= time
+            // const sdfsdg = checkStep(30, 2, [30, 29, 30, 30, 30])
+            let tmp30 = 0, tmp29 = 0
+            for (let i = 0; i < step.length - 1; i++) {
+                if (step[i] === 30 && step[i + 1] === 30 && step[i + 2] === 30 && step[i + 3] === 30) {
+                    tmp30 = 4
+                    break
+                }
             }
-        }
-        for (let i = 0; i < step.length - 1; i++) {
-            if (step[i] === 29 && step[i + 1] === 29 && step[i + 2] === 29) {
-                tmp29 = 3
-                break
+            for (let i = 0; i < step.length - 1; i++) {
+                if (step[i] === 29 && step[i + 1] === 29 && step[i + 2] === 29) {
+                    tmp29 = 3
+                    break
+                }
             }
-        }
-        if (tmp30 === 4) {
-            YearInfo += `<span class='step30'>四連大</span>`
-        }
-        if (tmp29 === 3) {
-            YearInfo += `<span class='step30'>三連小</span>`
+            if (tmp30 === 4) {
+                YearInfo += `<span class='step30'>四連大</span>`
+            }
+            if (tmp29 === 3) {
+                YearInfo += `<span class='step30'>三連小</span>`
+            }
         }
         return {
             Era, YearInfo, MonthPrint,
-            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint,
+            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmDeciAcrPrint, NewmEquaPrint,
             SyzygyScPrint, SyzygyDeciPrint,
             TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermDuskstarPrint,
             ////////////// 以下用於日書/////////////
             LeapNumTermThis, SolsAccum,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
-            NewmRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmRaw)),
-            NewmAcrRaw: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
+            NewmRaw: ((Type === 1 || Type === 13) ? [] : NewmSlice(ThisYear.NewmRaw)),
+            NewmAcrRaw: ((Type === 1 || Type === 13) ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
             // NewmAcrInt: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrInt)),
             // NewmNodeAccumPrint, // : (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmStart)), // 為什麼還要切一遍？？
             NewmNodeAccumNightPrint,
@@ -482,4 +469,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(NewmIndex('Zhuanxu1', -316, -315))
+// console.log(Index('Datong', 1430, 1430))

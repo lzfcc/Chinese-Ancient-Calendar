@@ -22,7 +22,7 @@ const AutoCal = year => {
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint,
+        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeciAcrPrint,NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint,
         SyzygyScPrint, SyzygyDeciPrint, TermNamePrint,
         TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermDuskstarPrint,
     } = result
@@ -30,6 +30,10 @@ const PrintNewm = result => {
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
     if (NewmScPrint.length > 0) {
         Print += '**定朔** ' + NewmScPrint.join(' ') + `\n`
+        NewmDeciAcrPrint
+        if (NewmDeciAcrPrint.length > 0) {
+            Print += '**實時** ' + NewmDeciAcrPrint.join(' ') + `\n`
+        }
         if (NewmDeci3Print.length > 0) {
             Print += '**三次** ' + NewmDeci3Print.join(' ') + `\n`
         }

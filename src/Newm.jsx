@@ -12,6 +12,7 @@ const TableRowNameMap = {
   NewmAvgDeciPrint: ' ',
   NewmScPrint: '定朔',
   NewmMmddPrint: '公曆',
+  NewmDeciAcrPrint: '實時',
   NewmDeci3Print: '三次',
   NewmDeci2Print: '二次',
   NewmDeci1Print: '線性',

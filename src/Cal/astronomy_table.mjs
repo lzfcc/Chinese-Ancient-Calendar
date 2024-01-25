@@ -136,7 +136,7 @@ export const Longi2LatiTable1 = (SolsDif, CalName) => {
     let DawnRange = 0
     if (CalName !== 'Daye') DawnRange = 2.5
     const HalfTermLeng = Solar / 24
-    const SolsDif = SolsDif % Solar
+    SolsDif %= Solar
     const TermNum = ~~(SolsDif / HalfTermLeng) // 每日所在氣名
     const TermDif = SolsDif - TermNum * HalfTermLeng
     const Rise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
@@ -149,7 +149,7 @@ export const Longi2LatiTable1 = (SolsDif, CalName) => {
 export const Longi2LatiTable2 = (SolsDif, CalName) => {
     const { Type, Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
     } = Para[CalName]
-    const SolsDif = SolsDif % Solar
+    SolsDif %= Solar
     let DawnRange = 2.5
     if (CalName === 'Huangji') DawnRange = 2.365
     else if (['LindeA', 'LindeB', 'Daming3'].includes(CalName)) DawnRange = 0
@@ -281,7 +281,7 @@ const MoonLongiTable = (SolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換
         Longi = Quadrant - Longi
     }
     Sidereal = Sidereal || Solar
-    const SolsDif = SolsDif - NodeAccum
+    SolsDif -= NodeAccum
     const SolsDifHalf = SolsDif % (Solar / 2)
     const EclpLongi = (SolsDif + LongiRaw) % Sidereal
     let WhiteLongi = 0

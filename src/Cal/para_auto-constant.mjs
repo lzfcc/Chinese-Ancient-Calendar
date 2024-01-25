@@ -177,15 +177,14 @@ export const AutoLightRange = CalName => { // 昏明
 export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算日月食
     let RangeSunEcli = 0, RangeMoonEcli = 0
     if (Type === 11) {
-        RangeSunEcli = 0.002 // 大統是20分
+        // RangeSunEcli = 0.002 // 大統是20分
+        RangeSunEcli = 0.1
     } else if (CalName === 'Daye') {
         RangeSunEcli = 2 / 12
     } else if (['WuyinA', 'WuyinB'].includes(CalName)) {
         RangeSunEcli = 0.125
-    } else if (Type >= 8) {
-        RangeSunEcli = 0.02 // 其他的瞎填一個
     } else {
-        RangeSunEcli = 0.2 // 其他的瞎填一個
+        RangeSunEcli = 0.125 // 其他的瞎填一個
     }
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(CalName)) {
         RangeMoonEcli = 0.2 // 胡亂填，考慮到那時候沒有太陽修正，最多有0.2日差距
