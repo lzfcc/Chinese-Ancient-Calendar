@@ -110,13 +110,11 @@ const sunCorrGuimao = xRaw => {
     return flag2 * (Awu + flag1 * Aweibingwu)
 }
 export default (CalName, year) => {
-    // const cal = (CalName, year) => {
+// const cal = (CalName, year) => {
     const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
     const TermLeng = Solar / 12
     const CloseOriginYear = abs(year - CloseOriginAd) // 積年
     const OriginAccum = +(CloseOriginYear * Solar).toFixed(9) // 中積
-    const OriginAccumPrev = +((CloseOriginYear - 1) * Solar).toFixed(9)
-    const OriginAccumNext = +((CloseOriginYear + 1) * Solar).toFixed(9)
     const SolsAccum = year > CloseOriginAd ? OriginAccum + SolsConst : OriginAccum - SolsConst // 通積分。
     const Sols = +(year > CloseOriginAd ? SolsAccum % 60 : 60 - SolsAccum % 60).toFixed(9)
     const SolsDeci = deci(Sols) // 冬至小數
@@ -215,7 +213,7 @@ export default (CalName, year) => {
         // NowSd = 205.528185 // ⚠️1730算例臨時
         //////// 【一】實朔用時。用時的英語暫且用Now
         const Rise = 0.25 + (AcrSunLongi < 180 ? -1 : 1) * riseDif(HighLongi2LowLati(Obliquity, AcrSunLongi), BeijingLati)
-        if (deci(NowSd) < Rise - 5 / 96 && deci(NowSd) > 1 - Rise + 5 / 96) return  // 日出前日入後五刻以內可以見食
+        if (deci(NowSd) < Rise - 5 / 96 || deci(NowSd) > 1 - Rise + 5 / 96) return  // 日出前日入後五刻以內可以見食
         else {
             //////// 【二】食甚實緯、食甚用時。這一段日月食都一樣
             const SunNow = sunGuimao(NowSd)
@@ -357,7 +355,7 @@ export default (CalName, year) => {
             const AngDistappaAsm = qiexianA(DistappaAsm, DistappaAvg, AngDistMovingAsm) // 對設時視距角
             const DistMovingAsm = sin(AngDistMovingAsm) / sin(AngDistappaAsm) * DistappaAsm // 設時視行
             const DistMovingAcr0 = DistappaAvg * cos(AngDistappaAsm)   // 真時視行
-            const Acr0AvgDif = -sign(AngWhiteHigharcAvg) * DistMovingAcr0 * AsmAvgDif / DistMovingAsm // 真時距分
+            const Acr0AvgDif = -sign(AngWhiteHigharcAvg) * abs(DistMovingAcr0 * AsmAvgDif / DistMovingAsm) // 真時距分
             const SdAcr0 = SdAvg + Acr0AvgDif // 食甚真時
             //////// 【七】食甚考定真時、食分
             const ArcAcr0AvgDif = Acr0AvgDif * EquilibriumDV // 真時距弧            
@@ -371,7 +369,7 @@ export default (CalName, year) => {
             const DistMovingAcr1 = sin(AngDistMovingAcr1) / sin(AngDistappaAcr1) * DistappaAcr1 // 考真時視行
             const DistMovingAcr = DistappaAsm * cos(AngDistappaAcr1) // 定真時視行
             const DistappaAcr = DistappaAsm * sin(AngDistappaAcr1) // 定真時兩心視距            
-            let AcrAsmDif = DistMovingAcr * (AsmAvgDif - Acr0AvgDif) / DistMovingAcr1 // 定真時距分。白經在高弧東，設時距分小爲減；白經在高弧西，設時距分小爲加。
+            let AcrAsmDif = DistMovingAcr * (abs(AsmAvgDif) - abs(Acr0AvgDif)) / DistMovingAcr1 // 定真時距分。白經在高弧東，設時距分小爲減；白經在高弧西，設時距分小爲加。
             if (AngWhiteHigharcAcr0 < 0) AcrAsmDif = -AcrAsmDif
             const SdAcr = SdAsm + AcrAsmDif
             let Magni = (RadiusSum - DistappaAcr) / SunAcrRadius * 2
@@ -599,7 +597,7 @@ export default (CalName, year) => {
     } = AutoNewmSyzygy(false, LeapNumTerm)
     return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, TermSc, TermDeci, TermAcrSc, TermAcrDeci, SyzygySc, SyzygyDeci, SunEcli, MoonEcli }
 }
-// console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+// console.log(cal("Guimao", 1436)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbit = 298 + 6 / 60 + 9.329 / 3600
