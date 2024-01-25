@@ -486,13 +486,13 @@ const cal = (CalName, year) => {
         const { MoonLongi: MoonLongiAft } = moonGuimao(x + step, SunperiAft, SunOrbitAft, SunCorrAft, SunGongAft)
         SunLongiAft += isNewm ? 0 : 180
         SunLongiAft %= 360
-        const Deci = deci(x) - step + (SunLongiBef - MoonLongiBef) / (t(MoonLongiAft - MoonLongiBef) - t(SunLongiAft - SunLongiBef)) * step * 2 // 一小時月距日實行
+        const Deci = deci(x) - step + t(SunLongiBef - MoonLongiBef) / (t(MoonLongiAft - MoonLongiBef) - t(SunLongiAft - SunLongiBef)) * step * 2 // 一小時月距日實行
         return ~~x + Deci // 實朔實時距冬至次日的時間
     }
     const AutoNewmSyzygy = isNewm => {
-        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], TermSc = [], TermDeci = [], Equa = [], Ecli = []
+        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], NowSd = [], TermSc = [], TermDeci = [], NowTermSd = [], Equa = [], Ecli = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 7; i <= 7; i++) { // 0—13
+        for (let i = 1; i <= 14; i++) {
             //////// 平朔望
             const AvgSd = ChouSd + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSdMidn = ~~AvgSd
@@ -511,22 +511,22 @@ const cal = (CalName, year) => {
             if (t(MoonLongiMidnToday - SunLongiMidnToday) > 180) {  // 如太陰實行未及太陽，則平朔日為實朔本日
                 if (t(MoonLongiMidnMorrow - SunLongiMidnMorrow) > 180) { // 如次日太陰實行仍未及太陽，則次日爲實朔日
                     Acr0SdMidn = AvgSdMidn + 1
-                    Acr0Deci = (SunLongiMidnMorrow - MoonLongiMidnMorrow) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday))
+                    Acr0Deci = t(SunLongiMidnMorrow - MoonLongiMidnMorrow) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday))
                 } else {
-                    Acr0Deci = (SunLongiMidnToday - MoonLongiMidnToday) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday)) // 分子：一日之月距日實行：三率，分母：一日之月實行與一日之日實行相減，爲一日之月距日實行：一率。實際上是t=s/v
+                    Acr0Deci = t(SunLongiMidnToday - MoonLongiMidnToday) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday)) // 分子：一日之月距日實行：三率，分母：一日之月實行與一日之日實行相減，爲一日之月距日實行：一率。實際上是t=s/v
                 }
             } else { // 如太陰實行已過太陽，則平朔前一日為實朔本日。
                 Acr0SdMidn = AvgSdMidn - 1
-                Acr0Deci = 1 - (MoonLongiMidnToday - SunLongiMidnToday) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday))
+                Acr0Deci = 1 - t(MoonLongiMidnToday - SunLongiMidnToday) / (t(MoonLongiMidnMorrow - MoonLongiMidnToday) - t(SunLongiMidnMorrow - SunLongiMidnToday))
             }
             //////// 實朔望實時
             const AcrSd = iteration(Acr0SdMidn + Acr0Deci, 0.5 / 24, isNewm)
             // const Acr2Sd = iteration(AcrSd, 0.1 / 24, isNewm)
             const { Sunperi: AcrSunperi, SunOrbit: AcrSunOrbit, SunCorr: AcrSunCorr, SunGong: AcrSunGong, SunLongi: AcrSunLongi } = sunGuimao(AcrSd)
             const { Whitelongi: AcrWhitelongi } = moonGuimao(AcrSd, AcrSunperi, AcrSunOrbit, AcrSunCorr, AcrSunGong)
-            const NowSd = AcrSd + timeDif(AcrSunCorr, AcrSunLongi)
-            AcrDeci[i] = deci(NowSd).toFixed(4).slice(2, 6)
-            AcrSc[i] = ScList[(SolsmorScOrder + ~~NowSd) % 60]
+            NowSd[i] = AcrSd + timeDif(AcrSunCorr, AcrSunLongi)
+            AcrDeci[i] = deci(NowSd[i]).toFixed(4).slice(2, 6)
+            AcrSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
             //////// 交食
             let isEclipse = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            
@@ -534,9 +534,9 @@ const cal = (CalName, year) => {
             else isEclipse = tmp < MoonLimit
             if (isEclipse) {
                 if (isNewm) {
-                    Ecli[i] = sunEcliGuimao(NowSd, AcrSunLongi)
+                    Ecli[i] = sunEcliGuimao(NowSd[i], AcrSunLongi)
                 }
-                else Ecli[i] = moonEcliGuimao(NowSd, AcrSunLongi)
+                else Ecli[i] = moonEcliGuimao(NowSd[i], AcrSunLongi)
             }
             //////// 節氣。用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書可能用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時。
             if (isNewm) {
@@ -546,16 +546,23 @@ const cal = (CalName, year) => {
                 const Acr0TermSd = AvgTermSd - TermSunCorr / SunAvgDV
                 const Acr0Sun = sunGuimao(Acr0TermSd)
                 const AcrTermSd = Acr0TermSd + ((((i + 1) * 30) % 360 - Acr0Sun.SunGong) / SunAvgDV)
-                const NowTermSd = AcrTermSd + timeDif(Acr0Sun.SunCorr, Acr0Sun.SunLongi)
-                TermSc[i] = ScList[(SolsmorScOrder + ~~NowTermSd) % 60]
-                TermDeci[i] = deci(NowTermSd).toFixed(4).slice(2, 6)
+                NowTermSd[i] = AcrTermSd + timeDif(Acr0Sun.SunCorr, Acr0Sun.SunLongi)
+                TermSc[i] = ScList[(SolsmorScOrder + ~~NowTermSd[i]) % 60]
+                TermDeci[i] = deci(NowTermSd[i]).toFixed(4).slice(2, 6)
             }
         }
-        return { AvgSc, AvgDeci, AcrSc, AcrDeci, TermSc, TermDeci, Ecli }
+        let Leap = 0
+        for (let i = 1; i <= 12; i++) {
+            if ((~~NowTermSd[i] < ~~NowSd[i + 1]) && (~~NowTermSd[i + 1] >= ~~NowSd[i + 2])) {
+                Leap = i // 閏Leap月，第Leap+1月爲閏月
+                break
+            }
+        }
+        return { AvgSc, AvgDeci, AcrSc, AcrDeci, TermSc, TermDeci, Ecli, Leap }
         // const { Start, Total, End, Magni } = Ecli
     }
     const {
-        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmAcrSc, AcrDeci: NewmAcrDeci, Ecli: NewmEcli, TermSc, TermDeci,
+        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmAcrSc, AcrDeci: NewmAcrDeci, Ecli: NewmEcli, TermSc, TermDeci
     } = AutoNewmSyzygy(true)
     const {
         AcrSc: SyzygySc, AcrDeci: SyzygyDeci, Ecli: SyzygyEcli
@@ -563,7 +570,7 @@ const cal = (CalName, year) => {
     return { NewmAvgSc, NewmAvgDeci, NewmAcrSc, NewmAcrDeci, TermSc, TermDeci, SyzygySc, SyzygyDeci, NewmEcli, SyzygyEcli }
 }
 // console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
-console.log(cal("Guimao", 1914))
+console.log(cal("Guimao", 1784))
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbit = 298 + 6 / 60 + 9.329 / 3600
