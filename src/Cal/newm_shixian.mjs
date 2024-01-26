@@ -86,7 +86,8 @@ const atmos = h => {
     return ang2 - ang1
 }
 // console.log(atmos(20)) // 0.04453873130688635
-const dist = (deg, c2) => { // 已知橢圓某點角度、橢圓倍兩心差，求短邊長，即距地心長度。像日躔曆理以角求積那樣，日在辛，地在甲，另一焦點丙，延長辛甲到壬，丙壬⊥辛壬。甲辛=x，(2-x)^2=丙壬^2+(甲壬+x)^2。
+// 以下分別是月離算法和日食算法求日地距離，不知為何用不同方法。
+const dist2 = (deg, c2) => { // 目前未加條件判斷，只適合近地點起算的太陽。已知橢圓某點角度、橢圓倍兩心差，求距地心長度。像日躔曆理以角求積那樣，日在辛，地在甲，另一焦點丙，延長辛甲到壬，丙壬⊥辛壬。甲辛=x，(2-x)^2=丙壬^2+(甲壬+x)^2。
     const jiaren = cos(deg) * c2 // 分股
     const bingren = sin(deg) * c2 // 勾    
     const gouxianSum = 2 + jiaren // 勾弦和
@@ -95,6 +96,19 @@ const dist = (deg, c2) => { // 已知橢圓某點角度、橢圓倍兩心差，�
     return +(2 - xian).toFixed(7)
     // return (4 - bingren ** 2 - jiaren ** 2) / (2 * jiaren + 4) // 我自己的算法 
 }
+const dist = (deg, c2) => { // 作垂線成兩勾股法，小股y=(4*x-4-c2**2)/(2*c2)，c2+y=cos(deg)*x
+    let x = 0
+    if (c2 < 0.034) { // 太陽從近地點起算
+        if (deg > 90 && deg < 270) x = (4 - c2 ** 2) / (2 * c2) / (2 / c2 - cos(t3(deg)))
+        else x = (4 - c2 ** 2) / (4 + 2 * c2 * cos(t3(deg)))
+    } else { // 月亮從遠地點起算
+        if (deg > 90 && deg < 270) x = (4 - c2 ** 2) / (4 + 2 * c2 * cos(t3(deg)))
+        else x = (4 - c2 ** 2) / (2 * c2) / (2 / c2 - cos(t3(deg)))
+    }
+    return +x.toFixed(7)
+}
+// console.log(dist(180, 0.066782*2))
+// console.log(dist2(324, 0.0538))
 const sunCorrGuimao = xRaw => {
     xRaw = +xRaw % 360
     const x = xRaw % 180
@@ -154,7 +168,7 @@ export default (CalName, year) => {
         const AvgNode = AvgNode1 - SunCorr / SunCorrMax * AvgNodeCorrMax// 用正交=正交平行+-正交平均
         const SunMoonapoDif = t(SunGong - AvgMoonapo) // 日距月最高
         const SunNodeDif = t(SunGong - AvgNode) // 日距正交        
-        const SunDist = dist(SunOrbit + SunCorr, 0.0338000) // 日距地心。
+        const SunDist = dist2(SunOrbit + SunCorr, 0.0338000) // 日距地心。
         const TubedDif = (1.0169000 ** 3 - SunDist ** 3) / 0.101410  // 求立方較,太阳最高距地心数之立方。這裡再除以太陽高卑距地之立方大較 (10000000+169000)**3-(10000000-169000)**3
         const AvgMoonCorr2Apogee = abs(sin(SunMoonapoDif * 2) * AvgMoonCorr2ApogeeMax) // 太陽在最高時日距月最高之二平均
         const AvgMoonCorr2Perigee = abs(sin(SunMoonapoDif * 2) * AvgMoonCorr2PerigeeMax)
@@ -235,9 +249,9 @@ export default (CalName, year) => {
             const AcrSunOrbit = SunNow.SunOrbit + SunAvg.SunCorr // 太陽實引：實朔引數+-本時太陽均數
             const AcrMoonOrbit = MoonNow.MoonOrbit + MoonAvg.MoonCorr1 // 太陰實引
             const MoonDist = dist(AcrMoonOrbit, MoonNow.MoonLco * 2)
-            const HorizonParallax = MoonDist * (57 / 60 + 30 / 3600) - 10 / 3600 // 地平高下差=太陰在地平上最大地半徑差-太陽地半徑差
-            const SunAcrRadius = dist(AcrSunOrbit, 0.0338000) * (16 / 60 + 6 / 3600) - 15 / 3600 // 太陽實半徑=太陽視半徑-光分15秒
-            const MoonRadius = MoonDist * (15 / 60 + 40 / 3600 + 30 / 216000) // 太陰視半徑
+            const HorizonParallax = 3450 / 3600 / MoonDist - 10 / 3600 // 地平高下差=太陰在地平上最大地半徑差（中距57分30秒）-太陽地半徑差
+            const SunAcrRadius = 966 / 3600 / dist(AcrSunOrbit, 0.0338000) - 15 / 3600 // 太陽實半徑=太陽視半徑（中率16分6秒）-光分15秒
+            const MoonRadius = 940.5 / 3600 / MoonDist // 太陰視半徑（中率15分40秒30微）
             const RadiusSum = SunAcrRadius + MoonRadius // 併徑
             //////// 【四】食甚太陽黃赤經緯宿度、黃赤二經交角            
             const TotalSunLongi = t(SunAvg.SunLongi + TotalNowDif * (SunOnehAft.SunGong - SunAvg.SunGong) * 24) // 食甚太陽黃道經度=實朔太陽黃道實行+距時日實行
@@ -597,7 +611,7 @@ export default (CalName, year) => {
     } = AutoNewmSyzygy(false, LeapNumTerm)
     return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, TermSc, TermDeci, TermAcrSc, TermAcrDeci, SyzygySc, SyzygyDeci, SunEcli, MoonEcli }
 }
-// console.log(cal("Guimao", 1436)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+// console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbit = 298 + 6 / 60 + 9.329 / 3600
