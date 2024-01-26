@@ -36,8 +36,14 @@ export default (CalName, YearStart, YearEnd) => {
         NewmInt = NewmInt || []
         if (Type === 13) {
             NewmStart = 0
-            TermStart = 0
             NewmEnd = LeapNumTermThis ? 1 : 0
+            if (PrevYear.LeapNumTerm) {
+                if (PrevYear.NewmAvgDeci[13] === ThisYear.NewmAvgDeci[1]) {
+                    NewmStart = 1
+                    NewmEnd = LeapNumTermThis ? 2 : 1
+                }
+            }
+            TermStart = 0
             TermEnd = NewmEnd
         }
         if (Type === 13) isLeapTT = LeapNumTermThis ? true : false
@@ -469,4 +475,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Datong', 1430, 1430))
+// console.log(Index('Guimao', 1738, 1738))
