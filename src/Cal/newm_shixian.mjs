@@ -110,7 +110,7 @@ const dist = (deg, c2) => { // 作垂線成兩勾股法，小股y=(4*x-4-c2**2)/
 // console.log(dist(180, 0.066782*2))
 // console.log(dist2(324, 0.0538))
 const sunCorrGuimao = xRaw => {
-    xRaw = +xRaw % 360
+    xRaw = (+xRaw + 360) % 360
     const x = xRaw % 180
     const xMirror = t3(x)
     const a = 1, a2 = 2, b = 0.999857185, mid = 0.999928589, c = 0.0169000, c2 = 0.0338000, aSUBc = 0.9831000, aDIVb = 0.999857185 // 大小徑、avg中率、兩心差（焦距）。中距盈縮差1°56′12″。
@@ -150,7 +150,7 @@ const eclpMansion = (Y, Longi) => {
 // console.log(eclpMansion(2684, 10))
 export default (CalName, Y) => {
 // const cal = (CalName, Y) => {
-    const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
+    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
     const TermLeng = Solar / 12
     const CloseOriginYear = abs(Y - CloseOriginAd) // 積年
     const OriginAccum = +(CloseOriginYear * Solar).toFixed(9) // 中積
@@ -577,20 +577,29 @@ export default (CalName, Y) => {
                 }
                 else Ecli[i] = moonEcliGuimao(NowSd[i], AcrSunLongi)
             }
-            //////// 節氣。用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書可能用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時。
+            //////// 節氣
             if (isNewm) {
+                const TermGong = ((i + 1) * 30) % 360
                 const TermSd = (i + 1) * TermLeng - (1 - SolsDeci)
-                const TermSunperiMidn = SunperiConst + SunperiThisyear + SunperiDV * ~~TermSd
-                const TermSunCorr = sunCorrGuimao((i + 1) * 30 - TermSunperiMidn)
-                const Acr0TermSd = TermSd - TermSunCorr / SunAvgDV
-                const Acr0Sun = sunGuimao(Acr0TermSd)
-                const AcrTermSd = Acr0TermSd + ((((i + 1) * 30) % 360 - Acr0Sun.SunGong) / SunAvgDV)
-                NowTermSd[i] = AcrTermSd + timeDif(Acr0Sun.SunCorr, Acr0Sun.SunLongi)
                 TermSc[i] = ScList[(SolsmorScOrder + ~~TermSd) % 60]
                 TermDeci[i] = deci(TermSd).toFixed(4).slice(2, 6)
+                const TermSunperiMidn = SunperiConst + SunperiThisyear + SunperiDV * ~~TermSd
+                const TermSunCorr = sunCorrGuimao(TermGong - TermSunperiMidn)
+                const Acr0TermSd = TermSd - TermSunCorr / SunAvgDV
+                // 用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書可能用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時。
+                // const Acr0Sun = sunGuimao(Acr0TermSd)
+                // const AcrTermSd = Acr0TermSd + ((TermGong  - Acr0Sun.SunGong) / SunAvgDV)
+                // 下再用推節氣時刻法。沒有推逐日太陽宮度，為了少點麻煩，只用本日次日，不考慮再昨天或明天的情況。與曆書相較密合。
+                let AcrTermSd = 0
+                const SunToday = sunGuimao(~~Acr0TermSd)
+                const SunMorrow = sunGuimao(~~Acr0TermSd + 1)
+                const MidnToday = SunToday.SunGong
+                const MidnMorrow = SunMorrow.SunGong
+                AcrTermSd = ~~Acr0TermSd + (TermGong - MidnToday + (TermGong === 0 ? 360 : 0)) / (MidnMorrow - MidnToday)
+                NowTermSd[i] = AcrTermSd + timeDif(SunToday.SunCorr, SunToday.SunLongi)
                 TermAcrSc[i] = ScList[(SolsmorScOrder + ~~NowTermSd[i]) % 60]
                 TermAcrDeci[i] = deci(NowTermSd[i]).toFixed(4).slice(2, 6)
-                TermEclp[i] = eclpMansion(Y, Acr0Sun.SunLongi)
+                TermEclp[i] = eclpMansion(Y, sunGuimao(AcrTermSd).SunLongi)
             }
         }
         //////// 置閏
@@ -636,7 +645,7 @@ export default (CalName, Y) => {
     } = AutoNewmSyzygy(false, LeapNumTerm)
     return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, NewmEclp, SyzygySc, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp }
 }
-// console.log(cal("Guimao", 1731)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+// console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbit = 298 + 6 / 60 + 9.329 / 3600
