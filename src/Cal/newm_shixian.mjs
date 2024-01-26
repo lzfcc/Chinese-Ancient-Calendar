@@ -250,8 +250,8 @@ export default (CalName, year) => {
             const AcrMoonOrbit = MoonNow.MoonOrbit + MoonAvg.MoonCorr1 // 太陰實引
             const MoonDist = dist(AcrMoonOrbit, MoonNow.MoonLco * 2)
             const HorizonParallax = 3450 / 3600 / MoonDist - 10 / 3600 // 地平高下差=太陰在地平上最大地半徑差（中距57分30秒）-太陽地半徑差
-            const SunAcrRadius = 966 / 3600 / dist(AcrSunOrbit, 0.0338000) - 15 / 3600 // 太陽實半徑=太陽視半徑（中率16分6秒）-光分15秒
-            const MoonRadius = 940.5 / 3600 / MoonDist // 太陰視半徑（中率15分40秒30微）
+            const SunAcrRadius = (966 / 3600) / dist(AcrSunOrbit, 0.0338000) - 15 / 3600 // 太陽實半徑=太陽視半徑（中率16分6秒）-光分15秒
+            const MoonRadius = (940.5 / 3600) / MoonDist // 太陰視半徑（中率15分40秒30微）
             const RadiusSum = SunAcrRadius + MoonRadius // 併徑
             //////// 【四】食甚太陽黃赤經緯宿度、黃赤二經交角            
             const TotalSunLongi = t(SunAvg.SunLongi + TotalNowDif * (SunOnehAft.SunGong - SunAvg.SunGong) * 24) // 食甚太陽黃道經度=實朔太陽黃道實行+距時日實行
@@ -386,9 +386,8 @@ export default (CalName, year) => {
             let AcrAsmDif = DistMovingAcr * (abs(AsmAvgDif) - abs(Acr0AvgDif)) / DistMovingAcr1 // 定真時距分。白經在高弧東，設時距分小爲減；白經在高弧西，設時距分小爲加。
             if (AngWhiteHigharcAcr0 < 0) AcrAsmDif = -AcrAsmDif
             const SdAcr = SdAsm + AcrAsmDif
-            let Magni = (RadiusSum - DistappaAcr) / SunAcrRadius * 2
-            if (Magni < 0.01) return
-            Magni = Magni.toFixed(2)
+            const Magni = Math.round(100 * (RadiusSum - DistappaAcr) / (SunAcrRadius * 2))
+            if (Magni < 2) return
             //////// 【八】初虧前設時兩心視距
             let SdBefStartAsm = 0, SdBefEndAsm = 0
             if (AngWhiteHigharcAcr0 < 0) {
@@ -460,15 +459,14 @@ export default (CalName, year) => {
             const AcrMoonOrbit = MoonNow.MoonOrbit + MoonTotal.MoonCorr1
             const AcrSunOrbit = SunNow.SunOrbit + SunTotal.SunCorr
             const MoonDist = dist(AcrMoonOrbit, MoonNow.MoonLco * 2)
-            const MoonParallax = MoonDist * (57 / 60 + 30 / 3600) // 太陰地半徑差。中距最大地半徑差 57分30秒。此一弧度代正弦算。
-            const SunRadius = dist(AcrSunOrbit, 0.0338000) * (16 / 60 + 6 / 3600) // 太陽視半徑。中距太陽視半徑16分6秒
+            const MoonParallax = (57 / 60 + 30 / 3600) / MoonDist // 太陰地半徑差。中距最大地半徑差 57分30秒。此一弧度代正弦算。
+            const SunRadius = (966 / 3600) / dist(AcrSunOrbit, 0.0338000) // 太陽視半徑。中距太陽視半徑16分6秒
             const ShadowRadius = MoonParallax + 10 / 3600 - SunRadius + MoonParallax / 69 // 實影半徑=月半徑差+日半徑差-日半徑+影差。太陽地半徑差10秒。
-            const MoonRadius = MoonDist * (15 / 60 + 40 / 3600 + 30 / 216000) // 太陰視半徑
+            const MoonRadius = (940.5 / 3600) / MoonDist // 太陰視半徑
             const RadiusSum = MoonRadius + ShadowRadius // 併徑——也就是出現月食的最大極限
-            // const RadiusDif = MoonRadius - ShadowRadius // 兩徑較                    
-            let Magni = (RadiusSum - Dist) / (MoonRadius * 2) // 若食甚實緯大於併徑，則月與地影不相切，則不食，即不必算。上編卷七：併徑大於距緯之較，即爲月食之分
-            if (Magni < 0.01) return
-            Magni = Magni.toFixed(2)
+            // const RadiusDif = MoonRadius - ShadowRadius // 兩徑較
+            const Magni = Math.round(100 * (RadiusSum - Dist) / (MoonRadius * 2)) // 若食甚實緯大於併徑，則月與地影不相切，則不食，即不必算。上編卷七：併徑大於距緯之較，即爲月食之分
+            if (Magni < 2) return
             //////// 【四】初虧復圓時刻
             const ArcStartend = sqr((RadiusSum + Dist) * (RadiusSum - Dist)) // 初虧復圓距弧。就是直角三角形已知兩邊。
             const StarttoendTime = ArcStartend / EquilibriumDV // 初虧復圓距時            
@@ -587,16 +585,16 @@ export default (CalName, year) => {
             if (Ecli[i]) {
                 if (isNewm) {
                     EcliPrint[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                    EcliPrint[i] += '出' + Ecli[i].Rise + ' 分' + Ecli[i].Magni + '虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 入' + Ecli[i].Sunset
+                    EcliPrint[i] += '出' + Ecli[i].Rise + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 入' + Ecli[i].Sunset
                 } else {
                     EcliPrint[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                    EcliPrint[i] += '入' + Ecli[i].Sunset + ' 分' + Ecli[i].Magni + '虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 出' + Ecli[i].Rise
+                    EcliPrint[i] += '入' + Ecli[i].Sunset + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 出' + Ecli[i].Rise
                 }
-                if (+Ecli[i].Magni >= 9.99) {
+                if (Ecli[i].Magni >= 99) {
                     AcrSc[i] += `<span class='eclipse-symbol'>●</span>`
-                } else if (+Ecli[i].Magni >= 1) {
+                } else if (Ecli[i].Magni > 10) {
                     AcrSc[i] += `<span class='eclipse-symbol'>◐</span>`
-                } else if (+Ecli[i].Magni > 0) {
+                } else if (Ecli[i].Magni > 0) {
                     AcrSc[i] += `<span class='eclipse-symbol'>◔</span>`
                 }
             }
@@ -611,7 +609,7 @@ export default (CalName, year) => {
     } = AutoNewmSyzygy(false, LeapNumTerm)
     return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, TermSc, TermDeci, TermAcrSc, TermAcrDeci, SyzygySc, SyzygyDeci, SunEcli, MoonEcli }
 }
-// console.log(cal("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+// console.log(cal("Guimao", 1731)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbit = 298 + 6 / 60 + 9.329 / 3600

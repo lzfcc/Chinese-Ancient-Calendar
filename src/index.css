@@ -533,6 +533,7 @@ tr.TermEquaPrint {
 
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
+  font-weight: bold;
 }
 
 /* tr.TermMansionPrint {
@@ -554,6 +555,18 @@ tr.SyzygyScPrint {
 
 tr.SyzygyDeciPrint {
   border-bottom: 2px solid var(--gray);
+}
+tr.NewmDeci1Print th {
+  font-weight: normal;
+}
+tr.NewmDeci2Print th {
+  font-weight: normal;
+}
+tr.NewmDeci3Print th {
+  font-weight: normal;
+}
+tr.NewmDeciAcrPrint th {
+  font-weight: normal;
 }
 
 .calendar-select {
