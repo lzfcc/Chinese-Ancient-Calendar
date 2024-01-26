@@ -28,7 +28,7 @@ export default (CalName, YearStart, YearEnd) => {
         const SolsMon = (1 - ZhengNum + 12) % 12 // 冬至月
         const isLeapPvPt = PrevYear.isLeapPost
         const { isLeapAdvan: isLeapTA, JiScOrder: JiScOrder,
-            SolsAccum, NewmEqua, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgSolsDif, TermAcrSolsDif, AccumPrint, LeapLimit
+            SolsAccum, NewmEqua, NewmEclp, TermAvgRaw, TermAcrRaw, EquaDegAccumList, TermAvgSolsDif, TermAcrSolsDif, AccumPrint, LeapLimit
         } = ThisYear
         let { LeapNumTerm: LeapNumTermThis, isLeapPrev: isLeapTPv, isLeapThis: isLeapTT,
             NewmInt, NewmStart, NewmEnd, TermStart, TermEnd,
@@ -94,7 +94,7 @@ export default (CalName, YearStart, YearEnd) => {
                 isLeapTPv = 1
             }
         }
-        const TermAvgMod = [], TermOrderMod = [], TermSc = [], TermName = [], TermDeci = [], TermEqua = [], TermDuskstar = []
+        const TermAvgMod = [], TermOrderMod = [], TermSc = [], TermName = [], TermDeci = [], TermEqua = [], TermEclp = [], TermDuskstar = []
         let TermAcrSc = [], TermAcrDeci = [], TermAcrMod = [], TermAcrOrderMod = []
         if (Type === 13) {
             for (let i = 1; i <= 12; i++) {
@@ -103,6 +103,7 @@ export default (CalName, YearStart, YearEnd) => {
                 TermDeci[i] = ThisYear.TermDeci[i]
                 TermAcrSc[i] = ThisYear.TermAcrSc[i]
                 TermAcrDeci[i] = ThisYear.TermAcrDeci[i]
+                TermEclp[i] = ThisYear.TermEclp[i]
             }
             if (LeapNumTermThis) {
                 TermName[LeapNumTermThis + 1] = '无'
@@ -110,7 +111,7 @@ export default (CalName, YearStart, YearEnd) => {
                 TermDeci[LeapNumTermThis + 1] = ''
                 TermAcrSc[LeapNumTermThis + 1] = ''
                 TermAcrDeci[LeapNumTermThis + 1] = ''
-                TermEqua[LeapNumTermThis + 1] = ''
+                TermEclp[LeapNumTermThis + 1] = ''
                 TermDuskstar[LeapNumTermThis + 1] = ''
                 for (let i = LeapNumTermThis + 2; i <= 13; i++) {
                     TermName[i] = TermList[(i + 1) % 12]
@@ -118,7 +119,7 @@ export default (CalName, YearStart, YearEnd) => {
                     TermDeci[i] = ThisYear.TermDeci[i - 1]
                     TermAcrSc[i] = ThisYear.TermAcrSc[i - 1]
                     TermAcrDeci[i] = ThisYear.TermAcrDeci[i - 1]
-                    TermEqua[i] = 0
+                    TermEclp[i] = ThisYear.TermEclp[i - 1]
                     TermDuskstar[i] = 0
                 }
             }
@@ -258,9 +259,10 @@ export default (CalName, YearStart, YearEnd) => {
             NewmDeci2Print = NewmSlice(ThisYear.NewmDeci2)
         }
         const NewmEquaPrint = NewmSlice(NewmEqua || [])
+        const NewmEclpPrint = NewmSlice(NewmEclp || [])
         const SyzygyScPrint = NewmSlice(ThisYear.SyzygySc)
         const SyzygyDeciPrint = NewmSlice(ThisYear.SyzygyDeci)
-        let NewmDeciPrint = [], TermNamePrint = [], TermScPrint = [], TermDeciPrint = [], TermAcrScPrint = [], TermAcrDeciPrint = [], TermEquaPrint = [], TermDuskstarPrint = []
+        let NewmDeciPrint = [], TermNamePrint = [], TermScPrint = [], TermDeciPrint = [], TermAcrScPrint = [], TermAcrDeciPrint = [], TermEquaPrint = [], TermEclpPrint = [], TermDuskstarPrint = []
         if (Type === 1) {
             TermNamePrint = TermSlice(ThisYear.TermName)
             TermScPrint = TermSlice(ThisYear.TermSc)
@@ -287,6 +289,7 @@ export default (CalName, YearStart, YearEnd) => {
                 TermDeciPrint = TermSlice(TermDeci)
             }
             TermEquaPrint = TermSlice(TermEqua)
+            TermEclpPrint = TermSlice(TermEclp)
             TermDuskstarPrint = TermSlice(TermDuskstar)
         }
         ////////// 調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
@@ -448,9 +451,9 @@ export default (CalName, YearStart, YearEnd) => {
         }
         return {
             Era, YearInfo, MonthPrint,
-            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmDeciAcrPrint, NewmEquaPrint,
+            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmDeciAcrPrint, NewmEquaPrint, NewmEclpPrint,
             SyzygyScPrint, SyzygyDeciPrint,
-            TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermDuskstarPrint,
+            TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
             ////////////// 以下用於日書/////////////
             LeapNumTermThis, SolsAccum,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況

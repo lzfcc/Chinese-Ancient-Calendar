@@ -22,9 +22,7 @@ const AutoCal = year => {
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeciAcrPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint,
-        SyzygyScPrint, SyzygyDeciPrint, TermNamePrint,
-        TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermDuskstarPrint,
+        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeciAcrPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
@@ -48,7 +46,10 @@ const PrintNewm = result => {
         Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDeciPrint.join(' ') + `\n`
     }
     if ((NewmEquaPrint || []).length > 0) {
-        Print += '**赤度** ' + NewmEquaPrint.join(' ') + `\n`
+        Print += '**赤道** ' + NewmEquaPrint.join(' ') + `\n`
+    }
+    if ((NewmEclpPrint || []).length > 0) {
+        Print += '**黃道** ' + NewmEclpPrint.join(' ') + `\n`
     }
     Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDeciPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
     if (NewmDeciAcrPrint.length > 0) {

@@ -1,6 +1,6 @@
 // 可參考廖育棟的時憲曆日月氣朔網站 http://ytliu.epizy.com/Shixian/index_chinese.html ，有一分很漂亮的公式說明。
 import Para from './para_calendars.mjs'
-import { ScList, deci } from './para_constant.mjs'
+import { ScList, deci, EclpDegJiazi, MansionNameListQing } from './para_constant.mjs'
 const abs = x => Math.abs(x)
 const sign = x => Math.sign(x)
 const pi = Math.PI
@@ -123,29 +123,54 @@ const sunCorrGuimao = xRaw => {
     if (xRaw > 180) flag2 = -1
     return flag2 * (Awu + flag1 * Aweibingwu)
 }
-export default (CalName, year) => {
-// const cal = (CalName, year) => {
+const eclpMansion = (Y, Longi) => {
+    const EclpDeg = []
+    for (let i = 0; i <= 27; i++) {
+        EclpDeg[i] = (EclpDegJiazi[i] + (51 / 3600) * (Y - 1684) + 360) % 360
+    }
+    let MansionDeg = 0
+    let MansionName = ''
+    for (let i = 0; i <= 27; i++) {
+        const iSub1 = (i + 27) % 28
+        if (EclpDeg[i] - EclpDeg[iSub1] < 0) {
+            if ((Longi + 360 >= EclpDeg[iSub1] && Longi < EclpDeg[i]) ||
+                (Longi >= EclpDeg[iSub1] && Longi < EclpDeg[i] + 360)) {
+                MansionDeg = (Longi + 360 - EclpDeg[iSub1]) % 360
+                MansionName = MansionNameListQing[iSub1]
+            }
+        } else {
+            if (Longi >= EclpDeg[iSub1] && Longi < EclpDeg[i]) {
+                MansionDeg = Longi - EclpDeg[iSub1]
+                MansionName = MansionNameListQing[iSub1]
+            }
+        }
+    }
+    return MansionName + MansionDeg.toFixed(3)
+}
+// console.log(eclpMansion(2684, 10))
+export default (CalName, Y) => {
+// const cal = (CalName, Y) => {
     const { CloseOriginAd, Solar, Precession, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
     const TermLeng = Solar / 12
-    const CloseOriginYear = abs(year - CloseOriginAd) // 積年
+    const CloseOriginYear = abs(Y - CloseOriginAd) // 積年
     const OriginAccum = +(CloseOriginYear * Solar).toFixed(9) // 中積
-    const SolsAccum = year > CloseOriginAd ? OriginAccum + SolsConst : OriginAccum - SolsConst // 通積分。
-    const Sols = +(year > CloseOriginAd ? SolsAccum % 60 : 60 - SolsAccum % 60).toFixed(9)
+    const SolsAccum = Y > CloseOriginAd ? OriginAccum + SolsConst : OriginAccum - SolsConst // 通積分。
+    const Sols = +(Y > CloseOriginAd ? SolsAccum % 60 : 60 - SolsAccum % 60).toFixed(9)
     const SolsDeci = deci(Sols) // 冬至小數
     const SolsmorScOrder = (~~Sols + 2) % 60 // 本年紀日：以天正冬至干支加一日得紀日。（考成：所求本年天正冬至次日之干支。既有天正冬至干支，可以不用紀日，因用表推算起於年根而不用天正冬至。若無紀日，則無以定干支，且日數自紀日干支起初日，故並用之）Solsmor: winter solstice tomorrow 冬至次日子正初刻
     const SunRoot = (1 - SolsDeci) * SunAvgDV // 年根（考成：天正冬至次日子正初刻太陽距冬至之平行經度。天正冬至分：冬至距本日子正初刻後之分數與周日一萬分相減，餘爲冬至距次日子正初刻前之分數，故與每日平行為比例，得次日子正初刻太陽距冬至之平行經度）。一率：週日一萬分，二率：每日平行，三率：以天正冬至分與週日一萬分相減，求得四率爲秒，以分收之得年根。// 本來是分，我收作度。    
-    const DayAccum = year > CloseOriginAd ? OriginAccum + deci(SolsConst) - SolsDeci : OriginAccum - deci(SolsConst) + SolsDeci // 積日（曆元冬至次日到所求天正冬至次日的日數，等於算式的曆元冬至當日到所求冬至當日日數）    
-    const ChouAccum = year > CloseOriginAd ? DayAccum - ChouConst : DayAccum + ChouConst // 通朔
-    // const LunarNum = year > CloseOriginAd ? ~~(ChouAccum / Lunar) + 1 : ~~(ChouAccum / Lunar) // 積朔。似乎+1是為了到十二月首朔
-    const ChouSd = year > CloseOriginAd ? (Lunar - ChouAccum % Lunar) % Lunar : ChouAccum % Lunar // 首朔（十二月朔距冬至次日子正）：通朔以朔策除之，得數加一爲積朔，餘數與朔策相減爲首朔。上考則通朔以朔策除之爲積朔，餘數爲首朔。Sd：某時刻距離冬至次日子正的時間
+    const DayAccum = Y > CloseOriginAd ? OriginAccum + deci(SolsConst) - SolsDeci : OriginAccum - deci(SolsConst) + SolsDeci // 積日（曆元冬至次日到所求天正冬至次日的日數，等於算式的曆元冬至當日到所求冬至當日日數）    
+    const ChouAccum = Y > CloseOriginAd ? DayAccum - ChouConst : DayAccum + ChouConst // 通朔
+    // const LunarNum = Y > CloseOriginAd ? ~~(ChouAccum / Lunar) + 1 : ~~(ChouAccum / Lunar) // 積朔。似乎+1是為了到十二月首朔
+    const ChouSd = Y > CloseOriginAd ? (Lunar - ChouAccum % Lunar) % Lunar : ChouAccum % Lunar // 首朔（十二月朔距冬至次日子正）：通朔以朔策除之，得數加一爲積朔，餘數與朔策相減爲首朔。上考則通朔以朔策除之爲積朔，餘數爲首朔。Sd：某時刻距離冬至次日子正的時間
     // const LunarNumWhitelongi = LunarNum * MoonNodeMS // 積朔太陰交周
-    // const ChouWhitelongi = year > CloseOriginAd ? LunarNumWhitelongi + ChouWhitelongiConst : ChouWhitelongiConst - LunarNumWhitelongi // 首朔太陰交周
-    const MoonRoot = year > CloseOriginAd ? MoonConst + DayAccum * MoonAvgDV : MoonConst - DayAccum * MoonAvgDV // 太陰年根    
-    const MoonapoRoot = year > CloseOriginAd ? DayAccum * MoonapoDV + MoonapoConst : MoonapoConst - DayAccum * MoonapoDV  // 最高年根
-    const NodeRoot = year > CloseOriginAd ? NodeConst - DayAccum * NodeDV : NodeConst + DayAccum * NodeDV // 正交年根，所得爲白經
+    // const ChouWhitelongi = Y > CloseOriginAd ? LunarNumWhitelongi + ChouWhitelongiConst : ChouWhitelongiConst - LunarNumWhitelongi // 首朔太陰交周
+    const MoonRoot = Y > CloseOriginAd ? MoonConst + DayAccum * MoonAvgDV : MoonConst - DayAccum * MoonAvgDV // 太陰年根    
+    const MoonapoRoot = Y > CloseOriginAd ? DayAccum * MoonapoDV + MoonapoConst : MoonapoConst - DayAccum * MoonapoDV  // 最高年根
+    const NodeRoot = Y > CloseOriginAd ? NodeConst - DayAccum * NodeDV : NodeConst + DayAccum * NodeDV // 正交年根，所得爲白經
     // const OriginAccumMansion = OriginAccum + MansionDayConst // 通積宿
     // const Mansion = (OriginAccumMansion % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
-    const SunperiThisyear = year > CloseOriginAd ? SunperiYV * CloseOriginYear : -SunperiYV * CloseOriginYear // 本年最卑行    
+    const SunperiThisyear = Y > CloseOriginAd ? SunperiYV * CloseOriginYear : -SunperiYV * CloseOriginYear // 本年最卑行    
     /////////// 推日躔 //////////
     const sunGuimao = Sd => { // 時間不限於子正初刻，一天中任意時候都可以
         const AvgSun = Sd * SunAvgDV + SunRoot // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
@@ -154,7 +179,7 @@ export default (CalName, year) => {
         const SunCorr = sunCorrGuimao(SunOrbit)
         const SunGong = t(AvgSun + SunCorr) // 實行
         const SunLongi = (SunGong + 270) % 360 // 黃道度
-        // SunGong-Precession*(year-1684)⋯⋯ 求宿度：以積年與歲差五十一秒相乘，得數，與癸卯年黃道宿鈐相加，得本年宿鈐。察實行足減某宿度分則減之，餘爲某宿度分。——與古曆算法不同，這是捷法，但是⚠️這是夜半
+        // SunGong-Precession*(Y-1684)⋯⋯ 求宿度：以積年與歲差五十一秒相乘，得數，與癸卯年黃道宿鈐相加，得本年宿鈐。察實行足減某宿度分則減之，餘爲某宿度分。——與古曆算法不同，這是捷法，但是⚠️這是夜半
         return { SunOrbit, SunCorr, SunLongi, SunGong, Sunperi }
     }
     /////////// 推月離 //////////
@@ -503,7 +528,7 @@ export default (CalName, year) => {
         return ~~x + Deci // 實朔實時距冬至次日的時間
     }
     const AutoNewmSyzygy = (isNewm, LeapNumTerm) => {
-        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], NowSd = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], NowTermSd = [], Equa = [], Ecli = []
+        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], NowSd = [], Eclp = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], NowTermSd = [], TermEclp = [], Ecli = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
         for (let i = 1; i <= 14; i++) {
             //////// 平朔望
@@ -540,6 +565,7 @@ export default (CalName, year) => {
             NowSd[i] = AcrSd + timeDif(AcrSunCorr, AcrSunLongi)
             AcrDeci[i] = deci(NowSd[i]).toFixed(4).slice(2, 6)
             AcrSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
+            Eclp[i] = eclpMansion(Y, AcrSunLongi)
             //////// 交食
             let isEcli = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            
@@ -564,6 +590,7 @@ export default (CalName, year) => {
                 TermDeci[i] = deci(TermSd).toFixed(4).slice(2, 6)
                 TermAcrSc[i] = ScList[(SolsmorScOrder + ~~NowTermSd[i]) % 60]
                 TermAcrDeci[i] = deci(NowTermSd[i]).toFixed(4).slice(2, 6)
+                TermEclp[i] = eclpMansion(Y, Acr0Sun.SunLongi)
             }
         }
         //////// 置閏
@@ -599,15 +626,15 @@ export default (CalName, year) => {
                 }
             }
         }
-        return { AvgSc, AvgDeci, AcrSc, AcrDeci, TermSc, TermDeci, TermAcrSc, TermAcrDeci, EcliPrint, LeapNumTerm }
+        return { AvgSc, AvgDeci, AcrSc, AcrDeci, Eclp, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, EcliPrint, LeapNumTerm }
     }
     const {
-        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmSc, AcrDeci: NewmDeci, EcliPrint: SunEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, LeapNumTerm
+        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmSc, AcrDeci: NewmDeci, Eclp: NewmEclp, EcliPrint: SunEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, LeapNumTerm
     } = AutoNewmSyzygy(true)
     const {
         AcrSc: SyzygySc, AcrDeci: SyzygyDeci, EcliPrint: MoonEcli
     } = AutoNewmSyzygy(false, LeapNumTerm)
-    return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, TermSc, TermDeci, TermAcrSc, TermAcrDeci, SyzygySc, SyzygyDeci, SunEcli, MoonEcli }
+    return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, NewmEclp, SyzygySc, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp }
 }
 // console.log(cal("Guimao", 1731)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)

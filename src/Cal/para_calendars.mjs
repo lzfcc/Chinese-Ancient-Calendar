@@ -2866,12 +2866,12 @@ export default {
         Venus: 583.9197207,
         Mercury: 115.8771744,
     },
+    ////////////////
     Jiazi: { // 曆象考成
         Type: 13,
         ApplyYear: [[1727, 1733]],
         CloseOriginAd: 1684,
-        Solar: 365.2421875, // 週歲 
-        Sidereal: 1296000, // 360°。
+        Solar: 365.2421875, // 週歲
         Precession: 51 / 3600, // 岁差51″
         SunAvgV: 3548.3305169, // 每日平行″
         PeriYearV: 61.16666, // 最卑perihelion每歲平行″，
@@ -2888,8 +2888,7 @@ export default {
         Type: 13,
         ApplyYear: [[1734, 1913]],
         CloseOriginAd: 1723,
-        Solar: 365.24233442, // 週歲 
-        Sidereal: 1296000, // 360°。
+        Solar: 365.24233442, // 週歲
         Precession: 51 / 3600, // 岁差51″
         Lunar: 29.53059053,
         SunAvgDV: 3548.3290897 / 3600, // 太陽每日平行″        

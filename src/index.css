@@ -508,11 +508,7 @@ tr.NewmScPrint {
   font-weight: bold;
 }
 
-tr.NewmAvgScPrint {
-  font-weight: bold;
-}
-
-tr.TermScPrint {
+tr.NewmAvgScPrint, tr.TermScPrint {
   font-weight: bold;
 }
 
@@ -520,13 +516,13 @@ tr.TermNamePrint {
   color: var(--gray);
 }
 
-tr.NewmEquaPrint {
+tr.NewmEquaPrint, tr.NewmEclpPrint {
   border-bottom: 2px solid var(--gray);
   color: var(--gray);
   font-size: .8em;
 }
 
-tr.TermEquaPrint {
+tr.TermEclpPrint, tr.TermEquaPrint, tr.TermDuskstarPrint  {
   color: var(--gray);
   font-size: .8em;
 }
@@ -534,15 +530,6 @@ tr.TermEquaPrint {
 tr.TermAcrScPrint {
   border-top: 1px solid var(--gray);
   font-weight: bold;
-}
-
-/* tr.TermMansionPrint {
-  color: var(--gray);
-} */
-
-tr.TermDuskstarPrint {
-  color: var(--gray);
-  font-size: .8em;
 }
 
 tr.TermAcrScPrint {
@@ -556,16 +543,7 @@ tr.SyzygyScPrint {
 tr.SyzygyDeciPrint {
   border-bottom: 2px solid var(--gray);
 }
-tr.NewmDeci1Print th {
-  font-weight: normal;
-}
-tr.NewmDeci2Print th {
-  font-weight: normal;
-}
-tr.NewmDeci3Print th {
-  font-weight: normal;
-}
-tr.NewmDeciAcrPrint th {
+tr.NewmDeci1Print th,tr.NewmDeci2Print th,tr.NewmDeci3Print th,tr.NewmDeciAcrPrint th {
   font-weight: normal;
 }
 

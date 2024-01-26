@@ -17,6 +17,7 @@ const TableRowNameMap = {
   NewmDeci2Print: '二次',
   NewmDeci1Print: '線性',
   NewmEquaPrint: '赤道',
+  NewmEclpPrint: '黃道',
   SyzygyScPrint: '望',
   SyzygyDeciPrint: ' ',
   TermNamePrint: '中氣',
@@ -25,6 +26,7 @@ const TableRowNameMap = {
   TermScPrint: '平氣',
   TermDeciPrint: ' ',
   TermEquaPrint: '氣赤',
+  TermEclpPrint: '氣黃',
   TermDuskstarPrint: '旦昏中'
 }
 const heightCache = createCache();

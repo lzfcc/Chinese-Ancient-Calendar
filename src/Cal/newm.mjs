@@ -5,7 +5,7 @@ import { ConstWest } from './astronomy_west.mjs'
 import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub, LeapAdjust } from './astronomy_other.mjs'
 import { AutoEqua2Eclp } from './astronomy_bind.mjs'
 
-export default (CalName, year) => {
+export default (CalName, Y) => {
     const { Type, isAcr, isNewmPlus, Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
@@ -23,18 +23,18 @@ export default (CalName, year) => {
     const ZhangMon = Math.round(ZhangRange * (12 + ZhangLeap / ZhangRange))
     // const JiMon = JiRange * ZhangMon / ZhangRange
     const ZhengSolsDif = ZhengNum - OriginMonNum
-    const OriginYear = year - (OriginAd || CloseOriginAd) // 上元積年（算上）
+    const OriginYear = Y - (OriginAd || CloseOriginAd) // 上元積年（算上）
     // const CloseSolsDif = CloseOriginAd - OriginAd // 統天距算
-    const CloseOriginYear = year - CloseOriginAd // 距差。授時以1280開始
+    const CloseOriginYear = Y - CloseOriginAd // 距差。授時以1280開始
     let SolarChangeAccum = 0, LunarChangeAccum = 0, LeapSurAvgThis = 0, LeapSurAvgPrev = 0, LeapSurAvgNext = 0, OriginAccumThis = 0
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? 1 : -1
     if (CalName === 'West') {
-        const Func = ConstWest(year)
+        const Func = ConstWest(Y)
         Solar = Func.Solar
         Lunar = Func.Lunar
-        SolarChangeAccum = signX * ((year - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
-        LunarChangeAccum = -signX * ((year - 2000) ** 2) * 1e-9
+        SolarChangeAccum = signX * ((Y - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
+        LunarChangeAccum = -signX * ((Y - 2000) ** 2) * 1e-9
     } else if (CalName === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
         SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
@@ -44,8 +44,8 @@ export default (CalName, year) => {
         Solar = parseFloat((SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000)).toPrecision(10))
     } else if (CalName === 'Wannian') {
         // 置曆元所距年積算為汎距，來加往減元紀為定距，以朞實乘之，四約，為積日，不滿，退除為刻，是名汎積。定距自相乘，七之八而一，所得滿百萬為日，不滿為刻及分秒，〔帶半秒已上者收作一秒〕是名節氣歲差，用減汎積，餘為定積。
-        // Solar = parseFloat((SolarRaw - (year - 1281) * 1.75 * 1e-6).toPrecision(10))       
-        SolarChangeAccum = signX * 8.75 * 1e-7 * (year - 1281) ** 2
+        // Solar = parseFloat((SolarRaw - (Y - 1281) * 1.75 * 1e-6).toPrecision(10))       
+        SolarChangeAccum = signX * 8.75 * 1e-7 * (Y - 1281) ** 2
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const MonLeap = parseFloat((TermLeng - Lunar).toPrecision(14)) // 月閏，借鑑授時曆
@@ -106,8 +106,8 @@ export default (CalName, year) => {
         // LeapSurAvgPrev = parseFloat((LeapAccumPrev % Lunar).toPrecision(14))
         // LeapSurAvgNext = parseFloat((LeapAccumNext % Lunar).toPrecision(14))
         OriginAccumThis = CloseOriginYear * SolarRaw + SolarChangeAccum
-        const OriginAccumPrev = (CloseOriginYear - 1) * SolarRaw + signX * 8.75 * 1e-7 * (year - 1281 - 1) ** 2
-        const OriginAccumNext = (CloseOriginYear + 1) * SolarRaw + signX * 8.75 * 1e-7 * (year - 1281 + 1) ** 2
+        const OriginAccumPrev = (CloseOriginYear - 1) * SolarRaw + signX * 8.75 * 1e-7 * (Y - 1281 - 1) ** 2
+        const OriginAccumNext = (CloseOriginYear + 1) * SolarRaw + signX * 8.75 * 1e-7 * (Y - 1281 + 1) ** 2
         SolsAccum = OriginAccumThis + SolsConst
         const LeapAccumThis = OriginAccumThis - FirstConst // 閏積
         const LeapAccumPrev = OriginAccumPrev - FirstConst
@@ -194,7 +194,7 @@ export default (CalName, year) => {
             isAdvance = 1
         }
     }
-    const EquaDegAccumList = AutoDegAccumList(CalName, year)
+    const EquaDegAccumList = AutoDegAccumList(CalName, Y)
     const AutoNewmSyzygy = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
