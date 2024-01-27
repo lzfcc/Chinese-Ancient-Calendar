@@ -29,7 +29,6 @@ const LongiHigh2Low = (e, x) => ~~(Math.ceil(x / 90) / 2) * 180 + atan(cos(e) * 
 const LongiLow2High = (e, x) => Math.ceil(Math.ceil(x / 90) / 2) * 180 - 90 - atan(cos(e) * cot(x)) // 赤轉黃，黃轉白
 const HighLongi2LowLati = (e, x) => asin(sin(e) * sin(x)) // 月距正交轉黃緯
 const LowLongi2LowLati = (e, x) => atan(tan(e) * sin(x)) // 求赤經高弧交角用到這個的變形
-const riseDif = (SunLati, LocationLati) => asin(tan(abs(SunLati) * tan(LocationLati))) / 15 / 24
 // const LowLati2HighLongi = (e, x) => // 已知太陽赤緯轉黃經
 // console.log(HighLongi2LowLati(23 + 29 / 60,112.28487818))
 // console.log(LowLati2HighLongi(23 + 29 / 60, 11.49258677))
@@ -122,11 +121,9 @@ const sunCorrGuimao = xRaw => {
     if (xRaw > 180) flag2 = -1
     return flag2 * (Awu + flag1 * Aweibingwu)
 }
-const eclpMansion = (Y, Gong) => {
-    const EclpDeg = []
-    for (let i = 0; i <= 27; i++) {
-        EclpDeg[i] = (EclpDegJiazi[i] + (51 / 3600) * (Y - 1684) + 360) % 360
-    }
+const rise = (Longi, Obliquity, BeijingLati) => 0.25 + (Longi < 180 ? -1 : 1) * (asin(tan(abs(HighLongi2LowLati(Obliquity, Longi)) * tan(BeijingLati))) / 360) // 日出時刻。這個經度應該是正午的經度
+const gong2Mansion = (EclpDeg, Gong) => {
+    Gong = t(Gong)
     let MansionDeg = 0
     let MansionName = ''
     for (let i = 0; i <= 27; i++) {
@@ -146,9 +143,27 @@ const eclpMansion = (Y, Gong) => {
     }
     return MansionName + MansionDeg.toFixed(3)
 }
+const eclpMansion = (Y, Gong, MidnToday, MidnMorrow, Rise) => {
+    const EclpDeg = []
+    for (let i = 0; i <= 27; i++) {
+        EclpDeg[i] = (EclpDegJiazi[i] + (51 / 3600) * (Y - 1684) + 360) % 360
+    }
+    const Mansion = gong2Mansion(EclpDeg, Gong)
+    let DuskstarPrint = ''
+    if (MidnToday) {
+        const SunDV = MidnMorrow - MidnToday
+        const MorningstarGong = MidnToday + (Rise - 0.025) * SunDV - (0.5 - Rise + 0.025) * 360
+        const DuskstarGong = MidnToday + (1 - Rise + 0.025) * SunDV + (0.5 - Rise + 0.025) * 360
+        const Morningstar = gong2Mansion(EclpDeg, MorningstarGong)
+        const Duskstar = gong2Mansion(EclpDeg, DuskstarGong)
+        DuskstarPrint = `${Morningstar}
+${Duskstar}`
+    }
+    return { Mansion, DuskstarPrint }
+}
 // console.log(eclpMansion(2684, 10))
 export default (CalName, Y) => {
-// const cal = (CalName, Y) => {
+    // const cal = (CalName, Y) => {
     const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunCorrMax, AvgMoonCorr1Max, AvgMoonapoCorrMax, AvgNodeCorrMax, AvgMoonCorr2ApogeeMax, AvgMoonCorr2PerigeeMax, AvgMoonCorr3Max, MoonCorr2ApogeeMax, MoonCorr2PerigeeMax, MoonCorr3Max, MoonCorr4MaxList, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, Obliquity, ObliqmoonMax, ObliqmoonMin, BeijingLati } = Para[CalName]
     const TermLeng = Solar / 12
     const CloseOriginYear = abs(Y - CloseOriginAd) // 積年
@@ -250,7 +265,7 @@ export default (CalName, Y) => {
     const sunEcliGuimao = (NowSd, AcrSunLongi) => {
         // NowSd = 205.528185 // ⚠️1730算例臨時
         //////// 【一】實朔用時。用時的英語暫且用Now
-        const Rise = 0.25 + (AcrSunLongi < 180 ? -1 : 1) * riseDif(HighLongi2LowLati(Obliquity, AcrSunLongi), BeijingLati)
+        const Rise = rise(AcrSunLongi, Obliquity, BeijingLati)
         if (deci(NowSd) < Rise - 5 / 96 || deci(NowSd) > 1 - Rise + 5 / 96) return  // 日出前日入後五刻以內可以見食
         else {
             //////// 【二】食甚實緯、食甚用時。這一段日月食都一樣
@@ -460,7 +475,7 @@ export default (CalName, Y) => {
     }
     const moonEcliGuimao = (NowSd, AcrSunLongi) => {
         //////// 【一】實望用時
-        const Rise = 0.25 + (AcrSunLongi < 180 ? -1 : 1) * riseDif(HighLongi2LowLati(Obliquity, AcrSunLongi), BeijingLati)
+        const Rise = rise(AcrSunLongi, Obliquity, BeijingLati)
         if (deci(NowSd) > Rise + 9 / 96 && deci(NowSd) < 1 - Rise - 9 / 96) return  // 日出入前後9刻以內入算
         else {
             //////// 【二】食甚實緯、食甚時刻
@@ -527,9 +542,9 @@ export default (CalName, Y) => {
         return ~~x + Deci // 實朔實時距冬至次日的時間
     }
     const AutoNewmSyzygy = (isNewm, LeapNumTerm) => {
-        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], NowSd = [], Eclp = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], NowTermSd = [], TermEclp = [], Ecli = []
+        const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], NowSd = [], Eclp = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], NowTermSd = [], TermEclp = [], TermDuskstar = [], Ecli = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 7; i <= 14; i++) {
+        for (let i = 1; i <= 14; i++) {
             //////// 平朔望
             const AvgSd = ChouSd + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSdMidn = ~~AvgSd
@@ -564,7 +579,7 @@ export default (CalName, Y) => {
             NowSd[i] = AcrSd + timeDif(AcrSunCorr, AcrSunLongi)
             AcrDeci[i] = deci(NowSd[i]).toFixed(4).slice(2, 6)
             AcrSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
-            Eclp[i] = eclpMansion(Y, AcrSunGong)
+            Eclp[i] = eclpMansion(Y, AcrSunGong).Mansion
             //////// 交食
             let isEcli = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            
@@ -598,7 +613,10 @@ export default (CalName, Y) => {
                 NowTermSd[i] = AcrTermSd + timeDif(SunToday.SunCorr, SunToday.SunLongi)
                 TermAcrSc[i] = ScList[(SolsmorScOrder + ~~NowTermSd[i]) % 60]
                 TermAcrDeci[i] = deci(NowTermSd[i]).toFixed(4).slice(2, 6)
-                TermEclp[i] = eclpMansion(Y, TermGong)
+                const TermRise = rise(((MidnMorrow - MidnToday) / 2 + MidnToday + 270) % 360, Obliquity, BeijingLati)
+                const Mansion = eclpMansion(Y, TermGong, MidnToday, MidnMorrow, TermRise)
+                TermEclp[i] = Mansion.Mansion
+                TermDuskstar[i] = Mansion.DuskstarPrint
             }
         }
         //////// 置閏
@@ -634,15 +652,15 @@ export default (CalName, Y) => {
                 }
             }
         }
-        return { AvgSc, AvgDeci, AcrSc, AcrDeci, Eclp, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, EcliPrint, LeapNumTerm }
+        return { AvgSc, AvgDeci, AcrSc, AcrDeci, Eclp, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, TermDuskstar, EcliPrint, LeapNumTerm }
     }
     const {
-        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmSc, AcrDeci: NewmDeci, Eclp: NewmEclp, EcliPrint: SunEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, LeapNumTerm
+        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, AcrSc: NewmSc, AcrDeci: NewmDeci, Eclp: NewmEclp, EcliPrint: SunEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, TermDuskstar, LeapNumTerm
     } = AutoNewmSyzygy(true)
     const {
         AcrSc: SyzygySc, AcrDeci: SyzygyDeci, EcliPrint: MoonEcli
     } = AutoNewmSyzygy(false, LeapNumTerm)
-    return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, NewmEclp, SyzygySc, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp }
+    return { LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmDeci, NewmEclp, SyzygySc, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp, TermDuskstar }
 }
 // console.log(cal("Guimao", 1430)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiThisyear=166*(1/60+2.9975/3600)

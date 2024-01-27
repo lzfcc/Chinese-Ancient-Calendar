@@ -103,7 +103,8 @@ export default (CalName, YearStart, YearEnd) => {
                 TermDeci[i] = ThisYear.TermDeci[i]
                 TermAcrSc[i] = ThisYear.TermAcrSc[i]
                 TermAcrDeci[i] = ThisYear.TermAcrDeci[i]
-                TermEclp[i] = ThisYear.TermEclp[i]
+                TermEclp[i] = ThisYear.TermEclp[i]                
+                TermDuskstar[i] = ThisYear.TermDuskstar[i]
             }
             if (LeapNumTermThis) {
                 TermName[LeapNumTermThis + 1] = '无'
@@ -120,7 +121,7 @@ export default (CalName, YearStart, YearEnd) => {
                     TermAcrSc[i] = ThisYear.TermAcrSc[i - 1]
                     TermAcrDeci[i] = ThisYear.TermAcrDeci[i - 1]
                     TermEclp[i] = ThisYear.TermEclp[i - 1]
-                    TermDuskstar[i] = 0
+                    TermDuskstar[i] = ThisYear.TermDuskstar[i - 1]
                 }
             }
         } else if (Type > 1) {
