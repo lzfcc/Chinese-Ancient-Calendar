@@ -1,27 +1,23 @@
 import Para from './para_calendars.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
-import { MansionNameList, MansionNameListQing } from './para_constant.mjs' // 賦值解構
+import { MansionNameList, AutoDegAccumList } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
-
-export const Deg2Mansion = (MansionAccum, DegAccumList) => {
-    let MansionOrder = 0
-    MansionAccum = +MansionAccum + 1e-12
-    for (let j = 1; j <= 28; j++) {
-        if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
-            MansionOrder = j
-            break
-        }
-    }
-    let MansionName = MansionNameList[MansionOrder]
-    // if (DegAccumList === EclpDegJiazi) {
-    //     MansionName = MansionNameListQing[MansionOrder]
-    // }
-    const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(4)
-    return MansionName + MansionDeg
-}
 
 export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
+export const Deg2Mansion = (Deg, DegAccumList) => {
+    Deg = +Deg + 1e-12
+    let MansionDeg = 0
+    let MansionName = ''
+    for (let i = 1; i <= 28; i++) {
+        if (Deg >= DegAccumList[i] && Deg < DegAccumList[i + 1]) {
+            MansionDeg = Deg - DegAccumList[i]
+            MansionName = MansionNameList[i]
+            break
+        }
+    }
+    return MansionName + MansionDeg.toFixed(3)
+}
 
 export const Accum2Mansion = (Accum, DegAccumList, CalName, SolsDif, SolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
     const { Type, SolarRaw, SolsConst, MansionConst, MansionRaw } = Para[CalName]
@@ -29,61 +25,57 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, SolsDif, SolsDeci, y
     Sidereal = Sidereal || (Solar || SolarRaw)
     if (CalName === 'Shoushi' || CalName === 'Shoushi2') {
         Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
-    }// 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。） // 試了一下，按上面這樣區分1281前後，沒有任何變化
-    const Mansion = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
+    } // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。） // 試了一下，按上面這樣區分1281前後，沒有任何變化
+    const OriginDeg = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? SolsConst : 0
     Accum += MansionConst || 0
-    let MansionOrder = 0
-    const MansionAccum = ((Mansion + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
-    for (let j = 1; j <= 28; j++) {
-        if (DegAccumList[j] <= MansionAccum && MansionAccum < DegAccumList[j + 1]) {
-            MansionOrder = j
-            break
-        }
-    }
-    const MansionName = MansionNameList[MansionOrder]
-    const MansionDeg = (MansionAccum - DegAccumList[MansionOrder]).toFixed(3)
-    const MansionResult = MansionName + MansionDeg
+    const Deg = ((OriginDeg + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
+    const Mansion = Deg2Mansion(Deg, DegAccumList)
     /////////昏中《中》頁326
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏=1-(Rise-LightRange)，夜半至明東行度數=Rise-LightRange
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
-    let DuskstarResult = ''
+    let MorningDuskstar = ``
     const LightRange = AutoLightRange(CalName)
     if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
-        let DuskstarOrder = 0
-        let MorningstarOrder = 0
         const Rise = AutoLongi2Lati(SolsDif, SolsDeci, CalName).Rise / 100
         const HalfLight = 0.5 - Rise + LightRange // 半晝漏
         const HalfNight = Rise - LightRange
         // 大衍只考慮了昬時距午度
-        const MorningstarRaw = (MansionAccum + Sidereal * (1 - HalfLight) + (Type === 7 ? 0 : HalfNight)) % Sidereal
-        const DuskstarRaw = (MansionAccum + Sidereal * HalfLight + (Type === 7 ? 0 : 1 - HalfNight)) % Sidereal
-        for (let k = 1; k <= 28; k++) {
-            if (DegAccumList[k] < DuskstarRaw && DuskstarRaw < DegAccumList[k + 1]) {
-                DuskstarOrder = k
-                break
-            }
-        }
-        for (let k = 1; k <= 28; k++) {
-            if (DegAccumList[k] < MorningstarRaw && MorningstarRaw < DegAccumList[k + 1]) {
-                MorningstarOrder = k
-                break
-            }
-        }
-        const DuskstarName = MansionNameList[DuskstarOrder]
-        const DuskstarDeg = (DuskstarRaw - DegAccumList[DuskstarOrder]).toFixed(3)
-        const MorningstarName = MansionNameList[MorningstarOrder]
-        const MorningstarDeg = (MorningstarRaw - DegAccumList[MorningstarOrder]).toFixed(3)
-        DuskstarResult = `${MorningstarName}${MorningstarDeg}
-${DuskstarName}${DuskstarDeg}`
+        const MorningstarDeg = (Deg + Sidereal * (1 - HalfLight) + (Type === 7 ? 0 : HalfNight)) % Sidereal
+        const DuskstarDeg = (Deg + Sidereal * HalfLight + (Type === 7 ? 0 : 1 - HalfNight)) % Sidereal
+        const Duskstar = Deg2Mansion(DuskstarDeg, DegAccumList)
+        const Morningstar = Deg2Mansion(MorningstarDeg, DegAccumList)
+        MorningDuskstar = `${Morningstar}
+${Duskstar}`
     }
-    return { MansionOrder, MansionResult, DuskstarResult }
+    return { Mansion, MorningDuskstar }
 }
-// console.log(Accum2Mansion(131536,34 ,'Yuanjia',34.15).MansionResult)
+// console.log(Accum2Mansion(131536, 34, 'Yuanjia', 34.15).Mansion)
 
 // if (Type === 11) {
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
+// 以下是西曆日躔：
+export const Gong2Mansion = (CalName, Y, Gong, MidnToday, MidnMorrow, Rise) => {
+    const { Solar, MansionConst } = Para[CalName]
+    const EclpDegAccumList = AutoDegAccumList(CalName, Y, true)
+    Gong -= (51 / 3600) * (Y - 1684)
+    Gong += MansionConst
+    Gong *= Solar / 360
+    const Mansion = Deg2Mansion((Gong + Solar) % Solar, EclpDegAccumList)
+    let DuskstarPrint = ''
+    if (MidnToday) {
+        const SunDV = MidnMorrow - MidnToday
+        const MorningstarGong = MidnToday + (Rise - 0.025) * SunDV - (0.5 - Rise + 0.025) * 360
+        const DuskstarGong = MidnToday + (1 - Rise + 0.025) * SunDV + (0.5 - Rise + 0.025) * 360
+        const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList)
+        const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList)
+        DuskstarPrint = `${Morningstar}
+${Duskstar}`
+    }
+    return { Mansion, DuskstarPrint }
+}
+// console.log(Gong2Mansion('Guimao', 1684, 0))
 
 export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
     const { isNewmPlus } = Para[CalName]
@@ -202,11 +194,11 @@ const Exhaustion = () => { // 大同歲實365.2469 設在0.015-0.018之間。365
         Sidereal = +(Sidereal + 0.000001).toFixed(6)
         const Solar = 365 + 9681 / 39616
         const Accum = Solar * 1025699
-        const MansionAccum = (121.2599 + Accum) % Sidereal
-        // const DuskstarRaw = (MansionAccum + 0.225 * Sidereal + 0.7) % Sidereal
-        if (MansionAccum >= 87 && MansionAccum < 87.9) {
-            // if (DuskstarRaw >= 183.2599 && DuskstarRaw < 184.2499) {
-            Print += ',' + Sidereal // + ':' + MansionAccum}
+        const Deg = (121.2599 + Accum) % Sidereal
+        // const DuskstarDeg = (Deg + 0.225 * Sidereal + 0.7) % Sidereal
+        if (Deg >= 87 && Deg < 87.9) {
+            // if (DuskstarDeg >= 183.2599 && DuskstarDeg < 184.2499) {
+            Print += ',' + Sidereal // + ':' + Deg}
             // }
         }
         return Print

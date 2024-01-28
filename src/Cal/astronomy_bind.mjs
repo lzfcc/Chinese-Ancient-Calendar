@@ -260,6 +260,7 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     const EquaAccumListJiyuan = AutoDegAccumList(CalName, 1106)
     const EquaAccumListDaming3 = []
     const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
+    const EquaAccumListJiazi = []
     const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
     const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
     const EclpAccumListLindeA = AutoDegAccumList(CalName, 665, 1) // 麟德
@@ -269,7 +270,8 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
     const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
     const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
-    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
+    const EclpAccumListJiazi = AutoDegAccumList(CalName, 1684, 1) // 甲子元曆
+    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
         const Eclp = Deg2Mansion(Deg, EclpList, CalName)
         const EquaList = eval('EquaAccumList' + title)
@@ -284,7 +286,7 @@ export const BindDeg2Mansion = (Deg, CalName) => {
     })
     return Print
 }
-// console.log(BindDeg2Mansion(334.1511, 'Qianxiang'))
+// console.log(BindDeg2Mansion(23.1511, 'Jiazi'))
 
 export const BindMansion2Deg = (Mansion, CalName) => {
     const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
@@ -296,6 +298,7 @@ export const BindMansion2Deg = (Mansion, CalName) => {
     const EquaAccumListJiyuan = AutoDegAccumList(CalName, 1106)
     const EquaAccumListDaming3 = []
     const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
+    const EquaAccumListJiazi = []
     const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
     const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
     const EclpAccumListLindeA = AutoDegAccumList(CalName, 665, 1) // 麟德
@@ -305,7 +308,8 @@ export const BindMansion2Deg = (Mansion, CalName) => {
     const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
     const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
     const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
-    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi'].map(title => {
+    const EclpAccumListJiazi = AutoDegAccumList(CalName, 1684, 1) // 甲子、癸卯
+    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
         const Eclp = Mansion2Deg(Mansion, EclpList, CalName)
         const EquaList = eval('EquaAccumList' + title)
@@ -320,7 +324,7 @@ export const BindMansion2Deg = (Mansion, CalName) => {
     })
     return Print
 }
-
+// console.log(BindMansion2Deg('氐1', 'Guimao'))
 export const AutoLongi2Lati = (LongiRaw, SolsDeci, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
     const { Type, Solar, SolarRaw } = Para[CalName]
     let special = 0, Plus1 = 0, Plus2 = 0

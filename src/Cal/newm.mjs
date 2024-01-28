@@ -253,7 +253,7 @@ export default (CalName, Y) => {
                     if (Type === 11) { // 授時要黃轉赤 ⚠️ 2024-01 這樣轉可以嗎？？？
                         Eclp2EquaDif = AutoEqua2Eclp(SolsDif[i], CalName).Eclp2EquaDif
                     }
-                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).MansionResult
+                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).Mansion
                 }
                 TermAvgSolsDif[i] = (i + ZhengSolsDif - 1) * TermLeng
                 TermAvgRaw[i] = SolsAccum + TermAvgSolsDif[i]

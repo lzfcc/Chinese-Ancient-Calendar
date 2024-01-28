@@ -87,7 +87,7 @@ export default (CalName, year) => {
         NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmSolsDif[i] = NewmAvgBare[i] - SolsAccumRaw
         if (MansionRaw) {
-            NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).MansionResult
+            NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).Mansion
         }
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdSols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
         SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + SolsConst).toPrecision(14)) + BuScOrder
@@ -121,8 +121,8 @@ export default (CalName, year) => {
             if (MansionRaw) {
                 const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
                 const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
-                TermEqua[i] = Func.MansionResult
-                TermDuskstar[i] = Func.DuskstarResult
+                TermEqua[i] = Func.Mansion
+                TermDuskstar[i] = Func.MorningDuskstar
             }
         }
     } else {
@@ -137,8 +137,8 @@ export default (CalName, year) => {
             if (MansionRaw) {
                 const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
                 const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
-                TermEqua[i] = Func.MansionResult
-                TermDuskstar[i] = Func.DuskstarResult
+                TermEqua[i] = Func.Mansion
+                TermDuskstar[i] = Func.MorningDuskstar
             }
         }
         while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2)) {
@@ -166,8 +166,8 @@ export default (CalName, year) => {
             if (MansionRaw) {
                 const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
                 const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
-                TermEqua[i] = Func.MansionResult
-                TermDuskstar[i] = Func.DuskstarResult
+                TermEqua[i] = Func.Mansion
+                TermDuskstar[i] = Func.MorningDuskstar
             }
         }
     }

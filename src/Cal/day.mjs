@@ -251,25 +251,24 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
                     }
                 }
                 const EquaFunc = Accum2Mansion(SunEquaLongiAccum, EquaDegAccumList, CalName, SunEquaLongi, SolsDeci)
-                Equa[i][k] = EquaFunc.MansionResult
-                Duskstar[i][k] = EquaFunc.DuskstarResult
-                Eclp[i][k] = Accum2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).MansionResult
+                Equa[i][k] = EquaFunc.Mansion
+                Duskstar[i][k] = EquaFunc.MorningDuskstar
+                Eclp[i][k] = Accum2Mansion(SunEclpLongiAccum, EclpDegAccumList, CalName).Mansion
                 const Longi2LatiFunc = AutoLongi2Lati(Type === 11 ? SunEclpLongiNoon : SunEquaLongiNoon, SolsDeci, CalName)
                 Lati[i][k] = Longi2LatiFunc.Lati.toFixed(3) + '度'
                 Rise[i][k] = Longi2LatiFunc.Rise.toFixed(3) + '刻'
                 Dial[i][k] = Longi2LatiFunc.Dial ? Longi2LatiFunc.Dial.toFixed(3) + '尺' : 0
                 // 每日夜半月黃經
-                const MoonEclpFunc = Accum2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName)
-                const MoonMansionOrder = MoonEclpFunc.MansionOrder
+                const MoonMansion = Accum2Mansion(MoonEclpLongiAccum, EclpDegAccumList, CalName).Mansion
                 let MoonMansionNote = ''
-                if ((Type >= 2 && Type <= 4) && (MoonMansionOrder === 5 || MoonMansionOrder === 26)) { // 乾象規定月在張心署之
+                if ((Type >= 2 && Type <= 4) && (MoonMansion[0] === '心' || MoonMansion[0] === '張')) { // 乾象：月在張心署之
                     MoonMansionNote = `<span class='MoonMansionNote'>忌刑</span>`
                 }
                 let MoonEclpWhiteDif = ''
                 if (Type > 5 && Type < 11) {
                     MoonEclpWhiteDif = `\n黃白差` + AutoMoonLongi(NodeAccumNight, MoonEclpLongi, CalName).EclpWhiteDif.toFixed(4)
                 }
-                MoonEclp[i][k] = MoonEclpFunc.MansionResult + MoonMansionNote + (MoonEclpWhiteDif || '')
+                MoonEclp[i][k] = MoonMansion + MoonMansionNote + (MoonEclpWhiteDif || '')
                 ///////////具注曆////////////
                 const ScOrder = (ZhengInt % 60 + 60 + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]

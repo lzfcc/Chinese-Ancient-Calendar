@@ -139,8 +139,8 @@ export default (CalName, YearStart, YearEnd) => {
                 }
                 if (MansionRaw) {
                     const Func = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, year)
-                    TermEqua[i] = Func.MansionResult
-                    TermDuskstar[i] = Func.DuskstarResult
+                    TermEqua[i] = Func.Mansion
+                    TermDuskstar[i] = Func.MorningDuskstar
                 }
             }
             if (isLeapTT) {
@@ -170,8 +170,8 @@ export default (CalName, YearStart, YearEnd) => {
                     }
                     if (MansionRaw) {
                         const Func = Accum2Mansion((TermAcrRaw[i - 1] || TermAvgRaw[i - 1]), EquaDegAccumList, CalName, (TermAcrSolsDif[i - 1] || TermAvgSolsDif[i - 1]), SolsDeci, year)
-                        TermEqua[i] = Func.MansionResult
-                        TermDuskstar[i] = Func.DuskstarResult
+                        TermEqua[i] = Func.Mansion
+                        TermDuskstar[i] = Func.MorningDuskstar
                     }
                 }
             }

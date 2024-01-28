@@ -133,7 +133,7 @@ export const CalNameList = {
   // Wannian: '聖壽萬年',
   // Huangzhong: '黃鐘',
   // Huihui: '回回',
-  // Jiazi: "曆象考成",
+  Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
 };
 export const CalNameDayList = {
@@ -834,10 +834,6 @@ export const FiveList1 = " 木火土金水";
 export const FiveList2 = "火土金土水土木土火"; // 土王用事
 export const ThreeList = "天地人"; // 四分曆三紀名
 export const YuanList = "上中下";
-export const MansionNameList =
-  "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢觜參井鬼柳星張翼軫"; // 值日，星期日對應房、虛、昴、星
-export const MansionAnimalNameList =
-  "蚓蛟龍貉兔狐虎豹獬牛蝠鼠燕豬㺄狼狗雉雞烏猴猿犴羊獐馬鹿蛇蚓";
 export const MonSindhuNameList = " 翼角氐心箕女室婁昴觜鬼星"; // 李輝《漢譯佛經中的宿曜術研究》頁43
 export const MonHexagramNameList = " 泰壯夬乾姤遯否觀剝坤復臨";
 export const MonScaleNameList = [
@@ -1057,56 +1053,35 @@ const EclpDegJiyuan = [
 const EclpDegNewDaming = [
   0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18.25, 9.5, 17.75, 12.75, 15.5, 11, 16.5, 0.5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5,
 ]; // 重修大明、庚午
-const EclpDegShoushi = [
-  0, 12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59, 
-  23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34, 
-  17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28, 
+const EclpDegShoushi = [0,
+  12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59,
+  23.47, 6.9, 11.12, 8.75, 15.95, 18.32, 9.34,
+  17.87, 12.36, 15.81, 11.08, 16.5, 0.05, 10.28,
   31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75,
-]; // 黃道度
-export const MansionNameListQing =
-  "斗牛女虛危室壁奎婁胃昴畢參觜井鬼柳星張翼軫角亢氐房心尾箕";
-// 甲子元曆黃道宿鈐。暫時沒在曆象考成找到，用的五禮通考卷195，p9167。江永：此二十八宿度數，與崇禎戊辰所測者間有損益。
-export const EclpDegJiazi = [
-  0 * 30 + 5 + 50 / 60, // 斗
-  0 * 30 + 29 + 27 / 60,
-  1 * 30 + 7 + 23 / 60,
-  1 * 30 + 19 + 1 / 60,
-  1 * 30 + 29 + 0 / 60,
-  2 * 30 + 19 + 7 / 60,
-  3 * 30 + 4 + 48 / 60,
-  3 * 30 + 17 + 54 / 60, // 奎
-  3 * 30 + 29 + 33 / 60,
-  4 * 30 + 12 + 33 / 60,
-  4 * 30 + 24 + 48 / 60,
-  5 * 30 + 4 + 3 / 60,
-  5 * 30 + 18 + 1 / 60, // 參
-  5 * 30 + 19 + 22 / 60, // 觜。參觜顛倒
-  6 * 30 + 0 + 55 / 60, // 井
-  7 * 30 + 1 + 20 / 60,
-  7 * 30 + 5 + 52 / 60,
-  7 * 30 + 22 + 56 / 60,
-  8 * 30 + 1 + 19 / 60, // 張
-  8 * 30 + 19 + 23 / 60,
-  9 * 30 + 6 + 23 / 60,
-  9 * 30 + 19 + 26 / 60, // 角
-  10 * 30 + 0 + 3 / 60,
-  10 * 30 + 10 + 41 / 60,
-  10 * 30 + 28 + 31 / 60,
-  11 * 30 + 3 + 21 / 60,
-  11 * 30 + 10 + 54 / 60,
-  11 * 30 + 26 + 50 / 60]
-
-export const AutoDegAccumList = (CalName, year, isEclp) => {
-  // isEclp===1，是黃道度
-  const { Type, Solar, SolarRaw, MansionRaw, MansionFractPosition } =
+]; // 授時黃道
+// 西曆
+const EclpDegJiazi = [0,
+  10.616666666666667, 10.633333333333333, 17.833333333333333, 4.8333333333333333, 7.55, 15.933333333333333, 9, // 角七宿76.4
+  23.616666666666667, 7.9333333333333333, 11.633333333333333, 9.9833333333333333, 20.116666666666667, 15.683333333333333, 13.1, // 斗七宿102.06666666667
+  11.65, 13, 12.25, 9.25, 13.966666666666667, 1.35, 11.55, // 奎七宿73.01666666667
+  30.416666666666666, 4.5333333333333333, 17.066666666666666, 8.3833333333333333, 18.066666666666666, 17, 13.05, //井七宿108.5166666667。合360度
+] // 甲子元曆黃道度，根據黃道宿鈐歸算
+export const MansionNameList =
+  "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢觜參井鬼柳星張翼軫"; // 值日，星期日對應房、虛、昴、星
+// export const MansionNameListQing =
+// "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢參觜井鬼柳星張翼軫"; // 參觜互換
+export const MansionAnimalNameList =
+  "蚓蛟龍貉兔狐虎豹獬牛蝠鼠燕豬㺄狼狗雉雞烏猴猿犴羊獐馬鹿蛇蚓";
+export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1 是黃道度
+  const { Type, Solar, SolarRaw, MansionRaw, MansionFracPosi } =
     Para[CalName];
   let { Sidereal } = Para[CalName];
   let DegListRaw = []; // 不同時期用不同的宿度
   if (isEclp) {
-    // if (year >= 1684) {
-    //   DegListRaw = EclpDegJiazi;
-    // } else 
-    if (year >= 1281) {
+    // 1684
+    if (year >= 1684) {
+      DegListRaw = EclpDegJiazi;
+    } else if (year >= 1281) {
       DegListRaw = EclpDegShoushi;
     } else if (Type === 10 && year >= 1180 && year <= 1280) {
       // 'Daming3'
@@ -1140,11 +1115,17 @@ export const AutoDegAccumList = (CalName, year, isEclp) => {
     }
   }
   Sidereal = Sidereal || Solar || SolarRaw;
-  let DegList = [];
-  let DegAccumList = [];
+  let DegList = [], DegAccumList = [];
   if (MansionRaw) {
-    DegList = DegListRaw.slice();
-    DegList[MansionFractPosition] += Sidereal - ~~Sidereal;
+    if (year >= 1684) {
+      for (let i = 1; i <= 28; i++) {
+        DegList[i] = DegListRaw[i] * Sidereal / 360
+      }
+      DegList[0] = 0
+    } else {
+      DegList = DegListRaw.slice();
+      DegList[MansionFracPosi] += Sidereal - ~~Sidereal;
+    }
     DegAccumList = DegList.slice();
     for (let i = 1; i <= 28; i++) { // 從1開始索引
       DegAccumList[i] += DegAccumList[i - 1];
@@ -1155,7 +1136,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => {
   }
   return DegAccumList;
 };
-// console.log(AutoDegAccumList('Daming', 543))
+// console.log(AutoDegAccumList('Guimao', 1700, 1))
 export const GongList = [
   "娵訾",
   "降婁",
@@ -1235,3 +1216,34 @@ export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30];
 // }
 // EquaDegAccumList = EquaDegAccumList.slice(-1).concat(EquaDegAccumList.slice(0, -1))
 // EquaDegAccumList[0] = 0
+// 甲子元曆黃道宿鈐。暫時沒在曆象考成找到，用的五禮通考卷195，p9167。江永：此二十八宿度數，與崇禎戊辰所測者間有損益。
+// const EclpDegJiaziAccum = [ // 即1684年前冬至在箕3.1666666667
+//   0 * 30 + 5 + 50 / 60, // 斗
+//   0 * 30 + 29 + 27 / 60,
+//   1 * 30 + 7 + 23 / 60,
+//   1 * 30 + 19 + 1 / 60,
+//   1 * 30 + 29 + 0 / 60,
+//   2 * 30 + 19 + 7 / 60,
+//   3 * 30 + 4 + 48 / 60,
+//   3 * 30 + 17 + 54 / 60, // 奎
+//   3 * 30 + 29 + 33 / 60,
+//   4 * 30 + 12 + 33 / 60,
+//   4 * 30 + 24 + 48 / 60,
+//   5 * 30 + 4 + 3 / 60,
+//   5 * 30 + 18 + 1 / 60, // 參
+//   5 * 30 + 19 + 22 / 60, // 觜。參觜顛倒
+//   6 * 30 + 0 + 55 / 60, // 井
+//   7 * 30 + 1 + 20 / 60,
+//   7 * 30 + 5 + 52 / 60,
+//   7 * 30 + 22 + 56 / 60,
+//   8 * 30 + 1 + 19 / 60, // 張
+//   8 * 30 + 19 + 23 / 60,
+//   9 * 30 + 6 + 23 / 60,
+//   9 * 30 + 19 + 26 / 60, // 角
+//   10 * 30 + 0 + 3 / 60,
+//   10 * 30 + 10 + 41 / 60,
+//   10 * 30 + 28 + 31 / 60,
+//   11 * 30 + 3 + 21 / 60,
+//   11 * 30 + 10 + 54 / 60,
+//   11 * 30 + 26 + 50 / 60 // 箕
+// ]
