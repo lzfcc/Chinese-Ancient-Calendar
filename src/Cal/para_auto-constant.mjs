@@ -177,8 +177,7 @@ export const AutoLightRange = CalName => { // 昏明
 export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算日月食
     let RangeSunEcli = 0, RangeMoonEcli = 0
     if (Type === 11) {
-        // RangeSunEcli = 0.002 // 大統是20分
-        RangeSunEcli = 0.1
+        RangeSunEcli = 0.002 // 大統是20分
     } else if (CalName === 'Daye') {
         RangeSunEcli = 2 / 12
     } else if (['WuyinA', 'WuyinB'].includes(CalName)) {
@@ -191,7 +190,7 @@ export const AutoRangeEcli = (CalName, Type) => { // 日出入前後多少不算
     } else if (Type <= 6) {
         RangeMoonEcli = 0.125 // 戊寅麟德
     } else {
-        RangeMoonEcli = 0.082 // 大統是20分，其他不知道
+        RangeMoonEcli = 0.082 // 大統月食八刻二十分，其他不知道
     }
     return { RangeSunEcli, RangeMoonEcli }
 }

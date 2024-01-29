@@ -61,7 +61,7 @@ export default (CalName, YearStart, YearEnd) => {
         const TermAvgMod = [], TermOrderMod = [], TermSc = [], TermName = [], TermDeci = [], TermEqua = [], TermEclp = [], TermDuskstar = []
         let TermAcrSc = [], TermAcrDeci = [], TermAcrMod = [], TermAcrOrderMod = []
         if (Type === 13) {
-            for (let i = 1; i <= 12; i++) {
+            for (let i = 1; i <= 13; i++) {
                 TermName[i] = TermList[(i + 2) % 12]
                 TermSc[i] = ThisYear.TermSc[i]
                 TermDeci[i] = ThisYear.TermDeci[i]
@@ -89,7 +89,7 @@ export default (CalName, YearStart, YearEnd) => {
                 }
             }
         } else if (Type > 1) {
-            for (let i = 0; i <= 13; i++) {
+            for (let i = 1; i <= 13; i++) {
                 TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
                 TermOrderMod[i] = Math.floor(TermAvgMod[i])
                 TermName[i] = TermList[(i + ZhengSolsDif + OriginMonNum + 12) % 12]
@@ -109,7 +109,7 @@ export default (CalName, YearStart, YearEnd) => {
             }
             if (LeapNumTerm) {
                 TermName[LeapNumTerm + 1] = '无'
-                if (TermAcrRaw[0]) {
+                if (TermAcrRaw[1]) {
                     TermAcrSc[LeapNumTerm + 1] = ''
                     TermAcrDeci[LeapNumTerm + 1] = ''
                 }
@@ -269,25 +269,22 @@ export default (CalName, YearStart, YearEnd) => {
                 const SyzygyAnomaAccumPrint = NewmSlice(ThisYear.SyzygyAnomaAccum)
                 const SyzygySolsDifPrint = NewmSlice(ThisYear.SyzygySolsDif)
                 const SyzygyAcrSolsDifPrint = NewmSlice(ThisYear.SyzygyAcrSolsDif)
-                for (let i = 7; i < MonthPrint.length; i++) { // 切了之後從0開始索引
+                for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
-                    if (LeapNumTerm > 0) {
-                        if (i === LeapNumTerm) NoleapMon = i
-                        else if (i > LeapNumTerm) NoleapMon = i
-                    }
+                    if (LeapNumTerm > 0 && i >= LeapNumTerm) NoleapMon = i
                     let Rise = AutoLongi2Lati(NewmAcrSolsDifPrint[i], SolsDeci, CalName).Rise / 100
                     let SunEcliFunc = {}, MoonEcliFunc = {}
                     const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(CalName, Type)
                     let isSunEcli = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&
                         ((NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli))
                     let isMoonEcli = (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) &&
-                        ((SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)) // 大統月食八刻二十分
+                        ((SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli))
                     const Sunset = (1 - Rise).toFixed(4).slice(2, 6)
-                    Rise = Rise.toFixed(4).slice(2, 6)
                     if (CalName === 'Mingtian') {
                         isSunEcli = (NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
                         isMoonEcli = (SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)
                     }
+                    Rise = Rise.toFixed(4).slice(2, 6)
                     if (isSunEcli) { // 這些數字根據大統，再放寬0.3
                         SunEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSolsDifPrint[i], NewmSolsDifPrint[i], 1, CalName, NoleapMon, LeapNumTerm, SolsAccum)
                         const SunEcliStatus = SunEcliFunc.Status
@@ -441,4 +438,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Qianxiang', 0, 0))
+// console.log(Index('Qianxiang', 3, 3))
