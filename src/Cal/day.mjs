@@ -23,7 +23,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
     const Day = (CalName, year) => {
         const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[CalName]
         let { Solar, Sidereal, Lunar } = Para[CalName]
-        const { LeapNumTermThis, SolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
+        const { LeapNumTerm, SolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(CalName, year)[0]
         Solar = Solar || SolarRaw
         Sidereal = Sidereal || Solar
         Lunar = Lunar || LunarRaw
@@ -144,18 +144,18 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         let JianchuDayAccum = ZhengInt - Math.floor(SolsAccum) // 建除
         let HuangheiDayAccum = JianchuDayAccum
         let JianchuOrigin = 0, HuangheiOrigin = 0, Fu1DayAccum = 0, Fu2DayAccum = 0, Fu3DayAccum = 0, HouOrder = 0, FiveOrder = 0, HexagramOrder = 0
-        for (let i = 1; i <= 12 + (LeapNumTermThis > 0 ? 1 : 0); i++) { // 有閏就13             
+        for (let i = 1; i <= 12 + (LeapNumTerm > 0 ? 1 : 0); i++) { // 有閏就13             
             let NoleapMon = i
-            if (LeapNumTermThis > 0) {
-                if (i === LeapNumTermThis + 1) {
+            if (LeapNumTerm > 0) {
+                if (i === LeapNumTerm + 1) {
                     NoleapMon = i - 1
-                } else if (i >= LeapNumTermThis + 2) {
+                } else if (i >= LeapNumTerm + 2) {
                     NoleapMon = i - 1
                 }
             }
             MonName[i] = MonNumList1[NoleapMon] + '月'
-            if (LeapNumTermThis > 0 && i === LeapNumTermThis + 1) { // 好像有LeapNumTermThis<0的情況
-                MonName[i] = '閏' + MonNumList1[LeapNumTermThis] + '月'
+            if (LeapNumTerm > 0 && i === LeapNumTerm + 1) { // 好像有LeapNumTerm<0的情況
+                MonName[i] = '閏' + MonNumList1[LeapNumTerm] + '月'
             }
             MonName[i] += NewmInt[i] - NewmInt[i - 1] === 29 ? '小' : '大'
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)

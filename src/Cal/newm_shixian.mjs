@@ -588,12 +588,14 @@ export default (CalName, Y) => {
                 TermDuskstar[i] = Mansion.DuskstarPrint
             }
         }
-        //////// 置閏
         LeapNumTerm = LeapNumTerm || 0
-        for (let i = 1; i <= 12; i++) {
-            if ((~~NowTermSd[i] < ~~NowSd[i + 1]) && (~~NowTermSd[i + 1] >= ~~NowSd[i + 2])) {
-                LeapNumTerm = i // 閏Leap月，第Leap+1月爲閏月
-                break
+        if (isNewm) {
+            //////// 置閏
+            for (let i = 1; i <= 12; i++) {
+                if ((~~NowTermSd[i] < ~~NowSd[i + 1]) && (~~NowTermSd[i + 1] >= ~~NowSd[i + 2])) {
+                    LeapNumTerm = i // 閏Leap月，第Leap+1月爲閏月
+                    break
+                }
             }
         }
         //////// 朔閏表信息
