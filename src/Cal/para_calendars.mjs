@@ -1337,7 +1337,7 @@ export default {
         // const HalfZhangRange = ZhangRange / 2 // 皇極度準，歲率的一半
         // const TermClock = SolarDenom / 12 // 皇極氣辰
         // const AnomadenomFractDif = AnomaDenom - AnomaFract // 皇極終全餘
-        // const MoonAvgVDeg = parseFloat((Sidereal / Lunar + 1).toPrecision(13))
+        // const MoonAvgDV = parseFloat((Sidereal / Lunar + 1).toPrecision(13))
     },
     Yisi: {
         Type: 6,
@@ -1719,11 +1719,11 @@ export default {
         isAcr: true,
         Solar: 365.25875, // 陳久金《符天曆研究》。顧：365.2762必譯書者之失
         SunAvgVDeg: 887 / 900,
-        MoonAvgVDeg: 12 + 887 / 900,
+        MoonAvgDV: 12 + 887 / 900,
         Sidereal: 365.25875, // 闕
         Lunar: 29 + 373 / 703, // 29.530583 
         Anoma: 27.5545415, // 沒找到，暫時胡謅一個
-        MoonAcrVDeg: [0, -77, -71, -61, -47, -30, -10, 10, 30, 47, 61, 71, 77, 77, 71, 61, 47, 30, 10, -10, -30, -47, -61, -71, -77, -77], // 月段六。原文：77, 71, 61, 47, 30, 10
+        MoonAcrDVDeg: [0, -77, -71, -61, -47, -30, -10, 10, 30, 47, 61, 71, 77, 77, 71, 61, 47, 30, 10, -10, -30, -47, -61, -71, -77, -77], // 月段六。原文：77, 71, 61, 47, 30, 10
         SunAcrAvgDifList: [35, 32, 27, 22, 13, 5, -5, -13, -22, -27, -32, -35, -35, -32, -27, -22, -13, -5, 5, 13, 22, 27, 32, 35, 35], // 日段六。原文： 35, 32, 27, 22, 13, 5。一段管15度，兩段管一相。所以1段=15度，1相=30度，12相=360度。這個是要從冬至開始
         OriginAd: 657,
         CloseOriginAd: 657, // 顯慶二年二月一日曆首

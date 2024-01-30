@@ -145,7 +145,7 @@ export default (CalName, Y) => {
     // const Mansion = (OriginAccumMansion % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
     const SunperiThisyear = Y > CloseOriginAd ? SunperiYV * CloseOriginYear : -SunperiYV * CloseOriginYear // 本年最卑行    
     /////////// 推日躔 //////////
-    const sunGuimao = Sd => { // 時間不限於子正初刻，一天中任意時候都可以
+    const sunGuimao = Sd => {
         const AvgSun = Sd * SunAvgDV + SunRoot // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
         const Sunperi = SunperiConst + SunperiDV * Sd + SunperiThisyear // 最卑平行
         const SunOrbit = t(AvgSun - Sunperi) // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
@@ -513,7 +513,7 @@ export default (CalName, Y) => {
     const AutoNewmSyzygy = (isNewm, LeapNumTerm) => {
         const AvgSc = [], AvgDeci = [], AcrSc = [], AcrDeci = [], NowSd = [], Eclp = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], NowTermSd = [], TermEclp = [], TermDuskstar = [], Ecli = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
-        for (let i = 1; i <= 14; i++) {
+        for (let i = 0; i <= 14; i++) {
             //////// 平朔望
             const AvgSd = ChouSd + (1 + i - (isNewm ? 1 : 0.5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSdMidn = ~~AvgSd

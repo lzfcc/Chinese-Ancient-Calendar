@@ -134,7 +134,7 @@ export default (CalName, Y) => {
     const EquaDegAccumList = AutoDegAccumList(CalName, Y)
     const AutoNewmSyzygy = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], TermDuskstar = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
-        for (let i = 1; i <= 14; i++) {
+        for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScConst) % 60) + 60) % 60]

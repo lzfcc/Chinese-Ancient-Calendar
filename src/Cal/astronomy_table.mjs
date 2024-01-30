@@ -390,8 +390,8 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
         }
         Lati = Yinyang * Interpolate1(n, Initial) / Portion
     } else if (CalName === 'Dayan') { // 大衍的入交度數另有算式，我直接用月平行速來算 // 三次差：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8// 曲安京《曆法》頁251
-        const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        const LongiRaw = NodeAccumHalf * MoonAvgVDeg
+        const MoonAvgDV = AutoMoonAvgV(CalName)
+        const LongiRaw = NodeAccumHalf * MoonAvgDV
         const Cycle = AutoNodeCycle(CalName)
         const l = 15 // Cycle / 24 // 一象限15度
         const Longi = LongiRaw * 360 / Cycle

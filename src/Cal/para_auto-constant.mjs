@@ -117,8 +117,8 @@ export const AutoNodeCycle = CalName => {
         NodeCycle = 363.793419
     } else { // 其他的不知道了
         const { Node } = Para[CalName]
-        const MoonAvgVDeg = AutoMoonAvgV(CalName)
-        NodeCycle = +(MoonAvgVDeg * Node).toFixed(4)
+        const MoonAvgDV = AutoMoonAvgV(CalName)
+        NodeCycle = +(MoonAvgDV * Node).toFixed(4)
     }
     return NodeCycle
 }
