@@ -9,7 +9,7 @@ export default (CalName, Y) => {
     const { Type, isAcr, isNewmPlus, Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
-        YinyangConst, EcliConst } = Para[CalName]
+        YinyangConst, EcliConst, MansionRaw } = Para[CalName]
     let { Solar, SolarRaw, Lunar, LunarRaw, ScConst, NodeConst, FirstConst, AnomaConst, MansionConst, SolsConst
     } = Para[CalName]
     ScConst = ScConst || 0
@@ -20,13 +20,14 @@ export default (CalName, Y) => {
     AnomaConst = Type === 11 ? AnomaConst : (AnomaConst / Denom || 0)
     MansionConst = MansionConst || 0
     SolsConst = SolsConst || 0
+    const isExcl = Type >= 4 ? 1 : 0
     const ZhangMon = Math.round(ZhangRange * (12 + ZhangLeap / ZhangRange))
     // const JiMon = JiRange * ZhangMon / ZhangRange
     const ZhengSolsDif = ZhengNum - OriginMonNum
     const OriginYear = Y - (OriginAd || CloseOriginAd) // 上元積年（算上）
     // const CloseSolsDif = CloseOriginAd - OriginAd // 統天距算
     const CloseOriginYear = Y - CloseOriginAd // 距差。授時以1280開始
-    let SolarChangeAccum = 0, LunarChangeAccum = 0, LeapSurAvgThis = 0, OriginAccumThis = 0
+    let SolarChangeAccum = 0, LunarChangeAccum = 0, LeapSurAvg = 0, OriginAccumThis = 0
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? 1 : -1
     if (CalName === 'West') {
@@ -74,11 +75,11 @@ export default (CalName, Y) => {
     let SolsAccum = Type < 11 ? OriginYear * Solar + SolsConst + ZoneDif + SolarChangeAccum : 0
     SolsAccum = +SolsAccum.toFixed(fixed)
     if (ZhangRange) {
-        LeapSurAvgThis = OriginYear * ZhangMon % ZhangRange // 今年閏餘
+        LeapSurAvg = OriginYear * ZhangMon % ZhangRange // 今年閏餘
     } else if (Type < 8) {
-        LeapSurAvgThis = OriginYear * SolarNumer % LunarNumer // OriginYear * SolarNumer爲期總
+        LeapSurAvg = OriginYear * SolarNumer % LunarNumer // OriginYear * SolarNumer爲期總
     } else if (Type < 11) {
-        LeapSurAvgThis = ((SolsAccum + FirstConst) % LunarRaw + LunarRaw) % LunarRaw
+        LeapSurAvg = ((SolsAccum + FirstConst) % LunarRaw + LunarRaw) % LunarRaw
     } else if (CalName === 'Wannian') {
         // 置歲定積減去律應滿律總去之不盡得歲首黃鍾正律大小餘大餘命甲子筭外累加律策得次律大小餘滿律總去之 
         // 置歲定積減去閏應滿朔策去之不盡即所求閏餘日及分秒
@@ -86,27 +87,27 @@ export default (CalName, Y) => {
         // const OriginAccumPrev = WannianDingju(CloseOriginYear - 1)
         // const OriginAccumNext = WannianDingju(CloseOriginYear + 1)
         // SolsAccum = OriginAccumThis + SolsConst
-        // const LeapAccumThis = OriginAccumThis + FirstConst // 閏積        
+        // const LeapAccumThis = OriginAccumThis + FirstConst // 閏積   
         OriginAccumThis = CloseOriginYear * SolarRaw + SolarChangeAccum
         const LeapAccumThis = OriginAccumThis - FirstConst // 閏積
-        LeapSurAvgThis = parseFloat(((LeapAccumThis % Lunar + Lunar) % Lunar).toPrecision(14)) // 閏餘、冬至月齡        
+        LeapSurAvg = parseFloat(((LeapAccumThis % Lunar + Lunar) % Lunar).toPrecision(14)) // 閏餘、冬至月齡        
     } else if (Type === 11) {
         OriginAccumThis = CloseOriginYear * Solar // 中積
         SolsAccum = OriginAccumThis + SolsConst // 通積：該年冬至積日
         const LeapAccumThis = OriginAccumThis + FirstConst // 閏積
-        LeapSurAvgThis = parseFloat(((LeapAccumThis % Lunar + Lunar) % Lunar).toPrecision(14)) // 閏餘、冬至月齡        
+        LeapSurAvg = parseFloat(((LeapAccumThis % Lunar + Lunar) % Lunar).toPrecision(14)) // 閏餘、冬至月齡        
     }
     const SolsDeci = deci(SolsAccum) //.toFixed(fixed)
     let FirstAccum = 0, FirstAnomaAccum = 0, FirstNodeAccum = 0
     if (ZhangRange) {
         FirstAccum = Math.floor(OriginYear * ZhangMon / ZhangRange) * Lunar
     } else if (Type < 8) {
-        FirstAccum = SolsAccum - LeapSurAvgThis / Denom + LunarChangeAccum
-    } else FirstAccum = SolsAccum - LeapSurAvgThis + LunarChangeAccum
+        FirstAccum = SolsAccum - LeapSurAvg / Denom + LunarChangeAccum
+    } else FirstAccum = SolsAccum - LeapSurAvg + LunarChangeAccum
     if (Node && Type < 11) {
         FirstNodeAccum = (FirstAccum + NodeConst + (YinyangConst === -1 ? Node / 2 : 0) + ZoneDif / 18) % Node
     } else if (Type >= 11) {
-        FirstNodeAccum = ((OriginAccumThis - LeapSurAvgThis + NodeConst + (YinyangConst === -1 ? Node / 2 : 0)) % Node + Node) % Node
+        FirstNodeAccum = ((OriginAccumThis - LeapSurAvg + NodeConst + (YinyangConst === -1 ? Node / 2 : 0)) % Node + Node) % Node
     }
     FirstAccum += ZoneDif
     if (CalName === 'Qianxiang') {
@@ -114,7 +115,7 @@ export default (CalName, Y) => {
     } else if (Type < 11) {
         FirstAnomaAccum = ((FirstAccum + AnomaConst + (CalName === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
     } else if (Type === 11) {
-        FirstAnomaAccum = ((OriginAccumThis - LeapSurAvgThis + AnomaConst) % Anoma + Anoma) % Anoma
+        FirstAnomaAccum = ((OriginAccumThis - LeapSurAvg + AnomaConst) % Anoma + Anoma) % Anoma
     }
     FirstAccum = +FirstAccum.toFixed(fixed)
     FirstAnomaAccum = +FirstAnomaAccum.toFixed(fixed)
@@ -132,7 +133,7 @@ export default (CalName, Y) => {
     }
     const EquaDegAccumList = AutoDegAccumList(CalName, Y)
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], TermDuskstar = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 1; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
@@ -174,10 +175,9 @@ export default (CalName, Y) => {
                     Deci[i] = deci(AcrRaw[i])
                     Deci3[i] = Deci[i].toFixed(4).slice(2, 6)
                 }
-            } else {
-                Deci[i] = AvgDeci[i]
-            }
-            let NewmPlus = 0, SyzygySub = 0, NewmPlusPrint = '', SyzygySubPrint = ''
+            } else Deci[i] = AvgDeci[i]
+            let NewmPlus = 0, SyzygySub = 0
+            let NewmPlusPrint = '', SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
                     const Func = AutoNewmPlus((Deci1[i] || Deci[i]), SolsDif[i], SolsDeci, CalName) // 進朔
@@ -193,16 +193,24 @@ export default (CalName, Y) => {
                 }
                 TermAvgSolsDif[i] = (i + ZhengSolsDif - 1) * TermLeng
                 TermAvgRaw[i] = SolsAccum + TermAvgSolsDif[i]
-                const TermNum3 = 2 * (i + ZhengSolsDif - 1)
+                const tmp = ((TermAvgRaw[i] + isExcl + ScConst) % 60 + 60) % 60
+                TermSc[i] = ScList[~~tmp]
+                TermDeci[i] = deci(tmp).toFixed(4).slice(2, 6)
                 if (Type >= 5 && AcrTermList) {
+                    const TermNum3 = 2 * (i + ZhengSolsDif - 1)
                     let Plus = 0
-                    if (TermNum3 >= 24) {
-                        Plus = Solar
-                    } else if (TermNum3 < 0) {
-                        Plus = -Solar
-                    }
+                    if (TermNum3 >= 24) Plus = Solar
+                    else if (TermNum3 < 0) Plus = -Solar
                     TermAcrSolsDif[i] = AcrTermList[(TermNum3 + 24) % 24] + Plus
-                    TermAcrRaw[i] = SolsAccum + TermAcrSolsDif[i] // 定氣距冬至+中積
+                    TermAcrRaw[i] = SolsAccum + TermAcrSolsDif[i] // 定氣距冬至+中積                
+                    const tmp2 = ((TermAcrRaw[i] + isExcl + ScConst) % 60 + 60) % 60
+                    TermAcrSc[i] = ScList[~~tmp2]
+                    TermAcrDeci[i] = deci(tmp2).toFixed(4).slice(2, 6)
+                }
+                if (MansionRaw) {
+                    const Func = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y)
+                    TermEqua[i] = Func.Mansion
+                    TermDuskstar[i] = Func.MorningDuskstar
                 }
             } else {
                 const Func = AutoSyzygySub(Deci[i], SolsDif[i], SolsDeci, CalName) // 退望
@@ -263,7 +271,7 @@ export default (CalName, Y) => {
         return {
             AvgSc, Tcorr, AvgDeci, Int, Raw, Sc, AcrInt, AcrRaw,
             Deci, Deci1, Deci2, Deci3,
-            Equa, TermAvgRaw, TermAcrRaw, TermAcrSolsDif, TermAvgSolsDif, LeapNumTerm,
+            Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, TermDuskstar, LeapNumTerm,
             /// 交食用到
             NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, SolsDif, AcrSolsDif
         }
@@ -282,7 +290,8 @@ export default (CalName, Y) => {
         Deci2: NewmDeci2,
         Deci3: NewmDeci3,
         Equa: NewmEqua,
-        TermAvgRaw, TermAcrRaw, TermAcrSolsDif, TermAvgSolsDif, LeapNumTerm,
+        TermSc, TermDeci, TermAcrSc, TermAcrDeci,
+        TermEqua, TermDuskstar, LeapNumTerm,
         ///// 交食
         NodeAccum: NewmNodeAccum,
         AnomaAccum: NewmAnomaAccum,
@@ -300,18 +309,18 @@ export default (CalName, Y) => {
         SolsDif: SyzygySolsDif,
         AcrSolsDif: SyzygyAcrSolsDif,
     } = AutoNewmSyzygy(0)
-    const LeapSurAcrThis = ZhangRange ? (LeapSurAvgThis - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange : LeapSurAvgThis - NewmTcorr[1]
+    const LeapSurAcr = ZhangRange ? (LeapSurAvg - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange : LeapSurAvg - NewmTcorr[1]
     return {
         LeapLimit, OriginYear, JiYear, JiScOrder, SolsAccum, AccumPrint,
         NewmAvgSc, NewmAvgDeci,
         NewmSc, NewmInt, NewmRaw, NewmAcrRaw, NewmAcrInt, NewmDeci1, NewmDeci2, NewmDeci3,
         SyzygySc,
-        TermAvgRaw, TermAcrRaw,
-        LeapSurAvgThis, LeapSurAcrThis, LeapNumTerm,
-        EquaDegAccumList, NewmEqua, TermAvgSolsDif, TermAcrSolsDif,
+        TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, TermDuskstar,
+        LeapSurAvg, LeapSurAcr, LeapNumTerm,
+        EquaDegAccumList, NewmEqua,
         //////// 交食用
-        NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmSolsDif, NewmAcrSolsDif,
+        SolsDeci,NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmSolsDif, NewmAcrSolsDif,
         SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygySolsDif, SyzygyAcrSolsDif,
     }
 }
-// console.log(cal('Datong', 1007))
+// console.log(cal('Datong', 1000))

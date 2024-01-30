@@ -194,7 +194,7 @@ export default (CalName, year) => {
         SolsAccumMod, SolsAccum,
         NewmAvgBare, NewmAvgRaw, NewmInt, NewmAvgSc, NewmAvgDeci,
         SyzygySc, SyzygyDeci,
-        TermAvgBare, TermName, TermSc, TermDeci,
+        TermName, TermSc, TermDeci,
         LeapSurAvgFix, LeapSurAvgThis, LeapNumOriginLeapSur, LeapNumTerm,
         isAdvance, isPost, isLeapAvgFix, isLeapAvgThis, isLeapAvgNext, NewmStart, NewmEnd, TermStart, TermEnd,
         NewmEqua, TermEqua, TermDuskstar

@@ -60,8 +60,13 @@ const PrintNewm = result => {
     if (TermAcrScPrint.length > 0) {
         Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDeciPrint.join(' ') + `\n`
     }
-    if ((TermDuskstarPrint || []).length > 0) {
+    if ((TermEquaPrint || []).length > 0) {
         Print += '**氣赤**' + TermEquaPrint.join(' ') + `\n`
+    }
+    if ((TermEclpPrint || []).length > 0) {
+        Print += '**氣黃**' + TermEclpPrint.join(' ') + `\n`
+    }
+    if ((TermDuskstarPrint || []).length > 0) {
         Print += '**昏中** ' + TermDuskstarPrint.join(' ') + `\n`
     }
     return Print + `\n`
