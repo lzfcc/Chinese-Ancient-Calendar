@@ -285,10 +285,10 @@ export default (CalName, YearStart, YearEnd) => {
                     NewmAvgDeciPrint[i] = NewmAvgDeciPrint[i].toFixed(4).slice(2, 6)
                     SyzygyDeciPrint[i] = SyzygyDeciPrint[i].toFixed(4).slice(2, 6)
                 }
-            } else if (Type === 13) {
-                SunEcli = ThisYear.SunEcli
-                MoonEcli = ThisYear.MoonEcli
             }
+        } else if (Type === 13) {
+            SunEcli = ThisYear.SunEcli
+            MoonEcli = ThisYear.MoonEcli
         }
         const YearSc = ScList[((year - 3) % 60 + 60) % 60]
         let Era = year
@@ -392,4 +392,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Guimao', 1000, 1000))
+// console.log(Index('Guimao', 1730, 1730))
