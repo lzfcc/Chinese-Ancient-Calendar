@@ -1,7 +1,7 @@
 import N1 from './newm_quar.mjs'
 import N2 from './newm.mjs'
 // import N3 from './newm_huihui.mjs'
-import N4 from './newm_shixian.mjs'
+import { N4 } from './newm_shixian.mjs'
 import Para from './para_calendars.mjs'
 import { TermList, ScList, ThreeList, CalNameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
