@@ -667,7 +667,7 @@ export const N4 = (CalName, Y) => {
         SunRoot, SunperiRoot, MoonRoot, MoonapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSd, SolsmorScOrder, NowTerm1Sd
     }
 }
-// console.log(N4("Guimao", 1723)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+// console.log(N4("Guimao", 1761)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
 // console.log(sunGuimao(SunRoot, SunperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbdeg = 298 + 6 / 60 + 9.329 / 3600

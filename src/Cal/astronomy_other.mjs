@@ -60,7 +60,7 @@ export const Gong2Mansion = (CalName, Y, Gong, MidnToday, MidnMorrow, Rise) => {
     const { Solar, MansionConst } = Para[CalName]
     const EclpDegAccumList = AutoDegAccumList(CalName, Y, true)
     let Mansion = '', DuskstarPrint = ''
-    if (Gong) {
+    if (Gong !== false) {
         Gong -= (51 / 3600) * (Y - 1684)
         Gong += MansionConst
         Gong *= Solar / 360

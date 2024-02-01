@@ -94,7 +94,7 @@ export const D2 = (CalName, YearStart, YearEnd) => {
                 const tmp1 = HighLongi2LowLati(Obliquity, SunLongi)
                 Lati[i][k] = (tmp1 > 0 ? 'N ' : 'S ') + deg2Hms(Math.abs(tmp1))
                 Rise[i][k] = riseQing(SunLongi + (SunLongiMidnMorrow - SunLongi) / 2, Obliquity, BeijingLati)
-                Duskstar[i][k] = Gong2Mansion(CalName, Y, 0, SunLongi, SunLongiMidnMorrow, Rise[i][k]).DuskstarPrint
+                Duskstar[i][k] = Gong2Mansion(CalName, Y, false, SunLongi, SunLongiMidnMorrow, Rise[i][k]).DuskstarPrint
                 Rise[i][k] = ClockQing(Rise[i][k] * 100)
                 MoonEclp[i][k] = deg2Hms(MoonLongi)
                 MoonMansion[i][k] = Gong2Mansion(CalName, Y, MoonGong).Mansion + '度'
