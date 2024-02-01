@@ -18,7 +18,7 @@ import { Accum2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
-export default (CalName, YearStart, YearEnd) => {
+export const D1 = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, year) => {
         const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[CalName]
@@ -397,4 +397,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(CalDay('Dayan', 1256, 1256))
+// console.log(D1('Datong', 1762, 1762))

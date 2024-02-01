@@ -21,7 +21,7 @@ const deg2Hms = deg => {
     return ~~deg + '°' + m + '′' + s + '″'
 }
 // console.log(deg2Hms(1.52))
-export default (CalName, YearStart, YearEnd) => {
+export const D2 = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, Y) => {
         const { Type, Lunar, Solar, Obliquity, WeekConst, MansionDayConst, ScConst, BeijingLati } = Para[CalName]
@@ -52,7 +52,7 @@ export default (CalName, YearStart, YearEnd) => {
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
         const OriginJdAccum = 2086292 + ~~(365.2423 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
         const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
-        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], EquaMansion = [], Eclp = [], EclpMansion = [], MoonEclp = [], MoonEclpLati = [], MoonMansion = [], Rise = [], Lati = []
+        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], EquaMansion = [], Eclp = [], EclpMansion = [], MoonEclp = [], MoonEclpLati = [], MoonMansion = [], Rise = [], Lati = [], Duskstar = []
         let DayAccum = 0, JieAccum = 0 // 各節積日 
         let JianchuDayAccum = NewmSd[0] // 建除
         let JianchuOrigin = 0
@@ -73,6 +73,7 @@ export default (CalName, YearStart, YearEnd) => {
             Week[i] = []
             Rise[i] = []
             Lati[i] = []
+            Duskstar[i] = []
             Equa[i] = []
             EquaMansion[i] = []
             Eclp[i] = []
@@ -92,11 +93,9 @@ export default (CalName, YearStart, YearEnd) => {
                 EclpMansion[i][k] = Gong2Mansion(CalName, Y, SunGong).Mansion + '度' // 注意：入宿度是轉換成了古度的
                 const tmp1 = HighLongi2LowLati(Obliquity, SunLongi)
                 Lati[i][k] = (tmp1 > 0 ? 'N ' : 'S ') + deg2Hms(Math.abs(tmp1))
-                Rise[i][k] = ClockQing(riseQing(SunLongi + (SunLongiMidnMorrow - SunLongi) / 2, Obliquity, BeijingLati) * 100)
-                // const Mansion = Gong2Mansion(CalName, Y, TermGong, MidnToday, MidnMorrow, Rise[i][k])
-                // TermEclp[i] = Mansion.Mansion
-                // TermDuskstar[i] = Mansion.DuskstarPrint
-
+                Rise[i][k] = riseQing(SunLongi + (SunLongiMidnMorrow - SunLongi) / 2, Obliquity, BeijingLati)
+                Duskstar[i][k] = Gong2Mansion(CalName, Y, 0, SunLongi, SunLongiMidnMorrow, Rise[i][k]).DuskstarPrint
+                Rise[i][k] = ClockQing(Rise[i][k] * 100)
                 MoonEclp[i][k] = deg2Hms(MoonLongi)
                 MoonMansion[i][k] = Gong2Mansion(CalName, Y, MoonGong).Mansion + '度'
                 MoonEclpLati[i][k] = (MoonLati > 0 ? 'N ' : 'S ') + deg2Hms(Math.abs(MoonLati))
@@ -131,8 +130,7 @@ export default (CalName, YearStart, YearEnd) => {
         return {
             Era, Title, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
             Sc, Jd, Nayin, Week,
-            Equa, EquaMansion, Eclp, EclpMansion, Lati,
-            Rise,
+            Equa, EquaMansion, Eclp, EclpMansion, Lati, Rise, Duskstar,
             MoonEclp, MoonMansion, MoonEclpLati
         }
     }
@@ -142,4 +140,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(CalDayShixian('Guimao', 1730, 1730))
+// console.log(D2('Guimao', 1730, 1730))

@@ -84,14 +84,16 @@ export default (CalName, YearStart, YearEnd) => {
                 if (ThisYear.Term1Equa) {
                     Term1Equa[i] = ThisYear.Term1Equa[i]
                 }
+                if (ThisYear.Term1Eclp) {
+                    Term1Eclp[i] = ThisYear.Term1Eclp[i]
+                }
                 if (ThisYear.Term1AcrSc) {
                     Term1AcrSc[i] = ThisYear.Term1AcrSc[i]
                     Term1AcrDeci[i] = ThisYear.Term1AcrDeci[i]
-                    Term1Eclp[i] = ThisYear.Term1Eclp[i]
                 }
             }
             if (LeapNumTerm) {
-                TermName[LeapNumTerm + 1] = '无'
+                TermName[LeapNumTerm + 1] = '无中'
                 TermSc[LeapNumTerm + 1] = ''
                 TermDeci[LeapNumTerm + 1] = ''
                 TermAcrSc[LeapNumTerm + 1] = ''
@@ -102,7 +104,7 @@ export default (CalName, YearStart, YearEnd) => {
                     TermName[i] = Term1List[(i + 2) % 12]
                     TermSc[i] = ThisYear.Term1Sc[i]
                     TermDeci[i] = ThisYear.Term1Deci[i]
-                    if (ThisYear.TermAcrSc) {
+                    if (ThisYear.Term1AcrSc) {
                         TermAcrSc[i] = ThisYear.Term1AcrSc[i]
                         TermAcrDeci[i] = ThisYear.Term1AcrDeci[i]
                     }
@@ -129,7 +131,7 @@ export default (CalName, YearStart, YearEnd) => {
                 }
             }
             if (PrevYear.LeapNumTerm) {
-                Term1Name[1] = '无'
+                Term1Name[1] = '无節'
                 Term1Sc[1] = ''
                 Term1Deci[1] = ''
                 if (ThisYear.Term1Equa) {
@@ -244,10 +246,10 @@ export default (CalName, YearStart, YearEnd) => {
         if (Term1AcrSc[2]) {
             Term1AcrScPrint = TermSlice(Term1AcrSc)
             Term1AcrDeciPrint = TermSlice(Term1AcrDeci)
-            Term1EclpPrint = TermSlice(Term1Eclp)
         }
         Term1EquaPrint = Term1Equa[2] ? TermSlice(Term1Equa) : undefined
         TermEquaPrint = TermEqua[2] ? TermSlice(TermEqua) : undefined
+        Term1EclpPrint = Term1Eclp[2] ? TermSlice(Term1Eclp) : undefined
         TermEclpPrint = TermEclp[2] ? TermSlice(TermEclp) : undefined
         TermDuskstarPrint = TermDuskstar[2] ? TermSlice(TermDuskstar) : undefined
         ////////// 調用交食模塊。由於隋系交食需要用月份，所以必須要切了之後才能用，傳一堆參數，很惡心
@@ -409,7 +411,7 @@ export default (CalName, YearStart, YearEnd) => {
             Era, YearInfo, MonthPrint,
             NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmDeciAcrPrint, NewmEquaPrint, NewmEclpPrint,
             SyzygyScPrint, SyzygyDeciPrint,
-            Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1EquaPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1EclpPrint,
+            Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1EquaPrint, Term1EclpPrint,
             TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
             ////////////// 曆書
             LeapNumTerm, SolsAccum,
@@ -444,4 +446,4 @@ export default (CalName, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Guimao', 1760, 1760))
+// console.log(Index('Datong', 1760, 1760))

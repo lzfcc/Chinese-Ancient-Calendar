@@ -59,11 +59,13 @@ ${Duskstar}`
 export const Gong2Mansion = (CalName, Y, Gong, MidnToday, MidnMorrow, Rise) => {
     const { Solar, MansionConst } = Para[CalName]
     const EclpDegAccumList = AutoDegAccumList(CalName, Y, true)
-    Gong -= (51 / 3600) * (Y - 1684)
-    Gong += MansionConst
-    Gong *= Solar / 360
-    const Mansion = Deg2Mansion((Gong + Solar) % Solar, EclpDegAccumList)
-    let DuskstarPrint = ''
+    let Mansion = '', DuskstarPrint = ''
+    if (Gong) {
+        Gong -= (51 / 3600) * (Y - 1684)
+        Gong += MansionConst
+        Gong *= Solar / 360
+        Mansion = Deg2Mansion((Gong + Solar) % Solar, EclpDegAccumList)
+    }
     if (MidnToday) {
         const SunDV = MidnMorrow - MidnToday
         const MorningstarGong = MidnToday + (Rise - 0.025) * SunDV - (0.5 - Rise + 0.025) * 360

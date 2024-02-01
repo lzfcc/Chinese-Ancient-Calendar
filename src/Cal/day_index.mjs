@@ -1,5 +1,5 @@
-import D1 from './day.mjs'
-import D2 from './day_shixian.mjs'
+import { D1 } from './day.mjs'
+import { D2 } from './day_shixian.mjs'
 import Para from './para_calendars.mjs'
 
 export default (CalName, YearStart, YearEnd) => {

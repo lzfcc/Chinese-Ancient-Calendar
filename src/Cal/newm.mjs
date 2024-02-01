@@ -133,7 +133,7 @@ export default (CalName, Y) => {
     }
     const EquaDegAccumList = AutoDegAccumList(CalName, Y)
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], Term1Sc = [], Term1Deci = [], Term1Equa = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgRaw = [], TermAvgSolsDif = [], Term1AvgRaw = [], Term1AvgSolsDif = [], Term1Sc = [], Term1Deci = [], Term1AcrRaw = [], Term1AcrSolsDif = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Equa = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
@@ -196,7 +196,13 @@ export default (CalName, Y) => {
                 const tmp = ((TermAvgRaw[i] + isExcl + ScConst) % 60 + 60) % 60
                 TermSc[i] = ScList[~~tmp]
                 TermDeci[i] = deci(tmp).toFixed(4).slice(2, 6)
+                Term1AvgSolsDif[i] = (i + ZhengSolsDif - 1.5) * TermLeng
+                Term1AvgRaw[i] = SolsAccum + Term1AvgSolsDif[i]
+                const tmp1 = ((Term1AvgRaw[i] + isExcl + ScConst) % 60 + 60) % 60
+                Term1Sc[i] = ScList[~~tmp1]
+                Term1Deci[i] = deci(tmp1).toFixed(4).slice(2, 6)
                 if (Type >= 5 && AcrTermList) {
+                    // 定中氣
                     const TermNum3 = 2 * (i + ZhengSolsDif - 1)
                     let Plus = 0
                     if (TermNum3 >= 24) Plus = Solar
@@ -206,15 +212,20 @@ export default (CalName, Y) => {
                     const tmp2 = ((TermAcrRaw[i] + isExcl + ScConst) % 60 + 60) % 60
                     TermAcrSc[i] = ScList[~~tmp2]
                     TermAcrDeci[i] = deci(tmp2).toFixed(4).slice(2, 6)
+                    // 定節氣
+                    const TermNum2 = 2 * (i + ZhengSolsDif - 1) - 1
+                    let Plus1 = 0
+                    if (TermNum2 >= 24) Plus1 = Solar
+                    else if (TermNum2 < 0) Plus1 = -Solar
+                    Term1AcrSolsDif[i] = AcrTermList[(TermNum2 + 24) % 24] + Plus1
+                    Term1AcrRaw[i] = SolsAccum + Term1AcrSolsDif[i] // 定氣距冬至+中積                
+                    const tmp3 = ((Term1AcrRaw[i] + isExcl + ScConst) % 60 + 60) % 60
+                    Term1AcrSc[i] = ScList[~~tmp3]
+                    Term1AcrDeci[i] = deci(tmp3).toFixed(4).slice(2, 6)
                 }
-                const Term1AvgSolsDif = (i + ZhengSolsDif - 1.5) * TermLeng
-                const Term1AvgRaw = SolsAccum + Term1AvgSolsDif
-                const tmp1 = ((Term1AvgRaw + isExcl + ScConst) % 60 + 60) % 60
-                Term1Sc[i] = ScList[~~tmp1]
-                Term1Deci[i] = deci(tmp1).toFixed(4).slice(2, 6)
                 if (MansionRaw) {
                     TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
-                    Term1Equa[i] = Accum2Mansion(Term1AvgRaw, EquaDegAccumList, CalName, Term1AvgSolsDif, SolsDeci, Y).Mansion
+                    Term1Equa[i] = Accum2Mansion((Term1AcrRaw[i] || Term1AvgRaw[i]), EquaDegAccumList, CalName, (Term1AcrSolsDif[i] || Term1AvgSolsDif[i]), SolsDeci, Y).Mansion
                 }
             } else {
                 const Func = AutoSyzygySub(Deci[i], SolsDif[i], SolsDeci, CalName) // 退望
@@ -274,7 +285,7 @@ export default (CalName, Y) => {
         }
         return {
             AvgSc, Tcorr, AvgDeci, Int, Raw, Sc, AcrInt, AcrRaw,
-            Deci, Deci1, Deci2, Deci3, Equa, Term1Sc, Term1Deci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, LeapNumTerm,
+            Deci, Deci1, Deci2, Deci3, Equa, Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, LeapNumTerm,
             /// 交食用到
             NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, SolsDif, AcrSolsDif
         }
@@ -293,8 +304,8 @@ export default (CalName, Y) => {
         Deci2: NewmDeci2,
         Deci3: NewmDeci3,
         Equa: NewmEqua,
-        Term1Sc, Term1Deci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci,
-        TermEqua, LeapNumTerm,
+        Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Equa,
+        TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, LeapNumTerm,
         ///// 交食
         NodeAccum: NewmNodeAccum,
         AnomaAccum: NewmAnomaAccum,
@@ -318,7 +329,8 @@ export default (CalName, Y) => {
         NewmAvgSc, NewmAvgDeci,
         NewmSc, NewmInt, NewmRaw, NewmAcrRaw, NewmAcrInt, NewmDeci1, NewmDeci2, NewmDeci3,
         SyzygySc,
-        Term1Sc, Term1Deci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua,
+        Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Equa,
+        TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua,
         LeapSurAvg, LeapSurAcr, LeapNumTerm,
         EquaDegAccumList, NewmEqua,
         //////// 交食用
@@ -326,4 +338,4 @@ export default (CalName, Y) => {
         SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygySolsDif, SyzygyAcrSolsDif,
     }
 }
-// console.log(cal('Datong', 1000))
+// console.log(cal('Qianxiang', 1760))
