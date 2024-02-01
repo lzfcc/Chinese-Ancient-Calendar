@@ -12,7 +12,7 @@ import { sunGuimao, moonGuimao, LongiHigh2Low, HighLongi2LowLati, riseQing } fro
 import CalNewm from './newm_index.mjs'
 import { Gong2Mansion } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
-import { ClockQing } from './time_decimal2clock.mjs'
+import { ClockWest } from './time_decimal2clock.mjs'
 
 const deg2Hms = deg => {
     const Deci = deci(deg)
@@ -24,17 +24,13 @@ const deg2Hms = deg => {
 export const D2 = (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, Y) => {
-        const { Type, Lunar, Solar, Obliquity, WeekConst, MansionDayConst, ScConst, BeijingLati } = Para[CalName]
-        const { LeapNumTerm, SolsAccum, SunRoot, SunperiRoot, MoonRoot, MoonapoRoot, NodeRoot, NewmSd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(CalName, Y)[0]
+        const { Obliquity, BeijingLati } = Para[CalName]
+        const { LeapNumTerm, SolsAccum, SunRoot, SunperiRoot, MoonRoot, MoonapoRoot, NodeRoot, NewmSd, NowTerm1Sd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(CalName, Y)[0]
         ///////
         const YearScOrder = ((Y - 3) % 60 + 60) % 60
         const YearSc = ScList[YearScOrder]
         const YearStem = StemList.indexOf(YearSc[0])
         const YearBranch = BranchList.indexOf(YearSc[1])
-        //////
-        const EquaDegAccumList = AutoDegAccumList(CalName, Y)
-        const EclpDegAccumList = AutoDegAccumList(CalName, Y, 1)
-        ////////
         let Title = ''
         if (Y > 0) {
             Title = Y + ' 年歲次' + YearSc
@@ -94,8 +90,8 @@ export const D2 = (CalName, YearStart, YearEnd) => {
                 const tmp1 = HighLongi2LowLati(Obliquity, SunLongi)
                 Lati[i][k] = (tmp1 > 0 ? 'N ' : 'S ') + deg2Hms(Math.abs(tmp1))
                 Rise[i][k] = riseQing(SunLongi + (SunLongiMidnMorrow - SunLongi) / 2, Obliquity, BeijingLati)
-                Duskstar[i][k] = Gong2Mansion(CalName, Y, false, SunLongi, SunLongiMidnMorrow, Rise[i][k]).DuskstarPrint
-                Rise[i][k] = ClockQing(Rise[i][k] * 100)
+                Duskstar[i][k] = Gong2Mansion(CalName, Y, false, SunLongi + 90, SunLongiMidnMorrow + 90, Rise[i][k]).DuskstarPrint
+                Rise[i][k] = ClockWest(Rise[i][k])
                 MoonEclp[i][k] = deg2Hms(MoonLongi)
                 MoonMansion[i][k] = Gong2Mansion(CalName, Y, MoonGong).Mansion + '度'
                 MoonEclpLati[i][k] = (MoonLati > 0 ? 'N ' : 'S ') + deg2Hms(Math.abs(MoonLati))
@@ -104,25 +100,9 @@ export const D2 = (CalName, YearStart, YearEnd) => {
                 Sc[i][k] = ScList[ScOrder]
                 Jd[i][k] = parseInt(OriginJdAccum + OriginJdDif + SdMidn + 2)
                 Jd[i][k] += ' ' + Jd2Date1(Jd[i][k]).Mmdd
-                const Stem = StemList.indexOf(Sc[i][k][0])
-                const Branch = BranchList.indexOf(Sc[i][k][1])
                 const MansionOrder = (MansionDaySolsmor + DayAccum) % 28
                 const WeekOrder = (MansionDaySolsmor + DayAccum + 3) % 7
                 Week[i][k] = WeekList[WeekOrder] + WeekList1[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
-                // const JieNum = Math.round((Math.ceil(~~(SdMidn / HalfTermLeng) / 2) + 11) % 12.1)
-                // 立春1，驚蟄2，清明3，立夏4，芒種5，小暑6，立秋7，白露8，寒露9，立冬10，大雪11，小寒12
-                // if (DayAccum === 1) {
-                //     const XiaohanDifInt = ZhengInt - Math.floor(SolsAccum) - HalfTermLeng + DayAccum
-                //     const tmp = ~~((SolsDifInt + 1 - XiaohanDifInt) / 12)
-                //     const tmp1 = SolsDifInt + 1 - tmp * 12 - Branch
-                //     JianchuOrigin = tmp1 + 2 // 小寒後第一個丑開始建除
-                // }
-                // JianchuDayAccum++
-                // if (DayAccum === JieAccum) {
-                //     JianchuDayAccum--
-                // }
-                // const Jianchu = JianchuList[((JianchuDayAccum - JianchuOrigin) % 12 + 12) % 12]
-                // Nayin[i][k] = NayinList[Math.ceil(ScOrder / 2)] + ' ' + Jianchu
                 Sc[i][k] = NumList[k] + '日' + Sc[i][k]
             }
         }

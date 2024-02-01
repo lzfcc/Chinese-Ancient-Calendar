@@ -431,7 +431,8 @@ export default (CalName, YearStart, YearEnd) => {
             MoonRoot: Type === 13 ? ThisYear.MoonRoot : undefined,
             MoonapoRoot: Type === 13 ? ThisYear.MoonapoRoot : undefined,
             NodeRoot: Type === 13 ? ThisYear.NodeRoot : undefined,
-            NewmSd: Type === 13 ? ThisYear.NewmSd.slice(1 + NewmStart) : undefined
+            NewmSd: Type === 13 ? ThisYear.NewmSd.slice(1 + NewmStart) : undefined,
+            NowTerm1Sd: Type === 13 ? ThisYear.NowTerm1Sd.slice(1 + TermStart) : undefined
         }
     }
     Memo[0] = AutoNewm(CalName, YearStart - 1) // 去年

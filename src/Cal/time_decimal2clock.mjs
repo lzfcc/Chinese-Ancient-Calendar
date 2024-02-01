@@ -3,7 +3,7 @@ import {
     BranchList, HalfList, StemList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh, deci,
 } from './para_constant.mjs'
 
-const ClockWest = Deci => {
+export const ClockWest = Deci => {
     let h = ~~(Deci * 24)
     let m = ~~((Deci - h / 24) * 24 * 60)
     let s = ~~((Deci - h / 24 - m / 24 / 60) * 86400)
@@ -19,7 +19,7 @@ const ClockWest = Deci => {
     if (s.length < 2) {
         s = '0' + s
     }
-    const Print = h + 'h ' + m + 'm ' + s + 's'
+    const Print = h + ':' + m + ':' + s
     return Print
 }
 
@@ -110,7 +110,7 @@ const ClockSong = Deci => { // 皇祐之後、元、明。四刻是1/6。1刻60�
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
 }
 
-export const ClockQing = DeciRaw => { // 清代96刻
+const ClockQing = DeciRaw => { // 清代96刻
     const Deci = DeciRaw + 100 / 24 // 夜半子半
     const KeRaw = Deci * 0.96 + 1e-10
     const KeOrder = ~~KeRaw
