@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import {
-    ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
+    CalNameList, ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
     WeekList, MansionNameList, MansionAnimalNameList,
     ManGodList, JianchuList, HuangheiList, YuanList,
     HalfTermList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
@@ -18,7 +18,7 @@ import { Accum2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
-export const CalDay = (CalName, YearStart, YearEnd) => {
+export default (CalName, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (CalName, year) => {
         const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[CalName]
@@ -130,6 +130,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         } else {
             Era = '前 ' + (1 - year) + ' 年歲次' + YearSc + StemList1[YearStem] + BranchList1[YearBranch]
         }
+        const Title = CalNameList[CalName] + '萬年天文具注曆日'
         const YuanYear = ((year - 604) % 180 + 180) % 180 // 術數的元，以604甲子爲上元，60年一元，凡三元
         const YuanOrder = ~~(YuanYear / 60)
         const ThreeYuanYear = YuanYear - YuanOrder * 60
@@ -385,7 +386,7 @@ export const CalDay = (CalName, YearStart, YearEnd) => {
         }
         DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + Yuan
         return {
-            Era, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
+            Era, Title, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
             Sc, Jd, Nayin, Week, Equa, Eclp, Lati, Rise, Dial, Duskstar, MoonEclp, MoonEclpLati,
             HouName, HexagramName, FiveName, ManGod, Luck
         }

@@ -20,14 +20,21 @@ const TableRowNameMap = {
   NewmEclpPrint: '黃道',
   SyzygyScPrint: '望',
   SyzygyDeciPrint: ' ',
-  TermNamePrint: '中氣',
-  TermAcrScPrint: '定氣',
-  TermAcrDeciPrint: ' ',
+  Term1NamePrint: '節氣',
+  Term1ScPrint: '平氣',
+  Term1DeciPrint: ' ',
+  Term1AcrScPrint: '定氣',
+  Term1AcrDeciPrint: ' ',
+  Term1EquaPrint: '氣赤',
+  Term1EclpPrint: '氣黃',
+  TermNamePrint: '節氣',
   TermScPrint: '平氣',
   TermDeciPrint: ' ',
+  TermAcrScPrint: '定氣',
+  TermAcrDeciPrint: ' ',
   TermEquaPrint: '氣赤',
   TermEclpPrint: '氣黃',
-  TermDuskstarPrint: '旦昏中'
+  TermDuskstarPrint: '旦昏中',
 }
 const heightCache = createCache();
 

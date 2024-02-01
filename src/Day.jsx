@@ -52,7 +52,9 @@ export default class Day extends React.Component {
       <section className='day-render' style={{ whiteSpace: "pre-wrap" }}>
 
         <div className='daytitle-wrap'>
-          <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />{CalNameDayList[this.state.calendars]}萬年天文具注曆日</h2>
+          <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />
+          {this.state.output.Title}
+          </h2>
           <p className='DayAccum'>{this.state.output.DayAccum}</p>
           <p>{this.state.output.YearGod}</p>
           <div className='YearColor'>

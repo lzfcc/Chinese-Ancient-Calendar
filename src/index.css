@@ -115,11 +115,11 @@ a:hover {
 }
 
 /* strong { */
-  /* background: var(--red);
+/* background: var(--red);
   padding: .1em;
   color: var(--bg); */
-  /* font-weight: normal; */
-  /* border-radius: .2em; */
+/* font-weight: normal; */
+/* border-radius: .2em; */
 /* } */
 
 b {
@@ -463,7 +463,7 @@ table td {
   margin-top: 1em;
 }
 
-.table-narrow table td{
+.table-narrow table td {
   min-width: 0;
   padding: .5em .4em;
 }
@@ -503,37 +503,40 @@ tr.MonthPrint {
   font-weight: bold;
 }
 
-tr.NewmScPrint {
-  border-top: 1px solid var(--gray);
-  font-weight: bold;
-}
-
-tr.NewmAvgScPrint, tr.TermScPrint {
-  font-weight: bold;
-}
-
+tr.NewmScPrint,
 tr.TermNamePrint {
+  border-top: 1px solid var(--gray);
+}
+
+tr.TermNamePrint,
+tr.Term1NamePrint {
   color: var(--gray);
 }
 
-tr.NewmEquaPrint, tr.NewmEclpPrint {
+tr.NewmScPrint,
+tr.NewmAvgScPrint,
+tr.TermScPrint,
+tr.TermAcrScPrint,
+tr.Term1ScPrint,
+tr.Term1AcrScPrint {
+  font-weight: bold;
+}
+
+tr.Term1EclpPrint,
+tr.Term1EquaPrint,
+tr.TermEclpPrint,
+tr.TermEquaPrint,
+tr.TermDuskstarPrint {
+  color: var(--gray);
+  font-size: .8em;
+}
+
+
+tr.NewmEquaPrint,
+tr.NewmEclpPrint {
   border-bottom: 2px solid var(--gray);
   color: var(--gray);
   font-size: .8em;
-}
-
-tr.TermEclpPrint, tr.TermEquaPrint, tr.TermDuskstarPrint  {
-  color: var(--gray);
-  font-size: .8em;
-}
-
-tr.TermAcrScPrint {
-  border-top: 1px solid var(--gray);
-  font-weight: bold;
-}
-
-tr.TermAcrScPrint {
-  border-top: 1px solid var(--gray);
 }
 
 tr.SyzygyScPrint {
@@ -543,7 +546,11 @@ tr.SyzygyScPrint {
 tr.SyzygyDeciPrint {
   border-bottom: 2px solid var(--gray);
 }
-tr.NewmDeci1Print th,tr.NewmDeci2Print th,tr.NewmDeci3Print th,tr.NewmDeciAcrPrint th {
+
+tr.NewmDeci1Print th,
+tr.NewmDeci2Print th,
+tr.NewmDeci3Print th,
+tr.NewmDeciAcrPrint th {
   font-weight: normal;
 }
 
@@ -969,35 +976,26 @@ hr {
   color: var(--gray)
 }
 
-.Equa {
+.Equa,
+.EquaMansion {
   color: var(--letterred);
 }
 
-.Eclp {
+.Eclp,
+.EclpMansion {
   color: var(--letteryellow);
 }
 
-.Lati {
-  color: var(--lettergreen);
-}
-
-.Rise {
-  color: var(--lettergreen);
-}
-
-.Dial {
-  color: var(--lettergreen);
-}
-
+.Lati,
+.Rise,
+.Dial,
 .Duskstar {
   color: var(--lettergreen);
 }
 
-.MoonEclp {
-  color: var(--letterblue);
-}
-
-.MoonEclpLati {
+.MoonEclp,
+.MoonEclpLati,
+.MoonMansion {
   color: var(--letterblue);
 }
 
@@ -1009,7 +1007,6 @@ hr {
   font-size: 2em;
   margin: 0 .1em;
 }
-
 
 .ManGod {
   color: var(--gray);
@@ -1053,7 +1050,7 @@ hr {
 }
 
 .YearColor table {
-  border-collapse: separate;
+  border-collapse: collapse;
   font-family: var(--serif);
   border: none;
 }
@@ -1069,56 +1066,42 @@ hr {
 .color-white {
   background: var(--bggray);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .color-black {
   color: var(--bg);
   background: var(--black);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .color-cyan {
   background: var(--cyan);
-  color: var(--bg);
+  color: var(--black);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .color-green {
   color: var(--bg);
   background: var(--green);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .color-yellow {
   color: var(--bg);
   background: var(--letteryellow);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .color-red {
   color: var(--bg);
   background: var(--letterred);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .color-purple {
   color: var(--bg);
   background: var(--purple);
   padding: 1em .5em;
-  border-radius: .7em;
-  margin: .2em;
 }
 
 .lati-red {

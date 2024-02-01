@@ -133,7 +133,7 @@ export default (CalName, Y) => {
     }
     const EquaDegAccumList = AutoDegAccumList(CalName, Y)
     const AutoNewmSyzygy = isNewm => {
-        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], TermDuskstar = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
+        const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAvgRaw = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgSolsDif = [], Term1Sc = [], Term1Deci = [], Term1Equa = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
             AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
@@ -207,10 +207,14 @@ export default (CalName, Y) => {
                     TermAcrSc[i] = ScList[~~tmp2]
                     TermAcrDeci[i] = deci(tmp2).toFixed(4).slice(2, 6)
                 }
+                const Term1AvgSolsDif = (i + ZhengSolsDif - 1.5) * TermLeng
+                const Term1AvgRaw = SolsAccum + Term1AvgSolsDif
+                const tmp1 = ((Term1AvgRaw + isExcl + ScConst) % 60 + 60) % 60
+                Term1Sc[i] = ScList[~~tmp1]
+                Term1Deci[i] = deci(tmp1).toFixed(4).slice(2, 6)
                 if (MansionRaw) {
-                    const Func = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y)
-                    TermEqua[i] = Func.Mansion
-                    TermDuskstar[i] = Func.MorningDuskstar
+                    TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
+                    Term1Equa[i] = Accum2Mansion(Term1AvgRaw, EquaDegAccumList, CalName, Term1AvgSolsDif, SolsDeci, Y).Mansion
                 }
             } else {
                 const Func = AutoSyzygySub(Deci[i], SolsDif[i], SolsDeci, CalName) // 退望
@@ -270,8 +274,7 @@ export default (CalName, Y) => {
         }
         return {
             AvgSc, Tcorr, AvgDeci, Int, Raw, Sc, AcrInt, AcrRaw,
-            Deci, Deci1, Deci2, Deci3,
-            Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, TermDuskstar, LeapNumTerm,
+            Deci, Deci1, Deci2, Deci3, Equa, Term1Sc, Term1Deci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, LeapNumTerm,
             /// 交食用到
             NodeAccum, NodeAccumNight, AnomaAccum, AnomaAccumNight, SolsDif, AcrSolsDif
         }
@@ -290,8 +293,8 @@ export default (CalName, Y) => {
         Deci2: NewmDeci2,
         Deci3: NewmDeci3,
         Equa: NewmEqua,
-        TermSc, TermDeci, TermAcrSc, TermAcrDeci,
-        TermEqua, TermDuskstar, LeapNumTerm,
+        Term1Sc, Term1Deci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci,
+        TermEqua, LeapNumTerm,
         ///// 交食
         NodeAccum: NewmNodeAccum,
         AnomaAccum: NewmAnomaAccum,
@@ -315,11 +318,11 @@ export default (CalName, Y) => {
         NewmAvgSc, NewmAvgDeci,
         NewmSc, NewmInt, NewmRaw, NewmAcrRaw, NewmAcrInt, NewmDeci1, NewmDeci2, NewmDeci3,
         SyzygySc,
-        TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua, TermDuskstar,
+        Term1Sc, Term1Deci, Term1Equa, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua,
         LeapSurAvg, LeapSurAcr, LeapNumTerm,
         EquaDegAccumList, NewmEqua,
         //////// 交食用
-        SolsDeci,NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmSolsDif, NewmAcrSolsDif,
+        SolsDeci, NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmSolsDif, NewmAcrSolsDif,
         SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygySolsDif, SyzygyAcrSolsDif,
     }
 }

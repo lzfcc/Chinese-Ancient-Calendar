@@ -68,7 +68,7 @@ const ClockTmp = (Deci, Mode) => { // 我假設：每日96刻，子初夜半，�
 }
 
 const Clock24 = Deci => {
-    const Portion = 100 / 24
+    const Portion = 100 / 24 + 1e-10
     let ClockOrder = ~~(Deci / Portion)
     const ClockFrac = Deci - ClockOrder * Portion
     const Twelve = ~~(ClockFrac / Portion * 12)
@@ -79,7 +79,7 @@ const Clock24 = Deci => {
 }
 
 const ClockTang = Deci => { // 唐、宋皇祐之前。1/3刻放在時辰最後，可能是初或正兩種情況
-    const KeRaw = (Deci + 100 / 24) % 100 // 夜半子半 
+    const KeRaw = (Deci + 100 / 24 + 1e-10) % 100 // 夜半子半 
     let ClockOrder = ~~(KeRaw / (100 / 12))
     const HalfRaw = KeRaw - (ClockOrder * (100 / 12))
     let QuarOrder = 0
@@ -92,7 +92,7 @@ const ClockTang = Deci => { // 唐、宋皇祐之前。1/3刻放在時辰最後�
 }
 
 const ClockSong = Deci => { // 皇祐之後、元、明。四刻是1/6。1刻60分，1分=14.4s
-    const KeRaw = (Deci + 100 / 24) % 100 // 夜半子半 
+    const KeRaw = (Deci + 100 / 24 + 1e-10) % 100 // 夜半子半 
     let ClockOrder = ~~(KeRaw / (100 / 12))
     const HalfOrder = ~~((KeRaw - ClockOrder * (100 / 12)) / (4 + 1 / 6))
     let HalfRaw = KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6))
@@ -110,17 +110,19 @@ const ClockSong = Deci => { // 皇祐之後、元、明。四刻是1/6。1刻60�
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
 }
 
-const ClockQing = Deci => { // 清代96刻
-    Deci += 100 / 24 // 夜半子半
-    const KeRaw = Deci * 0.96
+export const ClockQing = DeciRaw => { // 清代96刻
+    const Deci = DeciRaw + 100 / 24 // 夜半子半
+    const KeRaw = Deci * 0.96 + 1e-10
     const KeOrder = ~~KeRaw
     const ClockOrder = ~~(KeRaw / 8)
     const HalfOrder = ~~((KeOrder - ClockOrder * 8) / 4)
     const QuarOrder = KeOrder - (ClockOrder * 8 + HalfOrder * 4)
     const MinOrder = ~~(deci(KeRaw) * 15) % 15
-    return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
+    const sum = (ClockOrder / 12 + (HalfOrder - 1) / 24 + QuarOrder / 96 + MinOrder / 1440) * 86400
+    const SecOrder = ~~(DeciRaw * 864 - sum)
+    return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + '刻' + (MinOrder === 0 ? '' : nzh.encodeS(MinOrder) + '分') + (SecOrder === 0 ? '' : nzh.encodeS(SecOrder) + '秒')
 }
-
+// console.log(ClockQing(99.99))
 export const AutoClock = (Deci, CalName) => {
     const { Type } = Para[CalName]
     let Print = ''

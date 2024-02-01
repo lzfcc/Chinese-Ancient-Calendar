@@ -1,5 +1,5 @@
 import CalNewm from './newm_index.mjs'
-import { CalDay } from './day.mjs'
+import CalDay from './day_index.mjs'
 import Para from './para_calendars.mjs'
 
 const AutoCal = year => {
@@ -22,7 +22,7 @@ const AutoCal = year => {
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeciAcrPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
+        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeciAcrPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,Term1AcrSc, Term1AcrDeci
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
@@ -52,6 +52,10 @@ const PrintNewm = result => {
         Print += '**黃道** ' + NewmEclpPrint.join(' ') + `\n`
     }
     Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDeciPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
+    if ((Term1AcrSc || []).length > 0) {
+        Print += '**節氣** ' + Term1AcrSc.join(' ') + `\n`
+        Print += '**分** ' + Term1AcrDeci.join(' ') + `\n`
+    }
     if (NewmDeciAcrPrint.length > 0) {
         Print += '平氣 ' + TermScPrint.join(' ') + '\n**分** ' + TermDeciPrint.join(' ') + `\n`
     } else {
@@ -68,7 +72,7 @@ const PrintNewm = result => {
     }
     if ((TermDuskstarPrint || []).length > 0) {
         Print += '**昏中** ' + TermDuskstarPrint.join(' ') + `\n`
-    }
+    }    
     return Print + `\n`
 }
 
@@ -379,11 +383,11 @@ const DayView = CalInfo => {
 }
 export const outputDayWeb = (year, CalName) => {
     const [result] = CalDay(CalName, year)
-    const { Era, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
-        ...OtherResult
+    const { Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor, ...OtherResult
     } = result
     return {
-        Era, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
+        Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
         DayData: DayView(OtherResult)
     }
 }
+// console.log(outputDayWeb(1730, 'Datong'))
