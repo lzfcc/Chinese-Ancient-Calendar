@@ -1,5 +1,5 @@
 import React from 'react'
-import { CalNameList } from './Cal/para_constant'
+import { NameList } from './Cal/para_constant'
 import MenuSelect from './MenuSelect'
 import DynamicList, { createCache } from 'react-window-dynamic-list'
 import ReactMarkdown from 'react-markdown'
@@ -121,7 +121,7 @@ export default class Newm extends React.Component {
   //     </div>);
   // }
   renderCalendar() {
-    const cals = CalNameList
+    const cals = NameList
     return (
       <span>
         <MenuSelect

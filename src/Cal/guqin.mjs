@@ -718,7 +718,7 @@ const Tuning1 = (Freq = 432, n = 3) => { // 宮調. 五弦基準頻率，默認�
     Xin[5] = Freq
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '宮調 5 6 1 2 3' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, TuneName: '宮調 5 6 1 2 3' }
 }
 // console.log(Tuning1(432, 1).Zhun)
 
@@ -782,7 +782,7 @@ const Tuning2 = (Freq = 432, n = 1) => { // 商調
     Xin[5] = Freq
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '商調 1 2 4 5 6' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, TuneName: '商調 1 2 4 5 6' }
 }
 
 const Tuning4 = (Freq = 432, n = 4) => { // 徵調
@@ -837,7 +837,7 @@ const Tuning4 = (Freq = 432, n = 4) => { // 徵調
     Xin[5] = Freq
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui4, ZhunFreq, HuiFreq, Name: '徵調 4 5 ♭7 1 2' }
+    return { Zhun, Hui, Xin, Hui2, Hui4, ZhunFreq, HuiFreq, TuneName: '徵調 4 5 ♭7 1 2' }
 }
 
 const Tuning5 = (Freq = 432, n = 2) => { // 羽調
@@ -883,7 +883,7 @@ const Tuning5 = (Freq = 432, n = 2) => { // 羽調
     Xin[5] = Freq
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui4, ZhunFreq, HuiFreq, Name: '羽調 ♭7 1 ♭3 4 5' }
+    return { Zhun, Hui, Xin, Hui4, ZhunFreq, HuiFreq, TuneName: '羽調 ♭7 1 ♭3 4 5' }
 }
 
 const Tuning6 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
@@ -946,7 +946,7 @@ const Tuning6 = (Freq = 432, n = 5) => {  // 蕤賓調緊五 2 3 5 6 1 2 3
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '蕤賓調　緊五' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, TuneName: '蕤賓調　緊五' }
 }
 
 const Tuning7 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
@@ -1008,7 +1008,7 @@ const Tuning7 = (Freq = 432, n = 2) => {  // 清商調緊二五七 6 1 2 3 5 6 7
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, Name: '淸商調　緊二五七' }
+    return { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, TuneName: '淸商調　緊二五七' }
 }
 
 const Tuning8 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
@@ -1072,7 +1072,7 @@ const Tuning8 = (Freq = 432, n = 1) => {  // 慢角調慢三 1 2 3 5 6 1 2
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '慢角調　慢三' }
+    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, TuneName: '慢角調　慢三' }
 }
 
 const Tuning9 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
@@ -1139,7 +1139,7 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
         OneDifZhun: '243/256',
         OneDifHui: '15/16',
         OneDifXin: 0.94387431268169,
-        Name: '慢宮調　慢一三六'
+        TuneName: '慢宮調　慢一三六'
     }
 }
 
@@ -1195,7 +1195,7 @@ const Tuning10 = (Freq = 432, n = 1) => {  // 徽法律淒涼調緊二五 5 #6 1
     Xin[5] = +List12[1]
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Hui2, Hui4, Xin, HuiFreq, ZhunFreq, Name: '䠂商調　緊二五' }
+    return { Zhun, Hui, Hui2, Hui4, Xin, HuiFreq, ZhunFreq, TuneName: '䠂商調　緊二五' }
 }
 
 const Tuning11 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
@@ -1263,7 +1263,7 @@ const Tuning11 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 
         OneDifZhun: '8/9',
         OneDifHui: '9/10',
         OneDifXin: 0.8908987181403393,
-        Name: '黃鐘調　緊五慢一'
+        TuneName: '黃鐘調　緊五慢一'
     }
 }
 
@@ -1337,7 +1337,7 @@ const Tuning12 = (Freq = 432, n = 1) => {  // 無媒調慢三六 1 2 3 5 6 7 2 �
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, Name: '无媒調　慢三六' }
+    return { Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq, TuneName: '无媒調　慢三六' }
 }
 
 const Tuning13 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
@@ -1405,7 +1405,7 @@ const Tuning13 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
         OneDifZhun: '243/256',
         OneDifHui: '243/256',
         OneDifXin: 0.943874312681694,
-        Name: '間弦一　慢一三'
+        TuneName: '間弦一　慢一三'
     }
 }
 
@@ -1461,7 +1461,7 @@ const Tuning14 = (Freq = 432, n = 1) => {  // 間弦二緊五慢三 1 2 3 5 #6 1
     Xin[7] = +List12[5]
     return {
         Zhun, Hui2, Hui, Hui4, Xin, ZhunFreq, HuiFreq,
-        Name: '間弦二　緊五慢三'
+        TuneName: '間弦二　緊五慢三'
     }
 }
 
@@ -1487,7 +1487,7 @@ const Tuning15 = (Freq = 432, n = 3) => { // 徽法律平調慢五七 5 b6 1 2 b
     Xin[5] = +List12[11] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[4]
-    return { Hui, Xin, HuiFreq, Name: '日傳平調　慢五七' }
+    return { Hui, Xin, HuiFreq, TuneName: '日傳平調　慢五七' }
 }
 
 const Tuning16 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
@@ -1512,7 +1512,7 @@ const Tuning16 = (Freq = 432, n = 2) => {  // 徽法律側商調慢三四六 #6 
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq, Name: '側商調　慢三四六' }
+    return { Hui, Xin, HuiFreq, TuneName: '側商調　慢三四六' }
 }
 
 const Tuning17 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
@@ -1537,7 +1537,7 @@ const Tuning17 = (Freq = 432, n = 1) => {  // 徽法律側羽調緊七
     Xin[5] = +List12[12] / 2
     Xin[6] = +List12[2]
     Xin[7] = +List12[5]
-    return { Hui, Xin, HuiFreq, Name: '側羽調　緊七' }
+    return { Hui, Xin, HuiFreq, TuneName: '側羽調　緊七' }
 }
 
 const Tuning18 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
@@ -1572,7 +1572,7 @@ const Tuning18 = (Freq = 432, n = 5) => {  // 徽法側蜀調緊二慢五 5 #6 1
     Xin[5] = +List12[11] / 2
     Xin[6] = +List12[3]
     Xin[7] = +List12[5]
-    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, Name: '側蜀調　緊二慢五' }
+    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, TuneName: '側蜀調　緊二慢五' }
 }
 
 const Tuning19 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五七
@@ -1601,14 +1601,14 @@ const Tuning19 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五�
         Hui, Xin, HuiFreq,
         OneDifHui: '9/10',
         OneDifXin: 0.890898718140339,
-        Name: '側楚調　慢一二緊五七'
+        TuneName: '側楚調　慢一二緊五七'
     }
 }
 
 const NumList = '〇一二三四五六七八九'
 
 export const Tuning = (TuningMode, Freq = 432, n = 0) => {
-    const { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, OneDifZhun, OneDifHui, Name } = eval('Tuning' + TuningMode)(Freq, +n)
+    const { Zhun, Hui, Xin, Hui2, Hui3, Hui4, ZhunFreq, HuiFreq, OneDifZhun, OneDifHui, TuneName } = eval('Tuning' + TuningMode)(Freq, +n)
     const DifZhun = [], NameZhun = [], DifHui = [], NameHui = [], NameHui2 = [], NameHui3 = [], NameHui4 = [], PitchZhun = [], PitchHui = []
     if (Zhun) {
         for (let i = 1; i <= 6; i++) {
@@ -1656,7 +1656,7 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
         })
 
     }
-    return { Name, Print }
+    return { TuneName, Print }
 }
 // console.log(Tuning(9))
 

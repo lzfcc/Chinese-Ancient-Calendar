@@ -2,23 +2,23 @@ import { ScList, TermList, AutoDegAccumList, deci } from './para_constant.mjs'
 import Para from './para_calendars.mjs'
 import { Accum2Mansion } from './astronomy_other.mjs'
 
-export default (CalName, year) => {
+export default (Name, year) => {
     const { Lunar, Solar, SolsOriginDif, SolsOriginMon,
         OriginAd, OriginYearSc, BuScConst, ZhengNum, OriginMonNum,
         YuanRange, TongRange, isTermLeap, EcliRange, EcliNumer, MansionRaw
-    } = Para[CalName]
-    let { JiRange, BuRange, SolsConst, DayConst } = Para[CalName]
-    if (CalName === 'Taichu') {
+    } = Para[Name]
+    let { JiRange, BuRange, SolsConst, DayConst } = Para[Name]
+    if (Name === 'Taichu') {
         JiRange = YuanRange
         BuRange = TongRange
     }
     SolsConst = SolsConst || 0
     DayConst = DayConst || 0
-    const BuSkip = ['Qianzaodu', 'Yuanmingbao'].includes(CalName) ? 365.25 * BuRange % 60 : Solar * BuRange % 60
+    const BuSkip = ['Qianzaodu', 'Yuanmingbao'].includes(Name) ? 365.25 * BuRange % 60 : Solar * BuRange % 60
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     const ZhengSolsDif = ZhengNum - OriginMonNum // 年首和正月的差
     let OriginYear = year - OriginAd // 上元積年（算上）
-    const JupiterSc = CalName === 'Taichu' ? ScList[(~~(OriginYear % 1728 * 145 / 144) + OriginYearSc) % 60] : '' // 三統曆太歲
+    const JupiterSc = Name === 'Taichu' ? ScList[(~~(OriginYear % 1728 * 145 / 144) + OriginYearSc) % 60] : '' // 三統曆太歲
     const JiOrder = ~~(OriginYear % YuanRange / JiRange) // 入第幾紀
     const BuYear = OriginYear % YuanRange % JiRange % BuRange + 1 // 入蔀（統）第幾年
     const BuOrder = ~~(OriginYear % YuanRange % JiRange / BuRange) // 入第幾蔀（統）
@@ -75,7 +75,7 @@ export default (CalName, year) => {
     }
     // 閏餘法閏月
     const LeapNumOriginLeapSur = LeapNumAvgThis ? Math.round(((LeapNumAvgThis + ZhengSolsDif + 12) % 12 + 12) % 12.1) : 0
-    const EquaDegAccumList = MansionRaw ? AutoDegAccumList(CalName, year) : []
+    const EquaDegAccumList = MansionRaw ? AutoDegAccumList(Name, year) : []
     // 朔望
     const NewmAvgBare = [], NewmAvgRaw = [], NewmInt = [], NewmAvgSc = [], NewmSolsDif = [], NewmAvgDeci = [], NewmEqua = [], SyzygyAvgRaw = [], SyzygyAvgMod = [], SyzygyOrderMod = [], SyzygyDeci = []
     let SyzygySc = []
@@ -87,7 +87,7 @@ export default (CalName, year) => {
         NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmSolsDif[i] = NewmAvgBare[i] - SolsAccumRaw
         if (MansionRaw) {
-            NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, CalName).Mansion
+            NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, Name).Mansion
         }
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdSols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
         SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + SolsConst).toPrecision(14)) + BuScOrder
@@ -120,7 +120,7 @@ export default (CalName, year) => {
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, Name, TermSolsDif, SolsDeci)
                 TermEqua[i] = Func.Mansion
                 TermDuskstar[i] = Func.MorningDuskstar
             }
@@ -136,7 +136,7 @@ export default (CalName, year) => {
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, Name, TermSolsDif, SolsDeci)
                 TermEqua[i] = Func.Mansion
                 TermDuskstar[i] = Func.MorningDuskstar
             }
@@ -165,7 +165,7 @@ export default (CalName, year) => {
             TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
                 const TermSolsDif = TermAvgBare[i] - SolsAccumRaw
-                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, CalName, TermSolsDif, SolsDeci)
+                const Func = Accum2Mansion(TermAvgBare[i], EquaDegAccumList, Name, TermSolsDif, SolsDeci)
                 TermEqua[i] = Func.Mansion
                 TermDuskstar[i] = Func.MorningDuskstar
             }

@@ -4,11 +4,11 @@ import { Interpolate1, Interpolate3, Make2DPoints } from './equa_sn.mjs'
 import { AutoMoonAvgV, AutoNodePortion, AutoQuar, AutoMoonTcorrDif } from './para_auto-constant.mjs'
 
 // 大衍用不等間距二次內插，宣明也是。崇玄暫且用平氣。計算盈縮積
-export const SunDifAccumTable = (SolsDif, CalName) => {
-    const { Type, SunAcrAvgDifList, TermRangeA, TermRangeS, SolarRaw, AcrTermList } = Para[CalName]
-    let { Denom, Solar } = Para[CalName]
+export const SunDifAccumTable = (SolsDif, Name) => {
+    const { Type, SunAcrAvgDifList, TermRangeA, TermRangeS, SolarRaw, AcrTermList } = Para[Name]
+    let { Denom, Solar } = Para[Name]
     Solar = Solar || SolarRaw
-    if (Type >= 8 && CalName !== 'Qianyuan') Denom = 10000 // 崇玄也是萬分母
+    if (Type >= 8 && Name !== 'Qianyuan') Denom = 10000 // 崇玄也是萬分母
     const HalfTermLeng = Solar / 24
     const SunAcrAvgDifListList = [] // 這個多此一舉的SunAcrAvgDifListList一定不能刪掉，否則多次運算就會越來越小
     for (let i = 0; i <= 23; i++) {
@@ -25,7 +25,7 @@ export const SunDifAccumTable = (SolsDif, CalName) => {
     SunDifAccumList = [0, ...SunDifAccumList]
     SunDifAccumList[25] = SunDifAccumList[1]
     let SunDifAccum2 = 0
-    if (Type === 7 && CalName !== 'Qintian') {
+    if (Type === 7 && Name !== 'Qintian') {
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
             if (SolsDif >= AcrTermList[j] && SolsDif < AcrTermList[j + 1]) {
@@ -39,7 +39,7 @@ export const SunDifAccumTable = (SolsDif, CalName) => {
         const TermNum1 = ~~(SolsDif / HalfTermLeng)  // 朔望所在氣名
         // const TermNum2 = (TermNum1 + 1) % 24
         // const TermNewmDif = SolsDif - TermNum1 * HalfTermLeng // 注意要減1。朔望入氣日數
-        if (['LindeA', 'LindeB', 'Huangji', 'Shenlong'].includes(CalName)) {
+        if (['LindeA', 'LindeB', 'Huangji', 'Shenlong'].includes(Name)) {
             if ((SolsDif < 6 * HalfTermLeng) || (SolsDif >= 18 * HalfTermLeng)) TermRange = TermRangeA // 秋分後
             else TermRange = TermRangeS // 春分後
         } else TermRange = HalfTermLeng - SunAcrAvgDifListList[TermNum1] / Denom
@@ -63,25 +63,25 @@ export const SunDifAccumTable = (SolsDif, CalName) => {
 // console.log(SunDifAccumTable(9.25, 'Chongtian'))
 
 // 計算朓朒積
-const SunTcorrTable = (SolsDif, CalName) => {
-    const { Type, Solar, SolarRaw, SunTcorrList, AcrTermList, TermRangeA, TermRangeS } = Para[CalName]
-    let { Denom } = Para[CalName]
+const SunTcorrTable = (SolsDif, Name) => {
+    const { Type, Solar, SolarRaw, SunTcorrList, AcrTermList, TermRangeA, TermRangeS } = Para[Name]
+    let { Denom } = Para[Name]
     let HalfTermLeng = (Solar || SolarRaw) / 24
     const TermNum = ~~(SolsDif / HalfTermLeng)
     let TermRange = HalfTermLeng
-    if (['Huangji', 'LindeA', 'LindeB',].includes(CalName)) {
+    if (['Huangji', 'LindeA', 'LindeB',].includes(Name)) {
         if ((SolsDif < 6 * HalfTermLeng) || (SolsDif >= 18 * HalfTermLeng)) TermRange = TermRangeA // 秋分後
         else TermRange = TermRangeS // 春分後
     }
     const t = SolsDif - TermNum * HalfTermLeng
     const n = t / TermRange
     let SunTcorr1 = 0, SunTcorr2 = 0 // , SunTcorr2a = 0
-    if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
-        if (['WuyinA', 'WuyinB'].includes(CalName)) Denom = 11830
+    if (['Daye', 'WuyinA', 'WuyinB'].includes(Name)) {
+        if (['WuyinA', 'WuyinB'].includes(Name)) Denom = 11830
         SunTcorr1 = SunTcorrList[TermNum] + n * (SunTcorrList[TermNum + 1] - SunTcorrList[TermNum])
         SunTcorr1 /= Denom
     } else {
-        if (Type === 7 && CalName !== 'Qintian') { // 拉格朗日內插
+        if (Type === 7 && Name !== 'Qintian') { // 拉格朗日內插
             let TermNum = 0
             for (let j = 0; j <= 23; j++) {
                 if (SolsDif >= AcrTermList[j] && SolsDif < AcrTermList[j + 1]) {
@@ -97,7 +97,7 @@ const SunTcorrTable = (SolsDif, CalName) => {
             const D2 = SunTcorrList[TermNum + 2] - SunTcorrList[TermNum + 1]
             const D = (D1 - D2) / TermRange ** 2 // 日差
             let Plus = D / 2
-            if (['LindeA', 'LindeB', 'Yingtian', 'Qianyuan'].includes(CalName)) Plus = 0 // 這三曆初日沒有減半日差，不精確
+            if (['LindeA', 'LindeB', 'Yingtian', 'Qianyuan'].includes(Name)) Plus = 0 // 這三曆初日沒有減半日差，不精確
             const G1 = D1 / TermRange + (D1 - D2) / (2 * TermRange) - Plus
             const Gt = G1 - (t - 1) * D // 前多者日減，前少者日加初數
             SunTcorr2 = (G1 + Gt) * t / 2 + SunTcorrList[TermNum]
@@ -111,9 +111,9 @@ const SunTcorrTable = (SolsDif, CalName) => {
 }
 // console.log(SunTcorrTable(106, 'Chongtian'))
 
-const SunDifAccumFormula = (SolsDif, CalName) => {
-    const { Type, Denom, SolarRaw } = Para[CalName]
-    let { Solar } = Para[CalName]
+const SunDifAccumFormula = (SolsDif, Name) => {
+    const { Type, Denom, SolarRaw } = Para[Name]
+    let { Solar } = Para[Name]
     Solar = Solar || SolarRaw
     let SunDifAccum = 0
     let sign = 1
@@ -122,7 +122,7 @@ const SunDifAccumFormula = (SolsDif, CalName) => {
     const Solar25 = Solar / 4
     const SolsDifHalf = SolsDif % Solar50
     const T = Solar25 - Math.abs(SolsDifHalf - Solar25)
-    const { QuarA, QuarB } = AutoQuar(CalName, Type)
+    const { QuarA, QuarB } = AutoQuar(Name, Type)
     if (Type === 11) {
         // 定平立三差精確值、曆取値。f(88.5)精確值2.40247，曆取値2.40127 f(45)精確值1.78437，曆取值1.78354
         // DeltaSunA1: 513.3822097763196114, // 513.32
@@ -143,7 +143,7 @@ const SunDifAccumFormula = (SolsDif, CalName) => {
         }
         SunDifAccum *= sign / 10000
     } else { // 王榮彬《中國古代曆法的中心差算式之造術原理》
-        if (CalName === 'Guantian') {
+        if (Name === 'Guantian') {
             let SunDenom = 0
             const SunDenomA = 3294
             const SunDenomB = 3659
@@ -163,14 +163,14 @@ const SunDifAccumFormula = (SolsDif, CalName) => {
                 sign = -1
             }
             SunDifAccum = sign * (T / SunDenom) * (2 * Quadrant - T) // 盈縮差度分。極值2.37
-        } else if (CalName === 'Mingtian') {
+        } else if (Name === 'Mingtian') {
             if (SolsDif > Solar50) sign = -1
             SunDifAccum = sign * T * (200 - T) / 4135 // 盈縮差度分。極值2.4
             // SunTcorr = sign * T * (200 - T) * 400 / 567/Denom 按照月速13.36875算出來，和上面的算式沒有區別，很好
-        } else if (CalName === 'Futian') {
+        } else if (Name === 'Futian') {
             if (SolsDif > Solar50) sign = -1
             SunDifAccum = sign * SolsDifHalf * (Solar50 - SolsDifHalf) / 3300 // 陳久金《符天曆研究》原本是182、3300，我調整一下。所得爲立成的差積度，（3300）極値爲2.5094度，麟德2.77，大衍2.42，九執2.14.採用10000爲分母。
-        } else if (CalName === 'Yitian') {
+        } else if (Name === 'Yitian') {
             const Delta = 24543 / Denom // 盈縮積 // 946785.5=897699.5+24543*2
             Quadrant = QuarA
             if (SolsDif <= QuarA) {
@@ -190,9 +190,9 @@ const SunDifAccumFormula = (SolsDif, CalName) => {
 }
 // console.log(SunDifAccumFormula(88.88, 'Jiyuan'))
 
-const SunTcorrFormula = (SolsDif, CalName) => { // 一定程度上適用於崇玄以後
-    const { SolarRaw, Denom, SunTcorrList } = Para[CalName]
-    let { Solar } = Para[CalName]
+const SunTcorrFormula = (SolsDif, Name) => { // 一定程度上適用於崇玄以後
+    const { SolarRaw, Denom, SunTcorrList } = Para[Name]
+    let { Solar } = Para[Name]
     Solar = Solar || SolarRaw
     let SunTcorr = 0
     if (SunTcorrList) {
@@ -212,7 +212,7 @@ const SunTcorrFormula = (SolsDif, CalName) => { // 一定程度上適用於崇�
             Quadrant = QuarB
         } else sign = -1
         let Plus = 0
-        if (['LindeA', 'LindeB', 'Yingtian', 'Qianyuan'].includes(CalName)) Plus = 1 // 這幾部初定率沒有考慮半日差Delta/Quadrant**2，最後合併同類項多了一個1
+        if (['LindeA', 'LindeB', 'Yingtian', 'Qianyuan'].includes(Name)) Plus = 1 // 這幾部初定率沒有考慮半日差Delta/Quadrant**2，最後合併同類項多了一個1
         SunTcorr = sign * ((Delta * T / Quadrant ** 2) * (2 * Quadrant - T + Plus))
     }
     return SunTcorr * Denom
@@ -220,11 +220,11 @@ const SunTcorrFormula = (SolsDif, CalName) => { // 一定程度上適用於崇�
 // console.log(SunTcorrFormula(31.9780521262, 'Jiyuan'))
 
 // 這是魏晉南北朝的月離表
-const MoonTcorrTable1 = (AnomaAccum, CalName) => {
-    const { MoonAcrVList, MoonDifAccumList, Anoma, ZhangRange } = Para[CalName]
+const MoonTcorrTable1 = (AnomaAccum, Name) => {
+    const { MoonAcrVList, MoonDifAccumList, Anoma, ZhangRange } = Para[Name]
     AnomaAccum %= Anoma
     // const MoonAcrVList = MoonAcrVRaw.slice()
-    // if (['Tsrengguang', 'Xinghe', 'Tianbao', 'Daming',].includes(CalName)) {
+    // if (['Tsrengguang', 'Xinghe', 'Tianbao', 'Daming',].includes(Name)) {
     //     for (let i = 0; i <= 28; i++) {
     //         MoonAcrVList[i] = (MoonAcrVList[i] * ZhangRange)
     //     }
@@ -240,23 +240,23 @@ const MoonTcorrTable1 = (AnomaAccum, CalName) => {
     // }
     // MoonDifAccumList = MoonDifAccumList.slice(-1).concat(MoonDifAccumList.slice(0, -1))
     // MoonDifAccumList[0] = 0
-    const MoonAvgDV = AutoMoonAvgV(CalName)
+    const MoonAvgDV = AutoMoonAvgV(Name)
     const MoonAvgDVdenom = parseFloat((MoonAvgDV * ZhangRange).toPrecision(12)) // 乾象254=章歲+章月
     const AnomaAccumInt = ~~AnomaAccum
     const AnomaAccumFract = AnomaAccum - AnomaAccumInt
     let MoonDifAccum1 = MoonDifAccumList[AnomaAccumInt] + AnomaAccumFract * (MoonDifAccumList[AnomaAccumInt + 1] - MoonDifAccumList[AnomaAccumInt]) //* MoonAcrAvgDifList[AnomaAccumInt]
     const SunAvgV = ZhangRange
     let MoonTcorr1 = 0
-    if (['Qianxiang', 'Jingchu', 'Daming', 'Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
+    if (['Qianxiang', 'Jingchu', 'Daming', 'Daye', 'WuyinA', 'WuyinB'].includes(Name)) {
         MoonTcorr1 = -MoonDifAccum1 / (MoonAcrVList[~~AnomaAccum] - SunAvgV)
-    } else if (['Yuanjia'].includes(CalName)) { // 「賓等依何承天法」
+    } else if (['Yuanjia'].includes(Name)) { // 「賓等依何承天法」
         const MoonAcrDayDif = [] // 列差
         for (let i = 0; i <= 27; i++) {
             MoonAcrDayDif[i] = MoonAcrVList[i + 1] - MoonAcrVList[i]
         }
         const MoonAcrV1 = MoonAcrVList[AnomaAccumInt] + AnomaAccumFract * MoonAcrDayDif[AnomaAccumInt]
         MoonTcorr1 = -MoonDifAccum1 / (MoonAcrV1 - SunAvgV)
-    } else if (['Tsrengguang', 'Xinghe', 'Tianbao'].includes(CalName)) {
+    } else if (['Tsrengguang', 'Xinghe', 'Tianbao'].includes(Name)) {
         MoonTcorr1 = -MoonDifAccum1 / MoonAvgDVdenom
     }
     MoonDifAccum1 /= ZhangRange
@@ -264,9 +264,9 @@ const MoonTcorrTable1 = (AnomaAccum, CalName) => {
 }
 // console.log(MoonTcorrTable1(14, 'Daming').MoonDifAccum1)
 
-const MoonAcrSTable1 = (AnomaAccum, CalName) => {
-    const { MoonDifAccumList, ZhangRange } = Para[CalName]
-    const MoonAvgDV = AutoMoonAvgV(CalName)
+const MoonAcrSTable1 = (AnomaAccum, Name) => {
+    const { MoonDifAccumList, ZhangRange } = Para[Name]
+    const MoonAvgDV = AutoMoonAvgV(Name)
     const MoonAvgDVdenom = parseFloat((MoonAvgDV * ZhangRange).toPrecision(12))
     const MoonAcrSList = []
     for (let i = 0; i <= 28; i++) {
@@ -279,8 +279,8 @@ const MoonAcrSTable1 = (AnomaAccum, CalName) => {
 }
 // console.log(MoonAcrSTable1(0.1, 'Daming'))
 
-const MoonTcorrTable = (AnomaAccum, CalName) => {
-    const { Type, MoonTcorrList, Anoma, Denom } = Para[CalName]
+const MoonTcorrTable = (AnomaAccum, Name) => {
+    const { Type, MoonTcorrList, Anoma, Denom } = Para[Name]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
     const Anoma75 = Anoma * 0.75
@@ -296,14 +296,14 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
     let Plus = 0
     let MoonTcorr1 = 0
     let MoonTcorr2 = 0
-    if (CalName === 'Qintian') {
+    if (Name === 'Qintian') {
         const PartRange = Anoma / 248
         const XianNum = ~~(AnomaAccum / PartRange)
         const XianFrac = AnomaAccum / PartRange - XianNum // 占一限的百分比，而非一日。
         MoonTcorr1 = MoonTcorrList[XianNum] + XianFrac * (MoonTcorrList[XianNum + 1] - MoonTcorrList[XianNum])
     } else {
-        const { MoonTcorrDifPos: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AnomaAccum, CalName)
-        if (CalName === 'Yitian') {
+        const { MoonTcorrDifPos: MoonTcorrDif, TheDenom } = AutoMoonTcorrDif(AnomaAccum, Name)
+        if (Name === 'Yitian') {
             AnomaAccumInt = AnomaAccumQuarInt
             AnomaAccumFrac = AnomaAccumQuarFrac
             if (AnomaAccum < Anoma25) {
@@ -315,7 +315,7 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
             } else {
                 MoonTcorr1 = MoonTcorrList[Plus + AnomaAccumInt] + MoonTcorrDif * AnomaAccumFrac
             }
-        } else if (['Xuanming', 'Yingtian'].includes(CalName)) {
+        } else if (['Xuanming', 'Yingtian'].includes(Name)) {
             AnomaAccumInt = AnomaAccumHalfInt
             AnomaAccumFrac = AnomaAccumHalfFrac
             if (AnomaAccum >= Anoma50) Plus = 14
@@ -344,8 +344,8 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
             }
         }
     }
-    if (Type === 7 && CalName !== 'Qintian') {
-        if (CalName === 'Xuanming') {
+    if (Type === 7 && Name !== 'Qintian') {
+        if (Name === 'Xuanming') {
             AnomaAccumInt = AnomaAccumHalfInt
             AnomaAccumFrac = AnomaAccumHalfFrac
             if (AnomaAccum >= Anoma50) Plus = 14
@@ -370,8 +370,8 @@ const MoonTcorrTable = (AnomaAccum, CalName) => {
 // console.log(MoonTcorrTable(27.5, 'Qintian').MoonTcorr1)
 // console.log(MoonTcorrTable(27.5, 'Jiyuan').MoonTcorr1)
 
-const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不處理欽天了
-    const { Type, Anoma, MoonAcrVList, Denom } = Para[CalName]
+const MoonDifAccumTable = (AnomaAccum, Name) => { // 暫時沒有用，就不處理欽天了
+    const { Type, Anoma, MoonAcrVList, Denom } = Para[Name]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
     const Anoma75 = Anoma * 0.75
@@ -384,15 +384,15 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
     const AnomaAccumQuar = AnomaAccum % Anoma25
     const AnomaAccumQuarInt = ~~AnomaAccumQuar
     const AnomaAccumQuarFrac = AnomaAccumQuar - AnomaAccumQuarInt
-    const MoonAvgDV = AutoMoonAvgV(CalName)
+    const MoonAvgDV = AutoMoonAvgV(Name)
     // const MoonAvgDVdenom = parseFloat((MoonAvgDV * Denom).toPrecision(12))
     // 下月離表。麟德：盈加朒減，速減遲加
     const MoonAcrAvgDifList = [] // 損益率。速差。消減息加，前消後息。加減數（限）。《古代曆法計算法》第515-518頁。《中國古代曆法》第453頁說劉洪濤誤會爲實平行差。麟德爲增減率
     let MoonDifAccumList = []
     let MoonDegDenom = Denom
-    if (CalName === 'Qintian' || Type >= 8) {
+    if (Name === 'Qintian' || Type >= 8) {
         MoonDegDenom = 100
-        if (['Yingtian', 'Yitian'].includes(CalName)) {
+        if (['Yingtian', 'Yitian'].includes(Name)) {
             MoonDegDenom = Denom / 100
         }
     }
@@ -410,14 +410,14 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
     }
     MoonDifAccumList = [0, ...MoonDifAccumList]
     let Plus = 0
-    if (CalName === 'Yitian') {
+    if (Name === 'Yitian') {
         AnomaAccumInt = AnomaAccumQuarInt
         AnomaAccumFrac = AnomaAccumQuarFrac
         if (AnomaAccum < Anoma25) {
         } else if (AnomaAccum < Anoma50) Plus = 7
         else if (AnomaAccum < Anoma75) Plus = 14
         else Plus = 21
-    } else if (['Xuanming', 'Yingtian'].includes(CalName)) {
+    } else if (['Xuanming', 'Yingtian'].includes(Name)) {
         AnomaAccumInt = AnomaAccumHalfInt
         AnomaAccumFrac = AnomaAccumHalfFrac
         if (AnomaAccum >= Anoma50) Plus = 14
@@ -445,8 +445,8 @@ const MoonDifAccumTable = (AnomaAccum, CalName) => { // 暫時沒有用，就不
 }
 // console.log(MoonDifAccumTable(6.92, 'Tongtian'))
 
-const MoonAcrSTable2 = (AnomaAccum, CalName) => {
-    const { Type, Anoma, MoonAcrVList, Denom } = Para[CalName]
+const MoonAcrSTable2 = (AnomaAccum, Name) => {
+    const { Type, Anoma, MoonAcrVList, Denom } = Para[Name]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
     const Anoma75 = Anoma * 0.75
@@ -460,15 +460,15 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     const AnomaAccumQuarInt = ~~AnomaAccumQuar
     const AnomaAccumQuarFrac = AnomaAccumQuar - AnomaAccumQuarInt
     let MoonDegDenom = Denom
-    if (CalName === 'Qintian' || Type >= 8) {
+    if (Name === 'Qintian' || Type >= 8) {
         MoonDegDenom = 100
-        if (['Yingtian', 'Yitian'].includes(CalName)) MoonDegDenom = Denom / 100
+        if (['Yingtian', 'Yitian'].includes(Name)) MoonDegDenom = Denom / 100
     }
     const MoonAcrDV = []
-    const num = CalName === 'Qintian' ? 248 : 27
+    const num = Name === 'Qintian' ? 248 : 27
     for (let i = 0; i <= num; i++) {
         MoonAcrDV[i] = MoonAcrVList[i] / MoonDegDenom
-        MoonAcrDV[i] *= CalName === 'Qintian' ? 1 / 9 : 1
+        MoonAcrDV[i] *= Name === 'Qintian' ? 1 / 9 : 1
     }
     let MoonAcrSList = MoonAcrDV.slice()
     for (let i = 1; i <= num; i++) {
@@ -478,20 +478,20 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
     MoonAcrSList = [0, ...MoonAcrSList]
     let Plus = 0
     let MoonAcrS = 0
-    if (CalName === 'Qintian') {
+    if (Name === 'Qintian') {
         const PartRange = Anoma / 248
         const XianNum = ~~(AnomaAccum / PartRange)
         const XianFrac = AnomaAccum / PartRange - XianNum // 占一限的百分比，而非一日。
         MoonAcrS = MoonAcrSList[XianNum] + XianFrac * (MoonAcrSList[XianNum + 1] - MoonAcrSList[XianNum])
     } else {
-        if (CalName === 'Yitian') {
+        if (Name === 'Yitian') {
             AnomaAccumInt = AnomaAccumQuarInt
             AnomaAccumFrac = AnomaAccumQuarFrac
             if (AnomaAccum < Anoma25) {
             } else if (AnomaAccum < Anoma50) Plus = 7
             else if (AnomaAccum < Anoma75) Plus = 14
             else Plus = 21
-        } else if (['Xuanming', 'Yingtian'].includes(CalName)) {
+        } else if (['Xuanming', 'Yingtian'].includes(Name)) {
             AnomaAccumInt = AnomaAccumHalfInt
             AnomaAccumFrac = AnomaAccumHalfFrac
             if (AnomaAccum >= Anoma50) Plus = 14
@@ -507,11 +507,11 @@ const MoonAcrSTable2 = (AnomaAccum, CalName) => {
 // console.log(MoonAcrSTable2(27.5, 'Jiyuan'))
 // console.log(MoonAcrSTable2(27.5, 'Qintian'))
 
-export const MoonFormula = (AnomaAccumRaw, CalName) => {
-    const { Type, Anoma, PartRange } = Para[CalName]
+export const MoonFormula = (AnomaAccumRaw, Name) => {
+    const { Type, Anoma, PartRange } = Para[Name]
     const Anoma50 = Anoma / 2 // 轉中
     const Anoma25 = Anoma / 4
-    const MoonAvgDV = AutoMoonAvgV(CalName)
+    const MoonAvgDV = AutoMoonAvgV(Name)
     const AnomaAccumRev = Anoma50 - Math.abs(AnomaAccumRaw - Anoma50)
     let MoonDifAccum = 0, MoonAcrDV = 0
     let signB = 1
@@ -528,7 +528,7 @@ export const MoonFormula = (AnomaAccumRaw, CalName) => {
         // }
         MoonAcrDV = MoonAcrVListA[AnomaAccumPart]
     } else {
-        if (CalName === 'Mingtian') {
+        if (Name === 'Mingtian') {
             // AnomaAccum = big.div(SolsAccum, Lunar).add(i - 1 + ZhengSolsDif).mul(2142887000).mod(AnomaNumer).floor().div(81120000).toNumber()
             // AnomaAccum[i] = (Math.floor(SolsAccum / Lunar + i - 1 + ZhengSolsDif) * 2142887000 % AnomaNumer) / 81120000
             const AnomaAccum = AnomaAccumRaw * MoonAvgDV
@@ -544,7 +544,7 @@ export const MoonFormula = (AnomaAccumRaw, CalName) => {
             MoonDifAccum = tmp / 1976 // 遲疾差度 //+ T * (MoonAvgDV - Sidereal / Anoma) / MoonAvgDV // 《中國古代曆法》頁110莫名其妙說要加上後面這個，但不加纔跟其他曆相合
             // MoonTcorr2 = tmp / 0.67735 / Denom // 遲疾定差 13.36875*1976/0.67735=39000
             MoonAcrDV = 13.36875 + sign3 * (1.27 - T / 72.5) // 原文739
-        } else if (CalName === 'Futian') {
+        } else if (Name === 'Futian') {
             let AnomaAccum = AnomaAccumRaw
             if (AnomaAccumRaw > Anoma / 2) {
                 AnomaAccum -= Anoma / 2
@@ -558,39 +558,39 @@ export const MoonFormula = (AnomaAccumRaw, CalName) => {
 }
 // console.log(MoonFormula(12.903, 'Shoushi').MoonAcrDV)
 
-export const AutoTcorr = (AnomaAccum, SolsDif, CalName, NodeAccum, year) => {
-    const { Type, SolarRaw, PartRange, Anoma, NodeDenom } = Para[CalName]
-    let { Solar } = Para[CalName]
+export const AutoTcorr = (AnomaAccum, SolsDif, Name, NodeAccum, year) => {
+    const { Type, SolarRaw, PartRange, Anoma, NodeDenom } = Para[Name]
+    let { Solar } = Para[Name]
     Solar = Solar || SolarRaw
     SolsDif %= Solar
     AnomaAccum %= Anoma
     let sunFunc = {}, moonFunc = {}, TcorrFunc = {}
     let SunTcorr2 = 0, SunTcorr1 = 0, MoonTcorr2 = 0, MoonTcorr1 = 0, Tcorr2 = 0, Tcorr1 = 0, NodeAccumCorrA = 0, NodeAccumCorrB = 0, SunDifAccum = 0, MoonDifAccum = 0, SunTcorr = 0, MoonTcorr = 0, MoonAcrDV = 0 // Tcorr2二次或三次內插
-    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Yisi', 'LindeB', 'Shenlong', 'Zhide', 'Daming1', 'Daming2', 'Yiwei', 'Gengwu'].includes(CalName)) {
-        if (CalName === 'Huangchu') {
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Yisi', 'LindeB', 'Shenlong', 'Zhide', 'Daming1', 'Daming2', 'Yiwei', 'Gengwu'].includes(Name)) {
+        if (Name === 'Huangchu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Qianxiang').Tcorr1
-        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
+        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(Name)) {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Jingchu').Tcorr1
-        } else if (CalName === 'Xuanshi') {
+        } else if (Name === 'Xuanshi') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Tsrengguang').Tcorr1
-        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(CalName)) {
+        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(Name)) {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Tianbao').Tcorr1
-        } else if (CalName === 'Kaihuang') {
+        } else if (Name === 'Kaihuang') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Yuanjia').Tcorr1
-        } else if (CalName === 'Liangwu') {
+        } else if (Name === 'Liangwu') {
             Tcorr1 = AutoTcorr(AnomaAccum, 0, 'Daming').Tcorr1
-        } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+        } else if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
             Tcorr1 = AutoTcorr(AnomaAccum, SolsDif, 'Daye').Tcorr1
         } else {
-            if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
+            if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, SolsDif, 'LindeA')
-            } else if (['Zhide', 'TaiyiKaiyuan'].includes(CalName)) {
+            } else if (['Zhide', 'TaiyiKaiyuan'].includes(Name)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, SolsDif, 'Dayan')
-            } else if (['TaiyiJingyou'].includes(CalName)) {
+            } else if (['TaiyiJingyou'].includes(Name)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, SolsDif, 'Chongtian')
-            } else if (['Daming1', 'Daming2'].includes(CalName)) {
+            } else if (['Daming1', 'Daming2'].includes(Name)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, SolsDif, 'Jiyuan')
-            } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
+            } else if (['Yiwei', 'Gengwu'].includes(Name)) {
                 TcorrFunc = AutoTcorr(AnomaAccum, SolsDif, 'Daming3')
             }
             Tcorr1 = TcorrFunc.Tcorr1
@@ -601,13 +601,13 @@ export const AutoTcorr = (AnomaAccum, SolsDif, CalName, NodeAccum, year) => {
             MoonTcorr1 = TcorrFunc.MoonTcorr1
         }
     } else {
-        if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
-            SunTcorr1 = SunTcorrTable(SolsDif, CalName).SunTcorr1
-            MoonTcorr1 = MoonTcorrTable1(AnomaAccum, CalName).MoonTcorr1
+        if (['Daye', 'WuyinA', 'WuyinB'].includes(Name)) {
+            SunTcorr1 = SunTcorrTable(SolsDif, Name).SunTcorr1
+            MoonTcorr1 = MoonTcorrTable1(AnomaAccum, Name).MoonTcorr1
             Tcorr1 = SunTcorr1 + MoonTcorr1
             const HalfTermLeng = Solar / 24
             const TermNum = ~~(SolsDif / HalfTermLeng)
-            if (CalName === 'Daye') {
+            if (Name === 'Daye') {
                 if (TermNum <= 4) {
                     NodeAccumCorrA = Math.abs(SolsDif - HalfTermLeng) * 1380 / NodeDenom
                 } else if (TermNum <= 8) {
@@ -642,40 +642,40 @@ export const AutoTcorr = (AnomaAccum, SolsDif, CalName, NodeAccum, year) => {
                 }
             }
         } else if (Type <= 4) {
-            MoonTcorr1 = MoonTcorrTable1(AnomaAccum, CalName).MoonTcorr1
+            MoonTcorr1 = MoonTcorrTable1(AnomaAccum, Name).MoonTcorr1
             Tcorr1 = MoonTcorr1
-        } else if (['Yitian', 'Guantian'].includes(CalName)) {
-            const MoonAvgDV = AutoMoonAvgV(CalName)
-            SunDifAccum = SunDifAccumFormula(SolsDif, CalName)
-            MoonTcorr1 = -(MoonTcorrTable(AnomaAccum, CalName).MoonTcorr1)
+        } else if (['Yitian', 'Guantian'].includes(Name)) {
+            const MoonAvgDV = AutoMoonAvgV(Name)
+            SunDifAccum = SunDifAccumFormula(SolsDif, Name)
+            MoonTcorr1 = -(MoonTcorrTable(AnomaAccum, Name).MoonTcorr1)
             SunTcorr2 = SunDifAccum / MoonAvgDV
             Tcorr2 = SunTcorr2 + MoonTcorr1
-        } else if (['Futian', 'Mingtian'].includes(CalName)) {
-            const MoonAvgDV = AutoMoonAvgV(CalName)
-            SunDifAccum = SunDifAccumFormula(SolsDif, CalName)
-            const MoonFunc = MoonFormula(AnomaAccum, CalName)
+        } else if (['Futian', 'Mingtian'].includes(Name)) {
+            const MoonAvgDV = AutoMoonAvgV(Name)
+            SunDifAccum = SunDifAccumFormula(SolsDif, Name)
+            const MoonFunc = MoonFormula(AnomaAccum, Name)
             MoonDifAccum = MoonFunc.MoonDifAccum
             MoonAcrDV = MoonFunc.MoonAcrDV
             SunTcorr2 = SunDifAccum / MoonAvgDV
             MoonTcorr2 = -MoonDifAccum / MoonAvgDV
             Tcorr2 = SunTcorr2 + MoonTcorr2
-        } else if (Type === 7 && CalName !== 'Qintian') {
-            sunFunc = SunTcorrTable(SolsDif, CalName)
-            moonFunc = MoonTcorrTable(AnomaAccum, CalName)
+        } else if (Type === 7 && Name !== 'Qintian') {
+            sunFunc = SunTcorrTable(SolsDif, Name)
+            moonFunc = MoonTcorrTable(AnomaAccum, Name)
             SunTcorr2 = sunFunc.SunTcorr2
             MoonTcorr2 = -moonFunc.MoonTcorr2
             MoonTcorr1 = -moonFunc.MoonTcorr1
             Tcorr2 = SunTcorr2 + MoonTcorr2
             Tcorr1 = SunTcorr2 + MoonTcorr1
         } else if (Type < 11) {
-            sunFunc = SunTcorrTable(SolsDif, CalName)
+            sunFunc = SunTcorrTable(SolsDif, Name)
             SunTcorr2 = sunFunc.SunTcorr2
-            moonFunc = MoonTcorrTable(AnomaAccum + (CalName === 'Qintian' ? SunTcorr2 : 0), CalName)
+            moonFunc = MoonTcorrTable(AnomaAccum + (Name === 'Qintian' ? SunTcorr2 : 0), Name)
             MoonTcorr1 = -moonFunc.MoonTcorr1
             Tcorr2 = SunTcorr2 + MoonTcorr1
         } else if (Type === 11) {
-            SunDifAccum = SunDifAccumFormula(SolsDif, CalName)
-            moonFunc = MoonFormula(AnomaAccum, CalName)
+            SunDifAccum = SunDifAccumFormula(SolsDif, Name)
+            moonFunc = MoonFormula(AnomaAccum, Name)
             MoonDifAccum = moonFunc.MoonDifAccum
             MoonAcrDV = moonFunc.MoonAcrDV
             SunTcorr2 = SunDifAccum * PartRange / MoonAcrDV
@@ -693,7 +693,7 @@ export const AutoTcorr = (AnomaAccum, SolsDif, CalName, NodeAccum, year) => {
         SunTcorr = SunTcorr2 || (SunTcorr1 || 0)
         MoonTcorr = MoonTcorr2 || MoonTcorr1
         if (Type >= 5 && Type <= 10) {
-            const Portion = AutoNodePortion(CalName)
+            const Portion = AutoNodePortion(Name)
             NodeAccumCorrA = SunTcorr + Portion * MoonTcorr //  // 劉金沂《麟德曆交食計算法》。 const signNodeAccum = 1 // NodeAccumHalf > Node25 ? -1 : 1// 交前、先交。交後交在後，符號同定朔改正，交前，與定朔相反。 // 至少大衍的符號和定朔完全相同「⋯⋯以朓減朒加入交常」
             NodeAccumCorrB = Portion * SunTcorr + MoonTcorr // 太陽入交定日，上面是月亮入交定日
         }
@@ -706,57 +706,57 @@ export const AutoTcorr = (AnomaAccum, SolsDif, CalName, NodeAccum, year) => {
 }
 // console.log(AutoTcorr(6, 9, 'Qintian').MoonTcorr)
 
-export const AutoDifAccum = (AnomaAccum, SolsDif, CalName, year) => {
-    const { Type, SolarRaw, Anoma } = Para[CalName]
-    let { Solar } = Para[CalName]
+export const AutoDifAccum = (AnomaAccum, SolsDif, Name, year) => {
+    const { Type, SolarRaw, Anoma } = Para[Name]
+    let { Solar } = Para[Name]
     Solar = Solar || SolarRaw
     SolsDif %= Solar
     AnomaAccum %= Anoma
     let DifAccumFunc = {}
     let SunDifAccum = 0, MoonDifAccum = 0
-    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Yisi', 'LindeB', 'Shenlong', 'Zhide', 'Daming1', 'Daming2', 'Yiwei', 'Gengwu'].includes(CalName)) {
-        if (CalName === 'Huangchu') {
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Yisi', 'LindeB', 'Shenlong', 'Zhide', 'Daming1', 'Daming2', 'Yiwei', 'Gengwu'].includes(Name)) {
+        if (Name === 'Huangchu') {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Qianxiang').MoonDifAccum
-        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
+        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(Name)) {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Jingchu').MoonDifAccum
-        } else if (CalName === 'Xuanshi') {
+        } else if (Name === 'Xuanshi') {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Tsrengguang').MoonDifAccum
-        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(CalName)) {
+        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(Name)) {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Tianbao').MoonDifAccum
-        } else if (CalName === 'Kaihuang') {
+        } else if (Name === 'Kaihuang') {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Yuanjia').MoonDifAccum
-        } else if (CalName === 'Liangwu') {
+        } else if (Name === 'Liangwu') {
             MoonDifAccum = AutoDifAccum(AnomaAccum, 0, 'Liangwu').MoonDifAccum
         } else {
-            if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+            if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, 'Daye')
-            } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
+            } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, 'LindeA')
-            } else if (CalName === 'Zhide') {
+            } else if (Name === 'Zhide') {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, 'Dayan')
-            } else if (['Daming1', 'Daming2'].includes(CalName)) {
+            } else if (['Daming1', 'Daming2'].includes(Name)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, 'Jiyuan')
-            } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
+            } else if (['Yiwei', 'Gengwu'].includes(Name)) {
                 DifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, 'Daming3')
             }
             SunDifAccum = DifAccumFunc.SunDifAccum
             MoonDifAccum = DifAccumFunc.MoonDifAccum
         }
     } else {
-        if (['Daye', 'WuyinA', 'WuyinB'].includes(CalName)) {
-            SunDifAccum = AutoTcorr(AnomaAccum, SolsDif, CalName).SunTcorr1 * AutoMoonAvgV(CalName)
-            MoonDifAccum = MoonTcorrTable1(AnomaAccum, CalName).MoonDifAccum1
+        if (['Daye', 'WuyinA', 'WuyinB'].includes(Name)) {
+            SunDifAccum = AutoTcorr(AnomaAccum, SolsDif, Name).SunTcorr1 * AutoMoonAvgV(Name)
+            MoonDifAccum = MoonTcorrTable1(AnomaAccum, Name).MoonDifAccum1
         } else if (Type <= 4) {
-            MoonDifAccum = MoonTcorrTable1(AnomaAccum, CalName).MoonDifAccum1
-        } else if (['Yitian', 'Guantian'].includes(CalName)) {
-            SunDifAccum = SunDifAccumFormula(SolsDif, CalName)
-            MoonDifAccum = MoonDifAccumTable(AnomaAccum, CalName)
-        } else if (['Futian', 'Mingtian'].includes(CalName) || Type === 11) {
-            SunDifAccum = SunDifAccumFormula(SolsDif, CalName)
-            MoonDifAccum = MoonFormula(AnomaAccum, CalName).MoonDifAccum
+            MoonDifAccum = MoonTcorrTable1(AnomaAccum, Name).MoonDifAccum1
+        } else if (['Yitian', 'Guantian'].includes(Name)) {
+            SunDifAccum = SunDifAccumFormula(SolsDif, Name)
+            MoonDifAccum = MoonDifAccumTable(AnomaAccum, Name)
+        } else if (['Futian', 'Mingtian'].includes(Name) || Type === 11) {
+            SunDifAccum = SunDifAccumFormula(SolsDif, Name)
+            MoonDifAccum = MoonFormula(AnomaAccum, Name).MoonDifAccum
         } else if (Type < 11) {
-            SunDifAccum = SunDifAccumTable(SolsDif, CalName)
-            MoonDifAccum = MoonDifAccumTable(AnomaAccum, CalName)
+            SunDifAccum = SunDifAccumTable(SolsDif, Name)
+            MoonDifAccum = MoonDifAccumTable(AnomaAccum, Name)
         } else if (Type === 20) {
             SunDifAccum = SunAcrVWest(SolsDif, year).SunDifAccum
             MoonDifAccum = MoonAcrVWest(AnomaAccum, year).MoonDifAccum
@@ -766,64 +766,64 @@ export const AutoDifAccum = (AnomaAccum, SolsDif, CalName, year) => {
 }
 // console.log(AutoDifAccum(9, 9, 'Chongxuan').MoonDifAccum)
 
-export const AutoMoonAcrS = (AnomaAccum, CalName) => {
-    const { Type, Anoma } = Para[CalName]
+export const AutoMoonAcrS = (AnomaAccum, Name) => {
+    const { Type, Anoma } = Para[Name]
     let MoonAcrS = 0, AnomaCycle = 0
-    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Yisi', 'LindeB', 'Shenlong', 'Zhide', 'Daming1', 'Daming2', 'Yiwei', 'Gengwu'].includes(CalName)) {
-        if (CalName === 'Huangchu') {
+    if (['Huangchu', 'Liuzhi', 'Wangshuozhi', 'Sanji', 'Xuanshi', 'Jiayin', 'Tianhe', 'Daxiang', 'Kaihuang', 'Liangwu', 'Zhangmengbin', 'Liuxiaosun', 'Yisi', 'LindeB', 'Shenlong', 'Zhide', 'Daming1', 'Daming2', 'Yiwei', 'Gengwu'].includes(Name)) {
+        if (Name === 'Huangchu') {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Qianxiang')
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Qianxiang')
-        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(CalName)) {
+        } else if (['Liuzhi', 'Wangshuozhi', 'Sanji'].includes(Name)) {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Jingchu')
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Jingchu')
-        } else if (CalName === 'Xuanshi') {
+        } else if (Name === 'Xuanshi') {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Tsrengguang')
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Tsrengguang')
-        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(CalName)) {
+        } else if (['Jiayin', 'Tianhe', 'Daxiang'].includes(Name)) {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Tianbao')
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Tianbao')
-        } else if (CalName === 'Kaihuang') {
+        } else if (Name === 'Kaihuang') {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Yuanjia')
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Yuanjia')
-        } else if (CalName === 'Liangwu') {
+        } else if (Name === 'Liangwu') {
             MoonAcrS = MoonAcrSTable1(AnomaAccum, 'Daming')
             AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, 'Daming')
         } else {
-            if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+            if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Daye')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Daye')
-            } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
+            } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'LindeA')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'LindeA')
-            } else if (CalName === 'Zhide') {
+            } else if (Name === 'Zhide') {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Dayan')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Dayan')
-            } else if (['Daming1', 'Daming2'].includes(CalName)) {
+            } else if (['Daming1', 'Daming2'].includes(Name)) {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Jiyuan')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Jiyuan')
-            } else if (['Yiwei', 'Gengwu'].includes(CalName)) {
+            } else if (['Yiwei', 'Gengwu'].includes(Name)) {
                 MoonAcrS = MoonAcrSTable2(AnomaAccum, 'Daming3')
                 AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, 'Daming3')
             }
         }
     } else {
         if (Type > 1 && Type < 5) {
-            MoonAcrS = MoonAcrSTable1(AnomaAccum, CalName)
-            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, CalName)
+            MoonAcrS = MoonAcrSTable1(AnomaAccum, Name)
+            AnomaCycle = MoonAcrSTable1(Anoma - 1e-13, Name)
         } else {
-            if (CalName === 'Mingtian') {
-                MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
+            if (Name === 'Mingtian') {
+                MoonAcrS = MoonFormula(AnomaAccum, Name).MoonAcrS
                 AnomaCycle = 368.3708
-            } else if (CalName === 'Futian' || Type === 11) {
-                MoonAcrS = MoonFormula(AnomaAccum, CalName).MoonAcrS
-                AnomaCycle = MoonFormula(Anoma - 1e-13, CalName).MoonAcrS
+            } else if (Name === 'Futian' || Type === 11) {
+                MoonAcrS = MoonFormula(AnomaAccum, Name).MoonAcrS
+                AnomaCycle = MoonFormula(Anoma - 1e-13, Name).MoonAcrS
             } else {
-                MoonAcrS = MoonAcrSTable2(AnomaAccum, CalName)
-                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, CalName)
+                MoonAcrS = MoonAcrSTable2(AnomaAccum, Name)
+                AnomaCycle = MoonAcrSTable2(Anoma - 1e-13, Name)
             }
         }
     }
-    // if (['Xuanming', 'Yingtian', 'Yitian'].includes(CalName)) {
+    // if (['Xuanming', 'Yingtian', 'Yitian'].includes(Name)) {
     //     if (AnomaAccum > Anoma / 2) {
     //         MoonAcrS += AnomaCycle
     //     }

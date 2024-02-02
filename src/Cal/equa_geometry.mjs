@@ -180,7 +180,7 @@ const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
 
 }
 // 弧矢割圓術黃赤轉換。跟元志六《黃赤道率》立成表分毫不差，耶！！！
-export const Hushigeyuan = (LongiRaw, CalName) => { // 變量名見《中國古代曆法》頁629
+export const Hushigeyuan = (LongiRaw, Name) => { // 變量名見《中國古代曆法》頁629
     // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915    
     LongiRaw += 1e-12
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
@@ -193,7 +193,7 @@ export const Hushigeyuan = (LongiRaw, CalName) => { // 變量名見《中國古�
     //////////晷漏//////// 
     // const v2 = LatiFunc.h
     const SunHundred = 6 * ON + 1 // 日行百刻度
-    const Banhubei = p2Another * (['Datong', 'Datong2'].includes(CalName) ? 14.5554 : 19.9614) / pAnother // 19.9614：二至出入差半弧背 // 根據大統晨昏立成，14.5554與冬至初日相合
+    const Banhubei = p2Another * (['Datong', 'Datong2'].includes(Name) ? 14.5554 : 19.9614) / pAnother // 19.9614：二至出入差半弧背 // 根據大統晨昏立成，14.5554與冬至初日相合
     const Rise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
     //  const Duskstar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
     return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati, Lati1, Rise }

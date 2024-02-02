@@ -286,7 +286,7 @@ webpack
 - Sc 干支 sexagenary cycle
 - Stem 天干
 - Branch 地支
-- CalName 曆法名 calendar name
+- Name 曆法名 calendar name
 - Hexagram 八卦
 - Mansion 宿
 - MoonGod 月神

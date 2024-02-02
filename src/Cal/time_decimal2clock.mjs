@@ -23,25 +23,25 @@ export const ClockWest = Deci => {
     return Print
 }
 
-const ClockWeijin = (Deci, CalName) => {
-    const { Type } = Para[CalName]
+const ClockWeijin = (Deci, Name) => {
+    const { Type } = Para[Name]
     Deci = big(Deci)
     const Portion = big.div(100, 12)
-    if (CalName === 'Easthan' || Type >= 5) {
+    if (Name === 'Easthan' || Type >= 5) {
         Deci = Deci.add(100 / 24).mod(100)
     }
     let ClockOrder = (Deci.div(Portion)).floor().toNumber()
     const ClockFrac = Deci.sub(big(ClockOrder).mul(Portion))
     const Twelve = ((big.div(ClockFrac, Portion)).mul(12)).floor().toNumber()
-    if (Twelve === 11 && CalName !== 'WuyinA') {
+    if (Twelve === 11 && Name !== 'WuyinA') {
         ClockOrder++
     }
     let TwelveName = ''
     if (Type <= 4) {
         TwelveName = TwelveList[Twelve]
-    } else if (CalName === 'Huangji') {
+    } else if (Name === 'Huangji') {
         TwelveName = TwelveListHuangji[Twelve]
-    } else if (CalName === 'WuyinA') { // 戊寅交食加時。滕艳辉等:《戊寅元历》的日月食推算方法
+    } else if (Name === 'WuyinA') { // 戊寅交食加時。滕艳辉等:《戊寅元历》的日月食推算方法
         TwelveName = TwelveListWuyin[Twelve]
     }
     return BranchList[ClockOrder + 1] + '時' + TwelveName
@@ -123,12 +123,12 @@ const ClockQing = DeciRaw => { // 清代96刻
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + '刻' + (MinOrder === 0 ? '' : nzh.encodeS(MinOrder) + '分') + (SecOrder === 0 ? '' : nzh.encodeS(SecOrder) + '秒')
 }
 // console.log(ClockQing(99.99))
-export const AutoClock = (Deci, CalName) => {
-    const { Type } = Para[CalName]
+export const AutoClock = (Deci, Name) => {
+    const { Type } = Para[Name]
     let Print = ''
-    if (Type <= 6 && !['LindeA', 'LindeB'].includes(CalName)) {
-        Print = ClockWeijin(Deci, CalName)
-    } else if (Type === 7 || ['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian'].includes(CalName)) { // 因為宋志皇祐渾儀排在明天之後觀天之前
+    if (Type <= 6 && !['LindeA', 'LindeB'].includes(Name)) {
+        Print = ClockWeijin(Deci, Name)
+    } else if (Type === 7 || ['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian'].includes(Name)) { // 因為宋志皇祐渾儀排在明天之後觀天之前
         Print = ClockTang(Deci)
     } else if (Type >= 8) {
         Print = ClockSong(Deci)

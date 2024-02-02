@@ -219,9 +219,9 @@ const PrintDay = result => {
 //     start = ~~start
 //     end = ~~end
 //     if (mode === 1) { // 朔望氣
-//         list.forEach(CalName => {
+//         list.forEach(Name => {
 //             // let Year = start
-//             CalNewm(CalName, start, end).forEach((result, k) => {
+//             CalNewm(Name, start, end).forEach((result, k) => {
 //                 // Year = start + k
 //                 const Era = result.Era
 //                 printData[k] = printData[k] || [Era]
@@ -230,14 +230,14 @@ const PrintDay = result => {
 //         })
 //         if (isAuto) {
 //             const overlaps = OverlapCalendars(start, end)
-//             Object.entries(overlaps).forEach(([CalName, ranges]) => {
+//             Object.entries(overlaps).forEach(([Name, ranges]) => {
 //                 for (const range of ranges) {
 //                     for (let year = range[0]; year <= range[1]; year++) {
 //                         const k = year - start
-//                         if (printData[k][CalName]) {
+//                         if (printData[k][Name]) {
 //                             continue
 //                         }
-//                         const result = CalNewm(CalName, year)
+//                         const result = CalNewm(Name, year)
 //                         const Era = result.Era
 //                         printData[k] = printData[k] || [Era]
 //                         printData[k].push(PrintNewm(result))
@@ -246,9 +246,9 @@ const PrintDay = result => {
 //             })
 //         }
 //     } else {
-//         list.forEach(CalName => {
+//         list.forEach(Name => {
 //             // let Year = start
-//             CalDay(CalName, start, end).forEach((result, k) => {
+//             CalDay(Name, start, end).forEach((result, k) => {
 //                 // Year = start + k
 //                 // const Era = result.Era
 //                 printData[k] = printData[k] || []
@@ -277,8 +277,8 @@ export const outputFile = (mode, start, end, isAuto, listRaw) => {
             }
         }
     } else {
-        listRaw.forEach(CalName => {
-            CalDay(CalName, start, end).forEach((result, k) => {
+        listRaw.forEach(Name => {
+            CalDay(Name, start, end).forEach((result, k) => {
                 printData[k] = printData[k] || []
                 printData[k].push(PrintDay(result))
             })
@@ -298,20 +298,20 @@ export const outputFile = (mode, start, end, isAuto, listRaw) => {
 //     const outputNewmWeb = []
 //     start = ~~start
 //     end = ~~end
-//     list.forEach(CalName => {
+//     list.forEach(Name => {
 //         let Year = start
-//         CalNewm(CalName, start, end).forEach((result, k) => {
+//         CalNewm(Name, start, end).forEach((result, k) => {
 //             Year = start + k
 //             outputNewmWeb[k] = outputNewmWeb[k] || []
-//             result.id = CalName + Year // 给每个item一个唯一id在前端正确缓存高度
+//             result.id = Name + Year // 给每个item一个唯一id在前端正确缓存高度
 //             outputNewmWeb[k].push(result)
 //         })
 //     })
 //     if (isAuto) {
 //         for (let Year = start; Year <= end; Year++) {
 //             const AutoCals = AutoCal(Year)
-//             AutoCals.forEach(CalName => {
-//                 outputNewmWeb[k].push(CalNewm(CalName, Year))
+//             AutoCals.forEach(Name => {
+//                 outputNewmWeb[k].push(CalNewm(Name, Year))
 //             })
 //         }
 //     }
@@ -381,8 +381,8 @@ const DayView = CalInfo => {
     })
     return Day
 }
-export const outputDayWeb = (year, CalName) => {
-    const [result] = CalDay(CalName, year)
+export const outputDayWeb = (year, Name) => {
+    const [result] = CalDay(Name, year)
     const { Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor, ...OtherResult
     } = result
     return {

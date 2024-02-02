@@ -42,8 +42,8 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 //     }
 // }
 
-export const Equa2EclpTable = (LongiRaw, CalName) => {
-    let { Type, Sidereal, Solar } = Para[CalName]
+export const Equa2EclpTable = (LongiRaw, Name) => {
+    let { Type, Sidereal, Solar } = Para[Name]
     Sidereal = Sidereal || Solar
     const Sidereal50 = Sidereal / 2
     const Sidereal25 = Sidereal / 4
@@ -53,29 +53,29 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
     let Range = []
     if (Type <= 4) {
         Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + deci(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
-    } else if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) {
+    } else if (['Huangji', 'LindeA', 'LindeB'].includes(Name)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + deci(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
-    if (['Huangji', 'LindeA', 'LindeB'].includes(CalName)) { // 爲何皇極增速先慢後快，大衍先快後慢？
+    if (['Huangji', 'LindeA', 'LindeB'].includes(Name)) { // 爲何皇極增速先慢後快，大衍先快後慢？
         LongiDifDifInitial = 97 / 450 // ⋯⋯四度爲限。初數九十七，每限增一，以終百七
         LongiDifDifChange = 1 / 450
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(CalName)) {
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(Name)) {
         LongiDifDifInitial = 12 / 24
         LongiDifDifChange = -1 / 24
-    } else if (CalName === 'Qintian') {
+    } else if (Name === 'Qintian') {
         LongiDifDifInitial = 40 / 72
         LongiDifDifChange = -5 / 72
-    } else if (CalName === 'Yingtian') {
+    } else if (Name === 'Yingtian') {
         LongiDifDifInitial = 12 / 20.2
         LongiDifDifChange = -1.5 / 20.2
-    } else if (CalName === 'Qianyuan') {
+    } else if (Name === 'Qianyuan') {
         LongiDifDifInitial = 9 / 16.8
         LongiDifDifChange = -1 / 16.8
-    } else if (CalName === 'Yitian') {
+    } else if (Name === 'Yitian') {
         LongiDifDifInitial = 107 / 202
         LongiDifDifChange = -10 / 202
     }
@@ -131,10 +131,10 @@ export const Equa2EclpTable = (LongiRaw, CalName) => {
 }
 // console.log(Equa2EclpTable(23, 'Yitian'))
 
-export const Longi2LatiTable1 = (SolsDif, CalName) => {
-    const { Solar, NightList, DialList, SunLatiList } = Para[CalName]
+export const Longi2LatiTable1 = (SolsDif, Name) => {
+    const { Solar, NightList, DialList, SunLatiList } = Para[Name]
     let DawnRange = 0
-    if (CalName !== 'Daye') DawnRange = 2.5
+    if (Name !== 'Daye') DawnRange = 2.5
     const HalfTermLeng = Solar / 24
     SolsDif %= Solar
     const TermNum = ~~(SolsDif / HalfTermLeng) // 每日所在氣名
@@ -146,13 +146,13 @@ export const Longi2LatiTable1 = (SolsDif, CalName) => {
     return { Rise, Dial, Lati1, Lati }
 }
 
-export const Longi2LatiTable2 = (SolsDif, CalName) => {
+export const Longi2LatiTable2 = (SolsDif, Name) => {
     const { Type, Denom, Solar, Sidereal, NightList, DialList, SunLatiList, AcrTermList, TermRangeA, TermRangeS
-    } = Para[CalName]
+    } = Para[Name]
     SolsDif %= Solar
     let DawnRange = 2.5
-    if (CalName === 'Huangji') DawnRange = 2.365
-    else if (['LindeA', 'LindeB', 'Daming3'].includes(CalName)) DawnRange = 0
+    if (Name === 'Huangji') DawnRange = 2.365
+    else if (['LindeA', 'LindeB', 'Daming3'].includes(Name)) DawnRange = 0
     const f = 34.475 // 大衍地理緯度
     const HalfTermLeng = Solar / 24
     let Dial = 0
@@ -160,7 +160,7 @@ export const Longi2LatiTable2 = (SolsDif, CalName) => {
     let Lati1 = 0
     let Rise = 0
     let Sunrise1 = 0
-    if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(CalName)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
+    if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(Name)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
             if (SolsDif >= AcrTermList[j] && SolsDif < AcrTermList[j + 1]) {
@@ -269,13 +269,13 @@ export const Longi2LatiTable2 = (SolsDif, CalName) => {
 // console.log(Longi2LatiTable2(90, 'LindeB').Sunrise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
-const MoonLongiTable = (SolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換//////
-    const { Solar } = Para[CalName]
-    let { Sidereal } = Para[CalName]
-    const Quadrant = AutoNodeCycle(CalName) / 4
+const MoonLongiTable = (SolsDif, NodeAccumRaw, Name) => { ///////赤白轉換//////
+    const { Solar } = Para[Name]
+    let { Sidereal } = Para[Name]
+    const Quadrant = AutoNodeCycle(Name) / 4
     const NodeAccum = NodeAccumRaw// % (Node / 2)
     // 求交點：1、確定平交入朔、平交入轉，2、根據月亮改正計算月亮運動到升交點的時間，卽正交日辰，3、求正交加時黃道宿度，卽交點黃經
-    const LongiRaw = AutoMoonAvgV(CalName) * NodeAccum // 以月平行度乘之
+    const LongiRaw = AutoMoonAvgV(Name) * NodeAccum // 以月平行度乘之
     let Longi = LongiRaw % Quadrant
     if ((LongiRaw >= Quadrant && LongiRaw < Quadrant * 2) || (LongiRaw >= Quadrant * 3)) { // (LongiRaw >= Quadrant)
         Longi = Quadrant - Longi
@@ -286,25 +286,25 @@ const MoonLongiTable = (SolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換
     const EclpLongi = (SolsDif + LongiRaw) % Sidereal
     let WhiteLongi = 0
     let Range = []
-    if (CalName === 'Huangji') { // 麟德沒有
+    if (Name === 'Huangji') { // 麟德沒有
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2.94, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》頁60
-    } else if (['Dayan', 'Xuanming', 'Qintian', 'Yingtian'].includes(CalName)) {
+    } else if (['Dayan', 'Xuanming', 'Qintian', 'Yingtian'].includes(Name)) {
         Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0.94, 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LongiDifDifInitial = 0
     let LongiDifDifChange = 0
     let EclpWhiteDif = 0
     const Smallquadrant = 5.07 // Solar / 72// 欽天8節72限
-    if (CalName === 'Huangji') {
+    if (Name === 'Huangji') {
         LongiDifDifInitial = 11 / 45 // ⋯⋯四度爲限，初十一，每限損一，以終於一
         LongiDifDifChange = -1 / 45
-    } else if (['Dayan', 'Xuanming'].includes(CalName)) {
+    } else if (['Dayan', 'Xuanming'].includes(Name)) {
         LongiDifDifInitial = 12 / 24
         LongiDifDifChange = -1 / 24
-    } else if (CalName === 'Qintian') {
+    } else if (Name === 'Qintian') {
         LongiDifDifInitial = 40 / 72
         LongiDifDifChange = -5 / 72
-    } else if (CalName === 'Yingtian') {
+    } else if (Name === 'Yingtian') {
         LongiDifDifInitial = 12 / 20.2
         LongiDifDifChange = -1.5 / 20.2
     }
@@ -341,15 +341,15 @@ const MoonLongiTable = (SolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換
         }
     }
     EclpWhiteDif = LongiDifAccum[LongiOrder] + (LongiDifAccum[LongiOrder + 1] - LongiDifAccum[LongiOrder]) * (Longi - RangeAccum[LongiOrder]) / (RangeAccum[LongiOrder + 1] - RangeAccum[LongiOrder]) // 一次內插
-    if (CalName !== 'Huangji') EclpWhiteDif /= 2
+    if (Name !== 'Huangji') EclpWhiteDif /= 2
     let EquaWhiteDif = 0
-    if (['Dayan', 'Xuanming'].includes(CalName)) {
+    if (['Dayan', 'Xuanming'].includes(Name)) {
         EquaWhiteDif = SolsDifHalf / (Solar / 72) / 18
-    } else if (CalName === 'Qintian') {
+    } else if (Name === 'Qintian') {
         const OriginXian = Math.abs(SolsDifHalf - Solar / 4) / Smallquadrant // 限數
         // EclpWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，沒寫對
         EquaWhiteDif = (Longi - RangeAccum[LongiOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
-    } else if (CalName === 'Yingtian') {
+    } else if (Name === 'Yingtian') {
         const Hou = ~~(SolsDifHalf / (Solar / 72)) / 18
         EquaWhiteDif = (Longi - RangeAccum[LongiOrder]) * (0.5 - 5 * Hou / 3636)
     }
@@ -366,22 +366,22 @@ const MoonLongiTable = (SolsDif, NodeAccumRaw, CalName) => { ///////赤白轉換
 // console.log(MoonLongiTable(55.25, 11.22, 'Qianxiang').EclpLongi)
 // console.log(MoonLongiTable(45, 3, 'Qintian'))
 
-export const MoonLatiTable = (NodeAccum, CalName) => {
-    const { Type, Node, MoonLatiAccumList } = Para[CalName]
-    let { MoonLatiDifList } = Para[CalName]
+export const MoonLatiTable = (NodeAccum, Name) => {
+    const { Type, Node, MoonLatiAccumList } = Para[Name]
+    let { MoonLatiDifList } = Para[Name]
     ///////預處理陰陽曆////////
     let Portion = 10
     if (Type <= 4) Portion = 12
-    else if (CalName === 'Dayan') Portion = 120
-    else if (CalName === 'Wuji') Portion = 50 / 3 // 五紀正元找不到比例，瞎填
-    else if (CalName === 'Tsrengyuan') Portion = 219 / 4
+    else if (Name === 'Dayan') Portion = 120
+    else if (Name === 'Wuji') Portion = 50 / 3 // 五紀正元找不到比例，瞎填
+    else if (Name === 'Tsrengyuan') Portion = 219 / 4
     const NodeAccumHalf = NodeAccum % (Node / 2)
     const NodeAccumHalfInt = ~~NodeAccumHalf
     const Yinyang = NodeAccum > Node / 2 ? 1 : -1
     let Lati = 0
     if (Type < 6) {
         Lati = Yinyang * (MoonLatiAccumList[NodeAccumHalfInt] + (NodeAccumHalf - NodeAccumHalfInt) * MoonLatiDifList[NodeAccumHalfInt] / Portion)
-    } else if (Type === 6 || ['Wuji', 'Tsrengyuan'].includes(CalName)) { // 二次
+    } else if (Type === 6 || ['Wuji', 'Tsrengyuan'].includes(Name)) { // 二次
         let Initial = [MoonLatiAccumList[NodeAccumHalfInt], MoonLatiAccumList[NodeAccumHalfInt + 1], MoonLatiAccumList[NodeAccumHalfInt + 2]]
         let n = 1 + NodeAccumHalf - NodeAccumHalfInt
         if (NodeAccumHalf >= 12) {
@@ -389,10 +389,10 @@ export const MoonLatiTable = (NodeAccum, CalName) => {
             n = 3 + NodeAccumHalf - NodeAccumHalfInt
         }
         Lati = Yinyang * Interpolate1(n, Initial) / Portion
-    } else if (CalName === 'Dayan') { // 大衍的入交度數另有算式，我直接用月平行速來算 // 三次差：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8// 曲安京《曆法》頁251
-        const MoonAvgDV = AutoMoonAvgV(CalName)
+    } else if (Name === 'Dayan') { // 大衍的入交度數另有算式，我直接用月平行速來算 // 三次差：前半段 Δ = 171,-24,-8 後半段 Δ = -75,-40,8// 曲安京《曆法》頁251
+        const MoonAvgDV = AutoMoonAvgV(Name)
         const LongiRaw = NodeAccumHalf * MoonAvgDV
-        const Cycle = AutoNodeCycle(CalName)
+        const Cycle = AutoNodeCycle(Name)
         const l = 15 // Cycle / 24 // 一象限15度
         const Longi = LongiRaw * 360 / Cycle
         const k = ~~(Longi / l) // 本爻

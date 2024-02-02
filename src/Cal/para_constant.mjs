@@ -29,7 +29,7 @@ export const debounce = (fn, delay) => {
     }, delay);
   };
 };
-export const CalNameList = {
+export const NameList = {
   // 按照時間順序排列
   Yin: "殷",
   XiaDong: "冬至元夏",
@@ -136,7 +136,7 @@ export const CalNameList = {
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
 };
-export const CalNameDayList = {
+export const NameDayList = {
   // 可計算日書的曆法
   Easthan: "後漢四分",
   Qianxiang: "乾象",
@@ -1041,10 +1041,10 @@ export const MansionNameList =
 // "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢參觜井鬼柳星張翼軫"; // 參觜互換
 export const MansionAnimalNameList =
   "蚓蛟龍貉兔狐虎豹獬牛蝠鼠燕豬㺄狼狗雉雞烏猴猿犴羊獐馬鹿蛇蚓";
-export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1 是黃道度
+export const AutoDegAccumList = (Name, year, isEclp) => { // isEclp===1 是黃道度
   const { Type, Solar, SolarRaw, MansionRaw, MansionFracPosi } =
-    Para[CalName];
-  let { Sidereal } = Para[CalName];
+    Para[Name];
+  let { Sidereal } = Para[Name];
   let DegListRaw = []; // 不同時期用不同的宿度
   if (isEclp) {
     // 1684
@@ -1065,7 +1065,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1 是�
       DegListRaw = EclpDegDayan;
     } else if (year >= 665) {
       DegListRaw = EclpDegLinde;
-    } else if (CalName === "Huangji") {
+    } else if (Name === "Huangji") {
       DegListRaw = EclpDegHuangji;
     } else {
       DegListRaw = EclpDegEasthan;
@@ -1075,7 +1075,7 @@ export const AutoDegAccumList = (CalName, year, isEclp) => { // isEclp===1 是�
       DegListRaw = EquaDegShoushi;
     } else if (year >= 1106) {
       DegListRaw = EquaDegJiyuan;
-    } else if (year >= 1065 && CalName === "Mingtian") {
+    } else if (year >= 1065 && Name === "Mingtian") {
       DegListRaw = EquaDegMingtian;
     } else if (year >= 729) {
       DegListRaw = EquaDegDayan;

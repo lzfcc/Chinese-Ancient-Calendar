@@ -19,11 +19,11 @@ export const Deg2Mansion = (Deg, DegAccumList) => {
     return MansionName + MansionDeg.toFixed(3)
 }
 
-export const Accum2Mansion = (Accum, DegAccumList, CalName, SolsDif, SolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
-    const { Type, SolarRaw, SolsConst, MansionConst, MansionRaw } = Para[CalName]
-    let { Sidereal, Solar } = Para[CalName]
+export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
+    const { Type, SolarRaw, SolsConst, MansionConst, MansionRaw } = Para[Name]
+    let { Sidereal, Solar } = Para[Name]
     Sidereal = Sidereal || (Solar || SolarRaw)
-    if (CalName === 'Shoushi' || CalName === 'Shoushi2') {
+    if (Name === 'Shoushi' || Name === 'Shoushi2') {
         Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
     } // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。） // 試了一下，按上面這樣區分1281前後，沒有任何變化
     const OriginDeg = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
@@ -35,9 +35,9 @@ export const Accum2Mansion = (Accum, DegAccumList, CalName, SolsDif, SolsDeci, y
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏=1-(Rise-LightRange)，夜半至明東行度數=Rise-LightRange
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
     let MorningDuskstar = ``
-    const LightRange = AutoLightRange(CalName)
+    const LightRange = AutoLightRange(Name)
     if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
-        const Rise = AutoLongi2Lati(SolsDif, SolsDeci, CalName).Rise / 100
+        const Rise = AutoLongi2Lati(SolsDif, SolsDeci, Name).Rise / 100
         const HalfLight = 0.5 - Rise + LightRange // 半晝漏
         const HalfNight = Rise - LightRange
         // 大衍只考慮了昬時距午度
@@ -56,9 +56,9 @@ ${Duskstar}`
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
 // 以下是西曆日躔：
-export const Gong2Mansion = (CalName, Y, Gong, MidnToday, MidnMorrow, Rise) => {
-    const { Solar, MansionConst } = Para[CalName]
-    const EclpDegAccumList = AutoDegAccumList(CalName, Y, true)
+export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
+    const { Solar, MansionConst } = Para[Name]
+    const EclpDegAccumList = AutoDegAccumList(Name, Y, true)
     let Mansion = '', DuskstarPrint = ''
     if (Gong !== false) {
         Gong -= (51 / 3600) * (Y - 1684)
@@ -79,12 +79,12 @@ ${Duskstar}`
 }
 // console.log(Gong2Mansion('Guimao', 1684, 0))
 
-export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
-    const { isNewmPlus } = Para[CalName]
+export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, Name) => {
+    const { isNewmPlus } = Para[Name]
     let Plus = 3.75 // 若不用進朔，需要改成3.75
     if (isNewmPlus) {
         Plus = 2.75
-        if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
+        if (['Wuji', 'Tsrengyuan'].includes(Name)) {
             Plus = 3
         }
     }
@@ -97,25 +97,25 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, CalName) => {
     return LeapNumTerm
 }
 
-export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, CalName) => { // 朔小分
-    const { Solar } = Para[CalName]
+export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, Name) => { // 朔小分
+    const { Solar } = Para[Name]
     const Solar25 = Solar / 4
-    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, SolsDeci, CalName).Rise / 100
-    let { Rise, Sunrise1 } = AutoLongi2Lati(SolsDif, SolsDeci, CalName)
+    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, SolsDeci, Name).Rise / 100
+    let { Rise, Sunrise1 } = AutoLongi2Lati(SolsDif, SolsDeci, Name)
     Rise = (Sunrise1 || Rise) / 100
-    const LightRange = AutoLightRange(CalName)
+    const LightRange = AutoLightRange(Name)
     let standard = 0.75
     let Portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
-    if (CalName === 'Xuanming') {
+    if (Name === 'Xuanming') {
         Portion = 5 // 夏至0.7405
-    } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
         Portion = 2 // 夏至0.726
     }
-    if (['Wuji', 'Tsrengyuan'].includes(CalName)) {
+    if (['Wuji', 'Tsrengyuan'].includes(Name)) {
         standard = 1.1 - Rise + LightRange
-    } else if (CalName === 'Chongxuan') {
+    } else if (Name === 'Chongxuan') {
         standard = Math.max(0.725, 1 - Rise + LightRange)
-    } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(CalName)) { // 欽天日入後則進一日
+    } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(Name)) { // 欽天日入後則進一日
         standard = 1 - Rise // 冬至0.7，夏至0.8
     } else if (SolsDif > Solar25 && SolsDif < Solar * 0.75) {
         standard = 0.75 + (Rise - SpringequinoxSunrise) / Portion
@@ -130,12 +130,12 @@ export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, CalName) => { // 朔小分
 }
 // console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
 
-export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, CalName) => {
-    const { Type } = Para[CalName]
-    const LightRange = AutoLightRange(CalName)
-    const Rise = AutoLongi2Lati(SolsDif, SolsDeci, CalName).Rise / 100
+export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, Name) => {
+    const { Type } = Para[Name]
+    const LightRange = AutoLightRange(Name)
+    const Rise = AutoLongi2Lati(SolsDif, SolsDeci, Name).Rise / 100
     let standard = Rise - LightRange
-    if (Type >= 8 || CalName === 'Qintian') standard = Rise
+    if (Type >= 8 || Name === 'Qintian') standard = Rise
     let SyzygySub = 0
     let Print = ''
     if (Deci < standard) { // 晨前刻、晨初餘數
@@ -145,16 +145,16 @@ export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, CalName) => {
     return { SyzygySub, Print }
 }
 
-export const AutoNineOrbit = (NodeAccum, SolsDif, CalName) => { // 月行九道法
-    const { Type, SolarRaw, Node, LunarRaw } = Para[CalName]
+export const AutoNineOrbit = (NodeAccum, SolsDif, Name) => { // 月行九道法
+    const { Type, SolarRaw, Node, LunarRaw } = Para[Name]
     let { Solar, Lunar
-    } = Para[CalName]
+    } = Para[Name]
     Lunar = Lunar || LunarRaw
     Solar = Solar || SolarRaw
     const Node50 = Node / 2
     const SynodicNodeDif50 = (Lunar - Node) / 2 // 望差
     const HalfTermLeng = Solar / 24
-    SolsDif += (Node - NodeAccum) * AutoMoonAvgV(CalName) // 正交黃道度
+    SolsDif += (Node - NodeAccum) * AutoMoonAvgV(Name) // 正交黃道度
     let Print = ''
     if (Type <= 6) {
         if ((NodeAccum > Node50 - SynodicNodeDif50 && NodeAccum < Node50) || NodeAccum < SynodicNodeDif50 || (NodeAccum > Node50 && NodeAccum < Node50 + SynodicNodeDif50) || (NodeAccum > Node - SynodicNodeDif50)) {

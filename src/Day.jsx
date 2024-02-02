@@ -1,5 +1,5 @@
 import React from 'react'
-import { CalNameDayList } from './Cal/para_constant'
+import { NameDayList } from './Cal/para_constant'
 import MenuSelect from './MenuSelect'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
@@ -196,7 +196,7 @@ export default class Day extends React.Component {
   }
 
   renderCalendar() {
-    let cals = CalNameDayList
+    let cals = NameDayList
     return (
       <div className='calendar-select'>
         <MenuSelect

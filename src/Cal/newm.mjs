@@ -4,14 +4,14 @@ import { AutoTcorr } from './astronomy_acrv.mjs'
 import { ConstWest } from './astronomy_west.mjs'
 import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub } from './astronomy_other.mjs'
 import { AutoEqua2Eclp } from './astronomy_bind.mjs'
-// const cal = (CalName, Y) => {
-export default (CalName, Y) => {
+// const cal = (Name, Y) => {
+export default (Name, Y) => {
     const { Type, isAcr, isNewmPlus, Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,
         OriginAd, CloseOriginAd, OriginMonNum, ZhengNum,
         YuanRange, JiRange, ZhangRange, ZhangLeap,
-        YinyangConst, EcliConst, MansionRaw } = Para[CalName]
+        YinyangConst, EcliConst, MansionRaw } = Para[Name]
     let { Solar, SolarRaw, Lunar, LunarRaw, ScConst, NodeConst, FirstConst, AnomaConst, MansionConst, SolsConst
-    } = Para[CalName]
+    } = Para[Name]
     ScConst = ScConst || 0
     SolarRaw = SolarRaw || Solar
     LunarRaw = LunarRaw || Lunar
@@ -30,27 +30,27 @@ export default (CalName, Y) => {
     let SolarChangeAccum = 0, LunarChangeAccum = 0, LeapSurAvg = 0, OriginAccumThis = 0
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? 1 : -1
-    if (CalName === 'West') {
+    if (Name === 'West') {
         const Func = ConstWest(Y)
         Solar = Func.Solar
         Lunar = Func.Lunar
         SolarChangeAccum = signX * ((Y - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
         LunarChangeAccum = -signX * ((Y - 2000) ** 2) * 1e-9
-    } else if (CalName === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
+    } else if (Name === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
         SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
-    } else if (['Shoushi', 'Shoushi2'].includes(CalName)) {
+    } else if (['Shoushi', 'Shoushi2'].includes(Name)) {
         Solar = parseFloat((SolarRaw - (~~((CloseOriginYear + 1) / 100) / 10000)).toPrecision(10))
-    } else if (CalName === 'Wannian') {
+    } else if (Name === 'Wannian') {
         // 置曆元所距年積算為汎距，來加往減元紀為定距，以朞實乘之，四約，為積日，不滿，退除為刻，是名汎積。定距自相乘，七之八而一，所得滿百萬為日，不滿為刻及分秒，〔帶半秒已上者收作一秒〕是名節氣歲差，用減汎積，餘為定積。
         // Solar = parseFloat((SolarRaw - (Y - 1281) * 1.75 * 1e-6).toPrecision(10))       
         SolarChangeAccum = signX * 8.75 * 1e-7 * (Y - 1281) ** 2
     }
     const TermLeng = Solar / 12 // 每個中氣相隔的日數
     if (EcliConst) {
-        NodeConst = CalName === 'Yuanjia' ? Node * EcliConst : (Node / 2) * EcliConst
+        NodeConst = Name === 'Yuanjia' ? Node * EcliConst : (Node / 2) * EcliConst
     }
     const SynodicAnomaDif = Lunar - Anoma
     const SynodicNodeDif50 = (Lunar - Node) / 2
@@ -71,7 +71,7 @@ export default (CalName, Y) => {
     //     const OriginAccum = Dingju * 365.25 - Dingju ** 2 * 8.75 * 1e-7
     //     return OriginAccum
     // }
-    const ZoneDif = CalName === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
+    const ZoneDif = Name === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
     let SolsAccum = Type < 11 ? OriginYear * Solar + SolsConst + ZoneDif + SolarChangeAccum : 0
     SolsAccum = +SolsAccum.toFixed(fixed)
     if (ZhangRange) {
@@ -80,7 +80,7 @@ export default (CalName, Y) => {
         LeapSurAvg = OriginYear * SolarNumer % LunarNumer // OriginYear * SolarNumer爲期總
     } else if (Type < 11) {
         LeapSurAvg = ((SolsAccum + FirstConst) % LunarRaw + LunarRaw) % LunarRaw
-    } else if (CalName === 'Wannian') {
+    } else if (Name === 'Wannian') {
         // 置歲定積減去律應滿律總去之不盡得歲首黃鍾正律大小餘大餘命甲子筭外累加律策得次律大小餘滿律總去之 
         // 置歲定積減去閏應滿朔策去之不盡即所求閏餘日及分秒
         // OriginAccumThis = WannianDingju(CloseOriginYear)
@@ -110,10 +110,10 @@ export default (CalName, Y) => {
         FirstNodeAccum = ((OriginAccumThis - LeapSurAvg + NodeConst + (YinyangConst === -1 ? Node / 2 : 0)) % Node + Node) % Node
     }
     FirstAccum += ZoneDif
-    if (CalName === 'Qianxiang') {
+    if (Name === 'Qianxiang') {
         FirstAnomaAccum = (Math.floor((OriginYear + 1) * ZhangMon / ZhangRange) * Lunar) % Anoma // 算外。我也不知道怎麼積年就要+1。劉洪濤頁133，突然想到的！！存疑！！
     } else if (Type < 11) {
-        FirstAnomaAccum = ((FirstAccum + AnomaConst + (CalName === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
+        FirstAnomaAccum = ((FirstAccum + AnomaConst + (Name === 'Shenlong' ? Anoma / 2 : 0)) % Anoma + Anoma) % Anoma
     } else if (Type === 11) {
         FirstAnomaAccum = ((OriginAccumThis - LeapSurAvg + AnomaConst) % Anoma + Anoma) % Anoma
     }
@@ -131,7 +131,7 @@ export default (CalName, Y) => {
     } else {
         LeapLimit = parseFloat((13 * Lunar - Solar).toPrecision(14))
     }
-    const EquaDegAccumList = AutoDegAccumList(CalName, Y)
+    const EquaDegAccumList = AutoDegAccumList(Name, Y)
     const AutoNewmSyzygy = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgRaw = [], TermAvgSolsDif = [], Term1AvgRaw = [], Term1AvgSolsDif = [], Term1Sc = [], Term1Deci = [], Term1AcrRaw = [], Term1AcrSolsDif = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Equa = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
@@ -144,7 +144,7 @@ export default (CalName, Y) => {
             if (Anoma) {
                 AnomaAccum[i] = +((FirstAnomaAccum + (ZhengSolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(fixed) // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
                 AnomaAccumNight[i] = ~~AnomaAccum[i]
-                const TcorrBindFunc = AutoTcorr(AnomaAccum[i], SolsDif[i], CalName)
+                const TcorrBindFunc = AutoTcorr(AnomaAccum[i], SolsDif[i], Name)
                 if (Type <= 4) {
                     Tcorr[i] = TcorrBindFunc.Tcorr1
                     Tcorr1 = Tcorr[i]
@@ -180,16 +180,16 @@ export default (CalName, Y) => {
             let NewmPlusPrint = '', SyzygySubPrint = ''
             if (isNewm) {
                 if (isAcr && isNewmPlus) {
-                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), SolsDif[i], SolsDeci, CalName) // 進朔
+                    const Func = AutoNewmPlus((Deci1[i] || Deci[i]), SolsDif[i], SolsDeci, Name) // 進朔
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
                 if ((EquaDegAccumList || []).length) {
                     let Eclp2EquaDif = 0
                     if (Type === 11) { // 授時要黃轉赤 ⚠️ 2024-01 這樣轉可以嗎？？？
-                        Eclp2EquaDif = AutoEqua2Eclp(SolsDif[i], CalName).Eclp2EquaDif
+                        Eclp2EquaDif = AutoEqua2Eclp(SolsDif[i], Name).Eclp2EquaDif
                     }
-                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, CalName).Mansion
+                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, Name).Mansion
                 }
                 TermAvgSolsDif[i] = (i + ZhengSolsDif - 1) * TermLeng
                 TermAvgRaw[i] = SolsAccum + TermAvgSolsDif[i]
@@ -224,11 +224,11 @@ export default (CalName, Y) => {
                     Term1AcrDeci[i] = deci(tmp3).toFixed(4).slice(2, 6)
                 }
                 if (MansionRaw) {
-                    TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, CalName, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
-                    Term1Equa[i] = Accum2Mansion((Term1AcrRaw[i] || Term1AvgRaw[i]), EquaDegAccumList, CalName, (Term1AcrSolsDif[i] || Term1AvgSolsDif[i]), SolsDeci, Y).Mansion
+                    TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, Name, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
+                    Term1Equa[i] = Accum2Mansion((Term1AcrRaw[i] || Term1AvgRaw[i]), EquaDegAccumList, Name, (Term1AcrSolsDif[i] || Term1AvgSolsDif[i]), SolsDeci, Y).Mansion
                 }
             } else {
-                const Func = AutoSyzygySub(Deci[i], SolsDif[i], SolsDeci, CalName) // 退望
+                const Func = AutoSyzygySub(Deci[i], SolsDif[i], SolsDeci, Name) // 退望
                 SyzygySub = Func.SyzygySub
                 SyzygySubPrint = Func.Print
             }

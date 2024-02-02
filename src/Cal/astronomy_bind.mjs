@@ -10,12 +10,12 @@ import {
     Equa2EclpWest, Longi2LatiWest, Longi2SunriseWest, Longi2DialWest, SunAcrVWest,    // MoonAcrVWest
 } from './astronomy_west.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
-import { CalNameList, AutoDegAccumList } from './para_constant.mjs'
+import { NameList, AutoDegAccumList } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
 import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
 
-export const BindTcorr = (AnomaAccum, SolsDif, year, CalName) => {
+export const BindTcorr = (AnomaAccum, SolsDif, year, Name) => {
     SolsDif = +SolsDif
     AnomaAccum = +AnomaAccum
     if (SolsDif > 365.2425 || SolsDif < 0) {
@@ -43,8 +43,8 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, CalName) => {
     }]
     let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Fengyuan', 'Guantian', 'Zhantian']
-    List1 = CalName ? [CalName] : List1 // 這行用來給誤差分析程序
-    List2 = CalName ? [CalName] : List2
+    List1 = Name ? [Name] : List1 // 這行用來給誤差分析程序
+    List2 = Name ? [Name] : List2
     let SunTcorrInac = 0
     let MoonTcorrInac = 0
     Print1 = Print1.concat(
@@ -89,7 +89,7 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, CalName) => {
             }
             const Tcorr = +MoonTcorrPrint + (+SunTcorrPrint || 0)
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [SunDifAccumPrint, SunDifAccumInacPrint, MoonAcrSPrint, MoonDifAccumPrint, MoonDifAccumInacPrint, SunTcorrPrint, SunTcorrInacPrint, MoonTcorrPrint, MoonTcorrInacPrint, Tcorr.toFixed(4), NodeAccumCorrPrint]
             }
         }))
@@ -120,7 +120,7 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, CalName) => {
             const MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
             const Tcorr = +MoonTcorrPrint + +SunTcorrPrint
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [SunDifAccumPrint, SunDifAccumInacPrint, MoonAcrSPrint, MoonDifAccumPrint, MoonDifAccumInacPrint, SunTcorrPrint, SunTcorrInacPrint, MoonTcorrPrint, MoonTcorrInacPrint, Tcorr.toFixed(4), NodeAccumCorrA.toFixed(4)]
             }
         }))
@@ -128,30 +128,30 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, CalName) => {
 }
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
-export const AutoEqua2Eclp = (LongiRaw, CalName) => {
-    const { Type, Sidereal, Solar, SolarRaw } = Para[CalName]
+export const AutoEqua2Eclp = (LongiRaw, Name) => {
+    const { Type, Sidereal, Solar, SolarRaw } = Para[Name]
     LongiRaw %= Sidereal || (Solar || SolarRaw)
     let Equa2Eclp = 0
     let Eclp2Equa = 0
     let Equa2EclpDif = 0
     let Eclp2EquaDif = 0
     let Eclp2EquaLati = 0
-    if (CalName === 'Dayan') {
-        const Func = Equa2EclpFormula(LongiRaw, CalName)
+    if (Name === 'Dayan') {
+        const Func = Equa2EclpFormula(LongiRaw, Name)
         Equa2Eclp = Func.Equa2Eclp
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
         Eclp2EquaDif = Func.Eclp2EquaDif
-    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
+    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
         const Func = Equa2EclpTable(LongiRaw, 'LindeA')
         Equa2Eclp = Func.Equa2Eclp
         Equa2EclpDif = Func.Equa2EclpDif
-    } else if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
-        const Func = Equa2EclpTable(LongiRaw, CalName)
+    } else if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
+        const Func = Equa2EclpTable(LongiRaw, Name)
         Equa2Eclp = Func.Equa2Eclp
         Equa2EclpDif = Func.Equa2EclpDif
     } else if (Type === 8) {
-        const Func = Equa2EclpFormula(LongiRaw, CalName)
+        const Func = Equa2EclpFormula(LongiRaw, Name)
         Equa2Eclp = Func.Equa2Eclp
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
@@ -242,7 +242,7 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
                 Eclp2EquaLatiInacPrint = Eclp2EquaLatiInac.toFixed(4)
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [EclpLongiPrint, Equa2EclpDifPrint, EclpLongiInacPrint, EquaLongiPrint, Eclp2EquaDifPrint, EquaLongiInacPrint, Eclp2EquaLatiPrint, Eclp2EquaLatiInacPrint]
             }
         }))
@@ -250,37 +250,37 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
 }
 // console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
-export const BindDeg2Mansion = (Deg, CalName) => {
-    const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
+export const BindDeg2Mansion = (Deg, Name) => {
+    const EquaAccumListTaichu = AutoDegAccumList(Name, 300)
     const EquaAccumListHuangji = []
     const EquaAccumListLindeA = []
-    const EquaAccumListDayan = AutoDegAccumList(CalName, 729)
+    const EquaAccumListDayan = AutoDegAccumList(Name, 729)
     const EquaAccumListYingtian = []
     const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
-    const EquaAccumListJiyuan = AutoDegAccumList(CalName, 1106)
+    const EquaAccumListJiyuan = AutoDegAccumList(Name, 1106)
     const EquaAccumListDaming3 = []
-    const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
+    const EquaAccumListShoushi = AutoDegAccumList(Name, 1281)
     const EquaAccumListJiazi = []
-    const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
+    const EclpAccumListTaichu = AutoDegAccumList(Name, 300, 1) // 四分
     const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
-    const EclpAccumListLindeA = AutoDegAccumList(CalName, 665, 1) // 麟德
-    const EclpAccumListDayan = AutoDegAccumList(CalName, 729, 1) // 大衍
-    const EclpAccumListYingtian = AutoDegAccumList(CalName, 964) // 應天
-    const EclpAccumListMingtian = AutoDegAccumList(CalName, 1065, 1) // 明天
-    const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
+    const EclpAccumListLindeA = AutoDegAccumList(Name, 665, 1) // 麟德
+    const EclpAccumListDayan = AutoDegAccumList(Name, 729, 1) // 大衍
+    const EclpAccumListYingtian = AutoDegAccumList(Name, 964) // 應天
+    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065, 1) // 明天
+    const EclpAccumListJiyuan = AutoDegAccumList(Name, 1106, 1) // 紀元
     const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
-    const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
-    const EclpAccumListJiazi = AutoDegAccumList(CalName, 1684, 1) // 甲子元曆
+    const EclpAccumListShoushi = AutoDegAccumList(Name, 1281, 1) // 授時
+    const EclpAccumListJiazi = AutoDegAccumList(Name, 1684, 1) // 甲子元曆
     const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
-        const Eclp = Deg2Mansion(Deg, EclpList, CalName)
+        const Eclp = Deg2Mansion(Deg, EclpList, Name)
         const EquaList = eval('EquaAccumList' + title)
         let Equa = ''
         if ((EquaList || []).length) {
-            Equa = Deg2Mansion(Deg, EquaList, CalName)
+            Equa = Deg2Mansion(Deg, EquaList, Name)
         }
         return {
-            title: CalNameList[title],
+            title: NameList[title],
             data: [Equa, Eclp]
         }
     })
@@ -288,49 +288,49 @@ export const BindDeg2Mansion = (Deg, CalName) => {
 }
 // console.log(BindDeg2Mansion(23.1511, 'Jiazi'))
 
-export const BindMansion2Deg = (Mansion, CalName) => {
-    const EquaAccumListTaichu = AutoDegAccumList(CalName, 300)
+export const BindMansion2Deg = (Mansion, Name) => {
+    const EquaAccumListTaichu = AutoDegAccumList(Name, 300)
     const EquaAccumListHuangji = []
     const EquaAccumListLindeA = []
-    const EquaAccumListDayan = AutoDegAccumList(CalName, 729)
+    const EquaAccumListDayan = AutoDegAccumList(Name, 729)
     const EquaAccumListYingtian = []
     const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
-    const EquaAccumListJiyuan = AutoDegAccumList(CalName, 1106)
+    const EquaAccumListJiyuan = AutoDegAccumList(Name, 1106)
     const EquaAccumListDaming3 = []
-    const EquaAccumListShoushi = AutoDegAccumList(CalName, 1281)
+    const EquaAccumListShoushi = AutoDegAccumList(Name, 1281)
     const EquaAccumListJiazi = []
-    const EclpAccumListTaichu = AutoDegAccumList(CalName, 300, 1) // 四分
+    const EclpAccumListTaichu = AutoDegAccumList(Name, 300, 1) // 四分
     const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
-    const EclpAccumListLindeA = AutoDegAccumList(CalName, 665, 1) // 麟德
-    const EclpAccumListDayan = AutoDegAccumList(CalName, 729, 1) // 大衍
-    const EclpAccumListYingtian = AutoDegAccumList(CalName, 964) // 應天
-    const EclpAccumListMingtian = AutoDegAccumList(CalName, 1065, 1) // 明天
-    const EclpAccumListJiyuan = AutoDegAccumList(CalName, 1106, 1) // 紀元
+    const EclpAccumListLindeA = AutoDegAccumList(Name, 665, 1) // 麟德
+    const EclpAccumListDayan = AutoDegAccumList(Name, 729, 1) // 大衍
+    const EclpAccumListYingtian = AutoDegAccumList(Name, 964) // 應天
+    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065, 1) // 明天
+    const EclpAccumListJiyuan = AutoDegAccumList(Name, 1106, 1) // 紀元
     const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
-    const EclpAccumListShoushi = AutoDegAccumList(CalName, 1281, 1) // 授時
-    const EclpAccumListJiazi = AutoDegAccumList(CalName, 1684, 1) // 甲子、癸卯
+    const EclpAccumListShoushi = AutoDegAccumList(Name, 1281, 1) // 授時
+    const EclpAccumListJiazi = AutoDegAccumList(Name, 1684, 1) // 甲子、癸卯
     const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
-        const Eclp = Mansion2Deg(Mansion, EclpList, CalName)
+        const Eclp = Mansion2Deg(Mansion, EclpList, Name)
         const EquaList = eval('EquaAccumList' + title)
         let Equa = ''
         if ((EquaList || []).length) {
-            Equa = Mansion2Deg(Mansion, EquaList, CalName)
+            Equa = Mansion2Deg(Mansion, EquaList, Name)
         }
         return {
-            title: CalNameList[title],
+            title: NameList[title],
             data: [Equa, Eclp]
         }
     })
     return Print
 }
 // console.log(BindMansion2Deg('氐1', 'Guimao'))
-export const AutoLongi2Lati = (LongiRaw, SolsDeci, CalName, isBare) => { // 如果最後加上了isBare，就不加日躔
-    const { Type, Solar, SolarRaw } = Para[CalName]
+export const AutoLongi2Lati = (LongiRaw, SolsDeci, Name, isBare) => { // 如果最後加上了isBare，就不加日躔
+    const { Type, Solar, SolarRaw } = Para[Name]
     let special = 0, Plus1 = 0, Plus2 = 0
     LongiRaw = ~~(LongiRaw + SolsDeci) - SolsDeci
     if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci 0.3, LongiRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LongiRaw 2.8，該日3.1，去掉小數點是3
-    } else if (CalName === 'Chongxuan') { // 崇玄「昏後夜半」
+    } else if (Name === 'Chongxuan') { // 崇玄「昏後夜半」
         Plus1 = 1
         Plus2 = 0.5
     } else { // 其他假設是午中
@@ -340,40 +340,40 @@ export const AutoLongi2Lati = (LongiRaw, SolsDeci, CalName, isBare) => { // 如�
     LongiRaw %= Solar || SolarRaw
     let Longi2Lati = {}, Longi2LatiA = {}, Longi2LatiB = {}
     // 公式曆法加上日躔
-    if ((['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].includes(CalName) || Type === 11) && !isBare) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔。
-        Plus1 = AutoDifAccum(0, LongiRaw, CalName).SunDifAccum
+    if ((['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].includes(Name) || Type === 11) && !isBare) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔。
+        Plus1 = AutoDifAccum(0, LongiRaw, Name).SunDifAccum
     }
     const Longi1 = LongiRaw + Plus1
     const Longi2 = LongiRaw + Plus2
     if (Type <= 3) {
         Longi2Lati = Longi2LatiTable1(Longi1, 'Easthan')
-    } else if (CalName === 'Liangwu') {
+    } else if (Name === 'Liangwu') {
         Longi2Lati = Longi2LatiTable1(Longi1, 'Daming')
-    } else if (['Zhangmengbin', 'Liuxiaosun'].includes(CalName)) {
+    } else if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
         Longi2Lati = Longi2LatiTable2(Longi1, 'Daye')
     } else if (Type === 4) {
-        Longi2Lati = Longi2LatiTable1(Longi1, CalName)
-    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable1(Longi1, Name)
+    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
         Longi2Lati = Longi2LatiTable2(Longi1, 'LindeA')
     } else if (Type === 6) {
-        Longi2Lati = Longi2LatiTable2(Longi1, CalName)
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(CalName)) {
+        Longi2Lati = Longi2LatiTable2(Longi1, Name)
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
         Longi2Lati = Longi2LatiTable2(Longi1, 'Dayan')
-    } else if (CalName === 'Xuanming') {
-        Longi2Lati = Longi2LatiTable2(Longi1, CalName)
-    } else if (CalName === 'Qintian') {
+    } else if (Name === 'Xuanming') {
+        Longi2Lati = Longi2LatiTable2(Longi1, Name)
+    } else if (Name === 'Qintian') {
         Longi2LatiA = Longi2LatiFormula(Longi1, 'Chongxuan')
         Longi2LatiB = Longi2DialFormula(Longi2, 'Chongxuan')
         special = 1
-    } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, CalName)
-    } else if (['Fengyuan', 'Zhantian'].includes(CalName)) {
+    } else if (['Yingtian', 'Qianyuan'].includes(Name)) {
+        Longi2Lati = Longi2LatiTable2(Longi1, Name)
+    } else if (['Fengyuan', 'Zhantian'].includes(Name)) {
         Longi2LatiA = Longi2LatiFormula(Longi1, 'Guantian')
         Longi2LatiB = Longi2DialFormula(Longi2, 'Guantian')
         special = 1
     } else if (Type === 8) {
-        Longi2LatiA = Longi2LatiFormula(Longi1, CalName)
-        Longi2LatiB = Longi2DialFormula(Longi2, CalName)
+        Longi2LatiA = Longi2LatiFormula(Longi1, Name)
+        Longi2LatiB = Longi2DialFormula(Longi2, Name)
         special = 1
     } else if (Type === 9) {
         Longi2LatiA = Longi2LatiFormula(Longi1, 'Jiyuan')
@@ -384,7 +384,7 @@ export const AutoLongi2Lati = (LongiRaw, SolsDeci, CalName, isBare) => { // 如�
         Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
-        Longi2Lati = Hushigeyuan(Longi1, CalName)
+        Longi2Lati = Hushigeyuan(Longi1, Name)
     }
     let Lati = 0
     let Lati1 = 0
@@ -460,7 +460,7 @@ export const BindLongi2Lati = (LongiRaw, SolsDeci, f, Sidereal, year) => {
                 DialInacPrint2 = (Dial - WestD1).toFixed(4)
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [Lati1Print, LatiPrint, LatiInacPrint, SunrisePrint, SunriseInacPrint1, SunriseInacPrint2, DialPrint, DialInacPrint1, DialInacPrint2]
             }
         }))
@@ -468,44 +468,44 @@ export const BindLongi2Lati = (LongiRaw, SolsDeci, f, Sidereal, year) => {
 }
 // console.log(BindLongi2Lati(330, 0.45, 34.4, 365.2445, 1000))
 
-export const AutoMoonLati = (NodeAccum, CalName) => {
-    let { Type, Sidereal } = Para[CalName]
+export const AutoMoonLati = (NodeAccum, Name) => {
+    let { Type, Sidereal } = Para[Name]
     // Solar = Solar || SolarRaw
     let MoonLati = {}
     if (Type <= 3) {
         MoonLati = MoonLatiTable(NodeAccum, 'Qianxiang')
-    } else if (CalName === 'Yuanjia') {
-        MoonLati = MoonLatiTable(NodeAccum, CalName)
+    } else if (Name === 'Yuanjia') {
+        MoonLati = MoonLatiTable(NodeAccum, Name)
     } else if (Type === 4) {
         MoonLati = MoonLatiTable(NodeAccum, 'Daming')
     } else if (Type === 6) {
         MoonLati = MoonLatiTable(NodeAccum, 'Huangji')
-    } else if (['Qintian', 'Xuanming', 'Zhide', 'Dayan'].includes(CalName)) {
+    } else if (['Qintian', 'Xuanming', 'Zhide', 'Dayan'].includes(Name)) {
         MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
     } else if (Type === 7) {
-        MoonLati = MoonLatiTable(NodeAccum, CalName)
-    } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+        MoonLati = MoonLatiTable(NodeAccum, Name)
+    } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
-    } else if (['Chongtian'].includes(CalName)) {
-        MoonLati = MoonLatiFormula(NodeAccum, CalName)
-    } else if (['Guantian', 'Mingtian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
+    } else if (['Chongtian'].includes(Name)) {
+        MoonLati = MoonLatiFormula(NodeAccum, Name)
+    } else if (['Guantian', 'Mingtian', 'Fengyuan', 'Zhantian'].includes(Name)) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Guantian')
     } else if (Type === 9 || Type === 10) {
         MoonLati = MoonLatiFormula(NodeAccum, 'Jiyuan')
     }
     const MoonEquaLati = MoonLati.EquaLati || 0
-    const MoonEclpLati = MoonLati.Lati || 0 // MoonEquaLati - AutoLongi2Lati(SunEclpLongi, 0.5, CalName).Lati
+    const MoonEclpLati = MoonLati.Lati || 0 // MoonEquaLati - AutoLongi2Lati(SunEclpLongi, 0.5, Name).Lati
     const MoonEclpLati1 = MoonLati.Lati1 || Sidereal / 4 - MoonEclpLati
     return { MoonEclpLati, MoonEclpLati1, MoonEquaLati }
 }
 // console.log(AutoMoonLati(2, 'Tsrengyuan').MoonEclpLati)
 
-export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
-    let { Type, Solar, SolarRaw, Sidereal, Node } = Para[CalName]
+export const AutoMoonLongi = (NodeAccum, MoonEclp, Name) => {
+    let { Type, Solar, SolarRaw, Sidereal, Node } = Para[Name]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
-    const MoonAvgDV = AutoMoonAvgV(CalName)
-    const Quadrant = Type === 11 ? Sidereal / 4 : AutoNodeCycle(CalName) / 4
+    const MoonAvgDV = AutoMoonAvgV(Name)
+    const Quadrant = Type === 11 ? Sidereal / 4 : AutoNodeCycle(Name) / 4
     // 正交月黃經。《數》頁351
     // const tmp2 = Node - NewmNodeAccumPrint[i - 1] // 平交入朔
     // const NodeAnomaAccum = (AnomaAccumNight + tmp2) % Anoma // 每日夜半平交入轉
@@ -513,7 +513,7 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     const tmp4 = tmp3 * MoonAvgDV // 距後度
     // let NodeSolsDifDay = SolsDif + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
     const NodeEclp = (MoonEclp + tmp4) % Sidereal // 正交距冬至度數 // 算出來好迷啊，莫名其妙
-    // const NodeSolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, SolsDif, CalName, NodeAccum).MoonTcorr // 遲加疾減
+    // const NodeSolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, SolsDif, Name, NodeAccum).MoonTcorr // 遲加疾減
     // NodeSolsDifDay = (NodeSolsDifDay + NodeSolsDifMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
     const MoonNodeDif = MoonEclp - NodeEclp
     const MoonNodeDifHalf = MoonNodeDif % (Quadrant * 2)
@@ -522,16 +522,16 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, CalName) => {
     let EclpWhiteDif = 0, EquaWhiteDif = 0, EquaLati = 0, EquaLongi = 0, WhiteLongi = 0
     if (Type === 6) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Huangji')
-    } else if (CalName === 'Qintian') {
+    } else if (Name === 'Qintian') {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Qintian')
-    } else if (Type === 7 || CalName === 'Chongxuan') {
+    } else if (Type === 7 || Name === 'Chongxuan') {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Dayan')
-    } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(CalName)) {
+    } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Yingtian')
-    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(CalName)) {
+    } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(Name)) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Guantian')
-    } else if (['Chongtian', 'Mingtian'].includes(CalName)) {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, CalName)
+    } else if (['Chongtian', 'Mingtian'].includes(Name)) {
+        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, Name)
     } else if (Type === 9 || Type === 10) {
         EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Jiyuan')
     } else if (Type === 11) {
@@ -594,7 +594,7 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
                 EquaLatiPrint = EquaLati.toFixed(4)
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [NodeSolsDifDegPrint, EquaLongiPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
             }
         }))
@@ -650,7 +650,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsD
                 StatusPrint = '全食'
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
@@ -680,7 +680,7 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsD
                 StatusPrint = '全食'
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
@@ -736,7 +736,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, Sols
                 StatusPrint = '全食'
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
@@ -766,7 +766,7 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, Sols
                 StatusPrint = '全食'
             }
             return {
-                title: CalNameList[title],
+                title: NameList[title],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
@@ -774,10 +774,10 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, Sols
 }
 // console.log(BindMoonEclipse(1.1, 22, 22, 22))
 
-const InacPrintAnaly_SunTcorr = (CalName, AnomaAccum, year) => {
+const InacPrintAnaly_SunTcorr = (Name, AnomaAccum, year) => {
     let SunTcorrInac = []
     for (let i = 0; i <= 365; i++) {// i:AvgSolsDif
-        SunTcorrInac[i] = BindTcorr(AnomaAccum, i, year, CalName).SunTcorrInac
+        SunTcorrInac[i] = BindTcorr(AnomaAccum, i, year, Name).SunTcorrInac
     }
     return SunTcorrInac
 }

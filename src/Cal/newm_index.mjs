@@ -3,20 +3,20 @@ import N2 from './newm.mjs'
 // import N3 from './newm_huihui.mjs'
 import { N4 } from './newm_shixian.mjs'
 import Para from './para_calendars.mjs'
-import { TermList, Term1List, ScList, ThreeList, CalNameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
+import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
-// const Index = (CalName, YearStart, YearEnd) => {
-export default (CalName, YearStart, YearEnd) => {
-    const Bind = CalName => {
-        const type = Para[CalName].Type
+// const Index = (Name, YearStart, YearEnd) => {
+export default (Name, YearStart, YearEnd) => {
+    const Bind = Name => {
+        const type = Para[Name].Type
         if (type === 1) return N1
         else if (type === 13) return N4
         else return N2
     }
-    const AutoNewm = Bind(CalName)
-    const { Type, OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, SolsOriginDif } = Para[CalName]
+    const AutoNewm = Bind(Name)
+    const { Type, OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, SolsOriginDif } = Para[Name]
     const Memo = []
     const calculate = year => {
         const [PrevYear, ThisYear, NextYear] = Memo
@@ -147,8 +147,8 @@ export default (CalName, YearStart, YearEnd) => {
         // 月序
         const MonthName = []
         let MonNumList = MonNumList1
-        if (CalName === 'Zhuanxu1') MonNumList = MonNumListChuA
-        else if (CalName === 'Zhuanxu2') MonNumList = MonNumListChuB
+        if (Name === 'Zhuanxu1') MonNumList = MonNumListChuA
+        else if (Name === 'Zhuanxu2') MonNumList = MonNumListChuB
         if (Type === 1) {
             if (isTermLeap) {
                 if (LeapNumTerm && (ThisYear.isLeapAvgThis || specialNewmSyzygyEnd)) {
@@ -269,21 +269,21 @@ export default (CalName, YearStart, YearEnd) => {
                 for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTerm > 0 && i >= LeapNumTerm) NoleapMon = i
-                    let Rise = AutoLongi2Lati(NewmAcrSolsDifPrint[i], SolsDeci, CalName).Rise / 100
+                    let Rise = AutoLongi2Lati(NewmAcrSolsDifPrint[i], SolsDeci, Name).Rise / 100
                     let SunEcliFunc = {}, MoonEcliFunc = {}
-                    const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(CalName, Type)
+                    const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(Name, Type)
                     let isSunEcli = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&
                         ((NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli))
                     let isMoonEcli = (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) &&
                         ((SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli))
                     const Sunset = (1 - Rise).toFixed(4).slice(2, 6)
-                    if (CalName === 'Mingtian') {
+                    if (Name === 'Mingtian') {
                         isSunEcli = (NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
                         isMoonEcli = (SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)
                     }
                     Rise = Rise.toFixed(4).slice(2, 6)
                     if (isSunEcli) { // 這些數字根據大統，再放寬0.3
-                        SunEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSolsDifPrint[i], NewmSolsDifPrint[i], 1, CalName, NoleapMon, LeapNumTerm, SolsAccum)
+                        SunEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSolsDifPrint[i], NewmSolsDifPrint[i], 1, Name, NoleapMon, LeapNumTerm, SolsAccum)
                         const SunEcliStatus = SunEcliFunc.Status
                         let NewmMagni = 0
                         const NewmStartDeci = SunEcliFunc.StartDeci ? SunEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
@@ -303,7 +303,7 @@ export default (CalName, YearStart, YearEnd) => {
                         }
                     }
                     if (isMoonEcli) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
-                        MoonEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrSolsDifPrint[i], SyzygySolsDifPrint[i], 0, CalName, NoleapMon, LeapNumTerm, SolsAccum)
+                        MoonEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrSolsDifPrint[i], SyzygySolsDifPrint[i], 0, Name, NoleapMon, LeapNumTerm, SolsAccum)
                         const MoonEcliStatus = MoonEcliFunc.Status
                         let SyzygyMagni = 0
                         const SyzygyStartDeci = MoonEcliFunc.StartDeci ? MoonEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
@@ -338,10 +338,10 @@ export default (CalName, YearStart, YearEnd) => {
         let Era = year
         if (year > 0) Era = `公元 ${year} 年 ${YearSc}`
         else Era = `公元前 ${1 - year} 年 ${YearSc}`
-        let YearInfo = `<span class='cal-name'>${CalNameList[CalName]}</span> 距曆元${year - (OriginAd || CloseOriginAd)}年 `
+        let YearInfo = `<span class='cal-name'>${NameList[Name]}</span> 距曆元${year - (OriginAd || CloseOriginAd)}年 `
         if (Type === 1) {
             const LeapSur = isTermLeap ? ThisYear.LeapSurAvgThis : ThisYear.LeapSurAvgFix
-            if (CalName === 'Taichu') {
+            if (Name === 'Taichu') {
                 YearInfo += `${ScList[ThisYear.BuScOrder]}統${ThisYear.BuYear}${ThisYear.JupiterSc}`
             } else {
                 YearInfo += `${ThreeList[ThisYear.JiOrder]}紀${ScList[ThisYear.BuScOrder]}蔀${ThisYear.BuYear}`
@@ -435,12 +435,12 @@ export default (CalName, YearStart, YearEnd) => {
             NowTerm1Sd: Type === 13 ? ThisYear.NowTerm1Sd.slice(1 + TermStart) : undefined
         }
     }
-    Memo[0] = AutoNewm(CalName, YearStart - 1) // 去年
-    Memo[1] = AutoNewm(CalName, YearStart) // 今年
+    Memo[0] = AutoNewm(Name, YearStart - 1) // 去年
+    Memo[1] = AutoNewm(Name, YearStart) // 今年
     const result = []
     YearEnd = YearEnd === undefined ? YearStart : YearEnd
     for (let year = YearStart; year <= YearEnd; year++) {
-        Memo[2] = AutoNewm(CalName, year + 1) // 明年
+        Memo[2] = AutoNewm(Name, year + 1) // 明年
         result.push(calculate(year))
         Memo[0] = Memo[1] // 数组滚动，避免重复运算
         Memo[1] = Memo[2]

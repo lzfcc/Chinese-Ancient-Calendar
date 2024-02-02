@@ -89,9 +89,9 @@ export default class MenuSelect extends React.Component {
               this.props.onSelect && this.props.onSelect(selected)
             }}
           >
-            {Object.entries(this.props.calMap).map(([calKey, calName], index) => {
+            {Object.entries(this.props.calMap).map(([calKey, Name], index) => {
               const disabled = this.state.selected.includes(calKey);
-              return <option disabled={disabled} value={calKey}>{calName}</option>;
+              return <option disabled={disabled} value={calKey}>{Name}</option>;
             })}
           </select>
         )}

@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import { Interpolate1 } from './equa_sn.mjs'
-import { CalNameList } from './para_constant.mjs'
+import { NameList } from './para_constant.mjs'
 
 // import { Interpolate2 } from './equa_sn.mjs'
 // import { Interpolate1_big } from './equa_sn.mjs'
@@ -22,8 +22,8 @@ import { CalNameList } from './para_constant.mjs'
 //     a[i] = -(MoonTcorrList[i + 1] - MoonTcorrList[i])
 // }
 
-const AutoSunInterpolate = (n, CalName, S1, S2, S3) => {
-    const { Type, Solar, SolarRaw, SunTcorrList, TermRangeA, TermRangeS } = Para[CalName]
+const AutoSunInterpolate = (n, Name, S1, S2, S3) => {
+    const { Type, Solar, SolarRaw, SunTcorrList, TermRangeA, TermRangeS } = Para[Name]
     let D1, D2 = 0
     if (S1) {
         D1 = S2 - S1
@@ -34,13 +34,13 @@ const AutoSunInterpolate = (n, CalName, S1, S2, S3) => {
     }
 
     let Result = 0
-    if (CalName === 'Huangji') {
+    if (Name === 'Huangji') {
         Result = SunInterpolateA(n)
-    } else if (['LindeA', 'LindeB'].includes(CalName)) {
+    } else if (['LindeA', 'LindeB'].includes(Name)) {
         Result = SunInterpolateB(n)
-    } else if (CalName === 'Chongxuan') {
+    } else if (Name === 'Chongxuan') {
         Result = SunInterpolateC(n)
-    } else if (['Yingtian', 'Qianyuan'].includes(CalName)) {
+    } else if (['Yingtian', 'Qianyuan'].includes(Name)) {
         Result = SunInterpolateD(n)
     } else {
         Result = SunInterpolateE(n)
@@ -137,7 +137,7 @@ const GenMoon248 = () => { // 欽天月離表
 // console.log(GenMoon248())
 
 const GenSolar = () => {
-    const CalList = Object.keys(CalNameList)
+    const CalList = Object.keys(NameList)
     const SolarList = []
     const Change = []
     CalList.forEach(name => {
@@ -147,7 +147,7 @@ const GenSolar = () => {
             const Deci = Solar - ~~Solar
             if (Deci < 0.2425 - 1e-12 || Deci > 0.2425 + 1e-12) {
                 Change.push((0.2425 - Deci) / ((1281 - CloseOriginAd) / 100))
-                SolarList.push([CloseOriginAd, Deci, CalNameList[name]])
+                SolarList.push([CloseOriginAd, Deci, NameList[name]])
             }
         }
     })
@@ -194,9 +194,9 @@ console.log(Math.log2(1.5))
 // const ZhangEcliRange = EcliRange / ZhangRange // 乾象會數
 // const ShuoHeFen = (Solar * JiRange * EcliDenom / 2) / EcliNumer // 乾象朔合分
 // let Shuowang = 0 // 朔望合數
-// if (CalName === 'Jingchu') {
+// if (Name === 'Jingchu') {
 //     Shuowang = LunarNumer / 2
-// } else if (CalName === 'Yuanjia') {
+// } else if (Name === 'Yuanjia') {
 //     Shuowang = EcliDenom / 2 // 元嘉朔望合數：會數/2
 // }
 // EcliLimit = EcliNumer - Shuowang // 入交限數 乾象先不管
@@ -267,7 +267,7 @@ console.log(Math.log2(1.5))
 
 
 // 這是崇天觀天原來的食延算法
-// else if (CalName === 'Chongtian') { // 崇天觀天食分完全一樣
+// else if (Name === 'Chongtian') { // 崇天觀天食分完全一樣
 //     // 84、140是陽陰曆食限的0.02
 //     if (isNewm) {
 //         Last = TheNodeDif < SunLimitYang ? (84 - TheNodeDif / 100) * (TheNodeDif / 100) / 1.85 : (140 - TheNodeDif / 100) * (TheNodeDif / 100) / 5.14 // f(4200)達到極值953.5                
@@ -276,7 +276,7 @@ console.log(Math.log2(1.5))
 //         Last = isDescend ? 1112 - Last / 935 : 900 - Last / 1156
 //     }
 //     Last *= 1337 / MoonAcrVList[~~AcrAnomaAccum]
-// } else if (CalName === 'Guantian') {
+// } else if (Name === 'Guantian') {
 //     if (isNewm) {
 //         Last = TheNodeDif < SunLimitYang ? (98 - TheNodeDif / 100) * (TheNodeDif / 100) / 2.5 : (140 - TheNodeDif / 100) * (TheNodeDif / 100) / 6.5 // 觀天只說250而一，沒說進二位                
 //     } else {

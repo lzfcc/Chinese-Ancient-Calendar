@@ -125,11 +125,15 @@ export const sunCorrGuimao = xRaw => { // 大徑1、小徑0.999857185、avg中�
     if (xRaw > 180) flag2 = -1
     return flag2 * (Awu + flag1 * Aweibingwu)
 }
-export const sunGuimao = (SunRoot, SunperiRoot, Sd) => {
-    const { SunAvgDV, SunperiConst, SunperiDV } = Para['Guimao']
+// export const sunJiazi = (SunRoot, SunperiRoot, Sd) => {
+
+// }
+export const sunShixian = (Name, SunRoot, SunperiRoot, Sd) => {
+    const { SunAvgDV, SunperiConst, SunperiDV } = Para[Name]
     const AvgSun = SunRoot + Sd * SunAvgDV // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
     const Sunperi = SunperiConst + SunperiDV * Sd + SunperiRoot // 最卑平行
     const SunOrbdeg = t(AvgSun - Sunperi) // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
+    // eval('sunCorr' + Name)
     const SunCorr = sunCorrGuimao(SunOrbdeg)
     const SunGong = t(AvgSun + SunCorr) // 實行
     const SunLongi = (SunGong + 270) % 360 // 黃道度
@@ -210,8 +214,8 @@ export const moonGuimao = (MoonRoot, NodeRoot, MoonapoRoot, Sd, Sunperi, SunOrbd
     //////// 黃道宿度。用到黃道宿鈐。待定。
     return { AcrNode, Whitegong, Whitelongi, MoonGong, MoonLongi, MoonLati, Obliqmoon, MoonOrbdeg, MoonCorr1, MoonC }
 }
-export const N4 = (CalName, Y) => {
-    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, MansionDayConst, Obliquity, BeijingLati } = Para[CalName]
+export const N4 = (Name, Y) => {
+    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SunperiConst, SunperiYV, SunperiDV, SunAvgDV, MoonAvgDV, MoonapoDV, NodeDV, MoonConst, MoonapoConst, NodeConst, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, MansionDayConst, Obliquity, BeijingLati } = Para[Name]
     const TermLeng = Solar / 12
     const CloseOriginYear = abs(Y - CloseOriginAd) // 積年
     const OriginAccum = +(CloseOriginYear * Solar).toFixed(9) // 中積
@@ -244,8 +248,8 @@ export const N4 = (CalName, Y) => {
         if (deci(NowSd) < Rise - 5 / 96 || deci(NowSd) > 1 - Rise + 5 / 96) return  // 日出前日入後五刻以內可以見食
         else {
             //////// 【二】食甚實緯、食甚用時。這一段日月食都一樣
-            const SunNow = sunGuimao(SunRoot, SunperiRoot, NowSd)
-            const SunOnehAft = sunGuimao(SunRoot, SunperiRoot, NowSd + 1 / 24)
+            const SunNow = sunShixian(Name, SunRoot, SunperiRoot, NowSd)
+            const SunOnehAft = sunShixian(Name, SunRoot, SunperiRoot, NowSd + 1 / 24)
             const MoonNow = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, NowSd, SunNow.Sunperi, SunNow.SunOrbdeg, SunNow.SunCorr, SunNow.SunGong)
             const MoonOnehAft = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, NowSd + 1 / 24, SunOnehAft.Sunperi, SunOnehAft.SunOrbdeg, SunOnehAft.SunCorr, SunOnehAft.SunGong)
             // 斜距交角差。本時此時二月離白道實行相減，得一小時太陰白道實行——「本時」應該是實望用時
@@ -257,7 +261,7 @@ export const N4 = (CalName, Y) => {
             const TotalNowDif = f3(MoonNow.Whitelongi) * ArcTotalNow / EquilibriumDV // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
             const SdAvg = NowSd + TotalNowDif // 食甚用時
             // const SdAvg = 205.527765625 // ⚠️臨時
-            const SunAvg = sunGuimao(SunRoot, SunperiRoot, SdAvg)
+            const SunAvg = sunShixian(Name, SunRoot, SunperiRoot, SdAvg)
             const MoonAvg = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, SdAvg, SunAvg.Sunperi, SunAvg.SunOrbdeg, SunAvg.SunCorr, SunAvg.SunGong)
             //////// 【三】地平高下差、日月視徑
             const AcrSunOrbdeg = SunNow.SunOrbdeg + SunAvg.SunCorr // 太陽實引：實朔引數+-本時太陽均數
@@ -454,8 +458,8 @@ export const N4 = (CalName, Y) => {
         if (deci(NowSd) > Rise + 9 / 96 && deci(NowSd) < 1 - Rise - 9 / 96) return  // 日出入前後9刻以內入算
         else {
             //////// 【二】食甚實緯、食甚時刻
-            const SunNow = sunGuimao(SunRoot, SunperiRoot, NowSd)
-            const SunOnehAft = sunGuimao(SunRoot, SunperiRoot, NowSd + 1 / 24)
+            const SunNow = sunShixian(Name, SunRoot, SunperiRoot, NowSd)
+            const SunOnehAft = sunShixian(Name, SunRoot, SunperiRoot, NowSd + 1 / 24)
             const MoonNow = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, NowSd, SunNow.Sunperi, SunNow.SunOrbdeg, SunNow.SunCorr, SunNow.SunGong)
             const MoonOnehAft = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, NowSd + 1 / 24, SunOnehAft.Sunperi, SunOnehAft.SunOrbdeg, SunOnehAft.SunCorr, SunOnehAft.SunGong)
             // 斜距交角差。本時此時二月離白道實行相減，得一小時太陰白道實行——「本時」應該是實望用時
@@ -467,7 +471,7 @@ export const N4 = (CalName, Y) => {
             const TotalNowDif = (MoonNow.Whitelongi % 180 < 90 ? -1 : 1) * ArcTotalNow / EquilibriumDV // 食甚距時。月距正交初宮六宮為減，五宮十一宮為加
             const SdTotal = NowSd + TotalNowDif
             let Total = deci(SdTotal) // 食甚時刻
-            const SunTotal = sunGuimao(SunRoot, SunperiRoot, SdTotal)
+            const SunTotal = sunShixian(Name, SunRoot, SunperiRoot, SdTotal)
             const MoonTotal = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, SdTotal, SunTotal.Sunperi, SunTotal.SunOrbdeg, SunTotal.SunCorr, SunTotal.SunGong)
             //////// 【三】食分
             const AcrMoonOrbdeg = MoonNow.MoonOrbdeg + MoonTotal.MoonCorr1
@@ -505,11 +509,11 @@ export const N4 = (CalName, Y) => {
         }
     }
     const iteration = (x, step, isNewm) => { // 迭代求實朔實時
-        let { Sunperi: SunperiBef, SunOrbdeg: SunOrbdegBef, SunCorr: SunCorrBef, SunLongi: SunLongiBef, SunGong: SunGongBef } = sunGuimao(SunRoot, SunperiRoot, x - step) // 如實望泛時爲丑正二刻，則以丑正初刻爲前時，寅初初刻爲後時——為什麼不說前後一時呢
+        let { Sunperi: SunperiBef, SunOrbdeg: SunOrbdegBef, SunCorr: SunCorrBef, SunLongi: SunLongiBef, SunGong: SunGongBef } = sunShixian(Name, SunRoot, SunperiRoot, x - step) // 如實望泛時爲丑正二刻，則以丑正初刻爲前時，寅初初刻爲後時——為什麼不說前後一時呢
         const { MoonLongi: MoonLongiBef } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, x - step, SunperiBef, SunOrbdegBef, SunCorrBef, SunGongBef)
         SunLongiBef += isNewm ? 0 : 180
         SunLongiBef %= 360
-        let { Sunperi: SunperiAft, SunOrbdeg: SunOrbdegAft, SunCorr: SunCorrAft, SunLongi: SunLongiAft, SunGong: SunGongAft } = sunGuimao(SunRoot, SunperiRoot, x + step)
+        let { Sunperi: SunperiAft, SunOrbdeg: SunOrbdegAft, SunCorr: SunCorrAft, SunLongi: SunLongiAft, SunGong: SunGongAft } = sunShixian(Name, SunRoot, SunperiRoot, x + step)
         const { MoonLongi: MoonLongiAft } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, x + step, SunperiAft, SunOrbdegAft, SunCorrAft, SunGongAft)
         SunLongiAft += isNewm ? 0 : 180
         SunLongiAft %= 360
@@ -525,12 +529,12 @@ export const N4 = (CalName, Y) => {
         const TermSunCorr = sunCorrGuimao(TermGong - TermSunperiMidn)
         const Acr0TermSd = TermSd - TermSunCorr / SunAvgDV
         // 用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時。
-        // const Acr0Sun = sunGuimao(SunRoot, SunperiRoot,Acr0TermSd)
+        // const Acr0Sun = sunShixian(Name,SunRoot, SunperiRoot,Acr0TermSd)
         // const AcrTermSd = Acr0TermSd + ((TermGong  - Acr0Sun.SunGong) / SunAvgDV)
         // 下再用推節氣時刻法。沒有推逐日太陽宮度，為了少點麻煩，只用本日次日，不考慮再昨天或明天的情況。與曆書相較密合。
         let AcrTermSd = 0
-        const SunToday = sunGuimao(SunRoot, SunperiRoot, ~~Acr0TermSd)
-        const SunMorrow = sunGuimao(SunRoot, SunperiRoot, ~~Acr0TermSd + 1)
+        const SunToday = sunShixian(Name, SunRoot, SunperiRoot, ~~Acr0TermSd)
+        const SunMorrow = sunShixian(Name, SunRoot, SunperiRoot, ~~Acr0TermSd + 1)
         const MidnToday = SunToday.SunGong
         const MidnMorrow = SunMorrow.SunGong
         AcrTermSd = ~~Acr0TermSd + (TermGong - MidnToday + (TermGong === 0 ? 360 : 0)) / (MidnMorrow - MidnToday)
@@ -538,7 +542,7 @@ export const N4 = (CalName, Y) => {
         const TermAcrSc = ScList[(SolsmorScOrder + ~~NowTermSd) % 60]
         const TermAcrDeci = deci(NowTermSd).toFixed(4).slice(2, 6)
         const TermRise = riseQing(((MidnMorrow - MidnToday) / 2 + MidnToday + 270) % 360, Obliquity, BeijingLati)
-        const TermEclp = Gong2Mansion(CalName, Y, TermGong, MidnToday, MidnMorrow, TermRise).Mansion
+        const TermEclp = Gong2Mansion(Name, Y, TermGong, MidnToday, MidnMorrow, TermRise).Mansion
         return { TermSc, TermDeci, NowTermSd, TermAcrSc, TermAcrDeci, TermEclp }
     }
     const AutoNewmSyzygy = (isNewm, LeapNumTerm) => {
@@ -551,11 +555,11 @@ export const N4 = (CalName, Y) => {
             AvgSc[i] = ScList[(SolsmorScOrder + AvgSdMidn) % 60]
             AvgDeci[i] = deci(AvgSd - AvgSdMidn).toFixed(4).slice(2, 6)
             //////// 實朔望泛時
-            let { Sunperi: SunperiMidnToday, SunOrbdeg: SunOrbdegMidnToday, SunCorr: SunCorrMidnToday, SunLongi: SunLongiMidnToday, SunGong: SunGongMidnToday } = sunGuimao(SunRoot, SunperiRoot, AvgSdMidn)
+            let { Sunperi: SunperiMidnToday, SunOrbdeg: SunOrbdegMidnToday, SunCorr: SunCorrMidnToday, SunLongi: SunLongiMidnToday, SunGong: SunGongMidnToday } = sunShixian(Name, SunRoot, SunperiRoot, AvgSdMidn)
             const { MoonLongi: MoonLongiMidnToday } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, AvgSdMidn, SunperiMidnToday, SunOrbdegMidnToday, SunCorrMidnToday, SunGongMidnToday)
             SunLongiMidnToday += isNewm ? 0 : 180
             SunLongiMidnToday %= 360
-            let { Sunperi: SunperiMidnMorrow, SunOrbdeg: SunOrbdegMidnMorrow, SunCorr: SunCorrMidnMorrow, SunLongi: SunLongiMidnMorrow, SunGong: SunGongMidnMorrow } = sunGuimao(SunRoot, SunperiRoot, AvgSdMidn + 1)
+            let { Sunperi: SunperiMidnMorrow, SunOrbdeg: SunOrbdegMidnMorrow, SunCorr: SunCorrMidnMorrow, SunLongi: SunLongiMidnMorrow, SunGong: SunGongMidnMorrow } = sunShixian(Name, SunRoot, SunperiRoot, AvgSdMidn + 1)
             const { MoonLongi: MoonLongiMidnMorrow } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, AvgSdMidn + 1, SunperiMidnMorrow, SunOrbdegMidnMorrow, SunCorrMidnMorrow, SunGongMidnMorrow)
             SunLongiMidnMorrow += isNewm ? 0 : 180
             SunLongiMidnMorrow %= 360
@@ -574,12 +578,12 @@ export const N4 = (CalName, Y) => {
             //////// 實朔望實時
             const AcrSd = iteration(Acr0SdMidn + Acr0Deci, .5 / 24, isNewm)
             // const Acr2Sd = iteration(AcrSd, 0.1 / 24, isNewm)
-            const { Sunperi: AcrSunperi, SunOrbdeg: AcrSunOrbdeg, SunCorr: AcrSunCorr, SunGong: AcrSunGong, SunLongi: AcrSunLongi } = sunGuimao(SunRoot, SunperiRoot, AcrSd)
+            const { Sunperi: AcrSunperi, SunOrbdeg: AcrSunOrbdeg, SunCorr: AcrSunCorr, SunGong: AcrSunGong, SunLongi: AcrSunLongi } = sunShixian(Name, SunRoot, SunperiRoot, AcrSd)
             const { Whitelongi: AcrWhitelongi } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, AcrSd, AcrSunperi, AcrSunOrbdeg, AcrSunCorr, AcrSunGong)
             NowSd[i] = AcrSd + timeDif(AcrSunCorr, AcrSunLongi)
             NowDeci[i] = deci(NowSd[i]).toFixed(4).slice(2, 6)
             NowSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
-            Eclp[i] = Gong2Mansion(CalName, Y, AcrSunGong).Mansion
+            Eclp[i] = Gong2Mansion(Name, Y, AcrSunGong).Mansion
             //////// 交食
             let isEcli = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            
@@ -667,8 +671,8 @@ export const N4 = (CalName, Y) => {
         SunRoot, SunperiRoot, MoonRoot, MoonapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSd, SolsmorScOrder, NowTerm1Sd
     }
 }
-// console.log(N4("Guimao", 1761)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
-// console.log(sunGuimao(SunRoot, SunperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiRoot=166*(1/60+2.9975/3600)
+// console.log(N4("Guimao", 1762)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例，見說明文檔
+// console.log(sunShixian(Name,SunRoot, SunperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SunperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // SunOrbdeg = 298 + 6 / 60 + 9.329 / 3600
 // AvgMoon1 = 295.5279086111
