@@ -2876,7 +2876,7 @@ export default {
         // CloseOriginAd: , // 崇禎元年戊辰
         Solar: 365.2421875, // 週歲
         // Precession: , // 岁差″      
-        BeijingLati: 39.9166666666667, // 見儀象考成卷首上葉七、曆象考成卷四
+        BjLati: 39.9166666666667, // 見儀象考成卷首上葉七、曆象考成卷四
         Obliquity: 23.525 // 第谷所測
     },
     Yongnian: { // 康熙永年表
@@ -2885,7 +2885,7 @@ export default {
         // CloseOriginAd: , // 
         Solar: 365.2421875, // 週歲
         // Precession: , // 岁差″      
-        BeijingLati: 39.9166666666667, // 
+        BjLati: 39.9166666666667, // 
         // Obliquity: , //
     },
     Jiazi: { // 曆象考成
@@ -2907,9 +2907,11 @@ export default {
         MansionRaw: [11, 3.16666666666667],
         MoonAvgVd: 13.17639477138889, // 47435.021177秒
         NodeVd: 0.05295555555556, // 190.64秒
+        MoonConst: 38.68257407407407, // 太陰平行應一宮8度40分57秒16微
+        NodeConst: 207.22716666666667, // 正交應：6宮27度13分37秒48微
         ZhengNum: 2,
         OriginMonNum: 0,
-        BeijingLati: 39.9916666666667, // 暢春園。五十九分三十秒
+        BjLati: 39.9916666666667, // 暢春園。五十九分三十秒
         Obliquity: 23.4916666666667  // 暢春園23+29/60+30/3600。曆象考成上編卷四
     },
     Guimao: { // 曆象考成後編
@@ -2942,7 +2944,7 @@ export default {
         SunLimitYinAcr: 18.4333333333333, // 實朔食限
         SunLimitYangAcr: 6.3666666666667,
         MoonLimit: 15.15,
-        BeijingLati: 39.9916666666667, // 京師北極出地
+        BjLati: 39.9916666666667, // 京師北極出地
         MansionConst: 70.5666666666667, // 箕3.166667的宿度
         MansionRaw: [11, 3.16666666666667],
         ZhengNum: 2,

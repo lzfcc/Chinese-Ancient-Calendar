@@ -2,10 +2,11 @@ import Para from './para_calendars.mjs'
 import { AutoLongi2Lati } from './astronomy_bind.mjs'
 import { MansionNameList, AutoDegAccumList } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
+import { twilight } from './newm_shixian.mjs'
 
 export const Mansion2Deg = (Mansion, DegAccumList) => (DegAccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
-export const Deg2Mansion = (Deg, DegAccumList) => {
+export const Deg2Mansion = (Deg, DegAccumList, fixed) => {
     Deg = +Deg + 1e-12
     let MansionDeg = 0
     let MansionName = ''
@@ -16,7 +17,7 @@ export const Deg2Mansion = (Deg, DegAccumList) => {
             break
         }
     }
-    return MansionName + MansionDeg.toFixed(3)
+    return MansionName + MansionDeg.toFixed(fixed || 3)
 }
 
 export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year) => { //上元以來積日，宿度表，曆法名，距冬至日數，冬至小分
@@ -43,10 +44,9 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
         // 大衍只考慮了昬時距午度
         const MorningstarDeg = (Deg + Sidereal * (1 - HalfLight) + (Type === 7 ? 0 : HalfNight)) % Sidereal
         const DuskstarDeg = (Deg + Sidereal * HalfLight + (Type === 7 ? 0 : 1 - HalfNight)) % Sidereal
-        const Duskstar = Deg2Mansion(DuskstarDeg, DegAccumList)
-        const Morningstar = Deg2Mansion(MorningstarDeg, DegAccumList)
-        MorningDuskstar = `${Morningstar}
-${Duskstar}`
+        const Duskstar = Deg2Mansion(DuskstarDeg, DegAccumList, 1)
+        const Morningstar = Deg2Mansion(MorningstarDeg, DegAccumList, 1)
+        MorningDuskstar = Duskstar + ' ' + Morningstar
     }
     return { Mansion, MorningDuskstar }
 }
@@ -57,7 +57,7 @@ ${Duskstar}`
 // }
 // 以下是西曆日躔：
 export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
-    const { Solar, MansionConst } = Para[Name]
+    const { Solar, MansionConst, Obliquity, BjLati } = Para[Name]
     const EclpDegAccumList = AutoDegAccumList(Name, Y, true)
     let Mansion = '', DuskstarPrint = ''
     if (Gong !== false) {
@@ -68,12 +68,12 @@ export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
     }
     if (MidnToday) {
         const SunVd = MidnMorrow - MidnToday
-        const MorningstarGong = MidnToday + (Rise - 0.025) * SunVd - (0.5 - Rise + 0.025) * 360
-        const DuskstarGong = MidnToday + (1 - Rise + 0.025) * SunVd + (0.5 - Rise + 0.025) * 360
-        const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList)
-        const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList)
-        DuskstarPrint = `${Morningstar}
-${Duskstar}`
+        const Twilight = twilight(Obliquity, BjLati, (MidnToday + SunVd / 2 + 270) % 360)
+        const MorningstarGong = MidnToday + (Rise - Twilight) * SunVd - (0.5 - Rise + Twilight) * 360
+        const DuskstarGong = MidnToday + (1 - Rise + Twilight) * SunVd + (0.5 - Rise + Twilight) * 360
+        const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
+        const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
+        DuskstarPrint = Morningstar + ' ' + Duskstar
     }
     return { Mansion, DuskstarPrint }
 }
