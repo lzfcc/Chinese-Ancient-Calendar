@@ -30,7 +30,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
         const HouLeng = Solar / 72
         const HalfTermLeng = Solar / 24
         const HexagramLeng = Solar / 60
-        const MoonAvgDV = Type < 4 ? AutoMoonAvgV(Name) : undefined
+        const MoonAvgVd = Type < 4 ? AutoMoonAvgV(Name) : undefined
         const ZhengInt = NewmInt[0] + (ScConst || 0)
         const ZhengSolsDif = +(ZhengInt - SolsAccum).toFixed(5) // 正月夜半到冬至距離
         const SolsDeci = deci(SolsAccum)
@@ -178,7 +178,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     SunEclpLongiNewm = SolsDifNewm + SunDifAccumNewm
                 }
                 if (Type < 4) {
-                    MoonEclpLongiNewmNight = SunEclpLongiNewm - deci(NewmRaw[i - 1]) * MoonAvgDV
+                    MoonEclpLongiNewmNight = SunEclpLongiNewm - deci(NewmRaw[i - 1]) * MoonAvgVd
                 } else {
                     const MoonAcrSFunc = AutoMoonAcrS(AnomaAccumNewm, Name)
                     AnomaCycle = MoonAcrSFunc.AnomaCycle
@@ -215,7 +215,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     SunEquaLongiAccum = SolsDifNight + SolsAccum
                     SunEclpLongi = AutoEqua2Eclp(SolsDifNight, Name).Equa2Eclp
                     SunEclpLongiAccum = SunEclpLongi + SolsAccum
-                    MoonEclpLongiAccum = SunEquaLongiAccum * MoonAvgDV
+                    MoonEclpLongiAccum = SunEquaLongiAccum * MoonAvgVd
                 } else {
                     NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node
                     AnomaAccumNight = (NewmAnomaAccumNightPrint[i - 1] + k - 1) % Anoma
@@ -239,7 +239,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     // 元嘉開始計算月度就有計入遲疾的方法，大業就完全是定朔，但又是平朔注曆，這樣會衝突，我只能把麟德以前全部求平行度。
                     // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
                     if (Type < 4) {
-                        MoonEclpLongi = MoonEclpLongiNewmNight + (k - 1) * MoonAvgDV
+                        MoonEclpLongi = MoonEclpLongiNewmNight + (k - 1) * MoonAvgVd
                         MoonEclpLongiAccum = MoonEclpLongi + SolsAccum
                     } else {
                         const MoonAcrSNight = AutoMoonAcrS(AnomaAccumNight, Name).MoonAcrS

@@ -67,9 +67,9 @@ export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
         Mansion = Deg2Mansion((Gong + Solar) % Solar, EclpDegAccumList)
     }
     if (MidnToday) {
-        const SunDV = MidnMorrow - MidnToday
-        const MorningstarGong = MidnToday + (Rise - 0.025) * SunDV - (0.5 - Rise + 0.025) * 360
-        const DuskstarGong = MidnToday + (1 - Rise + 0.025) * SunDV + (0.5 - Rise + 0.025) * 360
+        const SunVd = MidnMorrow - MidnToday
+        const MorningstarGong = MidnToday + (Rise - 0.025) * SunVd - (0.5 - Rise + 0.025) * 360
+        const DuskstarGong = MidnToday + (1 - Rise + 0.025) * SunVd + (0.5 - Rise + 0.025) * 360
         const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList)
         const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList)
         DuskstarPrint = `${Morningstar}

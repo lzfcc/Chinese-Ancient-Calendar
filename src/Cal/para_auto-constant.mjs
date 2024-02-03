@@ -117,8 +117,8 @@ export const AutoNodeCycle = Name => {
         NodeCycle = 363.793419
     } else { // 其他的不知道了
         const { Node } = Para[Name]
-        const MoonAvgDV = AutoMoonAvgV(Name)
-        NodeCycle = +(MoonAvgDV * Node).toFixed(4)
+        const MoonAvgVd = AutoMoonAvgV(Name)
+        NodeCycle = +(MoonAvgVd * Node).toFixed(4)
     }
     return NodeCycle
 }

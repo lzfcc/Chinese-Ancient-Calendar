@@ -54,7 +54,7 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, Name) => {
                 AutoDifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, title)
             }
             const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
-            const { SunTcorr, MoonTcorr, MoonAcrDV, NodeAccumCorrA } = AutoTcorr(AnomaAccum, SolsDif, title)
+            const { SunTcorr, MoonTcorr, MoonAcrVd, NodeAccumCorrA } = AutoTcorr(AnomaAccum, SolsDif, title)
             const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
             let SunTcorrPrint = '-'
             let SunTcorrInacPrint = '-'
@@ -81,8 +81,8 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, Name) => {
                 MoonTcorrInac = MoonTcorr - WestMoonTcorr
                 MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
             }
-            if (MoonAcrDV) {
-                MoonDifAccumPrint += `\n${MoonAcrDV.toFixed(4)}`
+            if (MoonAcrVd) {
+                MoonDifAccumPrint += `\n${MoonAcrVd.toFixed(4)}`
             }
             if (NodeAccumCorrA) {
                 NodeAccumCorrPrint = NodeAccumCorrA.toFixed(4)
@@ -504,13 +504,13 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, Name) => {
     let { Type, Solar, SolarRaw, Sidereal, Node } = Para[Name]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
-    const MoonAvgDV = AutoMoonAvgV(Name)
+    const MoonAvgVd = AutoMoonAvgV(Name)
     const Quadrant = Type === 11 ? Sidereal / 4 : AutoNodeCycle(Name) / 4
     // 正交月黃經。《數》頁351
     // const tmp2 = Node - NewmNodeAccumPrint[i - 1] // 平交入朔
     // const NodeAnomaAccum = (AnomaAccumNight + tmp2) % Anoma // 每日夜半平交入轉
     const tmp3 = Node - NodeAccum // 距後日
-    const tmp4 = tmp3 * MoonAvgDV // 距後度
+    const tmp4 = tmp3 * MoonAvgVd // 距後度
     // let NodeSolsDifDay = SolsDif + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
     const NodeEclp = (MoonEclp + tmp4) % Sidereal // 正交距冬至度數 // 算出來好迷啊，莫名其妙
     // const NodeSolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, SolsDif, Name, NodeAccum).MoonTcorr // 遲加疾減

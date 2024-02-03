@@ -239,14 +239,14 @@ export const MoonLongiFormula = (NodeEclpLongi, MoonNodeDifRev, Name) => { // Su
 export const MoonLatiFormula = (NodeAccum, Name, AnomaAccum, SolsDif) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
     const { Node } = Para[Name]
     const Cycle = AutoNodeCycle(Name)
-    let MoonAvgDV = AutoMoonAvgV(Name) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
+    let MoonAvgVd = AutoMoonAvgV(Name) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
     if (Name === 'Qintian') {
-        MoonAvgDV = 1
+        MoonAvgVd = 1
     }
     const Cycle50 = Cycle / 2
     const Cycle25 = Cycle / 4
     const Cycle125 = Cycle / 8
-    const Longi = NodeAccum * MoonAvgDV
+    const Longi = NodeAccum * MoonAvgVd
     const LongiHalf = Longi % Cycle50
     const LongiHalfRev = Cycle25 - Math.abs(LongiHalf - Cycle25)
     let Lati = 0

@@ -81,16 +81,16 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
-                const { SunOrbdeg, SunCorr, SunLongi, SunGong, Sunperi } = sunShixian(Name,SunRoot, SunperiRoot, SdMidn)
-                const { SunLongi: SunLongiMidnMorrow } = sunShixian(Name,SunRoot, SunperiRoot, SdMidn + 1)
+                const { SunOrbdeg, SunCorr, SunLongi, SunGong, Sunperi } = sunShixian(Name, SunRoot, SunperiRoot, SdMidn)
+                const { SunLongi: SunLongiMidnMor } = sunShixian(Name, SunRoot, SunperiRoot, SdMidn + 1)
                 const { MoonGong, MoonLongi, MoonLati } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, SdMidn, Sunperi, SunOrbdeg, SunCorr, SunGong)
                 Eclp[i][k] = deg2Hms(SunLongi)
                 EclpMansion[i][k] = Gong2Mansion(Name, Y, SunGong).Mansion + '度' // 注意：入宿度是轉換成了古度的
                 Equa[i][k] = deg2Hms(LongiHigh2Low(Obliquity, SunLongi))
                 const tmp1 = HighLongi2LowLati(Obliquity, SunLongi)
                 Lati[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
-                Rise[i][k] = riseQing(SunLongi + (SunLongiMidnMorrow - SunLongi) / 2, Obliquity, BeijingLati)
-                Duskstar[i][k] = Gong2Mansion(Name, Y, false, SunLongi + 90, SunLongiMidnMorrow + 90, Rise[i][k]).DuskstarPrint
+                Rise[i][k] = riseQing(SunLongi + (SunLongiMidnMor - SunLongi) / 2, Obliquity, BeijingLati)
+                Duskstar[i][k] = Gong2Mansion(Name, Y, false, SunLongi + 90, SunLongiMidnMor + 90, Rise[i][k]).DuskstarPrint
                 Rise[i][k] = ClockWest(Rise[i][k])
                 MoonEclp[i][k] = deg2Hms(MoonLongi)
                 MoonMansion[i][k] = Gong2Mansion(Name, Y, MoonGong).Mansion + '度'

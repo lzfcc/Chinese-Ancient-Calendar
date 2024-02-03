@@ -100,17 +100,17 @@ export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數�
     const Anoma = ConstFunc.Anoma
     const Sidereal = ConstFunc.Sidereal
     const Lunar = ConstFunc.Lunar
-    const MoonAvgDV = big(Sidereal).div(Lunar).add(1)
+    const MoonAvgVd = big(Sidereal).div(Lunar).add(1)
     let AnomaAccum1 = d2r(AnomaAccum * 360 / Anoma) // 順序不能換
     AnomaAccum = d2r(AnomaAccum * 360 / Anoma)
     AnomaAccum = AnomaAccum.mul(28.01241785825).div(Anoma) // 這個擬合函數的週期是28多，要化到一個近點月
     AnomaAccum1 = AnomaAccum1.mul(28.01241785825).div(Anoma)
     const MoonDifAccum = big(-0.623).add(big(0.623).mul(big.cos(AnomaAccum))).add(big(5).mul(big.sin(AnomaAccum)))
     const MoonDifAccum1 = big(-0.623).add(big(0.623).mul(big.cos(AnomaAccum1))).add(big(5).mul(big.sin(AnomaAccum1)))
-    const MoonAcrDV = MoonDifAccum.sub(MoonDifAccum1).add(MoonAvgDV)
+    const MoonAcrVd = MoonDifAccum.sub(MoonDifAccum1).add(MoonAvgVd)
     return {
         MoonDifAccum: MoonDifAccum.toNumber(),
-        MoonAcrDV: MoonAcrDV.toNumber()
+        MoonAcrVd: MoonAcrVd.toNumber()
     }
 }
 // console.log(MoonAcrVWest(7, 900))
@@ -379,7 +379,7 @@ export const EcliWest = (NodeAccum, AnomaAccum, Deci, SolsDif, f, year) => { // 
     const SunWestFunc = SunAcrVWest(SolsDif, year)
     let Longi = (SunWestFunc.Longi) % Solar // 黃經
     let SunV = SunWestFunc.SunAcrV
-    let MoonV = MoonAcrVWest(AnomaAccum, year).MoonAcrDV
+    let MoonV = MoonAcrVWest(AnomaAccum, year).MoonAcrVd
     SunV *= 360 / Solar
     MoonV *= 360 / Solar
     const d = Longi2LatiWest(Longi, Solar, year).d // 赤緯radius
@@ -501,7 +501,7 @@ const MingtianNode = () => {
     // Node = Sidereal / (v + 1 + Sidereal / Lunar)
     const Node = Sidereal.div(v.add(1).add(Sidereal.div(Lunar))).toString() //.toFraction(true) 
     // const Node = Solar.div(v.add(1).add(Solar.div(Lunar))).toFraction(true)
-    // return MoonAvgDVdenom
+    // return MoonAvgVddenom
 }
 // console.log(MingtianNode())
 

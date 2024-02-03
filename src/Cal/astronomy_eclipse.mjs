@@ -54,15 +54,15 @@ const ExMagni = (Magni, Type, Name, isNewm) => {
 
 const Eclipse1 = (NodeAccum, Name) => {
     const { Type, Node, Lunar } = Para[Name]
-    const MoonAvgDV = AutoMoonAvgV(Name)
+    const MoonAvgVd = AutoMoonAvgV(Name)
     const Node50 = Node / 2
     const Node25 = Node / 4
     const NodeAccumHalf = NodeAccum % Node50
     const NodeDif = Node25 - Math.abs(NodeAccumHalf - Node25)
-    const Limit = ['Daming', 'Kaihuang'].includes(Name) ? MoonAvgDV * (Lunar - Node) / 2 : Lunar / 2
+    const Limit = ['Daming', 'Kaihuang'].includes(Name) ? MoonAvgVd * (Lunar - Node) / 2 : Lunar / 2
     let Status = 0, Magni = 0
-    if (NodeDif * MoonAvgDV < Limit) {
-        Magni = 15 - NodeDif * MoonAvgDV
+    if (NodeDif * MoonAvgVd < Limit) {
+        Magni = 15 - NodeDif * MoonAvgVd
         const Func = ExMagni(Magni, Type)
         Magni = Func.Magni
         Status = Func.Status
@@ -236,7 +236,7 @@ const EcliStatus2 = (isNewm, Name, Denom, Solar25, Solar75, Solar, Lunar, HalfTe
 const EcliMagni2 = (Status, isNewm, Name, Denom, NodeDenom, Solar25, Solar50, Solar75, Solar, HalfTermLeng, SynodicNodeDif50, isYin, isBefore, isFast, Season, NodeDif, NodeDif12, SolsDif, SolsDifHalfRev, SummsolsDif, NoonDif, TotalDeci, Tcorr) => {
     let Magni = 0, Mcorr = 0, TheNotEcli = 0
     if (Status) {
-        const MoonAvgDV = AutoMoonAvgV(Name)
+        const MoonAvgVd = AutoMoonAvgV(Name)
         if (['Daye', 'WuyinA', 'WuyinB'].includes(Name)) {
             if (isNewm) {
                 // 劉洪濤頁462說交前交後的意思。劉洪濤和藤豔輝對術文理解不一，劉洪濤認爲後面的「時差減者，先交減之，後交加之」一句用來描述前面的「皆去不食餘一時」，藤認爲後面和前面是分開的，後面直接加減時差，前面的一時符號都是-。感覺藤的說法可靠一些。
@@ -274,7 +274,7 @@ const EcliMagni2 = (Status, isNewm, Name, Denom, NodeDenom, Solar25, Solar50, So
                 }
                 TheNotEcli = NodeDif - Mcorr
                 if (TheNotEcli < 0) Magni = 15
-                Magni = 15 - TheNotEcli * MoonAvgDV
+                Magni = 15 - TheNotEcli * MoonAvgVd
             }
         } else if (Name === 'Huangji') {
             if (isNewm) {
@@ -495,7 +495,7 @@ const Eclipse2 = (NodeAccum, AnomaAccum, AcrDeci, SolsDif, isNewm, Name, Month, 
 
 //////////////////////// 上面的NodeDif是一日，下面的TheNodeDif是日分
 
-const EcliTcorr3 = (isNewm, isYin, Name, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrDV, SunTcorr, NodeDif, AcrSolsDif) => {
+const EcliTcorr3 = (isNewm, isYin, Name, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrVd, SunTcorr, NodeDif, AcrSolsDif) => {
     let Tcorr = 0
     const isSunYin = AcrSolsDif > Solar25 && AcrSolsDif < Solar75
     const isSame = (isYin && isSunYin) || (isYin && isSunYin)
@@ -563,7 +563,7 @@ const EcliTcorr3 = (isNewm, isYin, Name, Type, Denom, Solar25, Solar75, NewmNoon
     //     TotalDeci = AcrDeci < 0.5 ? 0.5 + Tcorr : AcrDeci + Tcorr
     // } else
     if (Name === 'Mingtian') { // 明天沒有時差，《數理》頁424
-        TotalDeci = (AvgDeci + AvgMoonTcorr) * 13.37 / MoonAcrDV + SunTcorr
+        TotalDeci = (AvgDeci + AvgMoonTcorr) * 13.37 / MoonAcrVd + SunTcorr
     } else if (Type === 9 || Type === 10) {
         TotalDeci = AvgTotalDeci + Tcorr
     } else {
@@ -1168,7 +1168,7 @@ const EcliLast3 = (Name, Type, isNewm, Last, Magni, TheNodeDif, TotalDeci, Tcorr
         } else if (Type === 11) {
             Last = Math.sqrt(((isNewm ? 20 : 30) - Magni) * Magni)
                 * (['Datong', 'Datong2'].includes(Name) && !isNewm ? 0.00492 : 0.00574)
-                / (MoonFormula(AcrAnomaAccum, Name).MoonAcrDV - 0.082)
+                / (MoonFormula(AcrAnomaAccum, Name).MoonAcrVd - 0.082)
         }
         if (['Wuji', 'Tsrengyuan'].includes(Name)) {
             let Portion = 0.5
@@ -1215,7 +1215,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, Avg
     const NodeCycle = (Name === 'Chongxuan' || Type === 11) ? AutoNodeCycle(Name) : 0
     const NodeCycle50 = NodeCycle / 2
     const NodeCycle25 = NodeCycle / 4
-    const { Tcorr2: AvgTcorr, SunTcorr, MoonAcrDV, MoonTcorr: AvgMoonTcorr, NodeAccumCorrA: AvgNodeTcorr
+    const { Tcorr2: AvgTcorr, SunTcorr, MoonAcrVd, MoonTcorr: AvgMoonTcorr, NodeAccumCorrA: AvgNodeTcorr
     } = AutoTcorr(AvgAnomaAccum, AvgSolsDif, Name) // 經朔修正    
     const AcrAnomaAccum = (AvgAnomaAccum + AvgTcorr) % Anoma // 定朔入轉
     const AvgNodeAccumCorr = AvgNodeAccum + SunTcorr // 入交常日    
@@ -1240,7 +1240,7 @@ const Eclipse3 = (AvgNodeAccum, AvgAnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, Avg
     const RiseNoonDif = 0.5 - Rise // 日出沒辰刻距午正刻數/100，卽半晝分    
     ////////////////////// 時差
     const NodeDif = Type === 7 ? Denom * (Node25 - Math.abs(AcrNodeAccum % Node50 - Node25)) : 0
-    const { Tcorr, TotalDeci, TheTotalNoonDif, dd, isSame } = EcliTcorr3(isNewm, isYin, Name, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrDV, SunTcorr, NodeDif, AcrSolsDif)
+    const { Tcorr, TotalDeci, TheTotalNoonDif, dd, isSame } = EcliTcorr3(isNewm, isYin, Name, Type, Denom, Solar25, Solar75, NewmNoonDif, NewmNoonDifAbs, Rise, RiseNoonDif, AvgTotalDeci, AvgTotalNoonDif, AcrDeci, AvgDeci, AvgMoonTcorr, MoonAcrVd, SunTcorr, NodeDif, AcrSolsDif)
     ////////////////////// 食差
     const { TheNodeAccum, TheNodeDif: TheNodeDifRaw, Std1, Std2, StatusRaw, YinYangBorder, McorrA, McorrB } = EcliMcorr3(Name, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidereal50, Sidereal, Solar125, Solar25, Solar375, Solar50, Solar75, Solar875, Solar, NodeCycle25, NodeCycle50, MoonLimit1, Denom, AcrTermList,
         isNewm, isYin, isDescend, isSame, AcrSolsDif, AvgSolsDif, dd, TotalDeci, TheTotalNoonDif, RiseNoonDif, AcrNodeAccum, AvgNodeAccum, AvgNodeAccumCorr, AcrNewmNodeAccum, Tcorr, AvgTcorr, SolsAccum)
