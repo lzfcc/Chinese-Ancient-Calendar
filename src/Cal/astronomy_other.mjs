@@ -1,5 +1,5 @@
 import Para from './para_calendars.mjs'
-import { AutoLongi2Lati } from './astronomy_bind.mjs'
+import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { MansionNameList, AutoDegAccumList } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
 import { twilight } from './newm_shixian.mjs'
@@ -38,7 +38,7 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
     let MorningDuskstar = ``
     const LightRange = AutoLightRange(Name)
     if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
-        const Rise = AutoLongi2Lati(SolsDif, SolsDeci, Name).Rise / 100
+        const Rise = AutoLon2Lat(SolsDif, SolsDeci, Name).Rise / 100
         const HalfLight = 0.5 - Rise + LightRange // 半晝漏
         const HalfNight = Rise - LightRange
         // 大衍只考慮了昬時距午度
@@ -57,7 +57,7 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
 // }
 // 以下是西曆日躔：
 export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
-    const { Solar, MansionConst, Obliquity, BjLati } = Para[Name]
+    const { Solar, MansionConst, Sobliq, BjLat } = Para[Name]
     const EclpDegAccumList = AutoDegAccumList(Name, Y, true)
     let Mansion = '', DuskstarPrint = ''
     if (Gong !== false) {
@@ -68,7 +68,7 @@ export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
     }
     if (MidnToday) {
         const SunVd = MidnMorrow - MidnToday
-        const Twilight = twilight(Obliquity, BjLati, (MidnToday + SunVd / 2 + 270) % 360)
+        const Twilight = twilight(Sobliq, BjLat, (MidnToday + SunVd / 2 + 270) % 360)
         const MorningstarGong = MidnToday + (Rise - Twilight) * SunVd - (0.5 - Rise + Twilight) * 360
         const DuskstarGong = MidnToday + (1 - Rise + Twilight) * SunVd + (0.5 - Rise + Twilight) * 360
         const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
@@ -100,8 +100,8 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, Name) => {
 export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, Name) => { // 朔小分
     const { Solar } = Para[Name]
     const Solar25 = Solar / 4
-    const SpringequinoxSunrise = AutoLongi2Lati(Solar25, SolsDeci, Name).Rise / 100
-    let { Rise, Sunrise1 } = AutoLongi2Lati(SolsDif, SolsDeci, Name)
+    const SpringequinoxSunrise = AutoLon2Lat(Solar25, SolsDeci, Name).Rise / 100
+    let { Rise, Sunrise1 } = AutoLon2Lat(SolsDif, SolsDeci, Name)
     Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(Name)
     let standard = 0.75
@@ -133,7 +133,7 @@ export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, Name) => { // 朔小分
 export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, Name) => {
     const { Type } = Para[Name]
     const LightRange = AutoLightRange(Name)
-    const Rise = AutoLongi2Lati(SolsDif, SolsDeci, Name).Rise / 100
+    const Rise = AutoLon2Lat(SolsDif, SolsDeci, Name).Rise / 100
     let standard = Rise - LightRange
     if (Type >= 8 || Name === 'Qintian') standard = Rise
     let SyzygySub = 0

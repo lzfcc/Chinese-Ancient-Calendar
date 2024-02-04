@@ -2,7 +2,7 @@ import Para from './para_calendars.mjs'
 import { frc, deci } from './para_constant.mjs'
 import { AutoTcorr, AutoDifAccum, MoonFormula } from './astronomy_acrv.mjs'
 import { Interpolate3, Make2DPoints } from './equa_sn.mjs'
-import { AutoLongi2Lati } from './astronomy_bind.mjs'
+import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { AutoQuar, AutoMoonAvgV, AutoMoonTcorrDif, AutoNodePortion, AutoNodeCycle } from './para_auto-constant.mjs'
 
 const ExMagni = (Magni, Type, Name, isNewm) => {
@@ -649,8 +649,8 @@ const EcliMcorr3 = (Name, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidere
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
         } else if (Name === 'Qintian') {
             const SolsDeci = deci(SolsAccum)
-            const Lati = Math.abs(AutoLongi2Lati(TheSolsDif, SolsDeci, 'Chongxuan').Lati)
-            McorrA = MoonLimit1 * Lati * Denom / 251300 // 黃道出入食差
+            const Lat = Math.abs(AutoLon2Lat(TheSolsDif, SolsDeci, 'Chongxuan').Lat)
+            McorrA = MoonLimit1 * Lat * Denom / 251300 // 黃道出入食差
             YinYangBorder = McorrA * dd
             YinYangBorder = MoonLimit1 + (isYin ? -1 : 1) * YinYangBorder // 假設lati的單位是經法72，那麼常準在430-2322
             const tmp = Math.abs(AvgSolsDif % Solar25 - Solar125) * 24 // 「置日躔入曆⋯⋯」那就是經朔距冬至日，定朔距冬至日叫「定朔加時入曆」
@@ -1274,7 +1274,7 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif,
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgSolsDif, isNewm, Name, Month, Leap)
         } else {
             SolsDeci = SolsDeci || deci(SolsAccum)
-            const Rise = AutoLongi2Lati(AcrSolsDif, SolsDeci, Name).Rise / 100
+            const Rise = AutoLon2Lat(AcrSolsDif, SolsDeci, Name).Rise / 100
             if (['Fengyuan', 'Zhantian'].includes(Name)) {
                 Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, Rise, 0, isNewm, 'Guantian')
             } else if (['Chunyou', 'Huitian'].includes(Name)) {

@@ -3,8 +3,8 @@ import BindTcorr from './AcrV'
 import BindEqua2Eclp from './Equa2Eclp'
 import Deg2Mansion from './Deg2Mansion'
 import Mansion2Deg from './Mansion2Deg'
-import BindLongi2Lati from './Longi2Lati'
-import MoonLongi from './MoonLongi'
+import BindLon2Lat from './Lon2Lat'
+import MoonLon from './MoonLon'
 import Const from './Const'
 import Deciaml2Angle from './Deciaml2Angle'
 import SunEclipse from './SunEclipse'
@@ -55,9 +55,9 @@ export default class Astronomy extends React.Component {
           <Hushigeyuan />
           <Heron />
           <h2>步晷漏</h2>
-          <BindLongi2Lati />
+          <BindLon2Lat />
           <h2>月度月緯</h2>
-          <MoonLongi />
+          <MoonLon />
           <h2>交食之什</h2>
           <SunEclipse />
           <MoonEclipse />

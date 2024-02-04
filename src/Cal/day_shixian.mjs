@@ -8,7 +8,7 @@ import {
 import {
     YearGodConvert, YearColorConvert, MonColorConvert,
 } from './day_luck.mjs'
-import { sunShixian, moonGuimao, LongiHigh2Low, HighLongi2LowLati, riseQing, twilight } from './newm_shixian.mjs'
+import { sunShixian, moonGuimao, LonHigh2Low, HighLon2LowLat, riseQing, twilight } from './newm_shixian.mjs'
 import CalNewm from './newm_index.mjs'
 import { Gong2Mansion } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
@@ -24,8 +24,8 @@ const deg2Hms = deg => {
 export const D2 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (Name, Y) => {
-        const { Obliquity, BjLati } = Para[Name]
-        const { LeapNumTerm, SolsAccum, SunRoot, SunperiRoot, MoonRoot, MoonapoRoot, NodeRoot, NewmSd, NowTerm1Sd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
+        const { Sobliq, BjLat } = Para[Name]
+        const { LeapNumTerm, SolsAccum, SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, NewmSd, NowTerm1Sd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
         ///////
         const YearScOrder = ((Y - 3) % 60 + 60) % 60
         const YearSc = ScList[YearScOrder]
@@ -48,7 +48,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
         const OriginJdAccum = 2086292 + ~~(365.2423 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
         const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
-        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], EquaMansion = [], Eclp = [], EclpMansion = [], MoonEclp = [], MoonEclpLati = [], MoonMansion = [], Rise = [], Twilight = [], Lati = [], Duskstar = []
+        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], EquaMansion = [], Eclp = [], EclpMansion = [], MoonEclp = [], MoonEclpLat = [], MoonMansion = [], Rise = [], Twilight = [], Lat = [], Duskstar = []
         let DayAccum = 0, JieAccum = 0 // 各節積日 
         let JianchuDayAccum = NewmSd[0] // 建除
         let JianchuOrigin = 0
@@ -69,34 +69,34 @@ export const D2 = (Name, YearStart, YearEnd) => {
             Week[i] = []
             Rise[i] = []
             Twilight[i] = []
-            Lati[i] = []
+            Lat[i] = []
             Duskstar[i] = []
             Equa[i] = []
             EquaMansion[i] = []
             Eclp[i] = []
             EclpMansion[i] = []
             MoonEclp[i] = []
-            MoonEclpLati[i] = []
+            MoonEclpLat[i] = []
             MoonMansion[i] = []
             for (let k = 1; k <= ~~NewmSd[i] - ~~NewmSd[i - 1]; k++) { // 每月日數                
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
-                const { SunOrbdeg, SunCorr, SunLongi, SunGong, Sunperi } = sunShixian(Name, SunRoot, SunperiRoot, SdMidn)
-                const { SunLongi: SunLongiMidnMor } = sunShixian(Name, SunRoot, SunperiRoot, SdMidn + 1)
-                const { MoonGong, MoonLongi, MoonLati } = moonGuimao(MoonRoot, NodeRoot, MoonapoRoot, SdMidn, Sunperi, SunOrbdeg, SunCorr, SunGong)
-                Eclp[i][k] = deg2Hms(SunLongi)
+                const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunShixian(Name, SunRoot, SperiRoot, SdMidn)
+                const { SunLon: SunLonMidnMor } = sunShixian(Name, SunRoot, SperiRoot, SdMidn + 1)
+                const { MoonGong, MoonLon, MoonLat } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, SdMidn, Speri, Sorb, SunCorr, SunGong)
+                Eclp[i][k] = deg2Hms(SunLon)
                 EclpMansion[i][k] = Gong2Mansion(Name, Y, SunGong).Mansion + '度' // 注意：入宿度是轉換成了古度的
-                Equa[i][k] = deg2Hms(LongiHigh2Low(Obliquity, SunLongi))
-                const tmp1 = HighLongi2LowLati(Obliquity, SunLongi)
-                Lati[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
-                Rise[i][k] = riseQing(SunLongi + (SunLongiMidnMor - SunLongi) / 2, Obliquity, BjLati)
-                Duskstar[i][k] = Gong2Mansion(Name, Y, false, SunLongi + 90, SunLongiMidnMor + 90, Rise[i][k]).DuskstarPrint
-                Twilight[i][k] = ClockWest(Rise[i][k] - twilight(Obliquity, BjLati, SunLongi + (SunLongiMidnMor - SunLongi) / 2))
+                Equa[i][k] = deg2Hms(LonHigh2Low(Sobliq, SunLon))
+                const tmp1 = HighLon2LowLat(Sobliq, SunLon)
+                Lat[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
+                Rise[i][k] = riseQing(SunLon + (SunLonMidnMor - SunLon) / 2, Sobliq, BjLat)
+                Duskstar[i][k] = Gong2Mansion(Name, Y, false, SunLon + 90, SunLonMidnMor + 90, Rise[i][k]).DuskstarPrint
+                Twilight[i][k] = ClockWest(Rise[i][k] - twilight(Sobliq, BjLat, SunLon + (SunLonMidnMor - SunLon) / 2))
                 Rise[i][k] = ClockWest(Rise[i][k])
-                MoonEclp[i][k] = deg2Hms(MoonLongi)
+                MoonEclp[i][k] = deg2Hms(MoonLon)
                 MoonMansion[i][k] = Gong2Mansion(Name, Y, MoonGong).Mansion + '度'
-                MoonEclpLati[i][k] = (MoonLati > 0 ? 'N' : 'S') + deg2Hms(Math.abs(MoonLati))
+                MoonEclpLat[i][k] = (MoonLat > 0 ? 'N' : 'S') + deg2Hms(Math.abs(MoonLat))
                 ///////////具注曆////////////
                 const ScOrder = ~~(SolsmorScOrder + SdMidn) % 60
                 Sc[i][k] = ScList[ScOrder]
@@ -112,8 +112,8 @@ export const D2 = (Name, YearStart, YearEnd) => {
         return {
             Era, Title, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
             Sc, Jd, Nayin, Week,
-            Eclp, EclpMansion, Equa, EquaMansion, Lati, Twilight, Rise, Duskstar,
-            MoonEclp, MoonMansion, MoonEclpLati
+            Eclp, EclpMansion, Equa, EquaMansion, Lat, Twilight, Rise, Duskstar,
+            MoonEclp, MoonMansion, MoonEclpLat
         }
     }
     const result = []

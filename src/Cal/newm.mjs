@@ -30,13 +30,7 @@ export default (Name, Y) => {
     let SolarChangeAccum = 0, LunarChangeAccum = 0, LeapSurAvg = 0, OriginAccumThis = 0
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? 1 : -1
-    if (Name === 'West') {
-        const Func = ConstWest(Y)
-        Solar = Func.Solar
-        Lunar = Func.Lunar
-        SolarChangeAccum = signX * ((Y - 2000) ** 2) * 3.08 * 1e-8 // (首項+末項)/2
-        LunarChangeAccum = -signX * ((Y - 2000) ** 2) * 1e-9
-    } else if (Name === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
+    if (Name === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
         SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長
         // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw

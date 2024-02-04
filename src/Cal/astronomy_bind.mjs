@@ -1,13 +1,13 @@
 import Para from './para_calendars.mjs'
 import {
-    Equa2EclpTable, Longi2LatiTable1, Longi2LatiTable2, MoonLatiTable
+    Equa2EclpTable, Lon2LatTable1, Lon2LatTable2, MoonLatTable
 } from './astronomy_table.mjs'
 import {
-    Equa2EclpFormula, Longi2LatiFormula, Longi2DialFormula, MoonLatiFormula, MoonLongiFormula
+    Equa2EclpFormula, Lon2LatFormula, Lon2DialFormula, MoonLatFormula, MoonLonFormula
 } from './astronomy_formula.mjs'
 import { Hushigeyuan, HushigeyuanMoon } from './equa_geometry.mjs'
 import {
-    Equa2EclpWest, Longi2LatiWest, Longi2SunriseWest, Longi2DialWest, SunAcrVWest,    // MoonAcrVWest
+    Equa2EclpWest, Lon2LatWest, Lon2SunriseWest, Lon2DialWest, SunAcrVWest,    // MoonAcrVWest
 } from './astronomy_west.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
 import { NameList, AutoDegAccumList } from './para_constant.mjs'
@@ -128,64 +128,64 @@ export const BindTcorr = (AnomaAccum, SolsDif, year, Name) => {
 }
 // console.log(BindTcorr(21.200901, 220.0911, 1000))
 
-export const AutoEqua2Eclp = (LongiRaw, Name) => {
+export const AutoEqua2Eclp = (LonRaw, Name) => {
     const { Type, Sidereal, Solar, SolarRaw } = Para[Name]
-    LongiRaw %= Sidereal || (Solar || SolarRaw)
+    LonRaw %= Sidereal || (Solar || SolarRaw)
     let Equa2Eclp = 0
     let Eclp2Equa = 0
     let Equa2EclpDif = 0
     let Eclp2EquaDif = 0
-    let Eclp2EquaLati = 0
+    let Eclp2EquaLat = 0
     if (Name === 'Dayan') {
-        const Func = Equa2EclpFormula(LongiRaw, Name)
+        const Func = Equa2EclpFormula(LonRaw, Name)
         Equa2Eclp = Func.Equa2Eclp
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
         Eclp2EquaDif = Func.Eclp2EquaDif
     } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
-        const Func = Equa2EclpTable(LongiRaw, 'LindeA')
+        const Func = Equa2EclpTable(LonRaw, 'LindeA')
         Equa2Eclp = Func.Equa2Eclp
         Equa2EclpDif = Func.Equa2EclpDif
     } else if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
-        const Func = Equa2EclpTable(LongiRaw, Name)
+        const Func = Equa2EclpTable(LonRaw, Name)
         Equa2Eclp = Func.Equa2Eclp
         Equa2EclpDif = Func.Equa2EclpDif
     } else if (Type === 8) {
-        const Func = Equa2EclpFormula(LongiRaw, Name)
+        const Func = Equa2EclpFormula(LonRaw, Name)
         Equa2Eclp = Func.Equa2Eclp
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
         Eclp2EquaDif = Func.Eclp2EquaDif
     } else if (Type === 9 || Type === 10) {
-        const Func = Equa2EclpFormula(LongiRaw, 'Jiyuan')
+        const Func = Equa2EclpFormula(LonRaw, 'Jiyuan')
         Equa2Eclp = Func.Equa2Eclp
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
         Eclp2EquaDif = Func.Eclp2EquaDif
     } else if (Type === 11) {
-        const Func = Hushigeyuan(LongiRaw)
+        const Func = Hushigeyuan(LonRaw)
         Equa2Eclp = Func.Equa2Eclp
         Eclp2Equa = Func.Eclp2Equa
         Equa2EclpDif = Func.Equa2EclpDif
         Eclp2EquaDif = Func.Eclp2EquaDif
-        Eclp2EquaLati = Func.Lati
+        Eclp2EquaLat = Func.Lat
     }
-    Eclp2EquaDif = Eclp2Equa ? (Eclp2EquaDif || Eclp2Equa - LongiRaw) : 0
-    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif, Eclp2EquaLati }
+    Eclp2EquaDif = Eclp2Equa ? (Eclp2EquaDif || Eclp2Equa - LonRaw) : 0
+    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif, Eclp2EquaLat }
 }
 
-export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
+export const BindEqua2Eclp = (LonRaw, Sidereal, year) => {
     Sidereal = +Sidereal
-    LongiRaw = +LongiRaw
-    if (LongiRaw >= Sidereal || LongiRaw < 0) {
+    LonRaw = +LonRaw
+    if (LonRaw >= Sidereal || LonRaw < 0) {
         throw (new Error('請輸入一週天度內的度數'))
     }
     let Range = ''
-    if (LongiRaw < Sidereal / 4) {
+    if (LonRaw < Sidereal / 4) {
         Range += '冬至 → 春分，赤度 > 黃度'
-    } else if (LongiRaw < Sidereal / 2) {
+    } else if (LonRaw < Sidereal / 2) {
         Range += '春分 → 夏至，赤度 < 黃度'
-    } else if (LongiRaw < 3 * Sidereal / 4) {
+    } else if (LonRaw < 3 * Sidereal / 4) {
         Range += '夏至 → 秋分，赤度 > 黃度'
     } else {
         Range += '秋分 → 冬至，赤度 < 黃度'
@@ -195,55 +195,55 @@ export const BindEqua2Eclp = (LongiRaw, Sidereal, year) => {
         Equa2EclpDif: WestB1,
         Eclp2Equa: WestA,
         Eclp2EquaDif: WestA1
-    } = Equa2EclpWest(LongiRaw, Sidereal, year)
+    } = Equa2EclpWest(LonRaw, Sidereal, year)
     const {
-        Lati: WestLati
-    } = Longi2LatiWest(LongiRaw, Sidereal, year)
+        Lat: WestLat
+    } = Lon2LatWest(LonRaw, Sidereal, year)
     let Print = [{
         title: '球面三角',
-        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4), 0]
+        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLat.toFixed(4), 0]
     }]
     const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
         List1.map(title => {
-            let EclpLongiPrint = '-'
-            let EclpLongiInacPrint = '-'
-            let EquaLongiPrint = '-'
-            let EquaLongiInacPrint = '-'
+            let EclpLonPrint = '-'
+            let EclpLonInacPrint = '-'
+            let EquaLonPrint = '-'
+            let EquaLonInacPrint = '-'
             let Equa2EclpDifPrint = '-'
             let Eclp2EquaDifPrint = '-'
-            let Eclp2EquaLatiPrint = '-'
-            let Eclp2EquaLatiInacPrint = '-'
-            const Func = AutoEqua2Eclp(LongiRaw, title, Sidereal, year)
+            let Eclp2EquaLatPrint = '-'
+            let Eclp2EquaLatInacPrint = '-'
+            const Func = AutoEqua2Eclp(LonRaw, title, Sidereal, year)
             const Equa2Eclp = Func.Equa2Eclp
             const Eclp2Equa = Func.Eclp2Equa
             const Equa2EclpDif = Func.Equa2EclpDif
             const Eclp2EquaDif = Func.Eclp2EquaDif
-            let Eclp2EquaLati = 0
+            let Eclp2EquaLat = 0
             if (title === 'Shoushi') {
-                Eclp2EquaLati = Func.Eclp2EquaLati
+                Eclp2EquaLat = Func.Eclp2EquaLat
             } else if (List2.indexOf(title) > 0) {
-                Eclp2EquaLati = AutoLongi2Lati(LongiRaw, 0.5, title, 1).Lati
+                Eclp2EquaLat = AutoLon2Lat(LonRaw, 0.5, title, 1).Lat
             }
-            const Eclp2EquaLatiInac = Eclp2EquaLati - WestLati
+            const Eclp2EquaLatInac = Eclp2EquaLat - WestLat
             if (Equa2Eclp) {
-                EclpLongiPrint = Equa2Eclp.toFixed(5)
+                EclpLonPrint = Equa2Eclp.toFixed(5)
                 Equa2EclpDifPrint = Equa2EclpDif.toFixed(4)
-                EclpLongiInacPrint = (Equa2Eclp - WestB).toFixed(4)
+                EclpLonInacPrint = (Equa2Eclp - WestB).toFixed(4)
             }
             if (Eclp2Equa) {
-                EquaLongiPrint = Eclp2Equa.toFixed(5)
+                EquaLonPrint = Eclp2Equa.toFixed(5)
                 Eclp2EquaDifPrint = Eclp2EquaDif.toFixed(4)
-                EquaLongiInacPrint = (Eclp2Equa - WestA).toFixed(4)
+                EquaLonInacPrint = (Eclp2Equa - WestA).toFixed(4)
             }
-            if (Eclp2EquaLati) {
-                Eclp2EquaLatiPrint = Eclp2EquaLati.toFixed(4)
-                Eclp2EquaLatiInacPrint = Eclp2EquaLatiInac.toFixed(4)
+            if (Eclp2EquaLat) {
+                Eclp2EquaLatPrint = Eclp2EquaLat.toFixed(4)
+                Eclp2EquaLatInacPrint = Eclp2EquaLatInac.toFixed(4)
             }
             return {
                 title: NameList[title],
-                data: [EclpLongiPrint, Equa2EclpDifPrint, EclpLongiInacPrint, EquaLongiPrint, Eclp2EquaDifPrint, EquaLongiInacPrint, Eclp2EquaLatiPrint, Eclp2EquaLatiInacPrint]
+                data: [EclpLonPrint, Equa2EclpDifPrint, EclpLonInacPrint, EquaLonPrint, Eclp2EquaDifPrint, EquaLonInacPrint, Eclp2EquaLatPrint, Eclp2EquaLatInacPrint]
             }
         }))
     return { Range, Print }
@@ -325,11 +325,11 @@ export const BindMansion2Deg = (Mansion, Name) => {
     return Print
 }
 // console.log(BindMansion2Deg('氐1', 'Guimao'))
-export const AutoLongi2Lati = (LongiRaw, SolsDeci, Name, isBare) => { // 如果最後加上了isBare，就不加日躔
+export const AutoLon2Lat = (LonRaw, SolsDeci, Name, isBare) => { // 如果最後加上了isBare，就不加日躔
     const { Type, Solar, SolarRaw } = Para[Name]
     let special = 0, Plus1 = 0, Plus2 = 0
-    LongiRaw = ~~(LongiRaw + SolsDeci) - SolsDeci
-    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci 0.3, LongiRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LongiRaw 2.8，該日3.1，去掉小數點是3
+    LonRaw = ~~(LonRaw + SolsDeci) - SolsDeci
+    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci 0.3, LonRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LonRaw 2.8，該日3.1，去掉小數點是3
     } else if (Name === 'Chongxuan') { // 崇玄「昏後夜半」
         Plus1 = 1
         Plus2 = 0.5
@@ -337,117 +337,117 @@ export const AutoLongi2Lati = (LongiRaw, SolsDeci, Name, isBare) => { // 如果�
         Plus1 = 0.5
         Plus2 = 0.5
     }
-    LongiRaw %= Solar || SolarRaw
-    let Longi2Lati = {}, Longi2LatiA = {}, Longi2LatiB = {}
+    LonRaw %= Solar || SolarRaw
+    let Lon2Lat = {}, Lon2LatA = {}, Lon2LatB = {}
     // 公式曆法加上日躔
     if ((['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].includes(Name) || Type === 11) && !isBare) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔。
-        Plus1 = AutoDifAccum(0, LongiRaw, Name).SunDifAccum
+        Plus1 = AutoDifAccum(0, LonRaw, Name).SunDifAccum
     }
-    const Longi1 = LongiRaw + Plus1
-    const Longi2 = LongiRaw + Plus2
+    const Lon1 = LonRaw + Plus1
+    const Lon2 = LonRaw + Plus2
     if (Type <= 3) {
-        Longi2Lati = Longi2LatiTable1(Longi1, 'Easthan')
+        Lon2Lat = Lon2LatTable1(Lon1, 'Easthan')
     } else if (Name === 'Liangwu') {
-        Longi2Lati = Longi2LatiTable1(Longi1, 'Daming')
+        Lon2Lat = Lon2LatTable1(Lon1, 'Daming')
     } else if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, 'Daye')
+        Lon2Lat = Lon2LatTable2(Lon1, 'Daye')
     } else if (Type === 4) {
-        Longi2Lati = Longi2LatiTable1(Longi1, Name)
+        Lon2Lat = Lon2LatTable1(Lon1, Name)
     } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, 'LindeA')
+        Lon2Lat = Lon2LatTable2(Lon1, 'LindeA')
     } else if (Type === 6) {
-        Longi2Lati = Longi2LatiTable2(Longi1, Name)
+        Lon2Lat = Lon2LatTable2(Lon1, Name)
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, 'Dayan')
+        Lon2Lat = Lon2LatTable2(Lon1, 'Dayan')
     } else if (Name === 'Xuanming') {
-        Longi2Lati = Longi2LatiTable2(Longi1, Name)
+        Lon2Lat = Lon2LatTable2(Lon1, Name)
     } else if (Name === 'Qintian') {
-        Longi2LatiA = Longi2LatiFormula(Longi1, 'Chongxuan')
-        Longi2LatiB = Longi2DialFormula(Longi2, 'Chongxuan')
+        Lon2LatA = Lon2LatFormula(Lon1, 'Chongxuan')
+        Lon2LatB = Lon2DialFormula(Lon2, 'Chongxuan')
         special = 1
     } else if (['Yingtian', 'Qianyuan'].includes(Name)) {
-        Longi2Lati = Longi2LatiTable2(Longi1, Name)
+        Lon2Lat = Lon2LatTable2(Lon1, Name)
     } else if (['Fengyuan', 'Zhantian'].includes(Name)) {
-        Longi2LatiA = Longi2LatiFormula(Longi1, 'Guantian')
-        Longi2LatiB = Longi2DialFormula(Longi2, 'Guantian')
+        Lon2LatA = Lon2LatFormula(Lon1, 'Guantian')
+        Lon2LatB = Lon2DialFormula(Lon2, 'Guantian')
         special = 1
     } else if (Type === 8) {
-        Longi2LatiA = Longi2LatiFormula(Longi1, Name)
-        Longi2LatiB = Longi2DialFormula(Longi2, Name)
+        Lon2LatA = Lon2LatFormula(Lon1, Name)
+        Lon2LatB = Lon2DialFormula(Lon2, Name)
         special = 1
     } else if (Type === 9) {
-        Longi2LatiA = Longi2LatiFormula(Longi1, 'Jiyuan')
-        Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
+        Lon2LatA = Lon2LatFormula(Lon1, 'Jiyuan')
+        Lon2LatB = Lon2DialFormula(Lon2, 'Jiyuan')
         special = 1
     } else if (Type === 10) {
-        Longi2LatiA = Longi2LatiTable2(Longi1, 'Daming3')
-        Longi2LatiB = Longi2DialFormula(Longi2, 'Jiyuan')
+        Lon2LatA = Lon2LatTable2(Lon1, 'Daming3')
+        Lon2LatB = Lon2DialFormula(Lon2, 'Jiyuan')
         special = 1
     } else if (Type === 11) {
-        Longi2Lati = Hushigeyuan(Longi1, Name)
+        Lon2Lat = Hushigeyuan(Lon1, Name)
     }
-    let Lati = 0
-    let Lati1 = 0
+    let Lat = 0
+    let Lat1 = 0
     let Rise = 0
     let Dial = 0
     if (special) {
-        Lati = Longi2LatiA.Lati
-        Lati1 = Longi2LatiA.Lati1
-        Rise = Longi2LatiA.Rise
-        Dial = Longi2LatiB.Dial
+        Lat = Lon2LatA.Lat
+        Lat1 = Lon2LatA.Lat1
+        Rise = Lon2LatA.Rise
+        Dial = Lon2LatB.Dial
     } else {
-        Lati = Longi2Lati.Lati
-        Lati1 = Longi2Lati.Lati1
-        Rise = Longi2Lati.Rise
-        Dial = Longi2Lati.Dial || 0
+        Lat = Lon2Lat.Lat
+        Lat1 = Lon2Lat.Lat1
+        Rise = Lon2Lat.Rise
+        Dial = Lon2Lat.Dial || 0
     }
-    return { Lati, Lati1, Rise, Dial }
+    return { Lat, Lat1, Rise, Dial }
 }
-// console.log (AutoLongi2Lati (53.6, 0, 'Chongxuan'))
+// console.log (AutoLon2Lat (53.6, 0, 'Chongxuan'))
 
-export const BindLongi2Lati = (LongiRaw, SolsDeci, f, Sidereal, year) => {
+export const BindLon2Lat = (LonRaw, SolsDeci, f, Sidereal, year) => {
     Sidereal = +Sidereal
-    LongiRaw = +LongiRaw
+    LonRaw = +LonRaw
     SolsDeci = +('0.' + SolsDeci)
     f = +f
     year = +year
-    if (LongiRaw >= Sidereal || LongiRaw < 0) {
+    if (LonRaw >= Sidereal || LonRaw < 0) {
         throw (new Error('請輸入一週天度內的度數'))
     }
-    const Longi = LongiRaw + SunAcrVWest(LongiRaw, year).SunDifAccum // 積日轉換爲黃經
+    const Lon = LonRaw + SunAcrVWest(LonRaw, year).SunDifAccum // 積日轉換爲黃經
     const {
-        Lati1: WestA,
-        Lati: WestB
-    } = Longi2LatiWest(Longi, Sidereal, year)
+        Lat1: WestA,
+        Lat: WestB
+    } = Lon2LatWest(Lon, Sidereal, year)
     const {
         v: WestC,
         v1: WestC1
-    } = Longi2SunriseWest(Longi, f, Sidereal, year)
+    } = Lon2SunriseWest(Lon, f, Sidereal, year)
     const {
         Dial: WestD,
         Dial1: WestD1
-    } = Longi2DialWest(Longi, f, Sidereal, year)
+    } = Lon2DialWest(Lon, f, Sidereal, year)
     let Print = [{
         title: '球面三角',
         data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, (WestC1 - WestC).toFixed(4), `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0, (WestD1 - WestD).toFixed(4)]
     }]
     Print = Print.concat(
         ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi', 'Datong'].map(title => {
-            let Lati1Print = '-'
-            let LatiPrint = '-'
-            let LatiInacPrint = '-'
+            let Lat1Print = '-'
+            let LatPrint = '-'
+            let LatInacPrint = '-'
             let SunrisePrint = '-'
             let SunriseInacPrint1 = '-'
             let SunriseInacPrint2 = '-'
             let DialPrint = '-'
             let DialInacPrint1 = '-'
             let DialInacPrint2 = '-'
-            const { Lati1, Lati, Rise, Dial
-            } = AutoLongi2Lati(LongiRaw, SolsDeci, title)
-            if (Lati1) {
-                Lati1Print = Lati1.toFixed(4)
-                LatiPrint = Lati.toFixed(4)
-                LatiInacPrint = (Lati - WestB).toFixed(4)
+            const { Lat1, Lat, Rise, Dial
+            } = AutoLon2Lat(LonRaw, SolsDeci, title)
+            if (Lat1) {
+                Lat1Print = Lat1.toFixed(4)
+                LatPrint = Lat.toFixed(4)
+                LatInacPrint = (Lat - WestB).toFixed(4)
             }
             if (Rise) {
                 SunrisePrint = Rise.toFixed(4)
@@ -461,46 +461,46 @@ export const BindLongi2Lati = (LongiRaw, SolsDeci, f, Sidereal, year) => {
             }
             return {
                 title: NameList[title],
-                data: [Lati1Print, LatiPrint, LatiInacPrint, SunrisePrint, SunriseInacPrint1, SunriseInacPrint2, DialPrint, DialInacPrint1, DialInacPrint2]
+                data: [Lat1Print, LatPrint, LatInacPrint, SunrisePrint, SunriseInacPrint1, SunriseInacPrint2, DialPrint, DialInacPrint1, DialInacPrint2]
             }
         }))
     return Print
 }
-// console.log(BindLongi2Lati(330, 0.45, 34.4, 365.2445, 1000))
+// console.log(BindLon2Lat(330, 0.45, 34.4, 365.2445, 1000))
 
-export const AutoMoonLati = (NodeAccum, Name) => {
+export const AutoMoonLat = (NodeAccum, Name) => {
     let { Type, Sidereal } = Para[Name]
     // Solar = Solar || SolarRaw
-    let MoonLati = {}
+    let MoonLat = {}
     if (Type <= 3) {
-        MoonLati = MoonLatiTable(NodeAccum, 'Qianxiang')
+        MoonLat = MoonLatTable(NodeAccum, 'Qianxiang')
     } else if (Name === 'Yuanjia') {
-        MoonLati = MoonLatiTable(NodeAccum, Name)
+        MoonLat = MoonLatTable(NodeAccum, Name)
     } else if (Type === 4) {
-        MoonLati = MoonLatiTable(NodeAccum, 'Daming')
+        MoonLat = MoonLatTable(NodeAccum, 'Daming')
     } else if (Type === 6) {
-        MoonLati = MoonLatiTable(NodeAccum, 'Huangji')
+        MoonLat = MoonLatTable(NodeAccum, 'Huangji')
     } else if (['Qintian', 'Xuanming', 'Zhide', 'Dayan'].includes(Name)) {
-        MoonLati = MoonLatiTable(NodeAccum, 'Dayan')
+        MoonLat = MoonLatTable(NodeAccum, 'Dayan')
     } else if (Type === 7) {
-        MoonLati = MoonLatiTable(NodeAccum, Name)
+        MoonLat = MoonLatTable(NodeAccum, Name)
     } else if (['Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
-        MoonLati = MoonLatiFormula(NodeAccum, 'Chongxuan')
+        MoonLat = MoonLatFormula(NodeAccum, 'Chongxuan')
     } else if (['Chongtian'].includes(Name)) {
-        MoonLati = MoonLatiFormula(NodeAccum, Name)
+        MoonLat = MoonLatFormula(NodeAccum, Name)
     } else if (['Guantian', 'Mingtian', 'Fengyuan', 'Zhantian'].includes(Name)) {
-        MoonLati = MoonLatiFormula(NodeAccum, 'Guantian')
+        MoonLat = MoonLatFormula(NodeAccum, 'Guantian')
     } else if (Type === 9 || Type === 10) {
-        MoonLati = MoonLatiFormula(NodeAccum, 'Jiyuan')
+        MoonLat = MoonLatFormula(NodeAccum, 'Jiyuan')
     }
-    const MoonEquaLati = MoonLati.EquaLati || 0
-    const MoonEclpLati = MoonLati.Lati || 0 // MoonEquaLati - AutoLongi2Lati(SunEclpLongi, 0.5, Name).Lati
-    const MoonEclpLati1 = MoonLati.Lati1 || Sidereal / 4 - MoonEclpLati
-    return { MoonEclpLati, MoonEclpLati1, MoonEquaLati }
+    const MoonEquaLat = MoonLat.EquaLat || 0
+    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - AutoLon2Lat(SunEclpLon, 0.5, Name).Lat
+    const MoonEclpLat1 = MoonLat.Lat1 || Sidereal / 4 - MoonEclpLat
+    return { MoonEclpLat, MoonEclpLat1, MoonEquaLat }
 }
-// console.log(AutoMoonLati(2, 'Tsrengyuan').MoonEclpLati)
+// console.log(AutoMoonLat(2, 'Tsrengyuan').MoonEclpLat)
 
-export const AutoMoonLongi = (NodeAccum, MoonEclp, Name) => {
+export const AutoMoonLon = (NodeAccum, MoonEclp, Name) => {
     let { Type, Solar, SolarRaw, Sidereal, Node } = Para[Name]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
@@ -519,38 +519,38 @@ export const AutoMoonLongi = (NodeAccum, MoonEclp, Name) => {
     const MoonNodeDifHalf = MoonNodeDif % (Quadrant * 2)
     const MoonNodeDifQuar = MoonNodeDif % Quadrant // 所入初末限：置黃道宿積度，滿交象度（90多那個）去之，在半交象已下爲初限
     const MoonNodeDifRev = Quadrant / 2 - Math.abs(Quadrant / 2 - MoonNodeDifQuar)
-    let EclpWhiteDif = 0, EquaWhiteDif = 0, EquaLati = 0, EquaLongi = 0, WhiteLongi = 0
+    let EclpWhiteDif = 0, EquaWhiteDif = 0, EquaLat = 0, EquaLon = 0, WhiteLon = 0
     if (Type === 6) {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Huangji')
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, 'Huangji')
     } else if (Name === 'Qintian') {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Qintian')
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, 'Qintian')
     } else if (Type === 7 || Name === 'Chongxuan') {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Dayan')
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, 'Dayan')
     } else if (['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Yingtian')
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, 'Yingtian')
     } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(Name)) {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Guantian')
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, 'Guantian')
     } else if (['Chongtian', 'Mingtian'].includes(Name)) {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, Name)
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, Name)
     } else if (Type === 9 || Type === 10) {
-        EclpWhiteDif = MoonLongiFormula(NodeEclp, MoonNodeDifRev, 'Jiyuan')
+        EclpWhiteDif = MoonLonFormula(NodeEclp, MoonNodeDifRev, 'Jiyuan')
     } else if (Type === 11) {
         const Func = HushigeyuanMoon(NodeEclp, MoonNodeDif)
         EquaWhiteDif = Func.EquaWhiteDif
-        EquaLati = Func.EquaLati
-        EquaLongi = Func.EquaLongi
-        WhiteLongi = Func.WhiteLongi
+        EquaLat = Func.EquaLat
+        EquaLon = Func.EquaLon
+        WhiteLon = Func.WhiteLon
     }
     const sign1 = MoonNodeDifHalf > Quadrant ? -1 : 1 // 距半交後正交前，以差數爲減；距正交後、半交前，以差數爲加    
     EclpWhiteDif *= sign1
     if (Type < 11) {
-        WhiteLongi = MoonEclp + EclpWhiteDif
+        WhiteLon = MoonEclp + EclpWhiteDif
     }
-    return { NodeEclp, WhiteLongi, EclpWhiteDif, EquaWhiteDif, EquaLongi, EquaLati }
+    return { NodeEclp, WhiteLon, EclpWhiteDif, EquaWhiteDif, EquaLon, EquaLat }
 }
-// console.log(AutoMoonLongi(234, 45, 4.11, 'Dayan'))
+// console.log(AutoMoonLon(234, 45, 4.11, 'Dayan'))
 
-export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交日、距冬至日數
+export const BindMoonLonLat = (NodeAccum, MoonEclp) => { // 該時刻入交日、距冬至日數
     NodeAccum = +NodeAccum
     MoonEclp = +MoonEclp
     if (NodeAccum >= 27.21221 || NodeAccum < 0) {
@@ -563,44 +563,44 @@ export const BindMoonLongiLati = (NodeAccum, MoonEclp) => { // 該時刻入交�
     Print = Print.concat(
         ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
             let NodeSolsDifDegPrint = '-'
-            let WhiteLongiPrint = '-'
-            let EquaLongiPrint = '-'
+            let WhiteLonPrint = '-'
+            let EquaLonPrint = '-'
             let EclpWhiteDifPrint = '-'
             // let EclpEquaDifPrint = '-'
             let EquaWhiteDifPrint = '-'
-            let Lati1Print = '-'
-            let LatiPrint = '-'
-            let EquaLatiPrint = '-'
-            const { NodeEclp, EquaLongi, EclpWhiteDif, EquaWhiteDif, WhiteLongi, EquaLati
-            } = AutoMoonLongi(NodeAccum, MoonEclp, title)
-            const { MoonEclpLati1, MoonEclpLati,
-            } = AutoMoonLati(NodeAccum, title)
+            let Lat1Print = '-'
+            let LatPrint = '-'
+            let EquaLatPrint = '-'
+            const { NodeEclp, EquaLon, EclpWhiteDif, EquaWhiteDif, WhiteLon, EquaLat
+            } = AutoMoonLon(NodeAccum, MoonEclp, title)
+            const { MoonEclpLat1, MoonEclpLat,
+            } = AutoMoonLat(NodeAccum, title)
             if (NodeEclp) {
                 NodeSolsDifDegPrint = NodeEclp.toFixed(4)
             }
             if (EquaWhiteDif) {
-                EquaLongiPrint = EquaLongi.toFixed(4)
+                EquaLonPrint = EquaLon.toFixed(4)
                 EquaWhiteDifPrint = EquaWhiteDif.toFixed(4)
             }
-            if (WhiteLongi) {
-                WhiteLongiPrint = WhiteLongi.toFixed(4)
+            if (WhiteLon) {
+                WhiteLonPrint = WhiteLon.toFixed(4)
                 EclpWhiteDifPrint = EclpWhiteDif.toFixed(4)
             }
-            if (MoonEclpLati) {
-                Lati1Print = MoonEclpLati1.toFixed(4)
-                LatiPrint = MoonEclpLati.toFixed(4)
+            if (MoonEclpLat) {
+                Lat1Print = MoonEclpLat1.toFixed(4)
+                LatPrint = MoonEclpLat.toFixed(4)
             }
-            if (EquaLati) {
-                EquaLatiPrint = EquaLati.toFixed(4)
+            if (EquaLat) {
+                EquaLatPrint = EquaLat.toFixed(4)
             }
             return {
                 title: NameList[title],
-                data: [NodeSolsDifDegPrint, EquaLongiPrint, WhiteLongiPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lati1Print, LatiPrint, EquaLatiPrint]
+                data: [NodeSolsDifDegPrint, EquaLonPrint, WhiteLonPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lat1Print, LatPrint, EquaLatPrint]
             }
         }))
     return Print
 }
-// console.log(BindMoonLongiLati(2.252, 55.71))
+// console.log(BindMoonLonLat(2.252, 55.71))
 
 export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
     NodeAccum = +NodeAccum

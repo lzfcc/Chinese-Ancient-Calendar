@@ -78,7 +78,7 @@ const PrintNewm = result => {
 
 const PrintDay = result => {
     const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Equa, Eclp,
-        Lati, Rise, Duskstar, Dial, MoonEclp, MoonEclpLati, HouName, FiveName, HexagramName, ManGod, Luck,
+        Lat, Rise, Duskstar, Dial, MoonEclp, MoonEclpLat, HouName, FiveName, HexagramName, ManGod, Luck,
     } = result
     let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
     Print += '\n**干支**\n'
@@ -121,11 +121,11 @@ const PrintDay = result => {
         Print += `\n`
     }
     // }
-    // if ((Lati || []).length > 0) {
+    // if ((Lat || []).length > 0) {
     Print += '\n**日赤緯**\n'
-    for (let i = 1; i < Lati.length; i++) {
+    for (let i = 1; i < Lat.length; i++) {
         Print += MonName[i] + `\n`
-        Print += Lati[i].slice(1).join(' ')
+        Print += Lat[i].slice(1).join(' ')
         Print += `\n`
     }
     // }
@@ -160,11 +160,11 @@ const PrintDay = result => {
             Print += `\n`
         }
     }
-    if ((MoonEclpLati || []).length > 0) {
+    if ((MoonEclpLat || []).length > 0) {
         Print += '**月黃緯**\n'
-        for (let i = 1; i < MoonEclpLati.length; i++) {
+        for (let i = 1; i < MoonEclpLat.length; i++) {
             Print += MonName[i] + `\n`
-            Print += MoonEclpLati[i].slice(1).join(' ')
+            Print += MoonEclpLat[i].slice(1).join(' ')
             Print += `\n`
         }
     }

@@ -99,8 +99,7 @@ const printData = outputFile(1 -316, -315, false, [ // mode, YearStart, YearEnd,
     // 'Datong',
     // 'Datong2',    
     // 'Wannian',
-    // 'Xufa',
-    // 'West', // 上授時系
+    // 'Xufa', // 上授時系
     // 'Huihui',     
 ]) // 注意，-1000年爲公元前1001年，因爲沒有公元0年
 

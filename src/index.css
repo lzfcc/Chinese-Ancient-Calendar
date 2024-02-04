@@ -986,7 +986,7 @@ hr {
   color: var(--letteryellow);
 }
 
-.Lati,
+.Lat,
 .Twilight,
 .Rise,
 .Dial,
@@ -995,7 +995,7 @@ hr {
 }
 
 .MoonEclp,
-.MoonEclpLati,
+.MoonEclpLat,
 .MoonMansion {
   color: var(--letterblue);
 }

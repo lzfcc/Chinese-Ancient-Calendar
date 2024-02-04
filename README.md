@@ -117,8 +117,8 @@ $ npm run build
 - Equa 赤道 equator
 - Eclp 黃道 ecliptic
 - Ecli 交食 eclipse
-- Longi 經度 longitude
-- Lati 緯度 latitude
+- Lon 經度 longitude
+- Lat 緯度 latitude
 
 ### 變量 Variables
 

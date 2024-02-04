@@ -5,7 +5,7 @@ import { N4 } from './newm_shixian.mjs'
 import Para from './para_calendars.mjs'
 import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
-import { AutoLongi2Lati } from './astronomy_bind.mjs'
+import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
 // const Index = (Name, YearStart, YearEnd) => {
 export default (Name, YearStart, YearEnd) => {
@@ -269,7 +269,7 @@ export default (Name, YearStart, YearEnd) => {
                 for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTerm > 0 && i >= LeapNumTerm) NoleapMon = i
-                    let Rise = AutoLongi2Lati(NewmAcrSolsDifPrint[i], SolsDeci, Name).Rise / 100
+                    let Rise = AutoLon2Lat(NewmAcrSolsDifPrint[i], SolsDeci, Name).Rise / 100
                     let SunEcliFunc = {}, MoonEcliFunc = {}
                     const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(Name, Type)
                     let isSunEcli = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&
@@ -427,9 +427,9 @@ export default (Name, YearStart, YearEnd) => {
             SolsmorScOrder: Type === 13 ? ThisYear.SolsmorScOrder : undefined,
             MansionDaySolsmor: Type === 13 ? ThisYear.MansionDaySolsmor : undefined,
             SunRoot: Type === 13 ? ThisYear.SunRoot : undefined,
-            SunperiRoot: Type === 13 ? ThisYear.SunperiRoot : undefined,
+            SperiRoot: Type === 13 ? ThisYear.SperiRoot : undefined,
             MoonRoot: Type === 13 ? ThisYear.MoonRoot : undefined,
-            MoonapoRoot: Type === 13 ? ThisYear.MoonapoRoot : undefined,
+            MapoRoot: Type === 13 ? ThisYear.MapoRoot : undefined,
             NodeRoot: Type === 13 ? ThisYear.NodeRoot : undefined,
             NewmSd: Type === 13 ? ThisYear.NewmSd.slice(1 + NewmStart) : undefined,
             NowTerm1Sd: Type === 13 ? ThisYear.NowTerm1Sd.slice(1 + TermStart) : undefined

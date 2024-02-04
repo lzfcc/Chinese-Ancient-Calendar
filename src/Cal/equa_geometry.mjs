@@ -1,6 +1,6 @@
 // import { ConstWest } from './astronomy_west.mjs'
 import { big } from './para_constant.mjs'
-import { Equa2EclpWest, Longi2LatiWest } from './astronomy_west.mjs'
+import { Equa2EclpWest, Lon2LatWest } from './astronomy_west.mjs'
 
 const pi = big.acos(-1)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -131,7 +131,7 @@ export const RoundL2HPrint = lRaw => {
     return Print
 }
 // console.log(RoundL2HPrint(182.625, 60.875, 365.25))
-const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
+const Hushigeyuan_Sub = (LonRaw, p, q, pAnother) => {
     const Sidereal = 365.25
     const r = 60.875
     const d = 121.75
@@ -139,29 +139,29 @@ const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
     const Sidereal25 = Sidereal / 4
     const Sidereal50 = Sidereal / 2
     const Sidereal75 = Sidereal * 0.75
-    let Longi = LongiRaw % Sidereal25
-    if ((LongiRaw > Sidereal25 && LongiRaw <= Sidereal50) || (LongiRaw >= Sidereal75 && LongiRaw < Sidereal)) {
-        Longi = Sidereal25 - Longi
+    let Lon = LonRaw % Sidereal25
+    if ((LonRaw > Sidereal25 && LonRaw <= Sidereal50) || (LonRaw >= Sidereal75 && LonRaw < Sidereal)) {
+        Lon = Sidereal25 - Lon
     }
-    const v1 = RoundL2H(Longi) // LD黃道矢度 
+    const v1 = RoundL2H(Lon) // LD黃道矢度 
     const OL = r - v1 // 黃赤小弦
     const p1 = Math.sqrt(r ** 2 - OL ** 2) // LB黃半弧弦
     const p2 = p * OL / r // BN,LM
     const p2Another = pAnother * OL / r // BN黃赤小弧弦、黃赤內外半弧弦
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    let Eclp2EquaDif = (p3 + (v3 ** 2) / d - Longi) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
+    let Eclp2EquaDif = (p3 + (v3 ** 2) / d - Lon) % 91.3125 // 赤經。輸入0的話會冒出一個91.3125 
     ///// 黃轉赤的赤緯
     const OM = OL * q / r // 黃赤小股
     const ON = Math.sqrt(p1 ** 2 + OM ** 2) // 赤小弦// const ON = Math.sqrt(r ** 2 - p2 ** 2) //v2
-    let Lati = p2Another + (r - ON) ** 2 / d // r - ON ： 赤二弦差、黃赤內外矢 //NC ** 2 / d： 半背弦差
+    let Lat = p2Another + (r - ON) ** 2 / d // r - ON ： 赤二弦差、黃赤內外矢 //NC ** 2 / d： 半背弦差
     let sign = 1
-    if (LongiRaw < Sidereal25 || LongiRaw > Sidereal75) {
-        Lati = -Lati
+    if (LonRaw < Sidereal25 || LonRaw > Sidereal75) {
+        Lat = -Lat
         sign = -1
     }
     /////赤轉黃/////
-    const PE = RoundL2H(Longi)
+    const PE = RoundL2H(Lon)
     const OP = r - PE
     const PC = Math.sqrt(r ** 2 - OP ** 2)
     const CT = p * OP / q // PQ=CT，T是C向上垂直，超出了球體。Q是P垂直向上，交OD
@@ -170,81 +170,81 @@ const Hushigeyuan_Sub = (LongiRaw, p, q, pAnother) => {
     const PQ = p * OP / q
     const BL = PC * BN / PQ
     const BD = RoundC2HL(BL).Halfl
-    let Equa2EclpDif = Longi - BD
-    const condition = (LongiRaw >= 0 && LongiRaw < Sidereal25) || (LongiRaw >= Sidereal50 && LongiRaw < Sidereal75)
+    let Equa2EclpDif = Lon - BD
+    const condition = (LonRaw >= 0 && LonRaw < Sidereal25) || (LonRaw >= Sidereal50 && LonRaw < Sidereal75)
     Eclp2EquaDif *= condition ? 1 : -1
     Equa2EclpDif *= condition ? -1 : 1
-    const Eclp2Equa = LongiRaw + Eclp2EquaDif
-    const Equa2Eclp = LongiRaw + Equa2EclpDif
-    return { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lati, ON, p2Another, sign }
+    const Eclp2Equa = LonRaw + Eclp2EquaDif
+    const Equa2Eclp = LonRaw + Equa2EclpDif
+    return { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lat, ON, p2Another, sign }
 
 }
 // 弧矢割圓術黃赤轉換。跟元志六《黃赤道率》立成表分毫不差，耶！！！
-export const Hushigeyuan = (LongiRaw, Name) => { // 變量名見《中國古代曆法》頁629
+export const Hushigeyuan = (LonRaw, Name) => { // 變量名見《中國古代曆法》頁629
     // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915    
-    LongiRaw += 1e-12
+    LonRaw += 1e-12
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
     const pAnother = 23.71 // 二至黃赤內外半弧弦
     const q = 56.0268 // OK
     // const v = 4.8482 // KE    
-    const { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lati, ON, p2Another, sign
-    } = Hushigeyuan_Sub(LongiRaw, p, q, pAnother)
-    const Lati1 = 91.3125 - Lati // 91.314375
+    const { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lat, ON, p2Another, sign
+    } = Hushigeyuan_Sub(LonRaw, p, q, pAnother)
+    const Lat1 = 91.3125 - Lat // 91.314375
     //////////晷漏//////// 
-    // const v2 = LatiFunc.h
+    // const v2 = LatFunc.h
     const SunHundred = 6 * ON + 1 // 日行百刻度
     const Banhubei = p2Another * (['Datong', 'Datong2'].includes(Name) ? 14.5554 : 19.9614) / pAnother // 19.9614：二至出入差半弧背 // 根據大統晨昏立成，14.5554與冬至初日相合
     const Rise = 25 - sign * Banhubei * 100 / SunHundred // 半夜漏。似乎授時的夜漏包含了晨昏
     //  const Duskstar = (50 - (NightTime - 2.5)) * Sidereal / 100 + 正午赤度
-    return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati, Lati1, Rise }
+    return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lat, Lat1, Rise }
 }
 
-const Hushigeyuan_Ex = (LongiRaw, e) => { // 度數，黃赤交角
+const Hushigeyuan_Ex = (LonRaw, e) => { // 度數，黃赤交角
     const r = 60.875
     const h = RoundL2H(e)
     const p = Math.sqrt(r ** 2 - (r - h) ** 2)
     const q = r - h
-    const { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lati
-    } = Hushigeyuan_Sub(LongiRaw, p, q)
-    return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati, }
+    const { Eclp2EquaDif, Equa2EclpDif, Eclp2Equa, Equa2Eclp, Lat
+    } = Hushigeyuan_Sub(LonRaw, p, q)
+    return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lat, }
 }
 // console.log(Hushigeyuan(40).Eclp2Equa)
 // console.log(Hushigeyuan_Ex(40, 24).Eclp2Equa) // 弧矢割圓的黃赤交角以24度算
 
-const HushigeyuanWest = (LongiRaw, Sidereal, DE) => { // DE黃赤交角。變量名見《中國古代曆法》頁629
+const HushigeyuanWest = (LonRaw, Sidereal, DE) => { // DE黃赤交角。變量名見《中國古代曆法》頁629
     const pi = 3.141592653589793
     const Sidereal25 = Sidereal / 4
     const Sidereal50 = Sidereal / 2
     const Sidereal75 = Sidereal * 0.75
-    let Longi = LongiRaw % Sidereal25
-    if ((LongiRaw > Sidereal25 && LongiRaw <= Sidereal50) || (LongiRaw >= Sidereal75 && LongiRaw < Sidereal)) {
-        Longi = Sidereal25 - Longi
+    let Lon = LonRaw % Sidereal25
+    if ((LonRaw > Sidereal25 && LonRaw <= Sidereal50) || (LonRaw >= Sidereal75 && LonRaw < Sidereal)) {
+        Lon = Sidereal25 - Lon
     }
     ////轉換爲360度////
     const Portion4 = Sidereal / 360
-    Longi /= Portion4
+    Lon /= Portion4
     const r = 360 / pi / 2
     const p = RoundL2CWest(r, DE) // DK
     const v = RoundL2HWest(r, DE) // KE
     const q = r - v // OK
-    const v1 = RoundL2HWest(r, Longi) // LD
+    const v1 = RoundL2HWest(r, Lon) // LD
     const OL = r - v1
     const p1 = Math.sqrt(r ** 2 - OL ** 2) // LB黃半弧弦
     const p2 = p * OL / r // BN,LM
     const p3 = p1 * r / Math.sqrt(r ** 2 - p2 ** 2) // PC赤半弧弦
     // const v3 = r - Math.sqrt(r ** 2 - p3 ** 2) // PE赤橫弧矢
-    // const EquaLongi = RoundH2LWest(r, v3) // 這兩個結果完全一樣
-    const EquaLongi = RoundC2LWest(r, p3)
+    // const EquaLon = RoundH2LWest(r, v3) // 這兩個結果完全一樣
+    const EquaLon = RoundC2LWest(r, p3)
     ///// 黃轉赤的赤緯
     // const OM = OL * q / r // 黃赤小股
     // const NC = r - Math.sqrt(p1 ** 2 + OM ** 2)
-    // let Lati = RoundH2LWest(r, NC)
-    let Lati = RoundC2LWest(r, p2)
-    if (LongiRaw < Sidereal25 || LongiRaw > Sidereal75) {
-        Lati = -Lati
+    // let Lat = RoundH2LWest(r, NC)
+    let Lat = RoundC2LWest(r, p2)
+    if (LonRaw < Sidereal25 || LonRaw > Sidereal75) {
+        Lat = -Lat
     }
     /////赤轉黃/////
-    const PE = RoundL2HWest(r, Longi)
+    const PE = RoundL2HWest(r, Lon)
     const OP = r - PE
     const PC = Math.sqrt(r ** 2 - OP ** 2)
     const CT = p * OP / q // PQ=CT，T是C向上垂直，超出了球體。Q是P垂直向上，交OD
@@ -254,55 +254,55 @@ const HushigeyuanWest = (LongiRaw, Sidereal, DE) => { // DE黃赤交角。變量
     const BL = PC * BN / PQ
     const BD = RoundC2LWest(r, BL)
     //////轉換爲365.25度//////
-    let Eclp2EquaDif = (EquaLongi - Longi) * Portion4
-    let Equa2EclpDif = (Longi - BD) * Portion4
-    Lati *= Portion4
-    const condition = (LongiRaw >= 0 && LongiRaw < Sidereal25) || (LongiRaw >= Sidereal50 && LongiRaw < Sidereal75)
+    let Eclp2EquaDif = (EquaLon - Lon) * Portion4
+    let Equa2EclpDif = (Lon - BD) * Portion4
+    Lat *= Portion4
+    const condition = (LonRaw >= 0 && LonRaw < Sidereal25) || (LonRaw >= Sidereal50 && LonRaw < Sidereal75)
     Eclp2EquaDif *= condition ? 1 : -1
     Equa2EclpDif *= condition ? -1 : 1
-    const Eclp2Equa = LongiRaw + Eclp2EquaDif
-    const Equa2Eclp = LongiRaw + Equa2EclpDif
-    return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lati }
+    const Eclp2Equa = LonRaw + Eclp2EquaDif
+    const Equa2Eclp = LonRaw + Equa2EclpDif
+    return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lat }
 }
 // console.log(HushigeyuanWest(32, 365.25, 1000).Eclp2Equa)
 
-export const Hushigeyuan_Ex_Print = (LongiRaw, eRaw) => {
+export const Hushigeyuan_Ex_Print = (LonRaw, eRaw) => {
     const Sidereal = 365.25
     eRaw = +eRaw
-    LongiRaw = +LongiRaw
+    LonRaw = +LonRaw
     const e = eRaw * 360 / Sidereal
     const {
         Equa2Eclp: WestB,
         Equa2EclpDif: WestB1,
         Eclp2Equa: WestA,
         Eclp2EquaDif: WestA1
-    } = Equa2EclpWest(LongiRaw, Sidereal, 0, e)
-    const { Lati: WestLati } = Longi2LatiWest(LongiRaw, Sidereal, 0, e)
+    } = Equa2EclpWest(LonRaw, Sidereal, 0, e)
+    const { Lat: WestLat } = Lon2LatWest(LonRaw, Sidereal, 0, e)
     let Print = [{
         title: '球面三角',
-        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLati.toFixed(4), 0]
+        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLat.toFixed(4), 0]
     }]
     const {
         Equa2Eclp: West2B,
         Equa2EclpDif: West2B1,
         Eclp2Equa: West2A,
         Eclp2EquaDif: West2A1,
-        Lati: West2Lati
-    } = HushigeyuanWest(LongiRaw, Sidereal, e)
+        Lat: West2Lat
+    } = HushigeyuanWest(LonRaw, Sidereal, e)
     Print = Print.concat({
         title: '三角割圓',
-        data: [West2B.toFixed(5), West2B1.toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), 0, West2Lati.toFixed(4), 0]
+        data: [West2B.toFixed(5), West2B1.toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), 0, West2Lat.toFixed(4), 0]
     })
     const {
         Equa2Eclp: GeyuanB,
         Equa2EclpDif: GeyuanB1,
         Eclp2Equa: GeyuanA,
         Eclp2EquaDif: GeyuanA1,
-        Lati: GeyuanLati
-    } = Hushigeyuan_Ex(LongiRaw, eRaw)
+        Lat: GeyuanLat
+    } = Hushigeyuan_Ex(LonRaw, eRaw)
     Print = Print.concat({
         title: '弧矢割圓',
-        data: [GeyuanB.toFixed(5), GeyuanB1.toFixed(4), (GeyuanB - WestB).toFixed(4), GeyuanA.toFixed(5), GeyuanA1.toFixed(4), (GeyuanA - WestA).toFixed(4), GeyuanLati.toFixed(4), (GeyuanLati - WestLati).toFixed(4)]
+        data: [GeyuanB.toFixed(5), GeyuanB1.toFixed(4), (GeyuanB - WestB).toFixed(4), GeyuanA.toFixed(5), GeyuanA1.toFixed(4), (GeyuanA - WestA).toFixed(4), GeyuanLat.toFixed(4), (GeyuanLat - WestLat).toFixed(4)]
     })
     return Print
 }
@@ -328,14 +328,14 @@ export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交
         base = Solar * 0.75
     }
     const NodeEqua = base + sign2 * a0 // 白赤正交赤度、月離赤道正交宿度
-    const EquaLongi = Hushigeyuan(NodeEclp + MoonNodeEclpDif).Eclp2Equa // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道
+    const EquaLon = Hushigeyuan(NodeEclp + MoonNodeEclpDif).Eclp2Equa // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道
     //////////// 白赤大距：赤道正交後半交白道出入赤道內外度
     const u = e + I * (Sidereal25 - NodeEclpHalf) / Sidereal25 // KF白赤大距。黃白正交黃度v0=45誤差最大，165誤差最小
     const HN = NodeEqua % Sidereal25
     const NF = Sidereal25 - HN // 「白道積」
     const a = Math.min(HN, NF) // 赤道初末限度。在給定a=45的情況下，與頁387計算相合
     const VF = RoundL2H(NF)
-    const EquaLati = u * (60.875 - VF) / 60.875
+    const EquaLat = u * (60.875 - VF) / 60.875
     /////////// 白度 //////////
     let sign1 = -1
     if (NodeEclp >= Sidereal50) { // 冬至後- 夏至後+
@@ -348,8 +348,8 @@ export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交
     }
     // 《數》頁381：HN赤道初末限，卽N到白赤交點或半交點的距離，HM月離白道定積度，HN正交後赤道積度
     const EquaWhiteDif = sign3 * (tmpDing - a) * a / 1000
-    const WhiteLongi = EquaLongi + EquaWhiteDif
-    return { a0, u, EquaWhiteDif, EquaLongi, WhiteLongi, EquaLati }
+    const WhiteLon = EquaLon + EquaWhiteDif
+    return { a0, u, EquaWhiteDif, EquaLon, WhiteLon, EquaLat }
 }
 // console.log(HushigeyuanMoon(61, 70).EquaWhiteDif)
 
