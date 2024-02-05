@@ -36,7 +36,7 @@ export const Jd2Date1 = Jd => {
         year = '前 ' + year
     }
     let dd = c.sub(e).sub(big.floor(f.mul(30.6)))
-    const FracOfDay = Jd.sub(big.round(Jd)).add(0.5)
+    const FracOfDay = Jd.sub(big.round(Jd)).add(.5)
     const Hour = FracOfDay.mul(24)
     const h = big.floor(Hour)
     const m = big.floor((Hour.sub(h).mul(60)))
@@ -107,8 +107,8 @@ export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
         b = Math.floor(yy / 400) - Math.floor(yy / 100) + Math.floor(yy / 4)
     }
     // const Frac = h.div(24) + m.div(1440) + s.div(86400) + ms.div(86400000)
-    // const Date = Frac.add(365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -0.5) // Frac默認0，所以要減去半日
+    // const Date = Frac.add(365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -.5) // Frac默認0，所以要減去半日
     const Frac = h / 24 + m / 1440 + s / 86400 + ms / 86400000
-    const Date = 365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -0.5 + Frac
+    const Date = 365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -.5 + Frac
     return 'Julian date ' + Date
 }

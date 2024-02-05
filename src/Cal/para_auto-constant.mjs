@@ -125,7 +125,7 @@ export const AutoNodeCycle = Name => {
 // console.log(AutoNodeCycle('Qiandao'))
 
 export const AutoNodePortion = Name => {
-    let p = 0.0785077
+    let p = .0785077
     if (Name === 'Huangji') {
         p = 465 / 5923
     } else if (['Linde', 'Wuji', 'Tsrengyuan'].includes(Name)) {
@@ -165,11 +165,11 @@ export const AutoNodePortion = Name => {
 }
 
 export const AutoLightRange = Name => { // 昏明
-    let LightRange = 0.025 // 宣明不能確定，各個節氣都不一樣
+    let LightRange = .025 // 宣明不能確定，各個節氣都不一樣
     if (Name === 'Huangji') {
-        LightRange = 0.02365
+        LightRange = .02365
     } else if (['LindeA', 'LindeB'].includes(Name)) {
-        LightRange = 0.0228
+        LightRange = .0228
     }
     return LightRange
 }
@@ -177,20 +177,20 @@ export const AutoLightRange = Name => { // 昏明
 export const AutoRangeEcli = (Name, Type) => { // 日出入前後多少不算日月食
     let RangeSunEcli = 0, RangeMoonEcli = 0
     if (Type === 11) {
-        RangeSunEcli = 0.002 // 大統是20分
+        RangeSunEcli = .002 // 大統是20分
     } else if (Name === 'Daye') {
         RangeSunEcli = 2 / 12
     } else if (['WuyinA', 'WuyinB'].includes(Name)) {
-        RangeSunEcli = 0.125
+        RangeSunEcli = .125
     } else {
-        RangeSunEcli = 0.125 // 其他的瞎填一個
+        RangeSunEcli = .125 // 其他的瞎填一個
     }
     if (Type <= 3 || ['Yuanjia', 'Daming', 'Liangwu'].includes(Name)) {
-        RangeMoonEcli = 0.2 // 胡亂填，考慮到那時候沒有太陽修正，最多有0.2日差距
+        RangeMoonEcli = .2 // 胡亂填，考慮到那時候沒有太陽修正，最多有0.2日差距
     } else if (Type <= 6) {
-        RangeMoonEcli = 0.125 // 戊寅麟德
+        RangeMoonEcli = .125 // 戊寅麟德
     } else {
-        RangeMoonEcli = 0.082 // 大統月食八刻二十分，其他不知道
+        RangeMoonEcli = .082 // 大統月食八刻二十分，其他不知道
     }
     return { RangeSunEcli, RangeMoonEcli }
 }
@@ -200,7 +200,7 @@ export const AutoMoonTcorrDif = (AnomaAccum, Name) => { // 唐宋月離損益率
     const AnomaAccumInt = ~~AnomaAccum
     const Anoma25 = Anoma / 4 // 6.8887
     const Anoma50 = Anoma / 2 // 13.7772
-    const Anoma75 = Anoma * 0.75 // 20.6659
+    const Anoma75 = Anoma * .75 // 20.6659
     let MoonTcorrDif = 0
     let TheDenom = 1
     if (Name === 'Yitian') {

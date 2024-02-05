@@ -51,7 +51,7 @@ const ClockTmp = (Deci, Mode) => { // 我假設：每日96刻，子初夜半，�
     let Portion1 = 0
     let Portion2 = 0
     if (Mode === 96) {
-        Portion1 = 0.96
+        Portion1 = .96
         Portion2 = 8
     } else if (Mode === 108) {
         Portion1 = 1.08
@@ -112,7 +112,7 @@ const ClockSong = Deci => { // 皇祐之後、元、明。四刻是1/6。1刻60�
 
 const ClockQing = DeciRaw => { // 清代96刻
     const Deci = DeciRaw + 100 / 24 // 夜半子半
-    const KeRaw = Deci * 0.96 + 1e-10
+    const KeRaw = Deci * .96 + 1e-10
     const KeOrder = ~~KeRaw
     const ClockOrder = ~~(KeRaw / 8)
     const HalfOrder = ~~((KeOrder - ClockOrder * 8) / 4)
@@ -147,7 +147,7 @@ const ClockNameList = {
 const GengList = '初二三四五'
 
 export const BindClock1 = Deci => {
-    Deci = +('0.' + Deci)
+    Deci = +('.' + Deci)
     let Print = [{
         title: '現代',
         data: ClockWest(Deci)
@@ -214,10 +214,10 @@ export const Clock2Deci = Clock => {
         }
         if (B <= 2) {
             Start = (A - 1) / 12 + B / 24 + C / 100 - 1 / 24
-            End = ((Start + (C === 4 ? 0.01 / 6 : 0.01) + 1) % 1).toFixed(6)
+            End = ((Start + (C === 4 ? .01 / 6 : .01) + 1) % 1).toFixed(6)
         } else {
             Start = (A - 1) / 12 + C / 100 - 1 / 24
-            End = ((Start + (C === 8 ? 0.01 / 3 : 0.01) + 1) % 1).toFixed(6)
+            End = ((Start + (C === 8 ? .01 / 3 : .01) + 1) % 1).toFixed(6)
         }
         Start = ((Start + 1) % 1).toFixed(6)
     } else {
@@ -235,8 +235,8 @@ export const Clock2Deci = Clock => {
 
 
 export const BindNightClock = (DeciRaw, Rise, LightRange) => {
-    DeciRaw = +('0.' + DeciRaw)
-    Rise = +('0.' + Rise)
+    DeciRaw = +('.' + DeciRaw)
+    Rise = +('.' + Rise)
     LightRange = +LightRange / 100
     const Dawn = Rise - LightRange
     const Dusk = 1 - Rise + LightRange
@@ -287,7 +287,7 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
         data: GengName2 + ChouName2
     })
 
-    const GengRange3 = Night / 5 - 0.02
+    const GengRange3 = Night / 5 - .02
     const ChouRange3 = Night / 25
     let Geng3 = 0
     for (let i = 0; i <= 4; i++) {
@@ -305,12 +305,12 @@ export const BindNightClock = (DeciRaw, Rise, LightRange) => {
         }
     }
     let Print3 = ''
-    if (Deci + Dusk < 0.9 + Dawn) {
+    if (Deci + Dusk < .9 + Dawn) {
         const GengName3 = GengList[Geng3] + '更'
         const ChouName3 = QuarList[Chou3] + '點'
         Print3 = GengName3 + ChouName3
     } else {
-        const tmp = (DeciRaw - (Rise - 0.1)) * 100
+        const tmp = (DeciRaw - (Rise - .1)) * 100
         Print3 = '攢點後' + tmp.toFixed(2) + '刻'
     }
     Print = Print.concat({
@@ -327,7 +327,7 @@ export const Deci2Stage = Deci => {
     const Frac = Deci - Order4
     const Twelve = ~~(Frac * 12)
     const Four = ~~(Frac * 4)
-    const FourB = ~~((Frac + 0.125) * 4)
+    const FourB = ~~((Frac + .125) * 4)
     if (Twelve === 11) {
         Order12++
     }

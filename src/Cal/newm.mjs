@@ -31,8 +31,8 @@ export default (Name, Y) => {
     // 統天躔差=斗分差/10000*距差
     const signX = CloseOriginYear > 0 ? 1 : -1
     if (Name === 'Tongtian') { // 藤豔輝頁70、《中國古代曆法》第610頁。如果不算消長的話就完全不對，因爲上元積年就考慮了消長        
-        SolarChangeAccum = signX * 0.0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長
-        // Solar = SolarRaw // - 0.021167 * CloseOriginYear / Denom
+        SolarChangeAccum = signX * .0127 * CloseOriginYear ** 2 / Denom // 加在冬至上的歲實消長
+        // Solar = SolarRaw // - .021167 * CloseOriginYear / Denom
         // Lunar = CloseOriginYear ? (SolarRaw + SolarChangeAccum / CloseOriginYear - 10.5 / Denom) / (SolarRaw / LunarRaw) : LunarRaw
         LunarChangeAccum = -10.5 * CloseOriginYear / Denom
     } else if (['Shoushi', 'Shoushi2'].includes(Name)) {
@@ -65,7 +65,7 @@ export default (Name, Y) => {
     //     const OriginAccum = Dingju * 365.25 - Dingju ** 2 * 8.75 * 1e-7
     //     return OriginAccum
     // }
-    const ZoneDif = Name === 'Gengwu' ? 20000 * 0.04359 / Denom : 0 // 里差
+    const ZoneDif = Name === 'Gengwu' ? 20000 * .04359 / Denom : 0 // 里差
     let SolsAccum = Type < 11 ? OriginYear * Solar + SolsConst + ZoneDif + SolarChangeAccum : 0
     SolsAccum = +SolsAccum.toFixed(fixed)
     if (ZhangRange) {
@@ -126,14 +126,14 @@ export default (Name, Y) => {
         LeapLimit = parseFloat((13 * Lunar - Solar).toPrecision(14))
     }
     const EquaDegAccumList = AutoDegAccumList(Name, Y)
-    const AutoNewmSyzygy = isNewm => {
+    const main = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgRaw = [], TermAvgSolsDif = [], Term1AvgRaw = [], Term1AvgSolsDif = [], Term1Sc = [], Term1Deci = [], Term1AcrRaw = [], Term1AcrSolsDif = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Equa = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
-            AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar).toFixed(fixed)
+            AvgRaw[i] = +(FirstAccum + (ZhengSolsDif + i - (isNewm ? 1 : .5)) * Lunar).toFixed(fixed)
             AvgInt[i] = Math.floor(AvgRaw[i])
             AvgSc[i] = ScList[(((AvgInt[i] + 1 + ScConst) % 60) + 60) % 60]
             AvgDeci[i] = deci(AvgRaw[i])
-            SolsDif[i] = ((ZhengSolsDif + i - (isNewm ? 1 : 0.5)) * Lunar + FirstAccum - SolsAccum + Solar) % Solar
+            SolsDif[i] = ((ZhengSolsDif + i - (isNewm ? 1 : .5)) * Lunar + FirstAccum - SolsAccum + Solar) % Solar
             let Tcorr1 = 0
             if (Anoma) {
                 AnomaAccum[i] = +((FirstAnomaAccum + (ZhengSolsDif + i - 1) * SynodicAnomaDif + (isNewm ? 0 : Lunar / 2)) % Anoma).toFixed(fixed) // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
@@ -307,7 +307,7 @@ export default (Name, Y) => {
         NodeAccumNight: NewmNodeAccumNight,
         AnomaAccumNight: NewmAnomaAccumNight,
         AcrSolsDif: NewmAcrSolsDif,
-    } = AutoNewmSyzygy(1)
+    } = main(1)
     const {
         Sc: SyzygySc,
         Deci: SyzygyDeci,
@@ -316,7 +316,7 @@ export default (Name, Y) => {
         AnomaAccum: SyzygyAnomaAccum,
         SolsDif: SyzygySolsDif,
         AcrSolsDif: SyzygyAcrSolsDif,
-    } = AutoNewmSyzygy(0)
+    } = main(0)
     const LeapSurAcr = ZhangRange ? (LeapSurAvg - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange : LeapSurAvg - NewmTcorr[1]
     return {
         LeapLimit, OriginYear, JiYear, JiScOrder, SolsAccum, AccumPrint,

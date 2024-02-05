@@ -84,7 +84,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 //////////天文曆///////////
                 const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunShixian(Name, SunRoot, SperiRoot, SdMidn)
                 const { SunLon: SunLonMidnMor } = sunShixian(Name, SunRoot, SperiRoot, SdMidn + 1)
-                const { MoonGong, MoonLon, MoonLat } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, SdMidn, Speri, Sorb, SunCorr, SunGong)
+                const { MoonGong, MoonLon, MoonLat } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
                 Eclp[i][k] = deg2Hms(SunLon)
                 EclpMansion[i][k] = Gong2Mansion(Name, Y, SunGong).Mansion + '度' // 注意：入宿度是轉換成了古度的
                 Equa[i][k] = deg2Hms(LonHigh2Low(Sobliq, SunLon))

@@ -207,7 +207,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
             for (let k = 1; k <= NewmInt[i] - NewmInt[i - 1]; k++) { // 每月日數                
                 const SolsDifNight = ZhengSolsDif + DayAccum // 每日夜半距冬至日數
                 const SolsDifInt = ZhengInt - Math.floor(SolsAccum) + DayAccum // 冬至當日爲0
-                const SolsDifNoon = SolsDifNight + 0.5 // 每日正午                
+                const SolsDifNoon = SolsDifNight + .5 // 每日正午                
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 let SunEquaLon = 0, SunEquaLonAccum = 0, SunEclpLon = 0, SunEclpLonAccum = 0, SunEquaLonNoon = 0, SunEclpLonNoon = 0, MoonEclpLon = 0, MoonEclpLonAccum = 0, AnomaAccumNight = 0, NodeAccumNight = 0, MoonLonLatFunc = {}
@@ -219,7 +219,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 } else {
                     NodeAccumNight = (NewmNodeAccumNightPrint[i - 1] + k - 1) % Node
                     AnomaAccumNight = (NewmAnomaAccumNightPrint[i - 1] + k - 1) % Anoma
-                    const AnomaAccumNoon = (AnomaAccumNight + 0.5) % Anoma // 正午入轉                    
+                    const AnomaAccumNoon = (AnomaAccumNight + .5) % Anoma // 正午入轉                    
                     NodeAccumNight = (NodeAccumNight + AutoTcorr(AnomaAccumNight, SolsDifNight, Name, NodeAccumNight).NodeAccumCorrA) % Node
                     const SunDifAccumNight = AutoDifAccum(AnomaAccumNight, SolsDifNight, Name).SunDifAccum
                     const SunDifAccumNoon = AutoDifAccum(AnomaAccumNoon, SolsDifNoon, Name).SunDifAccum

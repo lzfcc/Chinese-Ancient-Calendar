@@ -224,7 +224,7 @@ export const BindEqua2Eclp = (LonRaw, Sidereal, year) => {
             if (title === 'Shoushi') {
                 Eclp2EquaLat = Func.Eclp2EquaLat
             } else if (List2.indexOf(title) > 0) {
-                Eclp2EquaLat = AutoLon2Lat(LonRaw, 0.5, title, 1).Lat
+                Eclp2EquaLat = AutoLon2Lat(LonRaw, .5, title, 1).Lat
             }
             const Eclp2EquaLatInac = Eclp2EquaLat - WestLat
             if (Equa2Eclp) {
@@ -329,13 +329,13 @@ export const AutoLon2Lat = (LonRaw, SolsDeci, Name, isBare) => { // 如果最後
     const { Type, Solar, SolarRaw } = Para[Name]
     let special = 0, Plus1 = 0, Plus2 = 0
     LonRaw = ~~(LonRaw + SolsDeci) - SolsDeci
-    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci 0.3, LonRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LonRaw 2.8，該日3.1，去掉小數點是3
+    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci .3, LonRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LonRaw 2.8，該日3.1，去掉小數點是3
     } else if (Name === 'Chongxuan') { // 崇玄「昏後夜半」
         Plus1 = 1
-        Plus2 = 0.5
+        Plus2 = .5
     } else { // 其他假設是午中
-        Plus1 = 0.5
-        Plus2 = 0.5
+        Plus1 = .5
+        Plus2 = .5
     }
     LonRaw %= Solar || SolarRaw
     let Lon2Lat = {}, Lon2LatA = {}, Lon2LatB = {}
@@ -408,7 +408,7 @@ export const AutoLon2Lat = (LonRaw, SolsDeci, Name, isBare) => { // 如果最後
 export const BindLon2Lat = (LonRaw, SolsDeci, f, Sidereal, year) => {
     Sidereal = +Sidereal
     LonRaw = +LonRaw
-    SolsDeci = +('0.' + SolsDeci)
+    SolsDeci = +('.' + SolsDeci)
     f = +f
     year = +year
     if (LonRaw >= Sidereal || LonRaw < 0) {
@@ -466,7 +466,7 @@ export const BindLon2Lat = (LonRaw, SolsDeci, f, Sidereal, year) => {
         }))
     return Print
 }
-// console.log(BindLon2Lat(330, 0.45, 34.4, 365.2445, 1000))
+// console.log(BindLon2Lat(330, .45, 34.4, 365.2445, 1000))
 
 export const AutoMoonLat = (NodeAccum, Name) => {
     let { Type, Sidereal } = Para[Name]
@@ -494,7 +494,7 @@ export const AutoMoonLat = (NodeAccum, Name) => {
         MoonLat = MoonLatFormula(NodeAccum, 'Jiyuan')
     }
     const MoonEquaLat = MoonLat.EquaLat || 0
-    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - AutoLon2Lat(SunEclpLon, 0.5, Name).Lat
+    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - AutoLon2Lat(SunEclpLon, .5, Name).Lat
     const MoonEclpLat1 = MoonLat.Lat1 || Sidereal / 4 - MoonEclpLat
     return { MoonEclpLat, MoonEclpLat1, MoonEquaLat }
 }
@@ -605,9 +605,9 @@ export const BindMoonLonLat = (NodeAccum, MoonEclp) => { // 該時刻入交日�
 export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
-    AvgDeci = +('0.' + AvgDeci)
+    AvgDeci = +('.' + AvgDeci)
     AvgSolsDif = +AvgSolsDif
-    SolsDeci = +('0.' + SolsDeci)
+    SolsDeci = +('.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {
@@ -686,14 +686,14 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsD
         }))
     return { Print1, Print2 }
 }
-// console.log(BindSunEclipse(0.1, 14, 3355, 14, 5))
+// console.log(BindSunEclipse(.1, 14, 3355, 14, 5))
 
 export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
-    AvgDeci = +('0.' + AvgDeci)
+    AvgDeci = +('.' + AvgDeci)
     AvgSolsDif = +AvgSolsDif
-    SolsDeci = +('0.' + SolsDeci)
+    SolsDeci = +('.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
     if (NodeAccum > 27.212215) {

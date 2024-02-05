@@ -48,7 +48,7 @@ export const SunDifAccumTable = (SolsDif, Name) => {
         SunDifAccum2 = Interpolate1(n + 1, [SunDifAccumList[TermNum1], SunDifAccumList[TermNum1 + 1], SunDifAccumList[TermNum1 + 2]])
         // const SunAcrAvgDif1 = SunAcrAvgDifListList[TermNum1]
         // const SunAcrAvgDif2 = SunAcrAvgDifListList[TermNum2]
-        // SunDifAccum2 = SunDifAccumList[TermNum1] + 0.5 * (TermNewmDif / TermRange) * (SunAcrAvgDif1 + SunAcrAvgDif2) + (TermNewmDif / TermRange) * (SunAcrAvgDif1 - SunAcrAvgDif2) - 0.5 * ((TermNewmDif / TermRange) ** 2) * (SunAcrAvgDif1 - SunAcrAvgDif2)
+        // SunDifAccum2 = SunDifAccumList[TermNum1] + .5 * (TermNewmDif / TermRange) * (SunAcrAvgDif1 + SunAcrAvgDif2) + (TermNewmDif / TermRange) * (SunAcrAvgDif1 - SunAcrAvgDif2) - .5 * ((TermNewmDif / TermRange) ** 2) * (SunAcrAvgDif1 - SunAcrAvgDif2)
     }
     // Solar =365 + 2366 / 9740
     // const AcrTermList = [] // 定氣距冬至日數
@@ -127,19 +127,19 @@ const SunDifAccumFormula = (SolsDif, Name) => {
         // 定平立三差精確值、曆取値。f(88.5)精確值2.40247，曆取値2.40127 f(45)精確值1.78437，曆取值1.78354
         // DeltaSunA1: 513.3822097763196114, // 513.32
         // DeltaSunA2: 2.4553858564920306, // 2.46
-        // DeltaSunA3: 0.003142755330375, // 0.0031
+        // DeltaSunA3: .003142755330375, // .0031
         // DeltaSunB1: 487.1014493604209278, //  487.06 
         // DeltaSunB2: 2.2074819445045348, // 2.21 
-        // DeltaSunB3: 0.0027262800048672, // 0.0027 
+        // DeltaSunB3: .0027262800048672, // .0027 
         // DeltaMoon1: 11.11,
-        // DeltaMoon2: 0.0281,
-        // DeltaMoon3: 0.000325,
+        // DeltaMoon2: .0281,
+        // DeltaMoon3: .000325,
         let sign = 1
         if (SolsDif >= Solar50) sign = -1
         if (SolsDif >= QuarA && SolsDif < Solar50 + QuarB) {
-            SunDifAccum = 487.06 * T - 2.21 * T ** 2 - 0.0027 * T ** 3
+            SunDifAccum = 487.06 * T - 2.21 * T ** 2 - .0027 * T ** 3
         } else {
-            SunDifAccum = 513.32 * T - 2.46 * T ** 2 - 0.0031 * T ** 3 // 盈縮差
+            SunDifAccum = 513.32 * T - 2.46 * T ** 2 - .0031 * T ** 3 // 盈縮差
         }
         SunDifAccum *= sign / 10000
     } else { // 王榮彬《中國古代曆法的中心差算式之造術原理》
@@ -277,13 +277,13 @@ const MoonAcrSTable1 = (AnomaAccum, Name) => {
     const MoonAcrS = (MoonAcrSList[AnomaAccumInt] + AnomaAccumFract * (MoonAcrSList[AnomaAccumInt + 1] - MoonAcrSList[AnomaAccumInt])) / ZhangRange
     return MoonAcrS
 }
-// console.log(MoonAcrSTable1(0.1, 'Daming'))
+// console.log(MoonAcrSTable1(.1, 'Daming'))
 
 const MoonTcorrTable = (AnomaAccum, Name) => {
     const { Type, MoonTcorrList, Anoma, Denom } = Para[Name]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
-    const Anoma75 = Anoma * 0.75
+    const Anoma75 = Anoma * .75
     AnomaAccum %= Anoma
     let AnomaAccumInt = ~~AnomaAccum
     let AnomaAccumFrac = AnomaAccum - AnomaAccumInt
@@ -374,7 +374,7 @@ const MoonDifAccumTable = (AnomaAccum, Name) => { // 暫時沒有用，就不處
     const { Type, Anoma, MoonAcrVList, Denom } = Para[Name]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
-    const Anoma75 = Anoma * 0.75
+    const Anoma75 = Anoma * .75
     AnomaAccum %= Anoma
     let AnomaAccumInt = ~~AnomaAccum
     let AnomaAccumFrac = AnomaAccum - AnomaAccumInt
@@ -434,10 +434,10 @@ const MoonDifAccumTable = (AnomaAccum, Name) => { // 暫時沒有用，就不處
     // const AnomaAccumDay2 = (AnomaAccumDay1 + 1) % 28 // 這沒加上最後一天的情況，以後得補上
     // const MoonAcrAvgDif1 = MoonAcrAvgDifList[AnomaAccumDay1]
     // const MoonAcrAvgDif2 = MoonAcrAvgDifList[AnomaAccumDay2]
-    // const MoonDifAccumA = 0.5 * AnomaAccumFract * (MoonAcrAvgDif1 + MoonAcrAvgDif2) + AnomaAccumFract * (MoonAcrAvgDif1 - MoonAcrAvgDif2) - 0.5 * (AnomaAccumFract ** 2) * (MoonAcrAvgDif1 - MoonAcrAvgDif2)
+    // const MoonDifAccumA = .5 * AnomaAccumFract * (MoonAcrAvgDif1 + MoonAcrAvgDif2) + AnomaAccumFract * (MoonAcrAvgDif1 - MoonAcrAvgDif2) - .5 * (AnomaAccumFract ** 2) * (MoonAcrAvgDif1 - MoonAcrAvgDif2)
     // let MoonDifAccumB = 0
     // if (Type === 6) {
-    //     MoonDifAccumB = 0.5 * (MoonDifAccumA / MoonAvgVddenom) * (MoonAcrAvgDif1 + MoonAcrAvgDif2) + (MoonDifAccumA / MoonAvgVddenom) * (1 - AnomaAccumFract) * (MoonAcrAvgDif1 - MoonAcrAvgDif2) - 0.5 * ((MoonDifAccumA / MoonAvgVddenom) ** 2) * (MoonAcrAvgDif1 - MoonAcrAvgDif2)
+    //     MoonDifAccumB = .5 * (MoonDifAccumA / MoonAvgVddenom) * (MoonAcrAvgDif1 + MoonAcrAvgDif2) + (MoonDifAccumA / MoonAvgVddenom) * (1 - AnomaAccumFract) * (MoonAcrAvgDif1 - MoonAcrAvgDif2) - .5 * ((MoonDifAccumA / MoonAvgVddenom) ** 2) * (MoonAcrAvgDif1 - MoonAcrAvgDif2)
     // }
     // const MoonDifAccum2 = MoonDifAccum[AnomaAccumDay1] + MoonDifAccumA + MoonDifAccumB
     // const MoonDifAccum1 = MoonDifAccum[AnomaAccumDay1] + MoonAcrAvgDif1 * AnomaAccumFract
@@ -449,7 +449,7 @@ const MoonAcrSTable2 = (AnomaAccum, Name) => {
     const { Type, Anoma, MoonAcrVList, Denom } = Para[Name]
     const Anoma25 = Anoma / 4
     const Anoma50 = Anoma / 2
-    const Anoma75 = Anoma * 0.75
+    const Anoma75 = Anoma * .75
     AnomaAccum %= Anoma
     let AnomaAccumInt = ~~AnomaAccum
     let AnomaAccumFrac = AnomaAccum - AnomaAccumInt
@@ -519,9 +519,9 @@ export const MoonFormula = (AnomaAccumRaw, Name) => {
         let signA = 1
         const T = (Anoma25 - Math.abs(AnomaAccumRaw % Anoma50 - Anoma25)) / PartRange
         if (AnomaAccumRaw >= Anoma50) signA = -1
-        MoonDifAccum = signA * (11.11 * T - 0.0281 * T ** 2 - 0.000325 * T ** 3) / 100 // 遲疾差。三個常數是遲疾定平立三差
+        MoonDifAccum = signA * (11.11 * T - .0281 * T ** 2 - .000325 * T ** 3) / 100 // 遲疾差。三個常數是遲疾定平立三差
         const AnomaAccumPart = ~~(AnomaAccumRev * 336 / Anoma)
-        const MoonAcrVListA = [1.2071, 1.2065, 1.2059, 1.2053, 1.2047, 1.2040, 1.2033, 1.2026, 1.2019, 1.2012, 1.2004, 1.1996, 1.1988, 1.1980, 1.1972, 1.1963, 1.1955, 1.1946, 1.1937, 1.1927, 1.1918, 1.1908, 1.1898, 1.1888, 1.1878, 1.1867, 1.1856, 1.1846, 1.1835, 1.1823, 1.1812, 1.1800, 1.1788, 1.1776, 1.1764, 1.1751, 1.1739, 1.1726, 1.1713, 1.1700, 1.1686, 1.1673, 1.1659, 1.1645, 1.1631, 1.1616, 1.1602, 1.1587, 1.1572, 1.1557, 1.1541, 1.1526, 1.1510, 1.1494, 1.1478, 1.1462, 1.1445, 1.1428, 1.1411, 1.1394, 1.1377, 1.1359, 1.1342, 1.1324, 1.1306, 1.1287, 1.1269, 1.1250, 1.1231, 1.1212, 1.1193, 1.1174, 1.1154, 1.1134, 1.1114, 1.1094, 1.1073, 1.1053, 1.1032, 1.1011, 1.0990, 1.0968, 1.0966, 1.0965, 1.0961, 1.0959, 1.0958, 1.0936, 1.0915, 1.0894, 1.0873, 1.0852, 1.0832, 1.0812, 1.0792, 1.0772, 1.0752, 1.0733, 1.0713, 1.0694, 1.0676, 1.0657, 1.0638, 1.0620, 1.0602, 1.0584, 1.0566, 1.0549, 1.0531, 1.0514, 1.0497, 1.0481, 1.0464, 1.0448, 1.0432, 1.0416, 1.0400, 1.0384, 1.0369, 1.0354, 1.0339, 1.0324, 1.0309, 1.0295, 1.0281, 1.0267, 1.0253, 1.0239, 1.0226, 1.0213, 1.0200, 1.0187, 1.0174, 1.0162, 1.0150, 1.0138, 1.0126, 1.0114, 1.0103, 1.0091, 1.0080, 1.0069, 1.0059, 1.0048, 1.0038, 1.0028, 1.0018, 1.0008, 0.9999, 0.9985, 0.9980, 0.9971, 0.9962, 0.9954, 0.9946, 0.9937, 0.9929, 0.9922, 0.9914, 0.9907, 0.9900, 0.9893, 0.9886, 0.9879, 0.9873, 0.9867, 0.9861, 0.9855]
+        const MoonAcrVListA = [1.2071, 1.2065, 1.2059, 1.2053, 1.2047, 1.2040, 1.2033, 1.2026, 1.2019, 1.2012, 1.2004, 1.1996, 1.1988, 1.1980, 1.1972, 1.1963, 1.1955, 1.1946, 1.1937, 1.1927, 1.1918, 1.1908, 1.1898, 1.1888, 1.1878, 1.1867, 1.1856, 1.1846, 1.1835, 1.1823, 1.1812, 1.1800, 1.1788, 1.1776, 1.1764, 1.1751, 1.1739, 1.1726, 1.1713, 1.1700, 1.1686, 1.1673, 1.1659, 1.1645, 1.1631, 1.1616, 1.1602, 1.1587, 1.1572, 1.1557, 1.1541, 1.1526, 1.1510, 1.1494, 1.1478, 1.1462, 1.1445, 1.1428, 1.1411, 1.1394, 1.1377, 1.1359, 1.1342, 1.1324, 1.1306, 1.1287, 1.1269, 1.1250, 1.1231, 1.1212, 1.1193, 1.1174, 1.1154, 1.1134, 1.1114, 1.1094, 1.1073, 1.1053, 1.1032, 1.1011, 1.0990, 1.0968, 1.0966, 1.0965, 1.0961, 1.0959, 1.0958, 1.0936, 1.0915, 1.0894, 1.0873, 1.0852, 1.0832, 1.0812, 1.0792, 1.0772, 1.0752, 1.0733, 1.0713, 1.0694, 1.0676, 1.0657, 1.0638, 1.0620, 1.0602, 1.0584, 1.0566, 1.0549, 1.0531, 1.0514, 1.0497, 1.0481, 1.0464, 1.0448, 1.0432, 1.0416, 1.0400, 1.0384, 1.0369, 1.0354, 1.0339, 1.0324, 1.0309, 1.0295, 1.0281, 1.0267, 1.0253, 1.0239, 1.0226, 1.0213, 1.0200, 1.0187, 1.0174, 1.0162, 1.0150, 1.0138, 1.0126, 1.0114, 1.0103, 1.0091, 1.0080, 1.0069, 1.0059, 1.0048, 1.0038, 1.0028, 1.0018, 1.0008, .9999, .9985, .9980, .9971, .9962, .9954, .9946, .9937, .9929, .9922, .9914, .9907, .9900, .9893, .9886, .9879, .9873, .9867, .9861, .9855]
         // const ad = [] // 沒找到什麼規律
         // for (let i = 0; i <= 167; i++) {
         //     ad[i] = +(MoonAcrVListA[i + 1] - MoonAcrVListA[i]).toFixed(4)
@@ -542,7 +542,7 @@ export const MoonFormula = (AnomaAccumRaw, Name) => {
             } else signB = -1
             const tmp = signB * T * (210.09 - T) // 積數
             MoonDifAccum = tmp / 1976 // 遲疾差度 //+ T * (MoonAvgVd - Sidereal / Anoma) / MoonAvgVd // 《中國古代曆法》頁110莫名其妙說要加上後面這個，但不加纔跟其他曆相合
-            // MoonTcorr2 = tmp / 0.67735 / Denom // 遲疾定差 13.36875*1976/0.67735=39000
+            // MoonTcorr2 = tmp / .67735 / Denom // 遲疾定差 13.36875*1976/.67735=39000
             MoonAcrVd = 13.36875 + sign3 * (1.27 - T / 72.5) // 原文739
         } else if (Name === 'Futian') {
             let AnomaAccum = AnomaAccumRaw

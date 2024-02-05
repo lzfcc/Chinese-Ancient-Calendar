@@ -25,7 +25,7 @@ export const ExhauDenom = (lower, upper, End) => {
 // 暴力求上元演紀
 export const ExhauOrigin = (SolarRaw, LunarNumer, Denom, OriginLower, OriginUpper, FirstLower, FirstUpper) => {
     // 會天1256年中冬至癸丑卯正初刻
-    const SolarNumer = Math.round(+('0.' + SolarRaw) * Denom)
+    const SolarNumer = Math.round(+('.' + SolarRaw) * Denom)
     const Solar = SolarNumer / Denom + 365
     LunarNumer = +LunarNumer
     Denom = +Denom
@@ -58,7 +58,7 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper, step
     const Solar = 365 + SolarNumer / Denom
     const SolsAccum = year * Solar
     x = String(x)
-    const x1 = +('0.' + x.split('.')[1])
+    const x1 = +('.' + x.split('.')[1])
     const FracInt = ~~(Denom * x1)
     const Int = +(x.split('.')[0])
     x = +x
@@ -80,4 +80,4 @@ export const ExhauConst = (SolarNumer, Denom, year, x, Range, lower, upper, step
     result = '冬至積日' + SolsAccum.toFixed(4) + `\n` + result
     return result
 }
-// console.log(ExhauConst(2364, 9740, 75638987, 27.21222, 0.00005, 24.798, 24.8))
+// console.log(ExhauConst(2364, 9740, 75638987, 27.21222, .00005, 24.798, 24.8))

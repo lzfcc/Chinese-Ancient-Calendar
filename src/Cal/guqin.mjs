@@ -470,7 +470,7 @@ export const Meantone = (x, mode) => { // 折中律、中庸全音律
     Freq1[0] = big(x)
     Freq2[0] = big(x)
     let a1 = big(5) // 原理見律曆初階第一章
-    let b1 = 0.25
+    let b1 = .25
     let c = 12
     if (mode === 3) {
         a1 = big(2.4)
@@ -489,7 +489,7 @@ export const Meantone = (x, mode) => { // 折中律、中庸全音律
         Cent1[i] = +OctaveCent(Freq1[i], x).Cent.toFixed(8)
     }
     let a2 = big(3.2) // 原理見律曆初階第一章
-    let b2 = 0.25
+    let b2 = .25
     if (mode === 3) {
         a2 = big(2.4)
         b2 = big.div(1, 3)
@@ -1138,7 +1138,7 @@ const Tuning9 = (Freq = 432, n = 4) => {  // 慢宮調慢一三六 3 5 6 1 2 3 5
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
         OneDifHui: '15/16',
-        OneDifXin: 0.94387431268169,
+        OneDifXin: .94387431268169,
         TuneName: '慢宮調　慢一三六'
     }
 }
@@ -1262,7 +1262,7 @@ const Tuning11 = (Freq = 432, n = 1) => {  // 黃鐘調緊五慢一 1 3 5 6 1 2 
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '8/9',
         OneDifHui: '9/10',
-        OneDifXin: 0.8908987181403393,
+        OneDifXin: .8908987181403393,
         TuneName: '黃鐘調　緊五慢一'
     }
 }
@@ -1404,7 +1404,7 @@ const Tuning13 = (Freq = 432, n = 4) => {  // 間弦一慢一三 7 2 3 5 6 1 2 �
         Zhun, Hui, Hui2, Hui3, Hui4, Xin, ZhunFreq, HuiFreq,
         OneDifZhun: '243/256',
         OneDifHui: '243/256',
-        OneDifXin: 0.943874312681694,
+        OneDifXin: .943874312681694,
         TuneName: '間弦一　慢一三'
     }
 }
@@ -1600,7 +1600,7 @@ const Tuning19 = (Freq = 432, n = 1) => {  // 徽法律側楚調慢一二緊五�
     return {
         Hui, Xin, HuiFreq,
         OneDifHui: '9/10',
-        OneDifXin: 0.890898718140339,
+        OneDifXin: .890898718140339,
         TuneName: '側楚調　慢一二緊五七'
     }
 }
@@ -1957,7 +1957,7 @@ export const Position2Pitch = (Input, TuningMode, TempMode, GongString, ZhiStrin
         Cent[i] = (Cent[i] % 1200 + 1200) % 1200
         // 下面是處理模糊徽位
         for (const [key, value] of Object.entries(FushionList)) {
-            const threshold = isStrict ? 0.95 : 10
+            const threshold = isStrict ? .95 : 10
             if (Cent[i] > +key - threshold && Cent[i] < +key + threshold && value[0] !== 3) {
                 Pitch[i] = value[OutputMode === 2 ? OutputMode : 3]
                 break

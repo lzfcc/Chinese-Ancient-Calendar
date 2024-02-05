@@ -11,14 +11,14 @@ const r2d = degree => big(degree).mul(180).div(pi)
 // }
 // console.log(tanliufenyi(14.1,1.1))
 
-// const SunAcrVWest = (SolsDif, Solar) => { // 極值出現在冬至後0.47345個節氣，說明現在冬至並非近地點 0.47344981964   24.6116951198865  週期 24.1382453      f(x) =  0.9864 + 0.03331  *cos(x*0.2603) +  0.004126*sin(x*0.2603) 
-//     SolsDif = big(SolsDif).mul(24.1382453).div(Solar).add(0.47344981964)
-//     const SunAcrV = big(0.9864).add(big(0.03331).mul(big.mul(SolsDif, 0.2603).cos())).add(big(0.004126).mul(big.mul(SolsDif, 0.2603)).sin())
+// const SunAcrVWest = (SolsDif, Solar) => { // 極值出現在冬至後0.47345個節氣，說明現在冬至並非近地點 .47344981964   24.6116951198865  週期 24.1382453      f(x) =  .9864 + .03331  *cos(x*.2603) +  .004126*sin(x*.2603) 
+//     SolsDif = big(SolsDif).mul(24.1382453).div(Solar).add(.47344981964)
+//     const SunAcrV = big(.9864).add(big(.03331).mul(big.mul(SolsDif, .2603).cos())).add(big(.004126).mul(big.mul(SolsDif, .2603)).sin())
 //     return SunAcrV.toString()
 // }
 // console.log(SunAcrVWest(91, 365.2425))
 
-// const SunAcrVWest = (SolsDif, Solar) => { // 我用定氣數據擬合的函數。 週期23.674398328214，極值2.023，-1.774 ，但是實際上應該是2.32，奇怪 0.1242-0.1018 *cos(x*0.2654) + 1.896*sin(x*0.2654)
+// const SunAcrVWest = (SolsDif, Solar) => { // 我用定氣數據擬合的函數。 週期23.674398328214，極值2.023，-1.774 ，但是實際上應該是2.32，奇怪 .1242-.1018 *cos(x*.2654) + 1.896*sin(x*.2654)
 //     SolsDif = d2r(big(SolsDif).mul(24).div(Solar))
 //     return SunDifAccum.toString()
 // }
@@ -28,21 +28,21 @@ export const ConstWest = year => { // 儒略世紀：36525日。我下面索性�
     // 黃赤交角 ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3 // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
     const t = big.sub(year, 2000).div(100)
     const obliquity = +(big(84381.448).sub(t.mul(46.84024)).sub(t.pow(2).mul(big(10).pow(-5).mul(59))).add(t.pow(3).mul(big(10).pow(-6).mul(1813))).div(3600).toFixed(10))
-    //《古曆新探》頁322.近日點平黃經 ω=281+13/60+15/3600+1.719175*T+ (1.63/3600)*T^2+(0.012/3600)*T^3 // T自1900起算的儒略世紀數。也就是說近日點越來越向春分移動 。375年在大雪，1247年近日點在冬至
+    //《古曆新探》頁322.近日點平黃經 ω=281+13/60+15/3600+1.719175*T+ (1.63/3600)*T^2+(.012/3600)*T^3 // T自1900起算的儒略世紀數。也就是說近日點越來越向春分移動 。375年在大雪，1247年近日點在冬至
     const T = big(year - 1900).div(100)
-    const perihelion = +(big(281).add(13 / 60).add(15 / 3600).add(T.mul(1.719175)).add(big.div(1.63, 3600).mul(T).pow(2)).add(big.div(0.012, 3600).mul(T).pow(3)).toFixed(8))
-    // 黃道離心率 e=0.01670862 -0.00004204T-0.000000124T**2
-    const eccentricity = +(big(0.01675104).sub(big(0.0000418).mul(T)).sub(big(0.00000000126).mul(T).pow(2)).toFixed(8))
+    const perihelion = +(big(281).add(13 / 60).add(15 / 3600).add(T.mul(1.719175)).add(big.div(1.63, 3600).mul(T).pow(2)).add(big.div(.012, 3600).mul(T).pow(3)).toFixed(8))
+    // 黃道離心率 e=.01670862 -.00004204T-.000000124T**2
+    const eccentricity = +(big(.01675104).sub(big(.0000418).mul(T)).sub(big(.00000000126).mul(T).pow(2)).toFixed(8))
     const y = big(year - 2000)
     const y1 = y.div(1000)
-    const Solar = big(365.242189623).sub(big(0.000061522).mul(y1)).sub(big.mul(big(6.09).mul(1e-8), y1.pow(2))).add(big.mul(big(2.6525).mul(1e-7), y1.pow(3))).toNumber()
-    // τ = 365.242189623 - 0.000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)
-    // Association，1992，102( 1) : 42. τ = 365.242189623 - 0.000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)
+    const Solar = big(365.242189623).sub(big(.000061522).mul(y1)).sub(big.mul(big(6.09).mul(1e-8), y1.pow(2))).add(big.mul(big(2.6525).mul(1e-7), y1.pow(3))).toNumber()
+    // τ = 365.242189623 - .000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)
+    // Association，1992，102( 1) : 42. τ = 365.242189623 - .000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)
     // VSOP87 曆表 Meeus J，Savoie D. The history of the tropical year[J]. Journal of the British Astronomical Association，1992，102( 1) : 42. 
-    const Sidereal = big(365.25636042).add(big(0.000000001).mul(y)).toNumber()
-    const Lunar = big(29.530588853).add(big(0.000000002162).mul(y)).toNumber()
-    const Anoma = big(27.554549878).sub(big(0.00000001039).mul(y)).toNumber() // 近點月
-    const Node = big(27.21222082).add(big(0.0000000038).mul(y)).toNumber()
+    const Sidereal = big(365.25636042).add(big(.000000001).mul(y)).toNumber()
+    const Lunar = big(29.530588853).add(big(.000000002162).mul(y)).toNumber()
+    const Anoma = big(27.554549878).sub(big(.00000001039).mul(y)).toNumber() // 近點月
+    const Node = big(27.21222082).add(big(.0000000038).mul(y)).toNumber()
     const Print = `朔望月 ${Lunar} 日
 近點月 ${Anoma} 日
 交點月 ${Node} 日
@@ -63,8 +63,8 @@ export const BindSolarChange = year => {
     const sign2 = year2 > 0 ? -1 : 1
     const SolarWest = big(365.2422393296).sub(big(6.16 * 1e-8).mul(year1)).toNumber()
     const SolarChangeWest = parseFloat((sign1 * big(3.08 * 1e-8).mul(year1 ** 2).toNumber()).toPrecision(12))
-    const SolarTongtian = parseFloat((365.2425 - 0.021167 / 12000 * year1).toPrecision(10))
-    const SolarChangeTongtian = parseFloat((sign1 * 0.0127 / 12000 * year1 ** 2).toPrecision(10))
+    const SolarTongtian = parseFloat((365.2425 - .021167 / 12000 * year1).toPrecision(10))
+    const SolarChangeTongtian = parseFloat((sign1 * .0127 / 12000 * year1 ** 2).toPrecision(10))
     const SolarShoushi = parseFloat((365.2425 - 2 * 1e-6 * year2).toPrecision(10))
     const SolarChangeShoushiRaw = parseFloat((-~~(year2 / 100) / 10000).toPrecision(10))
     const SolarChangeShoushi = parseFloat((sign2 * -SolarChangeShoushiRaw * year2).toPrecision(10))
@@ -95,7 +95,7 @@ export const BindSolarChange = year => {
 }
 // console.log(BindSolarChange(2000))
 
-export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -0.9942  + 0.723*cos(x* 0.2243) +  6.964 *sin(x* 0.2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
+export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數據擬合 -.9942  + .723*cos(x* .2243) +  6.964 *sin(x* .2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
     const ConstFunc = ConstWest(year)
     const Anoma = ConstFunc.Anoma
     const Sidereal = ConstFunc.Sidereal
@@ -105,8 +105,8 @@ export const MoonAcrVWest = (AnomaAccum, year) => { // 我2020年4個月的數�
     AnomaAccum = d2r(AnomaAccum * 360 / Anoma)
     AnomaAccum = AnomaAccum.mul(28.01241785825).div(Anoma) // 這個擬合函數的週期是28多，要化到一個近點月
     AnomaAccum1 = AnomaAccum1.mul(28.01241785825).div(Anoma)
-    const MoonDifAccum = big(-0.623).add(big(0.623).mul(big.cos(AnomaAccum))).add(big(5).mul(big.sin(AnomaAccum)))
-    const MoonDifAccum1 = big(-0.623).add(big(0.623).mul(big.cos(AnomaAccum1))).add(big(5).mul(big.sin(AnomaAccum1)))
+    const MoonDifAccum = big(-.623).add(big(.623).mul(big.cos(AnomaAccum))).add(big(5).mul(big.sin(AnomaAccum)))
+    const MoonDifAccum1 = big(-.623).add(big(.623).mul(big.cos(AnomaAccum1))).add(big(5).mul(big.sin(AnomaAccum1)))
     const MoonAcrVd = MoonDifAccum.sub(MoonDifAccum1).add(MoonAvgVd)
     return {
         MoonDifAccum: MoonDifAccum.toNumber(),
@@ -154,7 +154,7 @@ export const SunAcrVWest = (SolsDif, year) => { // 武家璧《大衍曆日躔�
 
 export const Equa2EclpWest = (LonRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
     let Lon = LonRaw % (Sidereal / 4)
-    if ((LonRaw > Sidereal / 4 && LonRaw <= Sidereal / 2) || (LonRaw >= Sidereal * 0.75 && LonRaw < Sidereal)) {
+    if ((LonRaw > Sidereal / 4 && LonRaw <= Sidereal / 2) || (LonRaw >= Sidereal * .75 && LonRaw < Sidereal)) {
         Lon = Sidereal / 4 - Lon
     }
     const Angle = big(Lon).mul(pi).div(big.div(Sidereal, 2)) // 古度轉radius
@@ -164,7 +164,7 @@ export const Equa2EclpWest = (LonRaw, Sidereal, year, E) => { // 《中國古代
     const Equa = Angle.tan().div(E.cos()).atan().mul(Sidereal / 2).div(pi)
     let Equa2EclpDif = big.sub(Lon, Eclp).abs().toNumber()
     let Eclp2EquaDif = big.sub(Lon, Equa).abs().toNumber()
-    const condition = (LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * 0.75)
+    const condition = (LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * .75)
     Equa2EclpDif *= condition ? -1 : 1
     Eclp2EquaDif *= condition ? 1 : -1
     const Equa2Eclp = LonRaw + Equa2EclpDif
@@ -192,13 +192,13 @@ export const Lon2LatWest = (lRaw, Sidereal, year, E) => { // 《中國古代曆�
 // cosw=-tanftand 。f緯度，d赤緯 w時角
 // sina-sinfsind/cosfcosd 是考慮了視直徑、蒙氣差之後的
 // 算出來的是地方時，要自己換算成當地時區
-// 跟壽星天文曆比，0.85修正之後的，夏至日出早了2分鐘，冬至晚了2分鐘。如果用0.51:日出定義是上邊緣出現的那一刻，而非中心點在地平線上。夏至合，而冬至晚了2分鐘
+// 跟壽星天文曆比，.85修正之後的，夏至日出早了2分鐘，冬至晚了2分鐘。如果用0.51:日出定義是上邊緣出現的那一刻，而非中心點在地平線上。夏至合，而冬至晚了2分鐘
 export const Lon2SunriseWest = (lRaw, f, Sidereal, year) => {
     f = big(f).mul(pi).div(big.div(Sidereal, 2))
     const d = d2r(Lon2LatWest(lRaw, Sidereal, year).d)
     // let v1 = big.tan(f).mul(big.tan(d))
     let v1 = big(0).sub(f.sin().mul(big.sin(d))).div(f.cos().mul(big.cos(d)))
-    let v = big.sin(d2r(-0.51)).sub(big.sin(f).mul(big.sin(d))).div(big.cos(f).mul(big.cos(d)))
+    let v = big.sin(d2r(-.51)).sub(big.sin(f).mul(big.sin(d))).div(big.cos(f).mul(big.cos(d)))
     v1 = big(50).sub(v1.acos().mul(big.div(50, pi))).toNumber() // 換算成百刻
     v = big(50).sub(v.acos().mul(big.div(50, pi))).toNumber()
     return { v1, v }
@@ -206,18 +206,18 @@ export const Lon2SunriseWest = (lRaw, f, Sidereal, year) => {
 // console.log(Lon2SunriseWest(180, 39, 360, 2021))
 // console.log(Lon2LatWest(182.625, 365.25, 2000).Lat)
 
-// 根據最新研究：蒙氣差ξ =(1819.08371242143 + 194.887513592849h +1.46555397475109h^2 -0.0419553783815395h^3) / (1+0.409283439734292h+0.0667313795916436h^2 +0.0000846859707945254h^3), h太陽高度角。张富、张丽娟、邱本志《一种计算太阳低仰角蒙气差的有理函数逼近方法》，《太陽能學報》2015(9)
+// 根據最新研究：蒙氣差ξ =(1819.08371242143 + 194.887513592849h +1.46555397475109h^2 -.0419553783815395h^3) / (1+.409283439734292h+.0667313795916436h^2 +.0000846859707945254h^3), h太陽高度角。张富、张丽娟、邱本志《一种计算太阳低仰角蒙气差的有理函数逼近方法》，《太陽能學報》2015(9)
 // 還可參考 李文、赵永超《地球椭球模型中太阳位置计算的改进》
 // h=90°-|緯度φ-赤緯δ|
 const Refraction = h => {
-    const n = big(1819.08371242143).add(big(194.887513592849).mul(h)).add(big(1.46555397475109).mul(h).mul(h)).sub(big(0.0419553783815395).mul(h).mul(h).mul(h))
-    const d = big(1).add(big(0.409283439734292).mul(h)).add(big(0.0667313795916436).mul(h).mul(h)).add(big(0.00008468597).mul(h).mul(h).mul(h))
+    const n = big(1819.08371242143).add(big(194.887513592849).mul(h)).add(big(1.46555397475109).mul(h).mul(h)).sub(big(.0419553783815395).mul(h).mul(h).mul(h))
+    const d = big(1).add(big(.409283439734292).mul(h)).add(big(.0667313795916436).mul(h).mul(h)).add(big(.00008468597).mul(h).mul(h).mul(h))
     return n.div(d).div(3600).toNumber()
 }
 
 // 求眞太陽高度角、天頂距
 const zAcrConvert = (Deci, Lat, f) => { // 日分，赤緯radius，緯度radius
-    const v = d2r(big(big(Deci).sub(0.5)).mul(360)) // 時角radius
+    const v = d2r(big(big(Deci).sub(.5)).mul(360)) // 時角radius
     let a = f.sin().mul(Lat.sin()).add(f.cos().mul(Lat.cos()).mul(v.cos())).asin() // 太陽高度角radius
     const zAcr = big(pi.div(2)).sub(a) // 眞天頂距radius
     return { v, a, zAcr }
@@ -240,7 +240,7 @@ export const Deciaml2Angle = (f, h1, m1, s1, SolsDifInt, h, m, s, year, height) 
     let zAcr = zAcrFunc.zAcr // 眞天頂距
     a = r2d(a)
     // 以下複製Lon2DialWest
-    const r = 0.52
+    const r = .52
     const Refrac = Refraction(a)
     const Parallax = big.div(8.8, 3600).mul(zAcr.sin())
     zAcr = r2d(zAcr)
@@ -256,7 +256,7 @@ export const Lon2DialWest = (l, f, Sidereal, year) => { // 黃經，周天，緯
     const d = Lon2LatWest(l, Sidereal, year).Lat // 赤緯
     const h = Sidereal / 4 - Math.abs(f - d) // 正午太陽高度
     const zAcr = f - d // 眞天頂距=緯度-赤緯
-    const r = 0.52 // 日視直徑0.53度。角半径=atan(1/2 d/D)
+    const r = .52 // 日視直徑0.53度。角半径=atan(1/2 d/D)
     const Refrac = Refraction(h)
     const Parallax = big.div(8.8, 3600).mul(d2r(zAcr).sin())
     const zRel = big(zAcr).sub(Refrac).sub(r).add(Parallax) // p0太陽地平視差8.8s。視差總是使視位置降低，地平線最大，天頂爲0
@@ -282,7 +282,7 @@ const Lat = () => { // 由《周髀算经》推算观测地 的纬度有三种�
         if (scale(x) > norm - eps && scale(x) < norm + eps) {
             return x
         }
-        x += 0.00001
+        x += .00001
     }
 }
 // console.log(Lat()) // 35.17369
@@ -293,8 +293,8 @@ const MoonLonWest_BACKUP = (EclpRaw, year) => { // 統一360度
     const v0 = d2r(Eclp) // 距冬至轉換成距離春分的黃經
     const I = d2r(5.1453) // 授時黃白大距6
     const E = d2r(ConstWest(year).obliquity) // 授時黃赤大距23.9
-    const cosE = big.cos(E) // 0.9
-    const tank = big.tan(I).div(big.sin(E)) // tank 0.22
+    const cosE = big.cos(E) // .9
+    const tank = big.tan(I).div(big.sin(E)) // tank .22
     // const k = tank.atan() // k正交極數 12.7
     const tana0 = tank.mul(v0.sin()).div(tank.mul(cosE.mul(v0.cos())).add(1))
     const a0Raw = tana0.atan() // a0距差
@@ -337,7 +337,7 @@ const MoonLatWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
     const T = d2r(45)
     const cosT = T.cos()
     const sinT = T.sin()
-    const Node = big(27.212220817).add(big(0.000000003833).mul(year - 2000))
+    const Node = big(27.212220817).add(big(.000000003833).mul(year - 2000))
     NodeAvgV = NodeAvgV || big(Sidereal).div(Node)
     const E = d2r(ConstWest(year).obliquity)
     const sinE = E.sin()
@@ -390,7 +390,7 @@ export const EcliWest = (NodeAccum, AnomaAccum, Deci, SolsDif, f, year) => { // 
     // }
     const h = zAcrFunc.v // 時角radius
     const e = d2r(ConstWestFunc.obliquity) // 黃赤交角degree
-    const H0 = big(0.9507) // 假設是月亮地平視差57' // 月亮地平視差曲安京《數》頁413
+    const H0 = big(.9507) // 假設是月亮地平視差57' // 月亮地平視差曲安京《數》頁413
     Lon = d2r(big(Lon).mul(360).div(Solar)).add(pi.mul(1.5)).mod(pi.mul(2)) //.toNumber()
     // const tanC = Lon.cos().mul(e.tan()).pow(-1) //.toNumber() // C星位角與赤經圈夾角
     // const sinC1 = h.sin().mul(f.cos()).mul(zAcr.div(90).asin()) //.toNumber() // C1星位角與黃道夾角
@@ -399,7 +399,7 @@ export const EcliWest = (NodeAccum, AnomaAccum, Deci, SolsDif, f, year) => { // 
     const k0 = H0.mul(f.cos()).div(MoonV - SunV) //.toNumber()
     const tmp = e.sub(e.mul(Lon.mod(pi.div(2))).div(pi.div(2)))
     const Tcorr0 = k0.mul(h.sin()) // 冬夏至點的特殊情況
-    const Tcorr = Tcorr0.mul(tmp.cos()).add(k0.mul(Lon.add(pi.mul(0.5)).cos())) // +k0cosl很奇怪，我自己加270度才湊出來的，實在不行就用Tcorr0
+    const Tcorr = Tcorr0.mul(tmp.cos()).add(k0.mul(Lon.add(pi.mul(.5)).cos())) // +k0cosl很奇怪，我自己加270度才湊出來的，實在不行就用Tcorr0
     const I = d2r(5.1453) // 黃白大距
     const k1 = H0.div(I.sin()).mul(f.sin()).mul(e.cos()) // 一個常數
     const k2 = H0.mul(f.cos()).mul(e.sin()).div(I.sin()) //.toNumber()
@@ -411,7 +411,7 @@ export const EcliWest = (NodeAccum, AnomaAccum, Deci, SolsDif, f, year) => { // 
         Mcorr: Mcorr.toNumber()
     }
 }
-// console.log(EcliWest(0.5, 360, 8, 35, 1000))
+// console.log(EcliWest(.5, 360, 8, 35, 1000))
 
 // 潮汐計算 http://blog.sciencenet.cn/blog-684007-733958.html
 // 這方法怎麼能用啊，日月分開計算，兩個明明是綜合影響
@@ -441,7 +441,7 @@ export const Node2Cycle = (Node, Lunar) => {
     if (NodeDenom === 1) {
         Node = big('27.' + Node)
         Lunar = big('29.' + Lunar)
-        Cycle = big(0.5).mul(Node.div(Lunar)).mul(Lunar.div(Lunar.sub(Node))).toFixed(32)
+        Cycle = big(.5).mul(Node.div(Lunar)).mul(Lunar.div(Lunar.sub(Node))).toFixed(32)
     } else {
         Node = frc('27 ' + Node)
         Lunar = frc('29 ' + Lunar)
@@ -458,7 +458,7 @@ export const Cycle2Node = (Cycle, Lunar) => {
     if (CycleDenom === 1) {
         Cycle = big('5.' + Cycle)
         Lunar = big('29.' + Lunar)
-        Node = Lunar.mul(Cycle.div(big.add(0.5, Cycle))).toFixed(32)
+        Node = Lunar.mul(Cycle.div(big.add(.5, Cycle))).toFixed(32)
     } else {
         Cycle = frc('5 ' + Cycle)
         Lunar = frc('29 ' + Lunar)

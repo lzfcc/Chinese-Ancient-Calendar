@@ -138,7 +138,7 @@ const Hushigeyuan_Sub = (LonRaw, p, q, pAnother) => {
     pAnother = pAnother || p
     const Sidereal25 = Sidereal / 4
     const Sidereal50 = Sidereal / 2
-    const Sidereal75 = Sidereal * 0.75
+    const Sidereal75 = Sidereal * .75
     let Lon = LonRaw % Sidereal25
     if ((LonRaw > Sidereal25 && LonRaw <= Sidereal50) || (LonRaw >= Sidereal75 && LonRaw < Sidereal)) {
         Lon = Sidereal25 - Lon
@@ -215,7 +215,7 @@ const HushigeyuanWest = (LonRaw, Sidereal, DE) => { // DE黃赤交角。變量�
     const pi = 3.141592653589793
     const Sidereal25 = Sidereal / 4
     const Sidereal50 = Sidereal / 2
-    const Sidereal75 = Sidereal * 0.75
+    const Sidereal75 = Sidereal * .75
     let Lon = LonRaw % Sidereal25
     if ((LonRaw > Sidereal25 && LonRaw <= Sidereal50) || (LonRaw >= Sidereal75 && LonRaw < Sidereal)) {
         Lon = Sidereal25 - Lon
@@ -325,7 +325,7 @@ export const HushigeyuanMoon = (NodeEclp, MoonNodeEclpDif) => { // v黃白正交
     const sign2 = NodeEclpHalf < Sidereal25 ? -1 : 1 // 初限- 末限+
     let base = Solar / 4
     if (NodeEclp >= Sidereal50) {
-        base = Solar * 0.75
+        base = Solar * .75
     }
     const NodeEqua = base + sign2 * a0 // 白赤正交赤度、月離赤道正交宿度
     const EquaLon = Hushigeyuan(NodeEclp + MoonNodeEclpDif).Eclp2Equa // 月亮赤度a=HN or NF。論文沒說怎麼求，根據頁661，其實就是正交度加上入交之後的積度轉換成赤道

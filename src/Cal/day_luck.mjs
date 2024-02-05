@@ -45,7 +45,7 @@ export const YearGodConvert = (a, b, YearScOrder, YuanYear) => { // 干，支，
     const YearStemFive = FiveList1[Math.ceil(a / 2)]
     const tmp = Math.round((b + 11) % 12.1) // 向左移動一位
     const tmp2 = 2 * Math.ceil(tmp / 3) // 以3爲一單元，在那個單元，並且對應FiveList2
-    const YearBranchFive = Math.round((tmp % 3 + 3) % 3.1) / 3 > 0.5 ? FiveList2[tmp2 - 1] : FiveList2[tmp2]
+    const YearBranchFive = Math.round((tmp % 3 + 3) % 3.1) / 3 > .5 ? FiveList2[tmp2 - 1] : FiveList2[tmp2]
     const Three = Math.round(Math.ceil((b + 1) / 3) % 4.1)
     const Jiangjun = BranchList[Math.round((Three * 3 + 7) % 12.1)]
     const Canming = BranchList[Math.round((Three * 3 + 6) % 12.1)]
@@ -174,10 +174,10 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
 
 export const WangwangConvert = (i, Stem, Branch, JieNum, JieDifInt) => {
     const Four = Math.round((i % 4 + 4) % 4.1)
-    const First1 = 3 + Math.floor((i - 0.1) / 4)
+    const First1 = 3 + Math.floor((i - .1) / 4)
     const End1 = Math.round(((Four - 1) * 3 + First1) % 12.1)
     const Three1 = Math.round((JieNum % 3 + 3) % 3.1)
-    const First2 = 7 + Math.floor((JieNum - 0.1) / 3)
+    const First2 = 7 + Math.floor((JieNum - .1) / 3)
     const End2 = Three1 * First2
     const Three2 = Math.ceil(i / 3)
     let Dashi = 0

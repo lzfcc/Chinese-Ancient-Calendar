@@ -90,7 +90,7 @@ export default (Name, year) => {
             NewmEqua[i] = Accum2Mansion(NewmAvgBare[i], EquaDegAccumList, Name).Mansion
         }
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdSols + year * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
-        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - 0.5) * Lunar + SolsConst).toPrecision(14)) + BuScOrder
+        SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - .5) * Lunar + SolsConst).toPrecision(14)) + BuScOrder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
         SyzygyOrderMod[i] = ~~SyzygyAvgMod[i]
         SyzygySc[i] = ScList[SyzygyOrderMod[i]]

@@ -25,7 +25,7 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
     let { Sidereal, Solar } = Para[Name]
     Sidereal = Sidereal || (Solar || SolarRaw)
     if (Name === 'Shoushi' || Name === 'Shoushi2') {
-        Sidereal += +(~~((year - 1280) / 100) * 0.0001).toFixed(4) // 方向和歲實消長反的
+        Sidereal += +(~~((year - 1280) / 100) * .0001).toFixed(4) // 方向和歲實消長反的
     } // 置中積，以加周應爲通積，滿周天分，（上推往古，每百年消一；下算將來，每百年長一。）去之，不盡，以日周約之爲度，不滿，退約爲分秒。命起赤道虛宿六度外，去之，至不滿宿，卽所求天正冬至加時日𨇠赤道宿度及分秒。（上考者，以周應減中積，滿周天，去之；不盡，以減周天，餘以日周約之爲度；餘同上。如當時有宿度者，止依當時宿度命之。） // 試了一下，按上面這樣區分1281前後，沒有任何變化
     const OriginDeg = DegAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
     Accum -= Type === 11 ? SolsConst : 0
@@ -34,12 +34,12 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
     const Mansion = Deg2Mansion(Deg, DegAccumList)
     /////////昏中《中》頁326
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏=1-(Rise-LightRange)，夜半至明東行度數=Rise-LightRange
-    // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(0.5-夜半漏)*週天-夜半漏（單位1日）
+    // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(.5-夜半漏)*週天-夜半漏（單位1日）
     let MorningDuskstar = ``
     const LightRange = AutoLightRange(Name)
     if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
         const Rise = AutoLon2Lat(SolsDif, SolsDeci, Name).Rise / 100
-        const HalfLight = 0.5 - Rise + LightRange // 半晝漏
+        const HalfLight = .5 - Rise + LightRange // 半晝漏
         const HalfNight = Rise - LightRange
         // 大衍只考慮了昬時距午度
         const MorningstarDeg = (Deg + Sidereal * (1 - HalfLight) + (Type === 7 ? 0 : HalfNight)) % Sidereal
@@ -53,7 +53,7 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
 // console.log(Accum2Mansion(131536, 34, 'Yuanjia', 34.15).Mansion)
 
 // if (Type === 11) {
-//     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + 0.0000001).toPrecision(14)) // 78.8根據命起和週應而來
+//     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + .0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
 // 以下是西曆日躔：
 export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
@@ -69,8 +69,8 @@ export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
     if (MidnToday) {
         const SunVd = MidnMorrow - MidnToday
         const Twilight = twilight(Sobliq, BjLat, (MidnToday + SunVd / 2 + 270) % 360)
-        const MorningstarGong = MidnToday + (Rise - Twilight) * SunVd - (0.5 - Rise + Twilight) * 360
-        const DuskstarGong = MidnToday + (1 - Rise + Twilight) * SunVd + (0.5 - Rise + Twilight) * 360
+        const MorningstarGong = MidnToday + (Rise - Twilight) * SunVd - (.5 - Rise + Twilight) * 360
+        const DuskstarGong = MidnToday + (1 - Rise + Twilight) * SunVd + (.5 - Rise + Twilight) * 360
         const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
         const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
         DuskstarPrint = Morningstar + ' ' + Duskstar
@@ -104,7 +104,7 @@ export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, Name) => { // 朔小分
     let { Rise, Sunrise1 } = AutoLon2Lat(SolsDif, SolsDeci, Name)
     Rise = (Sunrise1 || Rise) / 100
     const LightRange = AutoLightRange(Name)
-    let standard = 0.75
+    let standard = .75
     let Portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
     if (Name === 'Xuanming') {
         Portion = 5 // 夏至0.7405
@@ -114,11 +114,11 @@ export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, Name) => { // 朔小分
     if (['Wuji', 'Tsrengyuan'].includes(Name)) {
         standard = 1.1 - Rise + LightRange
     } else if (Name === 'Chongxuan') {
-        standard = Math.max(0.725, 1 - Rise + LightRange)
+        standard = Math.max(.725, 1 - Rise + LightRange)
     } else if (['LindeB', 'Dayan', 'Qintian', 'Chongtian'].includes(Name)) { // 欽天日入後則進一日
         standard = 1 - Rise // 冬至0.7，夏至0.8
-    } else if (SolsDif > Solar25 && SolsDif < Solar * 0.75) {
-        standard = 0.75 + (Rise - SpringequinoxSunrise) / Portion
+    } else if (SolsDif > Solar25 && SolsDif < Solar * .75) {
+        standard = .75 + (Rise - SpringequinoxSunrise) / Portion
     }
     let NewmPlus = 0
     let Print = ''
@@ -128,7 +128,7 @@ export const AutoNewmPlus = (Deci, SolsDif, SolsDeci, Name) => { // 朔小分
     }
     return { NewmPlus, Print }
 }
-// console.log( AutoNewmPlus (0.75, 191, 0.9, 'LindeA') )
+// console.log( AutoNewmPlus (.75, 191, .9, 'LindeA') )
 
 export const AutoSyzygySub = (Deci, SolsDif, SolsDeci, Name) => {
     const { Type } = Para[Name]
@@ -189,15 +189,15 @@ export const AutoNineOrbit = (NodeAccum, SolsDif, Name) => { // 月行九道法
     return Print
 }
 
-const Exhaustion = () => { // 大同歲實365.2469 設在0.015-0.018之間。365.262566
+const Exhaustion = () => { // 大同歲實365.2469 設在0.015-.018之間。365.262566
     let Sidereal = 365.2579
     let Print = ''
     while (Sidereal < 365.2689) {
-        Sidereal = +(Sidereal + 0.000001).toFixed(6)
+        Sidereal = +(Sidereal + .000001).toFixed(6)
         const Solar = 365 + 9681 / 39616
         const Accum = Solar * 1025699
         const Deg = (121.2599 + Accum) % Sidereal
-        // const DuskstarDeg = (Deg + 0.225 * Sidereal + 0.7) % Sidereal
+        // const DuskstarDeg = (Deg + .225 * Sidereal + .7) % Sidereal
         if (Deg >= 87 && Deg < 87.9) {
             // if (DuskstarDeg >= 183.2599 && DuskstarDeg < 184.2499) {
             Print += ',' + Sidereal // + ':' + Deg}

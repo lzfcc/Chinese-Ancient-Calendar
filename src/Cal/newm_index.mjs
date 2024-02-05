@@ -272,7 +272,7 @@ export default (Name, YearStart, YearEnd) => {
                     let Rise = AutoLon2Lat(NewmAcrSolsDifPrint[i], SolsDeci, Name).Rise / 100
                     let SunEcliFunc = {}, MoonEcliFunc = {}
                     const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(Name, Type)
-                    let isSunEcli = (NewmNodeAccumPrint[i] < 0.9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&
+                    let isSunEcli = (NewmNodeAccumPrint[i] < .9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&
                         ((NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli))
                     let isMoonEcli = (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) &&
                         ((SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli))

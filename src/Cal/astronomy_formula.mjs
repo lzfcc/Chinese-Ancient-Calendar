@@ -9,7 +9,7 @@ export const Equa2EclpFormula = (LonRaw, Name) => { // 公式化的，週天度�
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
     const Solar125 = Solar / 8
-    const Solar75 = Solar * 0.75
+    const Solar75 = Solar * .75
     let Equa2Eclp = 0, Eclp2Equa = 0
     const LonQuar = LonRaw % Solar25
     const Lon = Solar125 - Math.abs(LonQuar - Solar125)
@@ -64,7 +64,7 @@ export const Lon2LatFormula = (LonRaw, Name) => { // 《中國古代曆法》頁
     let LonHalf = LonRaw % Solar50
     const Lon = Solar25 - Math.abs(LonHalf - Solar25)
     let Lat = 0, g = 0
-    if (Name === 'Chongxuan') { // x=195.838,y=0. x=138.478,y=35.267極值。x=91.3, y=23.996
+    if (Name === 'Chongxuan') { // x=195.838,y=. x=138.478,y=35.267極值。x=91.3, y=23.996
         // g = (184 / 50025) * Lon ** 2 - (16 / (50025 * 3335)) * Lon ** 4
         g = big(184).div(50025).mul(big(Lon).pow(2)).sub(big(16).div(big.mul(50025, 3335)).mul(big(Lon).pow(4))).toNumber()
         if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = 23.9141 - g
@@ -170,8 +170,8 @@ export const Lon2DialFormula = (DegRaw, Name) => { // 崇玄的NodeAccum沿用�
             // Dial = 1.57 + 1e-6 * (545.25 * Deg ** 2 - (3827 / 2481) * Deg ** 2 + (5 / 827) * Deg ** 4)
             Dial = big(1.57).add(big(1e-6).mul(big(545.25).mul(Deg.pow(2)).sub(big(3827 / 2481).mul(Deg.pow(2))).add(big(5 / 827).mul(Deg.pow(4)))))
         } else {
-            // Dial = 1.57 + 1e-6 * (510.09274 * Deg ** 2 - 1.213548 * Deg ** 3 + 0.01034059 * Deg ** 4 - 0.0000403063 * Deg ** 5)
-            Dial = big(1.57).add(big(1e-6).mul(big(510.09274).mul(Deg.pow(2)).sub(big(1.213548).mul(Deg.pow(3))).add(big(0.01034059).mul(Deg.pow(4))).sub(big(0.0000403063).mul(Deg.pow(5)))))
+            // Dial = 1.57 + 1e-6 * (510.09274 * Deg ** 2 - 1.213548 * Deg ** 3 + .01034059 * Deg ** 4 - .0000403063 * Deg ** 5)
+            Dial = big(1.57).add(big(1e-6).mul(big(510.09274).mul(Deg.pow(2)).sub(big(1.213548).mul(Deg.pow(3))).add(big(.01034059).mul(Deg.pow(4))).sub(big(.0000403063).mul(Deg.pow(5)))))
         }
         Dial = Dial.toNumber()
     } else if (Name === 'Jiyuan') {
@@ -221,7 +221,7 @@ export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEcl
     //     if (NodeAccum <= Node50 && NodeEclpLon < Solar50) {
     //         EclpWhiteDif *= 1.125
     //     } else {
-    //         EclpWhiteDif *= 0.875
+    //         EclpWhiteDif *= .875
     //     }
     //     EquaWhiteDif = EclpWhiteDif * NodeEclpLonRev / Quadrant // 同名：赤白=黃赤+黃白，異名：赤白=黃赤-黃白 ？？            
     // }
@@ -229,7 +229,7 @@ export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEcl
     let EclpWhiteDif = Math.abs(AutoEqua2Eclp(MoonNodeDifRev, Name).Equa2EclpDif) / 2 // AutoEqua2Eclp(MoonEclpLonRev, Name)
     if (Name === 'Jiyuan') {
         if (NodeEclpLon < Solar50) EclpWhiteDif *= 1.125
-        else EclpWhiteDif *= 0.875
+        else EclpWhiteDif *= .875
     }
     EclpWhiteDif *= NodeEclpLonRev / Quadrant
     return EclpWhiteDif

@@ -6,7 +6,7 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 // /////乾象魏晉黃赤轉換//////
 // const Equa2EclpTable1 = (LonRaw, Sidereal) => {
 //     let Lon = LonRaw % (Sidereal / 4)
-//     if ((LonRaw > Sidereal / 4 && LonRaw <= Sidereal / 2) || (LonRaw >= Sidereal * 0.75 && LonRaw < Sidereal)) {
+//     if ((LonRaw > Sidereal / 4 && LonRaw <= Sidereal / 2) || (LonRaw >= Sidereal * .75 && LonRaw < Sidereal)) {
 //         Lon = Sidereal / 4 - Lon
 //     }
 //     let EclpLon = 0
@@ -31,7 +31,7 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 //         }
 //     }
 //     const Equa2EclpDif = LonDifAccum[LonOrder] + (LonDifAccum[LonOrder + 1] - LonDifAccum[LonOrder]) * (Lon - RangeAccum[LonOrder]) / (RangeAccum[LonOrder + 1] - RangeAccum[LonOrder]) // 線性內插
-//     if ((LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * 0.75)) {
+//     if ((LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * .75)) {
 //         EclpLon = LonRaw - Equa2EclpDif
 //     } else {
 //         EclpLon = LonRaw + Equa2EclpDif
@@ -122,7 +122,7 @@ export const Equa2EclpTable = (LonRaw, Name) => {
     }
     let Equa2EclpDif = LonDifAccum[LonOrder] + (LonDifAccum[LonOrder + 1] - LonDifAccum[LonOrder]) * (Lon - RangeAccum[LonOrder]) / (RangeAccum[LonOrder + 1] - RangeAccum[LonOrder]) // 一次內插
     let sign1 = 1
-    if ((LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * 0.75)) {
+    if ((LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * .75)) {
         sign1 = -1
     }
     Equa2EclpDif *= sign1
@@ -173,7 +173,7 @@ export const Lon2LatTable2 = (SolsDif, Name) => {
         for (let i = 0; i <= 23; i++) {
             const TermAcrRaw = AcrTermList[i]
             const TermAcrDeci = deci(TermAcrRaw)
-            TermAcrNoonDeciDif[i] = TermAcrDeci - 0.5 // 定氣與正午的距離
+            TermAcrNoonDeciDif[i] = TermAcrDeci - .5 // 定氣與正午的距離
         }
         const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
         const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDeciDif[TermNum]
@@ -198,7 +198,7 @@ export const Lon2LatTable2 = (SolsDif, Name) => {
         for (let i = 0; i <= 23; i++) {
             const TermAvgRaw = i * HalfTermLeng
             const TermAvgDeci = deci(TermAvgRaw) // 各平氣小數點
-            TermAvgNoonDeciDif[i] = TermAvgDeci - 0.5 // 平氣與正午的距離
+            TermAvgNoonDeciDif[i] = TermAvgDeci - .5 // 平氣與正午的距離
         }
         const nAvg = 1 + (TermDif + TermAvgNoonDeciDif[TermNum]) / TermRange
         if (Type === 10) { // 重修大明的日出分是三次內插
@@ -235,7 +235,7 @@ export const Lon2LatTable2 = (SolsDif, Name) => {
         // const delta3 = delta1 + delta2 // 泛初率
         // const delta4 = (delta2 / TermRange) / 2 // 限差。不/2是別差
         // const Corr = delta3 + delta4 // 定差
-        // const TermAcrDial = DialList[TermNum] - (TermAvgDeci[TermNumRaw] - 0.5) * Corr // 恆氣日中定影
+        // const TermAcrDial = DialList[TermNum] - (TermAvgDeci[TermNumRaw] - .5) * Corr // 恆氣日中定影
         // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式              
     }
     // 唐系、應天、乾元。本來寫了個去極度差分表，太麻煩，還不如直接用招差
@@ -289,7 +289,7 @@ const MoonLonTable = (SolsDif, NodeAccumRaw, Name) => { ///////赤白轉換/////
     if (Name === 'Huangji') { // 麟德沒有
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2.94, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》頁60
     } else if (['Dayan', 'Xuanming', 'Qintian', 'Yingtian'].includes(Name)) {
-        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0.94, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, .94, 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
     let LonDifDifInitial = 0
     let LonDifDifChange = 0
@@ -351,7 +351,7 @@ const MoonLonTable = (SolsDif, NodeAccumRaw, Name) => { ///////赤白轉換/////
         EquaWhiteDif = (Lon - RangeAccum[LonOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
     } else if (Name === 'Yingtian') {
         const Hou = ~~(SolsDifHalf / (Solar / 72)) / 18
-        EquaWhiteDif = (Lon - RangeAccum[LonOrder]) * (0.5 - 5 * Hou / 3636)
+        EquaWhiteDif = (Lon - RangeAccum[LonOrder]) * (.5 - 5 * Hou / 3636)
     }
     let EquaLon = 0
     // 大衍：（黃白差）距半交前後各九限，以差數爲減；距正交前後各九限，以差數爲加

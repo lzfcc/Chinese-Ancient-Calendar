@@ -30,7 +30,7 @@ const Sn4Sub = (n, p) => {
 
 export const Sn4 = (n, p) => { // 四角垛
     n = parseInt(n)
-    // let S = (big(big(n).mul(big(n).add(1)).mul(big(n).add(0.5))).mul(1 / 3)).toFixed(10).toString()
+    // let S = (big(big(n).mul(big(n).add(1)).mul(big(n).add(.5))).mul(1 / 3)).toFixed(10).toString()
     p = parseInt(p)
     // 注釋中的似乎有問題
     // let S = big(1)
@@ -265,7 +265,7 @@ export const MeasureSols = List => {
     let l = List[List.indexOf(Small) - 1]
     let r = List[List.indexOf(Big) - 1]
     let mid = (l + r) / 2
-    const eps = '0.00000000000000000001'
+    const eps = '.00000000000000000001'
     while (big.sub(r, l).abs().gt(eps)) {
         mid = big.add(l, r).div(2)
         let fl = Interpolate3_big(mid.sub(eps), List).f

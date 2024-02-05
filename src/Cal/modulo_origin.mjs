@@ -378,5 +378,5 @@ export const OriginModulo = (Denom, SolarFrac, OriginConstRaw, FirstConstRaw) =>
 // SolarNumer*Origin≡OriginConst (mod 60*Denom)
 // SolarNumer*Origin≡FirstConst (mod  LunarFrac )
 // N1≡ R0(mod 60) // N0<10**8
-// TN0≡ R1(mod 60 À) // R1，R2誤差<=0.01 // 1刻
+// TN0≡ R1(mod 60 À) // R1，R2誤差<=.01 // 1刻
 // TN0≡ R2(mod B)
