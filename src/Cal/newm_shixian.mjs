@@ -1,6 +1,6 @@
 // 可參考廖育棟的時憲曆日月氣朔網站 http://ytliu.epizy.com/Shixian/index_chinese.html ，有一分很漂亮的公式說明。
 import Para from './para_calendars.mjs'
-import { ScList, deci } from './para_constant.mjs'
+import { ScList, deci, fix } from './para_constant.mjs'
 import { Gong2Mansion } from './astronomy_other.mjs'
 const abs = X => Math.abs(X)
 const sign = X => Math.sign(X)
@@ -166,7 +166,7 @@ const sunCorrJiazi = Xraw => {
     const Wuchen = 2 * sin(Xt) * Rdif
     return f2(Xraw) * atan(Wuchen / Jiawu)
 }
-// console.log(sunCorrJiazi(140))
+// console.log(sunCorrJiazi(198 + 40 / 60 + 57.4 / 3600)) // -0°38′48.49″=0.6468027778 // https://zhuanlan.zhihu.com/p/511793561
 export const sunShixian = (Name, SunRoot, SperiRoot, Sd) => {
     const { SunAvgVd, SperiConst, SperiVd } = Para[Name]
     const AvgSun = SunRoot + Sd * SunAvgVd // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
@@ -244,7 +244,6 @@ export const moonJiazi = (MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) =>
     const AvgWhitelongi = t(AvgMoon - AvgNode) // 平望太陰交周
     return { AcrNode, Whitegong, Whitelongi, MoonGong, MoonLon, MoonLat, Mobliq, Morb, Corr1: flag1 * Corr1, AvgWhitelongi }
 }
-// console.log(moonJiazi())
 export const moonGuimao = (MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong, Speri, Sorb) => {
     const { MoonAvgVd, MapoVd, NodeVd } = Para['Guimao']
     const SunCorrMax = 1.93694444444444 // 太陽最大均數1 + 56 / 60 + 13 / 3600
@@ -538,7 +537,7 @@ export const N4 = (Name, Y) => {
         const SdStart = startEnd(SdBefStartAsm, false)
         //////// 【十一】復圓前設時兩心視距
         const SdEnd = startEnd(SdBefEndAsm, true)
-        return { Start: deci(SdStart).toFixed(4).slice(2, 6), Total: deci(SdAcr).toFixed(4).slice(2, 6), End: deci(SdEnd).toFixed(4).slice(2, 6), Magni }
+        return { Start: fix(deci(SdStart)), Total: fix(deci(SdAcr)), End: fix(deci(SdEnd)), Magni }
     }
     const moonEcliGuimao = NowSd => {
         //////// 【一】實望用時
@@ -590,7 +589,7 @@ export const N4 = (Name, Y) => {
         const TotalMoonEquaLon = ~~(Math.ceil(TotalMoonLon / 90) / 2) * 180 + atan(cos(ObliqMoonEqua) * tanArcMoonEquinox) // 太陰距二分赤道經度
         const TotalMoonEquaGong = (TotalMoonEquaLon + 90) % 360
         const TotalMoonEquaLat = atan(tan(ObliqMoonEqua) * sin(t3(TotalMoonEquaLon)))
-        return { Start: deci((Total - StarttoendTime + 1) % 1).toFixed(4).slice(2, 6), End: deci(Total + StarttoendTime).toFixed(4).slice(2, 6), Total: Total.toFixed(4).slice(2, 6), Magni, TotalMoonLon, TotalMoonLat, TotalMoonEquaLon, TotalMoonEquaLat }
+        return { Start: fix(deci((Total - StarttoendTime + 1) % 1)), End: fix(deci(Total + StarttoendTime)), Total: fix(Total), Magni, TotalMoonLon, TotalMoonLat, TotalMoonEquaLon, TotalMoonEquaLat }
     }
     const iteration = (X, step, isNewm) => { // 後編迭代求實朔實時
         let { Speri: SperiBef, Sorb: SorbBef, SunCorr: SunCorrBef, SunLon: SunLonBef, SunGong: SunGongBef } = sunShixian(Name, SunRoot, SperiRoot, X - step) // 如實望泛時爲丑正二刻，則以丑正初刻爲前時，寅初初刻爲後時——為什麼不說前後一時呢
@@ -608,7 +607,7 @@ export const N4 = (Name, Y) => {
         const TermGong = ((2 * i + (isMid ? 2 : 1)) * 15) % 360
         const TermSd = (i + (isMid ? 1 : .5)) * TermLeng - (1 - SolsDeci)
         const TermSc = ScList[(SolsmorScOrder + ~~TermSd) % 60]
-        const TermDeci = deci(TermSd).toFixed(4).slice(2, 6)
+        const TermDeci = fix(deci(TermSd))
         const TermSperiMidn = SperiConst + SperiRoot + SperiVd * ~~TermSd
         const TermSunCorr = sunCorrGuimao(TermGong - TermSperiMidn)
         const Acr0TermSd = TermSd - TermSunCorr / SunAvgVd
@@ -622,9 +621,9 @@ export const N4 = (Name, Y) => {
         const Tod = SunTod.SunGong
         const Mor = SunMor.SunGong
         AcrTermSd = ~~Acr0TermSd + (TermGong - Tod + (TermGong === 0 ? 360 : 0)) / (Mor - Tod)
-        const NowTermSd = AcrTermSd + timeAvg2Real(Sobliq, SunTod.SunCorr, SunTod.SunLon)
+        const NowTermSd = AcrTermSd + timeAvg2Real(Sobliq, SunTod.SunCorr, (TermGong + 270) % 360)
         const TermAcrSc = ScList[(SolsmorScOrder + ~~NowTermSd) % 60]
-        const TermAcrDeci = deci(NowTermSd).toFixed(4).slice(2, 6)
+        const TermAcrDeci = fix(deci(NowTermSd), 3)
         const TermEclp = Gong2Mansion(Name, Y, TermGong).Mansion
         return { TermSc, TermDeci, NowTermSd, TermAcrSc, TermAcrDeci, TermEclp }
     }
@@ -636,7 +635,7 @@ export const N4 = (Name, Y) => {
             const AvgSd = ChouSd + (i + (isNewm ? 0 : .5)) * Lunar // 各月平朔望到冬至次日子正日分
             const AvgSdMidn = ~~AvgSd
             AvgSc[i] = ScList[(SolsmorScOrder + AvgSdMidn) % 60]
-            AvgDeci[i] = deci(AvgSd).toFixed(4).slice(2, 6)
+            AvgDeci[i] = fix(deci(AvgSd))
             let AcrSd = 0, AcrSunGong = 0, AcrWhitelongi = 0, AcrSunCorr = 0
             let Acr0SdMidn = AvgSdMidn
             if (Name === 'Guimao') {
@@ -708,7 +707,7 @@ export const N4 = (Name, Y) => {
             }
             const AcrSunLon = (AcrSunGong + 90) % 360
             NowSd[i] = AcrSd + timeAvg2Real(Sobliq, AcrSunCorr, AcrSunLon) // 癸卯曆書用的實朔實時用時
-            NowDeci[i] = deci(NowSd[i]).toFixed(4).slice(2, 6)
+            NowDeci[i] = fix(deci(NowSd[i]), 3)
             NowSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
             Eclp[i] = Gong2Mansion(Name, Y, AcrSunGong).Mansion
             //////// 交食
@@ -743,7 +742,7 @@ export const N4 = (Name, Y) => {
                 Term1AcrDeci[i] = Func1.TermAcrDeci
                 Term1Eclp[i] = Func1.TermEclp
             }
-            Acr0Deci[i] = deci(Acr0Deci[i]).toFixed(4).slice(2, 6)
+            Acr0Deci[i] = fix(deci(Acr0Deci[i]), 3)
         }
         //////// 置閏
         LeapNumTerm = LeapNumTerm || 0
@@ -767,10 +766,10 @@ export const N4 = (Name, Y) => {
             if (Ecli[i]) {
                 if (isNewm) {
                     EcliPrint[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                    EcliPrint[i] += '出' + Rise[i].toFixed(4).slice(2, 6) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 入' + (1 - Rise[i]).toFixed(4).slice(2, 6)
+                    EcliPrint[i] += '出' + fix(Rise[i]) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 入' + fix(1 - Rise[i])
                 } else {
                     EcliPrint[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                    EcliPrint[i] += '入' + (1 - Rise[i]).toFixed(4).slice(2, 6) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 出' + Rise[i].toFixed(4).slice(2, 6)
+                    EcliPrint[i] += '入' + fix(1 - Rise[i]) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 出' + fix(Rise[i])
                 }
                 if (Ecli[i].Magni >= 99) {
                     NowSc[i] += `<span class='eclipse-symbol'>●</span>`
@@ -804,6 +803,7 @@ export const N4 = (Name, Y) => {
     }
 }
 // console.log(N4("Guimao", 1762)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
+// console.log(N4("Jiazi", 1921))
 // console.log(sunShixian(Name,SunRoot, SperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // Sorb = 298 + 6 / 60 + 9.329 / 3600

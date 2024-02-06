@@ -1,7 +1,6 @@
 import Para from './para_calendars.mjs'
-import { ScList, AutoDegAccumList, deci } from './para_constant.mjs'
+import { ScList, AutoDegAccumList, deci, fix } from './para_constant.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
-import { ConstWest } from './astronomy_west.mjs'
 import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub } from './astronomy_other.mjs'
 import { AutoEqua2Eclp } from './astronomy_bind.mjs'
 // const cal = (Name, Y) => {
@@ -161,13 +160,13 @@ export default (Name, Y) => {
                     Deci1[i] = Deci[i]
                 } else if (Type < 11) {
                     Deci[i] = deci(AcrRaw[i])
-                    Deci2[i] = Deci[i].toFixed(4).slice(2, 6)
+                    Deci2[i] = fix(Deci[i], 3)
                     if (Tcorr1) {
                         Deci1[i] = deci(AvgRaw[i] + Tcorr1)
                     }
                 } else if (Type === 11) {
                     Deci[i] = deci(AcrRaw[i])
-                    Deci3[i] = Deci[i].toFixed(4).slice(2, 6)
+                    Deci3[i] = fix(Deci[i], 3)
                 }
             } else Deci[i] = AvgDeci[i]
             let NewmPlus = 0, SyzygySub = 0
@@ -189,12 +188,12 @@ export default (Name, Y) => {
                 TermAvgRaw[i] = SolsAccum + TermAvgSolsDif[i]
                 const tmp = ((TermAvgRaw[i] + isExcl + ScConst) % 60 + 60) % 60
                 TermSc[i] = ScList[~~tmp]
-                TermDeci[i] = deci(tmp).toFixed(4).slice(2, 6)
+                TermDeci[i] = fix(deci(tmp))
                 Term1AvgSolsDif[i] = (i + ZhengSolsDif - 1.5) * TermLeng
                 Term1AvgRaw[i] = SolsAccum + Term1AvgSolsDif[i]
                 const tmp1 = ((Term1AvgRaw[i] + isExcl + ScConst) % 60 + 60) % 60
                 Term1Sc[i] = ScList[~~tmp1]
-                Term1Deci[i] = deci(tmp1).toFixed(4).slice(2, 6)
+                Term1Deci[i] = fix(deci(tmp1))
                 if (Type >= 5 && AcrTermList) {
                     // 定中氣
                     const TermNum3 = 2 * (i + ZhengSolsDif - 1)
@@ -205,7 +204,7 @@ export default (Name, Y) => {
                     TermAcrRaw[i] = SolsAccum + TermAcrSolsDif[i] // 定氣距冬至+中積                
                     const tmp2 = ((TermAcrRaw[i] + isExcl + ScConst) % 60 + 60) % 60
                     TermAcrSc[i] = ScList[~~tmp2]
-                    TermAcrDeci[i] = deci(tmp2).toFixed(4).slice(2, 6)
+                    TermAcrDeci[i] = fix(deci(tmp2), 3)
                     // 定節氣
                     const TermNum2 = 2 * (i + ZhengSolsDif - 1) - 1
                     let Plus1 = 0
@@ -215,7 +214,7 @@ export default (Name, Y) => {
                     Term1AcrRaw[i] = SolsAccum + Term1AcrSolsDif[i] // 定氣距冬至+中積                
                     const tmp3 = ((Term1AcrRaw[i] + isExcl + ScConst) % 60 + 60) % 60
                     Term1AcrSc[i] = ScList[~~tmp3]
-                    Term1AcrDeci[i] = deci(tmp3).toFixed(4).slice(2, 6)
+                    Term1AcrDeci[i] = fix(deci(tmp3), 3)
                 }
                 if (MansionRaw) {
                     TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, Name, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
@@ -254,7 +253,7 @@ export default (Name, Y) => {
             }
             NodeAccumNight[i] += NewmPlus // 給曆書用，不知道這樣可不可以
             if (Tcorr1) {
-                Deci1[i] = Deci1[i].toFixed(4).slice(2, 6)
+                Deci1[i] = fix(Deci1[i], 3)
             }
             AcrSolsDif[i] = SolsDif[i] + Tcorr[i]
         }
@@ -307,7 +306,7 @@ export default (Name, Y) => {
         NodeAccumNight: NewmNodeAccumNight,
         AnomaAccumNight: NewmAnomaAccumNight,
         AcrSolsDif: NewmAcrSolsDif,
-    } = main(1)
+    } = main(true)
     const {
         Sc: SyzygySc,
         Deci: SyzygyDeci,
@@ -316,7 +315,7 @@ export default (Name, Y) => {
         AnomaAccum: SyzygyAnomaAccum,
         SolsDif: SyzygySolsDif,
         AcrSolsDif: SyzygyAcrSolsDif,
-    } = main(0)
+    } = main(false)
     const LeapSurAcr = ZhangRange ? (LeapSurAvg - NewmTcorr[1] * ZhangRange / Lunar + ZhangRange) % ZhangRange : LeapSurAvg - NewmTcorr[1]
     return {
         LeapLimit, OriginYear, JiYear, JiScOrder, SolsAccum, AccumPrint,

@@ -3,7 +3,7 @@ import N2 from './newm.mjs'
 // import N3 from './newm_huihui.mjs'
 import { N4 } from './newm_shixian.mjs'
 import Para from './para_calendars.mjs'
-import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB } from './para_constant.mjs'
+import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB, fix } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
@@ -278,19 +278,19 @@ export default (Name, YearStart, YearEnd) => {
                         ((NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli))
                     let isMoonEcli = (SyzygyNodeAccumPrint[i] < 1.5 || (SyzygyNodeAccumPrint[i] > 12.1 && SyzygyNodeAccumPrint[i] < 15.1) || SyzygyNodeAccumPrint[i] > 25.7) &&
                         ((SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli))
-                    const Sunset = (1 - Rise).toFixed(4).slice(2, 6)
+                    const Sunset = fix(1 - Rise)
                     if (Name === 'Mingtian') {
                         isSunEcli = (NewmDeciPrint[i] > Rise - RangeSunEcli) && (NewmDeciPrint[i] < 1 - Rise + RangeSunEcli)
                         isMoonEcli = (SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)
                     }
-                    Rise = Rise.toFixed(4).slice(2, 6)
+                    Rise = fix(Rise)
                     if (isSunEcli) { // 這些數字根據大統，再放寬0.3
                         SunEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSolsDifPrint[i], NewmSolsDifPrint[i], 1, Name, NoleapMon, LeapNumTerm, SolsAccum)
                         const SunEcliStatus = SunEcliFunc.Status
                         let NewmMagni = 0
-                        const NewmStartDeci = SunEcliFunc.StartDeci ? SunEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
-                        const NewmTotalDeci = SunEcliFunc.TotalDeci ? SunEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
-                        const NewmEndDeci = SunEcliFunc.EndDeci ? SunEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
+                        const NewmStartDeci = SunEcliFunc.StartDeci ? fix(SunEcliFunc.StartDeci) : 0
+                        const NewmTotalDeci = SunEcliFunc.TotalDeci ? fix(SunEcliFunc.TotalDeci) : 0
+                        const NewmEndDeci = SunEcliFunc.EndDeci ? fix(SunEcliFunc.EndDeci) : 0
                         if (SunEcliStatus) {
                             NewmMagni = SunEcliFunc.Magni.toFixed(2)
                             SunEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
@@ -308,9 +308,9 @@ export default (Name, YearStart, YearEnd) => {
                         MoonEcliFunc = AutoEclipse(SyzygyNodeAccumPrint[i], SyzygyAnomaAccumPrint[i], SyzygyDeciPrint[i], SyzygyAvgDeciPrint[i], SyzygyAcrSolsDifPrint[i], SyzygySolsDifPrint[i], 0, Name, NoleapMon, LeapNumTerm, SolsAccum)
                         const MoonEcliStatus = MoonEcliFunc.Status
                         let SyzygyMagni = 0
-                        const SyzygyStartDeci = MoonEcliFunc.StartDeci ? MoonEcliFunc.StartDeci.toFixed(4).slice(2, 6) : 0
-                        const SyzygyTotalDeci = MoonEcliFunc.TotalDeci ? MoonEcliFunc.TotalDeci.toFixed(4).slice(2, 6) : 0
-                        const SyzygyEndDeci = MoonEcliFunc.EndDeci ? MoonEcliFunc.EndDeci.toFixed(4).slice(2, 6) : 0
+                        const SyzygyStartDeci = MoonEcliFunc.StartDeci ? fix(MoonEcliFunc.StartDeci) : 0
+                        const SyzygyTotalDeci = MoonEcliFunc.TotalDeci ? fix(MoonEcliFunc.TotalDeci) : 0
+                        const SyzygyEndDeci = MoonEcliFunc.EndDeci ? fix(MoonEcliFunc.EndDeci) : 0
                         if (MoonEcliStatus) {
                             SyzygyMagni = MoonEcliFunc.Magni.toFixed(2)
                             MoonEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
@@ -327,9 +327,9 @@ export default (Name, YearStart, YearEnd) => {
                     }
                 }
                 for (let i = 0; i < NewmDeciPrint.length; i++) {
-                    NewmDeciPrint[i] = NewmDeciPrint[i].toFixed(4).slice(2, 6)
-                    NewmAvgDeciPrint[i] = NewmAvgDeciPrint[i].toFixed(4).slice(2, 6)
-                    SyzygyDeciPrint[i] = SyzygyDeciPrint[i].toFixed(4).slice(2, 6)
+                    NewmDeciPrint[i] = fix(NewmDeciPrint[i])
+                    NewmAvgDeciPrint[i] = fix(NewmAvgDeciPrint[i])
+                    SyzygyDeciPrint[i] = fix(SyzygyDeciPrint[i], 3)
                 }
             }
         } else if (Type === 13) {
