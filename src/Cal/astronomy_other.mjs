@@ -56,7 +56,7 @@ export const Accum2Mansion = (Accum, DegAccumList, Name, SolsDif, SolsDeci, year
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + .0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
 // 以下是西曆日躔：
-export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
+export const Gong2Mansion = (Name, Y, Gong, Tod, Morrow, Rise) => {
     const { Solar, MansionConst, Sobliq, BjLat } = Para[Name]
     const EclpDegAccumList = AutoDegAccumList(Name, Y, true)
     let Mansion = '', DuskstarPrint = ''
@@ -66,11 +66,11 @@ export const Gong2Mansion = (Name, Y, Gong, MidnToday, MidnMorrow, Rise) => {
         Gong *= Solar / 360
         Mansion = Deg2Mansion((Gong + Solar) % Solar, EclpDegAccumList)
     }
-    if (MidnToday) {
-        const SunVd = MidnMorrow - MidnToday
-        const Twilight = twilight(Sobliq, BjLat, (MidnToday + SunVd / 2 + 270) % 360)
-        const MorningstarGong = MidnToday + (Rise - Twilight) * SunVd - (.5 - Rise + Twilight) * 360
-        const DuskstarGong = MidnToday + (1 - Rise + Twilight) * SunVd + (.5 - Rise + Twilight) * 360
+    if (Tod) {
+        const SunVd = Morrow - Tod
+        const Twilight = twilight(Sobliq, BjLat, (Tod + SunVd / 2 + 270) % 360)
+        const MorningstarGong = Tod + (Rise - Twilight) * SunVd - (.5 - Rise + Twilight) * 360
+        const DuskstarGong = Tod + (1 - Rise + Twilight) * SunVd + (.5 - Rise + Twilight) * 360
         const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
         const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EclpDegAccumList, 1)
         DuskstarPrint = Morningstar + ' ' + Duskstar

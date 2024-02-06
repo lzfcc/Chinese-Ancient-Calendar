@@ -26,21 +26,6 @@ export default (Name, YearStart, YearEnd) => {
         let { LeapNumTerm, NewmInt, NewmStart, NewmEnd, TermStart, TermEnd } = ThisYear
         NewmInt = NewmInt || []
         const TermName = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], TermEclp = [], TermDuskstar = [], Term1Name = [], Term1Sc = [], Term1Deci = [], Term1Equa = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Eclp = []
-        if (Type > 1) {
-            NewmStart = 0
-            NewmEnd = LeapNumTerm ? 1 : 0
-            TermEnd = NewmEnd
-            if (PrevYear.LeapNumTerm) {
-                LeapNumTerm = 0
-                // 可能出現去年不閏而閏，於是今年正月和去年十二月重疊
-                if ((PrevYear.NewmAvgSc[13]) === ThisYear.NewmAvgSc[1]) { // 會出現最末位差一點的情況
-                    NewmStart = 1
-                    NewmEnd = 1
-                    TermEnd = 0
-                }
-            }
-            TermStart = 0
-        }
         let specialStart = 0, specialNewmSyzygyEnd = 0
         if (Type === 1) {
             if ((isTermLeap && NextYear.TermSc[1] === '') || (!isTermLeap && NextYear.TermSc[SolsMon] === '')) {
@@ -56,7 +41,22 @@ export default (Name, YearStart, YearEnd) => {
             NewmEnd += specialNewmSyzygyEnd
             TermStart += specialStart
             LeapNumTerm -= NewmStart
+        } else {
+            NewmStart = 0
+            NewmEnd = LeapNumTerm ? 1 : 0
+            TermEnd = NewmEnd
+            if (PrevYear.LeapNumTerm) {
+                LeapNumTerm = 0
+                // 可能出現去年不閏而閏，於是今年正月和去年十二月重疊
+                if ((PrevYear.NewmAvgSc[13]) === ThisYear.NewmAvgSc[1]) { // 會出現最末位差一點的情況
+                    NewmStart = 1
+                    NewmEnd = 1
+                    TermEnd = 0
+                }
+            }
+            TermStart = 0
         }
+        // 調整節氣
         if (Type === 1) {
             TermName = ThisYear.TermName
             TermSc = ThisYear.TermSc
@@ -212,7 +212,7 @@ export default (Name, YearStart, YearEnd) => {
             ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmStart] - NewmInt[0]) * Denom).toPrecision(5))
         }
         const MonthPrint = MonthName.slice(1)
-        let NewmScPrint = [], NewmDeci3Print = [], NewmDeci2Print = [], NewmDeci1Print = [], NewmDeciAcrPrint = []
+        let NewmScPrint = [], NewmDeci3Print = [], NewmDeci2Print = [], NewmDeci1Print = [], NewmAcrDeciPrint = []
         if (Type >= 2) {
             NewmScPrint = NewmSlice(ThisYear.NewmSc)
             if (Type <= 10 && ThisYear.NewmDeci1) { // 線性內插
@@ -220,7 +220,7 @@ export default (Name, YearStart, YearEnd) => {
             } else if (Type === 11) { // 三次內插
                 NewmDeci3Print = NewmSlice(ThisYear.NewmDeci3)
             } else if (Type === 13) { // 實朔實時
-                NewmDeciAcrPrint = NewmSlice(ThisYear.NewmDeci)
+                NewmAcrDeciPrint = NewmSlice(ThisYear.NewmDeci)
             }
         }
         if (Type >= 5 && Type <= 10 && ThisYear.NewmDeci2) {
@@ -230,6 +230,8 @@ export default (Name, YearStart, YearEnd) => {
         const NewmEclpPrint = NewmEclp ? NewmSlice(NewmEclp) : undefined
         const SyzygyScPrint = NewmSlice(ThisYear.SyzygySc)
         const SyzygyDeciPrint = NewmSlice(ThisYear.SyzygyDeci)
+        const NewmAcr0DeciPrint = ThisYear.NewmAcr0Deci ? NewmSlice(ThisYear.NewmAcr0Deci) : undefined
+        const SyzygyAcr0DeciPrint = ThisYear.SyzygyAcr0Deci ? NewmSlice(ThisYear.SyzygyAcr0Deci) : undefined
         let NewmDeciPrint = [], TermNamePrint = [], TermScPrint = [], TermDeciPrint = [], TermAcrScPrint = [], TermAcrDeciPrint = [], TermEquaPrint = [], TermEclpPrint = [], TermDuskstarPrint = [], Term1NamePrint = [], Term1ScPrint = [], Term1DeciPrint = [], Term1EquaPrint = [], Term1AcrDeciPrint = [], Term1AcrScPrint = [], Term1EclpPrint = []
         TermNamePrint = TermSlice(TermName)
         TermScPrint = TermSlice(TermSc)
@@ -409,8 +411,8 @@ export default (Name, YearStart, YearEnd) => {
         }
         return {
             Era, YearInfo, MonthPrint,
-            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmDeciAcrPrint, NewmEquaPrint, NewmEclpPrint,
-            SyzygyScPrint, SyzygyDeciPrint,
+            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmAcr0DeciPrint, NewmAcrDeciPrint, NewmEquaPrint, NewmEclpPrint,
+            SyzygyScPrint, SyzygyAcr0DeciPrint, SyzygyDeciPrint,
             Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1EquaPrint, Term1EclpPrint,
             TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
             ////////////// 曆書
@@ -447,4 +449,4 @@ export default (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Datong', 1760, 1760))
+// console.log(Index('Jiazi', 1760, 1760))

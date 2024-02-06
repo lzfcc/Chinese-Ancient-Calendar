@@ -550,7 +550,9 @@ tr.SyzygyDeciPrint {
 tr.NewmDeci1Print th,
 tr.NewmDeci2Print th,
 tr.NewmDeci3Print th,
-tr.NewmDeciAcrPrint th {
+tr.NewmAcr0DeciPrint th,
+tr.NewmAcrDeciPrint th,
+tr.SyzygyAcr0DeciPrint th {
   font-weight: normal;
 }
 

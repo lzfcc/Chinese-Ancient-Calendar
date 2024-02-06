@@ -22,15 +22,16 @@ const AutoCal = year => {
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmDeciAcrPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,Term1AcrSc, Term1AcrDeci
+        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmAcr0DeciPrint, NewmAcrDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint, Term1AcrSc, Term1AcrDeci
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
     if (NewmScPrint.length > 0) {
         Print += '**定朔** ' + NewmScPrint.join(' ') + `\n`
-        NewmDeciAcrPrint
-        if (NewmDeciAcrPrint.length > 0) {
-            Print += '實時 ' + NewmDeciAcrPrint.join(' ') + `\n`
+        NewmAcrDeciPrint
+        if (NewmAcrDeciPrint.length > 0) {
+            Print += '平泛 ' + NewmAcr0DeciPrint.join(' ') + `\n`
+            Print += '視實 ' + NewmAcrDeciPrint.join(' ') + `\n`
         }
         if (NewmDeci3Print.length > 0) {
             Print += '三次 ' + NewmDeci3Print.join(' ') + `\n`
@@ -56,7 +57,7 @@ const PrintNewm = result => {
         Print += '**節氣** ' + Term1AcrSc.join(' ') + `\n`
         Print += '**分** ' + Term1AcrDeci.join(' ') + `\n`
     }
-    if (NewmDeciAcrPrint.length > 0) {
+    if (NewmAcrDeciPrint.length > 0) {
         Print += '平氣 ' + TermScPrint.join(' ') + '\n**分** ' + TermDeciPrint.join(' ') + `\n`
     } else {
         Print += '**平氣** ' + TermScPrint.join(' ') + '\n**分** ' + TermDeciPrint.join(' ') + `\n`
@@ -72,7 +73,7 @@ const PrintNewm = result => {
     }
     if ((TermDuskstarPrint || []).length > 0) {
         Print += '**昏中** ' + TermDuskstarPrint.join(' ') + `\n`
-    }    
+    }
     return Print + `\n`
 }
 
