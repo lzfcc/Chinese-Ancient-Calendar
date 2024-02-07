@@ -8,7 +8,7 @@ import {
 import {
     YearGodConvert, YearColorConvert, MonColorConvert,
 } from './day_luck.mjs'
-import { sunShixian, moonGuimao, LonHigh2Low, HighLon2LowLat, riseQing, twilight } from './newm_shixian.mjs'
+import { sunShixian, moonGuimao, LonHigh2Flat, HighLon2FlatLat, riseQing, twilight } from './newm_shixian.mjs'
 import CalNewm from './newm_index.mjs'
 import { Gong2Mansion } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
@@ -87,8 +87,8 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const { MoonGong, MoonLon, MoonLat } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
                 Eclp[i][k] = deg2Hms(SunLon)
                 EclpMansion[i][k] = Gong2Mansion(Name, Y, SunGong).Mansion + '度' // 注意：入宿度是轉換成了古度的
-                Equa[i][k] = deg2Hms(LonHigh2Low(Sobliq, SunLon))
-                const tmp1 = HighLon2LowLat(Sobliq, SunLon)
+                Equa[i][k] = deg2Hms(LonHigh2Flat(Sobliq, SunLon))
+                const tmp1 = HighLon2FlatLat(Sobliq, SunLon)
                 Lat[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
                 Rise[i][k] = riseQing(SunLon + (SunLonMor - SunLon) / 2, Sobliq, BjLat)
                 Duskstar[i][k] = Gong2Mansion(Name, Y, false, SunLon + 90, SunLonMor + 90, Rise[i][k]).DuskstarPrint

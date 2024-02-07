@@ -3,6 +3,7 @@ import { ScList, AutoDegAccumList, deci, fix } from './para_constant.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
 import { Accum2Mansion, AutoNewmPlus, AutoSyzygySub } from './astronomy_other.mjs'
 import { AutoEqua2Eclp } from './astronomy_bind.mjs'
+// console.log(13.17639477138888-385.81673571944444/29.530593)
 // const cal = (Name, Y) => {
 export default (Name, Y) => {
     const { Type, isAcr, isNewmPlus, Sidereal, SolarNumer, LunarNumer, Denom, Anoma, Node, AcrTermList,

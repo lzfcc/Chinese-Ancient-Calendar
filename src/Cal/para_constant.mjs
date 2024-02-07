@@ -19,7 +19,7 @@ export { big, frc, nzh };
 export const deci = x => +('.' + (x.toString().split('.')[1])) || 0 // 截取小數
 // console.log(4999999999999.14%1) // = .1396484375
 // console.log(4999999999999.14-Math.floor(4999999999999.14)) // = .1396484375
-export const fix = (x, n) => (x * 100).toFixed(n || 2)
+export const fix = (x, n) => (x * 100 < 10 ? '0' : '') + (x * 100).toFixed(n || 2)
 export const debounce = (fn, delay) => {
   let timer = 100; // 返回一个函数，这个函数会在一个时间区间结束后的 delay 毫秒时执行 fn 函数
   return (...args) => {
