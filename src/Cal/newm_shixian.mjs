@@ -202,7 +202,7 @@ export const moonJiazi = (MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) =>
     const AvgMapo = t(MapoRoot + Sd * MapoVd) // 最高平行.Mapo=MoonApogee太陰遠地點
     const AvgNode = NodeRoot - Sd * NodeVd // 正交平行    
     const AvgMoon = AvgMoon1 - timeAvg2Real(Sobliq, SunCorr, (SunGong + 270) % 360) * MoonAvgVd // 時差總爲加者時差行爲減
-    const Morb = AvgMoon - AvgMapo // 均輪心自行引數Morb=MoonOrbitDegree。1949算例：200°22′05.77″=200.3682694444⚠️我算出來多了一點
+    const Morb = t(AvgMoon - AvgMapo) // 均輪心自行引數Morb=MoonOrbitDegree。1949算例：200°22′05.77″=200.3682694444⚠️我算出來多了一點
     const { Corr1, Choumao } = moonCorr1Jiazi(Morb)
     const flag1 = f1(Morb) // 初均符號    
     const AcrMoon1 = AvgMoon + flag1 * Corr1 // 初實行
@@ -578,8 +578,10 @@ export const N4 = (Name, Y) => {
         const Dif2 = Math.sign(Dif) * abs(LonHigh2Flat(Mobliq, TotalWhitelongi) - TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加
         const TotalMoonGong = ((AcrSunGong + 180) % 360 + Dif + Dif2 + 360) % 360 // 加減食甚距弧（是Dif嗎？？），再加黃白升度差
         const TotalMoonLat = HighLon2FlatLat(Mobliq, TotalWhitelongi)
-        const TotalMoonEquaLat = 90 - aCb_Sph(Sobliq, 90 - TotalMoonLat, t2(TotalMoonGong))
-        const A = acos((cos(90 - TotalMoonLat) - cos(Sobliq) * cos(TotalMoonEquaLat)) / (sin(Sobliq) * sin(TotalMoonEquaLat)))  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
+        const TotalMoonEquaLat = 90 - aCb_Sph(Sobliq, 90 - TotalMoonLat, t1(TotalMoonGong))
+        const A = acos(
+            (cos(90 - TotalMoonLat) - cos(Sobliq) * cos(90 - TotalMoonEquaLat)) /
+            (sin(Sobliq) * sin(90 - TotalMoonEquaLat)))  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
         const TotalMoonEquaGong = 180 - A + (TotalMoonGong > 180 ? 180 : 0)
         return { Start: fix(deci(TotalSd - T_StartTotal)), End: fix(deci(TotalSd + T_StartTotal)), Total: fix(deci(TotalSd)), Magni, TotalMoonGong, TotalMoonLat, TotalMoonEquaGong, TotalMoonEquaLat }
     }
@@ -838,6 +840,7 @@ export const N4 = (Name, Y) => {
     const {
         Acr0Deci: SyzygyAcr0Deci, NowSc: SyzygySc, NowDeci: SyzygyDeci, EcliPrint: MoonEcli
     } = main(false, LeapNumTerm)
+    // } = main(false)
     return {
         LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmAcr0Deci, NewmDeci, NewmEclp, SyzygySc, SyzygyAcr0Deci, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
         Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Eclp,
