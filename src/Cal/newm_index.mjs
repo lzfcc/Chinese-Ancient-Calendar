@@ -230,8 +230,8 @@ export default (Name, YearStart, YearEnd) => {
         const NewmEclpPrint = NewmEclp ? NewmSlice(NewmEclp) : undefined
         const SyzygyScPrint = NewmSlice(ThisYear.SyzygySc)
         const SyzygyDeciPrint = NewmSlice(ThisYear.SyzygyDeci)
-        const NewmAcr0DeciPrint = ThisYear.NewmAcr0Deci ? NewmSlice(ThisYear.NewmAcr0Deci) : undefined
-        const SyzygyAcr0DeciPrint = ThisYear.SyzygyAcr0Deci ? NewmSlice(ThisYear.SyzygyAcr0Deci) : undefined
+        const NewmNowlineDeciPrint = ThisYear.NewmNowlineDeci ? NewmSlice(ThisYear.NewmNowlineDeci) : undefined
+        const SyzygyNowlineDeciPrint = ThisYear.SyzygyNowlineDeci ? NewmSlice(ThisYear.SyzygyNowlineDeci) : undefined
         let NewmDeciPrint = [], TermNamePrint = [], TermScPrint = [], TermDeciPrint = [], TermAcrScPrint = [], TermAcrDeciPrint = [], TermEquaPrint = [], TermEclpPrint = [], TermDuskstarPrint = [], Term1NamePrint = [], Term1ScPrint = [], Term1DeciPrint = [], Term1EquaPrint = [], Term1AcrDeciPrint = [], Term1AcrScPrint = [], Term1EclpPrint = []
         TermNamePrint = TermSlice(TermName)
         TermScPrint = TermSlice(TermSc)
@@ -411,8 +411,8 @@ export default (Name, YearStart, YearEnd) => {
         }
         return {
             Era, YearInfo, MonthPrint,
-            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmAcr0DeciPrint, NewmAcrDeciPrint, NewmEquaPrint, NewmEclpPrint,
-            SyzygyScPrint, SyzygyAcr0DeciPrint, SyzygyDeciPrint,
+            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmEquaPrint, NewmEclpPrint,
+            SyzygyScPrint, SyzygyNowlineDeciPrint, SyzygyDeciPrint,
             Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1EquaPrint, Term1EclpPrint,
             TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
             ////////////// 曆書

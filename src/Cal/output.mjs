@@ -22,7 +22,7 @@ const AutoCal = year => {
 
 const PrintNewm = result => {
     const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmAcr0DeciPrint, NewmAcrDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint, Term1AcrSc, Term1AcrDeci
+        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint, Term1AcrSc, Term1AcrDeci
     } = result
     let Print = YearInfo
     Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
@@ -30,7 +30,7 @@ const PrintNewm = result => {
         Print += '**定朔** ' + NewmScPrint.join(' ') + `\n`
         NewmAcrDeciPrint
         if (NewmAcrDeciPrint.length > 0) {
-            Print += '平泛 ' + NewmAcr0DeciPrint.join(' ') + `\n`
+            Print += '視泛 ' + NewmNowlineDeciPrint.join(' ') + `\n`
             Print += '視實 ' + NewmAcrDeciPrint.join(' ') + `\n`
         }
         if (NewmDeci3Print.length > 0) {

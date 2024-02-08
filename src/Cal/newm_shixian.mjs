@@ -676,7 +676,7 @@ export const N4 = (Name, Y) => {
         return { TermSc, TermDeci, NowTermSd, TermAcrSc, TermAcrDeci, TermEclp }
     }
     const main = (isNewm, LeapNumTerm) => {
-        const AvgSc = [], AvgDeci = [], Acr0Deci = [], NowSc = [], NowDeci = [], NowSd = [], Eclp = [], TermSc = [], TermDeci = [], NowTermSd = [], TermAcrSc = [], TermAcrDeci = [], Term1Sc = [], Term1Deci = [], NowTerm1Sd = [], TermEclp = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Eclp = [], Ecli = [], Rise = []
+        const AvgSc = [], AvgDeci = [], NowSc = [], NowlineSd = [], NowlineDeci = [], NowSd = [], NowDeci = [], Eclp = [], TermSc = [], TermDeci = [], NowTermSd = [], TermAcrSc = [], TermAcrDeci = [], Term1Sc = [], Term1Deci = [], NowTerm1Sd = [], TermEclp = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Eclp = [], Ecli = [], Rise = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
         for (let i = 0; i <= 14; i++) {
             //////// 平朔望
@@ -684,57 +684,44 @@ export const N4 = (Name, Y) => {
             const AvgSdMidn = ~~AvgSd
             AvgSc[i] = ScList[(SolsmorScOrder + AvgSdMidn) % 60]
             AvgDeci[i] = fix(deci(AvgSd))
-            let AcrSd = 0, AcrSunGong = 0, AcrWhitelongi = 0, AcrSunCorr = 0, AcrMorb = 0, AcrMoonCorr1 = 0, AcrSorb = 0
-            let Acr0SdMidn = AvgSdMidn
-            if (Name === 'Guimao') {
-                //////// 實朔望泛時。甲子元曆尚把注曆的朔望和交食的朔望分開，癸卯元曆就合一了
-                const { Speri: SperiTod, Sorb: SorbTod, SunCorr: SunCorrTod, SunLon: SunLonTodRaw, SunGong: SunGongTod } = sunShixian(Name, SunRoot, SperiRoot, AvgSdMidn)
-                const { MoonLon: MoonLonTod } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AvgSdMidn, SunCorrTod, SunGongTod, SperiTod, SorbTod)
+            let AcrSd = 0, AcrlineDeci = 0, AcrSunGong = 0, AcrWhitelongi = 0, AcrSunCorr = 0, AcrMorb = 0, AcrMoonCorr1 = 0, AcrSorb = 0
+            // 月離曆法·推合朔弦望法：直接用本日次日太陽太陰實行求，但必須先確定本日次日是哪日
+            let AcrlineSdMidn = AvgSdMidn
+            const acrlineDeci = AcrlineSdMidn => {
+                const { Speri: SperiTod, Sorb: SorbTod, SunCorr: SunCorrTod, SunLon: SunLonTodRaw, SunGong: SunGongTod } = sunShixian(Name, SunRoot, SperiRoot, AcrlineSdMidn)
+                const { MoonLon: MoonLonTod } = eval('moon' + Name)(MoonRoot, NodeRoot, MapoRoot, AcrlineSdMidn, SunCorrTod, SunGongTod, SperiTod, SorbTod)
                 const SunLonTod = (SunLonTodRaw + (isNewm ? 0 : 180)) % 360
-                const { Speri: SperiMor, Sorb: SorbMor, SunCorr: SunCorrMor, SunLon: SunLonMorRaw, SunGong: SunGongMor } = sunShixian(Name, SunRoot, SperiRoot, AvgSdMidn + 1)
-                const { MoonLon: MoonLonMor } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AvgSdMidn + 1, SunCorrMor, SunGongMor, SperiMor, SorbMor)
+                const { Speri: SperiMor, Sorb: SorbMor, SunCorr: SunCorrMor, SunLon: SunLonMorRaw, SunGong: SunGongMor } = sunShixian(Name, SunRoot, SperiRoot, AcrlineSdMidn + 1)
+                const { MoonLon: MoonLonMor } = eval('moon' + Name)(MoonRoot, NodeRoot, MapoRoot, AcrlineSdMidn + 1, SunCorrMor, SunGongMor, SperiMor, SorbMor)
                 const SunLonMor = (SunLonMorRaw + (isNewm ? 0 : 180)) % 360
-                if (t(MoonLonTod - SunLonTod) > 180) { // 如太陰實行未及太陽，則平朔日為實朔本日
-                    if (t(MoonLonMor - SunLonMor) > 180) { // 如次日太陰實行仍未及太陽，則次日爲實朔日
-                        Acr0SdMidn = AvgSdMidn + 1
-                        Acr0Deci[i] = t(SunLonMor - MoonLonMor) / (t(MoonLonMor - MoonLonTod) - t(SunLonMor - SunLonTod))
-                    } else {
-                        Acr0Deci[i] = t(SunLonTod - MoonLonTod) / (t(MoonLonMor - MoonLonTod) - t(SunLonMor - SunLonTod)) // 分子：一日之月距日實行：三率，分母：一日之月實行與一日之日實行相減，爲一日之月距日實行：一率。實際上是t=s/v
-                    }
-                } else { // 如太陰實行已過太陽，則平朔前一日為實朔本日。
-                    Acr0SdMidn = AvgSdMidn - 1
-                    Acr0Deci[i] = 1 - t(MoonLonTod - SunLonTod) / (t(MoonLonMor - MoonLonTod) - t(SunLonMor - SunLonTod))
+                return {
+                    MoonLonTod, SunLonTod, MoonLonMor, SunLonMor,
+                    AcrlineDeci: t(SunLonTod - MoonLonTod) / (t(MoonLonMor - MoonLonTod) - t(SunLonMor - SunLonTod))
                 }
+            }
+            const { MoonLonTod, SunLonTod, MoonLonMor, SunLonMor, AcrlineDeci: AcrlineDeciTmp } = acrlineDeci(AvgSdMidn)
+            AcrlineDeci = AcrlineDeciTmp
+            if (t(MoonLonTod - SunLonTod) > 180) {
+                if (t(MoonLonMor - SunLonMor) > 180) { // 如次日太陰實行仍未及太陽，則次日爲實朔日
+                    AcrlineSdMidn++
+                    AcrlineDeci = acrlineDeci(AcrlineSdMidn).AcrlineDeci
+                }
+            } else { // 如太陰實行未及太陽，則平朔日為實朔本日
+                AcrlineSdMidn--
+                AcrlineDeci = acrlineDeci(AcrlineSdMidn).AcrlineDeci
+            }
+            const AcrlineSd = AcrlineSdMidn + AcrlineDeci // 用今明兩日線性內插注曆
+            // 以下是交食用的精確朔望
+            if (Name === 'Guimao') {
+                //////// 實朔望泛時。甲子元曆尚把注曆的朔望和交食的朔望分開，癸卯元曆就合一了。癸卯元求泛時是只固定用平朔望今明兩天，而甲子元則是選用定朔望今明兩天，此處我統一用甲子元的辦法             
                 //////// 實朔望實時
-                AcrSd = iteration(Acr0SdMidn + Acr0Deci[i], .5 / 24, isNewm)
-                // const Acr2Sd = iteration(AcrSd, .1 / 24, isNewm)
+                const Acr0Sd = iteration(AcrlineSd, .5 / 24, isNewm)
+                AcrSd = iteration(Acr0Sd, .1 / 24, isNewm) // 我再加一次迭代
                 const { Speri: AcrSperi, Sorb: AcrSorbTmp, SunCorr: AcrSunCorrTmp, SunGong: AcrSunGongTmp } = sunShixian(Name, SunRoot, SperiRoot, AcrSd)
                 AcrWhitelongi = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AcrSd, AcrSunCorrTmp, AcrSunGongTmp, AcrSperi, AcrSorbTmp).Whitelongi
                 AcrSunGong = AcrSunGongTmp
                 AcrSunCorr = AcrSunCorrTmp
             } else {
-                // 月離曆法·推合朔弦望法：直接用本日次日太陽太陰實行求，但必須先確定本日次日是哪日
-                const { Speri: SperiTod, Sorb: SorbTod, SunCorr: SunCorrTod, SunLon: SunLonTodRaw, SunGong: SunGongTod } = sunShixian(Name, SunRoot, SperiRoot, AvgSdMidn)
-                const { MoonLon: MoonLonTod } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AvgSdMidn, SunCorrTod, SunGongTod, SperiTod, SorbTod)
-                const SunLonTod = (SunLonTodRaw + (isNewm ? 0 : 180)) % 360
-                const { Speri: SperiMor, Sorb: SorbMor, SunCorr: SunCorrMor, SunLon: SunLonMorRaw, SunGong: SunGongMor } = sunShixian(Name, SunRoot, SperiRoot, AvgSdMidn + 1)
-                const { MoonLon: MoonLonMor } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AvgSdMidn + 1, SunCorrMor, SunGongMor, SperiMor, SorbMor)
-                const SunLonMor = (SunLonMorRaw + (isNewm ? 0 : 180)) % 360
-                if (t(MoonLonTod - SunLonTod) > 180) { // 如太陰實行未及太陽，則平朔日為實朔本日
-                    if (t(MoonLonMor - SunLonMor) > 180) { // 如次日太陰實行仍未及太陽，則次日爲實朔日
-                        const { Speri: SperiMormor, Sorb: SorbMormor, SunCorr: SunCorrMormor, SunLon: SunLonMormorRaw, SunGong: SunGongMormor } = sunShixian(Name, SunRoot, SperiRoot, AvgSdMidn + 1)
-                        const { MoonLon: MoonLonMormor } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AvgSdMidn + 2, SunCorrMormor, SunGongMormor, SperiMormor, SorbMormor)
-                        const SunLonMormor = (SunLonMormorRaw + (isNewm ? 0 : 180)) % 360
-                        Acr0Deci[i] = t(SunLonMor - MoonLonMor) / (t(MoonLonMormor - MoonLonMor) - t(SunLonMormor - SunLonMor))
-                    } else {
-                        Acr0Deci[i] = t(SunLonTod - MoonLonTod) / (t(MoonLonMor - MoonLonTod) - t(SunLonMor - SunLonTod))
-                    }
-                } else { // 如太陰實行已過太陽，則平朔前一日為實朔本日
-                    const { Speri: SperiYest, Sorb: SorbYest, SunCorr: SunCorrYest, SunLon: SunLonYestRaw, SunGong: SunGongYest } = sunShixian(Name, SunRoot, SperiRoot, AvgSdMidn - 1)
-                    const { MoonLon: MoonLonYest } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, AvgSdMidn - 1, SunCorrYest, SunGongYest, SperiYest, SorbYest)
-                    const SunLonYest = (SunLonYestRaw + (isNewm ? 0 : 180)) % 360
-                    Acr0Deci[i] = t(SunLonYest - MoonLonYest) / (t(MoonLonTod - MoonLonYest) - t(SunLonTod - SunLonYest))
-                }
                 // 月食曆法·推實朔用時法
                 const { Sorb: AvgSorb, SunCorr: AvgSunCorr, SunGong: AvgSunGong } = sunShixian(Name, SunRoot, SperiRoot, AvgSd) // 平望太陽均數
                 const { Corr1: AvgMoonCorr1, Morb: AvgMorb, AvgWhitelongi: AvgWhitelongi } = moonJiazi(MoonRoot, NodeRoot, MapoRoot, AvgSd, AvgSunCorr, AvgSunGong) // 平望太陰均數
@@ -750,9 +737,12 @@ export const N4 = (Name, Y) => {
                 AcrSunGong = AvgSunGong + AcrT_MSDif * SunAvgVd + AcrSunCorr // 太陽黃經=實望太陽平行（平望+太陽距弧（平望至實望太陽本輪心行度））+太陽實均                
             }
             const AcrSunLon = (AcrSunGong + 90) % 360
-            NowSd[i] = AcrSd + timeAvg2Real(Sobliq, AcrSunCorr, AcrSunLon) // 癸卯曆書用的實朔實時用時
-            NowDeci[i] = fix(deci(NowSd[i]), 3)
+            const { SunCorr: SunCorrLineMidn, SunLon: SunLonLineMidn } = sunShixian(Name, SunRoot, SperiRoot, AcrlineSdMidn) // 為了寫得方便，索性重算一遍
+            NowlineSd[i] = AcrlineSd + timeAvg2Real(Sobliq, SunCorrLineMidn, SunLonLineMidn)
+            NowlineDeci[i] = fix(deci(NowlineSd[i]), 3)
+            NowSd[i] = AcrSd + timeAvg2Real(Sobliq, AcrSunCorr, AcrSunLon)
             NowSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
+            NowDeci[i] = fix(deci(NowSd[i]), 3)
             Eclp[i] = Gong2Mansion(Name, Y, AcrSunGong).Mansion
             //////// 交食
             let isEcli = false // 入食限可以入算
@@ -787,13 +777,12 @@ export const N4 = (Name, Y) => {
                 Term1AcrDeci[i] = Func1.TermAcrDeci
                 Term1Eclp[i] = Func1.TermEclp
             }
-            Acr0Deci[i] = fix(deci(Acr0Deci[i]), 3)
         }
         //////// 置閏
         LeapNumTerm = LeapNumTerm || 0
         if (isNewm) {
             for (let i = 1; i <= 12; i++) {
-                if ((~~NowTermSd[i] < ~~NowSd[i + 1]) && (~~NowTermSd[i + 1] >= ~~NowSd[i + 2])) {
+                if ((~~NowTermSd[i] < ~~NowlineSd[i + 1]) && (~~NowTermSd[i + 1] >= ~~NowlineSd[i + 2])) {
                     LeapNumTerm = i // 閏Leap月，第Leap+1月爲閏月
                     break
                 }
@@ -827,22 +816,22 @@ export const N4 = (Name, Y) => {
         }
         return {
             AvgSc, AvgDeci,
-            NowSc, Acr0Deci, NowDeci, NowSd, Eclp,
+            NowSc, NowlineDeci, NowDeci, NowSd, Eclp,
             TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
             Term1Sc, Term1Deci, NowTerm1Sd, Term1AcrSc, Term1AcrDeci, Term1Eclp, EcliPrint, LeapNumTerm
         }
     }
     const {
-        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, Acr0Deci: NewmAcr0Deci, NowSc: NewmSc, NowDeci: NewmDeci, NowSd: NewmSd, Eclp: NewmEclp, EcliPrint: SunEcli,
+        AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, NowlineDeci: NewmNowlineDeci, NowSc: NewmSc, NowDeci: NewmDeci, NowSd: NewmSd, Eclp: NewmEclp, EcliPrint: SunEcli,
         TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
         Term1Sc, Term1Deci, NowTerm1Sd, Term1AcrSc, Term1AcrDeci, Term1Eclp, LeapNumTerm
     } = main(true)
     const {
-        Acr0Deci: SyzygyAcr0Deci, NowSc: SyzygySc, NowDeci: SyzygyDeci, EcliPrint: MoonEcli
+        NowlineDeci: SyzygyNowlineDeci, NowSc: SyzygySc, NowDeci: SyzygyDeci, EcliPrint: MoonEcli
     } = main(false, LeapNumTerm)
     // } = main(false)
     return {
-        LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmAcr0Deci, NewmDeci, NewmEclp, SyzygySc, SyzygyAcr0Deci, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
+        LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmNowlineDeci, NewmDeci, NewmEclp, SyzygySc, SyzygyNowlineDeci, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
         Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Eclp,
         //// 曆書用
         SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSd, SolsmorScOrder, NowTerm1Sd
