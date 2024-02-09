@@ -212,9 +212,8 @@ export const moonJiazi = (MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) =>
     const Choujia = Choumao / sin(Corr1)
     // 次輪最近點距地。90：1.0037774。120：0.9883760。230：0.9836195。300：1.0172941
     const Jichou = R4 * sin2(t2(MSDif2)) // 120：0.0407827。135：0.0306884。320：0.0278970
-    const Ajichoujia = Corr1
-        + t1(Morb) // 均輪心距最卑之度=引數與半周相減
-        + flag1 * f4(MSDif) * t1(MSDif2) / 2  // 加減月距日距象限度爲夾角。距象限90度和我的算式等效。
+    const Ajichoujia = abs(Corr1 + t1(Morb) // 均輪心距最卑之度=引數與半周相減
+        + flag1 * f4(MSDif) * t1(MSDif2) / 2)  // 加減月距日距象限度爲夾角。距象限90度和我的算式等效。
     // 初均減者：月距日過一三象限，加；不過象限或過二象限，減。
     // 初均加者：相反。若初均與均輪心距最卑相加不足減月距日距象限度，則轉減。若相加過半周，則與全周相減。110、120用加：84度22分19秒=84.3719444444。135、230用減：8度53分6秒=8.885。320、300：74度14分51秒=74.2475
     let flag2 = flag1 // 二均符號    
@@ -338,7 +337,7 @@ export const N4 = (Name, Y) => {
     // const ChouWhitelongi = Y >= CloseOriginAd ? LunarNumWhitelongi + ChouWhitelongiConst : ChouWhitelongiConst - LunarNumWhitelongi // 首朔太陰交周
     const MoonRoot = Y >= CloseOriginAd ? MoonConst + DayAccum * MoonAvgVd : MoonConst - DayAccum * MoonAvgVd // 太陰年根    
     const MapoRoot = Y >= CloseOriginAd ? DayAccum * MapoVd + MapoConst : MapoConst - DayAccum * MapoVd  // 最高年根
-    const NodeRoot = Y >= CloseOriginAd ? NodeConst - DayAccum * NodeVd : NodeConst + DayAccum * NodeVd // 正交年根，所得爲白經
+    const NodeRoot = Y >= CloseOriginAd ? t(NodeConst - DayAccum * NodeVd) : t(NodeConst + DayAccum * NodeVd) // 正交年根，所得爲白經
     // const Mansion = (OriginAccumMansion % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
     const SperiRoot = Y >= CloseOriginAd ? SperiVy * CloseOriginYear : -SperiVy * CloseOriginYear // 本年最卑行
     const sunEcliGuimao = NowSd => {
@@ -838,7 +837,7 @@ export const N4 = (Name, Y) => {
     }
 }
 // console.log(N4("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
-// console.log(N4("Jiazi", 1949)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例
+// console.log(N4("Jiazi", 1730)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例
 // console.log(sunShixian(Name,SunRoot, SperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // Sorb = 298 + 6 / 60 + 9.329 / 3600
