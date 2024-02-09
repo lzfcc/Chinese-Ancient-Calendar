@@ -657,25 +657,26 @@ export const N4 = (Name, Y) => {
         const TermDeci = fix(deci(TermSd))
         const TermSperiMidn = SperiConst + SperiRoot + SperiVd * ~~TermSd
         const TermSunCorr = sunCorrGuimao(TermGong - TermSperiMidn).SunCorr
-        const Acr0TermSd = TermSd - TermSunCorr / SunAvgVd
-        // 用下編之平氣推定氣法，再加上一次迭代，和曆法理論值只有半分鐘以內的誤差。曆書用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時。
-        // const Acr0Sun = sunShixian(Name,SunRoot, SperiRoot,Acr0TermSd)
-        // const AcrTermSd = Acr0TermSd + ((TermGong  - Acr0Sun.SunGong) / SunAvgVd)
-        // 下再用推節氣時刻法。沒有推逐日太陽宮度，為了少點麻煩，只用本日次日，不考慮再昨天或明天的情況。與曆書相較密合。
-        let AcrTermSd = 0
-        const SunTod = sunShixian(Name, SunRoot, SperiRoot, ~~Acr0TermSd)
-        const SunMor = sunShixian(Name, SunRoot, SperiRoot, ~~Acr0TermSd + 1)
+        const AcrlineBSd = TermSd - TermSunCorr / SunAvgVd // 下編之平氣推定氣法。算這步是為了確定注曆定氣是在哪天
+        // 推節氣時刻法。沒有推逐日太陽宮度，為了少點麻煩，只用泛時本日次日，不考慮再昨天或明天的情況。與曆書相較密合。        
+        const SunTod = sunShixian(Name, SunRoot, SperiRoot, ~~AcrlineBSd)
+        const SunMor = sunShixian(Name, SunRoot, SperiRoot, ~~AcrlineBSd + 1)
         const Tod = SunTod.SunGong
         const Mor = SunMor.SunGong
-        AcrTermSd = ~~Acr0TermSd + (TermGong - Tod + (TermGong === 0 ? 360 : 0)) / (Mor - Tod)
-        const NowTermSd = AcrTermSd + timeAvg2Real(Sobliq, SunTod.SunCorr, (TermGong + 270) % 360)
-        const TermAcrSc = ScList[(SolsmorScOrder + ~~NowTermSd) % 60]
-        const TermAcrDeci = fix(deci(NowTermSd), 3)
+        const AcrlineSd = ~~AcrlineBSd + (TermGong - Tod + (TermGong === 0 ? 360 : 0)) / ((Mor - Tod + 360) % 360)
+        const NowlineSd = AcrlineSd + timeAvg2Real(Sobliq, SunTod.SunCorr, (TermGong + 270) % 360)
+        const NowlineSc = ScList[(SolsmorScOrder + ~~NowlineSd) % 60]
+        const NowlineDeci = fix(deci(NowlineSd), 3)
         const TermEclp = Gong2Mansion(Name, Y, TermGong).Mansion
-        return { TermSc, TermDeci, NowTermSd, TermAcrSc, TermAcrDeci, TermEclp }
+        // 再加上迭代。曆書用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時
+        const tmp = TermGong - sunShixian(Name, SunRoot, SperiRoot, AcrlineSd).SunGong // 預防冬至0宮的問題
+        const AcrSd = AcrlineSd + (abs(tmp) > 180 ? tmp + 360 : tmp) / SunAvgVd // 迭代
+        const NowSd = AcrSd + timeAvg2Real(Sobliq, sunShixian(Name, SunRoot, SperiRoot, AcrSd).SunCorr, (TermGong + 270) % 360)
+        const NowDeci = fix(deci(NowSd), 3)
+        return { TermSc, TermDeci, TermAcrSd: NowlineSd, TermAcrSc: NowlineSc, TermAcrDeci: NowlineDeci, TermNowDeci: NowDeci, TermEclp } // 為了和古曆統一，此處改名
     }
     const main = (isNewm, LeapNumTerm) => {
-        const AvgSc = [], AvgDeci = [], NowSc = [], NowlineSd = [], NowlineDeci = [], NowSd = [], NowDeci = [], Eclp = [], TermSc = [], TermDeci = [], NowTermSd = [], TermAcrSc = [], TermAcrDeci = [], Term1Sc = [], Term1Deci = [], NowTerm1Sd = [], TermEclp = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Eclp = [], Ecli = [], Rise = []
+        const AvgSc = [], AvgDeci = [], NowSc = [], NowlineSd = [], NowlineDeci = [], NowSd = [], NowDeci = [], Eclp = [], TermSc = [], TermDeci = [], TermAcrSd = [], TermAcrSc = [], TermAcrDeci = [], TermNowDeci = [], Term1Sc = [], Term1Deci = [], TermEclp = [], Term1AcrSc = [], Term1AcrDeci = [], Term1NowDeci = [], Term1Eclp = [], Ecli = [], Rise = []
         // 西曆推朔望的思路和古曆不一樣，需要求得平朔望當日子正日月實行，兩者相較，得實朔望與平朔望是否在同一日，確定實朔望在哪一天，再算當日與次日子正實行，求得實朔望泛時。
         for (let i = 0; i <= 14; i++) {
             //////// 平朔望
@@ -712,7 +713,7 @@ export const N4 = (Name, Y) => {
             const AcrlineSd = AcrlineSdMidn + AcrlineDeci // 用今明兩日線性內插注曆
             // 以下是交食用的精確朔望
             if (Name === 'Guimao') {
-                //////// 實朔望泛時。甲子元曆尚把注曆的朔望和交食的朔望分開，癸卯元曆就合一了。癸卯元求泛時是只固定用平朔望今明兩天，而甲子元則是選用定朔望今明兩天，此處我統一用甲子元的辦法             
+                //////// 實朔望泛時。甲子元曆尚把注曆的朔望和交食的朔望分開，癸卯元曆就合一了。癸卯元求泛時是只固定用平朔望今明兩天，而甲子元則是選用定朔望今明兩天，此處我統一用甲子元的辦法
                 //////// 實朔望實時
                 const Acr0Sd = iteration(AcrlineSd, .5 / 24, isNewm)
                 AcrSd = iteration(Acr0Sd, .1 / 24, isNewm) // 我再加一次迭代
@@ -764,16 +765,17 @@ export const N4 = (Name, Y) => {
                 const Func = term(i, true)
                 TermSc[i] = Func.TermSc
                 TermDeci[i] = Func.TermDeci
-                NowTermSd[i] = Func.NowTermSd
+                TermAcrSd[i] = Func.TermAcrSd
                 TermAcrSc[i] = Func.TermAcrSc
                 TermAcrDeci[i] = Func.TermAcrDeci
+                TermNowDeci[i] = Func.TermNowDeci
                 TermEclp[i] = Func.TermEclp
                 const Func1 = term(i, false)
                 Term1Sc[i] = Func1.TermSc
                 Term1Deci[i] = Func1.TermDeci
-                NowTerm1Sd[i] = Func1.NowTermSd
                 Term1AcrSc[i] = Func1.TermAcrSc
                 Term1AcrDeci[i] = Func1.TermAcrDeci
+                Term1NowDeci[i] = Func1.TermNowDeci
                 Term1Eclp[i] = Func1.TermEclp
             }
         }
@@ -781,7 +783,7 @@ export const N4 = (Name, Y) => {
         LeapNumTerm = LeapNumTerm || 0
         if (isNewm) {
             for (let i = 1; i <= 12; i++) {
-                if ((~~NowTermSd[i] < ~~NowlineSd[i + 1]) && (~~NowTermSd[i + 1] >= ~~NowlineSd[i + 2])) {
+                if ((~~TermAcrSd[i] < ~~NowlineSd[i + 1]) && (~~TermAcrSd[i + 1] >= ~~NowlineSd[i + 2])) {
                     LeapNumTerm = i // 閏Leap月，第Leap+1月爲閏月
                     break
                 }
@@ -816,27 +818,30 @@ export const N4 = (Name, Y) => {
         return {
             AvgSc, AvgDeci,
             NowSc, NowlineDeci, NowDeci, NowSd, Eclp,
-            TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
-            Term1Sc, Term1Deci, NowTerm1Sd, Term1AcrSc, Term1AcrDeci, Term1Eclp, EcliPrint, LeapNumTerm
+            TermSc, TermDeci,
+            TermAcrSc, TermAcrDeci, TermNowDeci, TermEclp,
+            Term1Sc, Term1Deci,
+            Term1AcrSc, Term1AcrDeci, Term1NowDeci, Term1Eclp,
+            EcliPrint, LeapNumTerm
         }
     }
     const {
         AvgSc: NewmAvgSc, AvgDeci: NewmAvgDeci, NowlineDeci: NewmNowlineDeci, NowSc: NewmSc, NowDeci: NewmDeci, NowSd: NewmSd, Eclp: NewmEclp, EcliPrint: SunEcli,
-        TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
-        Term1Sc, Term1Deci, NowTerm1Sd, Term1AcrSc, Term1AcrDeci, Term1Eclp, LeapNumTerm
+        TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermNowDeci, TermEclp,
+        Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1NowDeci, Term1Eclp, LeapNumTerm
     } = main(true)
     const {
         NowlineDeci: SyzygyNowlineDeci, NowSc: SyzygySc, NowDeci: SyzygyDeci, EcliPrint: MoonEcli
     } = main(false, LeapNumTerm)
     // } = main(false)
     return {
-        LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmNowlineDeci, NewmDeci, NewmEclp, SyzygySc, SyzygyNowlineDeci, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEclp,
-        Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Eclp,
+        LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmNowlineDeci, NewmDeci, NewmEclp, SyzygySc, SyzygyNowlineDeci, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermNowDeci, TermEclp,
+        Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1NowDeci, Term1Eclp,
         //// 曆書用
-        SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSd, SolsmorScOrder, NowTerm1Sd
+        SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSd, SolsmorScOrder
     }
 }
-// console.log(N4("Guimao", 1730)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
+// console.log(N4("Guimao", 1760)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
 // console.log(N4("Jiazi", 1730)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例
 // console.log(sunShixian(Name,SunRoot, SperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104

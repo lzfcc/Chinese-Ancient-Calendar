@@ -553,7 +553,9 @@ tr.NewmDeci2Print th,
 tr.NewmDeci3Print th,
 tr.NewmNowlineDeciPrint th,
 tr.NewmAcrDeciPrint th,
-tr.SyzygyNowlineDeciPrint th {
+tr.SyzygyNowlineDeciPrint th,
+tr.TermNowDeciPrint th,
+tr.Term1NowDeciPrint th {
   font-weight: normal;
 }
 

@@ -147,7 +147,7 @@ export default (Name, year) => {
         while (LeapNumTerm <= 11 && (TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2]) && (TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - 2)) {
             LeapNumTerm++
         }
-        TermName[LeapNumTerm + 1] = '无'
+        TermName[LeapNumTerm + 1] = '无中'
         TermSc[LeapNumTerm + 1] = ''
         TermDeci[LeapNumTerm + 1] = ''
         if (MansionRaw) {

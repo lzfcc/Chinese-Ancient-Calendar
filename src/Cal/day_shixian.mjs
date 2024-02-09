@@ -25,7 +25,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Day = (Name, Y) => {
         const { Sobliq, BjLat } = Para[Name]
-        const { LeapNumTerm, SolsAccum, SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, NewmSd, NowTerm1Sd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
+        const { LeapNumTerm, SolsAccum, SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, NewmSd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
         ///////
         const YearScOrder = ((Y - 3) % 60 + 60) % 60
         const YearSc = ScList[YearScOrder]
