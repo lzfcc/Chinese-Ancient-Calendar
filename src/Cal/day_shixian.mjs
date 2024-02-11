@@ -124,4 +124,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D2('Guimao', 1730, 1730))
+console.log(D2('Guimao', 1730, 1730))

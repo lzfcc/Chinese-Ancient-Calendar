@@ -2925,7 +2925,8 @@ export default {
         MoonLimit: 12.28194444444444, // 實望可食12+16/60+55/3600
         Mobliq: 4.975, // 黃白大距4度58分30秒
         MansionDayConst: 5.656374926, // 宿應，單位日。這是值日，其實和宿度無關。
-        MansionConst: 70.5666666666667, // 箕3.166667的宿度
+        MansionConst: 70.5666666666667, // 1684冬至箕3.166667的宿度
+        // EquaMansionConst: 72.8333333333333, // 赤道箕3.65。根據考成表赤道度
         MansionRaw: [11, 3.16666666666667],
         ZhengNum: 2,
         OriginMonNum: 0
@@ -2961,7 +2962,7 @@ export default {
         SunLimitYangAcr: 6.3666666666667,
         MoonLimit: 15.15,
         BjLat: 39.9916666666667, // 京師北極出地
-        MansionConst: 70.5666666666667, // 箕3.166667的宿度
+        MansionConst: 70.5666666666667, // 同甲子元曆 
         MansionRaw: [11, 3.16666666666667],
         ZhengNum: 2,
         OriginMonNum: 0

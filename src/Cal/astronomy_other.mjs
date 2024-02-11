@@ -2,7 +2,7 @@ import Para from './para_calendars.mjs'
 import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { MansionNameList, AutoDegAccumList, EclpLatJiazi } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
-import { LonHigh2Flat, starEclp2Equa, twilight } from './newm_shixian.mjs'
+import { LonHigh2Flat, twilight } from './newm_shixian.mjs'
 
 export const Mansion2Deg = (Mansion, AccumList) => (AccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
@@ -11,8 +11,8 @@ export const Deg2Mansion = (Deg, AccumList, fixed) => {
     let MansionDeg = 0
     let MansionName = ''
     for (let i = 1; i <= 28; i++) {
-        if (Deg >= AccumList[i] && Deg < AccumList[i + 1]) {
-            MansionDeg = Deg - AccumList[i]
+        if (Deg >= AccumList[i - 1] && Deg < AccumList[i]) {
+            MansionDeg = Deg - AccumList[i - 1]
             MansionName = MansionNameList[i]
             break
         }
@@ -46,7 +46,7 @@ export const Accum2Mansion = (Accum, AccumList, Name, SolsDif, SolsDeci, year) =
         const DuskstarDeg = (Deg + Sidereal * HalfLight + (Type === 7 ? 0 : 1 - HalfNight)) % Sidereal
         const Duskstar = Deg2Mansion(DuskstarDeg, AccumList, 1)
         const Morningstar = Deg2Mansion(MorningstarDeg, AccumList, 1)
-        MorningDuskstar = Duskstar + ' ' + Morningstar
+        MorningDuskstar = Morningstar + ' ' + Duskstar
     }
     return { Mansion, MorningDuskstar }
 }
@@ -61,11 +61,11 @@ export const Gong2Mansion = (Name, Y, EclpGong, Tod, Morrow, Rise) => {
     const { EclpAccumList, EquaAccumList } = AutoDegAccumList(Name, Y)
     let EclpMansion = '', EquaMansion = '', DuskstarPrint = ''
     if (EclpGong !== false) { // 如果false就只算昏旦中星
-        let EclpMansionGong = ((EclpGong - (51 / 3600) * (Y - 1684) + MansionConst + 360) % 360)  // 第谷歲差
-        const EquaMansionGong = LonHigh2Flat(Sobliq, EclpMansionGong) * Solar / 360
-        EclpMansionGong *= Solar / 360
-        EclpMansion = Deg2Mansion((EclpMansionGong + Solar) % Solar, EclpAccumList)
-        EquaMansion = Deg2Mansion((EquaMansionGong + Solar) % Solar, EquaAccumList)
+        const Precession = 51 / 3600 * (Y - 1684) // 第谷歲差
+        const EclpMansionGong = (EclpGong - Precession + MansionConst + 360) % 360
+        const EquaMansionGong = (LonHigh2Flat(Sobliq, EclpMansionGong) + 360) % 360
+        EclpMansion = Deg2Mansion((EclpMansionGong * Solar / 360 + Solar) % Solar, EclpAccumList)
+        EquaMansion = Deg2Mansion((EquaMansionGong * Solar / 360 + Solar) % Solar, EquaAccumList)
     }
     if (Tod) {
         const SunVd = Morrow - Tod

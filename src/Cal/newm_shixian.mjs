@@ -104,6 +104,8 @@ export const starEclp2Equa = (Sobliq, x, y) => { // 黃赤大距、黃經、黃�
         (sin(Sobliq) * sin(90 - Lat)))  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
     return { Gong: x < 180 ? A : 360 - A, Lat }
 }
+// console.log(LonHigh2Flat(23 + 29.5 / 60, 45))
+// console.log(starEclp2Equa(23 + 29.5 / 60, 135, 0).Gong)
 // console.log(starEclp2Equa(23 + 29.5 / 60, 27 + 10 / 60, 29 + 22 / 60)) // 考成卷十六恆星曆理算例:赤經緯23度41分58秒=23.6994444444，8度5分4秒=8.08444444444
 export const twilight = (Sobliq, BjLat, SunLon) => { // 民用曚影時長。應該也是用的正午太陽緯度
     const limit = 6 // 民用6度，天文18度
