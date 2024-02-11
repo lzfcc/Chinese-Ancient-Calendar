@@ -125,7 +125,7 @@ export default (Name, Y) => {
     } else {
         LeapLimit = parseFloat((13 * Lunar - Solar).toPrecision(14))
     }
-    const EquaDegAccumList = AutoDegAccumList(Name, Y)
+    const EquaAccumList = AutoDegAccumList(Name, Y).EquaAccumList
     const main = isNewm => {
         const AvgRaw = [], AvgInt = [], AvgSc = [], AvgDeci = [], TermAcrRaw = [], TermAcrSolsDif = [], TermAvgRaw = [], TermAvgSolsDif = [], Term1AvgRaw = [], Term1AvgSolsDif = [], Term1Sc = [], Term1Deci = [], Term1AcrRaw = [], Term1AcrSolsDif = [], Term1AcrSc = [], Term1AcrDeci = [], Term1Equa = [], TermSc = [], TermDeci = [], TermAcrSc = [], TermAcrDeci = [], TermEqua = [], AnomaAccum = [], AnomaAccumNight = [], NodeAccum = [], NodeAccumNight = [], AcrInt = [], Int = [], Raw = [], Tcorr = [], AcrRaw = [], AcrMod = [], Sc = [], Deci1 = [], Deci2 = [], Deci3 = [], Deci = [], SolsDif = [], AcrSolsDif = [], Equa = []
         for (let i = 0; i <= 14; i++) {
@@ -178,12 +178,12 @@ export default (Name, Y) => {
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
-                if ((EquaDegAccumList || []).length) {
+                if ((EquaAccumList || []).length) {
                     let Eclp2EquaDif = 0
                     if (Type === 11) { // 授時要黃轉赤 ⚠️ 2024-01 這樣轉可以嗎？？？
                         Eclp2EquaDif = AutoEqua2Eclp(SolsDif[i], Name).Eclp2EquaDif
                     }
-                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaDegAccumList, Name).Mansion
+                    Equa[i] = Accum2Mansion(AcrRaw[i] + Eclp2EquaDif, EquaAccumList, Name).Mansion
                 }
                 TermAvgSolsDif[i] = (i + ZhengSolsDif - 1) * TermLeng
                 TermAvgRaw[i] = SolsAccum + TermAvgSolsDif[i]
@@ -218,21 +218,16 @@ export default (Name, Y) => {
                     Term1AcrDeci[i] = fix(deci(tmp3), 3)
                 }
                 if (MansionRaw) {
-                    TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaDegAccumList, Name, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
-                    Term1Equa[i] = Accum2Mansion((Term1AcrRaw[i] || Term1AvgRaw[i]), EquaDegAccumList, Name, (Term1AcrSolsDif[i] || Term1AvgSolsDif[i]), SolsDeci, Y).Mansion
+                    TermEqua[i] = Accum2Mansion((TermAcrRaw[i] || TermAvgRaw[i]), EquaAccumList, Name, (TermAcrSolsDif[i] || TermAvgSolsDif[i]), SolsDeci, Y).Mansion
+                    Term1Equa[i] = Accum2Mansion((Term1AcrRaw[i] || Term1AvgRaw[i]), EquaAccumList, Name, (Term1AcrSolsDif[i] || Term1AvgSolsDif[i]), SolsDeci, Y).Mansion
                 }
             } else {
                 const Func = AutoSyzygySub(Deci[i], SolsDif[i], SolsDeci, Name) // 退望
                 SyzygySub = Func.SyzygySub
                 SyzygySubPrint = Func.Print
             }
-            if (isAcr) {
-                Int[i] = AcrInt[i]
-                Raw[i] = AcrRaw[i]
-            } else {
-                Int[i] = AvgInt[i]
-                Raw[i] = AvgRaw[i]
-            }
+            Int[i] = isAcr ? AcrInt[i] : AvgInt[i]
+            Raw[i] = isAcr ? AcrRaw[i] : AvgRaw[i]
             Int[i] += NewmPlus + SyzygySub // 這裏int是二次內差的結果，但線性與二次分屬兩日的極端情況太少了，暫且不論
             Raw[i] += NewmPlus + SyzygySub
             AcrInt[i] += NewmPlus + SyzygySub
@@ -261,19 +256,11 @@ export default (Name, Y) => {
         let LeapNumTerm = 0
         //////// 置閏
         if (isNewm) {
-            if (isAcr) {
-                for (let i = 1; i <= 12; i++) {
-                    if ((~~TermAvgRaw[i] < ~~AcrRaw[i + 1]) && (~~TermAvgRaw[i + 1] >= ~~AcrRaw[i + 2])) {
-                        LeapNumTerm = i // 閏Leap月，第Leap+1月爲閏月
-                        break
-                    }
-                }
-            } else {
-                for (let i = 1; i <= 12; i++) {
-                    if ((~~TermAvgRaw[i] < ~~AvgRaw[i + 1]) && (~~TermAvgRaw[i + 1] >= ~~AvgRaw[i + 2])) {
-                        LeapNumTerm = i
-                        break
-                    }
+            const NewmRaw = isAcr ? AcrRaw : AvgRaw
+            for (let i = 1; i <= 12; i++) {
+                if ((~~TermAvgRaw[i] < ~~NewmRaw[i + 1]) && (~~TermAvgRaw[i + 1] >= ~~NewmRaw[i + 2])) {
+                    LeapNumTerm = i // 閏Leap月，第Leap+1月爲閏月
+                    break
                 }
             }
         }
@@ -326,7 +313,7 @@ export default (Name, Y) => {
         Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1Equa,
         TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermEqua,
         LeapSurAvg, LeapSurAcr, LeapNumTerm,
-        EquaDegAccumList, NewmEqua,
+        EquaAccumList, NewmEqua,
         //////// 交食用
         SolsDeci, NewmNodeAccum, NewmNodeAccumNight, NewmAnomaAccum, NewmAnomaAccumNight, NewmDeci, NewmSolsDif, NewmAcrSolsDif,
         SyzygyNodeAccum, SyzygyAnomaAccum, SyzygyDeci, SyzygyAvgDeci, SyzygySolsDif, SyzygyAcrSolsDif,

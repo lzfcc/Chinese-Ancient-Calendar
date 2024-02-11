@@ -100,8 +100,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
         const YearStem = StemList.indexOf(YearSc[0])
         const YearBranch = BranchList.indexOf(YearSc[1])
         //////
-        const EquaDegAccumList = AutoDegAccumList(Name, year)
-        const EclpDegAccumList = AutoDegAccumList(Name, year, 1)
+        const { EquaAccumList, EclpAccumList } = AutoDegAccumList(Name, year)
         ////// 沒滅
         const MoSolsDif = [], MieSolsDif = []
         const MoLeng = Solar / (Solar - 360)
@@ -251,16 +250,16 @@ export const D1 = (Name, YearStart, YearEnd) => {
                         MoonEclpLat[i][k] = AutoNineOrbit(NodeAccumNight, SolsDifNight, Name) + MoonLonLatFunc.MoonEclpLat.toFixed(3) + '度'
                     }
                 }
-                const EquaFunc = Accum2Mansion(SunEquaLonAccum, EquaDegAccumList, Name, SunEquaLon, SolsDeci)
+                const EquaFunc = Accum2Mansion(SunEquaLonAccum, EquaAccumList, Name, SunEquaLon, SolsDeci)
                 Equa[i][k] = EquaFunc.Mansion
                 Duskstar[i][k] = EquaFunc.MorningDuskstar
-                Eclp[i][k] = Accum2Mansion(SunEclpLonAccum, EclpDegAccumList, Name).Mansion
+                Eclp[i][k] = Accum2Mansion(SunEclpLonAccum, EclpAccumList, Name).Mansion
                 const Lon2LatFunc = AutoLon2Lat(Type === 11 ? SunEclpLonNoon : SunEquaLonNoon, SolsDeci, Name)
                 Lat[i][k] = Lon2LatFunc.Lat.toFixed(3) + '度'
                 Rise[i][k] = Lon2LatFunc.Rise.toFixed(3) + '刻'
                 Dial[i][k] = Lon2LatFunc.Dial ? Lon2LatFunc.Dial.toFixed(3) + '尺' : 0
                 // 每日夜半月黃經
-                const MoonMansion = Accum2Mansion(MoonEclpLonAccum, EclpDegAccumList, Name).Mansion
+                const MoonMansion = Accum2Mansion(MoonEclpLonAccum, EclpAccumList, Name).Mansion
                 let MoonMansionNote = ''
                 if ((Type >= 2 && Type <= 4) && (MoonMansion[0] === '心' || MoonMansion[0] === '張')) { // 乾象：月在張心署之
                     MoonMansionNote = `<span class='MoonMansionNote'>忌刑</span>`

@@ -251,34 +251,27 @@ export const BindEqua2Eclp = (LonRaw, Sidereal, year) => {
 // console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
 
 export const BindDeg2Mansion = (Deg, Name) => {
-    const EquaAccumListTaichu = AutoDegAccumList(Name, 300)
+    const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList(Name, 300)
     const EquaAccumListHuangji = []
+    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500).EclpAccumList
     const EquaAccumListLindeA = []
-    const EquaAccumListDayan = AutoDegAccumList(Name, 729)
+    const EclpAccumListLindeA = AutoDegAccumList(Name, 665).EclpAccumList // 麟德
+    const { EquaAccumList: EquaAccumListDayan, EclpAccumList: EclpAccumListDayan } = AutoDegAccumList(Name, 729)
     const EquaAccumListYingtian = []
-    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
-    const EquaAccumListJiyuan = AutoDegAccumList(Name, 1106)
+    const EclpAccumListYingtian = AutoDegAccumList(Name, 964).EclpAccumList // 應天
+    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EquaAccumList // 明天
+    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065).EclpAccumList // 明天
+    const { EquaAccumList: EquaAccumListJiyuan, EclpAccumList: EclpAccumListJiyuan } = AutoDegAccumList(Name, 1106)
     const EquaAccumListDaming3 = []
-    const EquaAccumListShoushi = AutoDegAccumList(Name, 1281)
-    const EquaAccumListJiazi = []
-    const EclpAccumListTaichu = AutoDegAccumList(Name, 300, 1) // 四分
-    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
-    const EclpAccumListLindeA = AutoDegAccumList(Name, 665, 1) // 麟德
-    const EclpAccumListDayan = AutoDegAccumList(Name, 729, 1) // 大衍
-    const EclpAccumListYingtian = AutoDegAccumList(Name, 964) // 應天
-    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065, 1) // 明天
-    const EclpAccumListJiyuan = AutoDegAccumList(Name, 1106, 1) // 紀元
-    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
-    const EclpAccumListShoushi = AutoDegAccumList(Name, 1281, 1) // 授時
-    const EclpAccumListJiazi = AutoDegAccumList(Name, 1684, 1) // 甲子元曆
+    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180).EclpAccumList
+    const { EquaAccumList: EquaAccumListShoushi, EclpAccumList: EclpAccumListShoushi } = AutoDegAccumList(Name, 1281)
+    const { EquaAccumList: EquaAccumListJiazi, EclpAccumList: EclpAccumListJiazi } = AutoDegAccumList(Name, 1684) // 甲子元曆
     const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
         const Eclp = Deg2Mansion(Deg, EclpList, Name)
         const EquaList = eval('EquaAccumList' + title)
         let Equa = ''
-        if ((EquaList || []).length) {
-            Equa = Deg2Mansion(Deg, EquaList, Name)
-        }
+        if ((EquaList || []).length) Equa = Deg2Mansion(Deg, EquaList, Name)
         return {
             title: NameList[title],
             data: [Equa, Eclp]
@@ -289,26 +282,21 @@ export const BindDeg2Mansion = (Deg, Name) => {
 // console.log(BindDeg2Mansion(23.1511, 'Jiazi'))
 
 export const BindMansion2Deg = (Mansion, Name) => {
-    const EquaAccumListTaichu = AutoDegAccumList(Name, 300)
+    const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList(Name, 300)
     const EquaAccumListHuangji = []
+    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500).EclpAccumList
     const EquaAccumListLindeA = []
-    const EquaAccumListDayan = AutoDegAccumList(Name, 729)
+    const EclpAccumListLindeA = AutoDegAccumList(Name, 665).EclpAccumList // 麟德
+    const { EquaAccumList: EquaAccumListDayan, EclpAccumList: EclpAccumListDayan } = AutoDegAccumList(Name, 729)
     const EquaAccumListYingtian = []
-    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065) // 明天
-    const EquaAccumListJiyuan = AutoDegAccumList(Name, 1106)
+    const EclpAccumListYingtian = AutoDegAccumList(Name, 964).EclpAccumList // 應天
+    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EquaAccumList // 明天
+    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065).EclpAccumList // 明天
+    const { EquaAccumList: EquaAccumListJiyuan, EclpAccumList: EclpAccumListJiyuan } = AutoDegAccumList(Name, 1106)
     const EquaAccumListDaming3 = []
-    const EquaAccumListShoushi = AutoDegAccumList(Name, 1281)
-    const EquaAccumListJiazi = []
-    const EclpAccumListTaichu = AutoDegAccumList(Name, 300, 1) // 四分
-    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500, 1)
-    const EclpAccumListLindeA = AutoDegAccumList(Name, 665, 1) // 麟德
-    const EclpAccumListDayan = AutoDegAccumList(Name, 729, 1) // 大衍
-    const EclpAccumListYingtian = AutoDegAccumList(Name, 964) // 應天
-    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065, 1) // 明天
-    const EclpAccumListJiyuan = AutoDegAccumList(Name, 1106, 1) // 紀元
-    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180, 1)
-    const EclpAccumListShoushi = AutoDegAccumList(Name, 1281, 1) // 授時
-    const EclpAccumListJiazi = AutoDegAccumList(Name, 1684, 1) // 甲子、癸卯
+    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180).EclpAccumList
+    const { EquaAccumList: EquaAccumListShoushi, EclpAccumList: EclpAccumListShoushi } = AutoDegAccumList(Name, 1281)
+    const { EquaAccumList: EquaAccumListJiazi, EclpAccumList: EclpAccumListJiazi } = AutoDegAccumList(Name, 1684) 
     const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
         const EclpList = eval('EclpAccumList' + title)
         const Eclp = Mansion2Deg(Mansion, EclpList, Name)

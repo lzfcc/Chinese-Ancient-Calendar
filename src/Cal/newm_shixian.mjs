@@ -97,6 +97,14 @@ const abc_Sph = (a, b, c) => { // 斜弧三角形已知三邊求a所對角。上
     return avsin(vsinDif / mid)
 }
 // console.log(abc_Sph(108, 50.08333333333, 90)) // 113度45分36秒
+export const starEclp2Equa = (Sobliq, x, y) => { // 黃赤大距、黃經、黃緯
+    const Lat = 90 - aCb_Sph(Sobliq, 90 - y, t1(x))
+    const A = acos(
+        (cos(90 - y) - cos(Sobliq) * cos(90 - Lat)) /
+        (sin(Sobliq) * sin(90 - Lat)))  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
+    return { Gong: x < 180 ? A : 360 - A, Lat }
+}
+// console.log(starEclp2Equa(23 + 29.5 / 60, 27 + 10 / 60, 29 + 22 / 60)) // 考成卷十六恆星曆理算例:赤經緯23度41分58秒=23.6994444444，8度5分4秒=8.08444444444
 export const twilight = (Sobliq, BjLat, SunLon) => { // 民用曚影時長。應該也是用的正午太陽緯度
     const limit = 6 // 民用6度，天文18度
     const a = 90 + limit
@@ -583,11 +591,7 @@ export const N4 = (Name, Y) => {
         const Dif2 = Math.sign(Dif) * abs(LonHigh2Flat(Mobliq, TotalWhitelongi) - TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加
         const TotalMoonGong = ((AcrSunGong + 180) % 360 + Dif + Dif2 + 360) % 360 // 加減食甚距弧（是Dif嗎？？），再加黃白升度差
         const TotalMoonLat = HighLon2FlatLat(Mobliq, TotalWhitelongi)
-        const TotalMoonEquaLat = 90 - aCb_Sph(Sobliq, 90 - TotalMoonLat, t1(TotalMoonGong))
-        const A = acos(
-            (cos(90 - TotalMoonLat) - cos(Sobliq) * cos(90 - TotalMoonEquaLat)) /
-            (sin(Sobliq) * sin(90 - TotalMoonEquaLat)))  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
-        const TotalMoonEquaGong = 180 - A + (TotalMoonGong > 180 ? 180 : 0)
+        const { Gong: TotalMoonEquaGong, Lat: TotalMoonEquaLat } = starEclp2Equa(Sobliq, TotalMoonGong, TotalMoonLat)
         return { Start: fix(deci(TotalSd - T_StartTotal)), End: fix(deci(TotalSd + T_StartTotal)), Total: fix(deci(TotalSd)), Magni, TotalMoonGong, TotalMoonLat, TotalMoonEquaGong, TotalMoonEquaLat }
     }
     const moonEcliGuimao = NowSd => {

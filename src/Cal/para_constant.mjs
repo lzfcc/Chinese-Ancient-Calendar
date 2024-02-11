@@ -2,6 +2,7 @@ import big from "decimal.js";
 import frc from "fraction.js";
 import nzh from "nzh/hk.js";
 import Para from "./para_calendars.mjs";
+import { LonHigh2Flat, starEclp2Equa } from "./newm_shixian.mjs";
 
 big.config({
   precision: 64,
@@ -1033,81 +1034,96 @@ const EclpDegShoushi = [0,
 // 西曆
 const EclpDegJiazi = [0,
   10.616666666666667, 10.633333333333333, 17.833333333333333, 4.8333333333333333, 7.55, 15.933333333333333, 9, // 角七宿76.4
-  23.616666666666667, 7.9333333333333333, 11.633333333333333, 9.9833333333333333, 20.116666666666667, 15.683333333333333, 13.1, // 斗七宿102.06666666667
+  23.7833333333333, 7.76666666666667, 11.633333333333333, 9.9833333333333333, 20.116666666666667, 15.683333333333333, 13.1, // 斗七宿102.06666666667
   11.65, 13, 12.25, 9.25, 13.966666666666667, 1.35, 11.55, // 奎七宿73.01666666667
-  30.416666666666666, 4.5333333333333333, 17.066666666666666, 8.3833333333333333, 18.066666666666666, 17, 13.05, //井七宿108.5166666667。合360度
-] // 甲子元曆黃道度，根據黃道宿鈐歸算
+  30.416666666666666, 4.6, 17, 8.3833333333333333, 18.066666666666666, 17, 13.05, //井七宿108.5166666667。合360度
+] // 甲子元曆黃道度，根據黃道宿鈐歸算。考成·恆星曆理·總論：黃道經緯度根據儀象志歸算而得，而儀象志與新法曆書有微異。
+export const EclpLatJiazi = [0,
+  -1.98333333333333, 2.96666666666667, .43333333333333, -5.38333333333333, -3.91666666666667, -15, -6.93333333333333,// 角
+  -3.83333333333333, 4.68333333333333, 8.16666666666667, 8.7,
+  10.7, 19.43333333333333, 12.58333333333333, // 斗
+  15.96666666666667, 8.48333333333333, 11.26666666666667, 4.16666666666667, -2.61666666666667, -23.63333333333333, -13.43333333333333, // 奎
+  -.88333333333333, -.8, -12.45, -22.4, -26.2, -22.68333333333333, -14.41666666666667 // 井
+]
 export const MansionNameList =
   "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢觜參井鬼柳星張翼軫"; // 值日，星期日對應房、虛、昴、星
 // export const MansionNameListQing =
 // "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢參觜井鬼柳星張翼軫"; // 參觜互換
 export const MansionAnimalNameList =
   "蚓蛟龍貉兔狐虎豹獬牛蝠鼠燕豬㺄狼狗雉雞烏猴猿犴羊獐馬鹿蛇蚓";
-export const AutoDegAccumList = (Name, year, isEclp) => { // isEclp===1 是黃道度
-  const { Type, Solar, SolarRaw, MansionRaw, MansionFracPosi } =
+// 西曆：所有時代都用自己的度數，古曆：各個時代用各個時代的黃道赤道，清代赤道继续用授时
+export const AutoDegAccumList = (Name, Y) => {
+  const { Type, Solar, SolarRaw, MansionRaw, MansionFracPosi, MansionConst, Sobliq } =
     Para[Name];
   let { Sidereal } = Para[Name];
-  let DegListRaw = []; // 不同時期用不同的宿度
-  if (isEclp) {
-    // 1684
-    if (year >= 1684) {
-      DegListRaw = EclpDegJiazi;
-    } else if (year >= 1281) {
-      DegListRaw = EclpDegShoushi;
-    } else if (Type === 10 && year >= 1180 && year <= 1280) {
-      // 'Daming3'
-      DegListRaw = EclpDegNewDaming;
-    } else if (year >= 1106) {
-      DegListRaw = EclpDegJiyuan;
-    } else if (year >= 1065) {
-      DegListRaw = EclpDegMingtian;
-    } else if (year >= 964) {
-      DegListRaw = EclpDegYingtian;
-    } else if (year >= 729) {
-      DegListRaw = EclpDegDayan;
-    } else if (year >= 665) {
-      DegListRaw = EclpDegLinde;
-    } else if (Name === "Huangji") {
-      DegListRaw = EclpDegHuangji;
-    } else {
-      DegListRaw = EclpDegEasthan;
+  let EclpListRaw = [], EquaListRaw = [] // 不同時期用不同的宿度
+  Sidereal = Sidereal || Solar || SolarRaw;
+  const raw2Accum = ListRaw => {
+    let DegList = [], DegAccumList = [];
+    if (MansionRaw) {
+      DegList = ListRaw.slice();
+      DegList[MansionFracPosi] += deci(Sidereal)
+      DegAccumList = DegList.slice();
+      for (let i = 1; i <= 28; i++) { // 從1開始索引
+        DegAccumList[i] += DegAccumList[i - 1]
+        DegAccumList[i] = parseFloat(DegAccumList[i].toPrecision(13))
+      }
+    }
+    return DegAccumList
+  }
+  const raw2AccumB = ListRaw => {
+    let DegAccumList = [];
+    if (MansionRaw) {
+      DegAccumList = ListRaw.slice();
+      for (let i = 1; i <= 28; i++) { // 從1開始索引
+        DegAccumList[i] += (DegAccumList[i - 1])
+      }
+      for (let i = 1; i <= 28; i++) {
+        DegAccumList[i] *= Sidereal / 360
+        DegAccumList[i] = parseFloat(DegAccumList[i].toPrecision(13))
+      }
+    }
+    return DegAccumList
+  }
+  let EquaAccumList = [], EclpAccumList = []
+  if (Type === 13) {
+    EclpAccumList = raw2AccumB(EclpDegJiazi)
+    for (let i = 1; i <= 28; i++) {
+      const Eclp2EquaMansionGong = (EclpAccumList[i] - MansionConst + (51 / 3600) * (Y - 1684) + 360) % 360 // 某星距冬至度數
+      EquaAccumList[i] = ((starEclp2Equa(Sobliq, Eclp2EquaMansionGong, EclpLatJiazi[i]).Gong + LonHigh2Flat(Sobliq, MansionConst)) % 360) * Sidereal / 360
     }
   } else {
-    if (year >= 1281) {
-      DegListRaw = EquaDegShoushi;
-    } else if (year >= 1106) {
-      DegListRaw = EquaDegJiyuan;
-    } else if (year >= 1065 && Name === "Mingtian") {
-      DegListRaw = EquaDegMingtian;
-    } else if (year >= 729) {
-      DegListRaw = EquaDegDayan;
+    if (Y >= 1684) {
+      EclpListRaw = EclpDegJiazi
+      EclpAccumList = raw2AccumB(EclpListRaw)
     } else {
-      DegListRaw = EquaDegTaichu;
+      if (Y >= 1281) EclpListRaw = EclpDegShoushi
+      else if (Type === 10 && Y >= 1180 && Y <= 1280) EclpListRaw = EclpDegNewDaming // 'Daming3'
+      else if (Y >= 1106) EclpListRaw = EclpDegJiyuan
+      else if (Y >= 1065) EclpListRaw = EclpDegMingtian
+      else if (Y >= 964) EclpListRaw = EclpDegYingtian
+      else if (Y >= 729) EclpListRaw = EclpDegDayan
+      else if (Y >= 665) EclpListRaw = EclpDegLinde
+      else if (Name === "Huangji") EclpListRaw = EclpDegHuangji
+      else EclpListRaw = EclpDegEasthan
+      EclpAccumList = raw2Accum(EclpListRaw)
     }
+    if (Y >= 1281) EquaListRaw = EquaDegShoushi
+    else if (Y >= 1106) EquaListRaw = EquaDegJiyuan
+    else if (Y >= 1065 && Name === "Mingtian") EquaListRaw = EquaDegMingtian
+    else if (Y >= 729) EquaListRaw = EquaDegDayan
+    else EquaListRaw = EquaDegTaichu
+    EquaAccumList = raw2Accum(EquaListRaw)
   }
-  Sidereal = Sidereal || Solar || SolarRaw;
-  let DegList = [], DegAccumList = [];
-  if (MansionRaw) {
-    if (year >= 1684) {
-      for (let i = 1; i <= 28; i++) {
-        DegList[i] = DegListRaw[i] * Sidereal / 360
-      }
-      DegList[0] = 0
-    } else {
-      DegList = DegListRaw.slice();
-      DegList[MansionFracPosi] += Sidereal - ~~Sidereal;
-    }
-    DegAccumList = DegList.slice();
-    for (let i = 1; i <= 28; i++) { // 從1開始索引
-      DegAccumList[i] += DegAccumList[i - 1];
-      DegAccumList[i] = parseFloat(DegAccumList[i].toPrecision(13));
-    }
-    DegAccumList = [0, ...DegAccumList];
-    DegAccumList[29] = Sidereal;
-  }
-  return DegAccumList;
+  EclpAccumList = [0, ...EclpAccumList]
+  EclpAccumList[1] = 0
+  EclpAccumList[29] = Sidereal
+  EquaAccumList = [0, ...EquaAccumList]
+  EquaAccumList[1] = 0
+  EquaAccumList[29] = Sidereal
+  return { EclpAccumList, EquaAccumList }
 };
-// console.log(AutoDegAccumList('Guimao', 1700, 1))
+// console.log(AutoDegAccumList('Jiazi', 1684))
 export const GongList = [
   "娵訾",
   "降婁",
@@ -1138,7 +1154,7 @@ export const WestGongNameList = [
 ]; // 回回曆法
 export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30]; // 已上十二宮，所謂不動之月，凡三百六十五日，乃歲周之日也。若遇宮分有閏之年，於雙魚宮加一日，凡三百六十六日
 
-// lzfcc：
+// @lzfcc：
 // const ScList = ['癸亥']
 // const StemList = '甲乙丙丁戊己庚辛壬癸'
 // const BranchList = '子丑寅卯辰巳午未申酉戌亥'
@@ -1179,18 +1195,18 @@ export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30];
 // ]
 // 黃赤度經過以下檢驗都沒問題了
 // let EquaDegList = []
-// let EquaDegAccumList = []
+// let EquaAccumList = []
 // EquaDegList = EquaDegShoushi.slice()
-// EquaDegAccumList = EquaDegList.slice()
+// EquaAccumList = EquaDegList.slice()
 // for (let i = 1; i <= 29; i++) {
-//     EquaDegAccumList[i] += EquaDegAccumList[i - 1]
+//     EquaAccumList[i] += EquaAccumList[i - 1]
 // }
-// EquaDegAccumList = EquaDegAccumList.slice(-1).concat(EquaDegAccumList.slice(0, -1))
-// EquaDegAccumList[0] = 0
+// EquaAccumList = EquaAccumList.slice(-1).concat(EquaAccumList.slice(0, -1))
+// EquaAccumList[0] = 0
 // 甲子元曆黃道宿鈐。暫時沒在曆象考成找到，用的五禮通考卷195，p9167。江永：此二十八宿度數，與崇禎戊辰所測者間有損益。
 // const EclpDegJiaziAccum = [ // 即1684年前冬至在箕3.1666666667
 //   0 * 30 + 5 + 50 / 60, // 斗
-//   0 * 30 + 29 + 27 / 60,
+//   0 * 30 + 29 + 37 / 60, // _________五礼通考：27分
 //   1 * 30 + 7 + 23 / 60,
 //   1 * 30 + 19 + 1 / 60,
 //   1 * 30 + 29 + 0 / 60,
@@ -1205,7 +1221,7 @@ export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30];
 //   5 * 30 + 19 + 22 / 60, // 觜。參觜顛倒
 //   6 * 30 + 0 + 55 / 60, // 井
 //   7 * 30 + 1 + 20 / 60,
-//   7 * 30 + 5 + 52 / 60,
+//   7 * 30 + 5 + 56 / 60, //————————————五礼通考：52分
 //   7 * 30 + 22 + 56 / 60,
 //   8 * 30 + 1 + 19 / 60, // 張
 //   8 * 30 + 19 + 23 / 60,

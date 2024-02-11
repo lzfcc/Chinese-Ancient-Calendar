@@ -86,8 +86,10 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const { SunLon: SunLonMor } = sunShixian(Name, SunRoot, SperiRoot, SdMidn + 1)
                 const { MoonGong, MoonLon, MoonLat } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
                 Eclp[i][k] = deg2Hms(SunLon)
-                EclpMansion[i][k] = Gong2Mansion(Name, Y, SunGong).Mansion + '度' // 注意：入宿度是轉換成了古度的
+                const { EclpMansion: EclpMansionTmp, EquaMansion: EquaMansionTmp } = Gong2Mansion(Name, Y, SunGong)
+                EclpMansion[i][k] = EclpMansionTmp + '度' // 注意：入宿度是轉換成了古度的
                 Equa[i][k] = deg2Hms(LonHigh2Flat(Sobliq, SunLon))
+                EquaMansion[i][k] = EquaMansionTmp + '度'
                 const tmp1 = HighLon2FlatLat(Sobliq, SunLon)
                 Lat[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
                 Rise[i][k] = riseQing(SunLon + (SunLonMor - SunLon) / 2, Sobliq, BjLat)
@@ -95,7 +97,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 Twilight[i][k] = ClockWest(Rise[i][k] - twilight(Sobliq, BjLat, SunLon + (SunLonMor - SunLon) / 2))
                 Rise[i][k] = ClockWest(Rise[i][k])
                 MoonEclp[i][k] = deg2Hms(MoonLon)
-                MoonMansion[i][k] = Gong2Mansion(Name, Y, MoonGong).Mansion + '度'
+                MoonMansion[i][k] = Gong2Mansion(Name, Y, MoonGong).EclpMansion + '度'
                 MoonEclpLat[i][k] = (MoonLat > 0 ? 'N' : 'S') + deg2Hms(Math.abs(MoonLat))
                 ///////////具注曆////////////
                 const ScOrder = ~~(SolsmorScOrder + SdMidn) % 60
