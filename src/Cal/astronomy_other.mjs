@@ -2,7 +2,7 @@ import Para from './para_calendars.mjs'
 import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { MansionNameList, AutoDegAccumList, EclpLatJiazi } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
-import { LonHigh2Flat, twilight } from './newm_shixian.mjs'
+import { GongHigh2Flat, LonHigh2Flat, twilight } from './newm_shixian.mjs'
 
 export const Mansion2Deg = (Mansion, AccumList) => (AccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
@@ -59,11 +59,11 @@ export const Accum2Mansion = (Accum, AccumList, Name, SolsDif, SolsDeci, year) =
 export const Gong2Mansion = (Name, Y, EclpGong, Tod, Morrow, Rise) => {
     const { Solar, MansionConst, Sobliq, BjLat } = Para[Name]
     const { EclpAccumList, EquaAccumList } = AutoDegAccumList(Name, Y)
+    const Precession = 51 / 3600 * (Y - 1684) // 第谷歲差
     let EclpMansion = '', EquaMansion = '', DuskstarPrint = ''
     if (EclpGong !== false) { // 如果false就只算昏旦中星
-        const Precession = 51 / 3600 * (Y - 1684) // 第谷歲差
         const EclpMansionGong = (EclpGong - Precession + MansionConst + 360) % 360
-        const EquaMansionGong = (LonHigh2Flat(Sobliq, EclpMansionGong) + 360) % 360
+        const EquaMansionGong = (GongHigh2Flat(Sobliq, EclpMansionGong) + 360) % 360
         EclpMansion = Deg2Mansion((EclpMansionGong * Solar / 360 + Solar) % Solar, EclpAccumList)
         EquaMansion = Deg2Mansion((EquaMansionGong * Solar / 360 + Solar) % Solar, EquaAccumList)
     }
@@ -72,8 +72,8 @@ export const Gong2Mansion = (Name, Y, EclpGong, Tod, Morrow, Rise) => {
         const Twilight = twilight(Sobliq, BjLat, (Tod + SunVd / 2 + 270) % 360)
         const MorningstarGong = Tod + (Rise - Twilight) * SunVd - (.5 - Rise + Twilight) * 360
         const DuskstarGong = Tod + (1 - Rise + Twilight) * SunVd + (.5 - Rise + Twilight) * 360
-        const Morningstar = Deg2Mansion(((MorningstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EquaAccumList, 1)
-        const Duskstar = Deg2Mansion(((DuskstarGong + MansionConst) * (Solar / 360) + Solar) % Solar, EquaAccumList, 1)
+        const Morningstar = Deg2Mansion(((MorningstarGong - Precession + MansionConst) * (Solar / 360) + Solar) % Solar, EquaAccumList, 1)
+        const Duskstar = Deg2Mansion(((DuskstarGong - Precession + MansionConst) * (Solar / 360) + Solar) % Solar, EquaAccumList, 1)
         DuskstarPrint = Morningstar + ' ' + Duskstar
     }
     return { EclpMansion, EquaMansion, DuskstarPrint }
