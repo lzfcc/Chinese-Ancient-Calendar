@@ -27,7 +27,7 @@ const f1 = X => X % 360 > 180 ? 1 : -1// 不及半周为减，过半周为加。
 const f2 = X => X % 360 < 180 ? 1 : -1
 const f3 = X => X % 360 % 180 > 90 ? 1 : -1 // 一、三象限加，二、四象限減
 const f4 = X => X % 360 % 180 < 90 ? 1 : -1
-const Lon2Gong = Lon => (Lon + 90) % 360
+export const Lon2Gong = Lon => (Lon + 90) % 360
 const Gong2Lon = Gong => (Gong + 270) % 360
 export const LonHigh2Flat = (e, X) => ~~(Math.ceil(X / 90) / 2) * 180 + atan(cos(e) * tan(X)) // 傾角、經度，用於黃轉赤，白轉黃
 export const GongHigh2Flat = (e, X) => Lon2Gong(LonHigh2Flat(e, Gong2Lon(X)))
@@ -682,7 +682,7 @@ export const N4 = (Name, Y) => {
         const NowlineSd = AcrlineSd + timeAvg2Real(Sobliq, SunTod.SunCorr, Gong2Lon(TermGong))
         const NowlineSc = ScList[(SolsmorScOrder + ~~NowlineSd) % 60]
         const NowlineDeci = fix(deci(NowlineSd), 3)
-        const TermEclp = Gong2Mansion(Name, Y, TermGong).Mansion
+        const TermEclp = Gong2Mansion(Name, Y, TermGong).EclpMansion
         // 再加上迭代。曆書用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時
         const tmp = TermGong - sunShixian(Name, SunRoot, SperiRoot, AcrlineSd).SunGong // 預防冬至0宮的問題
         const AcrSd = AcrlineSd + (abs(tmp) > 180 ? tmp + 360 : tmp) / SunAvgVd // 迭代
@@ -763,7 +763,7 @@ export const N4 = (Name, Y) => {
             NowSd[i] = AcrSd + timeAvg2Real(Sobliq, AcrSunCorr, AcrSunLon)
             NowSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
             NowDeci[i] = fix(deci(NowSd[i]), 3)
-            Eclp[i] = Gong2Mansion(Name, Y, AcrSunGong).Mansion
+            Eclp[i] = Gong2Mansion(Name, Y, AcrSunGong).EclpMansion
             //////// 交食
             let isEcli = false // 入食限可以入算
             const tmp = t3(AcrWhitelongi) // 距離0、180的度數            

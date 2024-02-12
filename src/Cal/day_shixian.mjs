@@ -10,7 +10,7 @@ import {
 } from './day_luck.mjs'
 import { sunShixian, moonGuimao, LonHigh2Flat, HighLon2FlatLat, riseQing, twilight } from './newm_shixian.mjs'
 import CalNewm from './newm_index.mjs'
-import { Gong2Mansion } from './astronomy_other.mjs'
+import { Gong2Mansion, Lon2Midstar } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { ClockWest } from './time_decimal2clock.mjs'
 
@@ -93,7 +93,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const tmp1 = HighLon2FlatLat(Sobliq, SunLon)
                 Lat[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
                 Rise[i][k] = riseQing(SunLon + (SunLonMor - SunLon) / 2, Sobliq, BjLat)
-                Duskstar[i][k] = Gong2Mansion(Name, Y, false, SunLon + 90, SunLonMor + 90, Rise[i][k]).DuskstarPrint
+                Duskstar[i][k] = Lon2Midstar(Name, Y, SunLon, SunLonMor, Rise[i][k])
                 Twilight[i][k] = ClockWest(Rise[i][k] - twilight(Sobliq, BjLat, SunLon + (SunLonMor - SunLon) / 2))
                 Rise[i][k] = ClockWest(Rise[i][k])
                 MoonEclp[i][k] = deg2Hms(MoonLon)
@@ -124,4 +124,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-console.log(D2('Guimao', 1730, 1730))
+// console.log(D2('Guimao', 1730, 1730))
