@@ -48,7 +48,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
         const OriginJdAccum = 2086292 + ~~(365.2423 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
         const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
-        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], EquaMansion = [], Eclp = [], EclpMansion = [], MoonEclp = [], MoonEclpLat = [], MoonMansion = [], Rise = [], Twilight = [], Lat = [], Duskstar = []
+        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], EquaMansion = [], Eclp = [], EclpMansion = [], MoonEclp = [], MoonEclpLat = [], MoonMansion = [], Rise = [], Morningstar = [], Lat = [], Duskstar = []
         let DayAccum = 0, JieAccum = 0 // 各節積日 
         let JianchuDayAccum = NewmSd[0] // 建除
         let JianchuOrigin = 0
@@ -68,7 +68,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
             Nayin[i] = []
             Week[i] = []
             Rise[i] = []
-            Twilight[i] = []
+            Morningstar[i] = []
             Lat[i] = []
             Duskstar[i] = []
             Equa[i] = []
@@ -93,8 +93,10 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const tmp1 = HighLon2FlatLat(Sobliq, SunLon)
                 Lat[i][k] = (tmp1 > 0 ? 'N' : 'S') + deg2Hms(Math.abs(tmp1))
                 Rise[i][k] = riseQing(SunLon + (SunLonMor - SunLon) / 2, Sobliq, BjLat)
-                Duskstar[i][k] = Lon2Midstar(Name, Y, SunLon, SunLonMor, Rise[i][k])
-                Twilight[i][k] = ClockWest(Rise[i][k] - twilight(Sobliq, BjLat, SunLon + (SunLonMor - SunLon) / 2))
+                const { Morningstar: MorningstarTmp, Duskstar: DuskstarTmp } = Lon2Midstar(Name, Y, SunLon, SunLonMor, Rise[i][k])
+                const TwilightLeng = twilight(Sobliq, BjLat, SunLon + (SunLonMor - SunLon) / 2)
+                Morningstar[i][k] = ClockWest(Rise[i][k] - TwilightLeng, false) + ' ' + MorningstarTmp
+                Duskstar[i][k] = ClockWest(1 - Rise[i][k] + TwilightLeng, false) + ' ' + DuskstarTmp
                 Rise[i][k] = ClockWest(Rise[i][k])
                 MoonEclp[i][k] = deg2Hms(MoonLon)
                 MoonMansion[i][k] = Gong2Mansion(Name, Y, MoonGong).EclpMansion + '度'
@@ -114,7 +116,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
         return {
             Era, Title, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
             Sc, Jd, Nayin, Week,
-            Eclp, EclpMansion, Equa, EquaMansion, Lat, Twilight, Rise, Duskstar,
+            Eclp, EclpMansion, Equa, EquaMansion, Lat, Morningstar, Rise, Duskstar,
             MoonEclp, MoonMansion, MoonEclpLat
         }
     }

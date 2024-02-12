@@ -961,6 +961,9 @@ hr {
   vertical-align: top;
   border-top: 1px solid var(--shallowgray);
   border-bottom: 1px solid var(--shallowgray);
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: scroll;
 }
 
 .day-table td p {
@@ -995,6 +998,7 @@ hr {
 .Twilight,
 .Rise,
 .Dial,
+.Morningstar,
 .Duskstar {
   color: var(--lettergreen);
 }

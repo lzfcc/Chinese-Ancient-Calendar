@@ -3,7 +3,7 @@ import {
     BranchList, HalfList, StemList, QuarList, TwelveList, TwelveListHuangji, TwelveListWuyin, TwentyfourList, FourList, big, nzh, deci,
 } from './para_constant.mjs'
 
-export const ClockWest = Deci => {
+export const ClockWest = (Deci, isS) => {
     let h = ~~(Deci * 24)
     let m = ~~((Deci - h / 24) * 24 * 60)
     let s = ~~((Deci - h / 24 - m / 24 / 60) * 86400)
@@ -19,8 +19,7 @@ export const ClockWest = Deci => {
     if (s.length < 2) {
         s = '0' + s
     }
-    const Print = h + ':' + m + ':' + s
-    return Print
+    return isS === false ? h + ':' + m : h + ':' + m + ':' + s
 }
 
 const ClockWeijin = (Deci, Name) => {

@@ -35,7 +35,7 @@ export const Accum2Mansion = (Accum, AccumList, Name, SolsDif, SolsDeci, year) =
     /////////昏中《中》頁326
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏=1-(Rise-LightRange)，夜半至明東行度數=Rise-LightRange
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(.5-夜半漏)*週天-夜半漏（單位1日）
-    let MorningDuskstar = ``
+    let MorningDuskstar = ''
     const LightRange = AutoLightRange(Name)
     if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
         const Rise = AutoLon2Lat(SolsDif, SolsDeci, Name).Rise / 100
@@ -79,7 +79,7 @@ export const Lon2Midstar = (Name, Y, LonTod, LonMor, Rise) => {
     const DuskstarTmp = (1 - Rise + Twilight) * SunEquaVd + (.5 - Rise + Twilight) * 360
     const Morningstar = Deg2Mansion(((EquaMansionGongTod + MorningstarTmp) * (Solar / 360) + Solar) % Solar, EquaAccumList, 2)
     const Duskstar = Deg2Mansion(((EquaMansionGongTod + DuskstarTmp) * (Solar / 360) + Solar) % Solar, EquaAccumList, 2)
-    return Morningstar + Duskstar
+    return { Morningstar, Duskstar }
 }
 // console.log(Gong2Mansion('Guimao', 1684, 0))
 
