@@ -2,7 +2,7 @@ import big from "decimal.js";
 import frc from "fraction.js";
 import nzh from "nzh/hk.js";
 import Para from "./para_calendars.mjs";
-import { LonHigh2Flat, starEclp2Equa } from "./newm_shixian.mjs";
+import { starEclp2Equa } from "./newm_shixian.mjs";
 
 big.config({
   precision: 64,
@@ -1102,8 +1102,8 @@ export const AutoDegAccumList = (Name, Y) => {
     EclpAccumList = raw2AccumB(EclpDegJiazi)
     const Precession = 51 / 3600 * (Y - 1684)
     for (let i = 0; i <= 28; i++) {
-      const EclpMansionGong = (EclpAccumList[i] * 360 / Sidereal - MansionConst + Precession + 360) % 360 // 某星距冬至黃道度數
-      EquaAccumList[i] = ((starEclp2Equa(Sobliq, EclpMansionGong, EclpLatJiazi[i + 1]).Gong + MansionConst + 360) % 360)
+      const MansionLon = (EclpAccumList[i] * 360 / Sidereal - MansionConst + Precession + 270) % 360 // 某星黃經
+      EquaAccumList[i] = ((starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i + 1]).EquaLon + MansionConst + 90 + 360) % 360) // 這個積度是宮度
     }
     const adj = EquaAccumList[0] - 360
     for (let i = 0; i <= 28; i++) {

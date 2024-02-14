@@ -2,7 +2,7 @@ import Para from './para_calendars.mjs'
 import { AutoLon2Lat } from './astronomy_bind.mjs'
 import { MansionNameList, AutoDegAccumList, EclpLatJiazi } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
-import { GongHigh2Flat, Lon2Gong, LonHigh2Flat, twilight } from './newm_shixian.mjs'
+import { GongHigh2Flat, LonHigh2Flat, twilight } from './newm_shixian.mjs'
 
 export const Mansion2Deg = (Mansion, AccumList) => (AccumList[MansionNameList.indexOf(Mansion.slice(0, 1))] + +(Mansion.slice(1))).toFixed(4)
 // console.log(Mansion2Deg('亢1.15', [0, 0, 12, 9.25, 16], 'Dayan'))
@@ -31,7 +31,7 @@ export const Accum2Mansion = (Accum, AccumList, Name, SolsDif, SolsDeci, year) =
     Accum -= Type === 11 ? SolsConst : 0
     Accum += MansionConst || 0
     const Deg = ((OriginDeg + Accum) % Sidereal + Sidereal + 1e-12) % Sidereal
-    const Mansion = Deg2Mansion(Deg, AccumList)
+    const Mansion = Deg2Mansion(Deg, AccumList, 2)
     /////////昏中《中》頁326
     // 昬時距午度（卽太陽時角）=Sidereal*半晝漏（單位1日），夜半至昬東行度數=2-夜漏=1-(Rise-LightRange)，夜半至明東行度數=Rise-LightRange
     // 昏中=昬時距午度+夜半至昬東行度數=赤度+(晝漏*週天-夜漏)/200+1=1+赤度+(.5-夜半漏)*週天-夜半漏（單位1日）
@@ -46,7 +46,7 @@ export const Accum2Mansion = (Accum, AccumList, Name, SolsDif, SolsDeci, year) =
         const DuskstarDeg = (Deg + Sidereal * HalfLight + (Type === 7 ? 0 : 1 - HalfNight)) % Sidereal
         const Duskstar = Deg2Mansion(DuskstarDeg, AccumList, 2)
         const Morningstar = Deg2Mansion(MorningstarDeg, AccumList, 2)
-        MorningDuskstar = Morningstar + Duskstar
+        MorningDuskstar = Morningstar + ' ' + Duskstar
     }
     return { Mansion, MorningDuskstar }
 }
@@ -56,16 +56,19 @@ export const Accum2Mansion = (Accum, AccumList, Name, SolsDif, SolsDeci, year) =
 //     const MansionRaw = parseFloat((((78.8 + AvgRaw) % Sidereal + Sidereal) % Sidereal + .0000001).toPrecision(14)) // 78.8根據命起和週應而來
 // }
 // 以下是西曆日躔：
-export const Gong2Mansion = (Name, Y, EclpGong) => {
-    const { Solar, MansionConst, Sobliq } = Para[Name]
-    const { EclpAccumList, EquaAccumList } = AutoDegAccumList(Name, Y)
-    const Precession = 51 / 3600 * (Y - 1684) // 第谷歲差
-    let EclpMansion = '', EquaMansion = ''
-    const EclpMansionGong = (EclpGong - Precession + MansionConst + 360) % 360
-    const EquaMansionGong = (GongHigh2Flat(Sobliq, EclpMansionGong) + 360) % 360
-    EclpMansion = Deg2Mansion((EclpMansionGong * Solar / 360 + Solar) % Solar, EclpAccumList)
-    EquaMansion = Deg2Mansion((EquaMansionGong * Solar / 360 + Solar) % Solar, EquaAccumList)
-    return { EclpMansion, EquaMansion }
+export const eclpGong2Mansion = (Name, Y, EclpGong, fixed) => {
+    const { Solar, MansionConst } = Para[Name]
+    const { EclpAccumList } = AutoDegAccumList(Name, Y)
+    const Precession = 51 / 3600 * (Y - 1684) // 第谷歲差    
+    const EclpMansionGong = MansionConst - Precession + EclpGong
+    return Deg2Mansion((EclpMansionGong * Solar / 360 + Solar) % Solar, EclpAccumList, fixed)
+}
+export const equaGong2Mansion = (Name, Y, EquaGong, fixed) => {
+    const { Sobliq, Solar, MansionConst } = Para[Name]
+    const { EquaAccumList } = AutoDegAccumList(Name, Y)
+    const Precession = 51 / 3600 * (Y - 1684)
+    const EquaMansionGong = GongHigh2Flat(Sobliq, MansionConst - Precession) + EquaGong
+    return Deg2Mansion((EquaMansionGong * Solar / 360 + Solar) % Solar, EquaAccumList, fixed)
 }
 export const Lon2Midstar = (Name, Y, LonTod, LonMor, Rise) => {
     const { Solar, MansionConst, Sobliq, BjLat } = Para[Name]
@@ -81,7 +84,7 @@ export const Lon2Midstar = (Name, Y, LonTod, LonMor, Rise) => {
     const Duskstar = Deg2Mansion(((EquaMansionGongTod + DuskstarTmp) * (Solar / 360) + Solar) % Solar, EquaAccumList, 2)
     return { Morningstar, Duskstar }
 }
-// console.log(Gong2Mansion('Guimao', 1684, 0))
+// console.log(eclpGong2Mansion('Guimao', 1684, 0))
 
 export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, Name) => {
     const { isNewmPlus } = Para[Name]

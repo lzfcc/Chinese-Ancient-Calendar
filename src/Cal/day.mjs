@@ -247,17 +247,20 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     }
                     if (Type < 11) {
                         MoonLonLatFunc = AutoMoonLat(NodeAccumNight, Name)
-                        MoonEclpLat[i][k] = AutoNineOrbit(NodeAccumNight, SolsDifNight, Name) + MoonLonLatFunc.MoonEclpLat.toFixed(3) + '度'
+                        const tmp = MoonLonLatFunc.MoonEclpLat
+                        MoonEclpLat[i][k] = AutoNineOrbit(NodeAccumNight, SolsDifNight, Name) +
+                            (tmp > 0 ? 'N' : 'S') + Math.abs(tmp).toFixed(4)
                     }
                 }
                 const EquaFunc = Accum2Mansion(SunEquaLonAccum, EquaAccumList, Name, SunEquaLon, SolsDeci)
-                Equa[i][k] = EquaFunc.Mansion
+                Equa[i][k] = SunEquaLon.toFixed(4) + EquaFunc.Mansion
                 Duskstar[i][k] = EquaFunc.MorningDuskstar
-                Eclp[i][k] = Accum2Mansion(SunEclpLonAccum, EclpAccumList, Name).Mansion
+                Eclp[i][k] = SunEclpLon.toFixed(4) + Accum2Mansion(SunEclpLonAccum, EclpAccumList, Name).Mansion
                 const Lon2LatFunc = AutoLon2Lat(Type === 11 ? SunEclpLonNoon : SunEquaLonNoon, SolsDeci, Name)
-                Lat[i][k] = Lon2LatFunc.Lat.toFixed(3) + '度'
+                Lat[i][k] = (Lon2LatFunc.Lat > 0 ? 'N' : 'S') + Math.abs(Lon2LatFunc.Lat).toFixed(4) + '度'
                 Rise[i][k] = Lon2LatFunc.Rise.toFixed(3) + '刻'
-                Dial[i][k] = Lon2LatFunc.Dial ? Lon2LatFunc.Dial.toFixed(3) + '尺' : 0
+                Dial[i][k] = Lon2LatFunc.Dial ? ' ' + Lon2LatFunc.Dial.toFixed(3) + '尺' : ''
+                Rise[i][k] += Dial[i][k]
                 // 每日夜半月黃經
                 const MoonMansion = Accum2Mansion(MoonEclpLonAccum, EclpAccumList, Name).Mansion
                 let MoonMansionNote = ''
@@ -282,7 +285,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 if (Type >= 6) {
                     const WeekOrder = Math.round(((NewmInt[i - 1] + k - 1) % 7 + 5 + (WeekConst || 0)) % 7.1)
                     const MansionOrder = Math.round((((NewmInt[i - 1] + k - 1) % 28 + 23 + (MansionDayConst || 0)) + 28) % 28.1)
-                    Week[i][k] = WeekList[WeekOrder] + NumList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
+                    Week[i][k] = WeekList[WeekOrder] + MansionNameList[MansionOrder] + MansionAnimalNameList[MansionOrder]
                 }
                 for (let j = HouOrder; j < 90; j++) { // 氣候 
                     if (HouAccum[j] >= SolsDifNight && HouAccum[j] < SolsDifNight + 1) {
@@ -340,7 +343,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 } else if (DayAccum === Fu3DayAccum) {
                     Fu = `<span class='sanfu'>末伏</span>`
                 }
-                Nayin[i][k] = NayinList[Math.ceil(ScOrder / 2)] + Jianchu + Huanghei
+                Nayin[i][k] = NayinList[Math.ceil(ScOrder / 2)] + Jianchu + Huanghei + ' ' + Week[i][k]
                 HouName[i][k] += Fu
                 for (let j = 0; j < 7; j++) {
                     if (MieSolsDif[j] >= SolsDifNight && MieSolsDif[j] < SolsDifNight + 1) {
@@ -386,7 +389,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
         DayAccum = '凡' + nzh.encodeS(DayAccum) + '日　' + Yuan
         return {
             Era, Title, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
-            Sc, Jd, Nayin, Week, Equa, Eclp, Lat, Rise, Dial, Duskstar, MoonEclp, MoonEclpLat,
+            Sc, Jd, Nayin, Eclp, Equa, Lat, Rise, Duskstar, MoonEclp, MoonEclpLat,
             HouName, HexagramName, FiveName, ManGod, Luck
         }
     }

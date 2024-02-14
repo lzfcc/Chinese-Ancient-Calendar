@@ -12,6 +12,7 @@
   --red: #f27144;
   --letterred: #c11f1a;
   --letterblue: #0088e8;
+  --letterpurple: #a1007e;
   --blue: #2fa0ff;
   --bgblue: #e1f3ff;
   --purple: #c300f4;
@@ -985,28 +986,36 @@ hr {
 }
 
 .Equa,
-.EquaMansion {
+.EquaMansion,
+.Lat,
+.MoonEquaMansion {
   color: var(--letterred);
 }
 
 .Eclp,
-.EclpMansion {
+.EclpMansion,
+.MoonEclp,
+.MoonMansion {
   color: var(--letteryellow);
 }
 
-.Lat,
 .Twilight,
 .Rise,
 .Dial,
 .Morningstar,
-.Duskstar {
+.Duskstar,
+.MoonRise {
   color: var(--lettergreen);
 }
 
 .MoonEclp,
-.MoonEclpLat,
-.MoonMansion {
+.MoonEclpLat {
   color: var(--letterblue);
+}
+
+.MoonEqua,
+.MoonEquaLat {
+  color: var(--letterpurple);
 }
 
 .day-table td p.HexagramName {
