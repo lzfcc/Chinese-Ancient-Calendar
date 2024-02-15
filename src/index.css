@@ -15,7 +15,6 @@
   --letterpurple: #a1007e;
   --blue: #2fa0ff;
   --bgblue: #e1f3ff;
-  --purple: #c300f4;
   --cyan: #00e1d9;
   --green: #00bf0d;
   --lettergreen: #009a0b;
@@ -373,6 +372,7 @@ h2 {
 }
 
 table {
+  border-collapse: collapse;
   font-family: var(--codesans);
   font-size: .9em;
   line-height: 1.6em;
@@ -723,12 +723,12 @@ button.button4-3:hover {
 
 button.button4-5 {
   color: var(--bg);
-  background: var(--purple);
+  background: var(--letterpurple);
   border: none;
 }
 
 button.button4-5:hover {
-  color: var(--purple);
+  color: var(--letterpurple);
   background: none;
 }
 
@@ -1069,58 +1069,57 @@ hr {
 }
 
 .YearColor table {
-  border-collapse: collapse;
   font-family: var(--serif);
   border: none;
+  font-weight: bold;
 }
 
 .YearColor table td {
   padding: .7em 0;
-  font-weight: bold;
-  min-width: 3.4em;
-  width: 3em;
-  height: 1.9em;
+  min-width: 0 !important;
+  width: auto !important;
+  border: 1px solid var(--gray);
+}
+
+.color-white,
+.color-black,
+.color-cyan,
+.color-green,
+.color-yellow,
+.color-red,
+.color-purple {
+  color: var(--bg);
+  padding: 1em .5em;
 }
 
 .color-white {
+  color: var(--black);
   background: var(--bggray);
-  padding: 1em .5em;
 }
 
 .color-black {
-  color: var(--bg);
   background: var(--black);
-  padding: 1em .5em;
 }
 
 .color-cyan {
-  background: var(--cyan);
   color: var(--black);
-  padding: 1em .5em;
+  background: var(--cyan);
 }
 
 .color-green {
-  color: var(--bg);
   background: var(--green);
-  padding: 1em .5em;
 }
 
 .color-yellow {
-  color: var(--bg);
   background: var(--letteryellow);
-  padding: 1em .5em;
 }
 
 .color-red {
-  color: var(--bg);
   background: var(--letterred);
-  padding: 1em .5em;
 }
 
 .color-purple {
-  color: var(--bg);
-  background: var(--purple);
-  padding: 1em .5em;
+  background: var(--letterpurple);
 }
 
 .lati-red {

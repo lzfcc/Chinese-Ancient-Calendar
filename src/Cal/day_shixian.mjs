@@ -8,7 +8,7 @@ import {
 import {
     YearGodConvert, YearColorConvert, MonColorConvert,
 } from './day_luck.mjs'
-import { sunShixian, moonGuimao, LonHigh2Flat, HighLon2FlatLat, sunRiseQing, twilight, deg2Hms, Lat2NS, GongHigh2Flat, starEclp2Equa, Lon2Gong, moonRiseQing } from './newm_shixian.mjs'
+import { sunQing, moonQing, LonHigh2Flat, HighLon2FlatLat, sunRiseQing, twilight, deg2Hms, Lat2NS, GongHigh2Flat, starEclp2Equa, Lon2Gong, moonRiseQing } from './newm_shixian.mjs'
 import CalNewm from './newm_index.mjs'
 import { eclpGong2Mansion, equaGong2Mansion, Lon2Midstar } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
@@ -75,9 +75,9 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
-                const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunShixian(Name, SunRoot, SperiRoot, SdMidn)
-                const { SunLon: SunLonMor } = sunShixian(Name, SunRoot, SperiRoot, SdMidn + 1)
-                const { MoonGong, MoonLon, MoonLat } = moonGuimao(MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
+                const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunQing(Name, SunRoot, SperiRoot, SdMidn)
+                const { SunLon: SunLonMor } = sunQing(Name, SunRoot, SperiRoot, SdMidn + 1)
+                const { MoonGong, MoonLon, MoonLat } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
                 Eclp[i][k] = deg2Hms(SunLon) + eclpGong2Mansion(Name, Y, SunGong, 2)
                 // EclpMansion[i][k] =  // 注意：入宿度是轉換成了古度的
                 const SEquaLon = LonHigh2Flat(Sobliq, SunLon)
@@ -123,4 +123,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D2('Guimao', 1730, 1730))
+// console.log(D2('Jiazi', 1730, 1730))

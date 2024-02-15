@@ -131,7 +131,7 @@ export const YearColorConvert = YuanYear => {
         const row3c = `<span class='${ClassColorList[row3cn]}'>` + ColorList[row3cn] + NumList[row3cn] + `</span>`
         YearColor.push([row1a, row1b, row1c])
         YearColor.push([row2a, row2b, row2c])
-        YearColor.push([row3a, row3b, row3c])
+        YearColor.push([row3a, row3b, row3c])        
     }
     return YearColor
 }

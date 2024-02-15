@@ -2962,6 +2962,7 @@ export default {
         SunLimitYangAcr: 6.3666666666667,
         MoonLimit: 15.15,
         BjLat: 39.9916666666667, // 京師北極出地
+        // BjLon: 116.4343 // 現在地圖上看的北京觀象台經度
         MansionConst: 70.5666666666667, // 同甲子元曆 
         MansionRaw: [11, 3.16666666666667],
         ZhengNum: 2,
