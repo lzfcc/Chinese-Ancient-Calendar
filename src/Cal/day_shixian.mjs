@@ -3,7 +3,7 @@ import {
     NameList, ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
     WeekList, WeekList1, MansionNameList, MansionAnimalNameList,
     JianchuList, HuangheiList, YuanList,
-    nzh, NumList, MonNumList1, deci
+    nzh, NumList, MonNumList1
 } from './para_constant.mjs'
 import {
     YearGodConvert, YearColorConvert, MonColorConvert,
@@ -73,6 +73,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
             MoonRise[i] = []
             for (let k = 1; k <= ~~NewmSd[i] - ~~NewmSd[i - 1]; k++) { // 每月日數                
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
+                // const SdMidn = 68
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunQing(Name, SunRoot, SperiRoot, SdMidn)
@@ -123,4 +124,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D2('Jiazi', 1730, 1730))
+// console.log(D2('Jiazi', 1731, 1731))

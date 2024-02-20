@@ -34,8 +34,11 @@ export const GongHigh2Flat = (e, X) => Lon2Gong(LonHigh2Flat(e, Gong2Lon(X)))
 const LonHigh2FlatB = (Lat, X) => acos(cos(X) / cos(Lat)) // 已知黃經赤緯求赤經
 const LonFlat2High = (e, X) => Math.ceil(Math.ceil(X / 90) / 2) * 180 - 90 - atan(cos(e) * cot(X)) // 赤轉黃，黃轉白
 export const HighLon2FlatLat = (e, X) => asin(sin(e) * sin(X)) // 月距正交轉黃緯
+// console.log(LonHigh2Flat(23.4916666666667, 15))
+// console.log(LonFlat2High(23.4916666666667,73.80638)) // 考成卷八葉37算例
 // const LowLon2LowLat = (e, X) => atan(tan(e) * sin(X)) // 求赤經高弧交角用到這個的變形
 // const LowLat2HighLon = (e, X) => // 已知太陽赤緯轉黃經
+// console.log(LonHigh2Flat(23.5,15))
 // console.log(HighLon2FlatLat(23 + 29 / 60,112.28487818))
 // console.log(LowLat2HighLon(23 + 29 / 60, 11.49258677))
 // OA=40, HAB= 37.00450206, AH=18.74723726, OH=36.00521466, OB=44.09531291,HB=8.09009825, AB=20.36057491. sinHAB=.3973413465. HAB=23.41207808
@@ -96,6 +99,10 @@ const aCtimeb_Sph = (a, b, AngCTime) => {
     const c = LonFlat2High(AngA, b2) // 我的等效算法。經實驗，如果三角函數取小數點後8位，20.12486241，本來是20.1248526178365
     return { AngA, c }
 }
+// 球面三角已知兩角夾邊求另一角cosA=－cosBcosC+sinBsinCcosa
+const BaC_Sph = (B, C, a) => acos(sin(B) * sin(C) * cos(a) - cos(B) * cos(C))
+// console.log(BaC_Sph(90, 83.61729023292902, 72.7386111111)) // 72.84893171874154
+// console.log(BaC_Sph(72.8488888889,90,LonHigh2Flat(72.8488888889, 90 - abs(62.06444444444)))) //19.255410907734177
 // 斜弧三角形已知兩邊和夾角求另一邊
 const aCb_Sph = (a, b, C) => { // 納白爾公式 https://wenku.baidu.com/view/145cd0f4b84cf7ec4afe04a1b0717fd5360cb2f1.html
     const tanAPlBDiv2 = cos((a - b) / 2) / cos((a + b) / 2) * cot(C / 2)
@@ -103,6 +110,9 @@ const aCb_Sph = (a, b, C) => { // 納白爾公式 https://wenku.baidu.com/view/1
     const tancdiv2 = cos(atan(tanAPlBDiv2)) / cos(atan(tanAMiBDiv2)) * tan((a + b) / 2)
     return atan(tancdiv2) * 2
 }
+// 已知三個角一邊求b邊。sinAcosb=cosBsinC+sinBcosCcosa
+const ABCa_Sph = (A, B, C, a) => acos((cos(B) * sin(C) + sin(B) * cos(C) * cos(a)) / sin(A))
+// console.log(ABCa_Sph(72.8488888889,90,83.61729023292902,72.7386111111))// 88度1分18秒=88.02166666667
 const abc_Sph = (a, b, c) => { // 斜弧三角形已知三邊求a所對角。上編卷三總較法
     const sum = b + c
     const dif = abs(b - c)
@@ -116,10 +126,12 @@ const abc_Sph = (a, b, c) => { // 斜弧三角形已知三邊求a所對角。上
     return avsin(vsinDif / mid)
 }
 // console.log(abc_Sph(108, 50.08333333333, 90)) // 113度45分36秒
+// console.log(aCb_Sph(73.806348227262589, 75.08623544960639, 23.4916666666667)) // 22度39分19秒=22.6552777778)
+// console.log(abc_Sph(73.806348227262589, 75.08623544960639, 22.655413696754813)) // 83度37分4秒，83.61729023292902
 const White2Eclp = (Mobliq, Node, Whitelongi) => {
     // 黃道緯度。月距正交过一象限者与半周相减，过半周者减半周，过三象限者与全周相减
     // const EclpWhiteDif = TwoOrbdegDif(Mobliq, Whitelongi) // 升度差=月距正交之黃道度-月距正交。食甚距時加者亦爲加，減者亦爲減。⚠️我這裡符號用的食甚的月距正交，而非食甚距時所用的實望的月距正交
-    // const TotalMoonLat = sin(90 - AngEquiEclp) * Dist // 這是食甚實緯之南北。
+    // const TotalMLat = sin(90 - AngEquiEclp) * Dist // 這是食甚實緯之南北。
     // 月距正交初、一、二、六、七、八宫为交后，为减。三、四、五、九、十、十一宫为交前，为加。之所以%180，因為tan(20)=tan(200)
     // const MoonGong = t(Whitegong + EclpWhiteDif)
     return {
@@ -142,14 +154,14 @@ export const starEclp2Equa = (Sobliq, Lon, Lat) => { // 黃赤大距、黃經、
 // console.log(starEclp2Equa(23 + 29.5 / 60, 135, 0).EquaLon)
 // console.log(starEclp2Equa(23 + 29.5 / 60, 27 + 10 / 60, 29 + 22 / 60)) // 考成卷十六恆星曆理算例:赤經緯23度41分58秒=23.6994444444，8度5分4秒=8.08444444444
 const moonEclp2EquaGuimao = (Sobliq, Lon, Lat) => { // 《後編》已知黃道經緯度求赤道經緯度，見月食曆法
-    const A_ArcMEquinox_Eclp = (Lat > 0 ? 1 : -1) * t3(acot(sin(t3(Lon)) * cot(Lat))) // 太陰距二分弧與黃道交角。單獨算沒問題。近似成平面三角就可以了 sinAcotB=cotC，也就是a/r·r/h=a/h
-    const A_ArcMEquinox_Equa = (Lon > 180 ? -1 : 1) * Sobliq + A_ArcMEquinox_Eclp // 太陰距二分弧與赤道交角
+    const A_ArcMNox_Eclp = (Lat > 0 ? 1 : -1) * t3(acot(sin(t3(Lon)) * cot(Lat))) // 太陰距二分弧與黃道交角。單獨算沒問題。近似成平面三角就可以了 sinAcotB=cotC，也就是a/r·r/h=a/h
+    const A_ArcMNox_Equa = (Lon > 180 ? -1 : 1) * Sobliq + A_ArcMNox_Eclp // 太陰距二分弧與赤道交角
     // 思路：黃轉白，白轉赤。
-    const tanA_ArcMEquinox_Equa = cos(A_ArcMEquinox_Eclp) * tan(Lon) // 太陰距二分弧之正切線
-    const EquaLon = ~~(Math.ceil(Lon / 90) / 2) * 180 + atan(cos(A_ArcMEquinox_Equa) * tanA_ArcMEquinox_Equa) // 太陰距二分赤道經度
+    const tanA_ArcMNox_Equa = cos(A_ArcMNox_Eclp) * tan(Lon) // 太陰距二分弧之正切線
+    const EquaLon = ~~(Math.ceil(Lon / 90) / 2) * 180 + atan(cos(A_ArcMNox_Equa) * tanA_ArcMNox_Equa) // 太陰距二分赤道經度
     return {
         EquaLon,
-        EquaLat: atan(tan(A_ArcMEquinox_Equa) * sin(t3(EquaLon)))
+        EquaLat: atan(tan(A_ArcMNox_Equa) * sin(t3(EquaLon)))
     }
 }
 // console.log(starEclp2Equa(23.9, 220, 5))
@@ -202,6 +214,18 @@ const timeAvg2Real = (Sobliq, SunCorr, SunLon) => {
     const EclpEquaDifTcorr = (SunLon - LonHigh2Flat(Sobliq, SunLon)) / 360 // 升度時差。二分後爲加，二至後爲減。
     return SunCorrTcorr + EclpEquaDifTcorr
 }
+const sunCorrJiazi = Xraw => {
+    Xraw = (Xraw + 360) % 360
+    // const X = Xraw % 180
+    const Xt = t3(Xraw)
+    const Rdif = .0179208 // R0 = .0358416, 本輪R1 = .0268812, 均輪半徑R2 = .0089604
+    const Jiawu = 1 + (t2(Xraw) < 90 ? -1 : 1) * cos(Xt) * Rdif
+    const Wuchen = 2 * sin(Xt) * Rdif
+    return {
+        SunCorr: f2(Xraw) * atan(Wuchen / Jiawu),
+        SDist: sqr(Jiawu ** 2 + Wuchen ** 2)
+    }
+}
 const sunCorrGuimao = Xraw => { // 大徑1、小徑0.999857185、avg中率0.999928589、兩心差（焦距）。中距盈縮差1°56′12″。
     Xraw = (Xraw + 360) % 360
     const X = Xraw % 180
@@ -214,18 +238,6 @@ const sunCorrGuimao = Xraw => { // 大徑1、小徑0.999857185、avg中率0.9999
     if (X > 90) flag1 = -1
     if (Xraw > 180) flag2 = -1
     return { SunCorr: flag2 * (Awu + flag1 * Aweibingwu) }
-}
-const sunCorrJiazi = Xraw => {
-    Xraw = (Xraw + 360) % 360
-    // const X = Xraw % 180
-    const Xt = t3(Xraw)
-    const Rdif = .0179208 // R0 = .0358416, 本輪R1 = .0268812, 均輪半徑R2 = .0089604
-    const Jiawu = 1 + (t2(Xraw) < 90 ? -1 : 1) * cos(Xt) * Rdif
-    const Wuchen = 2 * sin(Xt) * Rdif
-    return {
-        SunCorr: f2(Xraw) * atan(Wuchen / Jiawu),
-        SDist: sqr(Jiawu ** 2 + Wuchen ** 2)
-    }
 }
 // console.log(sunCorrJiazi(198 + 40 / 60 + 57.4 / 3600)) // -0°38′48.49″=0.6468027778 // https://zhuanlan.zhihu.com/p/511793561
 export const sunQing = (Name, SunRoot, SperiRoot, Sd) => {
@@ -253,7 +265,7 @@ const moonCorr1Jiazi = Morb => { // 初均。卷五葉40算例：30：2度25分4
 const moonJiazi = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) => {
     const { MoonAvgVd, MapoVd, NodeVd, Sobliq } = Para[Name]
     const R4 = .0217, R5 = .01175 // 1本輪R1 = .058、2均輪R2 = .029、3負均輪圈R3 = .0797、4次輪、5次均輪
-    const MobliqMid = 5.13333333333333, MobliqDif = .15833333333333 // Mobliq0129 = 4.975朔望黃白大距4 + 58 / 60 + 30 / 3600，Mobliq0822 = 5.29166666666667,兩弦黃白大距5 + 17 / 60 + 30 / 3600，黃白大距中數5+8/60，黃白大距半較9/60+30/3600
+    const MobliqMid = 5.13333333333333, MobliqDif = .15833333333333 //朔望黃白大距，Mobliq0822 = 5.29166666666667,兩弦黃白大距5 + 17 / 60 + 30 / 3600，黃白大距中數5+8/60，黃白大距半較9/60+30/3600
     // 時差——引數——初均——月距日次引——二均——三均——白道實行——黃白大距、交均——正交
     const AvgMoon1 = t(MoonRoot + Sd * MoonAvgVd) // 太陰平行。1921算例330°20′19.9″=330.3388611111
     const AvgMapo = t(MapoRoot + Sd * MapoVd) // 最高平行.Mapo=MoonApogee太陰遠地點
@@ -370,7 +382,7 @@ export const moonQing = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGon
     else if (Name === 'Jiazi' || Name === 'Xinfa' || Name === 'Yongnian') return moonJiazi(Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong, Speri, Sorb)
 }
 export const N4 = (Name, Y) => {
-    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SperiConst, SperiVy, SperiVd, SunAvgVd, MoonAvgVd, MapoVd, NodeVd, MoonConst, MapoConst, NodeConst, SunAvgVm, SorbVm, MorbVm, MoonNodeVmSum, MoonNodeVdSum, ChouSunConst, ChouSorbConst, ChouMorbConst, ChouWhitelongiConst, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, MansionDayConst, Sobliq, MobliqMax, BjLat } = Para[Name]
+    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SperiConst, SperiVy, SperiVd, SunAvgVd, MoonAvgVd, MapoVd, NodeVd, MoonConst, MapoConst, NodeConst, SunAvgVm, SorbVm, MorbVm, MoonNodeVmSum, MoonNodeVdSum, ChouSunConst, ChouSorbConst, ChouMorbConst, ChouWhitelongiConst, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, MansionDayConst, Sobliq, BjLat } = Para[Name]
     const TermLeng = Solar / 12
     const MorbVd = MoonAvgVd - MapoVd
     const SorbVd = SunAvgVd - SperiVd
@@ -400,13 +412,111 @@ export const N4 = (Name, Y) => {
     const NodeRoot = Y >= CloseOriginAd ? t(NodeConst - DayAccum * NodeVd) : t(NodeConst + DayAccum * NodeVd) // 正交年根，所得爲白經
     // const Mansion = (OriginAccumMansion % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
     const SperiRoot = Y >= CloseOriginAd ? SperiVy * CloseOriginYear : -SperiVy * CloseOriginYear // 本年最卑行
+    const sunEcliJiazi = (NowSd, AcrWhitelongi, AcrMorb, AcrMoonCorr1, AcrSorb, AcrSunLon) => {
+        // AcrWhitelongi = 179 + 49 / 60 + 47.28 / 3600 // 2009算例
+        const Mobliq0116 = 4.975
+        const SDistMax = 1.0179208, SDistRatMax = 1162 // 太陽最高距地，地半徑比例數
+        const MDistMax = 1.01725, MDistRatMax = 58.16
+        const MRadReal = 0.27
+        const SRadReal = 5.07, SlRad = 6.37 // 太陽實半徑，光分半徑
+        const AcrSunGong = Lon2Gong(AcrSunLon)
+        //////// 【八】食甚距緯、食甚時刻——與月食同
+        const Distreal = HighLon2FlatLat(Mobliq0116, AcrWhitelongi) // 食甚實緯（距緯）：用時月距日之白緯。考成圖上平的是白道，斜的是黃道
+        // 實朔的定義，考成：日距交之黃經=月距交之白經；後編：黃經相同
+        const TotalWhitelongi = LonHigh2Flat(Mobliq0116, AcrWhitelongi) // 食甚交周：用時太陰距正交之白經。以太陽距交之黃經求其相當之白經，即食甚交周。距交之經度為食甚交周，相距之緯度即食甚實緯
+        const Dif = TotalWhitelongi - AcrWhitelongi  // 交周升度差=食甚交周與實朔交周之差
+        const OnehAftMoonCorr1 = f1(MorbVd / 24 + AcrMorb) * moonCorr1Jiazi(MorbVd / 24 + AcrMorb).Corr1
+        const MSAcrVhDif = MSAvgVdDif / 24 + OnehAftMoonCorr1 - AcrMoonCorr1 // 一小時月距日實行。後均與實均同號相減，異號相加。與一小時月距日平行相加減：實均與後均同爲加者，後均大則加；同為減者，後均大則減。異號者，後均加則加，後均減則減
+        const SdAvg = NowSd + Dif / MSAcrVhDif / 24 // 食甚用時：日月白道同度之時刻
+        const AcrSunEquaLon = LonHigh2Flat(Sobliq, AcrSunLon) // 算例：15度-->赤道同升度13度48分23秒
+        const SDistRat = sunCorrJiazi(AcrSorb).SDist / SDistMax * SDistRatMax // 太陽距地
+        const MDistRat = (moonCorr1Jiazi(AcrMorb).MDist - .01175) / MDistMax * MDistRatMax // 太陰距地。日月距地都是近時真時同用，因為變化可以忽略
+        //////// 【九】食甚近時
+        const sunEcliJiaziMain = (SunGong, SunEquaLon, Sd) => {
+            const SpringSouEquaDif = (SunEquaLon + deci(Sd) * 360 + 180) % 360 // 用時春分距午赤道度=太陽距春分+太陽距正午。太陽赤道度自西而東，時刻赤道度自東而西。算例：deci(Sd)=16/24=.6666，申正距午正60度
+            const NoxSouEquaDif = t3(SpringSouEquaDif) // 用時春秋分距午赤道度。算例73.806348227262589
+            const NoxSouEclpDif = LonFlat2High(Sobliq, NoxSouEquaDif) // 用時春秋分距午黃道度。《求黃平象限》葉37 用癸己戊正弧三角，有直角、黃赤大距、距午赤道度。算例75.08623544960639
+            let NoonEclpLon = NoxSouEclpDif
+            if (SpringSouEquaDif < 90) { }
+            else if (SpringSouEquaDif < 180) NoonEclpLon = 180 - NoxSouEclpDif
+            else if (SpringSouEquaDif < 270) NoonEclpLon = NoxSouEclpDif + 180
+            else NoonEclpLon = 360 - NoxSouEclpDif
+            const NoonEclpGong = Lon2Gong(NoonEclpLon) // 用時正午黃道宮度。算例165度5分10秒=165.08611111111
+            const NoonLatDif = aCb_Sph(NoxSouEquaDif, NoxSouEclpDif, Sobliq) // 用時正午黃赤距緯。算例22.655413696754813         
+            const AngEclpSou = abc_Sph(NoxSouEquaDif, NoxSouEclpDif, NoonLatDif)  // 用時黃道與子午圈交角。子午圈就是正午的圈。算例癸角=83.61729023292902
+            const NoonEclpHigh = 90 - BjLat + (NoonEclpLon < 180 ? 1 : -1) * NoonLatDif // 用時正午黃道高。算例癸乙72度44分19秒=72.7386111111
+            const EclpmidHigh = BaC_Sph(90, AngEclpSou, NoonEclpHigh) // 黃平象限距地平。算例丑角=72度50分56秒=72.8488888889
+            const EclpmidSouDif = abs(90 - ABCa_Sph(EclpmidHigh, 90, AngEclpSou, NoonEclpHigh)) // 用時黃平象限距午度。算例癸丑弧88度1分18秒=88.02166666667
+            const EclpmidGong = NoonEclpGong + (NoonEclpGong < 180 ? 1 : -1) * (NoonEclpHigh > 90 ? -1 : 1) * EclpmidSouDif // 用時黃平象限宮度。算例167度3分52秒=167.06444444444
+            const SunEclpmidDif = SunGong - EclpmidGong  // 用時太陽距黃平象限=月距限。太陽黃經大於黃平象限宮度爲限東。大於0爲限東，小於0爲限西。算例壬子弧62度3分52秒=62.06444444444
+            const SignEw = Math.sign(SunEclpmidDif) // 限東為1，西-1
+            const Zichou = 90 - abs(SunEclpmidDif) // 太陽距黃平象限之餘
+            // const Maochou = LonHigh2Flat(EclpmidHigh, Zichou)
+            const AngEclpHigharc = abs(atan(cot(EclpmidHigh) / sin(SunEclpmidDif))) // asin(sin(Maochou) / sin(Zichou)) // 黃道高弧交角。sin90/sin子丑=sin子/sin卯丑=sin丑/sin子卯。或BaC_Sph(EclpmidHigh, 90, Maochou) 算例角子=19度15分19秒=19.2552777778
+            const SunHigh = asin(sin(Zichou) * sin(EclpmidHigh)) // 太陽高弧。算例子卯=26度35分30秒
+            let flag1 = 1
+            if (TotalWhitelongi < 90 || TotalWhitelongi > 270) {
+                if (SignEw < 0) flag1 = -1
+            } else {
+                if (SignEw > 0) flag1 = -1
+            }
+            const AngWhiteHigharc = abs(AngEclpHigharc + flag1 * Mobliq0116) // 白道高弧交角
+            // if (AngWhiteHigharc > 90) SignEw = -SignEw // 加過90度者則限東變為限西。——最後求東西差，大於90的話cos就是負數，所以不用管這個
+            const WhitemidHigh = 180 - BaC_Sph(EclpmidHigh, Mobliq0116, Zichou) // 白平象限距地平高，>90就是在天頂北。卷八白平象限葉55
+            // const SignSn = EclpmidHigh > 90 ? -1 : 1 // 限距地高在天頂北者，白平象限在天頂南。白平象限在天頂南爲-1，北1。卷八白平象限葉75
+            const SignSn = WhitemidHigh > 90 ? 1 : -1
+            const AngSunZenith = 90 - SunHigh
+            const SParallax = qiexianA(1, SDistRat, AngSunZenith)
+            const MParallax = qiexianA(1, MDistRat, AngSunZenith)
+            const Parallax = MParallax - SParallax // 用時高下差
+            const EwCorr = atan(cos(AngWhiteHigharc) * tan(Parallax)) // 東西差。半徑與交角餘弦之比=高下差正切與東西差正切之比
+            const SnCorr = asin(sin(Parallax) * sin(AngWhiteHigharc)) // 南北差。東西南北差驗算通過
+            return { EwCorr: EwCorr * SignEw, SnCorr: SnCorr * SignSn }
+        }
+        const { EwCorr: AvgEwCorr } = sunEcliJiaziMain(AcrSunGong, AcrSunEquaLon, SdAvg)
+        const Acr0AvgDif = AvgEwCorr / MSAcrVhDif / 24 // 近時距分
+        const SdAcr0 = SdAvg - Acr0AvgDif // 食甚近時。用時月距限西爲加（以用時白道高弧交角變限不變限爲定）
+        //////// 【十】食甚真時
+        const { EwCorr: Acr0EwCorr } = sunEcliJiaziMain(AcrSunGong - AvgEwCorr, AcrSunEquaLon, SdAcr0)  // 太陽距春分後赤道度，即前求用時春分距午赤道度條內所得之數                
+        const AcrAvgDif = AvgEwCorr / (AvgEwCorr * 2 - Acr0EwCorr) * Acr0AvgDif // 食甚距分。加減號與近時距分同。AvgEwCorr * 2 - Acr0EwCorr是食甚視行
+        const SdAcr = SdAvg - AcrAvgDif
+        //////// 【十一】食分
+        const { EwCorr: AcrEwCorr, SnCorr: AcrSnCorr } = sunEcliJiaziMain(AcrSunGong - Acr0EwCorr, AcrSunEquaLon, SdAcr)
+        const Distappa = Distreal + AcrSnCorr // 視緯=實緯加減南北差。白平象限在天頂南者，實緯在黃道南則加，視緯仍爲南。實緯在黃道北則減，視緯仍爲北；若實緯在黃道北而南北差大於實緯，則反減，視緯即變為南。白平象限在天顶北者，实纬在黄道北则加，而视纬仍为北；實緯在黃道南則減，視緯仍爲南；若實緯在黃道南，而南北差大於實緯，則反減，視緯即變為北        
+        const SRadAppa = asin(SRadReal / SDistRat) // 太陽半徑。爲何是正弦不是正切？？
+        const MRadAppa = asin(MRadReal / MDistRat)
+        const RadSum = SRadAppa + MRadAppa // 併徑
+        const Magni = (100 * (RadSum - abs(Distappa)) / (SRadAppa * 2)).toFixed(1)
+        if (+Magni < 1) return
+        //////// 【十二】初虧真時  
+        const ArcStartTotal = acos(cos(RadSum) / cos(Distappa)) // 初虧復原距弧cosc = (cosa - sinbsinccosA) /cosb 
+        const AvgStartTotalDif = ArcStartTotal / MSAcrVhDif / 24 // 距時
+        const SdStartAvg = SdAcr - AvgStartTotalDif // 初虧用時
+        const { EwCorr: StartEwCorr } = sunEcliJiaziMain(AcrSunGong - AcrEwCorr - ArcStartTotal, AcrSunEquaLon, SdStartAvg)
+        const StartTotalDif = ArcStartTotal / (ArcStartTotal - (StartEwCorr - AcrEwCorr)) * AvgStartTotalDif // 初虧距分.// 初虧視行：初虧食甚同在白平象限東，初虧東西差大則以差分減，小則以差分加 // 以初亏视行化秒为一率，初亏复圆距时化秒为二率，初亏复圆距弧化秒为三率，求得四率为秒，以时分收之得初亏距分
+        const SdStart = SdAcr - StartTotalDif // 初虧真時
+        //////// 【十三】復原真時
+        const SdEndAvg = SdAcr + AvgStartTotalDif
+        const { EwCorr: EndEwCorr } = sunEcliJiaziMain(AcrSunGong - AcrEwCorr + ArcStartTotal, AcrSunEquaLon, SdEndAvg)
+        const EndTotalDif = (ArcStartTotal + (EndEwCorr - AcrEwCorr)) / MSAcrVhDif / 24 // 復原食甚同在白平象限東，復原東西差大則以差分加，小則以差分減
+        const SdEnd = SdAcr + EndTotalDif
+        const TotalSLon = sunQing(Name, SunRoot, SperiRoot, SdAcr).SunLon
+        return {
+            Start: fix(deci(SdStart)),
+            Total: fix(deci(SdAcr)),
+            End: fix(deci(SdEnd)),
+            Magni, TotalSLon,
+            TotalSEquaLon: LonHigh2Flat(Sobliq, TotalSLon),
+            TotalSLat: HighLon2FlatLat(Sobliq, TotalSLon)
+        }
+    }
     const sunEcliGuimao = NowSd => {
         // NowSd = 205.528185 // ⚠️1730算例臨時
         //////// 【一】實朔用時。用時的英語暫且用Now
         //////// 【二】食甚實緯、食甚用時。這一段日月食都一樣
         const SunNow = sunQing(Name, SunRoot, SperiRoot, NowSd)
-        const SunOnehAft = sunQing(Name, SunRoot, SperiRoot, NowSd + 1 / 24)
         const MoonNow = moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, NowSd, SunNow.SunCorr, SunNow.SunGong, SunNow.Speri, SunNow.Sorb)
+        const SunOnehAft = sunQing(Name, SunRoot, SperiRoot, NowSd + 1 / 24)
         const MoonOnehAft = moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, NowSd + 1 / 24, SunOnehAft.SunCorr, SunOnehAft.SunGong, SunOnehAft.Speri, SunOnehAft.Sorb)
         // 斜距交角差。本時此時二月離白道實行相減，得一小時太陰白道實行——「本時」應該是實望用時
         const AngEquiWhite = qiexian(SunOnehAft.SunGong - SunNow.SunGong, MoonOnehAft.Whitegong - MoonNow.Whitegong, MoonNow.Mobliq).Ashort // 斜距交角差（斜距黃道交角與黃白交角之差，也就是斜距與白道交角。暫且將斜距稱為equilibrium）
@@ -428,13 +538,13 @@ export const N4 = (Name, Y) => {
         const MoonRad = (940.5 / 3600) / MDist // 太陰視半徑（中率15分40秒30微）
         const RadSum = SunAcrRad + MoonRad // 併徑
         //////// 【四】食甚太陽黃赤經緯宿度、黃赤二經交角            
-        const TotalSunLon = t(SunAvg.SunLon + TotalNowDif * (SunOnehAft.SunGong - SunAvg.SunGong) * 24) // 食甚太陽黃道經度=實朔太陽黃道實行+距時日實行
-        const TotalSunEquaLon = LonHigh2Flat(Sobliq, TotalSunLon)
-        const TotalSunEquaGong = Lon2Gong(TotalSunEquaLon) // 自冬至初宮起算，得食甚太陽赤道經度。
-        const TotalSunEquaLat = HighLon2FlatLat(Sobliq, TotalSunLon) // 食甚太陽赤道緯度。食甚太陽距春秋分黃經之正弦：三率。
-        const AngSunPolar = 90 - TotalSunEquaLat // 太陽距北極
+        const AvgTotalSLon = t(SunAvg.SunLon + TotalNowDif * (SunOnehAft.SunGong - SunAvg.SunGong) * 24) // 食甚太陽黃道經度=實朔太陽黃道實行+距時日實行
+        const AvgTotalSEquaLon = LonHigh2Flat(Sobliq, AvgTotalSLon)
+        const AvgTotalSEquaGong = Lon2Gong(AvgTotalSEquaLon) // 自冬至初宮起算，得食甚太陽赤道經度。
+        const AvgTotalSLat = HighLon2FlatLat(Sobliq, AvgTotalSLon) // 食甚太陽赤道緯度。食甚太陽距春秋分黃經之正弦：三率。
+        const AngSunPolar = 90 - AvgTotalSLat // 太陽距北極
         const AngZenithPolar = 90 - BjLat // 北極距天頂
-        const AngEclpEqua = (TotalSunEquaGong > 180 ? 180 : 0) - acot(cot(Sobliq) / cos(TotalSunLon)) // 黃赤二經交角。自變量：太陽距春秋分黃經。冬至後黃經在赤經西，夏至後黃經在赤經東。⚠️我定義東正西負。此步已核驗
+        const AngEclpEqua = (AvgTotalSEquaGong > 180 ? 180 : 0) - acot(cot(Sobliq) / cos(AvgTotalSLon)) // 黃赤二經交角。自變量：太陽距春秋分黃經。冬至後黃經在赤經西，夏至後黃經在赤經東。⚠️我定義東正西負。此步已核驗
         const AngWhiteEclp = (MoonAvg.Whitelongi < 90 || MoonAvg.Whitelongi > 270 ? -1 : 1) * AngEquiEclp // 實朔月距正交初宮十一宮，白經在黃經西，五宮六宮白經在黃經東
         const AngWhiteEqua = AngEclpEqua + AngWhiteEclp // 赤白二經交角。所得爲白經在赤經之東西。
         //////// 【五】食甚用時兩心視距
@@ -605,40 +715,50 @@ export const N4 = (Name, Y) => {
         const SdStart = startEnd(SdBefStartAsm, false)
         //////// 【十一】復圓前設時兩心視距
         const SdEnd = startEnd(SdBefEndAsm, true)
-        return { Start: fix(deci(SdStart)), Total: fix(deci(SdAcr)), End: fix(deci(SdEnd)), Magni }
+        const TotalSLon = sunQing(Name, SunRoot, SperiRoot, SdAcr).SunLon
+        return {
+            Start: fix(deci(SdStart)),
+            Total: fix(deci(SdAcr)),
+            End: fix(deci(SdEnd)),
+            Magni, TotalSLon,
+            TotalSEquaLon: LonHigh2Flat(Sobliq, TotalSLon),
+            TotalSLat: HighLon2FlatLat(Sobliq, TotalSLon)
+        }
     }
-    const moonEcliJiazi = (NowSd, AcrWhitelongi, AcrMorb, AcrMoonCorr1, AcrSorb, AcrSunGong) => {
+    const moonEcliJiazi = (NowSd, AcrWhitelongi, AcrMorb, AcrMoonCorr1, AcrSorb, AcrSunLon) => {
         // 1949算例AcrWhitelongi：177.3276
         const SDistMax = 1.0179208, SDistRatMax = 1162 // 太陽最高距地，地半徑比例數
         const MDistMax = 1.01725, MDistRatMax = 58.16
         const MRadReal = 0.27
         const SlRad = 6.37 // 太陽光分半徑
+        const Mobliq0116 = 4.975 // 朔望黃白大距
         //////// 【八】食甚距緯、食甚時刻
-        const TotalWhiteLat = HighLon2FlatLat(MobliqMax, AcrWhitelongi) // 食甚距緯：太陰距地心之白緯。不知道為何要用這個公式，這樣求出來明明是黃緯 // 1949算例0.2316638889
-        const TotalWhitelongi = LonHigh2Flat(MobliqMax, AcrWhitelongi) // 食甚交周：太陰距正交之白經
-        const Dif = TotalWhitelongi - AcrWhitelongi  // 交周升度差//1949算例36.49″=0.01013611111       
-        const MSAcrVhDif = MSAvgVdDif / 24 + moonCorr1Jiazi(MorbVd / 24 + AcrMorb).Corr1 - AcrMoonCorr1 // 一小時月距日實行
+        const Distreal = HighLon2FlatLat(Mobliq0116, AcrWhitelongi) // 食甚距緯：太陰距地心之白緯 // 1949算例0.2316638889
+        const TotalWhitelongi = LonHigh2Flat(Mobliq0116, AcrWhitelongi) // 食甚交周：太陰距正交之白經
+        const Dif = TotalWhitelongi - AcrWhitelongi  // 交周升度差。1949算例36.49″=0.01013611111
+        const OnehAftMoonCorr1 = f1(MorbVd / 24 + AcrMorb) * moonCorr1Jiazi(MorbVd / 24 + AcrMorb).Corr1
+        const MSAcrVhDif = MSAvgVdDif / 24 + OnehAftMoonCorr1 - AcrMoonCorr1 // 一小時月距日實行
         const TotalSd = NowSd + Dif / MSAcrVhDif / 24 // 實望實交周五宮十一宮（交前）爲加，初宮六宮（交後）爲減。食甚時刻=實望用時+-食甚距時
         //////// 【九】食分        
         const SDistRat = sunCorrJiazi(AcrSorb).SDist / SDistMax * SDistRatMax // 太陽距地：太陽距地心與地半徑之比例
         const MDistRat = (moonCorr1Jiazi(AcrMorb).MDist - .01175) / MDistMax * MDistRatMax // 還要減去次均輪半徑
-        const MRad = atan(MRadReal / MDistRat) // 算例16′52.97″=0.28138
+        const MRadAppa = atan(MRadReal / MDistRat) // 算例16′52.97″=0.28138
         const ShadowLeng = SDistRat / (SlRad - 1) // 地影長
-        const AShadowCone = asin(1 / ShadowLeng) // 地影角
-        const ShadowWid = tan(AShadowCone) * (ShadowLeng - MDistRat) // 月所當地影之濶
+        const ShadowCone = asin(1 / ShadowLeng) // 地影角
+        const ShadowWid = tan(ShadowCone) * (ShadowLeng - MDistRat) // 月所當地影之濶
         const ShadowRad = atan(ShadowWid / MDistRat) // （從地球看的）地影半徑 // 1949算例46′24.78″=0.77355
-        const RadSum = MRad + ShadowRad // 併徑
-        const Magni = (100 * (RadSum - TotalWhiteLat) / (MRad * 2)).toFixed(1)
+        const RadSum = MRadAppa + ShadowRad // 併徑
+        const Magni = (100 * (RadSum - abs(Distreal)) / (MRadAppa * 2)).toFixed(1)
         if (+Magni < 1) return
         //////// 【十】初虧復原時刻
-        const ArcStartTotal = LonHigh2FlatB(TotalWhiteLat, RadSum) // 初虧復圓距弧，同於正弧三角形有黃道、距緯求赤道，第五則
+        const ArcStartTotal = LonHigh2FlatB(Distreal, RadSum) // 初虧復圓距弧，同於正弧三角形有黃道、距緯求赤道，第五則
         const T_StartTotal = ArcStartTotal / MSAcrVhDif / 24 // 初虧復圓距時
         //////// 【十二】太陰經緯宿度
-        const Dif2 = Math.sign(Dif) * abs(LonHigh2Flat(MobliqMax, TotalWhitelongi) - TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加
-        const TotalMoonLon = ((AcrSunGong + 180) % 360 + Dif + Dif2 + 270) % 360 // 加減食甚距弧（是Dif嗎？？），再加黃白升度差
-        const TotalMoonLat = HighLon2FlatLat(MobliqMax, TotalWhitelongi)
-        const { EquaLon: TotalMEquaLon, EquaLat: TotalMEquaLat } = starEclp2Equa(Sobliq, TotalMoonLon, TotalMoonLat)
-        return { Start: fix(deci(TotalSd - T_StartTotal)), End: fix(deci(TotalSd + T_StartTotal)), Total: fix(deci(TotalSd)), Magni, TotalMoonLon, TotalMoonLat, TotalMEquaLon, TotalMEquaLat }
+        const Dif2 = sign(Dif) * abs(LonHigh2Flat(Mobliq0116, TotalWhitelongi) - TotalWhitelongi) // 黃白升度差。食甚距時加者亦爲加
+        const TotalMLon = (AcrSunLon + Dif + Dif2 + 180) % 360 // 加減食甚距弧（是Dif嗎？？），再加黃白升度差
+        const TotalMLat = HighLon2FlatLat(Mobliq0116, TotalWhitelongi)
+        const { EquaLon: TotalMEquaLon, EquaLat: TotalMEquaLat } = starEclp2Equa(Sobliq, TotalMLon, TotalMLat)
+        return { Start: fix(deci(TotalSd - T_StartTotal)), End: fix(deci(TotalSd + T_StartTotal)), Total: fix(deci(TotalSd)), Magni, TotalMLon, TotalMLat, TotalMEquaLon, TotalMEquaLat }
     }
     const moonEcliGuimao = NowSd => {
         const MoonParallaxMidMax = .95833333333333 // 太陰中距最大地半徑差 57分30秒
@@ -680,22 +800,22 @@ export const N4 = (Name, Y) => {
         //////// 【六】食甚太陰黃道經緯宿度
         const LengTotalNow = TotalNowDif * (MoonOnehAft.Whitegong - MoonNow.Whitegong) * 24 // 距時月實行
         const TotalWhitelongi = MoonNow.Whitelongi + LengTotalNow // 食甚月距正交        
-        const { MoonLon: TotalMoonLon, MoonLat: TotalMoonLat } = White2Eclp(MoonNow.Mobliq, MoonNow.AcrNode, TotalWhitelongi)
+        const { MoonLon: TotalMLon, MoonLat: TotalMLat } = White2Eclp(MoonNow.Mobliq, MoonNow.AcrNode, TotalWhitelongi)
         //////// 【七】食甚太陰赤道經緯宿度
-        const { EquaLon: TotalMEquaLon, EquaLat: TotalMEquaLat } = moonEclp2EquaGuimao(Sobliq, TotalMoonLon, TotalMoonLat)
-        return { Start: fix(deci(TotalSd - T_StartTotal)), End: fix(deci(TotalSd + T_StartTotal)), Total: fix(deci(TotalSd)), Magni, TotalMoonLon, TotalMoonLat, TotalMEquaLon, TotalMEquaLat }
+        const { EquaLon: TotalMEquaLon, EquaLat: TotalMEquaLat } = moonEclp2EquaGuimao(Sobliq, TotalMLon, TotalMLat)
+        return { Start: fix(deci(TotalSd - T_StartTotal)), End: fix(deci(TotalSd + T_StartTotal)), Total: fix(deci(TotalSd)), Magni, TotalMLon, TotalMLat, TotalMEquaLon, TotalMEquaLat }
     }
-    const iteration = (X, step, isNewm) => { // 後編迭代求實朔實時
-        let { Speri: SperiBef, Sorb: SorbBef, SunCorr: SunCorrBef, SunLon: SunLonBef, SunGong: SunGongBef } = sunQing(Name, SunRoot, SperiRoot, X - step) // 如實望泛時爲丑正二刻，則以丑正初刻爲前時，寅初初刻爲後時——為什麼不說前後一時呢
-        const { MoonLon: MoonLonBef } = moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, X - step, SunCorrBef, SunGongBef, SperiBef, SorbBef)
+    const iteration = (Sd, step, isNewm) => { // 後編迭代求實朔實時
+        let { Speri: SperiBef, Sorb: SorbBef, SunCorr: SunCorrBef, SunLon: SunLonBef, SunGong: SunGongBef } = sunQing(Name, SunRoot, SperiRoot, Sd - step) // 如實望泛時爲丑正二刻，則以丑正初刻爲前時，寅初初刻爲後時——為什麼不說前後一時呢
+        const { MoonLon: MoonLonBef } = moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, Sd - step, SunCorrBef, SunGongBef, SperiBef, SorbBef)
         SunLonBef += isNewm ? 0 : 180
         SunLonBef %= 360
-        let { Speri: SperiAft, Sorb: SorbAft, SunCorr: SunCorrAft, SunLon: SunLonAft, SunGong: SunGongAft } = sunQing(Name, SunRoot, SperiRoot, X + step)
-        const { MoonLon: MoonLonAft } = moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, X + step, SunCorrAft, SunGongAft, SperiAft, SorbAft)
+        let { Speri: SperiAft, Sorb: SorbAft, SunCorr: SunCorrAft, SunLon: SunLonAft, SunGong: SunGongAft } = sunQing(Name, SunRoot, SperiRoot, Sd + step)
+        const { MoonLon: MoonLonAft } = moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, Sd + step, SunCorrAft, SunGongAft, SperiAft, SorbAft)
         SunLonAft += isNewm ? 0 : 180
         SunLonAft %= 360
-        const Deci = deci(X) - step + t(SunLonBef - MoonLonBef) / (t(MoonLonAft - MoonLonBef) - t(SunLonAft - SunLonBef)) * step * 2 // 一小時月距日實行
-        return ~~X + Deci // 實朔實時距冬至次日的時間
+        const Deci = deci(Sd) - step + t(SunLonBef - MoonLonBef) / (t(MoonLonAft - MoonLonBef) - t(SunLonAft - SunLonBef)) * step * 2 // 一小時月距日實行
+        return ~~Sd + Deci // 實朔實時距冬至次日的時間
     }
     const term = (i, isMid) => {
         const TermGong = ((2 * i + (isMid ? 2 : 1)) * 15) % 360
@@ -780,7 +900,7 @@ export const N4 = (Name, Y) => {
                 AcrSorb = AvgSorb + AvgT_MSDif * SorbVd // 太陽實引=平引+引弧。算例99°23′2.94″=99.38415
                 AcrMorb = AvgMorb + AvgT_MSDif * MorbVd // 太陰實引.1949算例200°37′18.14″=200.6217055556
                 AcrSunCorr = sunCorrJiazi(AcrSorb).SunCorr // 太陽實均.1949算例2°01′15.89″=2.02108055556
-                AcrMoonCorr1 = f1(AcrMorb) * moonCorr1Jiazi(AcrMorb).Corr1 // 1949算例1°48′14.36″=1.8039888889
+                AcrMoonCorr1 = f1(AcrMorb) * moonCorr1Jiazi(AcrMorb).Corr1 // 太陰實均。1949算例1°48′14.36″=1.8039888889
                 const AcrT_MSDif = (AcrSunCorr - AcrMoonCorr1) / MSAvgVdDif // 實距時=實距弧/速度差。1949算例：25m39s=0.0178125
                 AcrSd = AvgSd + AcrT_MSDif // 實望
                 const S_MoonPlusNode = AcrT_MSDif * MoonNodeVdSum // 交周距弧
@@ -805,10 +925,10 @@ export const N4 = (Name, Y) => {
                 Rise[i] = sunRiseQing(Sobliq, BjLat, AcrSunLon)
                 if (isNewm) {
                     if (deci(NowSd[i]) < Rise[i] - 5 / 96 || deci(NowSd[i]) > 1 - Rise[i] + 5 / 96) { }
-                    else Ecli[i] = eval('sunEcli' + Name)(NowSd[i])
+                    else Ecli[i] = eval('sunEcli' + Name)(NowSd[i], AcrWhitelongi, AcrMorb, AcrMoonCorr1, AcrSorb, AcrSunLon)
                 } else {
                     if (deci(NowSd[i]) > Rise[i] + 9 / 96 && deci(NowSd[i]) < 1 - Rise[i] - 9 / 96) { } // 日出入前後9刻以內入算
-                    else Ecli[i] = eval('moonEcli' + Name)(NowSd[i], AcrWhitelongi, AcrMorb, AcrMoonCorr1, AcrSorb, AcrSunGong)
+                    else Ecli[i] = eval('moonEcli' + Name)(NowSd[i], AcrWhitelongi, AcrMorb, AcrMoonCorr1, AcrSorb, AcrSunLon)
                 }
             }
             //////// 節氣
@@ -852,10 +972,10 @@ export const N4 = (Name, Y) => {
             if (Ecli[i]) {
                 if (isNewm) {
                     EcliPrint[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                    EcliPrint[i] += '出' + fix(Rise[i]) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 入' + fix(1 - Rise[i])
+                    EcliPrint[i] += '出' + fix(Rise[i]) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 入' + fix(1 - Rise[i]) + ' 甚日黃道' + deg2Hms(Ecli[i].TotalSLon) + ' 赤道' + deg2Hms(Ecli[i].TotalSEquaLon) + ' ' + Lat2NS(Ecli[i].TotalSLat)
                 } else {
                     EcliPrint[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                    EcliPrint[i] += '入' + fix(1 - Rise[i]) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 出' + fix(Rise[i]) + ' 甚月黃道' + deg2Hms(Ecli[i].TotalMoonLon) + ' ' + Lat2NS(Ecli[i].TotalMoonLat) + '赤道' + deg2Hms(Ecli[i].TotalMEquaLon) + ' ' + Lat2NS(Ecli[i].TotalMEquaLat)
+                    EcliPrint[i] += '入' + fix(1 - Rise[i]) + ' ' + Ecli[i].Magni + '% 虧' + Ecli[i].Start + '甚' + Ecli[i].Total + '復' + Ecli[i].End + ' 出' + fix(Rise[i]) + ' 甚月黃道' + deg2Hms(Ecli[i].TotalMLon) + ' ' + Lat2NS(Ecli[i].TotalMLat) + ' 赤道' + deg2Hms(Ecli[i].TotalMEquaLon) + ' ' + Lat2NS(Ecli[i].TotalMEquaLat)
                 }
                 if (Ecli[i].Magni >= 99) {
                     NowSc[i] += `<span class='eclipse-symbol'>●</span>`
@@ -893,7 +1013,7 @@ export const N4 = (Name, Y) => {
     }
 }
 // console.log(N4("Guimao", 1760)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
-// console.log(N4("Jiazi", 1949)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例。1921月離算例https://zhuanlan.zhihu.com/p/512380296 
+// console.log(N4("Jiazi", 1731)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例。1921月離算例https://zhuanlan.zhihu.com/p/512380296 。2009日食算例https://zhuanlan.zhihu.com/p/670820567
 // console.log(sunQing(Name,SunRoot, SperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // Sorb = 298 + 6 / 60 + 9.329 / 3600

@@ -37,7 +37,7 @@ const TableRowNameMap = {
   TermAcrDeciPrint: ' ',
   TermNowDeciPrint: '迭代',
   TermEquaPrint: '赤道',
-  TermEclpPrint: '道黃',
+  TermEclpPrint: '黃道',
   TermDuskstarPrint: '旦昏中',
 }
 const heightCache = createCache();

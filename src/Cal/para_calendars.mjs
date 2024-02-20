@@ -2922,12 +2922,15 @@ export default {
         BjLat: 39.9916666666667, // 暢春園。五十九分三十秒
         Sobliq: 23.4916666666667,  // 黃赤大距暢春園23+29/60+30/3600。曆象考成上編卷四,
         MoonLimitAvg: 14.9, // 平望可食
-        MoonLimit: 12.28194444444444, // 實望可食12+16/60+55/3600
-        MobliqMax: 4.975, // 黃白大距4度58分30秒
+        MoonLimit: 12.28194444444444, // 實望可食12+16/60+55/3600        
         MansionDayConst: 27.656374926, // 宿應，單位日。這是值日，其實和宿度無關。
         MansionConst: 70.5666666666667, // 1684冬至箕3.166667的宿度
         // EquaMansionConst: 72.8333333333333, // 赤道箕3.65。根據考成表赤道度
         MansionRaw: [11, 3.16666666666667],
+        SunLimitYinAvg: 20.8666666667, // 平朔食限
+        SunLimitYangAvg: 8.85,
+        SunLimitYinAcr: 18.25, // 實朔食限
+        SunLimitYangAcr: 6.2333333333,
         ZhengNum: 2,
         OriginMonNum: 0
     },
