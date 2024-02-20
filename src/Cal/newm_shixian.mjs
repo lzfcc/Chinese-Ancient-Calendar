@@ -270,7 +270,8 @@ const moonJiazi = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) => 
     const AvgMoon1 = t(MoonRoot + Sd * MoonAvgVd) // 太陰平行。1921算例330°20′19.9″=330.3388611111
     const AvgMapo = t(MapoRoot + Sd * MapoVd) // 最高平行.Mapo=MoonApogee太陰遠地點
     const AvgNode = NodeRoot - Sd * NodeVd // 正交平行    
-    const AvgMoon = AvgMoon1 - timeAvg2Real(Sobliq, SunCorr, Gong2Lon(SunGong)) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
+    const AvgMoon = AvgMoon1
+    // const AvgMoon = AvgMoon1 - timeAvg2Real(Sobliq, SunCorr, Gong2Lon(SunGong)) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
     const Morb = t(AvgMoon - AvgMapo) // 均輪心自行引數Morb=MoonOrbitDegree。1949算例：200°22′05.77″=200.3682694444⚠️我算出來多了一點
     const { Corr1, Choumao } = moonCorr1Jiazi(Morb) // 1921算例-1°29′33.22″=-1.4925611111
     const flag1 = f1(Morb) // 初均符號    
@@ -448,9 +449,10 @@ export const N4 = (Name, Y) => {
             const EclpmidHigh = BaC_Sph(90, AngEclpSou, NoonEclpHigh) // 黃平象限距地平。算例丑角=72度50分56秒=72.8488888889
             const EclpmidSouDif = abs(90 - ABCa_Sph(EclpmidHigh, 90, AngEclpSou, NoonEclpHigh)) // 用時黃平象限距午度。算例癸丑弧88度1分18秒=88.02166666667
             const EclpmidGong = NoonEclpGong + (NoonEclpGong < 180 ? 1 : -1) * (NoonEclpHigh > 90 ? -1 : 1) * EclpmidSouDif // 用時黃平象限宮度。算例167度3分52秒=167.06444444444
-            const SunEclpmidDif = SunGong - EclpmidGong  // 用時太陽距黃平象限=月距限。太陽黃經大於黃平象限宮度爲限東。大於0爲限東，小於0爲限西。算例壬子弧62度3分52秒=62.06444444444
-            const SignEw = Math.sign(SunEclpmidDif) // 限東為1，西-1
-            const Zichou = 90 - abs(SunEclpmidDif) // 太陽距黃平象限之餘
+            const SunEclpmidDif = abs(SunGong - EclpmidGong) // 用時太陽距黃平象限=月距限。算例壬子弧62度3分52秒=62.06444444444
+            const SignEw = (SunGong - EclpmidGong + 360) % 360 < 180 ? 1 : -1 // 太陽黃經大於黃平象限宮度爲限東。大於0爲限東，小於0爲限西——我想了下應該這樣處理
+            // const SignEw = Math.sign(SunEclpmidDif) // 限東為1，西-1
+            const Zichou = 90 - SunEclpmidDif // 太陽距黃平象限之餘
             // const Maochou = LonHigh2Flat(EclpmidHigh, Zichou)
             const AngEclpHigharc = abs(atan(cot(EclpmidHigh) / sin(SunEclpmidDif))) // asin(sin(Maochou) / sin(Zichou)) // 黃道高弧交角。sin90/sin子丑=sin子/sin卯丑=sin丑/sin子卯。或BaC_Sph(EclpmidHigh, 90, Maochou) 算例角子=19度15分19秒=19.2552777778
             const SunHigh = asin(sin(Zichou) * sin(EclpmidHigh)) // 太陽高弧。算例子卯=26度35分30秒
@@ -495,10 +497,10 @@ export const N4 = (Name, Y) => {
         const { EwCorr: StartEwCorr } = sunEcliJiaziMain(AcrSunGong - AcrEwCorr - ArcStartTotal, AcrSunEquaLon, SdStartAvg)
         const StartTotalDif = ArcStartTotal / (ArcStartTotal - (StartEwCorr - AcrEwCorr)) * AvgStartTotalDif // 初虧距分.// 初虧視行：初虧食甚同在白平象限東，初虧東西差大則以差分減，小則以差分加 // 以初亏视行化秒为一率，初亏复圆距时化秒为二率，初亏复圆距弧化秒为三率，求得四率为秒，以时分收之得初亏距分
         const SdStart = SdAcr - StartTotalDif // 初虧真時
-        //////// 【十三】復原真時
+        //////// 【十三】復圓真時
         const SdEndAvg = SdAcr + AvgStartTotalDif
         const { EwCorr: EndEwCorr } = sunEcliJiaziMain(AcrSunGong - AcrEwCorr + ArcStartTotal, AcrSunEquaLon, SdEndAvg)
-        const EndTotalDif = (ArcStartTotal + (EndEwCorr - AcrEwCorr)) / MSAcrVhDif / 24 // 復原食甚同在白平象限東，復原東西差大則以差分加，小則以差分減
+        const EndTotalDif = ArcStartTotal / (ArcStartTotal + (EndEwCorr - AcrEwCorr)) * AvgStartTotalDif // 復圓食甚同在白平象限東，復圓東西差大則以差分加，小則以差分減       
         const SdEnd = SdAcr + EndTotalDif
         const TotalSLon = sunQing(Name, SunRoot, SperiRoot, SdAcr).SunLon
         return {

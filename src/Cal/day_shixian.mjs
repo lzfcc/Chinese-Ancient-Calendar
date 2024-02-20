@@ -73,7 +73,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
             MoonRise[i] = []
             for (let k = 1; k <= ~~NewmSd[i] - ~~NewmSd[i - 1]; k++) { // 每月日數                
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
-                // const SdMidn = 68
+                // const SdMidn = 231
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunQing(Name, SunRoot, SperiRoot, SdMidn)
@@ -124,4 +124,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D2('Jiazi', 1731, 1731))
+// console.log(D2('Jiazi', 1733, 1733))
