@@ -915,8 +915,8 @@ hr {
   background: white;
   border: 1px solid var(--shallowgray);
   margin: 3em auto 0;
-  width: 1299px;
-  padding: 0 .5em 2em;
+  width: fit-content;
+  padding: 0 .2em 2em;
 }
 
 .day-render h2 {

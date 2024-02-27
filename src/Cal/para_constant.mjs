@@ -135,6 +135,8 @@ export const NameList = {
   // Wannian: '聖壽萬年',
   // Huangzhong: '黃鐘',
   // Huihui: '回回',
+  Xinfa: "新法曆書",
+  Yongnian: "康熙永年表",
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
 };
@@ -182,6 +184,8 @@ export const NameDayList = {
   Shoushi2: "授時(通軌)",
   Datong: "大統(通軌)",
   Datong2: "大統(曆志)",
+  Xinfa: "新法曆書",
+  Yongnian: "康熙永年表",
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
 };

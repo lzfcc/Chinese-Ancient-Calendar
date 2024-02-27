@@ -109,7 +109,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 Sc[i][k] = NumList[k] + '日' + Sc[i][k]
             }
         }
-        DayAccum = '僞造者依律處斬有能吿捕者官給賞銀五十兩如無本監時憲曆印信即同私造' + `\n凡` + nzh.encodeS(DayAccum) + '日　' + Yuan
+        DayAccum = '僞造者依律處斬有能吿捕者官給賞銀五十兩如無本監曆日印信即同私造' + `\n凡` + nzh.encodeS(DayAccum) + '日　' + Yuan
         return {
             Era, Title, DayAccum, YearGod, YearColor, MonName, MonInfo, MonColor,
             Sc, Jd, Nayin, Week,
