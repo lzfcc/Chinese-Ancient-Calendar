@@ -388,8 +388,8 @@ const moonJiazi = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) => 
     const AvgMoon0 = t(MoonRoot + Sd * MoonAvgVd) // 太陰平行。1921算例330°20′19.9″=330.3388611111
     const AvgMapo = t(MapoRoot + Sd * MapoVd) // 最高平行.Mapo=MoonApogee太陰遠地點
     const AvgNode = NodeRoot - Sd * NodeVd // 正交平行    
-    const AvgMoon = AvgMoon0
-    // const AvgMoon = AcrMoon0 - timeAvg2Real(Name, Sobliq, Gong2Lon(SunGong), SunCorr) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
+    // const AvgMoon = AvgMoon0
+    const AvgMoon = AvgMoon0 - timeAvg2Real(Name, Sobliq, Gong2Lon(SunGong), SunCorr) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
     const Morb = t(AvgMoon - AvgMapo) // 均輪心自行引數Morb=MoonOrbitDegree。1949算例：200°22′05.77″=200.3682694444
     const { Corr1, D1 } = moonCorr1Tycho(Morb) // 1921算例-1°29′33.22″=-1.4925611111
     const flag1 = Math.sign(Corr1)
@@ -1043,7 +1043,7 @@ export const N4 = (Name, Y) => {
             }
             const AcrSunLon = Gong2Lon(AcrSunGong)
             const { SunCorr: SunCorrLineMidn, SunLon: SunLonLineMidn } = sunQing(Name, SunRoot, SperiRoot, AcrlineSdMidn) // 為了寫得方便，索性重算一遍
-            NowlineSd[i] = AcrlineSd + (Name === 'Xinfa' || Name === 'Yongnian' ? 0 : timeAvg2Real(Name, Sobliq, SunLonLineMidn)) // 目前暫定新法和永年的日差放在月離裡面，甲子和癸卯時差放在這裡
+            NowlineSd[i] = AcrlineSd + (Name === 'Guimao' ? timeAvg2Real(Name, Sobliq, SunLonLineMidn, SunCorrLineMidn) : 0) // 新法、永年、甲子的時差放在月離裡面
             // NowlineDeci[i] = fix(deci(NowlineSd[i]), 3)
             NowlineDeci[i] = clockQingB(deci(NowlineSd[i]) * 100)
             NowSd[i] = AcrSd + timeAvg2Real(Name, Sobliq, AcrSunLon, AcrSunCorr) // 朔望只有月離初均，沒有日差，所以都要加。不清楚新法的交食用那種日差
