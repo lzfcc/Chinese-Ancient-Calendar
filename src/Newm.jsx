@@ -176,8 +176,8 @@ export default class Newm extends React.Component {
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
     if (isAuto) {
-      if (YearStart < -721 || YearStart > 1662 || YearEnd < -721 || YearEnd > 1683) {
-        alert('Year range of AutoChoose mode: -721 to 1683');
+      if (YearStart < -721 || YearStart > 1913 || YearEnd < -721 || YearEnd > 1913) {
+        alert('Year range of AutoChoose mode: -721 to 1913');
         return;
       }
     } else if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元

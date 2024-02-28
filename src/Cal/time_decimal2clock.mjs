@@ -108,8 +108,7 @@ const ClockSong = Deci => { // 皇祐之後、元、明。四刻是1/6。1刻60�
     const MinOrder = ~~((KeRaw - (ClockOrder * (100 / 12) + HalfOrder * (4 + 1 / 6) + QuarOrder)) * 60)
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder] + '' + QuarList[QuarOrder] + '刻' + nzh.encodeS(MinOrder) + '分'
 }
-
-const ClockQing = DeciRaw => { // 清代96刻
+const clockQingMain = DeciRaw => {
     const Deci = DeciRaw + 100 / 24 // 夜半子半
     const KeRaw = Deci * .96 + 1e-10
     const KeOrder = ~~KeRaw
@@ -119,7 +118,15 @@ const ClockQing = DeciRaw => { // 清代96刻
     const MinOrder = ~~(deci(KeRaw) * 15) % 15
     const sum = (ClockOrder / 12 + (HalfOrder - 1) / 24 + QuarOrder / 96 + MinOrder / 1440) * 86400
     const SecOrder = ~~(DeciRaw * 864 - sum)
+    return { ClockOrder, HalfOrder, QuarOrder, MinOrder, SecOrder }
+}
+const ClockQing = DeciRaw => { // 清代96刻
+    const { ClockOrder, HalfOrder, QuarOrder, MinOrder, SecOrder } = clockQingMain(DeciRaw)
     return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + '刻' + (MinOrder === 0 ? '' : nzh.encodeS(MinOrder) + '分') + (SecOrder === 0 ? '' : nzh.encodeS(SecOrder) + '秒')
+}
+export const clockQingB = DeciRaw => {
+    const { ClockOrder, HalfOrder, QuarOrder, MinOrder, SecOrder } = clockQingMain(DeciRaw)
+    return BranchList[ClockOrder + 1] + HalfList[HalfOrder % 2] + '' + QuarList[QuarOrder] + (MinOrder === 0 ? '' : MinOrder)
 }
 // console.log(ClockQing(99.99))
 export const AutoClock = (Deci, Name) => {

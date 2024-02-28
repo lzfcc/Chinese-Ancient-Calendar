@@ -16,7 +16,7 @@ import { ClockWest } from './time_decimal2clock.mjs'
 
 export const D2 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
-    const Day = (Name, Y) => {
+    const Main = (Name, Y) => {
         const { Sobliq, BjLat } = Para[Name]
         const { LeapNumTerm, SolsAccum, SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, NewmSd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
         ///////
@@ -25,11 +25,8 @@ export const D2 = (Name, YearStart, YearEnd) => {
         const YearStem = StemList.indexOf(YearSc[0])
         const YearBranch = BranchList.indexOf(YearSc[1])
         let Title = ''
-        if (Y > 0) {
-            Title = Y + '年歲次' + YearSc
-        } else {
-            Title = '前' + (1 - Y) + '年歲次' + YearSc
-        }
+        if (Y > 0) Title = Y + '年歲次' + YearSc
+        else Title = '前' + (1 - Y) + '年歲次' + YearSc
         Title += '日月經緯宿度時憲曆'
         const Era = '欽天監欽遵御製' + NameList[Name] + '印造時憲曆頒行天下'
         const YuanYear = ((Y - 604) % 180 + 180) % 180 // 術數的元，以604甲子爲上元，60年一元，凡三元
@@ -73,12 +70,12 @@ export const D2 = (Name, YearStart, YearEnd) => {
             MoonRise[i] = []
             for (let k = 1; k <= ~~NewmSd[i] - ~~NewmSd[i - 1]; k++) { // 每月日數                
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
-                // const SdMidn = 231
+                // const SdMidn = 263 // 1722-9-11八月朔 :263 廖育棟01:05
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunQing(Name, SunRoot, SperiRoot, SdMidn)
                 const { SunLon: SunLonMor } = sunQing(Name, SunRoot, SperiRoot, SdMidn + 1)
-                const { MoonGong, MoonLon, MoonLat } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
+                const { MoonGong, MoonLon, MoonLat, Whitelongi } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
                 Eclp[i][k] = deg2Hms(SunLon) + eclpGong2Mansion(Name, Y, SunGong, 2)
                 // EclpMansion[i][k] =  // 注意：入宿度是轉換成了古度的
                 const SEquaLon = LonHigh2Flat(Sobliq, SunLon)
@@ -97,7 +94,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 MoonEqua[i][k] = deg2Hms(Func3.EquaLon) + equaGong2Mansion(Name, Y, Lon2Gong(Func3.EquaLon), 2)
                 MoonEquaLat[i][k] = Lat2NS(Func3.EquaLat)
                 const { MoonRise: MoonRiseTmp, MoonSet: MoonSetTmp } = moonRiseQing(BjLat, Func3.EquaLon, Func3.EquaLat, SEquaLon)
-                MoonRise[i][k] = ClockWest(MoonRiseTmp) + ' ' + ClockWest(MoonSetTmp, false)
+                MoonRise[i][k] = ClockWest(MoonRiseTmp) + ' ' + ClockWest(MoonSetTmp, false) // + '距正交' + Whitelongi
                 ///////////具注曆////////////
                 const ScOrder = ~~(SolsmorScOrder + SdMidn) % 60
                 Sc[i][k] = ScList[ScOrder]
@@ -120,8 +117,8 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     const result = []
     for (let Y = YearStart; Y <= YearEnd; Y++) {
-        result.push(Day(Name, Y))
+        result.push(Main(Name, Y))
     }
     return result
 }
-// console.log(D2('Jiazi', 1733, 1733))
+// console.log(D2('Yongnian', 1722, 1722))

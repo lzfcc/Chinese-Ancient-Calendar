@@ -20,7 +20,7 @@ import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
 export const D1 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
-    const Day = (Name, year) => {
+    const Main = (Name, year) => {
         const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[Name]
         let { Solar, Sidereal, Lunar } = Para[Name]
         const { LeapNumTerm, SolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumNightPrint, NewmAnomaAccumPrint, NewmAnomaAccumNightPrint } = CalNewm(Name, year)[0]
@@ -395,7 +395,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
     }
     const result = []
     for (let year = YearStart; year <= YearEnd; year++) {
-        result.push(Day(Name, year))
+        result.push(Main(Name, year))
     }
     return result
 }

@@ -393,9 +393,9 @@ table th {
 }
 
 table td {
-  min-width: 4em;
-  padding: 1px 0;
-  width: 67px
+  /* min-width: 4em; */
+  width: fit-content;
+  padding: .1em .25em;
 }
 
 .year-select table {

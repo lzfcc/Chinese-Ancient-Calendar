@@ -2,6 +2,7 @@
 import Para from './para_calendars.mjs'
 import { ScList, deci, fix } from './para_constant.mjs'
 import { eclpGong2Mansion } from './astronomy_other.mjs'
+import { clockQingB } from './time_decimal2clock.mjs'
 const abs = X => Math.abs(X)
 const sign = X => Math.sign(X)
 const pi = Math.PI
@@ -208,31 +209,8 @@ const dist = (deg, c2) => { // 作垂線成兩勾股法，小股y=(4*X-4-c2**2)/
 }
 // console.log(dist(180, .066782*2))
 // console.log(dist2(324, .0538))
-// 時差總
-const timeAvg2Real = (Sobliq, SunCorr, SunLon) => {
-    const SunCorrTcorr = -SunCorr / 360 // 均數時差。以實望太陽均數變時。均數加者則爲減。
-    const EclpEquaDifTcorr = (SunLon - LonHigh2Flat(Sobliq, SunLon)) / 360 // 升度時差。二分後爲加，二至後爲減。
-    return SunCorrTcorr + EclpEquaDifTcorr
-}
 // 褚龙飞《崇祯历书系列历法中的太阳运动理论》：「可以断定日躔加减差表应该是根据对分圆模型计算而来的。」「从图上来看，平行心应为丙，即太阳应相对于丙作匀角速运动。这样，辛就应该是本轮圆心，辛乙才是本轮半径。」從上到下依此為平行心、本輪心、地心
-const sunCorrXinfa = Xraw => {
-    Xraw = (Xraw + 360) % 360
-    const Xt = t3(Xraw)
-    const E = .0179208
-    let x = 0
-    // 從本輪心作垂線，與平行心延線相交
-    const H = sin(Xt) * E // 本輪心作垂線
-    const J = cos(Xt) * E // 太陽平行心延長線      
-    x = ((Xraw > 90 && Xraw < 270 ? -1 : 1) * 2 * J + sqr(4 * J ** 2 - 4 * (J ** 2 + H ** 2 - 1))) / 2  // (x + J) ** 2 + H ** 2=1，或(x - J) ** 2 + H ** 2=1
-    // 餘弦定理 c²=a²+b²-2abcosC
-    const c2 = x ** 2 + 4 * E ** 2 - 2 * x * 2 * E * cos(Xraw > 90 && Xraw < 270 ? 180 - Xt : Xt)
-    return {
-        SunCorr: f2(Xraw) * qiexianA(2 * E, x, Xt),
-        SDist: sqr(c2)
-    }
-}
-// console.log(sunCorrXinfa(40))
-// const sunCorrXinfaZhunduifenyuan = Xraw => { 
+// const sunCorrXinfaZhunduifen = Xraw => { 
 //     Xraw = (Xraw + 360) % 360
 //     const X1 = (Xraw + 180) % 360 // 暫時最高起算
 //     const Xt = t3(X1)
@@ -247,6 +225,19 @@ const sunCorrXinfa = Xraw => {
 //         SDist: sqr(B2 ** 2 + H1 ** 2)
 //     }
 // }
+const sunCorrXinfa = Sorb => { // 廖育棟文檔改編。從上到下D、本輪心O、地心C，CO=OD=E，太陽在S，作OH⊥CS，DJ⊥CS
+    const E = .0179208
+    const OH = sin(Sorb) * E
+    const CH = cos(Sorb) * E
+    const DJ = 2 * OH
+    const HS = sqr(1 - OH ** 2)
+    const HJ = CH
+    const JS = HS - HJ
+    return {
+        SunCorr: +atan(DJ / JS).toFixed(12),
+        SDist: HS - CH
+    }
+}
 const sunCorrJiazi = Xraw => { // 本輪均輪模型
     Xraw = (Xraw + 360) % 360
     // const X = Xraw % 180
@@ -255,10 +246,12 @@ const sunCorrJiazi = Xraw => { // 本輪均輪模型
     const Jiawu = 1 + (t2(Xraw) < 90 ? -1 : 1) * cos(Xt) * Rdif
     const Wuchen = 2 * sin(Xt) * Rdif
     return {
-        SunCorr: f2(Xraw) * atan(Wuchen / Jiawu),
+        SunCorr: +(f2(Xraw) * atan(Wuchen / Jiawu)).toFixed(12),
         SDist: sqr(Jiawu ** 2 + Wuchen ** 2)
     }
 }
+// console.log(sunCorrXinfa(300))
+// console.log(sunCorrJiazi(300))
 const sunCorrGuimao = Xraw => { // 橢圓模型。大徑1、小徑0.999857185、avg中率0.999928589、兩心差（焦距）。中距盈縮差1°56′12″。
     Xraw = (Xraw + 360) % 360
     const X = Xraw % 180
@@ -272,19 +265,65 @@ const sunCorrGuimao = Xraw => { // 橢圓模型。大徑1、小徑0.999857185、
     if (Xraw > 180) flag2 = -1
     return { SunCorr: flag2 * (Awu + flag1 * Aweibingwu) }
 }
+const sunCorrQing = (Name, Sorb) => {
+    let SunCorr = 0
+    if (Name === 'Xinfa' || Name === 'Yongnian') SunCorr = sunCorrXinfa(Sorb).SunCorr
+    else if (Name === 'Jiazi') SunCorr = sunCorrJiazi(Sorb).SunCorr
+    else if (Name === 'Guimao') SunCorr = sunCorrGuimao(Sorb).SunCorr
+    return SunCorr
+}
 // console.log(sunCorrJiazi(198 + 40 / 60 + 57.4 / 3600)) // -0°38′48.49″=0.6468027778 // https://zhuanlan.zhihu.com/p/511793561
 export const sunQing = (Name, SunRoot, SperiRoot, Sd) => {
     const { SunAvgVd, SperiVd } = Para[Name]
     const AvgSun = SunRoot + Sd * SunAvgVd // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
     const Speri = SperiVd * Sd + SperiRoot // 最卑平行。Speri=SunPerigee太陽近地點。Sd=winter solstice tomorrow difference距離冬至次日子正的時間
     const Sorb = t(AvgSun - Speri) // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
-    let SunCorr = 0
-    if (Name === 'Xinfa' || Name === 'Yongnian') SunCorr = sunCorrXinfa(Sorb).SunCorr
-    else if (Name === 'Jiazi') SunCorr = sunCorrJiazi(Sorb).SunCorr
-    else if (Name === 'Guimao') SunCorr = sunCorrGuimao(Sorb).SunCorr
+    const SunCorr = sunCorrQing(Name, Sorb)
     const SunGong = t(AvgSun + SunCorr) // 實行
     const SunLon = Gong2Lon(SunGong) // 黃道度
     return { Sorb, SunCorr, SunLon, SunGong, Speri }
+}
+const timeAvg2RealXinfaList = [ // 距冬至度數0-359
+    8, 7.5, 7, 7, 7, 6, 5, 5, 4, 4, 3.5, 3, 2.5, 2, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3, -3, -3, -3.5, -4, -4.5,
+    -5, -5, -5, -5.5, -6, -6, -6, -6, -6.5, -7, -7, -7, -7, -7, -7.5, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8,
+    -7, -7, -7, -7, -7, -7, -7, -7, -6.5, -6, -6, -6, -6, -5.5, -5, -5, -5, -4.5, -4, -4, -4, -3.5, -3, -3, -2.5, -2, -2, -1.5, -1, -.5,
+    0, 0, .5, .5, .5, .5, .5, 1.5, 2, 2.5, 3, 3, 3, 3.5, 4, 4.5, 5, 5, 5, 5.5, 6, 6, 6.5, 7, 7, 7.5, 7.5, 8, 8, 8,
+    8.5, 8.5, 9, 9, 9.5, 9.5, 10, 10.5, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11.5, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+    12, 12, 12, 11.5, 11, 11, 11, 11, 11, 11, 11, 10.5, 10, 10, 10, 10, 10, 9.5, 9, 9, 9, 9, 8.5, 8, 8, 8, 7.5, 7.5, 7, 7,
+    6.5, 6, 6, 6, 6, 5.5, 5.5, 5, 5, 5, 5, 4.5, 4, 4, 4, 4, 3.5, 3, 3, 3, 3, 3, 3, 2.5, 2.5, 2, 2, 2, 2, 2,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2.5, 2.5, 3, 3, 3, 3, 3, 3, 3.5, 4, 4, 4.5, 4.5, 5, 5, 5, 5.5,
+    6, 6, 6, 6.5, 7, 7, 7, 7.5, 8, 8.5, 9, 9, 9, 9.5, 10, 10.5, 11, 11, 11.5, 11.5, 12, 12.5, 13, 13, 13.5, 13.5, 14, 14.5, 15, 15.5,
+    16, 16, 16.5, 17, 17, 17.5, 18, 18, 18, 18.5, 19, 19, 20, 20, 20, 20.5, 21, 21, 21, 21.5, 22, 22, 22, 22.5, 23, 23, 23, 23, 23, 23.5,
+    24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 23.5, 23, 23, 23, 23, 23.5, 22, 22, 22, 21.5,
+    21, 21, 21, 20.5, 20.5, 20, 19.5, 19, 19, 18.5, 18, 17.5, 17, 16.5, 16, 15.5, 15, 14.5, 14, 13.5, 13.5, 13, 12.5, 12, 11.5, 11, 10.5, 10, 9.5, 9
+]
+const timeAvg2RealXinfaLiao = (Sobliq, SunLon) => { // 根據廖育棟附錄A
+    const SunCorr = sunCorrJiazi(Lon2Gong(SunLon)).SunCorr
+    const a = tan(Sobliq / 2) ** 2 * sin(2 * SunLon)
+    const b = 1 + tan(Sobliq / 2) ** 2 * cos(2 * SunLon)
+    const EclpEquaDifTcorr = atan(a / b)
+    const SunCorrTcorr = -SunCorr // 變成分鐘數
+    const k = 7.5
+    return SunCorrTcorr * 4 + EclpEquaDifTcorr * 4 + k
+}
+const timeAvg2RealXinfa = (Sobliq, SunLon) => { // 査表
+    const SunGong = ~~Lon2Gong(SunLon)
+    return timeAvg2RealXinfaList[SunGong] / 1440
+}
+const timeAvg2RealXinfaB = (Sobliq, SunLon) => (SunLon - LonHigh2Flat(Sobliq, SunLon)) / 360 // 只考慮升度差
+// 時差總
+const timeAvg2RealJiazi = (Sobliq, SunLon, SunCorr) => {
+    const SunCorrTcorr = -SunCorr / 360 // 均數時差。以實望太陽均數變時。均數加者則爲減。
+    const EclpEquaDifTcorr = (SunLon - LonHigh2Flat(Sobliq, SunLon)) / 360 // 升度時差。二分後爲加，二至後爲減。
+    return SunCorrTcorr + EclpEquaDifTcorr
+}
+const timeAvg2Real = (Name, Sobliq, SunLon, SunCorr) => {
+    let TimeDif = 0
+    if (Name === 'Xinfa' || Name === 'Yongnian') {
+        if (SunCorr) TimeDif = timeAvg2RealXinfa(Sobliq, SunLon)
+        else TimeDif = timeAvg2RealXinfaB(Sobliq, SunLon) // 合朔只用升度差
+    } else if (Name === 'Jiazi' || Name === 'Guimao') TimeDif = timeAvg2RealJiazi(Sobliq, SunLon, SunCorr)
+    return TimeDif
 }
 // 測本輪大小遠近及加減差後法第七，近世歌白尼法，今時通用。崇禎曆書對幾個均數的定義也很迷惑，第十二說本輪次輪產生一二均，也就是考成的初均。對比表格，崇禎曆書自行加減表=考成初均表
 // 以下兩者區別主要是符號
@@ -316,12 +355,13 @@ const moonXinfa = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) => 
     const AvgMoon0 = t(MoonRoot + Sd * MoonAvgVd)
     const AvgMapo = t(MapoRoot + Sd * MapoVd) // 最高平行.Mapo=MoonApogee太陰遠地點
     const AvgNode = NodeRoot - Sd * NodeVd // 正交平行
-    const AvgMoon = AvgMoon0
+    const AvgMoon = AvgMoon0 - timeAvg2Real(Name, Sobliq, Gong2Lon(SunGong)) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
+    // const AvgMoon = AvgMoon0
     const Morb = t(AvgMoon - AvgMapo)
     const { Corr1, D1 } = moonCorr1Tycho(Morb)
     const AcrMoon0 = AvgMoon + Corr1 // 實平行
     const AcrMorb = Morb + Corr1
-    const MSDif = (AcrMoon0 - SunGong + 720) % 360
+    const MSDif = t(AcrMoon0 - SunGong)
     const MSDif2 = (MSDif * 2) % 360
     // 以下根據褚龍飛論文
     const E1 = 2 * R4 * sin(MSDif)
@@ -349,7 +389,7 @@ const moonJiazi = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) => 
     const AvgMapo = t(MapoRoot + Sd * MapoVd) // 最高平行.Mapo=MoonApogee太陰遠地點
     const AvgNode = NodeRoot - Sd * NodeVd // 正交平行    
     const AvgMoon = AvgMoon0
-    // const AvgMoon = AcrMoon0 - timeAvg2Real(Sobliq, SunCorr, Gong2Lon(SunGong)) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
+    // const AvgMoon = AcrMoon0 - timeAvg2Real(Name, Sobliq, Gong2Lon(SunGong), SunCorr) * MoonAvgVd // 時差總爲加者時差行爲減。1921算例330°23′39.19″=330.3942194444
     const Morb = t(AvgMoon - AvgMapo) // 均輪心自行引數Morb=MoonOrbitDegree。1949算例：200°22′05.77″=200.3682694444
     const { Corr1, D1 } = moonCorr1Tycho(Morb) // 1921算例-1°29′33.22″=-1.4925611111
     const flag1 = Math.sign(Corr1)
@@ -357,9 +397,9 @@ const moonJiazi = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong) => 
     const MSDif = (AcrMoon0 - SunGong + 720) % 360 // 月距日次引（次輪周之行度）
     // 次輪心行Orbdeg*2%360，次均輪心行MSDif*2
     const MSDif2 = (MSDif * 2) % 360 // 倍離
-    const AcrMorbTmp = abs(Corr1) + t1(Morb)  // 次輪最近點距地心線與次輪徑夾角 // 如果Morb<180就是t1(Morb-Corr1)，暫且這麼命名⚠️ 這一步到底是實引還是什麼的》？？？
+    const AcrMorbTmp = abs(Corr1) + t1(Morb)  // 以初均數與均輪心距最卑之度相加。次輪最近點距地心線與次輪徑夾角 // 如果Morb<180就是t1(Morb-Corr1)，暫且這麼命名
     // 次輪最近點距地。90：1.0037774。120：0.9883760。230：0.9836195。300：1.0172941
-    const Jichou = R4 * sin2(t2(MSDif2)) // 120：0.0407827。135：0.0306884。320：0.0278970
+    const Jichou = R4 * sin2(t2(MSDif2)) // 次輪月距日倍度之通弦。120：0.0407827。135：0.0306884。320：0.0278970
     const AngJichoujia = abs(AcrMorbTmp // 均輪心距最卑之度=引數與半周相減
         + flag1 * f4(MSDif) * t1(MSDif2) / 2)  // 加減月距日距象限度爲夾角。距象限90度和我的算式等效。
     // 初均減者：月距日過一三象限，加；不過象限或過二象限，減。
@@ -464,11 +504,12 @@ export const moonQing = (Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGon
     else if (Name === 'Guimao') return moonGuimao(Name, MoonRoot, NodeRoot, MapoRoot, Sd, SunCorr, SunGong, Speri, Sorb)
 }
 export const N4 = (Name, Y) => {
-    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SperiConst, SperiVy, SperiVd, SunAvgVd, MoonAvgVd, MapoVd, NodeVd, MoonConst, MapoConst, NodeConst, MoonNodeVdSum, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, MansionDayConst, Sobliq, BjLat } = Para[Name] // SunAvgVm, SorbVm, MorbVm, MoonNodeVmSum, ChouSunConst, ChouSorbConst, ChouMorbConst, ChouWhitelongiConst
+    const { CloseOriginAd, Solar, Lunar, ChouConst, SolsConst, SperiConst, SperiVy, SperiVd, SunAvgVd, MoonAvgVd, MapoVd, NodeVd, MoonConst, MapoConst, NodeConst, SunLimitYinAcr, SunLimitYangAcr, MoonLimit, MansionDayConst, Sobliq, BjLat } = Para[Name] // SunAvgVm, SorbVm, MorbVm, MoonNodeVmSum, ChouSunConst, ChouSorbConst, ChouMorbConst, ChouWhitelongiConst
     const TermLeng = Solar / 12
     const MorbVd = MoonAvgVd - MapoVd
     const SorbVd = SunAvgVd - SperiVd
     const MSAvgVdDif = MoonAvgVd - SunAvgVd
+    const MoonNodeVdSum = MoonAvgVd + NodeVd
     const CloseOriginYear = abs(Y - CloseOriginAd) // 積年
     const OriginAccum = +(CloseOriginYear * Solar).toFixed(9) // 中積
     const SolsAccum = Y >= CloseOriginAd ? OriginAccum + SolsConst : OriginAccum - SolsConst // 通積分
@@ -914,14 +955,15 @@ export const N4 = (Name, Y) => {
         const Tod = SunTod.SunGong
         const Mor = SunMor.SunGong
         const AcrlineSd = ~~AcrlineBSd + (TermGong - Tod + (TermGong === 0 ? 360 : 0)) / ((Mor - Tod + 360) % 360)
-        const NowlineSd = AcrlineSd + timeAvg2Real(Sobliq, SunTod.SunCorr, Gong2Lon(TermGong))
+        const NowlineSd = AcrlineSd + timeAvg2Real(Name, Sobliq, Gong2Lon(TermGong), SunTod.SunCorr)
         const NowlineSc = ScList[(SolsmorScOrder + ~~NowlineSd) % 60]
-        const NowlineDeci = fix(deci(NowlineSd), 3)
+        // const NowlineDeci = fix(deci(NowlineSd), 3)
+        const NowlineDeci = clockQingB(deci(NowlineSd) * 100)
         const TermEclp = eclpGong2Mansion(Name, Y, TermGong)
         // 再加上迭代。曆書用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時
         const tmp = TermGong - sunQing(Name, SunRoot, SperiRoot, AcrlineSd).SunGong // 預防冬至0宮的問題
         const AcrSd = AcrlineSd + (abs(tmp) > 180 ? tmp + 360 : tmp) / SunAvgVd // 迭代
-        const NowSd = AcrSd + timeAvg2Real(Sobliq, sunQing(Name, SunRoot, SperiRoot, AcrSd).SunCorr, Gong2Lon(TermGong))
+        const NowSd = AcrSd + timeAvg2Real(Name, Sobliq, Gong2Lon(TermGong), sunQing(Name, SunRoot, SperiRoot, AcrSd).SunCorr)
         const NowDeci = fix(deci(NowSd), 3)
         return { TermSc, TermDeci, TermAcrSd: NowlineSd, TermAcrSc: NowlineSc, TermAcrDeci: NowlineDeci, TermNowDeci: NowDeci, TermEclp } // 為了和古曆統一，此處改名
     }
@@ -938,12 +980,12 @@ export const N4 = (Name, Y) => {
             let AcrSd = 0, AcrlineDeci = 0, AcrSunGong = 0, AcrWhitelongi = 0, AcrSunCorr = 0, AcrMorb = 0, AcrMoonCorr1 = 0, AcrSorb = 0
             // 月離曆法·推合朔弦望法：直接用本日次日太陽太陰實行求，但必須先確定本日次日是哪日
             let AcrlineSdMidn = AvgSdMidn
-            const acrlineDeci = AcrlineSdMidn => {
-                const { Speri: SperiTod, Sorb: SorbTod, SunCorr: SunCorrTod, SunLon: SunLonTodRaw, SunGong: SunGongTod } = sunQing(Name, SunRoot, SperiRoot, AcrlineSdMidn)
-                const { MoonLon: MoonLonTod } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, AcrlineSdMidn, SunCorrTod, SunGongTod, SperiTod, SorbTod)
+            const acrlineDeci = SdMidn => {
+                const { Speri: SperiTod, Sorb: SorbTod, SunCorr: SunCorrTod, SunLon: SunLonTodRaw, SunGong: SunGongTod } = sunQing(Name, SunRoot, SperiRoot, SdMidn)
+                const { MoonLon: MoonLonTod } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorrTod, SunGongTod, SperiTod, SorbTod)
                 const SunLonTod = (SunLonTodRaw + (isNewm ? 0 : 180)) % 360
-                const { Speri: SperiMor, Sorb: SorbMor, SunCorr: SunCorrMor, SunLon: SunLonMorRaw, SunGong: SunGongMor } = sunQing(Name, SunRoot, SperiRoot, AcrlineSdMidn + 1)
-                const { MoonLon: MoonLonMor } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, AcrlineSdMidn + 1, SunCorrMor, SunGongMor, SperiMor, SorbMor)
+                const { Speri: SperiMor, Sorb: SorbMor, SunCorr: SunCorrMor, SunLon: SunLonMorRaw, SunGong: SunGongMor } = sunQing(Name, SunRoot, SperiRoot, SdMidn + 1)
+                const { MoonLon: MoonLonMor } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn + 1, SunCorrMor, SunGongMor, SperiMor, SorbMor)
                 const SunLonMor = (SunLonMorRaw + (isNewm ? 0 : 180)) % 360
                 return {
                     MoonLonTod, SunLonTod, MoonLonMor, SunLonMor,
@@ -984,12 +1026,12 @@ export const N4 = (Name, Y) => {
                 // const AvgMorb = (ChouMorb + i * MorbVm + (isNewm ? 0 : (MorbVm + 360) / 2)) % 360 // 1949算例200°22′05.77″=200.3682694444
                 const AvgMoonGong = t(MoonRoot + AvgSd * MoonAvgVd)
                 const AvgMorb = t(AvgMoonGong - AvgMapo)
-                const AvgSunCorr = sunCorrJiazi(AvgSorb).SunCorr // 平望太陽均數
+                const AvgSunCorr = sunCorrQing(Name, AvgSorb) // 平望太陽均數
                 const AvgMoonCorr1 = moonCorr1Tycho(AvgMorb).Corr1 // 平望太陰均數.1949算例1°46′58.30″=1.7828611111
                 const AvgT_MSDif = (AvgSunCorr - AvgMoonCorr1) / MSAvgVdDif // 距時=距弧（日月相距之弧）/速度差。算例27m56s=0.01939814815
                 AcrSorb = AvgSorb + AvgT_MSDif * SorbVd // 太陽實引=平引+引弧。算例99°23′2.94″=99.38415
                 AcrMorb = AvgMorb + AvgT_MSDif * MorbVd // 太陰實引.1949算例200°37′18.14″=200.6217055556
-                AcrSunCorr = sunCorrJiazi(AcrSorb).SunCorr // 太陽實均.1949算例2°01′15.89″=2.02108055556
+                AcrSunCorr = sunCorrQing(Name, AcrSorb) // 太陽實均.1949算例2°01′15.89″=2.02108055556
                 AcrMoonCorr1 = moonCorr1Tycho(AcrMorb).Corr1 // 太陰實均。1949算例1°48′14.36″=1.8039888889
                 const AcrT_MSDif = (AcrSunCorr - AcrMoonCorr1) / MSAvgVdDif // 實距時=實距弧/速度差。1949算例：25m39s=0.0178125
                 AcrSd = AvgSd + AcrT_MSDif // 實望
@@ -1001,9 +1043,10 @@ export const N4 = (Name, Y) => {
             }
             const AcrSunLon = Gong2Lon(AcrSunGong)
             const { SunCorr: SunCorrLineMidn, SunLon: SunLonLineMidn } = sunQing(Name, SunRoot, SperiRoot, AcrlineSdMidn) // 為了寫得方便，索性重算一遍
-            NowlineSd[i] = AcrlineSd + timeAvg2Real(Sobliq, SunCorrLineMidn, SunLonLineMidn)
-            NowlineDeci[i] = fix(deci(NowlineSd[i]), 3)
-            NowSd[i] = AcrSd + timeAvg2Real(Sobliq, AcrSunCorr, AcrSunLon)
+            NowlineSd[i] = AcrlineSd + (Name === 'Xinfa' || Name === 'Yongnian' ? 0 : timeAvg2Real(Name, Sobliq, SunLonLineMidn)) // 目前暫定新法和永年的日差放在月離裡面，甲子和癸卯時差放在這裡
+            // NowlineDeci[i] = fix(deci(NowlineSd[i]), 3)
+            NowlineDeci[i] = clockQingB(deci(NowlineSd[i]) * 100)
+            NowSd[i] = AcrSd + timeAvg2Real(Name, Sobliq, AcrSunLon, AcrSunCorr) // 朔望只有月離初均，沒有日差，所以都要加。不清楚新法的交食用那種日差
             NowSc[i] = ScList[(SolsmorScOrder + ~~NowSd[i]) % 60]
             NowDeci[i] = fix(deci(NowSd[i]), 3)
             Eclp[i] = eclpGong2Mansion(Name, Y, AcrSunGong)
@@ -1112,7 +1155,7 @@ export const N4 = (Name, Y) => {
     }
 }
 // console.log(N4("Guimao", 1760)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
-// console.log(N4("Jiazi", 1827)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例。1921月離算例https://zhuanlan.zhihu.com/p/512380296 。2009日食算例https://zhuanlan.zhihu.com/p/670820567
+// console.log(N4("Xinfa", 1667)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例。1921月離算例https://zhuanlan.zhihu.com/p/512380296 。2009日食算例https://zhuanlan.zhihu.com/p/670820567
 // console.log(sunQing(Name,SunRoot, SperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Sd=313，SunRoot=0+38/60+26.223/3600，SperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
 // Sorb = 298 + 6 / 60 + 9.329 / 3600
