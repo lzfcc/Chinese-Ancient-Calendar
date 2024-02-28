@@ -266,11 +266,12 @@ const sunCorrGuimao = Xraw => { // 橢圓模型。大徑1、小徑0.999857185、
     return { SunCorr: flag2 * (Awu + flag1 * Aweibingwu) }
 }
 const sunCorrQing = (Name, Sorb) => {
-    let SunCorr = 0
-    if (Name === 'Xinfa' || Name === 'Yongnian') SunCorr = sunCorrXinfa(Sorb).SunCorr
-    else if (Name === 'Jiazi') SunCorr = sunCorrJiazi(Sorb).SunCorr
-    else if (Name === 'Guimao') SunCorr = sunCorrGuimao(Sorb).SunCorr
-    return SunCorr
+    let Func = {}
+    if (Name === 'Xinfa' || Name === 'Yongnian') Func = sunCorrXinfa(Sorb)
+    else if (Name === 'Jiazi') Func = sunCorrJiazi(Sorb)
+    else if (Name === 'Guimao') Func = sunCorrGuimao(Sorb)
+    const { SunCorr, SDist } = Func
+    return { SunCorr, SDist }
 }
 // console.log(sunCorrJiazi(198 + 40 / 60 + 57.4 / 3600)) // -0°38′48.49″=0.6468027778 // https://zhuanlan.zhihu.com/p/511793561
 export const sunQing = (Name, SunRoot, SperiRoot, Sd) => {
@@ -278,7 +279,7 @@ export const sunQing = (Name, SunRoot, SperiRoot, Sd) => {
     const AvgSun = SunRoot + Sd * SunAvgVd // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
     const Speri = SperiVd * Sd + SperiRoot // 最卑平行。Speri=SunPerigee太陽近地點。Sd=winter solstice tomorrow difference距離冬至次日子正的時間
     const Sorb = t(AvgSun - Speri) // 求引數（考成：本日子正初刻均輪心過本輪最卑之行度。平行乃本輪心之行度，自冬至起初宮；引數乃均輪心之行度，自最卑起初宮）
-    const SunCorr = sunCorrQing(Name, Sorb)
+    const SunCorr = sunCorrQing(Name, Sorb).SunCorr
     const SunGong = t(AvgSun + SunCorr) // 實行
     const SunLon = Gong2Lon(SunGong) // 黃道度
     return { Sorb, SunCorr, SunLon, SunGong, Speri }
@@ -298,7 +299,7 @@ const timeAvg2RealXinfaList = [ // 距冬至度數0-359
     21, 21, 21, 20.5, 20.5, 20, 19.5, 19, 19, 18.5, 18, 17.5, 17, 16.5, 16, 15.5, 15, 14.5, 14, 13.5, 13.5, 13, 12.5, 12, 11.5, 11, 10.5, 10, 9.5, 9
 ]
 const timeAvg2RealXinfaLiao = (Sobliq, SunLon) => { // 根據廖育棟附錄A
-    const SunCorr = sunCorrJiazi(Lon2Gong(SunLon)).SunCorr
+    const SunCorr = sunCorrQing(Name, Lon2Gong(SunLon)).SunCorr
     const a = tan(Sobliq / 2) ** 2 * sin(2 * SunLon)
     const b = 1 + tan(Sobliq / 2) ** 2 * cos(2 * SunLon)
     const EclpEquaDifTcorr = atan(a / b)
@@ -552,7 +553,7 @@ export const N4 = (Name, Y) => {
         const MSAcrVhDif = MSAvgVdDif / 24 + OnehAftMoonCorr1 - AcrMoonCorr1 // 一小時月距日實行。後均與實均同號相減，異號相加。與一小時月距日平行相加減：實均與後均同爲加者，後均大則加；同為減者，後均大則減。異號者，後均加則加，後均減則減
         const SdAvg = NowSd + Dif / MSAcrVhDif / 24 // 食甚用時：日月白道同度之時刻
         const AcrSunEquaLon = LonHigh2Flat(Sobliq, AcrSunLon) // 算例：15度-->赤道同升度13度48分23秒
-        const SDistRat = sunCorrJiazi(AcrSorb).SDist / SDistMax * SDistRatMax // 太陽距地
+        const SDistRat = sunCorrQing(Name, AcrSorb).SDist / SDistMax * SDistRatMax // 太陽距地
         const MDistRat = (moonCorr1Tycho(AcrMorb).D1 - .01175) / MDistMax * MDistRatMax // 太陰距地。日月距地都是近時真時同用，因為變化可以忽略
         //////// 【九】食甚近時
         const sunEcliJiaziMain = (SunGong, SunEquaLon, Sd) => {
@@ -584,17 +585,24 @@ export const N4 = (Name, Y) => {
             } else {
                 if (SignEw > 0) flag1 = -1
             }
-            const AngWhiteHigharc = abs(AngEclpHigharc + flag1 * Mobliq0116) // 白道高弧交角
-            // if (AngWhiteHigharc > 90) SignEw = -SignEw // 加過90度者則限東變為限西。——最後求東西差，大於90的話cos就是負數，所以不用管這個
-            const WhitemidHigh = 180 - BaC_Sph(EclpmidHigh, Mobliq0116, Zichou) // 白平象限距地平高，>90就是在天頂北。卷八白平象限葉55
-            // const SignSn = EclpmidHigh > 90 ? -1 : 1 // 限距地高在天頂北者，白平象限在天頂南。白平象限在天頂南爲-1，北1。卷八白平象限葉75
-            const SignSn = WhitemidHigh > 90 ? 1 : -1
             const AngSunZenith = 90 - SunHigh
             const SParallax = qiexianA(1, SDistRat, AngSunZenith)
             const MParallax = qiexianA(1, MDistRat, AngSunZenith)
             const Parallax = MParallax - SParallax // 用時高下差
-            const EwCorr = atan(cos(AngWhiteHigharc) * tan(Parallax)) // 東西差。半徑與交角餘弦之比=高下差正切與東西差正切之比
-            const SnCorr = asin(sin(Parallax) * sin(AngWhiteHigharc)) // 南北差。東西南北差驗算通過
+            let SignSn = 1, EwCorr = 0, SnCorr = 0
+            if (Name === 'Jiazi') {
+                const AngWhiteHigharc = abs(AngEclpHigharc + flag1 * Mobliq0116) // 白道高弧交角
+                // if (AngWhiteHigharc > 90) SignEw = -SignEw // 加過90度者則限東變為限西。——最後求東西差，大於90的話cos就是負數，所以不用管這個
+                const WhitemidHigh = 180 - BaC_Sph(EclpmidHigh, Mobliq0116, Zichou) // 白平象限距地平高，>90就是在天頂北。卷八白平象限葉55
+                // const SignSn = EclpmidHigh > 90 ? -1 : 1 // 限距地高在天頂北者，白平象限在天頂南。白平象限在天頂南爲-1，北1。卷八白平象限葉75
+                SignSn = WhitemidHigh > 90 ? 1 : -1
+                EwCorr = atan(cos(AngWhiteHigharc) * tan(Parallax)) // 東西差。半徑與交角餘弦之比=高下差正切與東西差正切之比
+                SnCorr = asin(sin(Parallax) * sin(AngWhiteHigharc)) // 南北差。東西南北差驗算通過
+            } else { // 看到考成說新法以黃平象限為根據，所以暫時這樣寫
+                SignSn = EclpmidHigh > 90 ? 1 : -1
+                EwCorr = atan(cos(AngEclpHigharc) * tan(Parallax)) // 東西差
+                SnCorr = asin(sin(Parallax) * sin(AngEclpHigharc)) // 南北差
+            }
             return { EwCorr: EwCorr * SignEw, SnCorr: SnCorr * SignSn }
         }
         const { EwCorr: AvgEwCorr } = sunEcliJiaziMain(AcrSunGong, AcrSunEquaLon, SdAvg)
@@ -674,8 +682,10 @@ export const N4 = (Name, Y) => {
         //////// 【五】食甚用時兩心視距
         const flag3 = (AngWhiteHigharcAcr0, FlagDistrealAsm, FlagDistrealAcr0, AngWhiteHigharcAsm, AngDistrealAsm) => {
             let flag = 1
-            if (abs(AngWhiteHigharcAcr0) > 180) throw new Error("真時白經高弧交角大於180")
-            else if (abs(AngWhiteHigharcAcr0) < 90) {
+            AngWhiteHigharcAcr0 = t2(AngWhiteHigharcAcr0) // ⚠️暫時這樣處理。1646-1649都有大於180的情況
+            // if (abs(AngWhiteHigharcAcr0) > 180) throw new Error("真時白經高弧交角大於180")
+            // else
+            if (abs(AngWhiteHigharcAcr0) < 90) {
                 if (MoonAvg.Whitelongi < 180) {
                     if (FlagDistrealAsm !== FlagDistrealAcr0) flag = -1
                     else {
@@ -708,11 +718,12 @@ export const N4 = (Name, Y) => {
             AngArc = abs(AngArc) || 0
             const { AngA: AngEquaHigharc, c: AngSunZenith } = aCtimeb_Sph(AngZenithPolar, AngSunPolar, Sd)   // 赤經高弧交角
             const Parallax = HorizonParallax * sin(AngSunZenith) // 高下差
-            const AngWhiteHigharc = AngEquaHigharc + AngWhiteEqua // 白經高弧交角
+            const AngWhiteHigharc = t2(AngEquaHigharc + AngWhiteEqua) // 白經高弧交角⚠️暫時這樣處理
             let AngDistappa = abs(AngWhiteHigharc) - AngArc // 對兩心視距角
             let FlagDistreal = 1
-            if (abs(AngWhiteHigharc) > 180) throw new Error("白經高弧交角大於180")
-            else if (abs(AngWhiteHigharc) < 90) {
+            // if (abs(AngWhiteHigharc) > 180) throw new Error("白經高弧交角大於180")
+            // else
+            if (abs(AngWhiteHigharc) < 90) {
                 if (MoonAvg.Whitelongi < 180) {
                     if (AngDistappa > 0) FlagDistreal = sign(AngWhiteHigharc)
                     else FlagDistreal = -sign(AngWhiteHigharc)
@@ -738,10 +749,9 @@ export const N4 = (Name, Y) => {
             AngArc = abs(AngArc) || 0
             const { AngA: AngEquaHigharc, c: AngSunZenith } = aCtimeb_Sph(AngZenithPolar, AngSunPolar, Sd)   // 赤經高弧交角
             const Parallax = HorizonParallax * sin(AngSunZenith) // 高下差
-            const AngWhiteHigharc = AngEquaHigharc + AngWhiteEqua // 白經高弧交角
-            let AngDistappa = abs(AngWhiteHigharc) + AngArc // 對兩心視距角
-            if (abs(AngWhiteHigharc) > 180) throw new Error("白經高弧交角大於180")
-            else if (abs(AngWhiteHigharc) < 90) {
+            const AngWhiteHigharc = t2(AngEquaHigharc + AngWhiteEqua) // 白經高弧交角⚠️暫時這樣處理
+            let AngDistappa = abs(AngWhiteHigharc) + AngArc // 對兩心視距角            
+            if (abs(AngWhiteHigharc) < 90) {
                 if (MoonAvg.Whitelongi < 180) {
                     if (sign(AngWhiteHigharc) !== flag) AngDistappa = abs(AngWhiteHigharc) - AngArc
                 } else {
@@ -864,7 +874,7 @@ export const N4 = (Name, Y) => {
         const MSAcrVhDif = MSAvgVdDif / 24 + OnehAftMoonCorr1 - AcrMoonCorr1 // 一小時月距日實行
         const TotalSd = NowSd + Dif / MSAcrVhDif / 24 // 實望實交周五宮十一宮（交前）爲加，初宮六宮（交後）爲減。食甚時刻=實望用時+-食甚距時
         //////// 【九】食分        
-        const SDistRat = sunCorrJiazi(AcrSorb).SDist / SDistMax * SDistRatMax // 太陽距地：太陽距地心與地半徑之比例
+        const SDistRat = sunCorrQing(Name, AcrSorb).SDist / SDistMax * SDistRatMax // 太陽距地：太陽距地心與地半徑之比例
         const MDistRat = (moonCorr1Tycho(AcrMorb).D1 - .01175) / MDistMax * MDistRatMax // 還要減去次均輪半徑
         const MRadAppa = atan(MRadReal / MDistRat) // 算例16′52.97″=0.28138
         const ShadowLeng = SDistRat / (SlRad - 1) // 地影長
@@ -1026,12 +1036,12 @@ export const N4 = (Name, Y) => {
                 // const AvgMorb = (ChouMorb + i * MorbVm + (isNewm ? 0 : (MorbVm + 360) / 2)) % 360 // 1949算例200°22′05.77″=200.3682694444
                 const AvgMoonGong = t(MoonRoot + AvgSd * MoonAvgVd)
                 const AvgMorb = t(AvgMoonGong - AvgMapo)
-                const AvgSunCorr = sunCorrQing(Name, AvgSorb) // 平望太陽均數
+                const AvgSunCorr = sunCorrQing(Name, AvgSorb).SunCorr // 平望太陽均數
                 const AvgMoonCorr1 = moonCorr1Tycho(AvgMorb).Corr1 // 平望太陰均數.1949算例1°46′58.30″=1.7828611111
                 const AvgT_MSDif = (AvgSunCorr - AvgMoonCorr1) / MSAvgVdDif // 距時=距弧（日月相距之弧）/速度差。算例27m56s=0.01939814815
                 AcrSorb = AvgSorb + AvgT_MSDif * SorbVd // 太陽實引=平引+引弧。算例99°23′2.94″=99.38415
                 AcrMorb = AvgMorb + AvgT_MSDif * MorbVd // 太陰實引.1949算例200°37′18.14″=200.6217055556
-                AcrSunCorr = sunCorrQing(Name, AcrSorb) // 太陽實均.1949算例2°01′15.89″=2.02108055556
+                AcrSunCorr = sunCorrQing(Name, AcrSorb).SunCorr // 太陽實均.1949算例2°01′15.89″=2.02108055556
                 AcrMoonCorr1 = moonCorr1Tycho(AcrMorb).Corr1 // 太陰實均。1949算例1°48′14.36″=1.8039888889
                 const AcrT_MSDif = (AcrSunCorr - AcrMoonCorr1) / MSAvgVdDif // 實距時=實距弧/速度差。1949算例：25m39s=0.0178125
                 AcrSd = AvgSd + AcrT_MSDif // 實望
