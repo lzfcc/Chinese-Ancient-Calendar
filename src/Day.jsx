@@ -53,7 +53,7 @@ export default class Day extends React.Component {
 
         <div className='daytitle-wrap'>
           <h2><span className='daytitle-1'>{this.state.output.Era}</span><br />
-          {this.state.output.Title}
+            {this.state.output.Title}
           </h2>
           <p className='DayAccum'>{this.state.output.DayAccum}</p>
           <p>{this.state.output.YearGod}</p>
@@ -72,30 +72,30 @@ export default class Day extends React.Component {
           </div>
         </div>
         <hr />
-          {list.map((info, index) => {
-            return (
-              <div className="single-cal">
-                <h3>{MonName[index + 1]}</h3>
-                <p dangerouslySetInnerHTML={{ __html: MonInfo[index + 1] }}></p>
-                <span className='YearColor'>
-                  <table>
-                    {(MonColor[index + 1] || []).map(row => {
-                      return (
-                        <tr>
-                          {row.map(d => {
-                            return <td dangerouslySetInnerHTML={{ __html: d }}></td>
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </table>
-                </span>
-                <div>
-                  {this.RenderDayTableContent(index + 1, info)}
-                </div>
+        {list.map((info, index) => {
+          return (
+            <div className="single-cal">
+              <h3>{MonName[index + 1]}</h3>
+              <p dangerouslySetInnerHTML={{ __html: MonInfo[index + 1] }}></p>
+              <span className='YearColor'>
+                <table>
+                  {(MonColor[index + 1] || []).map(row => {
+                    return (
+                      <tr>
+                        {row.map(d => {
+                          return <td dangerouslySetInnerHTML={{ __html: d }}></td>
+                        })}
+                      </tr>
+                    );
+                  })}
+                </table>
+              </span>
+              <div>
+                {this.RenderDayTableContent(index + 1, info)}
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </section>
     );
   }
@@ -224,7 +224,8 @@ export default class Day extends React.Component {
           <li><span className='Rise'>綠色：（民用曚影時刻、）日出刻度、（正午晷長、）旦及昏中星</span></li>
           <li><span className='MoonEclp'>藍色：（月行九道、）太陰黃道經緯</span></li>
           <li><span className='MoonEqua'>紫色：太陰赤道經緯</span></li>
-          <li><span className='Rise'>（綠色：太陰出入時刻）</span></li>
+          <li><span className='MoonRise'>（綠色：太陰出入時刻）</span></li>
+          <li><span className='NodeMapo'>（灰色：羅㬋（正交）、月孛（月遠地點））</span></li>
           <li><span className='HouName'>黑色：沒滅、二十四節氣、七十二候、卦用事、土王用事</span></li>
           <li><span className='ManGod'>灰色：人神、血支血忌、日遊神</span></li>
           <li><span className='Luck'>紅色：各種日神</span></li>

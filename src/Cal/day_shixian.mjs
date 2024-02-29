@@ -38,7 +38,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
         const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
         const OriginJdAccum = 2086292 + ~~(365.2423 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
         const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
-        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], Eclp = [], Rise = [], Morningstar = [], Lat = [], Duskstar = [], MoonEclp = [], MoonEclpLat = [], MoonEqua = [], MoonEquaLat = [], MoonRise = []
+        const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], Eclp = [], Rise = [], Morningstar = [], Lat = [], Duskstar = [], MoonEclp = [], MoonEclpLat = [], MoonEqua = [], MoonEquaLat = [], MoonRise = [], NodeMapo = []
         let DayAccum = 0, JieAccum = 0 // 各節積日 
         let JianchuDayAccum = NewmSd[0] // 建除
         let JianchuOrigin = 0
@@ -53,21 +53,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
             const MonColorFunc = MonColorConvert(YuanYear, NoleapMon, ZhengMonScOrder)
             MonInfo[i] = MonColorFunc.MonInfo
             MonColor[i] = MonColorFunc.MonColor
-            Sc[i] = []
-            Jd[i] = []
-            Nayin[i] = []
-            Week[i] = []
-            Eclp[i] = []
-            Equa[i] = []
-            Rise[i] = []
-            Morningstar[i] = []
-            Lat[i] = []
-            Duskstar[i] = []
-            MoonEclp[i] = []
-            MoonEclpLat[i] = []
-            MoonEqua[i] = []
-            MoonEquaLat[i] = []
-            MoonRise[i] = []
+            Sc[i] = [], Jd[i] = [], Nayin[i] = [], Week[i] = [], Eclp[i] = [], Equa[i] = [], Rise[i] = [], Morningstar[i] = [], Lat[i] = [], Duskstar[i] = [], MoonEclp[i] = [], MoonEclpLat[i] = [], MoonEqua[i] = [], MoonEquaLat[i] = [], MoonRise[i] = [], NodeMapo[i] = []
             for (let k = 1; k <= ~~NewmSd[i] - ~~NewmSd[i - 1]; k++) { // 每月日數                
                 const SdMidn = ~~(NewmSd[i - 1] + k - 1) // 每日夜半距冬至日數
                 // const SdMidn = 263 // 1722-9-11八月朔 :263 廖育棟01:05
@@ -75,7 +61,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 //////////天文曆///////////
                 const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunQing(Name, SunRoot, SperiRoot, SdMidn)
                 const { SunLon: SunLonMor } = sunQing(Name, SunRoot, SperiRoot, SdMidn + 1)
-                const { MoonGong, MoonLon, MoonLat, Whitelongi } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
+                const { MoonGong, MoonLon, MoonLat, Node, Mapo } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SdMidn, SunCorr, SunGong, Speri, Sorb)
                 Eclp[i][k] = deg2Hms(SunLon) + eclpGong2Mansion(Name, Y, SunGong, 2)
                 // EclpMansion[i][k] =  // 注意：入宿度是轉換成了古度的
                 const SEquaLon = LonHigh2Flat(Sobliq, SunLon)
@@ -94,7 +80,8 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 MoonEqua[i][k] = deg2Hms(Func3.EquaLon) + equaGong2Mansion(Name, Y, Lon2Gong(Func3.EquaLon), 2)
                 MoonEquaLat[i][k] = Lat2NS(Func3.EquaLat)
                 const { MoonRise: MoonRiseTmp, MoonSet: MoonSetTmp } = moonRiseQing(BjLat, Func3.EquaLon, Func3.EquaLat, SEquaLon)
-                MoonRise[i][k] = ClockWest(MoonRiseTmp) + ' ' + ClockWest(MoonSetTmp, false) // + '距正交' + Whitelongi
+                MoonRise[i][k] = ClockWest(MoonRiseTmp) + ' ' + ClockWest(MoonSetTmp, false)
+                NodeMapo[i][k] = deg2Hms(Node) + deg2Hms(Mapo)
                 ///////////具注曆////////////
                 const ScOrder = ~~(SolsmorScOrder + SdMidn) % 60
                 Sc[i][k] = ScList[ScOrder]
@@ -112,7 +99,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
             Sc, Jd, Nayin, Week,
             Eclp, Equa, Lat, Morningstar, Rise, Duskstar,
             MoonEclp, MoonEclpLat,
-            MoonEqua, MoonEquaLat, MoonRise
+            MoonEqua, MoonEquaLat, MoonRise, NodeMapo
         }
     }
     const result = []
