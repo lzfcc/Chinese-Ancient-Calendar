@@ -152,7 +152,7 @@ export const SunAcrVWest = (SolsDif, year) => { // 武家璧《大衍曆日躔�
 }
 // console.log(SunAcrVWest(91, 4500))
 
-export const Equa2EclpWest = (LonRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣，所以機黃經和黃經到底是什麼關係
+export const Equa2EclpWest = (LonRaw, Sidereal, year, E) => { // 《中國古代曆法》頁630。這個公式跟https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE 的完全一樣
     let Lon = LonRaw % (Sidereal / 4)
     if ((LonRaw > Sidereal / 4 && LonRaw <= Sidereal / 2) || (LonRaw >= Sidereal * .75 && LonRaw < Sidereal)) {
         Lon = Sidereal / 4 - Lon
