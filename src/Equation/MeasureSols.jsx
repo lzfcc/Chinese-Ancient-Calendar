@@ -29,7 +29,7 @@ export default class Equa extends React.Component {
       for (let i = 0; i < arr.length; i++) {
         arr[i] = Number(arr[i])
       }
-      const Print = MeasureSols(arr)
+      const Print = MeasureSols(arr).Print
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)

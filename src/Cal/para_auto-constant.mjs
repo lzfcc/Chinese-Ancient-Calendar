@@ -33,7 +33,7 @@ export const AutoSolar = Name => {
     } else if (['Guantian', 'Jiyuan'].includes(Name)) {
         Solar = 365.2436
     } else {
-        Solar = +(Para[Name].Solar).toFixed(4)
+        Solar = +(Para[Name].Solar || Para[Name].SolarRaw).toFixed(5)
     }
     return Solar
 }
@@ -62,11 +62,11 @@ export const AutoMoonAvgV = Name => { // 陳美東《月離表初探》
     let V = 0
     if (Name === 'Daye') {
         V = 548.101486 / 41
-    } else if (['WuyinA', 'WuyinB'].includes(Name)) {
+    } else if (['Wuyin', 'WuyinB'].includes(Name)) {
         V = 13.36834319526627 // parseFloat((Solar / Lunar + 1).toPrecision(14))
     } else if (Name === 'Huangji') {
         V = 695 / 52
-    } else if (['LindeA', 'LindeB'].includes(Name)) {
+    } else if (['Linde', 'LindeB'].includes(Name)) {
         V = 13 + 480 / 1340
     } else if (Name === 'Yisi') {
         V = 13 + 494 / 1340
@@ -168,7 +168,7 @@ export const AutoLightRange = Name => { // 昏明
     let LightRange = .025 // 宣明不能確定，各個節氣都不一樣
     if (Name === 'Huangji') {
         LightRange = .02365
-    } else if (['LindeA', 'LindeB'].includes(Name)) {
+    } else if (['Linde', 'LindeB'].includes(Name)) {
         LightRange = .0228
     }
     return LightRange
@@ -180,7 +180,7 @@ export const AutoRangeEcli = (Name, Type) => { // 日出入前後多少不算日
         RangeSunEcli = .002 // 大統是20分
     } else if (Name === 'Daye') {
         RangeSunEcli = 2 / 12
-    } else if (['WuyinA', 'WuyinB'].includes(Name)) {
+    } else if (['Wuyin', 'WuyinB'].includes(Name)) {
         RangeSunEcli = .125
     } else {
         RangeSunEcli = .125 // 其他的瞎填一個

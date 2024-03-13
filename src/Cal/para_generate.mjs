@@ -36,7 +36,7 @@ const AutoSunInterpolate = (n, Name, S1, S2, S3) => {
     let Result = 0
     if (Name === 'Huangji') {
         Result = SunInterpolateA(n)
-    } else if (['LindeA', 'LindeB'].includes(Name)) {
+    } else if (['Linde', 'LindeB'].includes(Name)) {
         Result = SunInterpolateB(n)
     } else if (Name === 'Chongxuan') {
         Result = SunInterpolateC(n)
@@ -186,7 +186,7 @@ const test5 = function () {
 // console.log(test3(4)) // 16
 
 // console.log(big.log(2,1.5).toNumber())
-console.log(Math.log2(1.5))
+// console.log(Math.log2(1.5))
 
 ////// 下面的放在newm文件
 

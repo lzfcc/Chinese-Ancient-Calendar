@@ -1,14 +1,11 @@
 import React from 'react'
-import { BindLon2Lat } from '../Cal/astronomy_bind'
+import { bindLon2Lat } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      b: 5,
-      c: 365.244,
-      year: 1000,
-      d: 34.475,
+      b: 5
     }
     this.handle = this.handle.bind(this)
   }
@@ -30,34 +27,13 @@ export default class Converter extends React.Component {
             this.setState({ b: e.currentTarget.value });
           }}
         />
-        <span> 緯度</span>
-        <input className='width3'
-          value={this.state.d}
-          onChange={e => {
-            this.setState({ d: e.currentTarget.value });
-          }}
-        />
-        <span> 週天</span>
-        <input className='width3'
-          value={this.state.c}
-          onChange={e => {
-            this.setState({ c: e.currentTarget.value });
-          }}
-        />
-        <span> 公元年</span>
-        <input className='width2'
-          value={this.state.year}
-          onChange={e => {
-            this.setState({ year: e.currentTarget.value });
-          }}
-        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = BindLon2Lat(this.state.a, this.state.b, this.state.d, this.state.c, this.state.year)
+      const Print = bindLon2Lat(this.state.a, this.state.b, this.state.d, this.state.c, this.state.year)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -73,15 +49,16 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th><bc>去極度</bc></th>
-            <th>赤緯</th>
+            <th><bc>赤緯</bc>度</th>
             <th>誤差</th>
-            <th><bc>日出</bc></th>
-            <th>誤差1</th>
-            <th>誤差2</th>
-            <th><bc>晷長</bc></th>
-            <th>誤差1</th>
-            <th>誤差2</th>
+            <th>ε度</th>
+            <th><bc>日出</bc>刻</th>
+            <th>誤差修正</th>
+            <th>誤差未修</th>
+            <th><bc>晷長</bc>尺</th>
+            <th>誤差修正‱</th>
+            <th>誤差未修‱</th>
+            <th>緯度°</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -101,9 +78,10 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>積日 ⇒ 去極度、赤緯、日出、晷長</h3>
+        <h3>積日 ⇒ 赤緯、日出、晷長</h3>
         {this.input()}
         <button onClick={this.handle} className='button4-2'>longi2lati</button>
+        <p>「誤差未修」：與直接由太陽赤緯換算過來的理論值之間的誤差，「誤差修正」：考慮了蒙氣差、太陽視半徑之後的理論值。公式算法的日出都是未修正的</p>
         {this.result()}
       </div>
     )

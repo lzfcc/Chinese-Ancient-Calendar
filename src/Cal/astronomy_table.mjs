@@ -45,22 +45,19 @@ import { Interpolate1, Interpolate2, Interpolate3 } from './equa_sn.mjs'
 export const Equa2EclpTable = (LonRaw, Name) => {
     let { Type, Sidereal, Solar } = Para[Name]
     Sidereal = Sidereal || Solar
-    const Sidereal50 = Sidereal / 2
-    const Sidereal25 = Sidereal / 4
+    const Sidereal50 = Sidereal / 2, Sidereal25 = Sidereal / 4
     const LonHalf = LonRaw % Sidereal50
     const Lon = Sidereal25 - Math.abs(LonHalf - Sidereal25)
-    let Equa2Eclp = 0
     let Range = []
     if (Type <= 4) {
-        Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + deci(Sidereal / 4), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
-    } else if (['Huangji', 'LindeA', 'LindeB'].includes(Name)) {
+        Range = [0, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 5 + deci(Sidereal25), 4, 3, 4, 4, 4, 3, 4, 4, 4, 3, 4] // 劉洪濤
+    } else if (['Huangji', 'Linde', 'LindeB'].includes(Name)) {
         Range = [0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3.31, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] // 《中國古代曆法》57頁
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
-        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + deci(Sidereal / 4), 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        Range = [0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1 + deci(Sidereal25), 5, 5, 5, 5, 5, 5, 5, 5, 5]
     }
-    let LonDifDifInitial = 0
-    let LonDifDifChange = 0
-    if (['Huangji', 'LindeA', 'LindeB'].includes(Name)) { // 爲何皇極增速先慢後快，大衍先快後慢？
+    let LonDifDifInitial = 0, LonDifDifChange = 0
+    if (['Huangji', 'Linde', 'LindeB'].includes(Name)) { // 爲何皇極增速先慢後快，大衍先快後慢？
         LonDifDifInitial = 97 / 450 // ⋯⋯四度爲限。初數九十七，每限增一，以終百七
         LonDifDifChange = 1 / 450
     } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan', 'Xuanming'].includes(Name)) {
@@ -94,7 +91,7 @@ export const Equa2EclpTable = (LonRaw, Name) => {
     for (let i = length / 2 + 3; i <= length + 1; i++) {
         LonDifDif[i] = LonDifDif[i - 1] - LonDifDifChange
     }
-    let LonDifAccum = []
+    const LonDifAccum = []
     LonDifAccum[0] = 0
     if (Type <= 4) {
         for (let i = 1; i <= 12; i++) {
@@ -122,23 +119,23 @@ export const Equa2EclpTable = (LonRaw, Name) => {
     }
     let Equa2EclpDif = LonDifAccum[LonOrder] + (LonDifAccum[LonOrder + 1] - LonDifAccum[LonOrder]) * (Lon - RangeAccum[LonOrder]) / (RangeAccum[LonOrder + 1] - RangeAccum[LonOrder]) // 一次內插
     let sign1 = 1
-    if ((LonRaw >= 0 && LonRaw < Sidereal / 4) || (LonRaw >= Sidereal / 2 && LonRaw < Sidereal * .75)) {
-        sign1 = -1
-    }
+    if (LonRaw < Sidereal / 4 || (LonRaw >= Sidereal50 && LonRaw < Sidereal * .75)) sign1 = -1
     Equa2EclpDif *= sign1
-    Equa2Eclp = LonRaw + Equa2EclpDif
-    return { Equa2Eclp, Equa2EclpDif }
+    const Equa2Eclp = LonRaw + Equa2EclpDif
+    const Eclp2EquaDif = -Equa2EclpDif
+    const Eclp2Equa = LonRaw + Eclp2EquaDif
+    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif }
 }
-// console.log(Equa2EclpTable(23, 'Yitian'))
+// console.log(Equa2EclpTable(1, 'Qianxiang'))
 
-export const Lon2LatTable1 = (SolsDif, Name) => {
+export const Lon2LatTable1 = (Sd, Name) => {
     const { Solar, NightList, DialList, SunLatList } = Para[Name]
     let DawnRange = 0
     if (Name !== 'Daye') DawnRange = 2.5
     const HalfTermLeng = Solar / 24
-    SolsDif %= Solar
-    const TermNum = ~~(SolsDif / HalfTermLeng) // 每日所在氣名
-    const TermDif = SolsDif - TermNum * HalfTermLeng
+    Sd %= Solar
+    const TermNum = ~~(Sd / HalfTermLeng) // 每日所在氣名
+    const TermDif = Sd - TermNum * HalfTermLeng
     const Rise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
     const Dial = (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
     const Lat1 = (SunLatList[TermNum] + (TermDif / HalfTermLeng) * (SunLatList[TermNum + 1] - SunLatList[TermNum]))
@@ -146,24 +143,20 @@ export const Lon2LatTable1 = (SolsDif, Name) => {
     return { Rise, Dial, Lat1, Lat }
 }
 
-export const Lon2LatTable2 = (SolsDif, Name) => {
+export const Lon2LatTable2 = (Sd, Name) => {
     const { Type, Denom, Solar, Sidereal, NightList, DialList, SunLatList, AcrTermList, TermRangeA, TermRangeS
     } = Para[Name]
-    SolsDif %= Solar
+    Sd %= Solar
     let DawnRange = 2.5
     if (Name === 'Huangji') DawnRange = 2.365
-    else if (['LindeA', 'LindeB', 'Daming3'].includes(Name)) DawnRange = 0
+    else if (['Linde', 'LindeB', 'Daming3'].includes(Name)) DawnRange = 0
     const f = 34.475 // 大衍地理緯度
     const HalfTermLeng = Solar / 24
-    let Dial = 0
-    let Lat = 0
-    let Lat1 = 0
-    let Rise = 0
-    let Sunrise1 = 0
+    let Dial = 0, Lat = 0, Lat1 = 0, Rise = 0, Sunrise1 = 0
     if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(Name)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
         let TermNum = 0
         for (let j = 0; j <= 23; j++) {
-            if (SolsDif >= AcrTermList[j] && SolsDif < AcrTermList[j + 1]) {
+            if (Sd >= AcrTermList[j] && Sd < AcrTermList[j + 1]) {
                 TermNum = j
                 break
             }
@@ -178,21 +171,18 @@ export const Lon2LatTable2 = (SolsDif, Name) => {
         const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
         const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDeciDif[TermNum]
         const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDeciDif[TermNum]
-        Rise = DawnRange + Interpolate3(SolsDif, [[t1, NightList[TermNum]], [t2, NightList[TermNum + 1]], [t3, NightList[TermNum + 2]]])
-        Sunrise1 = DawnRange + NightList[TermNum] + ((SolsDif - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
-        Lat1 = Interpolate3(SolsDif, [[t1, SunLatList[TermNum]], [t2, SunLatList[TermNum + 1]], [t3, SunLatList[TermNum + 2]]])
+        Rise = DawnRange + Interpolate3(Sd, [[t1, NightList[TermNum]], [t2, NightList[TermNum + 1]], [t3, NightList[TermNum + 2]]])
+        Sunrise1 = DawnRange + NightList[TermNum] + ((Sd - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
+        Lat1 = Interpolate3(Sd, [[t1, SunLatList[TermNum]], [t2, SunLatList[TermNum + 1]], [t3, SunLatList[TermNum + 2]]])
         Lat = 91.31 - Lat1
     } else {
         ////////////平氣////////////
-        const TermNum = ~~(SolsDif / HalfTermLeng)
-        const TermDif = SolsDif - TermNum * HalfTermLeng
+        const TermNum = ~~(Sd / HalfTermLeng)
+        const TermDif = Sd - TermNum * HalfTermLeng
         let TermRange = 0
         if (Type === 6) {// 麟德   
-            if ((SolsDif < 6 * HalfTermLeng) || (SolsDif >= 18 * HalfTermLeng)) {
-                TermRange = TermRangeA // 秋分後
-            } else {
-                TermRange = TermRangeS // 春分後
-            }
+            if ((Sd < 6 * HalfTermLeng) || (Sd >= 18 * HalfTermLeng)) TermRange = TermRangeA // 秋分後
+            else TermRange = TermRangeS // 春分後
         } else TermRange = HalfTermLeng
         const TermAvgNoonDeciDif = []
         for (let i = 0; i <= 23; i++) {
@@ -239,7 +229,7 @@ export const Lon2LatTable2 = (SolsDif, Name) => {
         // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式              
     }
     // 唐系、應天、乾元。本來寫了個去極度差分表，太麻煩，還不如直接用招差
-    if (Type > 6) {
+    if (Type >= 7) {
         const SunLat2 = Lat1 - (91.3 - f) // 天頂距
         // 下爲大衍晷影差分表
         if (SunLat2 <= 27) {
@@ -269,7 +259,7 @@ export const Lon2LatTable2 = (SolsDif, Name) => {
 // console.log(Lon2LatTable2(90, 'LindeB').Sunrise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
 
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
-const MoonLonTable = (SolsDif, NodeAccumRaw, Name) => { ///////赤白轉換//////
+const MoonLonTable = (Sd, NodeAccumRaw, Name) => { ///////赤白轉換//////
     const { Solar } = Para[Name]
     let { Sidereal } = Para[Name]
     const Quadrant = AutoNodeCycle(Name) / 4
@@ -281,9 +271,9 @@ const MoonLonTable = (SolsDif, NodeAccumRaw, Name) => { ///////赤白轉換/////
         Lon = Quadrant - Lon
     }
     Sidereal = Sidereal || Solar
-    SolsDif -= NodeAccum
-    const SolsDifHalf = SolsDif % (Solar / 2)
-    const EclpLon = (SolsDif + LonRaw) % Sidereal
+    Sd -= NodeAccum
+    const SdHalf = Sd % (Solar / 2)
+    const EclpLon = (Sd + LonRaw) % Sidereal
     let WhiteLon = 0
     let Range = []
     if (Name === 'Huangji') { // 麟德沒有
@@ -344,13 +334,13 @@ const MoonLonTable = (SolsDif, NodeAccumRaw, Name) => { ///////赤白轉換/////
     if (Name !== 'Huangji') EclpWhiteDif /= 2
     let EquaWhiteDif = 0
     if (['Dayan', 'Xuanming'].includes(Name)) {
-        EquaWhiteDif = SolsDifHalf / (Solar / 72) / 18
+        EquaWhiteDif = SdHalf / (Solar / 72) / 18
     } else if (Name === 'Qintian') {
-        const OriginXian = Math.abs(SolsDifHalf - Solar / 4) / Smallquadrant // 限數
+        const OriginXian = Math.abs(SdHalf - Solar / 4) / Smallquadrant // 限數
         // EclpWhiteDif = (Lon - RangeAccum[LonOrder]) * (Smallquadrant / 2) * OriginXian / 1296 // 這個用公式來算黃白差，沒寫對
         EquaWhiteDif = (Lon - RangeAccum[LonOrder]) * (Smallquadrant / 8) * (1 - OriginXian / 324)
     } else if (Name === 'Yingtian') {
-        const Hou = ~~(SolsDifHalf / (Solar / 72)) / 18
+        const Hou = ~~(SdHalf / (Solar / 72)) / 18
         EquaWhiteDif = (Lon - RangeAccum[LonOrder]) * (.5 - 5 * Hou / 3636)
     }
     let EquaLon = 0

@@ -1,11 +1,12 @@
 import React from 'react'
-import { bindMansion2Deg } from '../Cal/astronomy_bind'
+import { bindCorrEllipse } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: '張5.9142',
+      Orb: 30,
+      cRaw: 0
     }
     this.handle = this.handle.bind(this)
   }
@@ -13,11 +14,18 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>宿度</span>
+        <span>引數</span>
         <input className='width3'
-          value={this.state.a}
+          value={this.state.Orb}
           onChange={e => {
-            this.setState({ a: e.currentTarget.value });
+            this.setState({ Orb: e.currentTarget.value });
+          }}
+        />
+        <span> 偏心率</span>
+        <input className='width3'
+          value={this.state.cRaw}
+          onChange={e => {
+            this.setState({ cRaw: e.currentTarget.value });
           }}
         />
       </span>
@@ -26,7 +34,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = bindMansion2Deg(this.state.a)
+      const Print = bindCorrEllipse(this.state.Orb, this.state.cRaw)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -38,12 +46,13 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2'>
+      <div className='ans table2 right' style={{ whiteSpace: "pre-wrap" }}>
         <table>
           <tr>
             <th></th>
-            <th>赤道</th>
-            <th>黃道</th>
+            <th>均數</th>
+            <th>牛頓迭代</th>
+            <th>誤差‱</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (
@@ -63,8 +72,9 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
+        <h3>幾何模型均數</h3>
         {this.input()}
-        <button onClick={this.handle} className='button4-6'>mansion2deg</button>
+        <button onClick={this.handle} className='button4-3'>日月之行</button>
         {this.result()}
       </div>
     )

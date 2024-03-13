@@ -7,456 +7,427 @@ import {
 } from './astronomy_formula.mjs'
 import { Hushigeyuan, HushigeyuanMoon } from './equa_geometry.mjs'
 import {
-    Equa2EclpWest, Lon2LatWest, Lon2SunriseWest, Lon2DialWest, SunAcrVWest,    // MoonAcrVWest
+    EquaEclpWest, sunRise, Lon2DialWest, ConstWest,
 } from './astronomy_west.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
-import { NameList, AutoDegAccumList } from './para_constant.mjs'
+import { NameList, AutoDegAccumList, MansionNameList } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg } from './astronomy_other.mjs'
-import { AutoMoonAvgV, AutoNodeCycle } from './para_auto-constant.mjs'
-
-export const BindTcorr = (AnomaAccum, SolsDif, year, Name) => {
-    SolsDif = +SolsDif
+import { AutoMoonAvgV, AutoNodeCycle, AutoSolar } from './para_auto-constant.mjs'
+import { GongFlat2High, GongHigh2Flat, HighLon2FlatLat, LonFlat2High, LonHigh2Flat, corrEllipse, corrEllipseB1, corrEllipseC, corrEllipseD1, corrEllipseD2, corrRingA, corrRingC } from './newm_shixian.mjs'
+const Gong2Lon = Gong => (Gong + 270) % 360
+// 月亮我2020年4個月的數據擬合 -.9942  + .723*cos(x* .2243) +  6.964 *sin(x* .2243)，但是幅度跟古曆比起來太大了，就調小了一點 極大4.4156，極小-5.6616
+export const bindTcorr = (AnomaAccum, Sd, Name) => {  // Name預留給誤差分析程序，否則不用
+    Sd = +Sd
     AnomaAccum = +AnomaAccum
-    if (SolsDif > 365.2425 || SolsDif < 0) {
-        throw (new Error('請輸入一回歸年內的日數！'))
-    }
-    const {
-        SunTcorr2: WestSunTcorr,
-        MoonTcorr2: WestMoonTcorr,
-        NodeAccumCorrA: WestNodeConst
-    } = AutoTcorr(AnomaAccum, SolsDif, 'West', 0, year)
-    const {
-        SunDifAccum: WestSun,
-        MoonDifAccum: WestMoon,
-    } = AutoDifAccum(AnomaAccum, SolsDif, 'West', year)
-    const {
-        MoonTcorr2: WestMoonTcorrB,
-        NodeAccumCorrA: WestNodeConstB
-    } = AutoTcorr(AnomaAccum + 13.7772755949, SolsDif, 'West', 0, year) // 13.7772755949是應天半轉
-    const { MoonDifAccum: WestMoonB,
-    } = AutoDifAccum(AnomaAccum + 13.7772755949, SolsDif, 'West', year)
-
-    let Print1 = [{
-        title: '現代近似',
-        data: [WestSun.toFixed(5), 0, '-', WestMoon.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorr.toFixed(5), 0, (WestSunTcorr + WestMoonTcorr).toFixed(4), WestNodeConst.toFixed(4)]
-    }]
-    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Shoushi']
+    if (Sd > 365.2425 || Sd < 0) throw (new Error('請輸入一回歸年內的日數！'))
+    let List1 = ['Qianxiang', 'Jingchu', 'Yuanjia', 'Daming', 'Tsrengguang', 'Xinghe', 'Tianbao', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Futian', 'Qintian', 'Mingtian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Daming3', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chunyou', 'Huitian', 'Chengtian', 'Shoushi']
     let List2 = ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Fengyuan', 'Guantian', 'Zhantian']
-    List1 = Name ? [Name] : List1 // 這行用來給誤差分析程序
+    List1 = Name ? [Name] : List1
     List2 = Name ? [Name] : List2
-    let SunTcorrInac = 0
-    let MoonTcorrInac = 0
-    Print1 = Print1.concat(
-        List1.map(title => {
-            let AutoDifAccumFunc = {}
-            if (title !== 'Qintian') {
-                AutoDifAccumFunc = AutoDifAccum(AnomaAccum, SolsDif, title)
-            }
-            const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
-            const { SunTcorr, MoonTcorr, MoonAcrVd, NodeAccumCorrA } = AutoTcorr(AnomaAccum, SolsDif, title)
-            const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
-            let SunTcorrPrint = '-'
-            let SunTcorrInacPrint = '-'
-            let MoonAcrSPrint = '-'
-            let MoonTcorrPrint = '-'
-            let MoonTcorrInacPrint = '-'
-            let NodeAccumCorrPrint = '-'
-            const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
-            const SunDifAccumInac = SunDifAccum ? SunDifAccum - WestSun : 0
-            const SunDifAccumInacPrint = SunDifAccumInac ? SunDifAccumInac.toFixed(4) : '-'
-            let MoonDifAccumPrint = MoonDifAccum ? MoonDifAccum.toFixed(4) : '-'
-            const MoonDifAccumInac = MoonDifAccum ? MoonDifAccum - WestMoon : '-'
-            const MoonDifAccumInacPrint = MoonDifAccum ? MoonDifAccumInac.toFixed(4) : '-'
-            if (SunTcorr) {
-                SunTcorrPrint = SunTcorr.toFixed(5)
-                SunTcorrInac = SunTcorr - WestSunTcorr
-                SunTcorrInacPrint = SunTcorrInac.toFixed(4)
-            }
-            if (MoonAcrS) {
-                MoonAcrSPrint = MoonAcrS.toFixed(3)
-            }
-            if (MoonTcorr) {
-                MoonTcorrPrint = MoonTcorr.toFixed(5)
-                MoonTcorrInac = MoonTcorr - WestMoonTcorr
-                MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
-            }
-            if (MoonAcrVd) {
-                MoonDifAccumPrint += `\n${MoonAcrVd.toFixed(4)}`
-            }
-            if (NodeAccumCorrA) {
-                NodeAccumCorrPrint = NodeAccumCorrA.toFixed(4)
-            }
-            const Tcorr = +MoonTcorrPrint + (+SunTcorrPrint || 0)
-            return {
-                title: NameList[title],
-                data: [SunDifAccumPrint, SunDifAccumInacPrint, MoonAcrSPrint, MoonDifAccumPrint, MoonDifAccumInacPrint, SunTcorrPrint, SunTcorrInacPrint, MoonTcorrPrint, MoonTcorrInacPrint, Tcorr.toFixed(4), NodeAccumCorrPrint]
-            }
-        }))
-    let Print2 = [{
-        title: '現代近似',
-        data: [WestSun.toFixed(5), 0, '-', WestMoonB.toFixed(4), 0, WestSunTcorr.toFixed(5), 0, WestMoonTcorrB.toFixed(5), 0, (WestSunTcorr + WestMoonTcorrB).toFixed(4), WestNodeConstB.toFixed(4)]
+    let Print1 = [], Print2 = []
+    Print1 = Print1.concat(List1.map(Name => {
+        const { Anoma, cS, cM } = Para[Name]
+        const Solar = AutoSolar(Name)
+        const p = 360 / Solar
+        const EllipseSun = cS ? corrEllipse(Sd * p, cS) / p : undefined
+        const EllipseMoon = cM ? corrEllipse((AnomaAccum / Anoma * 360 + 180) % 360, cM) / p : undefined
+        let AutoDifAccumFunc = {}
+        if (Name !== 'Qintian') AutoDifAccumFunc = AutoDifAccum(AnomaAccum, Sd, Name)
+        const { SunDifAccum, MoonDifAccum } = AutoDifAccumFunc
+        const { SunTcorr, MoonTcorr, MoonAcrVd, NodeAccumCorrA } = AutoTcorr(AnomaAccum, Sd, Name)
+        const MoonAcrS = AutoMoonAcrS(AnomaAccum, Name).MoonAcrS
+        let SunTcorrPrint = '-', NodeAccumCorrPrint = '-'
+        const SunDifAccumPrint = SunDifAccum ? SunDifAccum.toFixed(5) : '-'
+        const SunDifAccumErrPrint = EllipseSun !== undefined ?
+            ~~((SunDifAccum - EllipseSun) / EllipseSun * 10000) : '-'
+        const MoonDifAccumPrint = (MoonDifAccum || 0).toFixed(5)
+        const MoonAcrVdPrint = MoonAcrVd ? MoonAcrVd.toFixed(4) : '-'
+        const MoonDifAccumErrPrint = EllipseMoon !== undefined ?
+            ~~((MoonDifAccum - EllipseMoon) / EllipseMoon * 10000) : '-'
+        if (SunTcorr) SunTcorrPrint = SunTcorr.toFixed(5)
+        const MoonAcrSPrint = MoonAcrS.toFixed(4)
+        const MoonTcorrPrint = MoonTcorr.toFixed(5)
+        if (NodeAccumCorrA) NodeAccumCorrPrint = NodeAccumCorrA.toFixed(4)
+        const Tcorr = +MoonTcorrPrint + (+SunTcorrPrint || 0)
+        return {
+            title: NameList[Name],
+            data: [
+                SunDifAccumPrint, SunDifAccumErrPrint, SunTcorrPrint,
+                MoonDifAccumPrint, MoonDifAccumErrPrint, MoonTcorrPrint, MoonAcrSPrint, MoonAcrVdPrint,
+                Tcorr.toFixed(4), NodeAccumCorrPrint]
+        }
+    }))
+    Print2 = Print2.concat(List2.map(Name => {
+        const { Anoma, cS, cM } = Para[Name]
+        const Solar = AutoSolar(Name)
+        const p = 360 / Solar
+        const EllipseSun = cS ? corrEllipse(Sd * p, cS) / p : undefined
+        const EllipseMoon = cM ? corrEllipse(AnomaAccum / Anoma * 360, cM) / p : undefined
+        const { SunDifAccum, MoonDifAccum
+        } = AutoDifAccum(AnomaAccum, Sd, Name)
+        const { SunTcorr, MoonTcorr, NodeAccumCorrA
+        } = AutoTcorr(AnomaAccum, Sd, Name)
+        const MoonAcrS = AutoMoonAcrS(AnomaAccum, Name).MoonAcrS
+        const SunDifAccumPrint = SunDifAccum.toFixed(5)
+        const SunDifAccumErrPrint = EllipseSun !== undefined ?
+            ~~((SunDifAccum - EllipseSun) / EllipseSun * 10000) : '-'
+        const MoonAcrSPrint = MoonAcrS.toFixed(4)
+        const MoonDifAccumPrint = MoonDifAccum.toFixed(5)
+        const MoonDifAccumErrPrint = EllipseMoon !== undefined ?
+            ~~((MoonDifAccum - EllipseMoon) / EllipseMoon * 10000) : '-'
+        const SunTcorrPrint = SunTcorr.toFixed(5)
+        const MoonTcorrPrint = MoonTcorr.toFixed(5)
+        const Tcorr = +MoonTcorrPrint + +SunTcorrPrint
+        return {
+            title: NameList[Name],
+            data: [
+                SunDifAccumPrint, SunDifAccumErrPrint, SunTcorrPrint,
+                MoonDifAccumPrint, MoonDifAccumErrPrint, MoonTcorrPrint, MoonAcrSPrint,
+                Tcorr.toFixed(4), NodeAccumCorrA.toFixed(4)]
+        }
+    }))
+    return { Print1, Print2 }
+}
+// console.log(bindTcorr(1, 1))
+
+export const bindCorrEllipse = (Orb, cRaw) => {
+    const f = x => x.toFixed(10)
+    Orb = +Orb
+    cRaw = +cRaw
+    const cA = cRaw || .0169
+    const cB = cRaw || .0179208
+    if (cA > .02) Orb = (Orb + 180) % 360 // 各個小函數>.02都會+180，此處再加，反轉回來。
+    const AA = corrEllipse(Orb, cA)
+    const B = corrEllipseD1(Orb, cA) // 卡西尼
+    const C = corrEllipseB1(Orb, cA) // 借積求積
+    const D = corrEllipseD2(Orb, cA) // 兩三角形
+    const E = corrEllipseC(Orb, cA) // 借角求角
+    const AB = corrEllipse(Orb, cB)
+    const F = corrRingA(Orb, cB).Corr // 對分圓
+    const G = corrRingC(Orb, cB).Corr // 本輪均輪
+    const B1 = (B - AA) / AA * 10000 // 誤差‱
+    const C1 = (C - AA) / AA * 10000
+    const D1 = (D - AA) / AA * 10000
+    const E1 = (E - AA) / AA * 10000
+    const F1 = (F - AB) / AB * 10000
+    const G1 = (G - AB) / AB * 10000
+    const Print = [{
+        title: '卡西尼',
+        data: [B, f(AA), f(B1)]
+    }, {
+        title: '借積求積',
+        data: [C, '', f(C1)]
+    }, {
+        title: '兩三角形',
+        data: [D, '', f(D1)]
+    }, {
+        title: '借角求角',
+        data: [E, '', f(E1)]
+    }, {
+        title: '對分圓',
+        data: [F, cRaw ? '' : f(AB), f(F1)]
+    }, {
+        title: '本輪均輪',
+        data: [G, '', f(G1)]
     }]
-    Print2 = Print2.concat(
-        List2.map(title => {
-            const { SunDifAccum, MoonDifAccum,
-            } = AutoDifAccum(AnomaAccum, SolsDif, title)
-            const { SunTcorr, MoonTcorr, NodeAccumCorrA
-            } = AutoTcorr(AnomaAccum, SolsDif, title)
-            const MoonAcrS = AutoMoonAcrS(AnomaAccum, title).MoonAcrS
-            const SunDifAccumPrint = SunDifAccum.toFixed(5)
-            const SunDifAccumInacPrint = (SunDifAccum - WestSun).toFixed(4)
-            let MoonAcrSPrint = '-'
-            if (MoonAcrS) {
-                MoonAcrSPrint = MoonAcrS.toFixed(3)
-            }
-            const MoonDifAccumPrint = MoonDifAccum.toFixed(4)
-            const MoonDifAccumInacPrint = (MoonDifAccum - WestMoonB).toFixed(4)
-            const SunTcorrPrint = SunTcorr.toFixed(5)
-            SunTcorrInac = SunTcorr - WestSunTcorr
-            const SunTcorrInacPrint = SunTcorrInac.toFixed(4)
-            const MoonTcorrPrint = MoonTcorr.toFixed(5)
-            MoonTcorrInac = MoonTcorr - WestMoonTcorrB
-            const MoonTcorrInacPrint = MoonTcorrInac.toFixed(4)
-            const Tcorr = +MoonTcorrPrint + +SunTcorrPrint
-            return {
-                title: NameList[title],
-                data: [SunDifAccumPrint, SunDifAccumInacPrint, MoonAcrSPrint, MoonDifAccumPrint, MoonDifAccumInacPrint, SunTcorrPrint, SunTcorrInacPrint, MoonTcorrPrint, MoonTcorrInacPrint, Tcorr.toFixed(4), NodeAccumCorrA.toFixed(4)]
-            }
-        }))
-    return { Print1, Print2, SunTcorrInac, MoonTcorrInac }
+    return Print
 }
-// console.log(BindTcorr(21.200901, 220.0911, 1000))
-
-export const AutoEqua2Eclp = (LonRaw, Name) => {
+export const autoEquaEclp = (Gong, Name) => { // 輸入度數而非距冬至時間 // 只有公式法的才有黃轉赤。表格的是直接取符號相反
     const { Type, Sidereal, Solar, SolarRaw } = Para[Name]
-    LonRaw %= Sidereal || (Solar || SolarRaw)
-    let Equa2Eclp = 0
-    let Eclp2Equa = 0
-    let Equa2EclpDif = 0
-    let Eclp2EquaDif = 0
-    let Eclp2EquaLat = 0
-    if (Name === 'Dayan') {
-        const Func = Equa2EclpFormula(LonRaw, Name)
-        Equa2Eclp = Func.Equa2Eclp
-        Eclp2Equa = Func.Eclp2Equa
-        Equa2EclpDif = Func.Equa2EclpDif
-        Eclp2EquaDif = Func.Eclp2EquaDif
-    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
-        const Func = Equa2EclpTable(LonRaw, 'LindeA')
-        Equa2Eclp = Func.Equa2Eclp
-        Equa2EclpDif = Func.Equa2EclpDif
-    } else if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
-        const Func = Equa2EclpTable(LonRaw, Name)
-        Equa2Eclp = Func.Equa2Eclp
-        Equa2EclpDif = Func.Equa2EclpDif
-    } else if (Type === 8) {
-        const Func = Equa2EclpFormula(LonRaw, Name)
-        Equa2Eclp = Func.Equa2Eclp
-        Eclp2Equa = Func.Eclp2Equa
-        Equa2EclpDif = Func.Equa2EclpDif
-        Eclp2EquaDif = Func.Eclp2EquaDif
-    } else if (Type === 9 || Type === 10) {
-        const Func = Equa2EclpFormula(LonRaw, 'Jiyuan')
-        Equa2Eclp = Func.Equa2Eclp
-        Eclp2Equa = Func.Eclp2Equa
-        Equa2EclpDif = Func.Equa2EclpDif
-        Eclp2EquaDif = Func.Eclp2EquaDif
-    } else if (Type === 11) {
-        const Func = Hushigeyuan(LonRaw)
-        Equa2Eclp = Func.Equa2Eclp
-        Eclp2Equa = Func.Eclp2Equa
-        Equa2EclpDif = Func.Equa2EclpDif
-        Eclp2EquaDif = Func.Eclp2EquaDif
-        Eclp2EquaLat = Func.Lat
-    }
-    Eclp2EquaDif = Eclp2Equa ? (Eclp2EquaDif || Eclp2Equa - LonRaw) : 0
-    return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif, Eclp2EquaLat }
-}
-
-export const BindEqua2Eclp = (LonRaw, Sidereal, year) => {
-    Sidereal = +Sidereal
-    LonRaw = +LonRaw
-    if (LonRaw >= Sidereal || LonRaw < 0) {
-        throw (new Error('請輸入一週天度內的度數'))
-    }
-    let Range = ''
-    if (LonRaw < Sidereal / 4) {
-        Range += '冬至 → 春分，赤度 > 黃度'
-    } else if (LonRaw < Sidereal / 2) {
-        Range += '春分 → 夏至，赤度 < 黃度'
-    } else if (LonRaw < 3 * Sidereal / 4) {
-        Range += '夏至 → 秋分，赤度 > 黃度'
+    Gong %= Sidereal || (Solar || SolarRaw)
+    let Func = {}
+    if (Type <= 7 || ['Yingtian', 'Qianyuan', 'Yitian'].includes(Name)) {
+        if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) Func = Equa2EclpTable(Gong, 'Linde')
+        else Func = Equa2EclpTable(Gong, Name)
     } else {
-        Range += '秋分 → 冬至，赤度 < 黃度'
+        if (Type === 9 || Type === 10) Func = Equa2EclpFormula(Gong, 'Jiyuan')
+        else if (Type === 11) Func = Hushigeyuan(Gong)
+        else Func = Equa2EclpFormula(Gong, Name) // (Name === 'Dayan' || Type === 8)
     }
+    const { Equa2Eclp, Eclp2Equa, Equa2EclpDif, Eclp2EquaDif } = Func
+    return {
+        Equa2Eclp: +Equa2Eclp.toFixed(10),
+        Equa2EclpDif: +Equa2EclpDif.toFixed(10),
+        Eclp2Equa: +Eclp2Equa.toFixed(10),
+        Eclp2EquaDif: +Eclp2EquaDif.toFixed(10)
+    }
+}
+/**
+ * 藤豔輝<v>紀元曆日食算法及精度分析</v>距離冬至 31.816049 日，紀元日出 2126.2566/7290 = 29.1667572，我之前是直接用黃經，是 29.227518，差了 1 天多，改用距冬至日數，加上日躔，29.1664，密合。
+ * 陈美东《中国古代昼夜漏刻长度的计算法》「该文中所示二十四节气(平气)太阳黄经的算式，在本文中适用东汉四分历、景初历、元嘉历、大明历、皇极历、大业历、戊寅历、应天历、乾元历和仪天历等十种历法。而该文中所示二十四节气(定气)太阳黄经的算式，则适用于本文中的麟德历、大衍历、宣明历、崇玄历、崇天历、明天历、观天历和纪元历等八种历法
+ * 陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因爲整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。
+魏晉的黃道去極，是根據節氣來的，日書就不調用了。崇玄赤轉赤緯，「昏後夜半日數」，晷長：「日中入二至加時以來日數」。紀元「午中日行積度」
+崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致
+ * Lon2LatTable1 自然都是平行
+ * Lon2LatTable2。Type === 7 || ['Yingtian', 'Qianyuan']會在子函數用定氣算，所以不加改正
+ * Lon2LatFormula。紀元的曲線和現代公式擬合得很好，幾乎重合。因此自變量是黃道實行度。唯獨儀天是距二至的時間，不能加改正
+ * Hushigeyuan 實行
+ * Lon2DialFormula 都是實行度，儀天也是
+ * 陳美東誤差：四分.7，麟德.13，大衍.06，宣明.45，崇玄.09，儀天.45，崇天明天觀天.23 .20 .21，紀元.11，大明.12，授時.11。我testLon2Lat：後漢四分：0.7918, 麟德：0.0874, 大衍：0.0448, 宣明：0.3109, 崇玄：0.1009, 應天：0.3115, 乾元：0.3120, 儀天：0.3088, 崇天：0.0536, 明天：0.0539, 觀天：0.0541, 紀元：0.0089, 重修大明：0.0058, 授時：0.0148,
+ * @param {*} Sd 距冬至時間
+ * @param {*} SolsDeci 冬至小分
+ * @param {*} Name 曆法名
+ * @param {*} isBare 如果最後加上了isBare，就不加太陽改正
+ * @returns 
+ */
+export const autoLon2Lat = (Sd, SolsDeci, Name, isBare) => {
+    const { Type, Solar, SolarRaw } = Para[Name]
+    let Plus = .5
+    const SdMidn = (~~(Sd + SolsDeci) - SolsDeci + (Solar || SolarRaw)) % (Solar || SolarRaw) // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
+    if (Type <= 4 || Name === 'Huangji') Plus = -1 // 非常詭異，-2的誤差最小
+    else if (Type === 11) Plus = 0 // 授時「置所求日晨前夜半黃道積度」
+    // else if (Name === 'Chongxuan') Plus = 1 // 崇玄「昏後夜半」，似乎應該是1，不過.5的誤差遠小於1的誤差。以後再查術文
+    let Lon2Lat = {}, Corr = 0, Corr1 = 0
+    if ((['Linde', 'Chongxuan', 'Qintian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) && isBare !== true) {
+        Corr = AutoDifAccum(0, SdMidn, Name).SunDifAccum
+    }
+    if ((['Yitian'].includes(Name)) && isBare !== true) {
+        Corr1 = AutoDifAccum(0, SdMidn, Name).SunDifAccum
+    }
+    const X = SdMidn + Plus + Corr
+    let Lat = 0, Rise = 0, Dial = 0
+    if ((Type >= 8 && Type <= 10 && !['Yingtian', 'Qianyuan'].includes(Name)) || Name === 'Qintian') {
+        if (Type === 8 || Name === 'Qintian') { // 北宋Lon2LatFormula用實行
+            Lon2Lat = Lon2LatFormula(X, Name)
+            Dial = Lon2DialFormula(X + Corr1, Name, SolsDeci)
+        } else if (Type === 9) {
+            Lon2Lat = Lon2LatFormula(X, 'Jiyuan')
+            Dial = Lon2DialFormula(X, 'Jiyuan')
+        } else if (Type === 10) {
+            Lon2Lat = Lon2LatTable2(X, 'Daming3')
+            Dial = Lon2DialFormula(X, 'Jiyuan')
+        }
+        Lat = Lon2Lat.Lat
+        Rise = Lon2Lat.Rise
+    } else {
+        if (Type <= 3) {
+            Lon2Lat = Lon2LatTable1(X, 'Easthan')
+        } else if (Name === 'Liangwu') {
+            Lon2Lat = Lon2LatTable1(X, 'Daming')
+        } else if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
+            Lon2Lat = Lon2LatTable2(X, 'Daye')
+        } else if (Type === 4) {
+            Lon2Lat = Lon2LatTable1(X, Name)
+        } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
+            Lon2Lat = Lon2LatTable2(X, 'Linde')
+        } else if (Type === 6) {
+            Lon2Lat = Lon2LatTable2(X, Name)
+        } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
+            Lon2Lat = Lon2LatTable2(X, 'Dayan')
+        } else if (Name === 'Xuanming') {
+            Lon2Lat = Lon2LatTable2(X, Name)
+        } else if (['Yingtian', 'Qianyuan'].includes(Name)) {
+            Lon2Lat = Lon2LatTable2(X, Name)
+        } else if (Type === 11) {
+            Lon2Lat = Hushigeyuan(X, Name)
+        }
+        Lat = Lon2Lat.Lat
+        Rise = Lon2Lat.Rise
+        Dial = Lon2Lat.Dial || undefined
+    }
+    return { Lat, Rise, Dial: Dial ? +Dial.toFixed(6) : undefined }
+}
+// console.log(autoLon2Lat(53.6, 0, 'Daming3'))
+
+export const bindEquaEclp = (GongRaw, year) => {
+    year = +year, GongRaw = +GongRaw
+    if (GongRaw >= 365.25 || GongRaw < 0) throw (new Error('請輸入一週天度內的度數'))
+    let Range = ''
+    if (GongRaw < 91.3125) Range += '冬至 → 春分，赤度 > 黃度'
+    else if (GongRaw < 182.625) Range += '春分 → 夏至，赤度 < 黃度'
+    else if (GongRaw < 273.9375) Range += '夏至 → 秋分，赤度 > 黃度'
+    else Range += '秋分 → 冬至，赤度 < 黃度'
     const {
         Equa2Eclp: WestB,
         Equa2EclpDif: WestB1,
         Eclp2Equa: WestA,
         Eclp2EquaDif: WestA1
-    } = Equa2EclpWest(LonRaw, Sidereal, year)
-    const {
-        Lat: WestLat
-    } = Lon2LatWest(LonRaw, Sidereal, year)
+    } = EquaEclpWest(GongRaw, year)
+    const { Solar, e } = ConstWest(year)
+    const p = 360 / Solar
+    const WestLat = HighLon2FlatLat(e, Gong2Lon(GongRaw * p))
     let Print = [{
-        title: '球面三角',
-        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLat.toFixed(4), 0]
+        title: '現代',
+        data: [(WestB / p).toFixed(6), (WestB1 / p).toFixed(6), '-', 0, (WestA / p).toFixed(6), (WestA1 / p).toFixed(6), '-', 0, (WestLat / p).toFixed(6), '-', 0]
     }]
     const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
-        List1.map(title => {
-            let EclpLonPrint = '-'
-            let EclpLonInacPrint = '-'
-            let EquaLonPrint = '-'
-            let EquaLonInacPrint = '-'
-            let Equa2EclpDifPrint = '-'
-            let Eclp2EquaDifPrint = '-'
-            let Eclp2EquaLatPrint = '-'
-            let Eclp2EquaLatInacPrint = '-'
-            const Func = AutoEqua2Eclp(LonRaw, title, Sidereal, year)
-            const Equa2Eclp = Func.Equa2Eclp
-            const Eclp2Equa = Func.Eclp2Equa
-            const Equa2EclpDif = Func.Equa2EclpDif
-            const Eclp2EquaDif = Func.Eclp2EquaDif
+        List1.map(Name => {
+            const { Sobliq } = Para[Name]
+            const Solar = AutoSolar(Name)
+            const p = 360 / Solar
+            const Gong = GongRaw * p
+            const West0A = GongHigh2Flat(Sobliq * p, Gong) / p
+            const West0B = GongFlat2High(Sobliq * p, Gong) / p
+            const West0Lat = HighLon2FlatLat(Sobliq * p, Gong2Lon(Gong)) / p
+            let EclpLonPrint = '-', EclpLonWestPrint = '-', EclpLonErrPrint = '-', EquaLonPrint = '-', EquaLonWestPrint = '-', EquaLonErrPrint = '-', Equa2EclpDifPrint = '-', Eclp2EquaDifPrint = '-', Eclp2EquaLatPrint = '-', Eclp2EquaLatWestPrint = '-', Eclp2EquaLatErrPrint = '-'
+            const { Equa2Eclp, Eclp2Equa, Equa2EclpDif, Eclp2EquaDif } = autoEquaEclp(GongRaw, Name)
             let Eclp2EquaLat = 0
-            if (title === 'Shoushi') {
-                Eclp2EquaLat = Func.Eclp2EquaLat
-            } else if (List2.indexOf(title) > 0) {
-                Eclp2EquaLat = AutoLon2Lat(LonRaw, .5, title, 1).Lat
-            }
-            const Eclp2EquaLatInac = Eclp2EquaLat - WestLat
+            if (Name === 'Shoushi') Eclp2EquaLat = Hushigeyuan(GongRaw).Lat
+            else if (List2.indexOf(Name) > 0) Eclp2EquaLat = autoLon2Lat(GongRaw, .5, Name, true).Lat // true:不加太陽改正
             if (Equa2Eclp) {
-                EclpLonPrint = Equa2Eclp.toFixed(5)
-                Equa2EclpDifPrint = Equa2EclpDif.toFixed(4)
-                EclpLonInacPrint = (Equa2Eclp - WestB).toFixed(4)
+                EclpLonPrint = Equa2Eclp.toFixed(6)
+                Equa2EclpDifPrint = Equa2EclpDif.toFixed(6)
+                EclpLonWestPrint = West0B.toFixed(6)
+                EclpLonErrPrint = ~~((Equa2Eclp - West0B) / West0B * 10000)
             }
             if (Eclp2Equa) {
-                EquaLonPrint = Eclp2Equa.toFixed(5)
-                Eclp2EquaDifPrint = Eclp2EquaDif.toFixed(4)
-                EquaLonInacPrint = (Eclp2Equa - WestA).toFixed(4)
+                EquaLonPrint = Eclp2Equa.toFixed(6)
+                Eclp2EquaDifPrint = Eclp2EquaDif.toFixed(6)
+                EquaLonWestPrint = West0A.toFixed(6)
+                EquaLonErrPrint = ~~((Eclp2Equa - West0A) / West0A * 10000)
             }
             if (Eclp2EquaLat) {
-                Eclp2EquaLatPrint = Eclp2EquaLat.toFixed(4)
-                Eclp2EquaLatInacPrint = Eclp2EquaLatInac.toFixed(4)
+                Eclp2EquaLatPrint = Eclp2EquaLat.toFixed(6)
+                Eclp2EquaLatWestPrint = West0Lat.toFixed(6)
+                Eclp2EquaLatErrPrint = ~~((Eclp2EquaLat - West0Lat) / West0Lat * 10000)
             }
             return {
-                title: NameList[title],
-                data: [EclpLonPrint, Equa2EclpDifPrint, EclpLonInacPrint, EquaLonPrint, Eclp2EquaDifPrint, EquaLonInacPrint, Eclp2EquaLatPrint, Eclp2EquaLatInacPrint]
+                title: NameList[Name],
+                data: [EclpLonPrint, Equa2EclpDifPrint, EclpLonWestPrint, EclpLonErrPrint, EquaLonPrint, Eclp2EquaDifPrint, EquaLonWestPrint, EquaLonErrPrint, Eclp2EquaLatPrint, Eclp2EquaLatWestPrint, Eclp2EquaLatErrPrint]
             }
         }))
     return { Range, Print }
 }
-// console.log(BindEqua2Eclp(360, 365.2575, 0).Range)
+// console.log(bindEquaEclp(1, 1300).Print)
 
-export const BindDeg2Mansion = (Deg, Name) => {
-    const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList(Name, 300)
-    const EquaAccumListHuangji = []
-    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500).EclpAccumList
-    const EquaAccumListLindeA = []
-    const EclpAccumListLindeA = AutoDegAccumList(Name, 665).EclpAccumList // 麟德
-    const { EquaAccumList: EquaAccumListDayan, EclpAccumList: EclpAccumListDayan } = AutoDegAccumList(Name, 729)
-    const EquaAccumListYingtian = []
-    const EclpAccumListYingtian = AutoDegAccumList(Name, 964).EclpAccumList // 應天
-    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EquaAccumList // 明天
-    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065).EclpAccumList // 明天
-    const { EquaAccumList: EquaAccumListJiyuan, EclpAccumList: EclpAccumListJiyuan } = AutoDegAccumList(Name, 1106)
-    const EquaAccumListDaming3 = []
-    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180).EclpAccumList
-    const { EquaAccumList: EquaAccumListShoushi, EclpAccumList: EclpAccumListShoushi } = AutoDegAccumList(Name, 1281)
-    const { EquaAccumList: EquaAccumListJiazi, EclpAccumList: EclpAccumListJiazi } = AutoDegAccumList(Name, 1684) // 甲子元曆
-    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
-        const EclpList = eval('EclpAccumList' + title)
-        const Eclp = Deg2Mansion(Deg, EclpList, Name)
-        const EquaList = eval('EquaAccumList' + title)
-        let Equa = ''
-        if ((EquaList || []).length) Equa = Deg2Mansion(Deg, EquaList, Name)
-        return {
-            title: NameList[title],
-            data: [Equa, Eclp]
-        }
-    })
-    return Print
-}
-// console.log(BindDeg2Mansion(23.1511, 'Jiazi'))
-
-export const BindMansion2Deg = (Mansion, Name) => {
-    const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList(Name, 300)
-    const EquaAccumListHuangji = []
-    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500).EclpAccumList
-    const EquaAccumListLindeA = []
-    const EclpAccumListLindeA = AutoDegAccumList(Name, 665).EclpAccumList // 麟德
-    const { EquaAccumList: EquaAccumListDayan, EclpAccumList: EclpAccumListDayan } = AutoDegAccumList(Name, 729)
-    const EquaAccumListYingtian = []
-    const EclpAccumListYingtian = AutoDegAccumList(Name, 964).EclpAccumList // 應天
-    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EquaAccumList // 明天
-    const EclpAccumListMingtian = AutoDegAccumList(Name, 1065).EclpAccumList // 明天
-    const { EquaAccumList: EquaAccumListJiyuan, EclpAccumList: EclpAccumListJiyuan } = AutoDegAccumList(Name, 1106)
-    const EquaAccumListDaming3 = []
-    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180).EclpAccumList
-    const { EquaAccumList: EquaAccumListShoushi, EclpAccumList: EclpAccumListShoushi } = AutoDegAccumList(Name, 1281)
-    const { EquaAccumList: EquaAccumListJiazi, EclpAccumList: EclpAccumListJiazi } = AutoDegAccumList(Name, 1684) 
-    const Print = ['Taichu', 'Huangji', 'LindeA', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(title => {
-        const EclpList = eval('EclpAccumList' + title)
-        const Eclp = Mansion2Deg(Mansion, EclpList, Name)
-        const EquaList = eval('EquaAccumList' + title)
-        let Equa = ''
-        if ((EquaList || []).length) {
-            Equa = Mansion2Deg(Mansion, EquaList, Name)
-        }
-        return {
-            title: NameList[title],
-            data: [Equa, Eclp]
-        }
-    })
-    return Print
-}
-// console.log(BindMansion2Deg('氐1', 'Guimao'))
-export const AutoLon2Lat = (LonRaw, SolsDeci, Name, isBare) => { // 如果最後加上了isBare，就不加日躔
-    const { Type, Solar, SolarRaw } = Para[Name]
-    let special = 0, Plus1 = 0, Plus2 = 0
-    LonRaw = ~~(LonRaw + SolsDeci) - SolsDeci
-    if (Type === 11) { // 授時「置所求日晨前夜半黃道積度」假設 SolsDeci .3, LonRaw 2, 那麼實際上是2.3，去掉小數點，晨前夜半就是2.LonRaw 2.8，該日3.1，去掉小數點是3
-    } else if (Name === 'Chongxuan') { // 崇玄「昏後夜半」
-        Plus1 = 1
-        Plus2 = .5
-    } else { // 其他假設是午中
-        Plus1 = .5
-        Plus2 = .5
-    }
-    LonRaw %= Solar || SolarRaw
-    let Lon2Lat = {}, Lon2LatA = {}, Lon2LatB = {}
-    // 公式曆法加上日躔
-    if ((['Chongtian', 'Mingtian', 'Guantian', 'Jiyuan'].includes(Name) || Type === 11) && !isBare) { // 經測試， 'Yingtian', 'Qianyuan', 'Yitian' 不能加日躔。
-        Plus1 = AutoDifAccum(0, LonRaw, Name).SunDifAccum
-    }
-    const Lon1 = LonRaw + Plus1
-    const Lon2 = LonRaw + Plus2
-    if (Type <= 3) {
-        Lon2Lat = Lon2LatTable1(Lon1, 'Easthan')
-    } else if (Name === 'Liangwu') {
-        Lon2Lat = Lon2LatTable1(Lon1, 'Daming')
-    } else if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
-        Lon2Lat = Lon2LatTable2(Lon1, 'Daye')
-    } else if (Type === 4) {
-        Lon2Lat = Lon2LatTable1(Lon1, Name)
-    } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
-        Lon2Lat = Lon2LatTable2(Lon1, 'LindeA')
-    } else if (Type === 6) {
-        Lon2Lat = Lon2LatTable2(Lon1, Name)
-    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
-        Lon2Lat = Lon2LatTable2(Lon1, 'Dayan')
-    } else if (Name === 'Xuanming') {
-        Lon2Lat = Lon2LatTable2(Lon1, Name)
-    } else if (Name === 'Qintian') {
-        Lon2LatA = Lon2LatFormula(Lon1, 'Chongxuan')
-        Lon2LatB = Lon2DialFormula(Lon2, 'Chongxuan')
-        special = 1
-    } else if (['Yingtian', 'Qianyuan'].includes(Name)) {
-        Lon2Lat = Lon2LatTable2(Lon1, Name)
-    } else if (['Fengyuan', 'Zhantian'].includes(Name)) {
-        Lon2LatA = Lon2LatFormula(Lon1, 'Guantian')
-        Lon2LatB = Lon2DialFormula(Lon2, 'Guantian')
-        special = 1
-    } else if (Type === 8) {
-        Lon2LatA = Lon2LatFormula(Lon1, Name)
-        Lon2LatB = Lon2DialFormula(Lon2, Name)
-        special = 1
-    } else if (Type === 9) {
-        Lon2LatA = Lon2LatFormula(Lon1, 'Jiyuan')
-        Lon2LatB = Lon2DialFormula(Lon2, 'Jiyuan')
-        special = 1
-    } else if (Type === 10) {
-        Lon2LatA = Lon2LatTable2(Lon1, 'Daming3')
-        Lon2LatB = Lon2DialFormula(Lon2, 'Jiyuan')
-        special = 1
-    } else if (Type === 11) {
-        Lon2Lat = Hushigeyuan(Lon1, Name)
-    }
-    let Lat = 0
-    let Lat1 = 0
-    let Rise = 0
-    let Dial = 0
-    if (special) {
-        Lat = Lon2LatA.Lat
-        Lat1 = Lon2LatA.Lat1
-        Rise = Lon2LatA.Rise
-        Dial = Lon2LatB.Dial
-    } else {
-        Lat = Lon2Lat.Lat
-        Lat1 = Lon2Lat.Lat1
-        Rise = Lon2Lat.Rise
-        Dial = Lon2Lat.Dial || 0
-    }
-    return { Lat, Lat1, Rise, Dial }
-}
-// console.log (AutoLon2Lat (53.6, 0, 'Chongxuan'))
-
-export const BindLon2Lat = (LonRaw, SolsDeci, f, Sidereal, year) => {
-    Sidereal = +Sidereal
-    LonRaw = +LonRaw
+export const bindLon2Lat = (Sd, SolsDeci) => {
+    Sd = +Sd
     SolsDeci = +('.' + SolsDeci)
-    f = +f
-    year = +year
-    if (LonRaw >= Sidereal || LonRaw < 0) {
-        throw (new Error('請輸入一週天度內的度數'))
-    }
-    const Lon = LonRaw + SunAcrVWest(LonRaw, year).SunDifAccum // 積日轉換爲黃經
-    const {
-        Lat1: WestA,
-        Lat: WestB
-    } = Lon2LatWest(Lon, Sidereal, year)
-    const {
-        v: WestC,
-        v1: WestC1
-    } = Lon2SunriseWest(Lon, f, Sidereal, year)
-    const {
-        Dial: WestD,
-        Dial1: WestD1
-    } = Lon2DialWest(Lon, f, Sidereal, year)
-    let Print = [{
-        title: '球面三角',
-        data: [WestA.toFixed(4), WestB.toFixed(4), 0, `${WestC.toFixed(4)}\n${WestC1.toFixed(4)}`, 0, (WestC1 - WestC).toFixed(4), `${WestD.toFixed(4)}\n${WestD1.toFixed(4)}`, 0, (WestD1 - WestD).toFixed(4)]
-    }]
+    if (Sd >= 365.25 || Sd < 0) throw (new Error('請輸入一週天度內的度數'))
+    let Print = []
     Print = Print.concat(
-        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi', 'Datong'].map(title => {
-            let Lat1Print = '-'
-            let LatPrint = '-'
-            let LatInacPrint = '-'
-            let SunrisePrint = '-'
-            let SunriseInacPrint1 = '-'
-            let SunriseInacPrint2 = '-'
-            let DialPrint = '-'
-            let DialInacPrint1 = '-'
-            let DialInacPrint2 = '-'
-            const { Lat1, Lat, Rise, Dial
-            } = AutoLon2Lat(LonRaw, SolsDeci, title)
-            if (Lat1) {
-                Lat1Print = Lat1.toFixed(4)
-                LatPrint = Lat.toFixed(4)
-                LatInacPrint = (Lat - WestB).toFixed(4)
-            }
-            if (Rise) {
+        ['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi', 'Datong'].map(Name => {
+            const { Sobliq, RiseLat, DialLat } = Para[Name]
+            const Solar = AutoSolar(Name)
+            const p = 360 / Solar
+            const SdMidn = (~~(Sd + SolsDeci) - SolsDeci + Solar) % Solar // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
+            let GongRaw = SdMidn
+            if (['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji'].includes(Name)) GongRaw += corrEllipse(GongRaw * p, .0174) / p // 沒有太陽改正的古曆直接用現代公式
+            else GongRaw += (AutoDifAccum(0, SdMidn, Name).SunDifAccum || 0) // 加上太陽改正
+            const Gong = GongRaw * p, Lon = Gong2Lon(Gong)
+            const WestA = HighLon2FlatLat(Sobliq * p, Lon) / p // 球面三角緯度
+            const WestB = sunRise(Sobliq * p, RiseLat || 34.284, Lon)
+            const WestC = Lon2DialWest(Lon, DialLat || 34.404, Sobliq * p)
+            let LatPrint = '-', LatErrPrint = '-', SunrisePrint = '-', SunriseErrPrint1 = '-', SunriseErrPrint2 = '-', DialPrint = '-', DialErrPrint1 = '-', DialErrPrint2 = '-'
+            const { Lat, Rise, Dial
+            } = autoLon2Lat(Sd, SolsDeci, Name)
+            LatPrint = (Lat).toFixed(4)
+            LatErrPrint = (Lat - WestA).toFixed(4)
+            if (RiseLat) {
                 SunrisePrint = Rise.toFixed(4)
-                SunriseInacPrint1 = (Rise - WestC).toFixed(4)
-                SunriseInacPrint2 = (Rise - WestC1).toFixed(4)
+                SunriseErrPrint1 = (Rise - WestB.t).toFixed(4)
+                SunriseErrPrint2 = (Rise - WestB.t0).toFixed(4)
             }
-            if (Dial) {
+            if (DialLat) {
                 DialPrint = Dial.toFixed(4)
-                DialInacPrint1 = (Dial - WestD).toFixed(4)
-                DialInacPrint2 = (Dial - WestD1).toFixed(4)
+                DialErrPrint1 = ~~((Dial - WestC.Dial) / WestC.Dial * 10000)
+                DialErrPrint2 = ~~((Dial - WestC.Dial1) / WestC.Dial1 * 10000)
             }
             return {
-                title: NameList[title],
-                data: [Lat1Print, LatPrint, LatInacPrint, SunrisePrint, SunriseInacPrint1, SunriseInacPrint2, DialPrint, DialInacPrint1, DialInacPrint2]
+                title: NameList[Name],
+                data: [LatPrint, LatErrPrint, Sobliq, SunrisePrint, SunriseErrPrint1, SunriseErrPrint2, DialPrint, DialErrPrint1, DialErrPrint2, DialLat || RiseLat]
             }
         }))
     return Print
 }
-// console.log(BindLon2Lat(330, .45, 34.4, 365.2445, 1000))
+// console.log(bindLon2Lat(89, 5)[14].data[3])
+export const bindDeg2Mansion = Deg => {
+    const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList('Taichu', 300)
+    const EquaAccumListHuangji = []
+    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500).EclpAccumList
+    const EquaAccumListLinde = []
+    const EclpAccumListLinde = AutoDegAccumList('Linde', 665).EclpAccumList // 麟德
+    const { EquaAccumList: EquaAccumListDayan, EclpAccumList: EclpAccumListDayan } = AutoDegAccumList('Dayan', 729)
+    const EquaAccumListYingtian = []
+    const EclpAccumListYingtian = AutoDegAccumList('Yingtian', 964).EclpAccumList // 應天
+    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EquaAccumList // 明天
+    const EclpAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EclpAccumList // 明天
+    const { EquaAccumList: EquaAccumListJiyuan, EclpAccumList: EclpAccumListJiyuan } = AutoDegAccumList('Jiyuan', 1106)
+    const EquaAccumListDaming3 = []
+    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180).EclpAccumList
+    const { EquaAccumList: EquaAccumListShoushi, EclpAccumList: EclpAccumListShoushi } = AutoDegAccumList('Shoushi', 1281)
+    const { EquaAccumList: EquaAccumListJiazi, EclpAccumList: EclpAccumListJiazi } = AutoDegAccumList('Jiazi', 1684) // 甲子元曆
+    const Print = ['Taichu', 'Huangji', 'Linde', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(Name => {
+        const EclpList = eval('EclpAccumList' + Name)
+        const Eclp = Deg2Mansion(Deg, EclpList)
+        const EquaList = eval('EquaAccumList' + Name)
+        let Equa = ''
+        if ((EquaList || []).length) Equa = Deg2Mansion(Deg, EquaList)
+        return {
+            title: NameList[Name],
+            data: [Equa, Eclp]
+        }
+    })
+    return Print
+}
+// console.log(bindDeg2Mansion(23.1511, 'Jiazi'))
 
-export const AutoMoonLat = (NodeAccum, Name) => {
+export const bindMansion2Deg = Mansion => {
+    const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList('Taichu', 300)
+    const EquaAccumListHuangji = []
+    const EclpAccumListHuangji = AutoDegAccumList('Huangji', 500).EclpAccumList
+    const EquaAccumListLinde = []
+    const EclpAccumListLinde = AutoDegAccumList('Linde', 665).EclpAccumList // 麟德
+    const { EquaAccumList: EquaAccumListDayan, EclpAccumList: EclpAccumListDayan } = AutoDegAccumList('Dayan', 729)
+    const EquaAccumListYingtian = []
+    const EclpAccumListYingtian = AutoDegAccumList('Yingtian', 964).EclpAccumList // 應天
+    const EquaAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EquaAccumList // 明天
+    const EclpAccumListMingtian = AutoDegAccumList('Mingtian', 1065).EclpAccumList // 明天
+    const { EquaAccumList: EquaAccumListJiyuan, EclpAccumList: EclpAccumListJiyuan } = AutoDegAccumList('Jiyuan', 1106)
+    const EquaAccumListDaming3 = []
+    const EclpAccumListDaming3 = AutoDegAccumList('Daming3', 1180).EclpAccumList
+    const { EquaAccumList: EquaAccumListShoushi, EclpAccumList: EclpAccumListShoushi } = AutoDegAccumList('Shoushi', 1281)
+    const { EquaAccumList: EquaAccumListJiazi, EclpAccumList: EclpAccumListJiazi } = AutoDegAccumList('Jiazi', 1684)
+    const Print = ['Taichu', 'Huangji', 'Linde', 'Dayan', 'Yingtian', 'Mingtian', 'Jiyuan', 'Daming3', 'Shoushi', 'Jiazi'].map(Name => {
+        const EclpList = eval('EclpAccumList' + Name)
+        const Eclp = +Mansion2Deg(Mansion, EclpList, Name).toFixed(3)
+        const EquaList = eval('EquaAccumList' + Name)
+        let Equa = ''
+        if ((EquaList || []).length) {
+            Equa = +Mansion2Deg(Mansion, EquaList, Name).toFixed(3)
+        }
+        return {
+            title: NameList[Name],
+            data: [Equa, Eclp]
+        }
+    })
+    return Print
+}
+// console.log(bindMansion2Deg('氐1'))
+export const bindMansionAccumList = (Name, Y) => { // 本函數經ChatGPT優化
+    Y = +Y;
+    const { EclpAccumList, EquaAccumList } = AutoDegAccumList(Name, Y);
+    const EclpList = [], EquaList = []
+    for (let i = 1; i < 30; i++) {
+        EclpList[i] = +(EclpAccumList[i] - EclpAccumList[i - 1]).toFixed(3)
+        EquaList[i] = +(EquaAccumList[i] - EquaAccumList[i - 1]).toFixed(3)
+    }
+    const EclpAccumPrint = [], EquaAccumPrint = [];
+    const DirList = '東北西南'
+    for (let i = 0; i < 4; i++) {
+        EclpAccumPrint.push([]);
+        EquaAccumPrint.push([]);
+        let EclpSum = 0, EquaSum = 0
+        for (let j = 1; j <= 7; j++) {
+            const index = i * 7 + j;
+            EclpSum += EclpList[index + 1]
+            EquaSum += EquaList[index + 1]
+        }
+        for (let j = 1; j <= 7; j++) {
+            const index = i * 7 + j;
+            EclpAccumPrint[i].push(MansionNameList[index] + ' ' + EclpAccumList[index + 1] + `　\n　 ` + EclpList[index + 1]);
+            EquaAccumPrint[i].push(MansionNameList[index] + ' ' + EquaAccumList[index + 1] + `　\n　 ` + EquaList[index + 1]);
+        }
+        EclpAccumPrint[i][8] = DirList[i] + EclpSum.toFixed(2)
+        EquaAccumPrint[i][8] = DirList[i] + EquaSum.toFixed(2)
+    }
+    return { EclpAccumPrint, EquaAccumPrint };
+};
+// console.log(bindMansionAccumList('Shoushi', 1281).EclpAccumPrint)
+export const autoMoonLat = (NodeAccum, Name) => {
     let { Type, Sidereal } = Para[Name]
     // Solar = Solar || SolarRaw
     let MoonLat = {}
@@ -482,13 +453,12 @@ export const AutoMoonLat = (NodeAccum, Name) => {
         MoonLat = MoonLatFormula(NodeAccum, 'Jiyuan')
     }
     const MoonEquaLat = MoonLat.EquaLat || 0
-    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - AutoLon2Lat(SunEclpLon, .5, Name).Lat
-    const MoonEclpLat1 = MoonLat.Lat1 || Sidereal / 4 - MoonEclpLat
-    return { MoonEclpLat, MoonEclpLat1, MoonEquaLat }
+    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - autoLon2Lat(SunEclpLon, .5, Name).Lat
+    return { MoonEclpLat, MoonEquaLat }
 }
-// console.log(AutoMoonLat(2, 'Tsrengyuan').MoonEclpLat)
+// console.log(autoMoonLat(2, 'Tsrengyuan').MoonEclpLat)
 
-export const AutoMoonLon = (NodeAccum, MoonEclp, Name) => {
+export const autoMoonLon = (NodeAccum, MoonEclp, Name) => {
     let { Type, Solar, SolarRaw, Sidereal, Node } = Para[Name]
     Solar = Solar || SolarRaw
     Sidereal = Sidereal || Solar
@@ -499,10 +469,10 @@ export const AutoMoonLon = (NodeAccum, MoonEclp, Name) => {
     // const NodeAnomaAccum = (AnomaAccumNight + tmp2) % Anoma // 每日夜半平交入轉
     const tmp3 = Node - NodeAccum // 距後日
     const tmp4 = tmp3 * MoonAvgVd // 距後度
-    // let NodeSolsDifDay = SolsDif + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
+    // let NodeSdDay = Sd + tmp3 // 每日夜半平交日辰，我定義的：夜半的下個正交距離冬至日數。這算出來又是做什麼的？？
     const NodeEclp = (MoonEclp + tmp4) % Sidereal // 正交距冬至度數 // 算出來好迷啊，莫名其妙
-    // const NodeSolsDifMoonTcorr = AutoTcorr(NodeAnomaAccum, SolsDif, Name, NodeAccum).MoonTcorr // 遲加疾減
-    // NodeSolsDifDay = (NodeSolsDifDay + NodeSolsDifMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
+    // const NodeSdMoonTcorr = AutoTcorr(NodeAnomaAccum, Sd, Name, NodeAccum).MoonTcorr // 遲加疾減
+    // NodeSdDay = (NodeSdDay + NodeSdMoonTcorr) % Solar // 正交日辰=平交日辰+月亮改正  
     const MoonNodeDif = MoonEclp - NodeEclp
     const MoonNodeDifHalf = MoonNodeDif % (Quadrant * 2)
     const MoonNodeDifQuar = MoonNodeDif % Quadrant // 所入初末限：置黃道宿積度，滿交象度（90多那個）去之，在半交象已下爲初限
@@ -536,35 +506,30 @@ export const AutoMoonLon = (NodeAccum, MoonEclp, Name) => {
     }
     return { NodeEclp, WhiteLon, EclpWhiteDif, EquaWhiteDif, EquaLon, EquaLat }
 }
-// console.log(AutoMoonLon(234, 45, 4.11, 'Dayan'))
+// console.log(autoMoonLon(234, 45, 4.11, 'Dayan'))
 
-export const BindMoonLonLat = (NodeAccum, MoonEclp) => { // 該時刻入交日、距冬至日數
+export const bindMoonLonLat = (NodeAccum, MoonEclp) => { // 該時刻入交日、距冬至日數
     NodeAccum = +NodeAccum
     MoonEclp = +MoonEclp
-    if (NodeAccum >= 27.21221 || NodeAccum < 0) {
-        throw (new Error('請輸入一交點月內的日數'))
-    }
-    if (MoonEclp >= 365.246 || MoonEclp < 0) {
-        throw (new Error('請輸入一週天度內的度數'))
-    }
+    if (NodeAccum >= 27.21221 || NodeAccum < 0) throw (new Error('請輸入一交點月內的日數'))
+    if (MoonEclp >= 365.246 || MoonEclp < 0) throw (new Error('請輸入一週天度內的度數'))
     let Print = []
     Print = Print.concat(
-        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(title => {
-            let NodeSolsDifDegPrint = '-'
+        ['Qianxiang', 'Yuanjia', 'Daming', 'Huangji', 'Dayan', 'Wuji', 'Tsrengyuan', 'Chongxuan', 'Qintian', 'Yingtian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi'].map(Name => {
+            let NodeSdDegPrint = '-'
             let WhiteLonPrint = '-'
             let EquaLonPrint = '-'
             let EclpWhiteDifPrint = '-'
             // let EclpEquaDifPrint = '-'
             let EquaWhiteDifPrint = '-'
-            let Lat1Print = '-'
             let LatPrint = '-'
             let EquaLatPrint = '-'
             const { NodeEclp, EquaLon, EclpWhiteDif, EquaWhiteDif, WhiteLon, EquaLat
-            } = AutoMoonLon(NodeAccum, MoonEclp, title)
-            const { MoonEclpLat1, MoonEclpLat,
-            } = AutoMoonLat(NodeAccum, title)
+            } = autoMoonLon(NodeAccum, MoonEclp, Name)
+            const { MoonEclpLat,
+            } = autoMoonLat(NodeAccum, Name)
             if (NodeEclp) {
-                NodeSolsDifDegPrint = NodeEclp.toFixed(4)
+                NodeSdDegPrint = NodeEclp.toFixed(4)
             }
             if (EquaWhiteDif) {
                 EquaLonPrint = EquaLon.toFixed(4)
@@ -575,51 +540,46 @@ export const BindMoonLonLat = (NodeAccum, MoonEclp) => { // 該時刻入交日�
                 EclpWhiteDifPrint = EclpWhiteDif.toFixed(4)
             }
             if (MoonEclpLat) {
-                Lat1Print = MoonEclpLat1.toFixed(4)
                 LatPrint = MoonEclpLat.toFixed(4)
             }
             if (EquaLat) {
                 EquaLatPrint = EquaLat.toFixed(4)
             }
             return {
-                title: NameList[title],
-                data: [NodeSolsDifDegPrint, EquaLonPrint, WhiteLonPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, Lat1Print, LatPrint, EquaLatPrint]
+                title: NameList[Name],
+                data: [NodeSdDegPrint, EquaLonPrint, WhiteLonPrint, EclpWhiteDifPrint, EquaWhiteDifPrint, LatPrint, EquaLatPrint]
             }
         }))
     return Print
 }
-// console.log(BindMoonLonLat(2.252, 55.71))
+// console.log(bindMoonLonLat(2.252, 55.71))
 
-export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
+export const bindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     AvgDeci = +('.' + AvgDeci)
-    AvgSolsDif = +AvgSolsDif
+    AvgSd = +AvgSd
     SolsDeci = +('.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
-    if (NodeAccum > 27.212215) {
-        throw (new Error('請輸入一交點月27.212215內的日數'))
-    }
-    if (AnomaAccum > 27.5545) {
-        throw (new Error('請輸入一近點月27.5545內的日數'))
-    }
+    if (NodeAccum > 27.212215) throw (new Error('請輸入一交點月27.212215內的日數'))
+    if (AnomaAccum > 27.5545) throw (new Error('請輸入一近點月27.5545內的日數'))
     // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
-        if (AvgSolsDif >= j * HalfTermLeng && AvgSolsDif < (j + 1) * HalfTermLeng) {
+        if (AvgSd >= j * HalfTermLeng && AvgSd < (j + 1) * HalfTermLeng) {
             i = (j - 2 + 12) % 12
         }
         break
     }
     let Print1 = []
     Print1 = Print1.concat(
-        ['Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
+        ['Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong'].map(Name => {
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
+            const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 1, title, i + 1, 0, 0, SolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 1, Name, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -638,18 +598,18 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsD
                 StatusPrint = '全食'
             }
             return {
-                title: NameList[title],
+                title: NameList[Name],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
     Print2 = Print2.concat(
-        ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
+        ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(Name => {
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
+            const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 1, title, i + 1, 0, 0, SolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 1, Name, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -668,44 +628,40 @@ export const BindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsD
                 StatusPrint = '全食'
             }
             return {
-                title: NameList[title],
+                title: NameList[Name],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }
 }
-// console.log(BindSunEclipse(.1, 14, 3355, 14, 5))
+// console.log(bindSunEclipse(.1, 14, 3355, 14, 5))
 
-export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, SolsDeci) => {
+export const bindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci) => {
     NodeAccum = +NodeAccum
     AnomaAccum = +AnomaAccum
     AvgDeci = +('.' + AvgDeci)
-    AvgSolsDif = +AvgSolsDif
+    AvgSd = +AvgSd
     SolsDeci = +('.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
-    if (NodeAccum > 27.212215) {
-        throw (new Error('請輸入一交點月27.212215內的日數'))
-    }
-    if (AnomaAccum > 27.5545) {
-        throw (new Error('請輸入一近點月27.5545內的日數'))
-    }
+    if (NodeAccum > 27.212215) throw (new Error('請輸入一交點月27.212215內的日數'))
+    if (AnomaAccum > 27.5545) throw (new Error('請輸入一近點月27.5545內的日數'))
     // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
     let i = 0
     for (let j = 0; j <= 11; j++) {
-        if (AvgSolsDif >= j * HalfTermLeng && AvgSolsDif < (j + 1) * HalfTermLeng) {
+        if (AvgSd >= j * HalfTermLeng && AvgSd < (j + 1) * HalfTermLeng) {
             i = (j - 2 + 12) % 12
         }
         break
     }
     let Print1 = []
     Print1 = Print1.concat(
-        ['Tsrengguang', 'Daye', 'WuyinA', 'Huangji', 'LindeA', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong', 'Datong2'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
+        ['Tsrengguang', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Wuji', 'Tsrengyuan', 'Qintian', 'Jiyuan', 'Tongyuan', 'Qiandao', 'Chunxi', 'Huiyuan', 'Tongtian', 'Kaixi', 'Chengtian', 'Daming3', 'Gengwu', 'Shoushi', 'Datong', 'Datong2'].map(Name => {
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
+            const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 0, title, i + 1, 0, 0, SolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 0, Name, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -724,18 +680,18 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, Sols
                 StatusPrint = '全食'
             }
             return {
-                title: NameList[title],
+                title: NameList[Name],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
     Print2 = Print2.concat(
-        ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(title => {
-            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSolsDif, title)
+        ['Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Guantian'].map(Name => {
+            const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
-            const AcrSolsDif = AvgSolsDif + (Tcorr2 || Tcorr1)
+            const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
-            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSolsDif, AvgSolsDif, 0, title, i + 1, 0, 0, SolsDeci)
+            } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 0, Name, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
             let TotalDeciPrint = '-'
             let EndDeciPrint = '-'
@@ -754,19 +710,51 @@ export const BindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSolsDif, Sols
                 StatusPrint = '全食'
             }
             return {
-                title: NameList[title],
+                title: NameList[Name],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }
 }
-// console.log(BindMoonEclipse(1.1, 22, 22, 22))
+// console.log(bindMoonEclipse(1.1, 22, 22, 22))
 
-const InacPrintAnaly_SunTcorr = (Name, AnomaAccum, year) => {
-    let SunTcorrInac = []
-    for (let i = 0; i <= 365; i++) {// i:AvgSolsDif
-        SunTcorrInac[i] = BindTcorr(AnomaAccum, i, year, Name).SunTcorrInac
+const ErrPrint_SunTcorr = (Name, AnomaAccum) => {
+    let SunTcorrErr = []
+    for (let i = 1; i <= 182; i++) {
+        SunTcorrErr[i] = bindTcorr(AnomaAccum, i, Name).SunTcorrErr
     }
-    return SunTcorrInac
+    return SunTcorrErr
 }
-// console.log (InacPrintAnaly_SunTcorr('Shoushi', 7, 1247))
+// console.log (ErrPrint_SunTcorr('Shoushi', 7, 1247))
+
+const mse = List => { // 均方誤差
+    let Sum = 0
+    for (let i = 0; i < List.length; i++) {
+        Sum += List[i] ** 2
+    }
+    Sum /= List.length
+    return Sum
+}
+const testLon2Lat = List => { // 計算所有古曆在每一度的誤差，求均方差
+    const Err = []
+    for (let i = 0; i < List.length; i++) {
+        Err[i] = []
+        for (let k = 0; k <= 182; k++) {
+            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[1] // 赤緯
+            Err[i][k] = +bindLon2Lat(k, 5)[i].data[4] // 日出未修正
+            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[7] // 晷長修正
+        }
+    }
+    const MSE = []
+    for (let i = 0; i < List.length; i++) {
+        MSE[i] = mse(Err[i])
+    }
+    let Name = []
+    Name = Name.concat(List.map(a => NameList[a]))
+    const Print = []
+    for (let i = 0; i < List.length; i++) {
+        Print[i] = Name[i] + '：' + MSE[i].toFixed(4)
+    }
+    return Print
+}
+// console.log(testLon2Lat(['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji', 'Linde', 'Dayan', 'Xuanming', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Daming3', 'Shoushi', 'Datong']))

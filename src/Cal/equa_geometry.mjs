@@ -1,6 +1,5 @@
-// import { ConstWest } from './astronomy_west.mjs'
 import { big } from './para_constant.mjs'
-import { Equa2EclpWest, Lon2LatWest } from './astronomy_west.mjs'
+import { Gong2Lon, GongFlat2High, GongHigh2Flat, HighLon2FlatLat } from './newm_shixian.mjs'
 
 const pi = big.acos(-1)
 const r2d = degree => big(degree).mul(180).div(pi)
@@ -180,7 +179,7 @@ const Hushigeyuan_Sub = (LonRaw, p, q, pAnother) => {
 
 }
 // 弧矢割圓術黃赤轉換。跟元志六《黃赤道率》立成表分毫不差，耶！！！
-export const Hushigeyuan = (LonRaw, Name) => { // 變量名見《中國古代曆法》頁629
+export const Hushigeyuan = (LonRaw, Name) => { // 變量名見《中國古代曆法》頁629。將術文與球面三角對比誤差應該用23.807。
     // 北京赤道出地度50.365，緯度40.9475，40.949375。《大統法原勾股測望》：半弧背s26.465。矢v 5.915    
     LonRaw += 1e-12
     const p = 23.807 // DK 實測23.9半弧背、黃赤大勾
@@ -199,7 +198,7 @@ export const Hushigeyuan = (LonRaw, Name) => { // 變量名見《中國古代曆
     return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lat, Lat1, Rise }
 }
 
-const Hushigeyuan_Ex = (LonRaw, e) => { // 度數，黃赤交角
+const Hushigeyuan_Ex = (LonRaw, e) => { // 度數，黃赤交角。與上面的術文相比可拓展至任意黃赤交角的弧矢割圓。術文的數據由24（考慮捨入誤差24.00003）算得。
     const r = 60.875
     const h = RoundL2H(e)
     const p = Math.sqrt(r ** 2 - (r - h) ** 2)
@@ -208,11 +207,11 @@ const Hushigeyuan_Ex = (LonRaw, e) => { // 度數，黃赤交角
     } = Hushigeyuan_Sub(LonRaw, p, q)
     return { Eclp2Equa, Eclp2EquaDif, Equa2Eclp, Equa2EclpDif, Lat, }
 }
-// console.log(Hushigeyuan(40).Eclp2Equa)
-// console.log(Hushigeyuan_Ex(40, 24).Eclp2Equa) // 弧矢割圓的黃赤交角以24度算
+// console.log(Hushigeyuan(0.00001))
+// console.log(Hushigeyuan_Ex(0.00001, 23.9)) // 弧矢割圓的黃赤交角以24度算
 
 const HushigeyuanWest = (LonRaw, Sidereal, DE) => { // DE黃赤交角。變量名見《中國古代曆法》頁629
-    const pi = 3.141592653589793
+    const pi = Math.PI
     const Sidereal25 = Sidereal / 4
     const Sidereal50 = Sidereal / 2
     const Sidereal75 = Sidereal * .75
@@ -240,9 +239,7 @@ const HushigeyuanWest = (LonRaw, Sidereal, DE) => { // DE黃赤交角。變量�
     // const NC = r - Math.sqrt(p1 ** 2 + OM ** 2)
     // let Lat = RoundH2LWest(r, NC)
     let Lat = RoundC2LWest(r, p2)
-    if (LonRaw < Sidereal25 || LonRaw > Sidereal75) {
-        Lat = -Lat
-    }
+    if (LonRaw < Sidereal25 || LonRaw > Sidereal75) Lat = -Lat
     /////赤轉黃/////
     const PE = RoundL2HWest(r, Lon)
     const OP = r - PE
@@ -266,43 +263,32 @@ const HushigeyuanWest = (LonRaw, Sidereal, DE) => { // DE黃赤交角。變量�
 }
 // console.log(HushigeyuanWest(32, 365.25, 1000).Eclp2Equa)
 
-export const Hushigeyuan_Ex_Print = (LonRaw, eRaw) => {
-    const Sidereal = 365.25
-    eRaw = +eRaw
-    LonRaw = +LonRaw
-    const e = eRaw * 360 / Sidereal
-    const {
-        Equa2Eclp: WestB,
-        Equa2EclpDif: WestB1,
-        Eclp2Equa: WestA,
-        Eclp2EquaDif: WestA1
-    } = Equa2EclpWest(LonRaw, Sidereal, 0, e)
-    const { Lat: WestLat } = Lon2LatWest(LonRaw, Sidereal, 0, e)
+export const Hushigeyuan_Ex_Print = (GongRaw, e) => {
+    e = +e
+    GongRaw = +GongRaw
+    const p = 360 / 365.25
+    const Gong = GongRaw * p
+    let WestA = GongHigh2Flat(e, Gong)
+    let WestB = GongFlat2High(e, Gong)
+    const WestA1 = (WestA - Gong) / p
+    const WestB1 = (WestB - Gong) / p
+    const WestLat = HighLon2FlatLat(e, Gong2Lon(Gong)) / p
+    WestA /= p
+    WestB /= p
     let Print = [{
         title: '球面三角',
-        data: [WestB.toFixed(5), WestB1.toFixed(4), 0, WestA.toFixed(5), WestA1.toFixed(4), 0, WestLat.toFixed(4), 0]
+        data: [WestB.toFixed(6), WestB1.toFixed(6), 0, WestA.toFixed(6), WestA1.toFixed(6), 0, WestLat.toFixed(6), 0]
     }]
-    const {
-        Equa2Eclp: West2B,
-        Equa2EclpDif: West2B1,
-        Eclp2Equa: West2A,
-        Eclp2EquaDif: West2A1,
-        Lat: West2Lat
-    } = HushigeyuanWest(LonRaw, Sidereal, e)
-    Print = Print.concat({
-        title: '三角割圓',
-        data: [West2B.toFixed(5), West2B1.toFixed(4), 0, West2A.toFixed(5), West2A1.toFixed(4), 0, West2Lat.toFixed(4), 0]
-    })
     const {
         Equa2Eclp: GeyuanB,
         Equa2EclpDif: GeyuanB1,
         Eclp2Equa: GeyuanA,
         Eclp2EquaDif: GeyuanA1,
         Lat: GeyuanLat
-    } = Hushigeyuan_Ex(LonRaw, eRaw)
+    } = Hushigeyuan_Ex(GongRaw, e)
     Print = Print.concat({
         title: '弧矢割圓',
-        data: [GeyuanB.toFixed(5), GeyuanB1.toFixed(4), (GeyuanB - WestB).toFixed(4), GeyuanA.toFixed(5), GeyuanA1.toFixed(4), (GeyuanA - WestA).toFixed(4), GeyuanLat.toFixed(4), (GeyuanLat - WestLat).toFixed(4)]
+        data: [GeyuanB.toFixed(6), GeyuanB1.toFixed(6), ~~((GeyuanB - WestB) / WestB * 10000), GeyuanA.toFixed(6), GeyuanA1.toFixed(6), ~~((GeyuanA - WestA) / WestA * 10000), GeyuanLat.toFixed(6), ~~((GeyuanLat - WestLat) / WestLat * 10000)]
     })
     return Print
 }

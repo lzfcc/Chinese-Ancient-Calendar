@@ -1,12 +1,12 @@
 import React from 'react'
-import { BindEqua2Eclp } from '../Cal/astronomy_bind'
+import { bindEquaEclp } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      Eclp2: 365.244,
-      Eclp3: 1000,
+      Days: 1,
+      Year: 1000,
     }
     this.handle = this.handle.bind(this)
   }
@@ -16,23 +16,16 @@ export default class Converter extends React.Component {
       <span className='year-select'>
         <span>度數</span>
         <input className='width3'
-          value={this.state.Eclp1}
+          value={this.state.Days}
           onChange={e => {
-            this.setState({ Eclp1: e.currentTarget.value });
-          }}
-        />
-        <span> 週天</span>
-        <input className='width3'
-          value={this.state.Eclp2}
-          onChange={e => {
-            this.setState({ Eclp2: e.currentTarget.value });
+            this.setState({ Days: e.currentTarget.value });
           }}
         />
         <span> 公元年</span>
         <input className='width2'
-          value={this.state.Eclp3}
+          value={this.state.Year}
           onChange={e => {
-            this.setState({ Eclp3: e.currentTarget.value });
+            this.setState({ Year: e.currentTarget.value });
           }}
         />
       </span>
@@ -41,7 +34,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Range, Print } = BindEqua2Eclp(this.state.Eclp1, this.state.Eclp2, this.state.Eclp3)
+      const { Range, Print } = bindEquaEclp(this.state.Days, this.state.Year)
       this.setState({ outputEclp: Print, outputEclp1: Range })
     } catch (e) {
       alert(e.message)
@@ -60,12 +53,15 @@ export default class Converter extends React.Component {
             <th></th>
             <th><bc>赤 ⇒ 黃</bc></th>
             <th>黃-赤</th>
-            <th>誤差</th>            
+            <th>球面三角</th>
+            <th>誤差‱</th>
             <th><bc>黃 ⇒ 赤</bc></th>
             <th>赤-黃</th>
-            <th>誤差</th>
+            <th>球面三角</th>
+            <th>誤差‱</th>
             <th><bc>赤緯</bc></th>
-            <th>誤差</th>
+            <th>球面三角</th>
+            <th>誤差‱</th>
           </tr>
           {(this.state.outputEclp || []).map(row => {
             return (
@@ -85,7 +81,7 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>赤經 ⇌ 極黃經</h3>
+        <h3>赤經 ⇌ 黃經</h3>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>Eclp&Equa</button>
         {this.result()}

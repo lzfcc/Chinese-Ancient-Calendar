@@ -1,12 +1,11 @@
 import React from 'react'
-import { BindDeg2Mansion } from '../Cal/astronomy_bind'
+import { bindDeg2Mansion } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       a: 326.9312,
-      b: 'Qianxiang',
     }
     this.handle = this.handle.bind(this)
   }
@@ -21,20 +20,13 @@ export default class Converter extends React.Component {
             this.setState({ a: e.currentTarget.value });
           }}
         />
-        <span> 曆法</span>
-        <input className='width3'
-          value={this.state.b}
-          onChange={e => {
-            this.setState({ b: e.currentTarget.value });
-          }}
-        />
       </span>
     );
   }
 
   handle() {
     try {
-      const Print = BindDeg2Mansion(this.state.a, this.state.b)
+      const Print = bindDeg2Mansion(this.state.a)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -46,7 +38,7 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right'>
+      <div className='ans table2'>
         <table>
           <tr>
             <th></th>

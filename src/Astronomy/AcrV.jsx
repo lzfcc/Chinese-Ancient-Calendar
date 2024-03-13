@@ -1,11 +1,12 @@
 import React from 'react'
-import { BindTcorr } from '../Cal/astronomy_bind'
+import { bindTcorr } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      c: 1247,
+      a: 1,
+      b: 1
     }
     this.handle = this.handle.bind(this)
   }
@@ -27,20 +28,13 @@ export default class Converter extends React.Component {
             this.setState({ b: e.currentTarget.value });
           }}
         />
-        <span> 公元年</span>
-        <input className='width2'
-          value={this.state.c}
-          onChange={e => {
-            this.setState({ c: e.currentTarget.value });
-          }}
-        />
       </span>
     );
   }
 
   handle() {
     try {
-      const { Print1, Print2 } = BindTcorr(this.state.a, this.state.b, this.state.c)
+      const { Print1, Print2 } = bindTcorr(this.state.a, this.state.b)
       this.setState({ output1: Print1, output2: Print2 })
     } catch (e) {
       alert(e.message)
@@ -57,16 +51,15 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>日盈縮積</th>
-            <th>誤差</th>
-            <th>月實行度</th>
-            <th>月遲疾積</th>
-            <th>誤差</th>
-            <th>日行改正</th>
-            <th>誤差</th>
-            <th>月行改正</th>
-            <th>誤差</th>
-            <th>日月改正</th>
+            <th><bc>日</bc>盈縮積</th>
+            <th>誤差‱</th>
+            <th>改正</th>
+            <th><bc>月</bc>遲疾積</th>
+            <th>誤差‱</th>
+            <th>改正</th>
+            <th>實行</th>
+            <th>實速</th>
+            <th><bc>日月</bc>改正</th>
             <th>入交改正</th>
           </tr>
           {(this.state.output1 || []).map(row => {
@@ -84,16 +77,14 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>日盈縮積</th>
-            <th>誤差</th>
-            <th>月實行度</th>
-            <th>月遲疾積</th>
-            <th>誤差</th>
-            <th>日行改正</th>
-            <th>誤差</th>
-            <th>月行改正</th>
-            <th>誤差</th>
-            <th>日月改正</th>
+            <th><bc>日</bc>盈縮積</th>
+            <th>誤差‱</th>
+            <th>改正</th>
+            <th><bc>月</bc>遲疾積</th>
+            <th>誤差‱</th>
+            <th>改正</th>
+            <th>實行</th>
+            <th><bc>日月</bc>改正</th>
             <th>入交改正</th>
           </tr>
           {(this.state.output2 || []).map(row => {

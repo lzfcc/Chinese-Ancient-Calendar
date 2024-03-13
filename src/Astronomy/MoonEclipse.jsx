@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindMoonEclipse } from '../Cal/astronomy_bind'
+import { bindMoonEclipse } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -55,7 +55,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print1, Print2 } = BindMoonEclipse(this.state.a, this.state.b, this.state.c, this.state.d, this.state.f)
+      const { Print1, Print2 } = bindMoonEclipse(this.state.a, this.state.b, this.state.c, this.state.d, this.state.f)
       this.setState({ output1: Print1, output2: Print2 })
     } catch (e) {
       alert(e.message)

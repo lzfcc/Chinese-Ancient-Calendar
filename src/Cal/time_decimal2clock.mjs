@@ -32,7 +32,7 @@ const ClockWeijin = (Deci, Name) => {
     let ClockOrder = (Deci.div(Portion)).floor().toNumber()
     const ClockFrac = Deci.sub(big(ClockOrder).mul(Portion))
     const Twelve = ((big.div(ClockFrac, Portion)).mul(12)).floor().toNumber()
-    if (Twelve === 11 && Name !== 'WuyinA') {
+    if (Twelve === 11 && Name !== 'Wuyin') {
         ClockOrder++
     }
     let TwelveName = ''
@@ -40,7 +40,7 @@ const ClockWeijin = (Deci, Name) => {
         TwelveName = TwelveList[Twelve]
     } else if (Name === 'Huangji') {
         TwelveName = TwelveListHuangji[Twelve]
-    } else if (Name === 'WuyinA') { // 戊寅交食加時。滕艳辉等:《戊寅元历》的日月食推算方法
+    } else if (Name === 'Wuyin') { // 戊寅交食加時。滕艳辉等:《戊寅元历》的日月食推算方法
         TwelveName = TwelveListWuyin[Twelve]
     }
     return BranchList[ClockOrder + 1] + '時' + TwelveName
@@ -132,7 +132,7 @@ export const clockQingB = DeciRaw => {
 export const AutoClock = (Deci, Name) => {
     const { Type } = Para[Name]
     let Print = ''
-    if (Type <= 6 && !['LindeA', 'LindeB'].includes(Name)) {
+    if (Type <= 6 && !['Linde', 'LindeB'].includes(Name)) {
         Print = ClockWeijin(Deci, Name)
     } else if (Type === 7 || ['Futian', 'Chongxuan', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian'].includes(Name)) { // 因為宋志皇祐渾儀排在明天之後觀天之前
         Print = ClockTang(Deci)
@@ -145,7 +145,7 @@ export const AutoClock = (Deci, Name) => {
 const ClockNameList = {
     Easthan: '後漢四分曆',
     Yuanjia: '魏晉南北',
-    WuyinA: '戊寅曆',
+    Wuyin: '戊寅曆',
     Huangji: '皇極曆',
     Dayan: '唐北宋前期',
     Mingtian: '南宋元明'
@@ -160,7 +160,7 @@ export const BindClock1 = Deci => {
     }]
     Deci *= 100 + 1e-12
     Print = Print.concat(
-        ['Yuanjia', 'WuyinA', 'Easthan', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
+        ['Yuanjia', 'Wuyin', 'Easthan', 'Huangji', 'Dayan', 'Mingtian'].map(title => {
             return {
                 title: ClockNameList[title],
                 data: AutoClock(Deci, title)

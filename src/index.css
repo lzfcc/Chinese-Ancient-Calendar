@@ -427,8 +427,8 @@ table td {
 }
 
 .table2 table td {
-  width: auto;
-  min-width: 0;
+  width: fit-content;
+  white-space: nowrap;
   padding: .15em .7em;
   text-align: left;
 }
@@ -536,9 +536,12 @@ tr.TermDuskstarPrint {
 
 tr.NewmEquaPrint,
 tr.NewmEclpPrint {
-  border-bottom: 2px solid var(--gray);
   color: var(--gray);
   font-size: .8em;
+}
+
+tr.NewmEclpPrint {
+  border-bottom: 2px solid var(--gray);
 }
 
 tr.SyzygyScPrint {

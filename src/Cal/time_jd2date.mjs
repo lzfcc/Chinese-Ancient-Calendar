@@ -84,13 +84,7 @@ export const Jd2Date1 = Jd => {
 }
 
 export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
-    yy = parseInt(yy)
-    mm = parseInt(mm)
-    dd = parseInt(dd)
-    h = parseInt(h)
-    m = parseInt(m)
-    s = parseInt(s)
-    ms = parseInt(ms)
+    yy = parseInt(yy), mm = parseInt(mm), dd = parseInt(dd), h = parseInt(h), m = parseInt(m), s = parseInt(s), ms = parseInt(ms)
     if (mm > 12 || dd > 31 || h > 23 || s > 59 || ms > 999) {
         throw (new Error('invalid value!'))
     } else if (mm <= 0 || dd <= 0 || h < 0 || s < 0 || ms < 0) {
@@ -109,6 +103,49 @@ export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
     // const Frac = h.div(24) + m.div(1440) + s.div(86400) + ms.div(86400000)
     // const Date = Frac.add(365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -.5) // Frac默認0，所以要減去半日
     const Frac = h / 24 + m / 1440 + s / 86400 + ms / 86400000
-    const Date = 365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -.5 + Frac
+    const Date = 365 * yy - 679004 + b + Math.floor(30.600001 * (mm + 1)) + dd + 2400001 + -.5 + Frac
     return 'Julian date ' + Date
 }
+
+// https://ww2.mathworks.cn/matlabcentral/fileexchange/111820-nasa-jpl-development-ephemerides-de441
+// Mjday: Modified Julian Date from calendar date and time
+// 
+// Inputs:
+// Year      Calendar date components
+//  Month
+//  Day
+//  Hour      Time components
+//  Min
+// Sec
+//Output:
+// Modified Julian Date
+//     %
+//  Last modified: 2022 /09 / 24   Meysam Mahooti
+//     %
+//  Reference:
+//  Montenbruck O., Gill E.; Satellite Orbits: Models, Methods and
+// Applications; Springer Verlag, Heidelberg; Corrected 3rd Printing(2005).
+// function Mjday(Year, Month, Day, Hour = 0, Minute = 0, Sec = 0) {
+//     if (Month <= 2) {
+//         Month += 12;
+//         Year -= 1;
+//     }
+//     let b;
+//     if (10000 * Year + 100 * Month + Day <= 15821004) {
+//         // Julian calendar
+//         b = -2 + Math.floor((Year + 4716) / 4) - 1179;
+//     } else {
+//         // Gregorian calendar
+//         b = Math.floor(Year / 400) - Math.floor(Year / 100) + Math.floor(Year / 4);
+//     }
+
+//     const MjdMidnight = 365 * Year - 679004 + b + Math.floor(30.6001 * (Month + 1)) + Day;
+//     const FracOfDay = (Hour + Minute / 60 + Sec / 3600) / 24;
+
+//     const Mjd = MjdMidnight + FracOfDay;
+//     return Mjd;
+// }
+
+// // 示例使用
+// const mjd = Mjday(2023, 4, 12, 14, 30, 0);
+// console.log(mjd);

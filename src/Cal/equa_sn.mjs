@@ -107,6 +107,7 @@ export const Interpolate1 = (n, initial) => {
     }
     return S - S4
 }
+// console.log(Interpolate1(1.5, [1, 9, 25])) // delta:1,8,8
 
 export const Interpolate1_big = (n, initial) => {
     n = big(n)
@@ -144,10 +145,8 @@ f (${n}) = ${y}` + (n1 === Number(n) ? `` : `
 f (${n1}) = ${y1}`)
     return { Print, S, delta, delta1, y }
 }
-// console.log(Interpolate1_big(2.115, '27,64,125,216,343').y)
-// console.log(Interpolate1_big(3, '1,4,9').delta1)
-// console.log(Interpolate1_big(4.000001, 4, '27,64,125,216,343').Print)
-// console.log(Interpolate1_big(4.000001, 3, '25791，27341，28910，30499，32109').Print)
+// console.log(Interpolate1_big(1.5, [9, 16, 25]).Print)
+// console.log(Interpolate1_big(3, [1,4,9]).delta1)
 // 算出來差分之後，求y。爲了節省算力。delta由低次到高次。
 
 export const Interpolate2 = (n, f0, delta) => { // 跟下面的區別是沒用Deci.js
@@ -273,7 +272,11 @@ export const MeasureSols = List => {
         if (fl.lt(fr)) r = mid
         else l = mid
     }
-    return `f (${mid.toNumber()}) = ${Interpolate3_big(mid, List).f.toNumber()}`
+    const f = Interpolate3_big(mid, List).f.toNumber()
+    return {
+        f,
+        Print: `f (${mid.toNumber()}) = ${f}`
+    }
 }
 // console.log(MeasureSols([-1, -5, 6, -12, 7, -21])) // (4-x)x
 

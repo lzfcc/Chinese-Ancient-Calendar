@@ -212,11 +212,11 @@ export const FretPitch1 = (TuningMode, n) => { // 徽位音。弦法、宮弦
     // 排序
     ZhunNameList.sort((obj1, obj2) => obj1.cent - obj2.cent)
     ZhunNameBList.sort((obj1, obj2) => obj1.cent - obj2.cent)
-    const data = { 
-        ZhunPrint, 
-        ZhunNameBList: ZhunNameList.map(obj => obj.nameString(2)), 
+    const data = {
+        ZhunPrint,
+        ZhunNameBList: ZhunNameList.map(obj => obj.nameString(2)),
         ZhunNameList: ZhunNameList.map(obj => obj.nameString(1))
     }
     return data
 }
-console.log(FretPitch1(1, 0))
+// console.log(FretPitch1(1, 0))

@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
-import { AutoEqua2Eclp } from './astronomy_bind.mjs'
+import { autoEquaEclp } from './astronomy_bind.mjs'
 import { big } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoNodeCycle, AutoSolar, AutoSidereal } from './para_auto-constant.mjs'
 
@@ -33,7 +33,7 @@ export const Equa2EclpFormula = (LonRaw, Name) => { // 公式化的，週天度�
         h = Math.sqrt(197415.819225 + 1000 * Lon) - 444.315
     } else if (['Guantian', 'Fengyuan', 'Zhantian'].includes(Name)) {
         Equa2EclpDif = Lon * (400 - 3 * Lon) / 4000
-        h = Math.sqrt(360000 + (4000 / 3) * Lon) - 600
+        h = Math.sqrt(360000 + 4000 / 3 * Lon) - 600
     } else if (Name === 'Jiyuan') { // 紀元一直到南宋、大明、庚午
         Equa2EclpDif = Lon * (101 - Lon) / 1000
         // if (LonRaw < Solar25 || (LonRaw >= Solar50 && LonRaw < Solar75)) {
@@ -54,147 +54,102 @@ export const Equa2EclpFormula = (LonRaw, Name) => { // 公式化的，週天度�
     return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif }
 }
 // console.log(Equa2EclpFormula(91, 'Chongxuan'))
-
-// 魏晉的黃道去極，是根據節氣來的，日書就不調用了。崇玄內外度是「昏後夜半日數」，紀元「午中日行積度」
-// 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致。又說：魏晉南北、皇極、戊寅、應天、乾元、儀天自變量用的平氣，麟德大衍宣明崇玄之後用的定氣。
-export const Lon2LatFormula = (LonRaw, Name) => { // 《中國古代曆法》頁128。漏刻頁135
+export const Lon2LatFormula = (LonRaw, Name) => { // 《中國古代曆法》頁128、古曆新探p172。漏刻頁135。
     const Solar = AutoSidereal(Name)
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
-    let LonHalf = LonRaw % Solar50
-    const Lon = Solar25 - Math.abs(LonHalf - Solar25)
+    LonRaw %= Solar
+    const LonHalf = LonRaw % Solar50
     let Lat = 0, g = 0
-    if (Name === 'Chongxuan') { // x=195.838,y=. x=138.478,y=35.267極值。x=91.3, y=23.996
-        // g = (184 / 50025) * Lon ** 2 - (16 / (50025 * 3335)) * Lon ** 4
-        g = big(184).div(50025).mul(big(Lon).pow(2)).sub(big(16).div(big.mul(50025, 3335)).mul(big(Lon).pow(4))).toNumber()
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = 23.9141 - g
-        else Lat = -23.8859 + g
-    } else if (Name === 'Yitian') { // 儀天的自變量是距二至的日數
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) { // 冬至後次象
-            if (LonHalf > 93.7412) LonHalf = Solar50 - LonHalf
-            // g = (1261875 / 20126347) * LonHalf ** 2 - (6250000 / (20126347 * 522009)) * LonHalf ** 4
-            g = big.div(1261875, 20126347).mul(big(LonHalf).pow(2)).sub(big(6250000).div(big.mul(20126347, 522009)).mul(big(LonHalf).pow(4)))
+    if (Name === 'Yitian') {
+        if (LonRaw >= 88.8811 && LonRaw < Solar50 + 93.7411) { // 冬至後次象// 946785.5 / 10100=93.7411
+            Solar50
+            const Lon = Math.abs(Solar50 - LonRaw)
+            g = (1261875 / 20126347) * Lon ** 2 - (6250000 / (20126347 * 522009)) * Lon ** 4
+            Lat = 23.9296 - 50 / 1052 * g
         } else { // 冬至後初象
-            if (LonHalf > 88.8811) LonHalf = Solar50 - LonHalf
-            // g = (167750 / 2229099) * LonHalf ** 2 - (125000 / (2229099 * 39107)) * LonHalf ** 4
-            g = big.div(167750, 2229099).mul(big(LonHalf).pow(2)).sub(big(125000).div(big.mul(2229099, 39107)).mul(big(LonHalf).pow(4)))
+            const Lon = Math.min(LonRaw, Solar - LonRaw) // 到0的距離
+            g = (167750 / 2229099) * Lon ** 2 - (125000 / (2229099 * 39107)) * Lon ** 4
+            Lat = - 23.9081 + 50 / 1062 * g
         }
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) {
-            Lat = big(23.9296).sub(g.mul(big.div(50, 1052))).toNumber()
-        } else {
-            // Lat = -23.9081 + (50 / 1062) * g
-            Lat = big(-23.9296).add(g.mul(big.div(50, 1062))).toNumber()
-        }
-    } else if (Name === 'Chongtian') { // 崇天明天觀天等價，四次項系數之差小餘10^-10
-        // g = (460720 / 130620943) * Lon ** 2 - (80000 / (130620943 * 7873)) * Lon ** 4
-        g = big(460720).div(130620943).mul(big(Lon).pow(2)).sub(big(80000).div(big.mul(130620943, 7873)).mul(big(Lon).pow(4))).toNumber()
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = 24.0041 - g
-        else Lat = g - 23.9959
-    } else if (Name === 'Mingtian') {
-        // g = (84800 / 24039561) * Lon ** 2 - (20000 / (24039561 * 10689)) * Lon ** 4
-        g = big(84800).div(24039561).mul(big(Lon).pow(2)).sub(big(20000).div(big.mul(24039561, 10689)).mul(big(Lon).pow(4))).toNumber()
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = 24.0041 - g
-        else Lat = g - 23.9959
-    } else if (Name === 'Guantian') {
-        // g = (1221360 / 346290367) * Lon ** 2 - (784000 / (346290367 * 29109)) * Lon ** 4
-        g = big(1221360).div(346290367).mul(big(Lon).pow(2)).sub(big(784000).div(big.mul(346290367, 29109)).mul(big(Lon).pow(4))).toNumber()
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = 24.0041 - g
-        else Lat = g - 23.9959
     } else if (Name === 'Jiyuan') {
+        const Lon = Solar25 - Math.abs(LonHalf - Solar25)
         if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) { // 夏至前後
-            // Lat = 23.9 - (491.3109 ** 2 * Lon ** 2 - 982.6218 * Lon ** 3 + Lon ** 4) / (160000 * 348.856)
-            Lat = big(23.9).sub(big((big(491.3109).pow(2).mul(big(Lon).pow(2))).sub(big(982.6218).mul(big(Lon).pow(3))).add(big(Lon).pow(4))).div(big.mul(160000, 348.856))).toNumber()
+            Lat = 23.9 - (491.3109 ** 2 * Lon ** 2 - 982.6218 * Lon ** 3 + Lon ** 4) / 160000 / 348.856
         } else { // 冬至前後
-            // Lat = (608.3109 ** 2 * Lon ** 2 - 1216.6218 * Lon ** 3 + Lon ** 4) / (517 ** 2 * 348.856) - 23.9
-            Lat = big(-23.9).add(big((big(608.3109).pow(2).mul(big(Lon).pow(2))).sub(big(1216.6218).mul(big(Lon).pow(3))).add(big(Lon).pow(4))).div(big.mul(267289, 348.856))).toNumber()
-            // const tmp = (Solar25 - (Lon * (Solar25 - Lon) / 517 + Lon))
-            // Lat = (Solar50 - tmp) * tmp / 348.856
+            Lat = -23.9 + (608.3109 ** 2 * Lon ** 2 - 1216.6218 * Lon ** 3 + Lon ** 4) / 267289 / 348.856
+        }
+    } else {
+        const Lon = Solar25 - Math.abs(LonHalf - Solar25)
+        if (['Chongxuan', 'Qintian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian'].includes(Name)) {
+            let a = 1221360 / 346290367, b = 784000 / (346290367 * 29109), e1 = 24.0041, e2 = 23.9959 //  'Guantian', 'Fengyuan', 'Zhantian'
+            if (['Chongxuan', 'Qintian'].includes(Name)) a = 184 / 50025, b = 16 / (50025 * 3335), e1 = 23.9141, e2 = 23.8859
+            if (Name === 'Chongtian') a = 460720 / 130620943, b = 80000 / (130620943 * 7873)
+            else if (Name === 'Mingtian') a = 84800 / 24039561, b = 20000 / (24039561 * 10689)
+            g = a * Lon ** 2 - b * Lon ** 4
+            if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = e1 - g
+            else Lat = -e2 + g
         }
     }
     const Lat1 = Solar25 - Lat
     let Night = 0
     if (Name === 'Yitian') {
-        if (LonRaw < Solar25) Night = 22.53 - Lat / 4.76
+        if (LonRaw < 88.8811) Night = 22.53 - Lat / 4.76
         else if (LonRaw < Solar50) Night = 22.49 - Lat / 4.8
-        else if (LonRaw < 3 * Solar25) Night = 22.51 - Lat / 4.8
+        else if (LonRaw < Solar50 + 93.7411) Night = 22.51 - Lat / 4.8
         else Night = 22.47 - Lat / 4.76
     } else Night = 22.5 - Lat / 4.8
     const Rise = Night + 2.5
-    return { Lat, Lat1, Rise }
+    return { Lat: +Lat.toFixed(6), Lat1, Rise }
 }
-// console.log(Lon2LatFormula(31.816049, 'Jiyuan').Lat)
-
-// 崇玄赤轉黃，用的「赤道日度」，赤轉赤緯，「昏後夜半日數」，晷長：「日中入二至加時以來日數」
-export const Lon2DialFormula = (DegRaw, Name) => { // 崇玄的NodeAccum沿用大衍：正午與二至時刻的距離加上日躔。陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因爲整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。崇玄、崇天的節接銜接不理想。
-    const Solar = AutoSolar(Name)
-    const Solar25 = Solar / 4
-    const Solar50 = Solar / 2
-    let Deg = parseFloat((DegRaw % Solar50).toPrecision(14))
-    let Dial = 0
-    if (Name === 'Chongxuan') {
-        if ((DegRaw >= Solar50 && Deg > 123.62225) || (DegRaw < Solar50 && Deg > 59)) {
-            Deg = parseFloat((Solar50 - Deg).toPrecision(14))
-        }
-        if (DegRaw <= 59 || (DegRaw >= 123.62225 + Solar50)) {
-            Dial = 12.715 - 1e-6 * (2195 - 15 * Deg) * Deg ** 2
-        } else {
-            Dial = 1.478 + 1e-7 * (4880 - 4 * Deg) * Deg ** 2
-        }
-    } else if (Name === 'Yitian') {
-        if ((DegRaw >= Solar50 && Deg > 123.62225) || (DegRaw < Solar50 && Deg > 59)) {
-            Deg = parseFloat((Solar50 - Deg).toPrecision(14))
-        }
-        if (DegRaw <= 59 || (DegRaw >= 123.622275 + Solar50)) {
-            Dial = 12.715 - 1e-6 * (2130 - 14 * Deg) * Deg ** 2
-        } else {
-            Dial = 1.478 + 1e-7 * (4812 - 3.5 * Deg) * Deg ** 2
-        }
-    } else if (Name === 'Chongtian') {
-        if ((DegRaw >= Solar50 && Deg > 120.62) || (DegRaw < Solar50 && Deg > 62)) {
-            Deg = parseFloat((Solar50 - Deg).toPrecision(14))
-        }
-        if (DegRaw <= 62 || (DegRaw >= 120.62 + Solar50)) {
-            Dial = 12.715 - 1e-6 * (2197.14 - 15.05 * Deg) * Deg ** 2
-        } else {
-            Dial = 1.478 + 1e-7 * (4881.67 - 4.01 * Deg) * Deg ** 2
-        }
-    } else if (['Mingtian', 'Guantian'].includes(Name)) {
-        if ((DegRaw >= Solar50 && Deg > 137) || (DegRaw < Solar50 && Deg > 45.62)) {
-            Deg = parseFloat((Solar50 - Deg).toPrecision(14))
-        }
-        Deg = big(Deg)
-        if (DegRaw <= 45.62 || (DegRaw >= 137 + Solar50)) {
-            // Dial = 12.85 - 1e-6 * (1937.5 * Deg ** 2 - Deg ** 3 - (200 / 827) * Deg ** 4 + (1 / 827) * Deg ** 5)
-            Dial = big(12.85).sub(big(1e-6).mul(big(1937.5).mul(Deg.pow(2)).sub(Deg.pow(3)).sub(big(200 / 827).mul(Deg.pow(4))).add(big(1 / 827).mul(Deg.pow(5)))))
+// console.log(Lon2LatFormula(200, 'Yitian').Lat)
+// console.log(1e-6)
+export const Lon2DialFormula = (DegRaw, Name, SolsDeci) => { // 陈美东《崇玄仪天崇天三历晷长计算法及三次差内插法的应用》有儀天曆術文補
+    const Solar = AutoSolar(Name), Solar25 = Solar / 4, Solar50 = Solar / 2
+    DegRaw %= Solar
+    let xian = 0, Dial = 0, DialMor = 0
+    if (['Chongxuan', 'Qintian', 'Yitian'].includes(Name)) xian = 59
+    else if (Name === 'Chongtian') xian = 62
+    else if (['Mingtian', 'Guantian', 'Fengyuan', 'Zhantian'].includes(Name)) xian = 45.62
+    else if (Name === 'Jiyuan') xian = 62.2
+    const Deg1 = Math.min(DegRaw, Solar - DegRaw) // 與0的距離
+    const Deg2 = Math.abs(Solar50 - DegRaw) // 與180的距離
+    if (['Chongxuan', 'Qintian', 'Yitian', 'Chongtian'].includes(Name)) {
+        let a1 = 2197.14, b1 = 15.05, a2 = 4881.67, b2 = 4.01 // 崇天
+        if (Name === 'Chongxuan' || Name === 'Qintian') a1 = 2195, b1 = 15, a2 = 4880, b2 = 4
+        else if (Name === 'Yitian') a1 = 2130, b1 = 14, a2 = 4812, b2 = 3.5
+        if (DegRaw < xian || (DegRaw >= Solar - xian)) {
+            Dial = 12.715 - 1e-6 * (a1 - b1 * Deg1) * Deg1 ** 2
+        } else Dial = 1.478 + 1e-7 * (a2 - b2 * Deg2) * Deg2 ** 2
+        // if (['Chongxuan', 'Qintian'].includes(Name)) { // 大衍、崇玄求次日晷長。爲避免麻煩，統一用崇天的方法。儀天：算二至具體時刻到當日夜半，再加減半日晷長。《古曆新探》p138:當日時刻到二至(.N)的時長，崇玄.5-.N，儀天0，崇天.5。
+        //     const DegRawMor = DegRaw + 1
+        //     let DegMor = parseFloat(((DegRaw + 1) % Solar50).toPrecision(14))
+        //     if ((DegRawMor > xian && DegRawMor < Solar50) || (DegRawMor >= Solar - xian)) DegMor = parseFloat((Solar50 - DegMor).toPrecision(14))
+        //     if (DegRawMor < xian || (DegRawMor >= Solar - xian)) {
+        //         DialMor = 12.715 - 1e-6 * (a1 - b1 * DegMor) * DegMor ** 2
+        //     } else DialMor = 1.478 + 1e-7 * (a2 - b2 * DegMor) * DegMor ** 2
+        //     Dial += (.5 - SolsDeci) * (DialMor - Dial)
+        // }
+    } else if (['Mingtian', 'Guantian', 'Fengyuan', 'Zhantian'].includes(Name)) {
+        if (DegRaw <= xian || (DegRaw >= Solar - xian)) {
+            Dial = 12.85 - 1e-6 * (1937.5 * Deg1 ** 2 - Deg1 ** 3 - (200 / 827) * Deg1 ** 4 + (1 / 827) * Deg1 ** 5)
         } else if (DegRaw > Solar25 && DegRaw < 3 * Solar25) {
-            // Dial = 1.57 + 1e-6 * (545.25 * Deg ** 2 - (3827 / 2481) * Deg ** 2 + (5 / 827) * Deg ** 4)
-            Dial = big(1.57).add(big(1e-6).mul(big(545.25).mul(Deg.pow(2)).sub(big(3827 / 2481).mul(Deg.pow(2))).add(big(5 / 827).mul(Deg.pow(4)))))
+            Dial = 1.57 + 1e-6 * (545.25 * Deg2 ** 2 - (3827 / 2481) * Deg2 ** 3 + (5 / 827) * Deg2 ** 4)
         } else {
-            // Dial = 1.57 + 1e-6 * (510.09274 * Deg ** 2 - 1.213548 * Deg ** 3 + .01034059 * Deg ** 4 - .0000403063 * Deg ** 5)
-            Dial = big(1.57).add(big(1e-6).mul(big(510.09274).mul(Deg.pow(2)).sub(big(1.213548).mul(Deg.pow(3))).add(big(.01034059).mul(Deg.pow(4))).sub(big(.0000403063).mul(Deg.pow(5)))))
+            Dial = 1.57 + 1e-6 * (510.09274 * Deg2 ** 2 - 1.213548 * Deg2 ** 3 + .01034059 * Deg2 ** 4 - .0000403063 * Deg2 ** 5)
         }
-        Dial = Dial.toNumber()
     } else if (Name === 'Jiyuan') {
-        if ((DegRaw >= Solar50 && Deg > 120.42) || (DegRaw < Solar50 && Deg > 62.2)) {
-            Deg = parseFloat((Solar50 - Deg).toPrecision(14))
-        }
-        Deg = big(Deg)
-        if (DegRaw <= 62.2 || (DegRaw >= 120.42 + Solar50)) {
-            // Dial = 12.83 - 200 * Deg ** 2 / (100617 + 100 * Deg + (400 / 29) * Deg ** 2)
-            Dial = big(12.83).sub(big(200).mul(Deg.mul(Deg)).div((big(100617).add(Deg.mul(100)).add(big(400 / 29).mul(Deg.mul(Deg))))))
+        if (DegRaw <= xian || (DegRaw >= Solar - xian)) {
+            Dial = 12.83 - 200 * Deg1 ** 2 / (100617 + 100 * Deg1 + (400 / 29) * Deg1 ** 2)
         } else if (DegRaw > Solar25 && DegRaw < 3 * Solar25) {
-            // Dial = 1.56 + 4 * Deg ** 2 / (7923 + 9 * Deg ** 2)
-            Dial = big(1.56).add(Deg.mul(Deg).mul(4).div(big(7923).add(Deg.mul(9))))
+            Dial = 1.56 + 4 * Deg2 ** 2 / (7923 + 9 * Deg2)
         } else {
-            // Dial = 1.56 + 7700 * Deg ** 2 / (13584271.78 + 44718 * Deg - 100 * Deg ** 2)
-            Dial = big(1.56).add(Deg.mul(Deg).mul(7700).div(big(13584271.78).add(Deg.mul(44718).sub(Deg.mul(Deg).mul(100)))))
+            Dial = 1.56 + 7700 * Deg2 ** 2 / (13584271.78 + 44718 * Deg2 - 100 * Deg2 ** 2)
         }
-        Dial = Dial.toNumber()
     }
-    const Print = '距冬至 ' + DegRaw + ' 日，晷長 ' + Dial.toFixed(6) + ' 尺'
-    return { Dial, Print }
+    return Dial
 }
-// console.log(Lon2DialFormula(95, 'Jiyuan').Print)
+// console.log(Lon2DialFormula(307, 'Chongxuan', .3))
 
 // 《數》頁361 白道度是以黃道度、正交黃經的二元函數
 export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEclpLon, NodeAccum,  // 該日距冬至黃道度，入交日。不知是否應該加上日躔
@@ -226,7 +181,7 @@ export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEcl
     //     EquaWhiteDif = EclpWhiteDif * NodeEclpLonRev / Quadrant // 同名：赤白=黃赤+黃白，異名：赤白=黃赤-黃白 ？？            
     // }
     // 《數》頁359
-    let EclpWhiteDif = Math.abs(AutoEqua2Eclp(MoonNodeDifRev, Name).Equa2EclpDif) / 2 // AutoEqua2Eclp(MoonEclpLonRev, Name)
+    let EclpWhiteDif = Math.abs(autoEquaEclp(MoonNodeDifRev, Name).Equa2EclpDif) / 2 // autoEquaEclp(MoonEclpLonRev, Name)
     if (Name === 'Jiyuan') {
         if (NodeEclpLon < Solar50) EclpWhiteDif *= 1.125
         else EclpWhiteDif *= .875
@@ -236,17 +191,12 @@ export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEcl
 }
 // console.log(MoonLonFormula(91, 92, 'Jiyuan').EclpWhiteDif)
 
-export const MoonLatFormula = (NodeAccum, Name, AnomaAccum, SolsDif) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
+export const MoonLatFormula = (NodeAccum, Name, AnomaAccum, Sd) => { // 《中國古代曆法》頁146,陳美東《中國古代月亮極黃緯計算法》；《數》頁410
     const { Node } = Para[Name]
     const Cycle = AutoNodeCycle(Name)
     let MoonAvgVd = AutoMoonAvgV(Name) // 大衍：15*NodeAccum，0,1,...11 。其他都是13    
-    if (Name === 'Qintian') {
-        MoonAvgVd = 1
-    }
-    const Cycle50 = Cycle / 2
-    const Cycle25 = Cycle / 4
-    const Cycle125 = Cycle / 8
-    const Lon = NodeAccum * MoonAvgVd
+    if (Name === 'Qintian') MoonAvgVd = 1
+    const Cycle50 = Cycle / 2, Cycle25 = Cycle / 4, Cycle125 = Cycle / 8, Lon = NodeAccum * MoonAvgVd
     const LonHalf = Lon % Cycle50
     const LonHalfRev = Cycle25 - Math.abs(LonHalf - Cycle25)
     let Lat = 0
@@ -259,7 +209,7 @@ export const MoonLatFormula = (NodeAccum, Name, AnomaAccum, SolsDif) => { // 《
         if (LonHalfRev < 30) Lat = f1 - f2
         else Lat = f1 - f3
     } else if (Name === 'Qintian') {
-        NodeAccum += AutoTcorr(AnomaAccum, SolsDif, Name, NodeAccum).NodeAccumCorrA // 欽天用入交定日                
+        NodeAccum += AutoTcorr(AnomaAccum, Sd, Name, NodeAccum).NodeAccumCorrA // 欽天用入交定日                
         const NodeAccumHalf = NodeAccum % Cycle50
         Lat = (Node / 2 - NodeAccumHalf) * NodeAccumHalf / (556 / 72)
     } else if (Name === 'Chongtian') {

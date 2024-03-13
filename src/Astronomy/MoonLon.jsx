@@ -1,5 +1,5 @@
 import React from 'react'
-import { BindMoonLonLat } from '../Cal/astronomy_bind'
+import { bindMoonLonLat } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const Print = BindMoonLonLat(this.state.a, this.state.b)
+      const Print = bindMoonLonLat(this.state.a, this.state.b)
       this.setState({ output: Print })
     } catch (e) {
       alert(e.message)
@@ -47,12 +47,11 @@ export default class Converter extends React.Component {
         <table>
           <tr>
             <th></th>
-            <th>正交黃經</th>       
+            <th>正交黃經</th>
             <th>赤經</th>
             <th>極白經</th>
             <th>白-黃</th>
             <th>赤白差</th>
-            <th>去極度</th>
             <th>黃緯</th>
             <th>赤緯</th>
           </tr>

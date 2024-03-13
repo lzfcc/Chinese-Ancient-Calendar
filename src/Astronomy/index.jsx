@@ -1,8 +1,10 @@
 import React from 'react'
 import BindTcorr from './AcrV'
-import BindEqua2Eclp from './Equa2Eclp'
+import BindCorrEllipse from './Ellipse'
+import BindEquaEclp from './Equa2Eclp'
 import Deg2Mansion from './Deg2Mansion'
 import Mansion2Deg from './Mansion2Deg'
+import MansionAccumList from './MansionAccumList'
 import BindLon2Lat from './Lon2Lat'
 import MoonLon from './MoonLon'
 import Const from './Const'
@@ -42,18 +44,21 @@ export default class Astronomy extends React.Component {
         <section className='modulo'>
           <h2>躔離朓朒</h2>
           <BindTcorr />
+          <BindCorrEllipse />
           <h2>日度之什</h2>
           <Deg2Mansion />
           <p></p>
           <Mansion2Deg />
-          <BindEqua2Eclp />
+          <p></p>
+          <MansionAccumList />
+          <BindEquaEclp />
           <Round />
           <p></p>
           <Round2 />
           <p></p>
           <Round1 />
           <Hushigeyuan />
-          <Heron />
+          {/* <Heron /> */}
           <h2>步晷漏</h2>
           <BindLon2Lat />
           <h2>月度月緯</h2>
@@ -65,7 +70,7 @@ export default class Astronomy extends React.Component {
           <Node2Cycle />
           <Regression />
           <h2>現代天文計算</h2>
-          <Deciaml2Angle />
+          {/* <Deciaml2Angle /> */}
           <Const />
           <SolarChange />
         </section>

@@ -50,12 +50,12 @@ export default class Equa extends React.Component {
             <th></th>
             <th><bc>赤 ⇒ 黃</bc></th>
             <th>黃-赤</th>
-            <th>誤差</th>            
+            <th>誤差‱</th>
             <th><bc>黃 ⇒ 赤</bc></th>
             <th>赤-黃</th>
-            <th>誤差</th>
+            <th>誤差‱</th>
             <th><bc>赤緯</bc></th>
-            <th>誤差</th>
+            <th>誤差‱</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

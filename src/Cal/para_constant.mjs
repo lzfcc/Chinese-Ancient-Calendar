@@ -3,6 +3,8 @@ import frc from "fraction.js";
 import nzh from "nzh/hk.js";
 import Para from "./para_calendars.mjs";
 import { starEclp2Equa } from "./newm_shixian.mjs";
+import { Deg2Mansion } from "./astronomy_other.mjs";
+import { autoEquaEclp } from "./astronomy_bind.mjs";
 
 big.config({
   precision: 64,
@@ -86,11 +88,11 @@ export const NameList = {
   Zhangmengbin: "張孟賓(擬)",
   Liuxiaosun: "劉孝孫(擬)",
   Huangji: "皇極",
-  WuyinA: "戊寅",
+  Wuyin: "戊寅",
   WuyinB: "戊寅(平朔)",
   Shenlong: "神龍(擬)",
   Yisi: "乙巳(擬)",
-  LindeA: "麟德",
+  Linde: "麟德",
   LindeB: "麟德(進朔)",
   // Jiuzhi: '九執(擬)', // 顯慶年間印度曆法
   Dayan: "大衍",
@@ -156,9 +158,9 @@ export const NameDayList = {
   Tianbao: "天保",
   Daye: "大業",
   Huangji: "皇極",
-  WuyinA: "戊寅(定)",
+  Wuyin: "戊寅(定)",
   WuyinB: "戊寅(平)",
-  LindeA: "麟德(不進朔)",
+  Linde: "麟德(不進朔)",
   LindeB: "麟德(進朔)",
   Dayan: "大衍",
   Wuji: "五紀",
@@ -993,24 +995,39 @@ export const HuangheiList = [
 ]; // https://www.zhihu.com/question/20167015/answer/15508998
 
 // 從角開始：
-const EquaDegTaichu = [
-  0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 16, 2, 9, 33, 4, 15, 7, 18, 18, 17,
+const EquaDegTaichu = [0,
+  12, 9, 15, 5, 5, 18, 11,
+  26, 8, 12, 10, 17, 16, 9,
+  16, 12, 14, 11, 16, 2, 9,
+  33, 4, 15, 7, 18, 18, 17,
 ]; // 太初至麟德
-const EquaDegDayan = [
-  0, 12, 9, 15, 5, 5, 18, 11, 26, 8, 12, 10, 17, 16, 9, 16, 12, 14, 11, 17, 1, 10, 33, 3, 15, 7, 18, 18, 17,
+const EquaDegDayan = [0,
+  12, 9, 15, 5, 5, 18, 11,
+  26, 8, 12, 10, 17, 16, 9,
+  16, 12, 14, 11, 17, 1, 10,
+  33, 3, 15, 7, 18, 18, 17,
 ]; // 大衍以後。太=.75
-const EquaDegMingtian = [
-  0, 12, 9, 16, 5, 6, 19, 10, 25, 7, 11, 10, 16, 17, 9, 16, 12, 15, 11, 18, 1, 10, 34, 2, 14, 7, 18, 18, 17,
+const EquaDegMingtian = [0,
+  12, 9, 16, 5, 6, 19, 10,
+  25, 7, 11, 10, 16, 17, 9,
+  16, 12, 15, 11, 18, 1, 10,
+  34, 2, 14, 7, 18, 18, 17,
 ]; // 明天的新値。「自漢太初後至唐開元治曆之初，凡八百年間，悉無更易。今雖測驗與舊不同，亦歲月未久。新曆兩備其數，如淳風從舊之意。」所以還是沿用以前的
-const EquaDegJiyuan = [
-  0, 12, 9.25, 16, 5.75, 6.25, 19.25, 10.5, 25, 7.25, 11.25, 9, 15.5, 17, 8.75, 16.5, 12, 15, 11.25, 17.25, .5, 10.5, 33.25, 2.5, 13.75, 6.75, 17.25, 18.75, 17,
+const EquaDegJiyuan = [0,
+  12, 9.25, 16, 5.75, 6.25, 19.25, 10.5,
+  25, 7.25, 11.25, 9, 15.5, 17, 8.75,
+  16.5, 12, 15, 11.25, 17.25, .5, 10.5,
+  33.25, 2.5, 13.75, 6.75, 17.25, 18.75, 17,
 ]; // 少=1/4，太3/4。紀元的新値「如考唐，用唐所測；考古，用古所測：卽各得當時宿度。」根據年份用當時的觀測值。注意虛分要減去週天餘。金大明沿用紀元
-const EquaDegShoushi = [
-  0, 12.1, 9.2, 16.3, 5.6, 6.5, 19.1, 10.4, 25.2, 7.2, 11.35, 8.7, 15.4, 17.1, 8.6, 16.6, 11.8, 15.6, 11.3, 17.4, .05, 11.1, 33.3, 2.2, 13.3, 6.3, 17.25, 18.75, 17.3,
+const EquaDegShoushi = [0,
+  12.1, 9.2, 16.3, 5.6, 6.5, 19.1, 10.4,
+  25.2, 7.2, 11.35, 8.7, 15.4, 17.1, 8.6,
+  16.6, 11.8, 15.6, 11.3, 17.4, .05, 11.1,
+  33.3, 2.2, 13.3, 6.3, 17.25, 18.75, 17.3,
 ]; // 弦策少是0.25，太就是0.75。觜初五，說明初=0。大統同授時
 // 甲子曆曆元赤道度
-const EquaDegJiazi = [
-  0, 11.833333333333, 9.4, 16.55, 5.533333333333, 6.216666666667, 19.65, 10.2, // 角
+const EquaDegJiazi = [0,
+  11.833333333333, 9.4, 16.55, 5.533333333333, 6.216666666667, 19.65, 10.2, // 角
   24.216666666667, 6.916666666667, 11.05, 8.7, 14.85, 17.016666666667, 10.866666666667, // 斗
   14.133333333333, 11.983333333333, 15.05, 11.233333333333, 16.466666666667, 0.483333333333, 11.483333333333, // 奎
   32.4, 1.85, 12.8, 6, 17.1, 18.816666666667, 17.2, // 井
@@ -1029,20 +1046,35 @@ const EclpDegHuangji = [
 const EclpDegLinde = [
   0, 13, 10, 16, 5, 5, 18, 10, 24, 7, 11, 10, 16, 18, 10, 17, 13, 15, 11, 16, 2, 9, 30, 4, 14, 7, 17, 19, 18,
 ];
-const EclpDegDayan = [
-  0, 13, 9.5, 15.75, 5, 4.75, 17, 10.25, 23.5, 7.5, 11.25, 10, 17.75, 17.25, 9.75, 17.5, 12.5, 14.75, 11, 16.25, 1, 9.25, 30, 2.75, 14.25, 6.75, 18.75, 19.25, 18.75,
+const EclpDegDayan = [0,
+  13, 9.5, 15.75, 5, 4.75, 17, 10.25,
+  23.5, 7.5, 11.25, 10, 17.75, 17.25, 9.75,
+  17.5, 12.5, 14.75, 11, 16.25, 1, 9.25,
+  30, 2.75, 14.25, 6.75, 18.75, 19.25, 18.75,
 ];
-const EclpDegYingtian = [
-  0, 13, 9.5, 15.25, 5, 5, 17.25, 10.25, 23.5, 7.5, 11.75, 10, 17.25, 16.75, 10.25, 17.5, 12.75, 14.25, 11, 16.5, 1, 9.25, 30, 2.75, 14.5, 7, 18.25, 19.25, 18.75,
+const EclpDegYingtian = [0,
+  13, 9.5, 15.25, 5, 5, 17.25, 10.25,
+  23.5, 7.5, 11.75, 10, 17.25, 16.75, 10.25,
+  17.5, 12.75, 14.25, 11, 16.5, 1, 9.25,
+  30, 2.75, 14.5, 7, 18.25, 19.25, 18.75,
 ];
-const EclpDegMingtian = [
-  0, 13, 9.5, 15.5, 5, 4.75, 17, 10, 23.5, 7.5, 11.5, 10, 17.75, 17.25, 9.75, 17.75, 12.75, 14.5, 10.75, 16, 1, 9.25, 30, 2.75, 14.25, 7, 18.75, 19.5, 18.75,
+const EclpDegMingtian = [0,
+  13, 9.5, 15.5, 5, 4.75, 17, 10,
+  23.5, 7.5, 11.5, 10, 17.75, 17.25, 9.75,
+  17.75, 12.75, 14.5, 10.75, 16, 1, 9.25,
+  30, 2.75, 14.25, 7, 18.75, 19.5, 18.75,
 ]; // 明天、觀天
-const EclpDegJiyuan = [
-  0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18, 9.5, 18, 12.75, 15.5, 11, 16.5, .5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5,
+const EclpDegJiyuan = [0,
+  12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5,
+  23, 7, 11, 9, 16, 18, 9.5,
+  18, 12.75, 15.5, 11, 16.5, .5, 9.75,
+  30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5,
 ];
-const EclpDegNewDaming = [
-  0, 12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5, 23, 7, 11, 9, 16, 18.25, 9.5, 17.75, 12.75, 15.5, 11, 16.5, .5, 9.75, 30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5,
+const EclpDegNewDaming = [0,
+  12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5,
+  23, 7, 11, 9, 16, 18.25, 9.5,
+  17.75, 12.75, 15.5, 11, 16.5, .5, 9.75,
+  30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5,
 ]; // 重修大明、庚午
 const EclpDegShoushi = [0,
   12.87, 9.56, 16.4, 5.48, 6.27, 17.95, 9.59,
@@ -1052,7 +1084,7 @@ const EclpDegShoushi = [0,
 ]; // 授時黃道
 // 西曆
 const EclpDegXinfa = [0, 10.583333333333, 10.666666666667, 17.9, 4.766666666667, 7.716666666667, 15.433333333333, 9.83333333333, 23.35, 9.1, 10.233333333333, 9.983333333333, 20.116666666667, 15.683333333333, 13.266666666667, 11.483333333333, 13, 13.016666666667, 9.266666666667, 13.183333333333, 1.35, 11.55, 30.416666666667, 5.5, 16.1, 8.4, 18.05, 17, 13.05] // 崇禎元年1628戊辰
-// const EclpAccumXinfa = [0, 23.349999999999998, 32.45, 42.68333333333334, 52.66666666666667, 72.78333333333333, 88.46666666666667, 101.73333333333333, 113.21666666666667, 126.21666666666668, 139.23333333333332, 148.5, 161.6833333333333, 163.03333333333333, 174.58333333333331, 205, 210.5, 226.6, 235, 253.05, 270.05, 283.09999999999997, 293.68333333333334, 304.34999999999997, 322.25, 327.01666666666665, 334.73333333333335, 350.16666666666663]
+// const EclpAccumXinfa = [0, 23.35, 32.45, 42.68333333333334, 52.66666666666667, 72.78333333333333, 88.46666666666667, 101.73333333333333, 113.21666666666667, 126.21666666666668, 139.23333333333332, 148.5, 161.6833333333333, 163.03333333333333, 174.58333333333331, 205, 210.5, 226.6, 235, 253.05, 270.05, 283.1, 293.68333333333334, 304.35, 322.25, 327.01666666666665, 334.73333333333335, 350.16666666666663]
 const EclpDegJiazi = [0,
   10.616666666666667, 10.633333333333333, 17.833333333333333, 4.8333333333333333, 7.55, 15.933333333333333, 9, // 角七宿76.4
   23.7833333333333, 7.76666666666667, 11.633333333333333, 9.9833333333333333, 20.116666666666667, 15.683333333333333, 13.1, // 斗七宿102.06666666667
@@ -1075,89 +1107,118 @@ export const MansionNameList =
 export const MansionAnimalNameList =
   "蚓蛟龍貉兔狐虎豹獬牛蝠鼠燕豬㺄狼狗雉雞烏猴猿犴羊獐馬鹿蛇蚓";
 // 西曆：所有時代都用自己的度數，古曆：各個時代用各個時代的黃道赤道，清代赤道继续用授时
+
 export const AutoDegAccumList = (Name, Y) => {
-  const { Type, Solar, SolarRaw, MansionRaw, MansionFracPosi, MansionConst, Sobliq } =
-    Para[Name];
-  let { Sidereal } = Para[Name];
+  const { Type, OriginAd, CloseOriginAd, SolarRaw, MansionRaw, MansionFracPosi, MansionConst, Sobliq, StarVy, MansionOriginAd } = Para[Name]
+  let { Sidereal, Solar } = Para[Name]
   let EclpListRaw = [], EquaListRaw = [] // 不同時期用不同的宿度
-  Sidereal = Sidereal || Solar || SolarRaw;
+  Sidereal = Sidereal || (Solar || SolarRaw)
   const raw2Accum = ListRaw => {
     let DegList = [], DegAccumList = [];
     if (MansionRaw) {
       DegList = ListRaw.slice();
       DegList[MansionFracPosi] += deci(Sidereal)
-      DegAccumList = DegList.slice();
+      DegAccumList[0] = 0, DegAccumList[1] = 0
       for (let i = 1; i <= 28; i++) { // 從1開始索引
-        DegAccumList[i] += DegAccumList[i - 1]
-        DegAccumList[i] = parseFloat(DegAccumList[i].toPrecision(13))
+        DegAccumList[i] = DegAccumList[i - 1] + DegList[i - 1] // 在這卡了兩個小時終於對了
+        DegAccumList[i] = +DegAccumList[i].toFixed(3)
       }
     }
     return DegAccumList
   }
   const raw2AccumB = ListRaw => {
-    let DegAccumList = [];
+    let DegAccumList = []
     if (MansionRaw) {
-      DegAccumList = ListRaw.slice();
+      DegAccumList[0] = 0, DegAccumList[1] = 0
       for (let i = 1; i <= 28; i++) { // 西曆不用加斗分
-        DegAccumList[i] += DegAccumList[i - 1]
+        DegAccumList[i] = DegAccumList[i - 1] + ListRaw[i - 1]
       }
       for (let i = 1; i <= 28; i++) {
         DegAccumList[i] *= Sidereal / 360
-        DegAccumList[i] = parseFloat(DegAccumList[i].toPrecision(13))
+        DegAccumList[i] = +DegAccumList[i].toFixed(3)
       }
     }
     return DegAccumList
   }
   let EquaAccumList = [], EclpAccumList = []
+  // 古曆是由赤道宿度算黃道，西曆是由黃道宿度算赤道
   if (Type === 13) {
-    let Precession = 0
+    const p = 360 / Sidereal
+    const Precession = StarVy * (Y - (MansionOriginAd || CloseOriginAd))
     if (Name === 'Jiazi' || Name === 'Guimao') {
       EclpAccumList = raw2AccumB(EclpDegJiazi)
-      Precession = 51 / 3600 * (Y - 1684)
     } else {
       EclpAccumList = raw2AccumB(EclpDegXinfa)
-      Precession = 51 / 3600 * (Y - 1628)
     }
-    for (let i = 0; i <= 28; i++) {
-      const MansionLon = (EclpAccumList[i] * 360 / Sidereal - MansionConst + Precession + 270) % 360 // 某星黃經
-      EquaAccumList[i] = ((starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i + 1]).EquaLon + MansionConst + 90 + 360) % 360) // 這個積度是宮度
+    EclpAccumList[29] = +Sidereal.toFixed(4)
+    for (let i = 1; i <= 28; i++) {
+      const MansionLon = (EclpAccumList[i] * p - MansionConst + Precession + 270) % 360 // 某星黃經
+      EquaAccumList[i] = ((starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i]).EquaLon + MansionConst + 90 + 360) % 360) // 這個積度是宮度
     }
-    const adj = EquaAccumList[0] - 360
-    for (let i = 0; i <= 28; i++) {
-      EquaAccumList[i] = (EquaAccumList[i] - adj) * Sidereal / 360
-      EquaAccumList[i] = parseFloat(EquaAccumList[i].toPrecision(12))
+    const adj = EquaAccumList[1] - 360
+    for (let i = 1; i <= 28; i++) {
+      EquaAccumList[i] = ((EquaAccumList[i] - adj) % Sidereal) / p
+      EquaAccumList[i] = +EquaAccumList[i].toFixed(3)
     }
+    EquaAccumList[0] = 0, EquaAccumList[1] = 0, EquaAccumList[29] = +Sidereal.toFixed(4)
   } else {
-    if (Y >= 1628) {
-      if (Y >= 1684) {
-        EclpListRaw = EclpDegJiazi
-      } else EclpListRaw = EclpDegXinfa
-      EclpAccumList = raw2AccumB(EclpListRaw)
-    } else {
-      if (Y >= 1281) EclpListRaw = EclpDegShoushi
-      else if (Type === 10 && Y >= 1180 && Y <= 1280) EclpListRaw = EclpDegNewDaming // 'Daming3'
-      else if (Y >= 1106) EclpListRaw = EclpDegJiyuan
-      else if (Y >= 1065) EclpListRaw = EclpDegMingtian
-      else if (Y >= 964) EclpListRaw = EclpDegYingtian
-      else if (Y >= 729) EclpListRaw = EclpDegDayan
-      else if (Y >= 665) EclpListRaw = EclpDegLinde
-      else if (Name === "Huangji") EclpListRaw = EclpDegHuangji
-      else EclpListRaw = EclpDegEasthan
-      EclpAccumList = raw2Accum(EclpListRaw)
-    }
     if (Y >= 1281) EquaListRaw = EquaDegShoushi
     else if (Y >= 1106) EquaListRaw = EquaDegJiyuan
     else if (Y >= 1065 && Name === "Mingtian") EquaListRaw = EquaDegMingtian
     else if (Y >= 729) EquaListRaw = EquaDegDayan
     else EquaListRaw = EquaDegTaichu
     EquaAccumList = raw2Accum(EquaListRaw)
+    EquaAccumList[0] = 0, EquaAccumList[1] = 0, EquaAccumList[29] = +Sidereal.toFixed(4)
+    if (Type >= 7) {
+      const OriginYear = Y - (OriginAd || CloseOriginAd) + 1
+      if (Name === 'Shoushi' || Name === 'Shoushi2') {
+        Sidereal = +(Sidereal + +(~~(OriginYear / 100) / 10000)).toFixed(4)
+        Solar = +(SolarRaw - (~~(OriginYear / 100) / 10000)).toFixed(4)
+      }
+      const OriginDeg = EquaAccumList[MansionRaw[0]] + MansionRaw[1] // 曆元宿度積度
+      const Accum = OriginYear * Solar + (MansionConst || 0)
+      const SolsDeg = ((Accum + OriginDeg) % Sidereal + Sidereal) % Sidereal
+      // 參考紀元曆「求二十八宿黃道度」以及《中國古代曆法》p506
+      const EquaSdList = EquaAccumList.slice()
+      for (let i = 1; i <= 29; i++) {
+        EquaSdList[i] = (EquaSdList[i] - SolsDeg + Sidereal) % Sidereal
+      }
+      const Equa2EclpDif = []
+      for (let i = 1; i <= 28; i++) {
+        Equa2EclpDif[i] = autoEquaEclp(EquaSdList[i], Name).Equa2EclpDif
+      }
+      for (let i = 1; i <= 28; i++) {
+        EclpAccumList[i] = EquaAccumList[i] + Equa2EclpDif[i]
+      }
+      const adj = EclpAccumList[1] - Sidereal
+      for (let i = 1; i <= 28; i++) {
+        EclpAccumList[i] = (EclpAccumList[i] - adj + Sidereal) % Sidereal
+        EclpAccumList[i] = +(EclpAccumList[i]).toFixed(3)
+      }
+    } else { // 麟德以前還沒發明算黃道宿鈐的方法
+      if (Y >= 1628) {
+        if (Y >= 1684) EclpListRaw = EclpDegJiazi
+        else EclpListRaw = EclpDegXinfa
+        EclpAccumList = raw2AccumB(EclpListRaw)
+      } else {
+        if (Y >= 1281) EclpListRaw = EclpDegShoushi
+        // else if (Type === 10 && Y >= 1180 && Y <= 1280) EclpListRaw = EclpDegNewDaming // 'Daming3'
+        else if (Y >= 1106) EclpListRaw = EclpDegJiyuan
+        else if (Y >= 1065) EclpListRaw = EclpDegMingtian
+        else if (Y >= 964) EclpListRaw = EclpDegYingtian
+        else if (Y >= 729) EclpListRaw = EclpDegDayan
+        else if (Y >= 665) EclpListRaw = EclpDegLinde
+        else if (Name === "Huangji") EclpListRaw = EclpDegHuangji
+        else EclpListRaw = EclpDegEasthan
+        EclpAccumList = raw2Accum(EclpListRaw)
+      }
+    }
+    EclpAccumList[0] = 0, EclpAccumList[1] = 0, EclpAccumList[29] = +Sidereal.toFixed(4)
   }
-  EclpAccumList[28] = Sidereal
-  EquaAccumList[0] = 0
-  EquaAccumList[28] = Sidereal
   return { EclpAccumList, EquaAccumList }
 };
-// console.log(AutoDegAccumList('Guimao', 1684).EquaAccumList)
+// console.log(AutoDegAccumList('Shoushi', -2000))
+
 export const GongList = [
   "娵訾",
   "降婁",
