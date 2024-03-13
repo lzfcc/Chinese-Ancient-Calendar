@@ -5,7 +5,7 @@ import { N4 } from './newm_shixian.mjs'
 import Para from './para_calendars.mjs'
 import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB, fix } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
-import { autoLon2Lat } from './astronomy_bind.mjs'
+import { autoRise } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
 // const Index = (Name, YearStart, YearEnd) => {
 export default (Name, YearStart, YearEnd) => {
@@ -270,7 +270,7 @@ export default (Name, YearStart, YearEnd) => {
                 for (let i = 0; i < MonthPrint.length; i++) { // 切了之後從0開始索引
                     let NoleapMon = i + 1
                     if (LeapNumTerm > 0 && i >= LeapNumTerm) NoleapMon = i
-                    let Rise = autoLon2Lat(NewmAcrSdPrint[i], SolsDeci, Name).Rise / 100
+                    let Rise = autoRise(NewmAcrSdPrint[i], SolsDeci, Name) / 100
                     let SunEcliFunc = {}, MoonEcliFunc = {}
                     const { RangeSunEcli, RangeMoonEcli } = AutoRangeEcli(Name, Type)
                     let isSunEcli = (NewmNodeAccumPrint[i] < .9 || (NewmNodeAccumPrint[i] > 12.8 && NewmNodeAccumPrint[i] < 15.5) || NewmNodeAccumPrint[i] > 25.3) &&

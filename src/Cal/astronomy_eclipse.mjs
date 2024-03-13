@@ -2,7 +2,7 @@ import Para from './para_calendars.mjs'
 import { frc, deci } from './para_constant.mjs'
 import { AutoTcorr, AutoDifAccum, MoonFormula } from './astronomy_acrv.mjs'
 import { Interpolate3, Make2DPoints } from './equa_sn.mjs'
-import { autoLon2Lat } from './astronomy_bind.mjs'
+import { autoLat, autoRise } from './astronomy_bind.mjs'
 import { AutoQuar, AutoMoonAvgV, AutoMoonTcorrDif, AutoNodePortion, AutoNodeCycle } from './para_auto-constant.mjs'
 
 const ExMagni = (Magni, Type, Name, isNewm) => {
@@ -648,8 +648,7 @@ const EcliMcorr3 = (Name, Type, HalfTermLeng, Node25, Node50, Sidereal25, Sidere
             McorrB *= isYin ? -1 : 1
             YinYangBorder = 1275 + McorrB // 食定差=冬至食差「陰曆蝕差」+LimitCorr  
         } else if (Name === 'Qintian') {
-            const SolsDeci = deci(SolsAccum)
-            const Lat = Math.abs(autoLon2Lat(TheSd, SolsDeci, 'Chongxuan').Lat)
+            const Lat = Math.abs(autoLat(TheSd, Name))
             McorrA = MoonLimit1 * Lat * Denom / 251300 // 黃道出入食差
             YinYangBorder = McorrA * dd
             YinYangBorder = MoonLimit1 + (isYin ? -1 : 1) * YinYangBorder // 假設lati的單位是經法72，那麼常準在430-2322
@@ -1274,7 +1273,7 @@ export const AutoEclipse = (NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgS
             Eclipse = Eclipse2(NodeAccum, AnomaAccum, AcrDeci, AvgSd, isNewm, Name, Month, Leap)
         } else {
             SolsDeci = SolsDeci || deci(SolsAccum)
-            const Rise = autoLon2Lat(AcrSd, SolsDeci, Name).Rise / 100
+            const Rise = autoRise(AcrSd, SolsDeci, Name) / 100
             if (['Fengyuan', 'Zhantian'].includes(Name)) {
                 Eclipse = Eclipse3(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, Rise, 0, isNewm, 'Guantian')
             } else if (['Chunyou', 'Huitian'].includes(Name)) {

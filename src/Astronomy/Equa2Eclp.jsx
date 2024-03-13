@@ -61,7 +61,7 @@ export default class Converter extends React.Component {
             <th>誤差‱</th>
             <th><bc>赤緯</bc></th>
             <th>球面三角</th>
-            <th>誤差‱</th>
+            <th>誤差</th>
           </tr>
           {(this.state.outputEclp || []).map(row => {
             return (

@@ -54,27 +54,33 @@ export const Equa2EclpFormula = (LonRaw, Name) => { // 公式化的，週天度�
     return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif }
 }
 // console.log(Equa2EclpFormula(91, 'Chongxuan'))
-export const Lon2LatFormula = (LonRaw, Name) => { // 《中國古代曆法》頁128、古曆新探p172。漏刻頁135。
+/**
+ * 
+ * @param {*} LonRaw 儀天：距冬至時長，其他：實行度
+ * @param {*} Name 
+ * @returns 赤緯
+ */
+export const latFormula = (XRaw, Name) => { // 《中國古代曆法》頁128、古曆新探p172。漏刻頁135。
     const Solar = AutoSidereal(Name)
     const Solar25 = Solar / 4
     const Solar50 = Solar / 2
-    LonRaw %= Solar
-    const LonHalf = LonRaw % Solar50
+    XRaw %= Solar
+    const LonHalf = XRaw % Solar50
     let Lat = 0, g = 0
     if (Name === 'Yitian') {
-        if (LonRaw >= 88.8811 && LonRaw < Solar50 + 93.7411) { // 冬至後次象// 946785.5 / 10100=93.7411
+        if (XRaw >= 88.8811 && XRaw < Solar50 + 93.7411) { // 冬至後次象// 946785.5 / 10100=93.7411
             Solar50
-            const Lon = Math.abs(Solar50 - LonRaw)
+            const Lon = Math.abs(Solar50 - XRaw)
             g = (1261875 / 20126347) * Lon ** 2 - (6250000 / (20126347 * 522009)) * Lon ** 4
             Lat = 23.9296 - 50 / 1052 * g
         } else { // 冬至後初象
-            const Lon = Math.min(LonRaw, Solar - LonRaw) // 到0的距離
+            const Lon = Math.min(XRaw, Solar - XRaw) // 到0的距離
             g = (167750 / 2229099) * Lon ** 2 - (125000 / (2229099 * 39107)) * Lon ** 4
             Lat = - 23.9081 + 50 / 1062 * g
         }
     } else if (Name === 'Jiyuan') {
         const Lon = Solar25 - Math.abs(LonHalf - Solar25)
-        if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) { // 夏至前後
+        if (XRaw >= Solar25 && XRaw < 3 * Solar25) { // 夏至前後
             Lat = 23.9 - (491.3109 ** 2 * Lon ** 2 - 982.6218 * Lon ** 3 + Lon ** 4) / 160000 / 348.856
         } else { // 冬至前後
             Lat = -23.9 + (608.3109 ** 2 * Lon ** 2 - 1216.6218 * Lon ** 3 + Lon ** 4) / 267289 / 348.856
@@ -87,24 +93,26 @@ export const Lon2LatFormula = (LonRaw, Name) => { // 《中國古代曆法》頁
             if (Name === 'Chongtian') a = 460720 / 130620943, b = 80000 / (130620943 * 7873)
             else if (Name === 'Mingtian') a = 84800 / 24039561, b = 20000 / (24039561 * 10689)
             g = a * Lon ** 2 - b * Lon ** 4
-            if (LonRaw >= Solar25 && LonRaw < 3 * Solar25) Lat = e1 - g
+            if (XRaw >= Solar25 && XRaw < 3 * Solar25) Lat = e1 - g
             else Lat = -e2 + g
         }
     }
-    const Lat1 = Solar25 - Lat
+    return +Lat.toFixed(6)
+}
+// console.log(latFormula(200, 'Yitian').Lat)
+// console.log(1e-6)
+export const riseFormula = (LatNoon, SdNoon, Name) => {
+    const Solar = AutoSidereal(Name), Solar50 = Solar / 2
     let Night = 0
     if (Name === 'Yitian') {
-        if (LonRaw < 88.8811) Night = 22.53 - Lat / 4.76
-        else if (LonRaw < Solar50) Night = 22.49 - Lat / 4.8
-        else if (LonRaw < Solar50 + 93.7411) Night = 22.51 - Lat / 4.8
-        else Night = 22.47 - Lat / 4.76
-    } else Night = 22.5 - Lat / 4.8
-    const Rise = Night + 2.5
-    return { Lat: +Lat.toFixed(6), Lat1, Rise }
+        if (SdNoon < 88.8811) Night = 22.53 - LatNoon / 4.76
+        else if (SdNoon < Solar50) Night = 22.49 - LatNoon / 4.8
+        else if (SdNoon < Solar50 + 93.7411) Night = 22.51 - LatNoon / 4.8
+        else Night = 22.47 - LatNoon / 4.76
+    } else Night = 22.5 - LatNoon / 4.8
+    return Night + 2.5
 }
-// console.log(Lon2LatFormula(200, 'Yitian').Lat)
-// console.log(1e-6)
-export const Lon2DialFormula = (DegRaw, Name, SolsDeci) => { // 陈美东《崇玄仪天崇天三历晷长计算法及三次差内插法的应用》有儀天曆術文補
+export const dialFormula = (DegRaw, Name, SolsDeci) => { // 陈美东《崇玄仪天崇天三历晷长计算法及三次差内插法的应用》有儀天曆術文補
     const Solar = AutoSolar(Name), Solar25 = Solar / 4, Solar50 = Solar / 2
     DegRaw %= Solar
     let xian = 0, Dial = 0, DialMor = 0
@@ -149,7 +157,7 @@ export const Lon2DialFormula = (DegRaw, Name, SolsDeci) => { // 陈美东《崇�
     }
     return Dial
 }
-// console.log(Lon2DialFormula(307, 'Chongxuan', .3))
+// console.log(dialFormula(307, 'Chongxuan', .3))
 
 // 《數》頁361 白道度是以黃道度、正交黃經的二元函數
 export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEclpLon, NodeAccum,  // 該日距冬至黃道度，入交日。不知是否應該加上日躔

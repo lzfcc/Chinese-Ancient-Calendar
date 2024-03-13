@@ -11,7 +11,7 @@ import {
 } from './day_luck.mjs'
 import CalNewm from './newm_index.mjs'
 import {
-    autoEquaEclp, autoLon2Lat, autoMoonLon, autoMoonLat
+    autoEquaEclp, autoMoonLon, autoMoonLat, autoLat, autoRise, autoDial
 } from './astronomy_bind.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
 import { gong2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
@@ -238,10 +238,11 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 Equa[i][k] = SunEquaLon.toFixed(4) + EquaFunc.Mansion
                 Duskstar[i][k] = EquaFunc.MorningDuskstar
                 Eclp[i][k] = SunEclpLon.toFixed(4) + EquaFunc.EclpMansion
-                const Lon2LatFunc = autoLon2Lat(SdMidn, SolsDeci, Name)
-                Lat[i][k] = (Lon2LatFunc.Lat > 0 ? 'N' : 'S') + Math.abs(Lon2LatFunc.Lat).toFixed(4) + '度'
-                Rise[i][k] = Lon2LatFunc.Rise.toFixed(3) + '刻'
-                Dial[i][k] = Lon2LatFunc.Dial ? ' ' + Lon2LatFunc.Dial.toFixed(3) + '尺' : ''
+                const LatTmp = autoLat(SdMidn, Name)
+                Lat[i][k] = (LatTmp > 0 ? 'N' : 'S') + Math.abs(LatTmp).toFixed(3) + '度'
+                Rise[i][k] = autoRise(SdMidn, SolsDeci, Name).toFixed(3) + '刻'
+                const DialTmp = autoDial(SdMidn, SolsDeci, Name)
+                Dial[i][k] = DialTmp ? ' ' + DialTmp.toFixed(3) + '尺' : ''
                 Rise[i][k] += Dial[i][k]
                 // 每日夜半月黃經
                 const MoonMansion = gong2Mansion(Name, Y, MoonEclpLon).Mansion
@@ -381,4 +382,4 @@ export const D1 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D1('Datong', 1762, 1762))
+// console.log(D1('Gengwu', 1762, 1762))

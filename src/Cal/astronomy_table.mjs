@@ -127,137 +127,150 @@ export const Equa2EclpTable = (LonRaw, Name) => {
     return { Equa2Eclp, Equa2EclpDif, Eclp2Equa, Eclp2EquaDif }
 }
 // console.log(Equa2EclpTable(1, 'Qianxiang'))
-
-export const Lon2LatTable1 = (Sd, Name) => {
-    const { Solar, NightList, DialList, SunLatList } = Para[Name]
-    let DawnRange = 0
-    if (Name !== 'Daye') DawnRange = 2.5
-    const HalfTermLeng = Solar / 24
+const termNum = (Sd, Name) => {
+    const { Solar } = Para[Name]
     Sd %= Solar
+    const HalfTermLeng = Solar / 24
     const TermNum = ~~(Sd / HalfTermLeng) // 每日所在氣名
     const TermDif = Sd - TermNum * HalfTermLeng
-    const Rise = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
-    const Dial = (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
-    const Lat1 = (SunLatList[TermNum] + (TermDif / HalfTermLeng) * (SunLatList[TermNum + 1] - SunLatList[TermNum]))
-    const Lat = Solar / 4 - Lat1
-    return { Rise, Dial, Lat1, Lat }
+    return { TermNum, TermDif }
 }
-
-export const Lon2LatTable2 = (Sd, Name) => {
-    const { Type, Denom, Solar, Sidereal, NightList, DialList, SunLatList, AcrTermList, TermRangeA, TermRangeS
-    } = Para[Name]
+const termNumAcr = (Sd, Name) => {
+    const { Solar, AcrTermList } = Para[Name]
     Sd %= Solar
+    let TermNum = 0
+    for (let j = 0; j <= 23; j++) {
+        if (Sd >= AcrTermList[j] && Sd < AcrTermList[j + 1]) {
+            TermNum = j
+            break
+        }
+    }
+    return TermNum
+}
+export const latTable1 = (Sd, Name) => {
+    const { Solar, SunLatList } = Para[Name]
+    const { TermNum, TermDif } = termNum(Sd, Name)
+    const HalfTermLeng = Solar / 24
+    return Solar / 4 - (SunLatList[TermNum] + (TermDif / HalfTermLeng) * (SunLatList[TermNum + 1] - SunLatList[TermNum]))
+}
+export const riseTable1 = (Sd, Name) => {
+    const { NightList, Solar } = Para[Name]
+    const HalfTermLeng = Solar / 24
+    let DawnRange = 0
+    if (Name !== 'Daye') DawnRange = 2.5
+    const { TermNum, TermDif } = termNum(Sd, Name)
+    return DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum]) // 日出时刻=夜半漏+2.5刻
+}
+export const dialTable1 = (Sd, Name) => {
+    const { DialList, Solar } = Para[Name]
+    const { TermNum, TermDif } = termNum(Sd, Name)
+    const HalfTermLeng = Solar / 24
+    return (DialList[TermNum] + (TermDif / HalfTermLeng) * (DialList[TermNum + 1] - DialList[TermNum]))
+}
+export const latRiseTable2 = (X, Name) => { // X：求Rise必須是SdNoon，求Lat隨意。麟德：實行度，大明：距冬至時長
+    const { Type, Denom, NightList, Solar, TermRangeA, TermRangeS, SunLatList } = Para[Name]
     let DawnRange = 2.5
     if (Name === 'Huangji') DawnRange = 2.365
     else if (['Linde', 'LindeB', 'Daming3'].includes(Name)) DawnRange = 0
-    const f = 34.475 // 大衍地理緯度
+    let Lat = 0, Lat1 = 0, Rise = 0
+    const { TermNum, TermDif } = termNum(X, Name)
     const HalfTermLeng = Solar / 24
-    let Dial = 0, Lat = 0, Lat1 = 0, Rise = 0, Sunrise1 = 0
-    if (Type === 7 || ['Yingtian', 'Qianyuan'].includes(Name)) { // 應天與宣明去極度之差不超過0.03度——《中國古代曆法》頁46
-        let TermNum = 0
-        for (let j = 0; j <= 23; j++) {
-            if (Sd >= AcrTermList[j] && Sd < AcrTermList[j + 1]) {
-                TermNum = j
-                break
-            }
-        }
-        //////定氣/////
-        const TermAcrNoonDeciDif = [] // 中前後分。「冬至後，中前以差減，中後以差加⋯⋯冬至一日有減無加，夏至一日有加無減。」
-        for (let i = 0; i <= 23; i++) {
-            const TermAcrRaw = AcrTermList[i]
-            const TermAcrDeci = deci(TermAcrRaw)
-            TermAcrNoonDeciDif[i] = TermAcrDeci - .5 // 定氣與正午的距離
-        }
-        const t1 = AcrTermList[TermNum] - TermAcrNoonDeciDif[TermNum]
-        const t2 = AcrTermList[TermNum + 1] - TermAcrNoonDeciDif[TermNum]
-        const t3 = AcrTermList[TermNum + 2] - TermAcrNoonDeciDif[TermNum]
-        Rise = DawnRange + Interpolate3(Sd, [[t1, NightList[TermNum]], [t2, NightList[TermNum + 1]], [t3, NightList[TermNum + 2]]])
-        Sunrise1 = DawnRange + NightList[TermNum] + ((Sd - AcrTermList[TermNum]) / (AcrTermList[TermNum + 1] - AcrTermList[TermNum])) * (NightList[TermNum + 1] - NightList[TermNum])
-        Lat1 = Interpolate3(Sd, [[t1, SunLatList[TermNum]], [t2, SunLatList[TermNum + 1]], [t3, SunLatList[TermNum + 2]]])
-        Lat = 91.31 - Lat1
-    } else {
-        ////////////平氣////////////
-        const TermNum = ~~(Sd / HalfTermLeng)
-        const TermDif = Sd - TermNum * HalfTermLeng
-        let TermRange = 0
-        if (Type === 6) {// 麟德   
-            if ((Sd < 6 * HalfTermLeng) || (Sd >= 18 * HalfTermLeng)) TermRange = TermRangeA // 秋分後
-            else TermRange = TermRangeS // 春分後
-        } else TermRange = HalfTermLeng
-        const TermAvgNoonDeciDif = []
-        for (let i = 0; i <= 23; i++) {
-            const TermAvgRaw = i * HalfTermLeng
-            const TermAvgDeci = deci(TermAvgRaw) // 各平氣小數點
-            TermAvgNoonDeciDif[i] = TermAvgDeci - .5 // 平氣與正午的距離
-        }
-        const nAvg = 1 + (TermDif + TermAvgNoonDeciDif[TermNum]) / TermRange
-        if (Type === 10) { // 重修大明的日出分是三次內插
-            Rise = 100 * (Interpolate1(nAvg, [NightList[TermNum], NightList[TermNum + 1], NightList[TermNum + 2], NightList[TermNum + 3]]) / Denom)
-            Sunrise1 = 100 * (NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])) / Denom
-        } else {
-            Rise = DawnRange + Interpolate1(nAvg, [NightList[TermNum], NightList[TermNum + 1], NightList[TermNum + 2]])
-            Sunrise1 = DawnRange + NightList[TermNum] + (TermDif / HalfTermLeng) * (NightList[TermNum + 1] - NightList[TermNum])
-        }
-        if (Type === 6) {
-            Dial = Interpolate1(nAvg, [DialList[TermNum], DialList[TermNum + 1], DialList[TermNum + 2]])
-        }
-        if (Type === 10) {
-            Lat = -(Rise - 25) / (10896 / 52300)
-            Lat1 = Sidereal / 4 - Lat
-        } else {
-            Lat1 = Interpolate1(nAvg, [SunLatList[TermNum], SunLatList[TermNum + 1], SunLatList[TermNum + 2]])
-            Lat = 91.31 - Lat1 // 赤緯
-        }
-        // 紀志剛《麟德曆晷影計算方法研究》，《自然科學史研究》1994(4)                         
-        /////////預處理晷長///////////
-        // let DialChangeList = [] // 陟降率
-        // DialChangeList[0] = 0
-        // for (let i = 1; i <= 24; i++) {
-        //     DialChangeList[i] = parseFloat((DialList[i + 1] - DialList[i]).toPrecision(12))
-        // }
-        // DialChangeList[25] = DialChangeList[1]
-        // delta1 = ((DialChangeList[TermNum] + DialChangeList[TermNum + 1]) / 2) / TermRange // 泛末率
-        // delta2 = (DialChangeList[TermNum] - DialChangeList[TermNum + 1]) / TermRange // 總差
-        // if (TermNum % 12 === 0) { // 芒種、大雪
-        //     delta2 = ((DialChangeList[TermNum - 1] - DialChangeList[TermNum]) / TermRange)
-        //     delta1 = ((DialChangeList[TermNum - 1] + DialChangeList[TermNum]) / 2) / TermRange - delta2
-        // }
-        // const delta3 = delta1 + delta2 // 泛初率
-        // const delta4 = (delta2 / TermRange) / 2 // 限差。不/2是別差
-        // const Corr = delta3 + delta4 // 定差
-        // const TermAcrDial = DialList[TermNum] - (TermAvgDeci[TermNumRaw] - .5) * Corr // 恆氣日中定影
-        // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式              
+    let TermRange = 0
+    if (Type === 6) { // 麟德   
+        if ((X < 6 * HalfTermLeng) || (X >= 18 * HalfTermLeng)) TermRange = TermRangeA // 秋分後
+        else TermRange = TermRangeS // 春分後
+    } else TermRange = HalfTermLeng
+    const TermDifP = 1 + TermDif / TermRange
+    if (Type === 10) { // 重修大明的日出分是三次內插
+        Rise = 100 * (Interpolate1(TermDifP, [NightList[TermNum], NightList[TermNum + 1], NightList[TermNum + 2], NightList[TermNum + 3]]) / Denom)
+        Lat = -(Rise - 25) / (10896 / 52300)
+    } else { // 麟德
+        Rise = DawnRange + Interpolate1(TermDifP, [NightList[TermNum], NightList[TermNum + 1], NightList[TermNum + 2]])
+        Lat1 = Interpolate1(TermDifP, [SunLatList[TermNum], SunLatList[TermNum + 1], SunLatList[TermNum + 2]])
+        Lat = 91.31 - Lat1 // 赤緯
     }
-    // 唐系、應天、乾元。本來寫了個去極度差分表，太麻煩，還不如直接用招差
-    if (Type >= 7) {
-        const SunLat2 = Lat1 - (91.3 - f) // 天頂距
-        // 下爲大衍晷影差分表
-        if (SunLat2 <= 27) {
-            Dial = Interpolate2(SunLat2 - 1, 1379, [1380, 2, 1])
-        } else if (SunLat2 <= 42) {
-            Dial = Interpolate2(SunLat2 - 28, 42267, [1788, 32, 2])
-        } else if (SunLat2 <= 46) {
-            Dial = Interpolate2(SunLat2 - 43, 73361, [2490, 74, 6])
-        } else if (SunLat2 <= 50) {
-            Dial = Interpolate2(SunLat2 - 47, 83581, [3212, -118, 272])
-        } else if (SunLat2 <= 57) {
-            Dial = Interpolate2(SunLat2 - 51, 96539, [3562, 165, 7])
-        } else if (SunLat2 <= 61) {
-            Dial = Interpolate2(SunLat2 - 58, 125195, [4900, 250, 19])
-        } else if (SunLat2 <= 67) {
-            Dial = Interpolate2(SunLat2 - 60, 146371, [6155, 481, 33])
-        } else if (SunLat2 <= 72) {
-            Dial = Interpolate2(SunLat2 - 68, 191179, [9545, 688, 36])
-        } else {
-            Dial = Interpolate2(SunLat2 - 73, 246147, [13354, 1098, 440, 620, 180])
-        }
-        Dial /= 10000
-    }
-    // 夜半漏計算直接用招差術了，不勝其煩。
-    return { Lat, Lat1, Dial, Rise, Sunrise1 }
+    return { Lat, Rise }
 }
-// console.log(Lon2LatTable2(90, 'LindeB').Sunrise1) // 《麟德曆晷影計算方法硏究》頁323：第15日應比12.28稍長。我現在算出來沒問題。
-
+export const latRiseTable3 = (Sd, Name) => { // Sd：求Rise必須是SdNoon，求Lat隨意。大衍：距冬至時長
+    const { NightList, AcrTermList, SunLatList } = Para[Name]
+    const DawnRange = 2.5
+    let Lat = 0, Lat1 = 0, Rise = 0
+    const TermNumAcr = termNumAcr(Sd, Name)
+    Rise = DawnRange + Interpolate3(Sd, [
+        [AcrTermList[TermNumAcr], NightList[TermNumAcr]],
+        [AcrTermList[TermNumAcr + 1], NightList[TermNumAcr + 1]],
+        [AcrTermList[TermNumAcr + 2], NightList[TermNumAcr + 2]]
+    ])
+    Lat1 = Interpolate3(Sd, [
+        [AcrTermList[TermNumAcr], SunLatList[TermNumAcr]],
+        [AcrTermList[TermNumAcr + 1], SunLatList[TermNumAcr + 1]],
+        [AcrTermList[TermNumAcr + 2], SunLatList[TermNumAcr + 2]]
+    ])
+    Lat = 91.31 - Lat1
+    return { Lat, Lat1, Rise }
+}
+/**
+ * Type===6// 紀志剛《麟德曆晷影計算方法研究》，《自然科學史研究》1994(4) 頁323：第15日應比12.28稍長。我現在算出來沒問題。
+ * @param {*} GongNoon 正午實行度
+ * @param {*} Name 
+ * @returns 
+ */
+export const dialTable2 = (GongNoon, Name) => {
+    /////////預處理晷長///////////
+    // let DialChangeList = [] // 陟降率
+    // DialChangeList[0] = 0
+    // for (let i = 1; i <= 24; i++) {
+    //     DialChangeList[i] = parseFloat((DialList[i + 1] - DialList[i]).toPrecision(12))
+    // }
+    // DialChangeList[25] = DialChangeList[1]
+    // delta1 = ((DialChangeList[TermNum] + DialChangeList[TermNum + 1]) / 2) / TermRange // 泛末率
+    // delta2 = (DialChangeList[TermNum] - DialChangeList[TermNum + 1]) / TermRange // 總差
+    // if (TermNum % 12 === 0) { // 芒種、大雪
+    //     delta2 = ((DialChangeList[TermNum - 1] - DialChangeList[TermNum]) / TermRange)
+    //     delta1 = ((DialChangeList[TermNum - 1] + DialChangeList[TermNum]) / 2) / TermRange - delta2
+    // }
+    // const delta3 = delta1 + delta2 // 泛初率
+    // const delta4 = (delta2 / TermRange) / 2 // 限差。不/2是別差
+    // const Corr = delta3 + delta4 // 定差
+    // const TermAcrDial = DialList[TermNum] - (TermAvgDeci[TermNumRaw] - .5) * Corr // 恆氣日中定影
+    // Dial = (TermAcrDial + (TermDifInt * delta1 + TermDifInt * delta2 - (TermDifInt ** 2) * delta4)).toFixed(4) // 劉焯二次內插公式
+    const { Type, DialList, Solar, TermRangeS, TermRangeA } = Para[Name]
+    const { TermNum, TermDif } = termNum(GongNoon, Name)
+    const HalfTermLeng = Solar / 24
+    let TermRange = 0
+    if (Type === 6) { // 麟德   
+        if ((GongNoon < 6 * HalfTermLeng) || (GongNoon >= 18 * HalfTermLeng)) TermRange = TermRangeA // 秋分後
+        else TermRange = TermRangeS // 春分後
+    } else TermRange = HalfTermLeng
+    const TermDifP = 1 + TermDif / TermRange
+    return Interpolate1(TermDifP, [DialList[TermNum], DialList[TermNum + 1], DialList[TermNum + 2]])
+}
+export const dialTable3 = Lat1 => { // 7、應天、乾元。本來寫了個去極度差分表，太麻煩，還不如直接用招差
+    const f = 34.475 // 大衍地理緯度
+    let Dial = 0
+    const Z = Lat1 - (91.3 - f) // 天頂距
+    // 下爲大衍晷影差分表
+    if (Z <= 27) {
+        Dial = Interpolate2(Z - 1, 1379, [1380, 2, 1])
+    } else if (Z <= 42) {
+        Dial = Interpolate2(Z - 28, 42267, [1788, 32, 2])
+    } else if (Z <= 46) {
+        Dial = Interpolate2(Z - 43, 73361, [2490, 74, 6])
+    } else if (Z <= 50) {
+        Dial = Interpolate2(Z - 47, 83581, [3212, -118, 272])
+    } else if (Z <= 57) {
+        Dial = Interpolate2(Z - 51, 96539, [3562, 165, 7])
+    } else if (Z <= 61) {
+        Dial = Interpolate2(Z - 58, 125195, [4900, 250, 19])
+    } else if (Z <= 67) {
+        Dial = Interpolate2(Z - 60, 146371, [6155, 481, 33])
+    } else if (Z <= 72) {
+        Dial = Interpolate2(Z - 68, 191179, [9545, 688, 36])
+    } else {
+        Dial = Interpolate2(Z - 73, 246147, [13354, 1098, 440, 620, 180])
+    }
+    return Dial / 10000
+}
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 const MoonLonTable = (Sd, NodeAccumRaw, Name) => { ///////赤白轉換//////
     const { Solar } = Para[Name]

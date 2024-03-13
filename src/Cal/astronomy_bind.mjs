@@ -1,9 +1,9 @@
 import Para from './para_calendars.mjs'
 import {
-    Equa2EclpTable, Lon2LatTable1, Lon2LatTable2, MoonLatTable
+    Equa2EclpTable, MoonLatTable, latTable1, riseTable1, latRiseTable2, latRiseTable3, dialTable1, dialTable2, dialTable3
 } from './astronomy_table.mjs'
 import {
-    Equa2EclpFormula, Lon2LatFormula, Lon2DialFormula, MoonLatFormula, MoonLonFormula
+    Equa2EclpFormula, latFormula, dialFormula, MoonLatFormula, MoonLonFormula, riseFormula
 } from './astronomy_formula.mjs'
 import { Hushigeyuan, HushigeyuanMoon } from './equa_geometry.mjs'
 import {
@@ -163,73 +163,118 @@ export const autoEquaEclp = (Gong, Name) => { // 輸入度數而非距冬至時�
  * Lon2LatTable2。Type === 7 || ['Yingtian', 'Qianyuan']會在子函數用定氣算，所以不加改正
  * Lon2LatFormula。紀元的曲線和現代公式擬合得很好，幾乎重合。因此自變量是黃道實行度。唯獨儀天是距二至的時間，不能加改正
  * Hushigeyuan 實行
- * Lon2DialFormula 都是實行度，儀天也是
+ * dialFormula 都是實行度，儀天也是
  * 陳美東誤差：四分.7，麟德.13，大衍.06，宣明.45，崇玄.09，儀天.45，崇天明天觀天.23 .20 .21，紀元.11，大明.12，授時.11。我testLon2Lat：後漢四分：0.7918, 麟德：0.0874, 大衍：0.0448, 宣明：0.3109, 崇玄：0.1009, 應天：0.3115, 乾元：0.3120, 儀天：0.3088, 崇天：0.0536, 明天：0.0539, 觀天：0.0541, 紀元：0.0089, 重修大明：0.0058, 授時：0.0148,
  * @param {*} Sd 距冬至時間
  * @param {*} SolsDeci 冬至小分
+ * @param {*} isBare true：不加太陽改正
  * @param {*} Name 曆法名
- * @param {*} isBare 如果最後加上了isBare，就不加太陽改正
  * @returns 
  */
-export const autoLon2Lat = (Sd, SolsDeci, Name, isBare) => {
-    const { Type, Solar, SolarRaw } = Para[Name]
-    let Plus = .5
-    const SdMidn = (~~(Sd + SolsDeci) - SolsDeci + (Solar || SolarRaw)) % (Solar || SolarRaw) // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
-    if (Type <= 4 || Name === 'Huangji') Plus = -1 // 非常詭異，-2的誤差最小
-    else if (Type === 11) Plus = 0 // 授時「置所求日晨前夜半黃道積度」
-    // else if (Name === 'Chongxuan') Plus = 1 // 崇玄「昏後夜半」，似乎應該是1，不過.5的誤差遠小於1的誤差。以後再查術文
-    let Lon2Lat = {}, Corr = 0, Corr1 = 0
-    if ((['Linde', 'Chongxuan', 'Qintian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) && isBare !== true) {
-        Corr = AutoDifAccum(0, SdMidn, Name).SunDifAccum
-    }
-    if ((['Yitian'].includes(Name)) && isBare !== true) {
-        Corr1 = AutoDifAccum(0, SdMidn, Name).SunDifAccum
-    }
-    const X = SdMidn + Plus + Corr
-    let Lat = 0, Rise = 0, Dial = 0
-    if ((Type >= 8 && Type <= 10 && !['Yingtian', 'Qianyuan'].includes(Name)) || Name === 'Qintian') {
-        if (Type === 8 || Name === 'Qintian') { // 北宋Lon2LatFormula用實行
-            Lon2Lat = Lon2LatFormula(X, Name)
-            Dial = Lon2DialFormula(X + Corr1, Name, SolsDeci)
-        } else if (Type === 9) {
-            Lon2Lat = Lon2LatFormula(X, 'Jiyuan')
-            Dial = Lon2DialFormula(X, 'Jiyuan')
-        } else if (Type === 10) {
-            Lon2Lat = Lon2LatTable2(X, 'Daming3')
-            Dial = Lon2DialFormula(X, 'Jiyuan')
+export const autoLat = (Sd, Name, isBare) => {
+    const { Type } = Para[Name]
+    let Corr = 0, Lat = 0
+    if (isBare !== true) {
+        if (['Linde', 'Yisi', 'LindeB', 'Shenlong', 'Chongxuan', 'Qintian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) {
+            Corr = AutoDifAccum(0, Sd, Name).SunDifAccum
         }
-        Lat = Lon2Lat.Lat
-        Rise = Lon2Lat.Rise
-    } else {
-        if (Type <= 3) {
-            Lon2Lat = Lon2LatTable1(X, 'Easthan')
-        } else if (Name === 'Liangwu') {
-            Lon2Lat = Lon2LatTable1(X, 'Daming')
-        } else if (['Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
-            Lon2Lat = Lon2LatTable2(X, 'Daye')
-        } else if (Type === 4) {
-            Lon2Lat = Lon2LatTable1(X, Name)
-        } else if (['Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
-            Lon2Lat = Lon2LatTable2(X, 'Linde')
-        } else if (Type === 6) {
-            Lon2Lat = Lon2LatTable2(X, Name)
-        } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
-            Lon2Lat = Lon2LatTable2(X, 'Dayan')
-        } else if (Name === 'Xuanming') {
-            Lon2Lat = Lon2LatTable2(X, Name)
-        } else if (['Yingtian', 'Qianyuan'].includes(Name)) {
-            Lon2Lat = Lon2LatTable2(X, Name)
-        } else if (Type === 11) {
-            Lon2Lat = Hushigeyuan(X, Name)
-        }
-        Lat = Lon2Lat.Lat
-        Rise = Lon2Lat.Rise
-        Dial = Lon2Lat.Dial || undefined
     }
-    return { Lat, Rise, Dial: Dial ? +Dial.toFixed(6) : undefined }
+    const X = Sd + Corr
+    if (Type <= 4 || Name === 'Huangji') Lat = latTable1(X, 'Easthan')
+    else if (['Linde', 'Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
+        Lat = latRiseTable2(X, 'Linde').Lat
+    } else if (Type === 6) {
+        Lat = latRiseTable2(X, Name).Lat
+    } else if (Type === 10) {
+        Lat = latRiseTable2(X, 'Daming3').Lat
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
+        Lat = latRiseTable3(X, 'Dayan').Lat
+    } else if (['Xuanming', 'Yingtian', 'Qianyuan'].includes(Name)) {
+        Lat = latRiseTable3(X, Name).Lat
+    } else if (Type === 8 || Name === 'Qintian') { // 北宋latFormula用實行
+        Lat = latFormula(X, Name)
+    } else if (Type === 9) {
+        Lat = latFormula(X, 'Jiyuan')
+    } else if (Type === 11) {
+        Lat = Hushigeyuan(X, Name).Lat
+    }
+    return Lat
 }
-// console.log(autoLon2Lat(53.6, 0, 'Daming3'))
-
+export const autoRise = (Sd, SolsDeci, Name) => {
+    const { Type, Solar, SolarRaw } = Para[Name]
+    let Corr = 0, Plus = 0, Rise = 0
+    let SdNoon = (~~(Sd + SolsDeci) - SolsDeci + (Solar || SolarRaw)) % (Solar || SolarRaw) + .5 // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
+    if (Type <= 4) Plus = -1.5 // 非常詭異
+    else if (Type === 11) Plus = -.5 // 授時「置所求日晨前夜半黃道積度」
+    SdNoon += Plus
+    if (['Linde', 'Yisi', 'LindeB', 'Shenlong', 'Chongxuan', 'Qintian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) {
+        Corr = AutoDifAccum(0, SdNoon, Name).SunDifAccum
+    }
+    const X = SdNoon + Corr
+    if (['Daming', 'Liangwu'].includes(Name)) {
+        Rise = riseTable1(X, 'Daming')
+    } else if (['Daye', 'Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
+        Rise = riseTable1(X, 'Daye')
+    } else if (Type <= 3) {
+        Rise = riseTable1(X, 'Easthan')
+    } else if (Type === 4) {
+        Rise = riseTable1(X, Name)
+    } else if (['Linde', 'Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
+        Rise = latRiseTable2(X, 'Linde').Rise
+    } else if (Type === 6) {
+        Rise = latRiseTable2(X, Name).Rise
+    } else if (Type === 10) {
+        Rise = latRiseTable2(X, 'Daming3').Rise
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
+        Rise = latRiseTable3(X, 'Dayan').Rise
+    } else if (['Xuanming', 'Yingtian', 'Qianyuan'].includes(Name)) {
+        Rise = latRiseTable3(X, Name).Rise
+    } else if (Type === 8 || Name === 'Qintian') { // 北宋latFormula用實行
+        Rise = riseFormula(latFormula(X, Name), SdNoon, Name)
+    } else if (Type === 9) {
+        Rise = riseFormula(latFormula(X, 'Jiyuan'), SdNoon, 'Jiyuan')
+    } else if (Type === 11) {
+        Rise = Hushigeyuan(X, Name).Rise
+    }
+    return Rise
+}
+export const autoDial = (Sd, SolsDeci, Name) => {
+    const { Type, Solar, SolarRaw } = Para[Name]
+    let Corr = 0, Plus = 0, Dial = 0
+    let SdNoon = (~~(Sd + SolsDeci) - SolsDeci + (Solar || SolarRaw)) % (Solar || SolarRaw) + .5 // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
+    if (Type <= 4) Plus = -1.5 // 非常詭異
+    else if (Type === 11) Plus = -.5 // 授時「置所求日晨前夜半黃道積度」
+    SdNoon += Plus
+    // 真奇怪，不加改正誤差才小
+    // if (['Linde', 'Yisi', 'LindeB', 'Shenlong', 'Chongxuan', 'Qintian', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) {
+    //     Corr = AutoDifAccum(0, SdNoon, Name).SunDifAccum
+    // }
+    const X = SdNoon + Corr
+    if (['Daming', 'Liangwu'].includes(Name)) {
+        Dial = dialTable1(X, 'Daming')
+    } else if (['Daye', 'Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
+        Dial = dialTable1(X, 'Daye')
+    } else if (Type <= 3) {
+        Dial = dialTable1(X, 'Easthan')
+    } else if (Type === 4) {
+        Dial = dialTable1(X, Name)
+    } else if (['Linde', 'Yisi', 'LindeB', 'Shenlong'].includes(Name)) {
+        Dial = dialTable2(X, 'Linde')
+    } else if (Type === 6) {
+        Dial = dialTable2(X, Name)
+    } else if (['Dayan', 'Zhide', 'Wuji', 'Tsrengyuan'].includes(Name)) {
+        Dial = dialTable3(latRiseTable3(X, 'Dayan').Lat1)
+    } else if ((['Xuanming', 'Yingtian', 'Qianyuan'].includes(Name)) && Name !== 'Qintian') {
+        Dial = dialTable3(latRiseTable3(X, Name).Lat1)
+    } else if ((Type >= 8 && Type <= 10) || Name === 'Qintian') {
+        if (Type === 8 || Name === 'Qintian') { // 北宋Lon2LatFormula用實行            
+            Dial = dialFormula(X, Name, SolsDeci)
+        } else if (Type >= 9) {
+            Dial = dialFormula(X, 'Jiyuan')
+        }
+    }
+    return Dial
+}
 export const bindEquaEclp = (GongRaw, year) => {
     year = +year, GongRaw = +GongRaw
     if (GongRaw >= 365.25 || GongRaw < 0) throw (new Error('請輸入一週天度內的度數'))
@@ -252,7 +297,7 @@ export const bindEquaEclp = (GongRaw, year) => {
         data: [(WestB / p).toFixed(6), (WestB1 / p).toFixed(6), '-', 0, (WestA / p).toFixed(6), (WestA1 / p).toFixed(6), '-', 0, (WestLat / p).toFixed(6), '-', 0]
     }]
     const List1 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Qintian', 'Yingtian', 'Qianyuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
-    const List2 = ['Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
+    const List2 = ['Qianxiang', 'Huangji', 'Dayan', 'Chongxuan', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Jiyuan', 'Shoushi']
     Print = Print.concat(
         List1.map(Name => {
             const { Sobliq } = Para[Name]
@@ -266,7 +311,7 @@ export const bindEquaEclp = (GongRaw, year) => {
             const { Equa2Eclp, Eclp2Equa, Equa2EclpDif, Eclp2EquaDif } = autoEquaEclp(GongRaw, Name)
             let Eclp2EquaLat = 0
             if (Name === 'Shoushi') Eclp2EquaLat = Hushigeyuan(GongRaw).Lat
-            else if (List2.indexOf(Name) > 0) Eclp2EquaLat = autoLon2Lat(GongRaw, .5, Name, true).Lat // true:不加太陽改正
+            else if (List2.indexOf(Name) > 0) Eclp2EquaLat = autoLat(GongRaw, Name, true)
             if (Equa2Eclp) {
                 EclpLonPrint = Equa2Eclp.toFixed(6)
                 Equa2EclpDifPrint = Equa2EclpDif.toFixed(6)
@@ -282,7 +327,7 @@ export const bindEquaEclp = (GongRaw, year) => {
             if (Eclp2EquaLat) {
                 Eclp2EquaLatPrint = Eclp2EquaLat.toFixed(6)
                 Eclp2EquaLatWestPrint = West0Lat.toFixed(6)
-                Eclp2EquaLatErrPrint = ~~((Eclp2EquaLat - West0Lat) / West0Lat * 10000)
+                Eclp2EquaLatErrPrint = +(Eclp2EquaLat - West0Lat).toFixed(4)
             }
             return {
                 title: NameList[Name],
@@ -291,8 +336,6 @@ export const bindEquaEclp = (GongRaw, year) => {
         }))
     return { Range, Print }
 }
-// console.log(bindEquaEclp(1, 1300).Print)
-
 export const bindLon2Lat = (Sd, SolsDeci) => {
     Sd = +Sd
     SolsDeci = +('.' + SolsDeci)
@@ -312,9 +355,10 @@ export const bindLon2Lat = (Sd, SolsDeci) => {
             const WestB = sunRise(Sobliq * p, RiseLat || 34.284, Lon)
             const WestC = Lon2DialWest(Lon, DialLat || 34.404, Sobliq * p)
             let LatPrint = '-', LatErrPrint = '-', SunrisePrint = '-', SunriseErrPrint1 = '-', SunriseErrPrint2 = '-', DialPrint = '-', DialErrPrint1 = '-', DialErrPrint2 = '-'
-            const { Lat, Rise, Dial
-            } = autoLon2Lat(Sd, SolsDeci, Name)
-            LatPrint = (Lat).toFixed(4)
+            const Lat = autoLat(Sd, Name)
+            const Rise = autoRise(Sd, SolsDeci, Name)
+            const Dial = autoDial(Sd, SolsDeci, Name)
+            LatPrint = Lat.toFixed(4)
             LatErrPrint = (Lat - WestA).toFixed(4)
             if (RiseLat) {
                 SunrisePrint = Rise.toFixed(4)
@@ -406,7 +450,7 @@ export const bindMansionAccumList = (Name, Y) => { // 本函數經ChatGPT優化
         EquaList[i] = +(EquaAccumList[i] - EquaAccumList[i - 1]).toFixed(3)
     }
     const EclpAccumPrint = [], EquaAccumPrint = [];
-    const DirList = '東北西南'
+    const DirList = ['東青龍', '北玄武', '西白虎', '南朱雀']
     for (let i = 0; i < 4; i++) {
         EclpAccumPrint.push([]);
         EquaAccumPrint.push([]);
@@ -453,7 +497,7 @@ export const autoMoonLat = (NodeAccum, Name) => {
         MoonLat = MoonLatFormula(NodeAccum, 'Jiyuan')
     }
     const MoonEquaLat = MoonLat.EquaLat || 0
-    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - autoLon2Lat(SunEclpLon, .5, Name).Lat
+    const MoonEclpLat = MoonLat.Lat || 0 // MoonEquaLat - autoLat(SunEclpLon, .5, Name)
     return { MoonEclpLat, MoonEquaLat }
 }
 // console.log(autoMoonLat(2, 'Tsrengyuan').MoonEclpLat)
@@ -739,9 +783,9 @@ const testLon2Lat = List => { // 計算所有古曆在每一度的誤差，求�
     const Err = []
     for (let i = 0; i < List.length; i++) {
         Err[i] = []
-        for (let k = 0; k <= 182; k++) {
-            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[1] // 赤緯
-            Err[i][k] = +bindLon2Lat(k, 5)[i].data[4] // 日出未修正
+        for (let k = 0; k <= 182; k++) { // k如果改成1有bug
+            Err[i][k] = +bindLon2Lat(k, 5)[i].data[1] // 赤緯
+            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[4] // 日出未修正
             // Err[i][k] = +bindLon2Lat(k, 5)[i].data[7] // 晷長修正
         }
     }

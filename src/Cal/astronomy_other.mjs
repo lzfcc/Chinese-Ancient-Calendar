@@ -1,6 +1,6 @@
 import Para from './para_calendars.mjs'
-import { autoEquaEclp, autoLon2Lat } from './astronomy_bind.mjs'
-import { MansionNameList, AutoDegAccumList, EclpLatJiazi } from './para_constant.mjs'
+import { autoEquaEclp, autoRise } from './astronomy_bind.mjs'
+import { MansionNameList, AutoDegAccumList } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoLightRange } from './para_auto-constant.mjs'
 import { GongHigh2Flat, LonHigh2Flat, twilight } from './newm_shixian.mjs'
 
@@ -64,7 +64,7 @@ export const gong2Mansion = (Name, Y, EclpGong, Sd, SolsDeci) => {
     let MorningDuskstar = ''
     const LightRange = AutoLightRange(Name)
     if (SolsDeci >= 0) { // 一個小坑，四分曆存在SolsDeci===0的情況，所以要加上>=0，只保留undefined
-        const Rise = autoLon2Lat(Sd, SolsDeci, Name).Rise / 100
+        const Rise = autoRise(Sd, SolsDeci, Name) / 100
         const HalfLight = .5 - Rise + LightRange // 半晝漏
         const HalfNight = Rise - LightRange
         // 大衍只考慮了昬時距午度
@@ -152,9 +152,8 @@ export const LeapAdjust = (LeapNumTerm, TermAvgRaw, NewmInt, Name) => {
 export const AutoNewmPlus = (Deci, Sd, SolsDeci, Name) => { // 朔小分
     const { Solar } = Para[Name]
     const Solar25 = Solar / 4
-    const SpringequinoxSunrise = autoLon2Lat(Solar25, SolsDeci, Name).Rise / 100
-    let { Rise, Sunrise1 } = autoLon2Lat(Sd, SolsDeci, Name)
-    Rise = (Sunrise1 || Rise) / 100
+    const SpringequinoxSunrise = autoRise(Solar25, 0, Name) / 100
+    const Rise = autoRise(Sd, SolsDeci, Name) / 100
     const LightRange = AutoLightRange(Name)
     let standard = .75
     let Portion = 3 // 明天、紀元這樣，其他宋曆應該也差不多。夏至0.734 為什麼跟前面是相反的？
@@ -185,7 +184,7 @@ export const AutoNewmPlus = (Deci, Sd, SolsDeci, Name) => { // 朔小分
 export const AutoSyzygySub = (Deci, Sd, SolsDeci, Name) => {
     const { Type } = Para[Name]
     const LightRange = AutoLightRange(Name)
-    const Rise = autoLon2Lat(Sd, SolsDeci, Name).Rise / 100
+    const Rise = autoRise(Sd, SolsDeci, Name) / 100
     let standard = Rise - LightRange
     if (Type >= 8 || Name === 'Qintian') standard = Rise
     let SyzygySub = 0
