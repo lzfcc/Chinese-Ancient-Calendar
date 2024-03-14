@@ -190,7 +190,7 @@ export const Deciaml2Angle = (f, h1, m1, s1, SdInt, h, m, s, year, height) => {
 }
 
 // dial length = h tan(zenith height)
-export const Lon2DialWest = (l, f, Sobliq) => { // 黃經，地理緯度，黃赤交角
+export const Lon2DialWest = (Sobliq, f, l) => { // 黃經，地理緯度，黃赤交角
     const d = HighLon2FlatLat(Sobliq, l) // 赤緯
     const h = 90 - Math.abs(f - d) // 正午太陽高度
     const z0 = f - d // 眞天頂距=緯度-赤緯
@@ -202,8 +202,6 @@ export const Lon2DialWest = (l, f, Sobliq) => { // 黃經，地理緯度，黃�
     const Dial1 = (8 * tan(z0)).toFixed(8) // 未修正
     return { Dial, Dial1 }
 }
-// console.log(Lon2DialWest(45, 40, 23.5))
-
 const Lat = () => { // 由《周髀算经》推算观测地 的纬度有三种数据可用，一是夏至日影一尺六寸，二是冬至日影一丈三尺五寸，三是北极 高度一丈三寸。
     let x = 30.1
     const scale = x => Math.tan(d2r(x - 23.958428)) / Math.tan(d2r(x + 23.958428)) // 前2300年黃赤交角

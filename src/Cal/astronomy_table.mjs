@@ -271,6 +271,7 @@ export const dialTable3 = Lat1 => { // 7、應天、乾元。本來寫了個去�
     }
     return Dial / 10000
 }
+// console.log(dialTable3(115.19))
 // 《中》頁513:平交加上不均勻改正後是正交，求得正交黃道度，再求月道度。
 const MoonLonTable = (Sd, NodeAccumRaw, Name) => { ///////赤白轉換//////
     const { Solar } = Para[Name]

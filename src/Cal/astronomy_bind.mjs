@@ -156,7 +156,7 @@ export const autoEquaEclp = (Gong, Name) => { // 輸入度數而非距冬至時�
 /**
  * 藤豔輝<v>紀元曆日食算法及精度分析</v>距離冬至 31.816049 日，紀元日出 2126.2566/7290 = 29.1667572，我之前是直接用黃經，是 29.227518，差了 1 天多，改用距冬至日數，加上日躔，29.1664，密合。
  * 陈美东《中国古代昼夜漏刻长度的计算法》「该文中所示二十四节气(平气)太阳黄经的算式，在本文中适用东汉四分历、景初历、元嘉历、大明历、皇极历、大业历、戊寅历、应天历、乾元历和仪天历等十种历法。而该文中所示二十四节气(定气)太阳黄经的算式，则适用于本文中的麟德历、大衍历、宣明历、崇玄历、崇天历、明天历、观天历和纪元历等八种历法
- * 陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因爲整數好算一些，實在迷惑。   // ：冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是！！！！達到實行度所需日數！！！！！崇玄、崇天爲日躔表的盈縮分，儀天爲公式先後數，也就是定朔計算中的SunTcorr，只是符號相反。
+ * 陈美東《崇玄儀天崇天三曆晷長計算法及三次差內插法的應用》。1、距二至的整數日，2、算上二至中前後分的修正值。我現在直接用正午到二至的距離。之所以那麼麻煩，應該是因爲整數好算一些，實在迷惑。冬至到夏至，盈縮改正爲負，入盈曆，實行日小於平行日。因此自變量不應該是黃經，而是達到實行度所需日數！
 魏晉的黃道去極，是根據節氣來的，日書就不調用了。崇玄赤轉赤緯，「昏後夜半日數」，晷長：「日中入二至加時以來日數」。紀元「午中日行積度」
 崇天的漏刻、赤緯跟《中國古代晝夜漏刻長度的計算法》一致
  * Lon2LatTable1 自然都是平行
@@ -201,9 +201,11 @@ export const autoLat = (Sd, Name, isBare) => {
     return Lat
 }
 export const autoRise = (Sd, SolsDeci, Name) => {
-    const { Type, Solar, SolarRaw } = Para[Name]
+    const { Type } = Para[Name]
+    let { Solar, SolarRaw } = Para[Name]
+    Solar = Solar || SolarRaw
     let Corr = 0, Plus = 0, Rise = 0
-    let SdNoon = (~~(Sd + SolsDeci) - SolsDeci + (Solar || SolarRaw)) % (Solar || SolarRaw) + .5 // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
+    let SdNoon = (~~(Sd + SolsDeci) - SolsDeci + Solar + .5) % Solar // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
     if (Type <= 4) Plus = -1.5 // 非常詭異
     else if (Type === 11) Plus = -.5 // 授時「置所求日晨前夜半黃道積度」
     SdNoon += Plus
@@ -239,17 +241,18 @@ export const autoRise = (Sd, SolsDeci, Name) => {
     return Rise
 }
 export const autoDial = (Sd, SolsDeci, Name) => {
-    const { Type, Solar, SolarRaw } = Para[Name]
+    const { Type } = Para[Name]
+    let { Solar, SolarRaw } = Para[Name]
+    Solar = Solar || SolarRaw
     let Corr = 0, Plus = 0, Dial = 0
-    let SdNoon = (~~(Sd + SolsDeci) - SolsDeci + (Solar || SolarRaw)) % (Solar || SolarRaw) + .5 // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
+    let SdNoon = (~~(Sd + SolsDeci) - SolsDeci + Solar + .5) % Solar // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
     if (Type <= 4) Plus = -1.5 // 非常詭異
     else if (Type === 11) Plus = -.5 // 授時「置所求日晨前夜半黃道積度」
     SdNoon += Plus
-    // 真奇怪，不加改正誤差才小
-    // if (['Linde', 'Yisi', 'LindeB', 'Shenlong', 'Chongxuan', 'Qintian', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) {
-    //     Corr = AutoDifAccum(0, SdNoon, Name).SunDifAccum
-    // }
-    const X = SdNoon + Corr
+    if (['Linde', 'Yisi', 'LindeB', 'Shenlong', 'Chongxuan', 'Qintian', 'Yitian', 'Chongtian', 'Mingtian', 'Guantian', 'Fengyuan', 'Zhantian', 'Jiyuan'].includes(Name) || Type === 11) {
+        Corr = AutoDifAccum(0, SdNoon, Name).SunDifAccum
+    }
+    const X = SdNoon - Corr // 這要反著來
     if (['Daming', 'Liangwu'].includes(Name)) {
         Dial = dialTable1(X, 'Daming')
     } else if (['Daye', 'Zhangmengbin', 'Liuxiaosun'].includes(Name)) {
@@ -347,13 +350,20 @@ export const bindLon2Lat = (Sd, SolsDeci) => {
             const Solar = AutoSolar(Name)
             const p = 360 / Solar
             const SdMidn = (~~(Sd + SolsDeci) - SolsDeci + Solar) % Solar // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
-            let GongRaw = SdMidn
-            if (['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji'].includes(Name)) GongRaw += corrEllipse(GongRaw * p, .0174) / p // 沒有太陽改正的古曆直接用現代公式
-            else GongRaw += (AutoDifAccum(0, SdMidn, Name).SunDifAccum || 0) // 加上太陽改正
-            const Gong = GongRaw * p, Lon = Gong2Lon(Gong)
+            let GongRaw = Sd
+            let GongMidnRaw = SdMidn
+            if (['Easthan', 'Yuanjia', 'Daming', 'Daye', 'Wuyin', 'Huangji'].includes(Name)) {
+                GongRaw += corrEllipse(GongRaw * p, .0174) / p
+                GongMidnRaw += corrEllipse(GongRaw * p, .0174) / p
+            } // 沒有太陽改正的古曆直接用現代公式
+            else {
+                GongRaw += (AutoDifAccum(0, SdMidn, Name).SunDifAccum || 0)
+                GongMidnRaw += (AutoDifAccum(0, SdMidn, Name).SunDifAccum || 0)
+            } // 加上太陽改正
+            const Gong = GongRaw * p, Lon = Gong2Lon(Gong), GongMidn = GongMidnRaw * p, LonMidn = Gong2Lon(GongMidn)
             const WestA = HighLon2FlatLat(Sobliq * p, Lon) / p // 球面三角緯度
-            const WestB = sunRise(Sobliq * p, RiseLat || 34.284, Lon)
-            const WestC = Lon2DialWest(Lon, DialLat || 34.404, Sobliq * p)
+            const WestB = sunRise(Sobliq * p, RiseLat || 34.284, LonMidn)
+            const WestC = Lon2DialWest(Sobliq * p, DialLat || 34.404, LonMidn)
             let LatPrint = '-', LatErrPrint = '-', SunrisePrint = '-', SunriseErrPrint1 = '-', SunriseErrPrint2 = '-', DialPrint = '-', DialErrPrint1 = '-', DialErrPrint2 = '-'
             const Lat = autoLat(Sd, Name)
             const Rise = autoRise(Sd, SolsDeci, Name)
@@ -377,7 +387,7 @@ export const bindLon2Lat = (Sd, SolsDeci) => {
         }))
     return Print
 }
-// console.log(bindLon2Lat(89, 5)[14].data[3])
+// console.log(bindLon2Lat(0, 2)[14].data[3])
 export const bindDeg2Mansion = Deg => {
     const { EquaAccumList: EquaAccumListTaichu, EclpAccumList: EclpAccumListTaichu } = AutoDegAccumList('Taichu', 300)
     const EquaAccumListHuangji = []
@@ -784,9 +794,9 @@ const testLon2Lat = List => { // 計算所有古曆在每一度的誤差，求�
     for (let i = 0; i < List.length; i++) {
         Err[i] = []
         for (let k = 0; k <= 182; k++) { // k如果改成1有bug
-            Err[i][k] = +bindLon2Lat(k, 5)[i].data[1] // 赤緯
+            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[1] // 赤緯
             // Err[i][k] = +bindLon2Lat(k, 5)[i].data[4] // 日出未修正
-            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[7] // 晷長修正
+            Err[i][k] = +bindLon2Lat(k, 5)[i].data[8] // 晷長未修正
         }
     }
     const MSE = []
