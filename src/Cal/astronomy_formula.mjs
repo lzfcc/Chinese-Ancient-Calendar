@@ -163,9 +163,7 @@ export const dialFormula = (DegRaw, Name, SolsDeci) => { // 陈美东《崇玄�
 export const MoonLonFormula = (NodeEclpLon, MoonNodeDifRev, Name) => { // SunEclpLon, NodeAccum,  // 該日距冬至黃道度，入交日。不知是否應該加上日躔
     const Solar = AutoSolar(Name)
     const NodeCycle = AutoNodeCycle(Name)
-    const Quadrant = NodeCycle / 4
-    const Solar25 = Solar / 4
-    const Solar50 = Solar / 2
+    const Quadrant = NodeCycle / 4, Solar25 = Solar / 4, Solar50 = Solar / 2
     // const Node50 = Node / 2
     // const NodeEclpLonRev = Math.abs(NodeEclpLon % Solar50 - Solar / 4) // 去二分度。黃白差在二分爲0
     const NodeEclpLonHalf = NodeEclpLon % Solar50

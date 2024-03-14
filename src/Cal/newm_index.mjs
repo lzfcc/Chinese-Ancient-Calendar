@@ -283,6 +283,9 @@ export default (Name, YearStart, YearEnd) => {
                         isMoonEcli = (SyzygyDeciPrint[i] < Rise + RangeMoonEcli) || (SyzygyDeciPrint[i] > 1 - Rise - RangeMoonEcli)
                     }
                     Rise = fix(Rise)
+                    const StatusList = [``, `<span class='eclipse-symbol'>●</span>`,
+                        `<span class='eclipse-symbol'>◐</span>`,
+                        `<span class='eclipse-symbol'>◔</span>`]
                     if (isSunEcli) { // 這些數字根據大統，再放寬0.3
                         SunEcliFunc = AutoEclipse(NewmNodeAccumPrint[i], NewmAnomaAccumPrint[i], NewmDeciPrint[i], NewmAvgDeciPrint[i], NewmAcrSdPrint[i], NewmSdPrint[i], 1, Name, NoleapMon, LeapNumTerm, SolsAccum)
                         const SunEcliStatus = SunEcliFunc.Status
@@ -294,13 +297,7 @@ export default (Name, YearStart, YearEnd) => {
                             NewmMagni = SunEcliFunc.Magni.toFixed(2)
                             SunEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
                             SunEcli[i] += '出' + Rise + ' 分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '') + ' 入' + Sunset
-                            if (SunEcliStatus === 1) {
-                                NewmScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                            } else if (SunEcliStatus === 2) {
-                                NewmScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                            } else if (SunEcliStatus === 3) {
-                                NewmScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
-                            }
+                            NewmScPrint[i] += StatusList[SunEcliStatus]
                         }
                     }
                     if (isMoonEcli) { // 陳美東《中國古代的月食食限及食分算法》：五紀17.8/13.36大概是1.33
@@ -314,15 +311,8 @@ export default (Name, YearStart, YearEnd) => {
                             SyzygyMagni = MoonEcliFunc.Magni.toFixed(2)
                             MoonEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
                             MoonEcli[i] += '入' + Sunset + ' 分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '') + ' 出' + Rise
-                            if (MoonEcliStatus === 1) {
-                                SyzygyScPrint[i] += `<span class='eclipse-symbol'>●</span>`
-                            } else if (MoonEcliStatus === 2) {
-                                SyzygyScPrint[i] += `<span class='eclipse-symbol'>◐</span>`
-                            } else if (MoonEcliStatus === 3) {
-                                SyzygyScPrint[i] += `<span class='eclipse-symbol'>◔</span>`
-                            }
+                            SyzygyScPrint[i] += StatusList[MoonEcliStatus]
                         }
-
                     }
                 }
                 for (let i = 0; i < NewmDeciPrint.length; i++) {
@@ -358,21 +348,14 @@ export default (Name, YearStart, YearEnd) => {
                 YearInfo += `閏${ThisYear.LeapNumOriginLeapSur - NewmStart}`
             }
         } else {
-            if (JiScOrder) {
-                YearInfo += `${ScList[JiScOrder]}紀${ThisYear.JiYear}`
-            }
+            if (JiScOrder) YearInfo += `${ScList[JiScOrder]}紀${ThisYear.JiYear}`
             if (Type <= 10) {
                 YearInfo += (OriginMonNum === 2 ? '雨' : '冬') + ((SolsAccum % 60 + 60) % 60).toFixed(4)
             }
-            if (Type === 2) {
-                YearInfo += `  平${ThisYear.LeapSurAvg}定${(ThisYear.LeapSurAcr).toFixed(2)}準${LeapLimit}`
-            } else if (Type === 3) {
-                YearInfo += `  平${Math.round((ThisYear.LeapSurAvg) * ZhangRange)}定${((ThisYear.LeapSurAcr) * ZhangRange).toFixed(2)}準${Math.round((LeapLimit) * ZhangRange)}`
-            } else if (Type <= 7) {
-                YearInfo += `  平${parseFloat((ThisYear.LeapSurAvg).toPrecision(8))}定${(ThisYear.LeapSurAcr).toFixed(2)}準${(LeapLimit)}`
-            } else if (Type <= 11) {
-                YearInfo += `  平${(ThisYear.LeapSurAvg).toFixed(2)}定${(ThisYear.LeapSurAcr).toFixed(2)}準${(LeapLimit).toFixed(2)}`
-            }
+            if (Type === 2) YearInfo += `  平${ThisYear.LeapSurAvg}定${(ThisYear.LeapSurAcr).toFixed(2)}準${LeapLimit}`
+            else if (Type === 3) YearInfo += `  平${Math.round((ThisYear.LeapSurAvg) * ZhangRange)}定${((ThisYear.LeapSurAcr) * ZhangRange).toFixed(2)}準${Math.round((LeapLimit) * ZhangRange)}`
+            else if (Type <= 7) YearInfo += `  平${parseFloat((ThisYear.LeapSurAvg).toPrecision(8))}定${(ThisYear.LeapSurAcr).toFixed(2)}準${(LeapLimit)}`
+            else if (Type <= 11) YearInfo += `  平${(ThisYear.LeapSurAvg).toFixed(2)}定${(ThisYear.LeapSurAcr).toFixed(2)}準${(LeapLimit).toFixed(2)}`
         }
         if (AccumPrint) YearInfo += ` ${AccumPrint}`
         let EcliPrint = []
@@ -401,12 +384,8 @@ export default (Name, YearStart, YearEnd) => {
                     break
                 }
             }
-            if (tmp30 === 4) {
-                YearInfo += `<span class='step30'>四連大</span>`
-            }
-            if (tmp29 === 3) {
-                YearInfo += `<span class='step30'>三連小</span>`
-            }
+            if (tmp30 === 4) YearInfo += `<span class='step30'>四連大</span>`
+            if (tmp29 === 3) YearInfo += `<span class='step30'>三連小</span>`
         }
         return {
             Era, YearInfo, MonthPrint,

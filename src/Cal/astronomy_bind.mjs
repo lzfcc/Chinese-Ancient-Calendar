@@ -452,8 +452,7 @@ export const bindMansion2Deg = Mansion => {
 }
 // console.log(bindMansion2Deg('氐1'))
 export const bindMansionAccumList = (Name, Y) => { // 本函數經ChatGPT優化
-    Y = +Y;
-    const { EclpAccumList, EquaAccumList } = AutoDegAccumList(Name, Y);
+    const { EclpAccumList, EquaAccumList } = AutoDegAccumList(Name.toString(), +Y);
     const EclpList = [], EquaList = []
     for (let i = 1; i < 30; i++) {
         EclpList[i] = +(EclpAccumList[i] - EclpAccumList[i - 1]).toFixed(3)
@@ -480,7 +479,7 @@ export const bindMansionAccumList = (Name, Y) => { // 本函數經ChatGPT優化
     }
     return { EclpAccumPrint, EquaAccumPrint };
 };
-// console.log(bindMansionAccumList('Shoushi', 1281).EclpAccumPrint)
+// console.log(bindMansionAccumList('Dayan', 1181).EclpAccumPrint)
 export const autoMoonLat = (NodeAccum, Name) => {
     let { Type, Sidereal } = Para[Name]
     // Solar = Solar || SolarRaw
@@ -698,6 +697,7 @@ export const bindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci)
     SolsDeci = +('.' + SolsDeci)
     const Solar = 365.24478
     const HalfTermLeng = Solar / 24
+    const StatusList = ['不食', '全食', '偏食', '微少']
     if (NodeAccum > 27.212215) throw (new Error('請輸入一交點月27.212215內的日數'))
     if (AnomaAccum > 27.5545) throw (new Error('請輸入一近點月27.5545內的日數'))
     // 隋系是要根據月份來判斷的，這裏爲了簡化輸入，我改爲用節氣判斷季節，這不準確
@@ -716,23 +716,14 @@ export const bindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci)
             const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 0, Name, i + 1, 0, 0, SolsDeci)
-            let StartDeciPrint = '-'
-            let TotalDeciPrint = '-'
-            let EndDeciPrint = '-'
+            let StartDeciPrint = '-', TotalDeciPrint = '-', EndDeciPrint = '-'
             const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
             if (StartDeci && TotalDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
-            let StatusPrint = '不食'
-            if (Status === 3) {
-                StatusPrint = '微少'
-            } else if (Status === 2) {
-                StatusPrint = '偏食'
-            } else if (Status === 1) {
-                StatusPrint = '全食'
-            }
+            const StatusPrint = StatusList[Status]
             return {
                 title: NameList[Name],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
@@ -746,23 +737,14 @@ export const bindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci)
             const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
             const { Magni, StartDeci, TotalDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 0, Name, i + 1, 0, 0, SolsDeci)
-            let StartDeciPrint = '-'
-            let TotalDeciPrint = '-'
-            let EndDeciPrint = '-'
+            let StartDeciPrint = '-', TotalDeciPrint = '-', EndDeciPrint = '-'
             const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
             if (StartDeci && TotalDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
                 TotalDeciPrint = (TotalDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
-            let StatusPrint = '不食'
-            if (Status === 3) {
-                StatusPrint = '微少'
-            } else if (Status === 2) {
-                StatusPrint = '偏食'
-            } else if (Status === 1) {
-                StatusPrint = '全食'
-            }
+            const StatusPrint = StatusList[Status]
             return {
                 title: NameList[Name],
                 data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
@@ -781,13 +763,12 @@ const ErrPrint_SunTcorr = (Name, AnomaAccum) => {
 }
 // console.log (ErrPrint_SunTcorr('Shoushi', 7, 1247))
 
-const mse = List => { // 均方誤差
+const rmse = List => { // 均方根
     let Sum = 0
     for (let i = 0; i < List.length; i++) {
         Sum += List[i] ** 2
     }
-    Sum /= List.length
-    return Sum
+    return Math.sqrt(Sum / List.length)
 }
 const testLon2Lat = List => { // 計算所有古曆在每一度的誤差，求均方差
     const Err = []
@@ -795,19 +776,19 @@ const testLon2Lat = List => { // 計算所有古曆在每一度的誤差，求�
         Err[i] = []
         for (let k = 0; k <= 182; k++) { // k如果改成1有bug
             // Err[i][k] = +bindLon2Lat(k, 5)[i].data[1] // 赤緯
-            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[4] // 日出未修正
-            Err[i][k] = +bindLon2Lat(k, 5)[i].data[8] // 晷長未修正
+            Err[i][k] = +bindLon2Lat(k, 5)[i].data[4] // 日出未修正
+            // Err[i][k] = +bindLon2Lat(k, 5)[i].data[8] // 晷長未修正
         }
     }
-    const MSE = []
+    const RMSE = []
     for (let i = 0; i < List.length; i++) {
-        MSE[i] = mse(Err[i])
+        RMSE[i] = rmse(Err[i])
     }
     let Name = []
     Name = Name.concat(List.map(a => NameList[a]))
     const Print = []
     for (let i = 0; i < List.length; i++) {
-        Print[i] = Name[i] + '：' + MSE[i].toFixed(4)
+        Print[i] = Name[i] + '：' + RMSE[i].toFixed(4)
     }
     return Print
 }

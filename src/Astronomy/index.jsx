@@ -42,15 +42,17 @@ export default class Astronomy extends React.Component {
     return (
       <>
         <section className='modulo'>
-          <h2>躔離朓朒</h2>
+          <h2>朓朒</h2>
           <BindTcorr />
           <BindCorrEllipse />
-          <h2>日度之什</h2>
+          <h2>宿度</h2>
           <Deg2Mansion />
           <p></p>
           <Mansion2Deg />
           <MansionAccumList />
           <BindEquaEclp />
+          <h2>晷漏</h2>
+          <BindLon2Lat />
           <Round />
           <p></p>
           <Round2 />
@@ -58,11 +60,9 @@ export default class Astronomy extends React.Component {
           <Round1 />
           <Hushigeyuan />
           {/* <Heron /> */}
-          <h2>步晷漏</h2>
-          <BindLon2Lat />
-          <h2>月度月緯</h2>
+          <h2>月行</h2>
           <MoonLon />
-          <h2>交食之什</h2>
+          <h2>交食</h2>
           <SunEclipse />
           <MoonEclipse />
           <Cycle2Node />

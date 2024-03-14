@@ -7,7 +7,7 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      calendars: [],
+      calendars: '',
       Year: 1281,
     }
     this.handle = this.handle.bind(this)
