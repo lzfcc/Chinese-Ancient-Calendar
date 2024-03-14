@@ -131,7 +131,7 @@ export const YearColorConvert = YuanYear => {
         const row3c = `<span class='${ClassColorList[row3cn]}'>` + ColorList[row3cn] + NumList[row3cn] + `</span>`
         YearColor.push([row1a, row1b, row1c])
         YearColor.push([row2a, row2b, row2c])
-        YearColor.push([row3a, row3b, row3c])        
+        YearColor.push([row3a, row3b, row3c])
     }
     return YearColor
 }
@@ -159,7 +159,8 @@ export const MonColorConvert = (YuanYear, i, ZhengMonScOrder) => {
     MonColor.push([row1a, row1b, row1c])
     MonColor.push([row2a, row2b, row2c])
     MonColor.push([row3a, row3b, row3c])
-    const MonSc = ScList[Math.round((ZhengMonScOrder + i - 1) % 60.1)]
+    // const MonSc = ScList[Math.round((ZhengMonScOrder + i - 1) % 60.1)]
+    const MonSc = ScList[(ZhengMonScOrder + i - 1) % 60]
     const MonSindhuName = MonSindhuNameList[i]
     const MonScaleName = MonScaleNameList[i]
     const MonHexagramName = MonHexagramNameList[i]

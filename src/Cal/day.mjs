@@ -4,7 +4,7 @@ import {
     WeekList, MansionNameList, MansionAnimalNameList,
     ManGodList, JianchuList, HuangheiList, YuanList,
     HalfTermList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
-    nzh, AutoDegAccumList, NumList, MonNumList1, deci
+    nzh, NumList, MonNumList1, deci
 } from './para_constant.mjs'
 import {
     YearGodConvert, YearColorConvert, MonColorConvert, WangwangConvert, FubaoConvert, LsStarConvert, BloodConvert, TouringGodConvert
@@ -18,21 +18,25 @@ import { gong2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
+const abs = x => Math.abs(x)
 export const D1 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Main = (Name, Y) => {
-        const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst } = Para[Name]
+        const { Type, LunarRaw, Node, Anoma, SolarRaw, WeekConst, MansionDayConst, ScConst, CloseOriginAd } = Para[Name]
         let { Solar, Sidereal, Lunar } = Para[Name]
         const { LeapNumTerm, SolsAccum, NewmInt, NewmRaw, NewmAcrRaw, NewmNodeAccumMidnPrint, NewmAnomaAccumPrint, NewmAnomaAccumMidnPrint } = CalNewm(Name, Y)[0]
-        Solar = Solar || SolarRaw
+        if (['Shoushi', 'Shoushi2'].includes(Name)) {
+            Solar = +(SolarRaw - ~~((Y - CloseOriginAd + 1) / 100) * .0001).toFixed(4)
+        }
         Sidereal = Sidereal || Solar
         Lunar = Lunar || LunarRaw
         const HouLeng = Solar / 72
         const HalfTermLeng = Solar / 24
         const HexagramLeng = Solar / 60
         const MoonAvgVd = Type < 4 ? AutoMoonAvgV(Name) : undefined
-        const ZhengInt = NewmInt[0] + (ScConst || 0)
-        const ZhengSd = +(ZhengInt - SolsAccum).toFixed(5) // 正月夜半到冬至距離
+        const ZhengScOrder = ((Math.floor(NewmInt[0]) + (ScConst || 0)) % 60 + 60) % 60
+        const ZhengSdMidn = +(NewmInt[0] - SolsAccum).toFixed(5) // 正月夜半到冬至距離
+        const ZhengSdInt = Math.floor(NewmInt[0]) - Math.floor(SolsAccum) // 正月朔日夜半距離冬至夜半整數日
         const SolsDeci = deci(SolsAccum)
         /////////// 預處理72候、五行、八卦列表//////////
         let HouList = [], Hexagram64List = [], HexagramSymbolList = [], FiveAccumList = [], HexagramAccumList = [], HouAccum = []
@@ -134,12 +138,19 @@ export const D1 = (Name, YearStart, YearEnd) => {
         const Yuan = YuanList[YuanOrder] + '元' + nzh.encodeS(ThreeYuanYear + 1) + '年'
         const YearGod = YearGodConvert(YearStem, YearBranch, YearScOrder, YuanYear)
         const YearColor = YearColorConvert(YuanYear)
-        const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
-        const OriginJdAccum = 2086292 + ~~(365.2423 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
-        const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
+        // const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
+        const ZhengMonScOrder = (YearStem * 12 - 9) % 60
+        const SolsJdAsm = 2086292 + ~~(365.2422 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，到當年假想冬至的標準儒略日
+        const SolsErr = (Solar - 365.2422) * (Y - CloseOriginAd) // 從曆元開始冬至比理論大約差了那麼多。這個是為了校驗，不直接參與運算
+        let AsmRealDif = ((SolsAccum + (ScConst || 0)) - (SolsJdAsm + 50)) % 60
+        if (abs(abs(AsmRealDif - SolsErr) - 60) > 6) {
+            if (abs(AsmRealDif - SolsErr + 60) < 6) AsmRealDif += 60 // 如果是-59，就要變成1
+        } else {
+            if (abs(AsmRealDif - SolsErr - 60) < 6) AsmRealDif -= 60  // 如果是59，就要變成-1
+        }
         const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], Eclp = [], Duskstar = [], MoonEclp = [], MoonEclpLat = [], Rise = [], Dial = [], Lat = [], HouName = [], HexagramName = [], FiveName = [], ManGod = [], Luck = []
-        let DayAccum = 0, JieAccum = 0, SummsolsDayAccum = 0, AutumnDayAccum = 0 // 各節積日 // 夏至積日// 立秋積日
-        let JianchuDayAccum = ZhengInt - Math.floor(SolsAccum) // 建除
+        let DayAccum = 0, JieAccum = 0, SummsolsDayAccum = 0, AutumnDayAccum = 0 // 各節積日。夏至積日，立秋積日
+        let JianchuDayAccum = ZhengSdInt // 建除
         let HuangheiDayAccum = JianchuDayAccum
         let JianchuOrigin = 0, HuangheiOrigin = 0, Fu1DayAccum = 0, Fu2DayAccum = 0, Fu3DayAccum = 0, HouOrder = 0, FiveOrder = 0, HexagramOrder = 0
         for (let i = 1; i <= 12 + (LeapNumTerm > 0 ? 1 : 0); i++) { // 有閏就13             
@@ -160,20 +171,12 @@ export const D1 = (Name, YearStart, YearEnd) => {
             MonInfo[i] = MonColorFunc.MonInfo
             MonColor[i] = MonColorFunc.MonColor
             let MoonEclpLonNewmMidn = 0, SunEclpLonNewm = 0, AnomaCycle = 0, MoonAcrSNewm = 0, SdNewm = 0
-            if (Type < 4) {
-                SdNewm = NewmRaw[i - 1] - SolsAccum // 合朔加時 
-            } else {
-                SdNewm = NewmAcrRaw[i - 1] - SolsAccum
-            }
+            if (Type < 4) SdNewm = NewmRaw[i - 1] - SolsAccum // 合朔加時 
+            else SdNewm = NewmAcrRaw[i - 1] - SolsAccum
             if (Type > 1) {
                 const AnomaAccumNewm = NewmAnomaAccumPrint[i - 1] // 加時入轉。這個求月行遲疾修正的步驟是我假設的
                 const SunDifAccumNewm = AutoDifAccum(AnomaAccumNewm, SdNewm, Name).SunDifAccum
-                if (Type < 11) {
-                    const SunEquaLonNewm = SdNewm + SunDifAccumNewm
-                    SunEclpLonNewm = autoEquaEclp(SunEquaLonNewm, Name).Equa2Eclp
-                } else { // 授時直接以黃道為準                
-                    SunEclpLonNewm = SdNewm + SunDifAccumNewm
-                }
+                SunEclpLonNewm = SdNewm + SunDifAccumNewm
                 if (Type < 4) {
                     MoonEclpLonNewmMidn = SunEclpLonNewm - deci(NewmRaw[i - 1]) * MoonAvgVd
                 } else {
@@ -202,8 +205,8 @@ export const D1 = (Name, YearStart, YearEnd) => {
             ManGod[i] = []
             Luck[i] = []
             for (let k = 1; k <= NewmInt[i] - NewmInt[i - 1]; k++) { // 每月日數                
-                const SdMidn = ZhengSd + DayAccum // 每日夜半距冬至日數
-                const SdInt = ZhengInt - Math.floor(SolsAccum) + DayAccum // 冬至當日爲0               
+                const SdMidn = ZhengSdMidn + DayAccum // 每日夜半距冬至時長
+                const SdInt = ZhengSdInt + DayAccum // 每日夜半距冬至夜半整日數。冬至當日爲0
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
                 let SunEquaLon = 0, SunEclpLon = 0, MoonEclpLon = 0, AnomaAccumMidn = 0, NodeAccumMidn = 0, MoonLonLatFunc = {}
@@ -229,7 +232,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                         MoonLonLatFunc = autoMoonLat(NodeAccumMidn, Name)
                         const tmp = MoonLonLatFunc.MoonEclpLat
                         MoonEclpLat[i][k] = AutoNineOrbit(NodeAccumMidn, SdMidn, Name) +
-                            (tmp > 0 ? 'N' : 'S') + Math.abs(tmp).toFixed(4)
+                            (tmp > 0 ? 'N' : 'S') + abs(tmp).toFixed(4)
                     }
                 }
                 const EquaFunc = gong2Mansion(Name, Y,
@@ -239,7 +242,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 Duskstar[i][k] = EquaFunc.MorningDuskstar
                 Eclp[i][k] = SunEclpLon.toFixed(4) + EquaFunc.EclpMansion
                 const LatTmp = autoLat(SdMidn, Name)
-                Lat[i][k] = (LatTmp > 0 ? 'N' : 'S') + Math.abs(LatTmp).toFixed(3) + '度'
+                Lat[i][k] = (LatTmp > 0 ? 'N' : 'S') + abs(LatTmp).toFixed(3) + '度'
                 Rise[i][k] = autoRise(SdMidn, SolsDeci, Name).toFixed(3) + '刻'
                 const DialTmp = autoDial(SdMidn, SolsDeci, Name)
                 Dial[i][k] = DialTmp ? ' ' + DialTmp.toFixed(3) + '尺' : ''
@@ -256,9 +259,9 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 }
                 MoonEclp[i][k] = MoonMansion + MoonMansionNote + (MoonEclpWhiteDif || '')
                 ///////////具注曆////////////
-                const ScOrder = (ZhengInt % 60 + 60 + DayAccum) % 60
+                const ScOrder = (ZhengScOrder + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]
-                Jd[i][k] = parseInt(OriginJdAccum + OriginJdDif + SdInt + 1)
+                Jd[i][k] = parseInt(SolsJdAsm + AsmRealDif + SdInt + 1)
                 Jd[i][k] += ' ' + Jd2Date1(Jd[i][k]).Mmdd
                 const Stem = StemList.indexOf(Sc[i][k][0])
                 const Branch = BranchList.indexOf(Sc[i][k][1])
@@ -294,7 +297,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     }
                 }
                 if (DayAccum === 1) {
-                    const XiaohanDifInt = ZhengInt - Math.floor(SolsAccum) - HalfTermLeng + DayAccum
+                    const XiaohanDifInt = ZhengSdInt - HalfTermLeng + DayAccum
                     const tmp = ~~((SdInt + 1 - XiaohanDifInt) / 12)
                     const tmp1 = SdInt + 1 - tmp * 12 - Branch
                     JianchuOrigin = tmp1 + 2 // 小寒後第一個丑開始建除
@@ -326,7 +329,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 } else if (DayAccum === Fu3DayAccum) {
                     Fu = `<span class='sanfu'>末伏</span>`
                 }
-                Nayin[i][k] = NayinList[Math.ceil(ScOrder / 2)] + Jianchu + Huanghei + ' ' + Week[i][k]
+                Nayin[i][k] = NayinList[Math.ceil(ScOrder / 2)] + Jianchu + Huanghei + ' ' + (Week[i][k] || '')
                 HouName[i][k] += Fu
                 for (let j = 0; j < 7; j++) {
                     if (MieSd[j] >= SdMidn && MieSd[j] < SdMidn + 1) {
@@ -382,4 +385,4 @@ export const D1 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D1('Gengwu', 1762, 1762))
+// console.log(D1('Shoushi', -2500))

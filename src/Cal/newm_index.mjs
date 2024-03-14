@@ -7,8 +7,8 @@ import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumLi
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { autoRise } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
-// const Index = (Name, YearStart, YearEnd) => {
-export default (Name, YearStart, YearEnd) => {
+const Index = (Name, YearStart, YearEnd) => {
+    // export default (Name, YearStart, YearEnd) => {
     const Bind = Name => {
         const type = Para[Name].Type
         if (type === 1) return N1
@@ -22,7 +22,7 @@ export default (Name, YearStart, YearEnd) => {
         const [PrevYear, ThisYear, NextYear] = Memo
         const ZhengSd = ZhengNum - OriginMonNum
         const SolsMon = (1 - ZhengNum + 12) % 12 // 冬至月
-        const { JiScOrder: JiScOrder, SolsAccum, NewmEqua, NewmEclp, AccumPrint, LeapLimit, SolsDeci } = ThisYear
+        const { JiScOrder: JiScOrder, SolsAccum, Sols, NewmEqua, NewmEclp, AccumPrint, LeapLimit, SolsDeci } = ThisYear
         let { LeapNumTerm, NewmInt, NewmStart, NewmEnd, TermStart, TermEnd } = ThisYear
         NewmInt = NewmInt || []
         const TermAcrSc = [], TermAcrDeci = [], TermNowDeci = [], Term1Name = [], Term1Sc = [], Term1Deci = [], Term1Equa = [], Term1Eclp = [], Term1AcrSc = [], Term1AcrDeci = [], Term1NowDeci = []
@@ -410,12 +410,12 @@ export default (Name, YearStart, YearEnd) => {
         }
         return {
             Era, YearInfo, MonthPrint,
-            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmEquaPrint, NewmEclpPrint,
+            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmEclpPrint, NewmEquaPrint,
             SyzygyScPrint, SyzygyNowlineDeciPrint, SyzygyDeciPrint,
-            Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1NowDeciPrint, Term1EquaPrint, Term1EclpPrint,
-            TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermNowDeciPrint, TermEquaPrint, TermEclpPrint, TermDuskstarPrint,
+            Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1NowDeciPrint, Term1EclpPrint, Term1EquaPrint,
+            TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermNowDeciPrint, TermEclpPrint, TermEquaPrint, TermDuskstarPrint,
             ////////////// 曆書
-            LeapNumTerm, SolsAccum,
+            LeapNumTerm, SolsAccum, Sols,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
             NewmRaw: ((Type === 1 || Type === 13) ? [] : NewmSlice(ThisYear.NewmRaw)),
             NewmAcrRaw: ((Type === 1 || Type === 13) ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
@@ -447,4 +447,4 @@ export default (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Shoushi', 1760, 1760))
+// console.log(Index('Shoushi', -2500, -2500))

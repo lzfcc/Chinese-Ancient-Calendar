@@ -364,7 +364,6 @@ export const corrEllipseC = (OrbRaw, c) => { // 借角求角法。大徑1、小�
     const Adif = OrbT - atan(tan(OrbT) * b / a)
     return +(f2(OrbRaw) * (Ae + (OrbRaw > 90 && OrbRaw < 270 ? -1 : 1) * Adif)).toFixed(12)
 }
-// console.log(corrEllipseC(60.13,.0338))
 export const corrEllipseD1 = (OrbRaw, c) => { // 見石雲里《历象考成后编中的中心差求法及其日月理论的总体精度》，卡西尼模型完整版，誤差比借積求積更小
     const a = 1, b = sqr(a ** 2 - c ** 2)
     if (c < .025) OrbRaw = (OrbRaw + 180) % 360 // 太陽
@@ -1301,7 +1300,7 @@ export const N4 = (Name, Y) => {
         LeapNumTerm, NewmAvgSc, NewmAvgDeci, NewmSc, NewmNowlineDeci, NewmDeci, NewmEqua, NewmEclp, SyzygySc, SyzygyNowlineDeci, SyzygyDeci, SunEcli, MoonEcli, TermSc, TermDeci, TermAcrSc, TermAcrDeci, TermNowDeci, TermEqua, TermEclp,
         Term1Sc, Term1Deci, Term1AcrSc, Term1AcrDeci, Term1NowDeci, Term1Equa, Term1Eclp,
         //// 曆書用
-        SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSmd, SolsmorScOrder
+        SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, SolsAccum, MansionDaySolsmor, NewmSmd, Sols, SolsmorScOrder
     }
 }
 // console.log(N4("Guimao", 1760)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔

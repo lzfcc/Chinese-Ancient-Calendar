@@ -13,12 +13,12 @@ import CalNewm from './newm_index.mjs'
 import { gong2MansionQing, Lon2Midstar } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { ClockWest } from './time_decimal2clock.mjs'
-
+const abs = x => Math.abs(x)
 export const D2 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Main = (Name, Y) => {
         const { Sobliq, RiseLat } = Para[Name]
-        const { LeapNumTerm, SolsAccum, SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, NewmSmd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
+        const { LeapNumTerm, Sols, SunRoot, SperiRoot, MoonRoot, MapoRoot, NodeRoot, NewmSmd, SolsmorScOrder, MansionDaySolsmor } = CalNewm(Name, Y)[0]
         ///////
         const YearScOrder = ((Y - 3) % 60 + 60) % 60
         const YearSc = ScList[YearScOrder]
@@ -35,9 +35,11 @@ export const D2 = (Name, YearStart, YearEnd) => {
         const Yuan = YuanList[YuanOrder] + '元' + nzh.encodeS(ThreeYuanYear + 1) + '年'
         const YearGod = YearGodConvert(YearStem, YearBranch, YearScOrder, YuanYear)
         const YearColor = YearColorConvert(YuanYear)
-        const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建        
-        const OriginJdAccum = 2086292 + ~~(365.2423 * (Y - 1000)) // 設公元1000年前冬至12月16日2086292乙酉(22)爲曆元，作爲儒略日標準
-        const OriginJdDif = (SolsAccum % 60 + 60) % 60 - Math.round((Math.round(OriginJdAccum) % 60 + 110) % 60.1)
+        // const ZhengMonScOrder = Math.round((YearStem * 12 - 9) % 60.1) // 正月月建
+        const ZhengMonScOrder = (YearStem * 12 - 9) % 60
+        const SolsJdAsm = 2086292 + ~~(365.2422 * (Y - 1000))
+        let AsmRealDif = (Sols - (SolsJdAsm + 50)) % 60 + 60
+        AsmRealDif -= Math.sign(AsmRealDif) * 60
         const MonName = [], MonInfo = [], MonColor = [], Sc = [], Jd = [], Nayin = [], Week = [], Equa = [], Eclp = [], Rise = [], Morningstar = [], Lat = [], Duskstar = [], MoonEclp = [], MoonEclpLat = [], MoonEqua = [], MoonEquaLat = [], MoonRise = [], NodeMapo = []
         let DayAccum = 0, JieAccum = 0 // 各節積日 
         let JianchuDayAccum = NewmSmd[0] // 建除
@@ -55,7 +57,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
             MonColor[i] = MonColorFunc.MonColor
             Sc[i] = [], Jd[i] = [], Nayin[i] = [], Week[i] = [], Eclp[i] = [], Equa[i] = [], Rise[i] = [], Morningstar[i] = [], Lat[i] = [], Duskstar[i] = [], MoonEclp[i] = [], MoonEclpLat[i] = [], MoonEqua[i] = [], MoonEquaLat[i] = [], MoonRise[i] = [], NodeMapo[i] = []
             for (let k = 1; k <= ~~NewmSmd[i] - ~~NewmSmd[i - 1]; k++) { // 每月日數                
-                const SmdMidn = ~~(NewmSmd[i - 1] + k - 1) // 每日夜半距冬至日數
+                const SmdMidn = ~~(NewmSmd[i - 1]) + k // 每日夜半距冬至次日夜半日數
                 // const SmdMidn = 263 // 1722-9-11八月朔 :263 廖育棟01:05
                 DayAccum++ // 這個位置不能變
                 //////////天文曆///////////
@@ -86,7 +88,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 ///////////具注曆////////////
                 const ScOrder = ~~(SolsmorScOrder + SmdMidn) % 60
                 Sc[i][k] = ScList[ScOrder]
-                Jd[i][k] = parseInt(OriginJdAccum + OriginJdDif + SmdMidn + 2)
+                Jd[i][k] = parseInt(SolsJdAsm + AsmRealDif + SmdMidn + 2)
                 Jd[i][k] += ' ' + Jd2Date1(Jd[i][k]).Mmdd
                 const MansionOrder = (MansionDaySolsmor + DayAccum) % 28
                 const WeekOrder = (MansionDaySolsmor + DayAccum + 3) % 7
@@ -109,4 +111,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D2('Yongnian', 1722, 1722))
+// console.log(D2('Guimao', 500))
