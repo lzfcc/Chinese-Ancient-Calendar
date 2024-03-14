@@ -222,7 +222,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     SunEquaLon = autoEquaEclp(SunEclpLon, Name).Eclp2Equa % Sidereal
                     // 元嘉開始計算月度就有計入遲疾的方法，大業就完全是定朔，但又是平朔注曆，這樣會衝突，我只能把麟德以前全部求平行度。
                     // 《中》頁514 月度：欽天以後，先求正交至平朔月行度、平朔太陽黃度，由於平朔日月平黃經相同，所以相加減卽得正交月黃度
-                    if (Type < 4) {
+                    if (Type <= 3) {
                         MoonEclpLon = MoonEclpLonNewmMidn + (k - 1) * MoonAvgVd
                     } else {
                         const MoonAcrSMidn = AutoMoonAcrS(AnomaAccumMidn, Name).MoonAcrS

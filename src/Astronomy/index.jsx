@@ -49,7 +49,6 @@ export default class Astronomy extends React.Component {
           <Deg2Mansion />
           <p></p>
           <Mansion2Deg />
-          <p></p>
           <MansionAccumList />
           <BindEquaEclp />
           <Round />

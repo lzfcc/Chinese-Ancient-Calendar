@@ -160,8 +160,8 @@ export default class Day extends React.Component {
       return
     }
     let YearStart = parseInt(this.state.YearStart)
-    if (YearStart < -2500 || YearStart > 9999) {
-      alert('year range: -2500 to 9999');
+    if (YearStart < -3807 || YearStart > 9999) {
+      alert('year range: -3807 to 9999');
       return
     }
     let YearEnd = YearStart

@@ -1,40 +1,21 @@
 import React from 'react'
+import { NameDayList } from '../Cal/para_constant'
+import MenuSelect from '../MenuSelect'
 import { bindMansionAccumList } from '../Cal/astronomy_bind'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      a: 'Shoushi',
-      b: 1281,
+      calendars: [],
+      Year: 1281,
     }
     this.handle = this.handle.bind(this)
   }
 
-  input() {
-    return (
-      <span className='year-select'>
-        <span>曆法</span>
-        <input className='width3'
-          value={this.state.a}
-          onChange={e => {
-            this.setState({ a: e.currentTarget.value });
-          }}
-        />
-        <span> 年份</span>
-        <input className='width3'
-          value={this.state.b}
-          onChange={e => {
-            this.setState({ b: e.currentTarget.value });
-          }}
-        />
-      </span>
-    );
-  }
-
   handle() {
     try {
-      const { EclpAccumPrint, EquaAccumPrint } = bindMansionAccumList(this.state.a, this.state.b)
+      const { EclpAccumPrint, EquaAccumPrint } = bindMansionAccumList(this.state.calendars, this.state.Year)
       this.setState({ EclpAccumPrint, EquaAccumPrint })
     } catch (e) {
       alert(e.message)
@@ -74,11 +55,38 @@ export default class Converter extends React.Component {
       </div>
     )
   }
+  renderCalendar() {
+    let cals = NameDayList
+    return (
+      <span className='calendar-select'>
+        <MenuSelect
+          calMap={cals}
+          onSelect={selected => {
+            this.setState({ calendars: selected })
+          }}
+        />
+      </span>
+    );
+  }
+  renderInput() {
+    return (
+      <span className='year-select'>
+        <input
+          value={this.state.Year}
+          onChange={e => {
+            this.setState({ Year: e.currentTarget.value });
+          }}
+        />
+        <span>年</span>
+      </span>
+    );
+  }
 
   render() {
     return (
       <div>
-        {this.input()}
+        {this.renderCalendar()}
+        {this.renderInput()}
         <button onClick={this.handle} className='button4-6'>黃赤宿鈐</button>
         {this.result()}
       </div>
