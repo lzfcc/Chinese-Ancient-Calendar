@@ -7,8 +7,8 @@ import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumLi
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { autoRise } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
-const Index = (Name, YearStart, YearEnd) => {
-    // export default (Name, YearStart, YearEnd) => {
+// const Index = (Name, YearStart, YearEnd) => {
+export default (Name, YearStart, YearEnd) => {
     const Bind = Name => {
         const type = Para[Name].Type
         if (type === 1) return N1
