@@ -8,11 +8,12 @@ import {
 import {
     YearGodConvert, YearColorConvert, MonColorConvert,
 } from './day_luck.mjs'
-import { sunQing, moonQing, LonHigh2Flat, HighLon2FlatLat, sunRiseQing, twilight, deg2Hms, Lat2NS, GongHigh2Flat, starEclp2Equa, Lon2Gong, moonRiseQing } from './newm_shixian.mjs'
+import { sunQing, moonQing, LonHigh2Flat, HighLon2FlatLat, sunRiseQing, twilight, deg2Hms, Lat2NS, GongHigh2Flat, Lon2Gong, moonRiseQing } from './newm_shixian.mjs'
 import CalNewm from './newm_index.mjs'
 import { mansionQing, midstarQing } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { ClockWest } from './time_decimal2clock.mjs'
+import { starEclp2Equa } from './astronomy_west.mjs'
 export const D2 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Main = (Name, Y) => {

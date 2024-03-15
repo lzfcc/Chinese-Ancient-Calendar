@@ -3,6 +3,7 @@ import Para from './para_calendars.mjs'
 import { ScList, deci, fix } from './para_constant.mjs'
 import { mansionQing } from './astronomy_other.mjs'
 import { clockQingB } from './time_decimal2clock.mjs'
+import { starEclp2Equa } from './astronomy_west.mjs'
 const abs = X => Math.abs(X)
 const sign = X => Math.sign(X)
 const pi = Math.PI
@@ -107,7 +108,7 @@ const BaC_Sph = (B, C, a) => acos(sin(B) * sin(C) * cos(a) - cos(B) * cos(C))
 // console.log(BaC_Sph(90, 83.61729023292902, 72.7386111111)) // 72.84893171874154
 // console.log(BaC_Sph(72.8488888889,90,LonHigh2Flat(72.8488888889, 90 - abs(62.06444444444)))) //19.255410907734177
 // 斜弧三角形已知兩邊和夾角求另一邊
-const aCb_Sph = (a, b, C) => { // 納白爾公式 https://wenku.baidu.com/view/145cd0f4b84cf7ec4afe04a1b0717fd5360cb2f1.html
+export const aCb_Sph = (a, b, C) => { // 納白爾公式 https://wenku.baidu.com/view/145cd0f4b84cf7ec4afe04a1b0717fd5360cb2f1.html
     const tanAPlBDiv2 = cos((a - b) / 2) / cos((a + b) / 2) * cot(C / 2)
     const tanAMiBDiv2 = sin((a - b) / 2) / sin((a + b) / 2) * cot(C / 2)
     const tancdiv2 = cos(atan(tanAPlBDiv2)) / cos(atan(tanAMiBDiv2)) * tan((a + b) / 2)
@@ -142,20 +143,7 @@ const White2Eclp = (Mobliq, Node, Whitelongi) => {
         MoonLat: HighLon2FlatLat(Mobliq, Whitelongi)
     }
 }
-export const starEclp2Equa = (Sobliq, Lon, Lat) => { // 黃赤大距、黃經、黃緯
-    const Gong = Lon2Gong(Lon)
-    const EquaLat = 90 - aCb_Sph(Sobliq, 90 - Lat, t1(Gong)) // 赤緯
-    const A = acos(
-        (cos(90 - Lat) - cos(Sobliq) * cos(90 - EquaLat)) /
-        (sin(Sobliq) * sin(90 - EquaLat)))  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
-    return {
-        EquaLon: Gong2Lon(Gong < 180 ? A : 360 - A),
-        EquaLat
-    }
-}
-// console.log(LonHigh2Flat(23 + 29.5 / 60, 45))
-// console.log(starEclp2Equa(23 + 29.5 / 60, 135, 0).EquaLon)
-// console.log(starEclp2Equa(23 + 29.5 / 60, 27 + 10 / 60, 29 + 22 / 60)) // 考成卷十六恆星曆理算例:赤經緯23度41分58秒=23.6994444444，8度5分4秒=8.08444444444
+
 const moonEclp2EquaGuimao = (Sobliq, Lon, Lat) => { // 《後編》已知黃道經緯度求赤道經緯度，見月食曆法
     const A_ArcMNox_Eclp = (Lat > 0 ? 1 : -1) * t3(acot(sin(t3(Lon)) * cot(Lat))) // 太陰距二分弧與黃道交角。單獨算沒問題。近似成平面三角就可以了 sinAcotB=cotC，也就是a/r·r/h=a/h
     const A_ArcMNox_Equa = (Lon > 180 ? -1 : 1) * Sobliq + A_ArcMNox_Eclp // 太陰距二分弧與赤道交角
@@ -167,7 +155,6 @@ const moonEclp2EquaGuimao = (Sobliq, Lon, Lat) => { // 《後編》已知黃道�
         EquaLat: atan(tan(A_ArcMNox_Equa) * sin(t3(EquaLon)))
     }
 }
-// console.log(starEclp2Equa(23.9, 220, 5))
 // console.log(moonEclp2EquaGuimao(23.9, 220, 5)) // 離黃道不遠的時候兩者區別不大
 export const twilight = (Sobliq, RiseLat, SunLon) => { // 民用曚影時長。應該也是用的正午太陽緯度
     const limit = 6 // 民用6度，天文18度

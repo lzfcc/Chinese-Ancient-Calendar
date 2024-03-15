@@ -81,7 +81,7 @@ export default class Converter extends React.Component {
   render() {
     return (
       <div>
-        <h3>赤經 ⇌ 黃經</h3>
+        <h3>太陽赤經 ⇌ 黃經</h3>
         {this.input()}
         <button onClick={this.handle} className='button4-6'>Eclp&Equa</button>
         {this.result()}

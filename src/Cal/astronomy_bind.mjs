@@ -7,7 +7,7 @@ import {
 } from './astronomy_formula.mjs'
 import { Hushigeyuan, HushigeyuanMoon } from './equa_geometry.mjs'
 import {
-    EquaEclpWest, sunRise, Lon2DialWest, ConstWest,
+    EquaEclpWest, sunRise, Lon2DialWest, ConstWest, starEclp2Ceclp, starEclp2Equa, testEclpEclpDif,
 } from './astronomy_west.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
 import { NameList, AutoDegAccumList, MansionNameList, MansionNameListQing } from './para_constant.mjs'
@@ -338,6 +338,16 @@ export const bindEquaEclp = (GongRaw, year) => {
             }
         }))
     return { Range, Print }
+}
+export const bindStarEclp2Equa = (Sobliq, Lon, Lat) => {
+    Sobliq = +Sobliq, Lon = +Lon, Lat = +Lat
+    const { EquaLon, EquaLat } = starEclp2Equa(Sobliq, Lon, Lat)
+    const Ceclp = starEclp2Ceclp(Sobliq, Lon, Lat)
+    const DifMax = testEclpEclpDif(Sobliq, Lat)
+    let Dif = Ceclp - Lon
+    if (Dif > 180) Dif -= 360
+    Dif = +Dif.toFixed(5)
+    return { EquaLon, EquaLat: +EquaLat.toFixed(5), Ceclp, Dif, DifMax }
 }
 export const bindLon2Lat = (Sd, SolsDeci) => {
     Sd = +Sd

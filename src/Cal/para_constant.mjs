@@ -2,8 +2,9 @@ import big from "decimal.js";
 import frc from "fraction.js";
 import nzh from "nzh/hk.js";
 import Para from "./para_calendars.mjs";
-import { LonHigh2Flat, starEclp2Equa } from "./newm_shixian.mjs";
+import { LonHigh2Flat } from "./newm_shixian.mjs";
 import { autoEquaEclp } from "./astronomy_bind.mjs";
+import { starEclp2Equa } from "./astronomy_west.mjs";
 
 big.config({
   precision: 64,
@@ -1139,7 +1140,7 @@ export const AutoDegAccumList = (Name, Y) => {
     EclpAccumList[29] = 360
     const StartEclpLon = (- MansionConst + Precession + 270 + 360) % 360 // 宿度起算點。本質上MansionConst是另一套計算度數的體系，那麼赤道上的MansionConst也需要黃轉赤
     const StartEquaLon = LonHigh2Flat(Sobliq, StartEclpLon)
-    for (let i = 1; i <= 29; i++) {
+    for (let i = 1; i <= 28; i++) {
       const MansionLon = (EclpAccumList[i] + StartEclpLon) % 360 // 某星黃經   
       // EquaAccumList[i] = ((starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i]).EquaLon + MansionConst + 90 + 360) % 360) // 這是以前錯的
       const MansionEquaLon = starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i]).EquaLon
@@ -1149,6 +1150,7 @@ export const AutoDegAccumList = (Name, Y) => {
     for (let i = 1; i <= 28; i++) {
       EquaAccumList[i] = (EquaAccumList[i] - adj) % 360
     }
+    EquaAccumList[29] = 360
     for (let i = 1; i <= 28; i++) {
       if (EquaAccumList[i] > EquaAccumList[i + 1]) {
         const tmp = EquaAccumList[i]
@@ -1211,7 +1213,7 @@ export const AutoDegAccumList = (Name, Y) => {
   }
   return { EclpAccumList, EquaAccumList, Exchange }
 };
-// console.log(AutoDegAccumList('Guimao', 15000))
+// console.log(AutoDegAccumList('Guimao', 1500))
 
 export const GongList = [
   "娵訾",

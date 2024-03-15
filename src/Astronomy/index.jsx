@@ -6,9 +6,10 @@ import Deg2Mansion from './Deg2Mansion'
 import Mansion2Deg from './Mansion2Deg'
 import MansionAccumList from './MansionAccumList'
 import BindLon2Lat from './Lon2Lat'
+import StarEqua from './StarEqua'
 import MoonLon from './MoonLon'
 import Const from './Const'
-import Deciaml2Angle from './Deciaml2Angle'
+// import Deciaml2Angle from './Deciaml2Angle'
 import SunEclipse from './SunEclipse'
 import MoonEclipse from './MoonEclipse'
 import Node2Cycle from './Node'
@@ -18,7 +19,7 @@ import Round from './Round'
 import Round1 from './Round1'
 import Round2 from './Round2'
 import Hushigeyuan from './Hushigeyuan'
-import Heron from './Heron'
+// import Heron from './Heron'
 import SolarChange from './SolarChange'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
@@ -51,6 +52,7 @@ export default class Astronomy extends React.Component {
           <Mansion2Deg />
           <MansionAccumList />
           <BindEquaEclp />
+          <StarEqua />
           <h2>晷漏</h2>
           <BindLon2Lat />
           <Round />

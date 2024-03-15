@@ -1,9 +1,10 @@
 import { big, frc } from './para_constant.mjs'
 import { Frac2FalseFrac, DeciFrac2IntFrac } from './equa_math.mjs'
-import { Gong2Lon, GongFlat2High, GongHigh2Flat, HighLon2FlatLat, Lon2Gong, LonFlat2High, LonHigh2Flat } from './newm_shixian.mjs'
+import { Gong2Lon, GongFlat2High, GongHigh2Flat, HighLon2FlatLat, Lon2Gong, LonFlat2High, LonHigh2Flat, aCb_Sph } from './newm_shixian.mjs'
 const pi = Math.PI //big.acos(-1)
 // const d2r = degree => big(degree).mul(pi).div(180)
 // const r2d = degree => big(degree).mul(180).div(pi)
+const abs = X => Math.abs(X)
 const d2r = d => d * pi / 180
 const r2d = r => r * 180 / pi
 const sin = X => Math.sin(d2r(X))//.toFixed(8) // 數理精蘊附八線表用的是七位小數
@@ -13,7 +14,7 @@ const cot = X => (1 / Math.tan(d2r(X)))//.toFixed(8)
 const asin = X => r2d(Math.asin(X))//.toFixed(8)
 const acos = X => r2d(Math.acos(X))//.toFixed(8)
 const atan = X => r2d(Math.atan(X))//.toFixed(8)
-
+const t1 = X => abs(180 - X % 360)
 // const tanliufenyi = (Deg, h) => {
 //     Deg = d2r(Deg)
 //     const x = big(h).div(Deg.tan())
@@ -116,6 +117,45 @@ export const HighLon2FlatLatWest = (GongRaw, year) => { // 根據當年的黃赤
     const Lon = (GongRaw * 360 / Sidereal + 270) % 360
     return HighLon2FlatLat(e, Lon)
 }
+
+/**
+ * 如果不用big，精度只有5位數
+ * @param {*} Sobliq 黃赤大距
+ * @param {*} Lon 黃經
+ * @param {*} Lat 黃緯
+ * @returns 
+ */
+export const starEclp2Equa = (Sobliq, Lon, Lat) => { // 黃赤大距、黃經、黃緯
+    const Gong = Lon2Gong(Lon)
+    const EquaLat = 90 - aCb_Sph(Sobliq, 90 - Lat, t1(Gong)) // 赤緯
+    let A = +(acos(
+        (cos(90 - Lat) - cos(Sobliq) * cos(90 - EquaLat)) /
+        (sin(Sobliq) * sin(90 - EquaLat)))).toFixed(5)  // cosA=(cosa-cosb·cosc)/(sinb·sinc)
+    A = A || 180
+    return {
+        EquaLon: +(Gong2Lon(Gong < 180 ? A : 360 - A)).toFixed(5),
+        EquaLat: +EquaLat.toFixed(10)
+    }
+}
+export const starEclp2Ceclp = (Sobliq, Lon, Lat) => +(LonFlat2High(Sobliq, starEclp2Equa(Sobliq, Lon, Lat).EquaLon)).toFixed(5)  // 黃道經緯轉古代極黃經
+export const testEclpEclpDif = (Sobliq, Lat) => { // 看極黃經和黃經差多少
+    const Dif = []
+    for (let i = 0; i < 180; i++) {
+        Dif[i] = (starEclp2Ceclp(Sobliq, i, Lat) - i) % 360
+        if (Dif[i] > 180) Dif[i] -= 360
+        Dif[i] = +Dif[i].toFixed(5)
+    }
+    const Max = Math.max(...Dif)
+    const A = Dif.indexOf(Max)
+    const B = Dif.indexOf(-Max)
+    const Print = `極黃經與黃經之差，約在${A}和${B}°出現極值${Max}°`
+    return Print
+}
+// console.log(testEclpEclpDif(23.5, 20))
+// console.log(starEclp2Ceclp(23.5, 5, 10))
+// console.log(starEclp2Equa(23.5, 1, 10))
+// console.log(starEclp2Equa(23 + 29.5 / 60, 27 + 10 / 60, 29 + 22 / 60)) // 考成卷十六恆星曆理算例:赤經緯23度41分58秒=23.6994444444，8度5分4秒=8.08444444444
+
 /**
  * 一天之内太阳高度角的变化速率如何计算？ - Pjer https://www.zhihu.com/question/25909220/answer/1026387602 一年中太阳直射点在地球上的移动速度是多少？ - 黄诚赟的回答 https://www.zhihu.com/question/335690936/answer/754032487「太阳直射点的纬度变化不是匀速的，春分秋分最大，夏至冬至最小。」
 https://zh.wikipedia.org/zh-hk/%E5%A4%AA%E9%99%BD%E4%BD%8D%E7%BD%AE
