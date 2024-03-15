@@ -374,7 +374,7 @@ h2 {
 table {
   border-collapse: collapse;
   font-family: var(--codesans);
-  font-size: .9em;
+  font-size: 1em;
   line-height: 1.6em;
   text-align: center;
   margin: .6em auto 2em;
@@ -416,12 +416,10 @@ table td {
 }
 
 .table2 p {
-  font-size: .9em;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .table2 table {
-  font-size: .9em;
   margin: .25em auto;
   border: none;
 }
@@ -977,7 +975,7 @@ hr {
 }
 
 .day-table td p.Sc {
-  font-size: 1.2em;
+  font-size: 1.3em;
   font-family: var(--serif);
   letter-spacing: 1px;
   font-weight: bold;

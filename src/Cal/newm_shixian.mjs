@@ -1,7 +1,7 @@
 // 可參考廖育棟的時憲曆日月氣朔網站 http://ytliu.epizy.com/Shixian/index_chinese.html ，有一分很漂亮的公式說明。
 import Para from './para_calendars.mjs'
 import { ScList, deci, fix } from './para_constant.mjs'
-import { gong2MansionQing } from './astronomy_other.mjs'
+import { mansionQing } from './astronomy_other.mjs'
 import { clockQingB } from './time_decimal2clock.mjs'
 const abs = X => Math.abs(X)
 const sign = X => Math.sign(X)
@@ -1104,7 +1104,7 @@ export const N4 = (Name, Y) => {
         const NowlineSc = ScList[(SolsmorScOrder + ~~NowlineSmd) % 60]
         // const NowlineDeci = fix(deci(NowlineSmd), 3)
         const NowlineDeci = clockQingB(deci(NowlineSmd) * 100)
-        const { Eclp: TermEclp, Equa: TermEqua } = gong2MansionQing(Name, Y, TermGong)
+        const { Eclp: TermEclp, Equa: TermEqua } = mansionQing(Name, Y, TermGong)
         // 再加上迭代。曆書用的本日次日比例法，少部分密合，大部分相差5-15分鐘。輸出的是視時
         const tmp = TermGong - sunQing(Name, SunRoot, SperiRoot, AcrlineSmd).SunGong // 預防冬至0宮的問題
         const AcrSmd = AcrlineSmd + (abs(tmp) > 180 ? tmp + 360 : tmp) / SunAvgVd // 迭代
@@ -1194,7 +1194,7 @@ export const N4 = (Name, Y) => {
             NowSmd[i] = AcrSmd + timeAvg2Real(Name, Sobliq, AcrSunLon, AcrSunCorr) // 朔望只有月離初均，沒有日差，所以都要加。不清楚新法的交食用那種日差
             NowSc[i] = ScList[(SolsmorScOrder + ~~NowSmd[i]) % 60]
             NowDeci[i] = fix(deci(NowSmd[i]), 3)
-            const Func = gong2MansionQing(Name, Y, AcrSunGong)
+            const Func = mansionQing(Name, Y, AcrSunGong)
             Eclp[i] = Func.Eclp
             Equa[i] = Func.Equa
             //////// 交食

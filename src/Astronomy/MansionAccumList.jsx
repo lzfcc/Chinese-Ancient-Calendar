@@ -15,8 +15,8 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { EclpAccumPrint, EquaAccumPrint } = bindMansionAccumList(this.state.calendars, this.state.Year)
-      this.setState({ EclpAccumPrint, EquaAccumPrint })
+      const { EclpAccumPrint, EquaAccumPrint, SolsEclpPrint, SolsEquaPrint } = bindMansionAccumList(this.state.calendars, this.state.Year)
+      this.setState({ EclpAccumPrint, EquaAccumPrint, SolsEclpPrint, SolsEquaPrint })
     } catch (e) {
       alert(e.message)
     }
@@ -29,6 +29,7 @@ export default class Converter extends React.Component {
     return (
       <div className='ans table2'>
         <h3>黃道宿鈐</h3>
+        <p>冬至日躔黃道 {(this.state.SolsEclpPrint)}</p>
         <table>
           {this.state.EclpAccumPrint.map(row => {
             return (
@@ -41,6 +42,7 @@ export default class Converter extends React.Component {
           })}
         </table>
         <h3>赤道宿鈐</h3>
+        <p>冬至日躔赤道 {(this.state.SolsEquaPrint)}</p >
         <table>
           {this.state.EquaAccumPrint.map(row => {
             return (

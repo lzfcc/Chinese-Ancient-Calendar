@@ -1,6 +1,6 @@
 import { ScList, TermList, AutoDegAccumList, deci } from './para_constant.mjs'
 import Para from './para_calendars.mjs'
-import { gong2Mansion } from './astronomy_other.mjs'
+import { mansion, midstar } from './astronomy_other.mjs'
 
 export default (Name, Y) => {
     const { Lunar, Solar, SolsOriginDif, SolsOriginMon,
@@ -86,7 +86,7 @@ export default (Name, Y) => {
         NewmAvgSc[i] = ScList[(NewmInt[i] % 60 + 60) % 60]
         NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6)
         NewmSd[i] = NewmAvgBare[i] - SolsAccumRaw
-        if (MansionRaw) NewmEqua[i] = gong2Mansion(Name, Y, undefined, NewmSd[i]).Mansion
+        if (MansionRaw) NewmEqua[i] = mansion(Name, Y, undefined, NewmSd[i]).Equa
         // NewmJd[i] = Math.round(parseFloat((JdOrigin + (~~((Math.round(parseFloat((JdSols + Y * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
         SyzygyAvgRaw[i] = parseFloat(((~~((BuYear - 1) * 235 / 19 + (SolsOriginMon || 0)) + ZhengNum + i - .5) * Lunar + SolsConst).toPrecision(14)) + BuScOrder
         SyzygyAvgMod[i] = (SyzygyAvgRaw[i] % 60 + 60) % 60
@@ -118,9 +118,8 @@ export default (Name, Y) => {
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermSd = TermAvgBare[i] - SolsAccumRaw
-                const Func = gong2Mansion(Name, Y, undefined, TermSd, SolsDeci)
-                TermEqua[i] = Func.Mansion
-                TermDuskstar[i] = Func.MorningDuskstar
+                TermEqua[i] = mansion(Name, Y, undefined, TermSd).Equa
+                TermDuskstar[i] = midstar(Name, Y, undefined, TermSd, SolsDeci)
             }
         }
     } else {
@@ -134,9 +133,8 @@ export default (Name, Y) => {
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
                 const TermSd = TermAvgBare[i] - SolsAccumRaw
-                const Func = gong2Mansion(Name, Y, undefined, TermSd, SolsDeci)
-                TermEqua[i] = Func.Mansion
-                TermDuskstar[i] = Func.MorningDuskstar
+                TermEqua[i] = mansion(Name, Y, undefined, TermSd).Equa
+                TermDuskstar[i] = midstar(Name, Y, undefined, TermSd, SolsDeci)
             }
         }
         while (LeapNumTerm >= 1 && (TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1]) && (TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2)) {
@@ -163,9 +161,8 @@ export default (Name, Y) => {
             TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
                 const TermSd = TermAvgBare[i] - SolsAccumRaw
-                const Func = gong2Mansion(Name, Y, undefined, TermSd, SolsDeci)
-                TermEqua[i] = Func.Mansion
-                TermDuskstar[i] = Func.MorningDuskstar
+                TermEqua[i] = mansion(Name, Y, undefined, TermSd).Equa
+                TermDuskstar[i] = midstar(Name, Y, undefined, TermSd, SolsDeci)
             }
         }
     }

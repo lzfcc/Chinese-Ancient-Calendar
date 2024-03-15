@@ -10,10 +10,9 @@ import {
 } from './day_luck.mjs'
 import { sunQing, moonQing, LonHigh2Flat, HighLon2FlatLat, sunRiseQing, twilight, deg2Hms, Lat2NS, GongHigh2Flat, starEclp2Equa, Lon2Gong, moonRiseQing } from './newm_shixian.mjs'
 import CalNewm from './newm_index.mjs'
-import { gong2MansionQing, Lon2Midstar } from './astronomy_other.mjs'
+import { mansionQing, midstarQing } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { ClockWest } from './time_decimal2clock.mjs'
-const abs = x => Math.abs(x)
 export const D2 = (Name, YearStart, YearEnd) => {
     YearEnd = YearEnd || YearStart
     const Main = (Name, Y) => {
@@ -64,7 +63,7 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 const { Sorb, SunCorr, SunLon, SunGong, Speri } = sunQing(Name, SunRoot, SperiRoot, SmdMidn)
                 const { SunLon: SunLonMor } = sunQing(Name, SunRoot, SperiRoot, SmdMidn + 1)
                 const { MoonGong, MoonLon, MoonLat, Node, Mapo } = moonQing(Name, MoonRoot, NodeRoot, MapoRoot, SmdMidn, SunCorr, SunGong, Speri, Sorb)
-                const Func = gong2MansionQing(Name, Y, SunGong, 2)
+                const Func = mansionQing(Name, Y, SunGong)
                 Eclp[i][k] = deg2Hms(SunLon) + Func.Eclp
                 // EclpMansion[i][k] =  // 注意：入宿度是轉換成了古度的
                 const SEquaLon = LonHigh2Flat(Sobliq, SunLon)
@@ -73,14 +72,14 @@ export const D2 = (Name, YearStart, YearEnd) => {
                 Lat[i][k] = Lat2NS(HighLon2FlatLat(Sobliq, SunLon))
                 Rise[i][k] = sunRiseQing(Sobliq, RiseLat, SunLon)
                 const TwilightLeng = twilight(Sobliq, RiseLat, SunLon)
-                const Func2 = Lon2Midstar(Name, Y, SunLon, SunLonMor, Rise[i][k])
+                const Func2 = midstarQing(Name, Y, SunLon, SunLonMor, Rise[i][k])
                 Morningstar[i][k] = ClockWest(Rise[i][k] - TwilightLeng, false) + ' ' + Func2.Morningstar
                 Duskstar[i][k] = ClockWest(1 - Rise[i][k] + TwilightLeng, false) + ' ' + Func2.Duskstar
                 Rise[i][k] = ClockWest(Rise[i][k]) + ' ' + ClockWest(1 - Rise[i][k], false)
-                MoonEclp[i][k] = deg2Hms(MoonLon) + gong2MansionQing(Name, Y, MoonGong, 2).Eclp
+                MoonEclp[i][k] = deg2Hms(MoonLon) + mansionQing(Name, Y, MoonGong).Eclp
                 MoonEclpLat[i][k] = Lat2NS(MoonLat)
                 const Func3 = starEclp2Equa(Sobliq, MoonLon, MoonLat)
-                MoonEqua[i][k] = deg2Hms(Func3.EquaLon) + gong2MansionQing(Name, Y, Lon2Gong(Func3.EquaLon), 2, true).Equa
+                MoonEqua[i][k] = deg2Hms(Func3.EquaLon) + mansionQing(Name, Y, Lon2Gong(Func3.EquaLon), true).Equa
                 MoonEquaLat[i][k] = Lat2NS(Func3.EquaLat)
                 const { MoonRise: MoonRiseTmp, MoonSet: MoonSetTmp } = moonRiseQing(RiseLat, Func3.EquaLon, Func3.EquaLat, SEquaLon)
                 MoonRise[i][k] = ClockWest(MoonRiseTmp) + ' ' + ClockWest(MoonSetTmp, false)
@@ -111,4 +110,4 @@ export const D2 = (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(D2('Guimao', 500))
+// console.log(D2('Guimao', 200))

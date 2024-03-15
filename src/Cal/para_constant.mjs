@@ -2,8 +2,7 @@ import big from "decimal.js";
 import frc from "fraction.js";
 import nzh from "nzh/hk.js";
 import Para from "./para_calendars.mjs";
-import { starEclp2Equa } from "./newm_shixian.mjs";
-import { Deg2Mansion } from "./astronomy_other.mjs";
+import { LonHigh2Flat, starEclp2Equa } from "./newm_shixian.mjs";
 import { autoEquaEclp } from "./astronomy_bind.mjs";
 
 big.config({
@@ -1070,7 +1069,7 @@ const EclpDegJiyuan = [0,
   18, 12.75, 15.5, 11, 16.5, .5, 9.75,
   30.5, 2.5, 13.25, 6.75, 17.75, 20, 18.5,
 ];
-const EclpDegNewDaming = [0,
+const EclpDegDaming3 = [0,
   12.75, 9.75, 16.25, 5.75, 6, 18.25, 9.5,
   23, 7, 11, 9, 16, 18.25, 9.5,
   17.75, 12.75, 15.5, 11, 16.5, .5, 9.75,
@@ -1083,7 +1082,11 @@ const EclpDegShoushi = [0,
   31.03, 2.11, 13, 6.31, 17.79, 20.09, 18.75,
 ]; // 授時黃道
 // 西曆
-const EclpDegXinfa = [0, 10.583333333333, 10.666666666667, 17.9, 4.766666666667, 7.716666666667, 15.433333333333, 9.83333333333, 23.35, 9.1, 10.233333333333, 9.983333333333, 20.116666666667, 15.683333333333, 13.266666666667, 11.483333333333, 13, 13.016666666667, 9.266666666667, 13.183333333333, 1.35, 11.55, 30.416666666667, 5.5, 16.1, 8.4, 18.05, 17, 13.05] // 崇禎元年1628戊辰
+const EclpDegXinfa = [0,
+  23.35, 9.1, 10.233333333333, 9.983333333333, 20.116666666667, 15.683333333333, 13.266666666667,
+  10.583333333333, 10.666666666667, 17.9, 4.766666666667, 7.716666666667, 15.433333333333, 9.83333333333,
+  11.483333333333, 13, 13.016666666667, 9.266666666667, 13.183333333333, 1.35, 11.55,
+  30.416666666667, 5.5, 16.1, 8.4, 18.05, 17, 13.05] // 崇禎元年1628戊辰
 // const EclpAccumXinfa = [0, 23.35, 32.45, 42.68333333333334, 52.66666666666667, 72.78333333333333, 88.46666666666667, 101.73333333333333, 113.21666666666667, 126.21666666666668, 139.23333333333332, 148.5, 161.6833333333333, 163.03333333333333, 174.58333333333331, 205, 210.5, 226.6, 235, 253.05, 270.05, 283.1, 293.68333333333334, 304.35, 322.25, 327.01666666666665, 334.73333333333335, 350.16666666666663]
 const EclpDegJiazi = [0,
   10.616666666666667, 10.633333333333333, 17.833333333333333, 4.8333333333333333, 7.55, 15.933333333333333, 9, // 角七宿76.4
@@ -1101,9 +1104,9 @@ export const EclpLatJiazi = [0,
   -.88333333333333, -.8, -12.45, -22.4, -26.2, -22.68333333333333, -14.41666666666667 // 井
 ]
 export const MansionNameList =
-  "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢觜參井鬼柳星張翼軫"; // 值日，星期日對應房、虛、昴、星
-// export const MansionNameListQing =
-// "軫角亢氐房心尾箕斗牛女虛危室壁奎婁胃昴畢參觜井鬼柳星張翼軫"; // 參觜互換
+  ['軫', '角', '亢', '氐', '房', '心', '尾', '箕', '斗', '牛', '女', '虛', '危', '室', '壁', '奎', '婁', '胃', '昴', '畢', '觜', '參', '井', '鬼', '柳', '星', '張', '翼', '軫']; // 值日，星期日對應房、虛、昴、星
+export const MansionNameListQing =
+  ['軫', '角', '亢', '氐', '房', '心', '尾', '箕', '斗', '牛', '女', '虛', '危', '室', '壁', '奎', '婁', '胃', '昴', '畢', '參', '觜', '井', '鬼', '柳', '星', '張', '翼', '軫']; // 參觜互換
 export const MansionAnimalNameList =
   "蚓蛟龍貉兔狐虎豹獬牛蝠鼠燕豬㺄狼狗雉雞烏猴猿犴羊獐馬鹿蛇蚓";
 // 西曆：所有時代都用自己的度數，古曆：各個時代用各個時代的黃道赤道，清代赤道继续用授时
@@ -1117,7 +1120,7 @@ export const AutoDegAccumList = (Name, Y) => {
     let DegList = [], DegAccumList = [];
     if (MansionRaw) {
       DegList = ListRaw.slice();
-      DegList[MansionFracPosi] += deci(Sidereal)
+      if (MansionFracPosi) DegList[MansionFracPosi] += deci(Sidereal)
       DegAccumList[0] = 0, DegAccumList[1] = 0
       for (let i = 1; i <= 28; i++) { // 從1開始索引
         DegAccumList[i] = DegAccumList[i - 1] + DegList[i - 1] // 在這卡了兩個小時終於對了
@@ -1126,41 +1129,38 @@ export const AutoDegAccumList = (Name, Y) => {
     }
     return DegAccumList
   }
-  const raw2AccumB = ListRaw => {
-    let DegAccumList = []
-    if (MansionRaw) {
-      DegAccumList[0] = 0, DegAccumList[1] = 0
-      for (let i = 1; i <= 28; i++) { // 西曆不用加斗分
-        DegAccumList[i] = DegAccumList[i - 1] + ListRaw[i - 1]
-      }
-      for (let i = 1; i <= 28; i++) {
-        DegAccumList[i] *= Sidereal / 360
-        DegAccumList[i] = +DegAccumList[i].toFixed(3)
-      }
-    }
-    return DegAccumList
-  }
   let EquaAccumList = [], EclpAccumList = []
   // 古曆是由赤道宿度算黃道，西曆是由黃道宿度算赤道
+  let Exchange = [] // 參觜互換
   if (Type === 13) {
-    const p = 360 / Sidereal
     const Precession = StarVy * (Y - (MansionOriginAd || CloseOriginAd))
-    if (Name === 'Jiazi' || Name === 'Guimao') {
-      EclpAccumList = raw2AccumB(EclpDegJiazi)
-    } else {
-      EclpAccumList = raw2AccumB(EclpDegXinfa)
-    }
-    EclpAccumList[29] = +Sidereal.toFixed(4)
-    for (let i = 1; i <= 28; i++) {
-      const MansionLon = (EclpAccumList[i] * p - MansionConst + Precession + 270) % 360 // 某星黃經
-      EquaAccumList[i] = ((starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i]).EquaLon + MansionConst + 90 + 360) % 360) // 這個積度是宮度
+    if (Name === 'Jiazi' || Name === 'Guimao') EclpAccumList = raw2Accum(EclpDegJiazi)
+    else EclpAccumList = raw2Accum(EclpDegXinfa)
+    EclpAccumList[29] = 360
+    const StartEclpLon = (- MansionConst + Precession + 270 + 360) % 360 // 宿度起算點。本質上MansionConst是另一套計算度數的體系，那麼赤道上的MansionConst也需要黃轉赤
+    const StartEquaLon = LonHigh2Flat(Sobliq, StartEclpLon)
+    for (let i = 1; i <= 29; i++) {
+      const MansionLon = (EclpAccumList[i] + StartEclpLon) % 360 // 某星黃經   
+      // EquaAccumList[i] = ((starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i]).EquaLon + MansionConst + 90 + 360) % 360) // 這是以前錯的
+      const MansionEquaLon = starEclp2Equa(Sobliq, MansionLon, EclpLatJiazi[i]).EquaLon
+      EquaAccumList[i] = ((MansionEquaLon - StartEquaLon + 360) % 360)
     }
     const adj = EquaAccumList[1] - 360
     for (let i = 1; i <= 28; i++) {
-      EquaAccumList[i] = ((EquaAccumList[i] - adj) % Sidereal) / p
+      EquaAccumList[i] = (EquaAccumList[i] - adj) % 360
+    }
+    for (let i = 1; i <= 28; i++) {
+      if (EquaAccumList[i] > EquaAccumList[i + 1]) {
+        const tmp = EquaAccumList[i]
+        EquaAccumList[i] = EquaAccumList[i + 1]
+        EquaAccumList[i + 1] = tmp
+        Exchange.push(i)
+      }
+    }
+    for (let i = 1; i <= 28; i++) {
       EquaAccumList[i] = +EquaAccumList[i].toFixed(3)
     }
-    EquaAccumList[0] = 0, EquaAccumList[1] = 0, EquaAccumList[29] = +Sidereal.toFixed(4)
+    EquaAccumList[0] = 0, EquaAccumList[29] = 360
   } else {
     if (Y >= 1281) EquaListRaw = EquaDegShoushi
     else if (Y >= 1106) EquaListRaw = EquaDegJiyuan
@@ -1168,7 +1168,7 @@ export const AutoDegAccumList = (Name, Y) => {
     else if (Y >= 729) EquaListRaw = EquaDegDayan
     else EquaListRaw = EquaDegTaichu
     EquaAccumList = raw2Accum(EquaListRaw)
-    EquaAccumList[0] = 0, EquaAccumList[1] = 0, EquaAccumList[29] = +Sidereal.toFixed(4)
+    EquaAccumList[29] = +Sidereal.toFixed(4)
     if (Type >= 7) {
       const OriginYear = Y - (OriginAd || CloseOriginAd) + 1
       if (Name === 'Shoushi' || Name === 'Shoushi2') {
@@ -1196,28 +1196,22 @@ export const AutoDegAccumList = (Name, Y) => {
         EclpAccumList[i] = +(EclpAccumList[i]).toFixed(3)
       }
     } else { // 麟德以前還沒發明算黃道宿鈐的方法
-      if (Y >= 1628) {
-        if (Y >= 1684) EclpListRaw = EclpDegJiazi
-        else EclpListRaw = EclpDegXinfa
-        EclpAccumList = raw2AccumB(EclpListRaw)
-      } else {
-        if (Y >= 1281) EclpListRaw = EclpDegShoushi
-        // else if (Type === 10 && Y >= 1180 && Y <= 1280) EclpListRaw = EclpDegNewDaming // 'Daming3'
-        else if (Y >= 1106) EclpListRaw = EclpDegJiyuan
-        else if (Y >= 1065) EclpListRaw = EclpDegMingtian
-        else if (Y >= 964) EclpListRaw = EclpDegYingtian
-        else if (Y >= 729) EclpListRaw = EclpDegDayan
-        else if (Y >= 665) EclpListRaw = EclpDegLinde
-        else if (Name === "Huangji") EclpListRaw = EclpDegHuangji
-        else EclpListRaw = EclpDegEasthan
-        EclpAccumList = raw2Accum(EclpListRaw)
-      }
+      if (Y >= 1281) EclpListRaw = EclpDegShoushi
+      // else if (Type === 10 && Y >= 1180 && Y <= 1280) EclpListRaw = EclpDegDaming3
+      else if (Y >= 1106) EclpListRaw = EclpDegJiyuan
+      else if (Y >= 1065) EclpListRaw = EclpDegMingtian
+      else if (Y >= 964) EclpListRaw = EclpDegYingtian
+      else if (Y >= 729) EclpListRaw = EclpDegDayan
+      else if (Y >= 665) EclpListRaw = EclpDegLinde
+      else if (Name === "Huangji") EclpListRaw = EclpDegHuangji
+      else EclpListRaw = EclpDegEasthan
+      EclpAccumList = raw2Accum(EclpListRaw)
     }
-    EclpAccumList[0] = 0, EclpAccumList[1] = 0, EclpAccumList[29] = +Sidereal.toFixed(4)
+    EclpAccumList[0] = 0, EclpAccumList[29] = +Sidereal.toFixed(4)
   }
-  return { EclpAccumList, EquaAccumList }
+  return { EclpAccumList, EquaAccumList, Exchange }
 };
-// console.log(AutoDegAccumList('Shoushi', -2000))
+// console.log(AutoDegAccumList('Guimao', 15000))
 
 export const GongList = [
   "娵訾",
@@ -1388,12 +1382,3 @@ export const WestGongDayList = [31, 31, 31, 32, 31, 31, 30, 30, 29, 29, 30, 30];
 // 11 * 30 + 0 + 29 / 60,
 // 11 * 30 + 6 + 42 / 60,
 // 11 * 30 + 26 + 21 / 60]
-const xxx = [0, 0, 6.430580291831551, 18.729718817791813, 36.4396093534044, 40.40036440392685, 49.189947132986404, 67.22712198217525, 78.06578842682346, 104.68655562806882, 110.67660969230762, 121.24556610005814, 130.69677661681735, 148.87404940929153, 159.77579045945325, 175.39782604388913, 185.6230138901753, 202.18101335215272, 214.77874538053217, 226.95617668158152, 243.36549998456195, 245.95053491379812, 257.17146022265723, 290.71488260409603, 295.53757725036644, 308.70191576494653, 312.8618447041458, 327.4594142699145, 344.7971673626406, 365.2421875]
-const fa = () => {
-  const a = []
-  for (let i = 0; i < xxx.length; i++) {
-    a[i] = xxx[i + 1] - xxx[i]
-  }
-  return a
-}
-// console.log(fa())

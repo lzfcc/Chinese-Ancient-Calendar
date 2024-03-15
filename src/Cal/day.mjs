@@ -14,7 +14,7 @@ import {
     autoEquaEclp, autoMoonLon, autoMoonLat, autoLat, autoRise, autoDial
 } from './astronomy_bind.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
-import { gong2Mansion, AutoNineOrbit } from './astronomy_other.mjs'
+import { mansion, AutoNineOrbit, midstar } from './astronomy_other.mjs'
 import { Jd2Date1 } from './time_jd2date.mjs'
 import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
@@ -235,12 +235,12 @@ export const D1 = (Name, YearStart, YearEnd) => {
                             (tmp > 0 ? 'N' : 'S') + abs(tmp).toFixed(4)
                     }
                 }
-                const EquaFunc = gong2Mansion(Name, Y,
+                const EquaFunc = mansion(Name, Y,
                     Type >= 5 ? SunEclpLon : undefined,
-                    SdMidn, SolsDeci)
-                Equa[i][k] = SunEquaLon.toFixed(4) + EquaFunc.Mansion
-                Duskstar[i][k] = EquaFunc.MorningDuskstar
-                Eclp[i][k] = SunEclpLon.toFixed(4) + EquaFunc.EclpMansion
+                    SdMidn)
+                Equa[i][k] = SunEquaLon.toFixed(4) + EquaFunc.Equa
+                Eclp[i][k] = SunEclpLon.toFixed(4) + EquaFunc.Eclp
+                Duskstar[i][k] = midstar(Name, Y, Type >= 5 ? SunEclpLon : undefined, SdMidn, SolsDeci)
                 const LatTmp = autoLat(SdMidn, Name)
                 Lat[i][k] = (LatTmp > 0 ? 'N' : 'S') + abs(LatTmp).toFixed(3) + '度'
                 Rise[i][k] = autoRise(SdMidn, SolsDeci, Name).toFixed(3) + '刻'
@@ -248,7 +248,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 Dial[i][k] = DialTmp ? ' ' + DialTmp.toFixed(3) + '尺' : ''
                 Rise[i][k] += Dial[i][k]
                 // 每日夜半月黃經
-                const MoonMansion = gong2Mansion(Name, Y, MoonEclpLon).Mansion
+                const MoonMansion = mansion(Name, Y, MoonEclpLon).Equa
                 let MoonMansionNote = ''
                 if ((Type >= 2 && Type <= 4) && (MoonMansion[0] === '心' || MoonMansion[0] === '張')) { // 乾象：月在張心署之
                     MoonMansionNote = `<span class='MoonMansionNote'>忌刑</span>`

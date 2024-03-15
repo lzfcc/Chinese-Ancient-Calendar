@@ -1,8 +1,7 @@
 import Para from './para_calendars.mjs'
-import { ScList, AutoDegAccumList, deci, fix } from './para_constant.mjs'
+import { ScList, deci, fix } from './para_constant.mjs'
 import { AutoDifAccum, AutoTcorr } from './astronomy_acrv.mjs'
-import { gong2Mansion, AutoNewmPlus, AutoSyzygySub } from './astronomy_other.mjs'
-import { autoEquaEclp } from './astronomy_bind.mjs'
+import { mansion, AutoNewmPlus, AutoSyzygySub } from './astronomy_other.mjs'
 // console.log(13.17639477138888-385.81673571944444/29.530593)
 // const cal = (Name, Y) => {
 export default (Name, Y) => {
@@ -174,10 +173,10 @@ export default (Name, Y) => {
                     NewmPlus = Func.NewmPlus
                     NewmPlusPrint = Func.Print
                 }
-                const Func = gong2Mansion(Name, Y,
+                const Func = mansion(Name, Y,
                     Type >= 5 ? AcrSd[i] + AutoDifAccum(0, AcrSd[i], Name).SunDifAccum : undefined, AcrSd[i])
-                Equa[i] = Func.Mansion // 授時：定朔加時定積度=定朔加時中積（即定朔入曆）+盈縮差
-                Eclp[i] = Func.EclpMansion
+                Equa[i] = Func.Equa // 授時：定朔加時定積度=定朔加時中積（即定朔入曆）+盈縮差
+                Eclp[i] = Func.Eclp
                 TermAvgSd[i] = (i + ZhengSd - 1) * TermLeng
                 TermAvgRaw[i] = SolsAccum + TermAvgSd[i]
                 const tmp = ((TermAvgRaw[i] + isExcl + ScConst) % 60 + 60) % 60
@@ -211,12 +210,12 @@ export default (Name, Y) => {
                     Term1AcrDeci[i] = fix(deci(tmp3), 3)
                 }
                 if (MansionRaw) {
-                    const Func = gong2Mansion(Name, Y, TermAvgSd[i], TermAvgSd[i])
-                    const Func1 = gong2Mansion(Name, Y, Term1AvgSd[i], Term1AvgSd[i]) // 這裏省略了紀元等提到的今年次年黃赤道差之差
-                    TermEqua[i] = Func.Mansion
-                    TermEclp[i] = Func.EclpMansion
-                    Term1Equa[i] = Func1.Mansion
-                    Term1Eclp[i] = Func1.EclpMansion
+                    const Func = mansion(Name, Y, TermAvgSd[i], TermAvgSd[i])
+                    const Func1 = mansion(Name, Y, Term1AvgSd[i], Term1AvgSd[i]) // 這裏省略了紀元等提到的今年次年黃赤道差之差
+                    TermEqua[i] = Func.Equa
+                    TermEclp[i] = Func.Eclp
+                    Term1Equa[i] = Func1.Equa
+                    Term1Eclp[i] = Func1.Eclp
                 }
             } else {
                 const Func = AutoSyzygySub(Deci[i], Sd[i], SolsDeci, Name) // 退望
