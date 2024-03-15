@@ -52,7 +52,7 @@ export default class Converter extends React.Component {
             <th></th>
             <th>均數</th>
             <th>牛頓迭代</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

@@ -80,8 +80,8 @@ export const mansion = (Name, Y, EclpGong, Sd) => {
 /**
  * 西曆日躔
  * @param {*} Name 
- * @param {*} Y 
- * @param {*} Gong 
+ * @param {*} Y 年份
+ * @param {*} Gong 距冬至黃道度
  * @param {*} fixed 保留小數點幾位
  * @param {*} isEqua true: Gong是赤道度
  * @returns 
@@ -90,22 +90,18 @@ export const mansionQing = (Name, Y, Gong, isEqua) => {
     const { StarVy, Sobliq, MansionConst, CloseOriginAd, MansionOriginAd } = Para[Name]
     const { EclpAccumList, EquaAccumList, Exchange } = AutoDegAccumList(Name, Y)
     const Precession = StarVy * (Y - (MansionOriginAd || CloseOriginAd))
-    const SolsEclpDeg = ((MansionConst - Precession) % 360 + 360) % 360 // 冬至黃道宿積度（宿的度量體系）
+    const SolsEclpDeg = ((MansionConst - Precession) % 360 + 360) % 360 // 冬至黃道宿積度（宿的度量體系）從角0度開始，冬至在多少度
     // 此處照抄古曆，只是黃赤互換
     const SolsEclpMansion = Deg2Mansion(SolsEclpDeg, EclpAccumList, undefined, true, Exchange)
     const SolsMansionName = SolsEclpMansion.slice(0, 1)
     const SolsEclpMansionDeg = +SolsEclpMansion.slice(1)
-    const SolsEquaDeg = GongHigh2Flat(Sobliq, SolsEclpDeg)
+    const SolsEquaDeg = GongHigh2Flat(Sobliq, SolsEclpDeg) // 直接這樣算即可，因為平常是逆時針加，這裏是順時針加，只是方向反了，但度數不變
     const SolsEquaMansion = Deg2Mansion(SolsEquaDeg, EquaAccumList, undefined, true, Exchange)
     let EclpMansionGong = 0, EquaMansionGong = 0
-    if (isEqua) {
-        EquaMansionGong = SolsEquaDeg + Gong
-        // EquaMansionGong = GongHigh2Flat(Sobliq, SolsEclpDeg) + Gong
-    } else {
+    if (isEqua) EquaMansionGong = SolsEquaDeg + Gong
+    else {
         EclpMansionGong = SolsEclpDeg + Gong
         EquaMansionGong = SolsEquaDeg + GongHigh2Flat(Sobliq, Gong)
-        // 這是以前的步驟
-        // EquaMansionGong = GongHigh2Flat(Sobliq, SolsEclpDeg) + GongHigh2Flat(Sobliq, Gong)
     }
     return {
         Eclp: Deg2Mansion(EclpMansionGong % 360, EclpAccumList, 3, true, Exchange, true),

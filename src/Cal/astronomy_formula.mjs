@@ -1,7 +1,6 @@
 import Para from './para_calendars.mjs'
 import { AutoTcorr } from './astronomy_acrv.mjs'
 import { autoEquaEclp } from './astronomy_bind.mjs'
-import { big } from './para_constant.mjs'
 import { AutoMoonAvgV, AutoNodeCycle, AutoSolar, AutoSidereal } from './para_auto-constant.mjs'
 
 export const Equa2EclpFormula = (LonRaw, Name) => { // 公式化的，週天度就用自己的

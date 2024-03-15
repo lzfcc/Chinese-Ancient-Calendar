@@ -9,7 +9,7 @@ export default class a extends React.Component {
     };
     this.handle = this.handle.bind(this)
   }
-  
+
   input() {
     return (
       <span className="year-select width4">
@@ -60,7 +60,7 @@ export default class a extends React.Component {
         <h3>大衍求一術</h3>
         {this.input()}
         <button onClick={this.handle} className="button4-2">
-          秦九韶再世
+          秦九韶
         </button><span className="Deci64">.64</span>
         {this.result()}
       </div>

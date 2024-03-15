@@ -3,7 +3,7 @@ import { RoundH2LPrint } from "../Cal/equa_geometry";
 export default class Equa extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {      
+    this.state = {
       H: 10
     };
     this.handle = this.handle.bind(this)
@@ -40,11 +40,11 @@ export default class Equa extends React.Component {
       <div className='ans table2'>
         <table>
           <tr>
-            <th></th>            
+            <th></th>
             <th>弧</th>
-            <th>誤差</th>         
+            <th>Δ</th>
             <th>弦</th>
-            <th>誤差</th>
+            <th>Δ</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

@@ -44,7 +44,7 @@ export default class Astronomy extends React.Component {
           <Fret2Leng />
           <br />
           <Leng2Fret />
-          <h2>生律之什</h2>
+          <h2>生律</h2>
           <h3>純律</h3>
           <Pythagorean />
           <Pythagorean60 />
@@ -58,7 +58,7 @@ export default class Astronomy extends React.Component {
           <Equal19 />
           <h2>品弦法</h2>
           <Tuning />
-          <h2>徽位之什</h2>
+          <h2>徽位</h2>
           <FretPitch />
           <BetweenFret />
           <h2>打譜第一步</h2>

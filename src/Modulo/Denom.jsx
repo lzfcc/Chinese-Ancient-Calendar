@@ -6,7 +6,7 @@ export default class a extends React.Component {
     this.state = { a: 399, b: 752, bigNumer: 26, bigDenom: 49, title: "弱率" }
     this.handle = this.handle.bind(this)
   }
-  
+
   input() {
     return (
       <span className="year-select width3">
@@ -77,7 +77,7 @@ export default class a extends React.Component {
             return (
               <tr>
                 <td className="RowTitle">{row.title}</td>
-                {row.data.map(d =>  {
+                {row.data.map(d => {
                   return <td>{d}</td>;
                 })}
               </tr>
@@ -95,7 +95,7 @@ export default class a extends React.Component {
         <h4>有日法求彊弱　累彊弱之數　顧觀光-陳久金</h4>
         {this.input()}
         <button onClick={this.handle} className="button4-1">
-          李銳是我
+          李銳
         </button>
         {this.result()}
       </div>

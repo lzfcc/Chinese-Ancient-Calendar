@@ -50,7 +50,7 @@ export default class a extends React.Component {
     return (
       <div>
         {this.input()}
-        <button onClick={this.handle} className='button4-3'>衝衝衝</button>
+        <button onClick={this.handle} className='button4-3'>○●○●</button>
         {this.result()}
       </div>
     );

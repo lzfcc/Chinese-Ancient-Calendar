@@ -66,7 +66,7 @@ export default class a extends React.Component {
         <h3>連分數　漸進分數</h3>
         {this.input()}
         <button onClick={this.handle} className="button4-3">
-          快快快
+          ●○●○
         </button><span className="Deci64">.64</span>
         {this.result()}
       </div>

@@ -54,14 +54,14 @@ export default class Converter extends React.Component {
             <th><bc>赤 ⇒ 黃</bc></th>
             <th>黃-赤</th>
             <th>球面三角</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
             <th><bc>黃 ⇒ 赤</bc></th>
             <th>赤-黃</th>
             <th>球面三角</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
             <th><bc>赤緯</bc></th>
             <th>球面三角</th>
-            <th>誤差</th>
+            <th>Δ</th>
           </tr>
           {(this.state.outputEclp || []).map(row => {
             return (

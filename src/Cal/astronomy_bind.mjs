@@ -9,7 +9,7 @@ import { Hushigeyuan, HushigeyuanMoon } from './equa_geometry.mjs'
 import {
     EquaEclpWest, sunRise, Lon2DialWest, ConstWest, starEclp2Ceclp, starEclp2Equa, testEclpEclpDif,
 } from './astronomy_west.mjs'
-import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
+import { AutoTcorr, AutoDifAccum, AutoMoonAcrS, ShoushiXianV } from './astronomy_acrv.mjs'
 import { NameList, AutoDegAccumList, MansionNameList, MansionNameListQing } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { Deg2Mansion, Mansion2Deg, mansion, mansionQing } from './astronomy_other.mjs'
@@ -42,7 +42,12 @@ export const bindTcorr = (AnomaAccum, Sd, Name) => {  // Name預留給誤差分�
         const SunDifAccumErrPrint = EllipseSun !== undefined ?
             ~~((SunDifAccum - EllipseSun) / EllipseSun * 10000) : '-'
         const MoonDifAccumPrint = (MoonDifAccum || 0).toFixed(5)
-        const MoonAcrVdPrint = MoonAcrVd ? MoonAcrVd.toFixed(4) : '-'
+        let MoonAcrVdPrint = '-'
+        if (Name === 'Shoushi') {
+            const tmp = ShoushiXianV(AnomaAccum)
+            MoonAcrVdPrint = tmp.toFixed(4) + `\n` + (tmp / .082).toFixed(4)
+        }
+        else if (MoonAcrVd) MoonAcrVdPrint = MoonAcrVd.toFixed(4)
         const MoonDifAccumErrPrint = EllipseMoon !== undefined ?
             ~~((MoonDifAccum - EllipseMoon) / EllipseMoon * 10000) : '-'
         if (SunTcorr) SunTcorrPrint = SunTcorr.toFixed(5)

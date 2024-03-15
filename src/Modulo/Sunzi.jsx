@@ -11,7 +11,7 @@ export default class a extends React.Component {
 
   input() {
     return (
-      <span className="year-select width5">        
+      <span className="year-select width5">
         <input
           value={this.state.sunziIn}
           onChange={e => {
@@ -49,7 +49,7 @@ export default class a extends React.Component {
         <h3>大衍總數術</h3>
         {this.input()}
         <button onClick={this.handle} className="button4-7">
-          老子
+          孫子
         </button><span className="Deci64">.64</span>
         {this.result()}
       </div>

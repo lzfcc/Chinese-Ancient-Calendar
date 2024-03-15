@@ -43,9 +43,9 @@ export default class Equa extends React.Component {
           <tr>
             <th></th>
             <th>矢</th>
-            <th>誤差</th>
+            <th>Δ</th>
             <th>弦</th>
-            <th>誤差</th>         
+            <th>Δ</th>
           </tr>
           {(this.state.output || []).map(row => {
             return (

@@ -600,6 +600,7 @@ a = [0, ...a]
 - 增加極黃經計算。
 - 合併西曆 `eclpGong2Mansion` 和 `equaGong2Mansion`，改寫赤道宿度算法。寫了觜參互換的算法。
 - 紀元、庚午曆書有問題：儒略日不對，而且黃道度也不對，原來是`ScConst`沒處理好。把`ZhengInt`分成 `ZhengScOrder`、`ZhengSdMidn`、`ZhengSdInt`，又重寫儒略日算法。
+- 增加多項式擬合，放在招差模塊。
 - 改名：古曆`SolsDif –> Sd`，西曆 `Sd –> Smd`，古曆`Night –> Midn`。
 
 ### Todo list

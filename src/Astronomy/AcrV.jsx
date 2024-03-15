@@ -46,16 +46,16 @@ export default class Converter extends React.Component {
       return null
     }
     return (
-      <div className='ans table2 right' style={{ whiteSpace: "pre-wrap" }}>
+      <div className='ans table2 right'>
         <h3>近地點入轉</h3>
         <table>
           <tr>
             <th></th>
             <th><bc>日</bc>盈縮積</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
             <th>改正</th>
             <th><bc>月</bc>遲疾積</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
             <th>改正</th>
             <th>實行</th>
             <th>實速</th>
@@ -67,7 +67,7 @@ export default class Converter extends React.Component {
               <tr>
                 <td className='RowTitle'>{row.title}</td>
                 {row.data.map(d => {
-                  return (<td>{d}</td>)
+                  return (<td style={{ whiteSpace: 'pre-wrap' }}>{d}</td>)
                 })}
               </tr>
             )
@@ -78,10 +78,10 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th><bc>日</bc>盈縮積</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
             <th>改正</th>
             <th><bc>月</bc>遲疾積</th>
-            <th>誤差‱</th>
+            <th>Δ‱</th>
             <th>改正</th>
             <th>實行</th>
             <th><bc>日月</bc>改正</th>

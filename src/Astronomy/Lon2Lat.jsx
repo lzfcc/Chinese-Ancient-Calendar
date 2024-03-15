@@ -50,14 +50,14 @@ export default class Converter extends React.Component {
           <tr>
             <th></th>
             <th><bc>赤緯</bc>度</th>
-            <th>誤差</th>
+            <th>Δ</th>
             <th>ε度</th>
             <th><bc>日出</bc>刻</th>
-            <th>誤差修正</th>
-            <th>誤差未修</th>
+            <th>Δ修正</th>
+            <th>Δ未修</th>
             <th><bc>晷長</bc>尺</th>
-            <th>誤差修正‱</th>
-            <th>誤差未修‱</th>
+            <th>Δ修正‱</th>
+            <th>Δ未修‱</th>
             <th>緯度°</th>
           </tr>
           {(this.state.output || []).map(row => {
@@ -81,7 +81,7 @@ export default class Converter extends React.Component {
         <h3>積日 ⇒ 赤緯、日出、晷長</h3>
         {this.input()}
         <button onClick={this.handle} className='button4-2'>longi2lati</button>
-        <p>「誤差未修」：與直接由太陽赤緯換算過來的理論值之間的誤差，「誤差修正」：考慮了蒙氣差、太陽視半徑之後的理論值。公式算法的日出都是未修正的</p>
+        <p>「Δ未修」：與直接由太陽赤緯換算過來的理論值之間的Δ，「Δ修正」：考慮了蒙氣差、太陽視半徑之後的理論值。公式算法的日出都是未修正的</p>
         {this.result()}
       </div>
     )
