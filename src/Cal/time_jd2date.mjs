@@ -1,90 +1,83 @@
-import {
-    big, ScList, WeekList1
-} from './para_constant.mjs'
+import { big, ScList, WeekList1 } from './para_constant.mjs'
 /**
  * 把儒略日轉換成儒略曆或格里高利曆 ported from https://ytliu0.github.io/ChineseCalendar/Julian.js by 廖育棟
  * @param {array} Jd 儒略日
  */
-
-export const Jd2Date1 = Jd => {
-    Jd = big(Jd)
-    let b = 0
-    let c = 0
-    let d = 0
-    let e = 0
-    let f = 0
-    if (Jd.lt(2299161)) { // Julian calendar
-        b = 0
-        c = Jd.add(1524)
-    } else { // Gregorian calendar
-        b = (Jd.sub(1867216.25)).div(36524.25).floor()
-        c = Jd.add(b).sub(big.floor(b.div(4))).add(1525)
+export const generateTimeString = (h, m, s, ms) => {
+    let hString = h.toString()
+    let mString = m.toString()
+    let sString = s.toString()
+    if (hString.length < 2) {
+        hString = '0' + hString
     }
-    d = big.floor((c.sub(122.1)).div(365.25))
-    if (d.lt(0)) {
-        d = d.add(1)
+    if (mString.length < 2) {
+        mString = '0' + mString
     }
-    e = d.mul(365).add(big.floor(d.div(4)))
-    f = big.floor((c.sub(e)).div(30.6))
-    if (f.lt(0)) {
-        f = f.add(1)
+    if (sString.length < 2) {
+        sString = '0' + sString
     }
-    let mm = f.sub(1).sub(big.floor(f.div(14)).mul(12))
-    let year = d.sub(4715).sub(big.floor((mm.add(7).div(10)))).toNumber()
-    if (year <= 0) {
-        year = Math.abs(year)
-        year = '前 ' + year
-    }
-    let dd = c.sub(e).sub(big.floor(f.mul(30.6)))
-    const FracOfDay = Jd.sub(big.round(Jd)).add(.5)
-    const Hour = FracOfDay.mul(24)
-    const h = big.floor(Hour)
-    const m = big.floor((Hour.sub(h).mul(60)))
-    const s = big.floor((Hour.sub(h).sub(m.div(60))).mul(3600))
-    const ms = big.floor(((Hour.sub(h).sub(m.div(60))).mul(3600).sub(Math.floor((Hour.sub(h).sub(m.div(60))).mul(3600)))).mul(1000))
-    const ScOrder = Math.round((Math.round(Jd) % 60 + 110) % 60.1)
-    Jd = Jd.toNumber()
-    const Week = Math.round((Math.round(Jd) % 7 + 8) % 7.1)
-    const WeekName = WeekList1[Week]
-    const Sc = ScList[ScOrder] + '(' + ScOrder + ')'
-
-    function generateTimeString(h, m, s, ms) {
-        let hString = h.toString()
-        let mString = m.toString()
-        let sString = s.toString()
-        let msString = ms.toString()
-        if (hString.length < 2) {
-            hString = '0' + hString
-        }
-        if (mString.length < 2) {
-            mString = '0' + mString
-        }
-        if (sString.length < 2) {
-            sString = '0' + sString
-        }
+    let msString = ''
+    if (ms) {
+        msString = ms.toString()
         if (msString.length < 2) {
             msString = '00' + msString
         } else if (msString.length < 3) {
             msString = '0' + msString
         }
-        return hString + ':' + mString + ':' + sString + ':' + msString
+        msString = '.' + msString
     }
-    mm = mm.toNumber()
-    dd = dd.round().toNumber()
+    return hString + ':' + mString + ':' + sString + msString
+}
+export const Jd2Date = Jd => {
+    let b = 0, c = 0, d = 0, e = 0, f = 0
+    if (Jd < 2299161) { // Julian calendar
+        b = 0
+        c = Jd + 1524
+    } else { // Gregorian calendar
+        b = Math.floor((Jd - 1867216.25) / 36524.25)
+        c = Jd + b - Math.floor(b / 4) + 1525
+    }
+    d = Math.floor((c - 122.1) / 365.25);
+    if (d < 0) d++
+    e = d * 365 + Math.floor(d / 4);
+    f = Math.floor((c - e) / 30.6);
+    if (f < 0) f++
+    let mm = f - 1 - Math.floor(f / 14) * 12;
+    let year = d - 4715 - Math.floor((mm + 7) / 10);
+    let dd = c - e - Math.floor(f * 30.6);
+    dd = Math.round(dd)
     if (dd === 0) {
         mm--
         dd = 31
     }
-    const Result = '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期' + WeekName + ' ｜ ' + Sc
-    const Mmdd = mm + '.' + dd
-    return {
-        Result,
-        Mmdd
-    }
+    const FracOfDay = Jd - Math.round(Jd) + 0.5;
+    const Hour = FracOfDay * 24;
+    const h = Math.floor(Hour);
+    const m = Math.floor((Hour - h) * 60);
+    const s = Math.floor((Hour - h - m / 60) * 3600);
+    const ms = Math.floor((((Hour - h - m / 60) * 3600) - Math.floor((Hour - h - m / 60) * 3600)) * 1000);
+    const ScOrder = Math.round((Math.round(Jd) % 60 + 110) % 60.1);
+    return { year, mm, dd, h, m, s, ms, ScOrder } // 組成一個數組或者對象居然很耗費時間，用了0.6ms
 }
-
+// const Start = performance.now()
+// console.log(Jd2Date(3460393))
+// const End = performance.now()
+// console.log(End - Start)
+export const Jd2DatePrint = Jd => {
+    const { year, mm, dd, h, m, s, ms, ScOrder } = Jd2Date(Jd)
+    let yy = year
+    if (year <= 0) {
+        yy = Math.abs(year) + 1
+        yy = '前 ' + yy;
+    }
+    const Week = Math.round((Math.round(Jd) % 7 + 8) % 7.1);
+    const WeekName = WeekList1[Week]
+    const Sc = ScList[ScOrder] + '(' + ScOrder + ')'
+    return '公元 ' + year + ' 年 ' + mm + ' 月 ' + dd + ' 日 ' + generateTimeString(h, m, s, ms) + ' ｜ 星期' + WeekName + ' ｜ ' + Sc
+}
 export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
     yy = parseInt(yy), mm = parseInt(mm), dd = parseInt(dd), h = parseInt(h), m = parseInt(m), s = parseInt(s), ms = parseInt(ms)
+    h = h || 0, m = m || 0, s = s || 0, ms = ms || 0
     if (mm > 12 || dd > 31 || h > 23 || s > 59 || ms > 999) {
         throw (new Error('invalid value!'))
     } else if (mm <= 0 || dd <= 0 || h < 0 || s < 0 || ms < 0) {
@@ -104,7 +97,7 @@ export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
     // const Date = Frac.add(365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -.5) // Frac默認0，所以要減去半日
     const Frac = h / 24 + m / 1440 + s / 86400 + ms / 86400000
     const Date = 365 * yy - 679004 + b + Math.floor(30.600001 * (mm + 1)) + dd + 2400001 + -.5 + Frac
-    return 'Julian date ' + Date
+    return Date
 }
 
 // https://ww2.mathworks.cn/matlabcentral/fileexchange/111820-nasa-jpl-development-ephemerides-de441

@@ -283,8 +283,8 @@ export const autoDial = (Sd, SolsDeci, Name) => {
     }
     return Dial
 }
-export const bindEquaEclp = (GongRaw, year) => {
-    year = +year, GongRaw = +GongRaw
+export const bindEquaEclp = (GongRaw, Jd) => {
+    Jd = +Jd, GongRaw = +GongRaw
     if (GongRaw >= 365.25 || GongRaw < 0) throw (new Error('請輸入一週天度內的度數'))
     let Range = ''
     if (GongRaw < 91.3125) Range += '冬至 → 春分，赤度 > 黃度'
@@ -296,8 +296,8 @@ export const bindEquaEclp = (GongRaw, year) => {
         Equa2EclpDif: WestB1,
         Eclp2Equa: WestA,
         Eclp2EquaDif: WestA1
-    } = EquaEclpWest(GongRaw, year)
-    const { Solar, e } = ConstWest(year)
+    } = EquaEclpWest(GongRaw, Jd)
+    const { Solar, e } = ConstWest(Jd)
     const p = 360 / Solar
     const WestLat = HighLon2FlatLat(e, Gong2Lon(GongRaw * p))
     let Print = [{

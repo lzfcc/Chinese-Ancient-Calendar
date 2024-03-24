@@ -25,6 +25,25 @@
 
 - <v>跋吐鲁番文书中的两件唐历</v>說麟德 678 年閏十月，但是算出來閏十一月。
 
+## 現代曆表
+
+|          | 模型                                                         | 代碼來源                                                     |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 總體方法 | 廖育棟                                                       | 《[月相和二十四節氣的計算](https://ytliu0.github.io/ChineseCalendar/computation_simp.html)》、*[Calculations in Star Charts](https://ytliu0.github.io/starCharts/)* |
+| 行星曆表 | VSOP87A                                                      | [orbit.js](https://vsr83.github.io/orbits.js/)               |
+| 月球曆表 | ELP2000                                                      | [orbit.js](https://vsr83.github.io/orbits.js/)               |
+| 歲差     | Vondrak 等（2011）                                           | [Vondrak](https://github.com/dreamalligator/vondrak)，由 chatGPT轉換爲JS。代碼中保留了我自己寫的 IAU2006 |
+| 章動     | [IAU2000A](http://asa.usno.navy.mil/SecM/Glossary.html#nutation) | [python-novas](https://github.com/brandon-rhodes/python-novas)/Cdist/nutation.c，由GPT 轉換爲 JS。代碼中保留了我自己寫的 IAU2000 |
+| TT轉UT1  | Stephenson等人（2016）及Morrison等人（2021）的擬合公式       | 廖育棟 [DeltaT](https://github.com/ytliu0/DeltaT)，由 chatGPT轉換爲JS。代碼中保留了 Morrison、Stephenson（2004）的擬合公式 |
+
+計算100年大約用時22秒。需要注意，ELP2000、VSOP87的座標是黃道，而非DE曆表的赤道。與廖育棟網站上的系統誤差是TT- UT1算法造成的（他似乎用的《月相》較老的，我用了他*Star Charts*所說的較新的），時間一長，相差能有三分鐘。
+
+另外可參考的庫：
+
+- [ephem.js](https://github.com/THRASTRO/ephem.js/) 各種各樣的 VSOP、ELP。
+
+
+
 ## 朔閏表可靠性驗證
 
 ### 一、程序

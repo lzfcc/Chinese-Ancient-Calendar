@@ -5,7 +5,7 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      c: 1247,
+      c: 2176525,
     }
     this.handle = this.handle.bind(this)
   }
@@ -13,7 +13,7 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>公元年</span>
+        <span>儒略日</span>
         <input className='width2'
           value={this.state.c}
           onChange={e => {

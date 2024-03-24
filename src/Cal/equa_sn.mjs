@@ -1,7 +1,7 @@
 import { lusolve, transpose, multiply, matrix, pow } from 'mathjs'
 import { big } from './para_constant.mjs'
 
-
+// console.log(big.div(big.acos(-1), 648000).toString())
 // const a = input => {
 //     input.toNumber()
 // }
@@ -465,7 +465,7 @@ const points = [
 
 
 // 以下多项式拟合代码由ChatGPT生成
-export const polyfit = (degree, points) => {// 拟合多项式的次数
+const polyfit = (degree, points) => {// 拟合多项式的次数
     degree = parseInt(degree)
     points = JSON.parse(points)
     // 构建矩阵A和向量b

@@ -1,5 +1,5 @@
 import React from "react"
-import { Jd2Date1 } from '../Cal/time_jd2date'
+import { Jd2DatePrint } from '../Cal/time_jd2date'
 export default class a extends React.Component {
   constructor(props) {
     super(props)
@@ -23,7 +23,7 @@ export default class a extends React.Component {
 
   handle() {
     try {
-      const { Result } = Jd2Date1(this.state.a);
+      const Result = Jd2DatePrint(this.state.a);
       this.setState({ output: Result });
     } catch (e) {
       alert(e.message);
@@ -48,7 +48,7 @@ export default class a extends React.Component {
         {this.input()}
         <button onClick={this.handle} className="button4-8">
           JD2date
-        </button><span className="Deci64">.64</span>        
+        </button><span className="Deci64">.64</span>
         {this.result()}
       </div>
     );

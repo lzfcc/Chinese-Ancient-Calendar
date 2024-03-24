@@ -9,7 +9,7 @@ import Interpolate1 from './Interpolate1'
 import Interpolate2 from './Interpolate2'
 import Interpolate3 from './Interpolate3'
 import MeasureSols from './MeasureSols'
-import Polyfit from './Polyfit'
+// import Polyfit from './Polyfit'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import md1 from '../note/equation.md';
@@ -41,8 +41,8 @@ export default class Equation extends React.Component {
           <Interpolate2 />
           <Interpolate3 />
           <MeasureSols />
-          <h2>擬合</h2>
-          <Polyfit />
+          {/* <h2>擬合</h2>
+          <Polyfit /> */}
           <h2>方程</h2>
           <Equa1 />
           {/* <h2>開方</h2>

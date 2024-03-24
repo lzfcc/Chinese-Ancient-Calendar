@@ -15,7 +15,7 @@ import {
 } from './astronomy_bind.mjs'
 import { AutoTcorr, AutoDifAccum, AutoMoonAcrS } from './astronomy_acrv.mjs'
 import { mansion, AutoNineOrbit, midstar } from './astronomy_other.mjs'
-import { Jd2Date1 } from './time_jd2date.mjs'
+import { Jd2Date } from './time_jd2date.mjs'
 import { AutoMoonAvgV } from './para_auto-constant.mjs'
 
 const abs = x => Math.abs(x)
@@ -262,7 +262,8 @@ export const D1 = (Name, YearStart, YearEnd) => {
                 const ScOrder = (ZhengScOrder + DayAccum) % 60
                 Sc[i][k] = ScList[ScOrder]
                 Jd[i][k] = parseInt(SolsJdAsm + AsmRealDif + SdInt + 1)
-                Jd[i][k] += ' ' + Jd2Date1(Jd[i][k]).Mmdd
+                const date = Jd2Date(Jd[i][k])
+                Jd[i][k] += ' ' + date.mm + '.' + date.dd
                 const Stem = StemList.indexOf(Sc[i][k][0])
                 const Branch = BranchList.indexOf(Sc[i][k][1])
                 const JieNum = Math.round((Math.ceil(~~(SdMidn / HalfTermLeng) / 2) + 11) % 12.1)

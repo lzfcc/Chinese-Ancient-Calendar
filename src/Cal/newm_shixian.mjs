@@ -7,8 +7,10 @@ import { starEclp2Equa } from './astronomy_west.mjs'
 const abs = X => Math.abs(X)
 const sign = X => Math.sign(X)
 const pi = Math.PI
-const d2r = d => d * pi / 180
-const r2d = r => r * 180 / pi
+const fmod = (X, m) => X - Math.floor(X / m) * m // (X % m + m) % m
+// console.log(fmod(-370, 360)) // 350
+const d2r = d => d * .0174532925199432957692369 // pi / 180
+const r2d = r => r * 57.2957795130823208767981548 // 180 / pi
 const sin = X => Math.sin(d2r(X))//.toFixed(8) // 數理精蘊附八線表用的是七位小數
 const sin2 = X => 2 * sin(X / 2) // 通弦
 const cos = X => Math.cos(d2r(X)) //.toFixed(8)
@@ -21,7 +23,7 @@ const atan = X => r2d(Math.atan(X))//.toFixed(8)
 const acot = X => (90 - r2d(Math.atan(X)))//.toFixed(8)
 const avsin = X => acos(1 - X)
 const sqr = X => Math.sqrt(X)
-const t = X => (X % 360 + 360) % 360
+const t = X => fmod(X, 360) //(X % 360 + 360) % 360
 const t1 = X => abs(180 - X % 360) // x不及半周者，与半周相减；过半周者，减半周。——與180的距離
 const t2 = X => Math.min(X % 360, 360 - X % 360) // x過半周者，與全周相減。——與0的距離
 const t3 = X => 90 - abs(90 - X % 180) // x过一象限者，与半周相减；过半周者，减半周；过三象限者，与全周相减。——與0、180的距離
@@ -1325,3 +1327,5 @@ export const N4 = (Name, Y) => {
 
 // console.log(atan(cos(23.9) * tan((340))))
 // console.log(atan(.1328888016451028/sin(18.7)))
+
+// console.log(32n % 5n)

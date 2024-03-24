@@ -144,6 +144,7 @@ export const NameList = {
   Yongnian: "康熙永年表(待定)",
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
+  Eph1: '半解析曆表'
 };
 export const NameDayList = {
   // 可計算日書的曆法

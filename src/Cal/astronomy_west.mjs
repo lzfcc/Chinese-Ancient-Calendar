@@ -34,35 +34,164 @@ const t1 = X => abs(180 - X % 360)
 //     return SunDifAccum.toString()
 // }
 
-export const ConstWest = (year, m, d) => { // 儒略世紀：36525日。我下面索性將100年作爲儒略世紀，要不然太麻煩
-    year = +year
-    // 黃赤交角 ε = 84381.448 − 46.84024T − (59 × 10^−5)T^2 + (1813 × 10^−6)T^3 // https://zh.wikipedia.org/zh-hans/%E8%BD%89%E8%BB%B8%E5%82%BE%E8%A7%92
-    const t = big.sub(year, 2000).div(100)
-    const e = +(big(84381.448).sub(t.mul(46.84024)).sub(t.pow(2).mul(big(10).pow(-5).mul(59))).add(t.pow(3).mul(big(10).pow(-6).mul(1813))).div(3600).toFixed(10))
-    //《古曆新探》頁322.近日點平黃經 ω=281+13/60+15/3600+1.719175*T+ (1.63/3600)*T^2+(.012/3600)*T^3 // T自1900起算的儒略世紀數。也就是說近日點越來越向春分移動 。375年在大雪，1247年近日點在冬至
-    const T = big(year - 1900).div(100)
-    const perihelion = +(big(281).add(13 / 60).add(15 / 3600).add(T.mul(1.719175)).add(big.div(1.63, 3600).mul(T).pow(2)).add(big.div(.012, 3600).mul(T).pow(3)).toFixed(8))
-    // 黃道離心率 e=.01670862 -.00004204T-.000000124T**2
-    const eccentricity = +(big(.01675104).sub(big(.0000418).mul(T)).sub(big(.00000000126).mul(T).pow(2)).toFixed(8))
-    const y = big(year - 2000)
-    const y1 = y.div(1000)
-    const Solar = big(365.242189623).sub(big(.000061522).mul(y1)).sub(big.mul(big(6.09).mul(1e-8), y1.pow(2))).add(big.mul(big(2.6525).mul(1e-7), y1.pow(3))).toNumber()
-    // τ = 365.242189623 - .000061522t - 6.09 × 1e-8 t^2 + 2.6525 * 1e-7 t^3 (t为J2000起算的儒略千年数)。VSOP87 曆表 Meeus J，Savoie D. The history of the tropical year[J]. Journal of the British Astronomical Association，1992，102( 1) : 42. 
-    const Sidereal = big(365.25636042).add(big(.000000001).mul(y)).toNumber()
-    const Lunar = big(29.530588853).add(big(.000000002162).mul(y)).toNumber()
-    const Anoma = big(27.554549878).sub(big(.00000001039).mul(y)).toNumber() // 近點月
-    const Node = big(27.21222082).add(big(.0000000038).mul(y)).toNumber()
+export const ConstWest = Jd => { // 儒略世紀：36525日。我下面索性將100年作爲儒略世紀，要不然太麻煩
+    Jd = +Jd
+    const T = (Jd - 2451545) / 36525 // J2000儒略世紀
+    const e = (84381.406 - 46.836769 * T - .0001831 * T ** 2 + .00200340 * T ** 3 - .000000576 * T ** 4 - .0000000434 * T ** 5) / 3600
+    //《古曆新探》頁322.近日點平黃經 ω // 也就是說近日點越來越向春分移動 。375年在大雪，1247年近日點在冬至
+    const T1 = (Jd - 2415021) / 36525
+    const perihelion = 281.22084 + 1.719175 * T1 + (1.63 / 3600) * T1 ** 2 + (.012 / 3600) * T1 ** 3
+    const eccentricity = .01670862 - .00004204 * T1 - .000000124 * T1 ** 2 // 黃道離心率
+    const Solar = 365.242189623 - .000061522 * T - 6.09e-8 * T ** 2 + 2.6525e-7 * T ** 3 // VSOP87 曆表 Meeus J，Savoie D. The history of the tropical year[J]. Journal of the British Astronomical Association，1992，102( 1) : 42. 
+    const Sidereal = 365.25636042 + 1e-7 * T
+    const Lunar = 29.530588853 + 2.162e-7 * T
+    const Anoma = 27.554549878 - 1.039e-6 * T
+    const Node = 27.21222082 + 3.8e-7 * T
     const Print = `朔望月 ${Lunar} 日
 近點月 ${Anoma} 日
 交點月 ${Node} 日
 回歸年 ${Solar} 日
 恆星年 ${Sidereal} 日
-黃赤交角 ${e}°
+平黃赤交角 ${e}°
 黃道離心率 ${eccentricity}
 近日點平黃經 ${perihelion}°`
     return { Print, e, perihelion, eccentricity, Anoma, Solar, Sidereal, Lunar }
 }
 // console.log(ConstWest(-401).Print)
+
+/**
+ * deltaT=TT-UT1 ,  -1999 to +3000 // https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
+ * All values of ΔT based on Morrison and Stephenson [2004] assume a value for the Moon's secular acceleration of -26 arcsec/cy^2. However, the ELP-2000/82 lunar ephemeris employed in the Canon uses a slightly different value of -25.858 arcsec/cy^2. Thus, a small correction "c" must be added to the values derived from the polynomial expressions for ΔT before they can be used in the Canon:
+    c = -0.000012932 * (y - 1955)^2
+ * @param {*} year 
+ * @param {*} month 
+ * @returns delta(day)
+ */
+export const TT2UT1 = (year, month) => {
+    month = month || 1
+    const y = year + (month - .5) / 12 // This gives "y" for the middle of the month
+    let u = 0, t = 0, D = 0
+    if (year < -1999) return undefined
+    else if (year < -500) {
+        u = (y - 1820) / 100
+        D = -20 + 32 * u ** 2
+    } else if (year < 500) {
+        u = y / 100
+        D = 10583.6 - 1014.41 * u + 33.78311 * u ** 2 - 5.952053 * u ** 3 - 0.1798452 * u ** 4 + 0.022174192 * u ** 5 + 0.0090316521 * u ** 6
+    } else if (year < 1600) {
+        u = (y - 1000) / 100
+        D = 1574.2 - 556.01 * u + 71.23472 * u ** 2 + 0.319781 * u ** 3 - 0.8503463 * u ** 4 - 0.005050998 * u ** 5 + 0.0083572073 * u ** 6
+    } else if (year < 1700) {
+        t = y - 1600
+        D = 120 - 0.9808 * t - 0.01532 * t ** 2 + t ** 3 / 7129
+    } else if (year < 1800) {
+        t = y - 1700
+        D = 8.83 + 0.1603 * t - 0.0059285 * t ** 2 + 0.00013336 * t ** 3 - t ** 4 / 1174000
+    } else if (year < 1860) {
+        t = y - 1800
+        D = 13.72 - 0.332447 * t + 0.0068612 * t ** 2 + 0.0041116 * t ** 3 - 0.00037436 * t ** 4
+            + 0.0000121272 * t ** 5 - 0.0000001699 * t ** 6 + 0.000000000875 * t ** 7
+    } else if (year < 1900) {
+        t = y - 1860
+        D = 7.62 + 0.5737 * t - 0.251754 * t ** 2 + 0.01680668 * t ** 3
+            - 0.0004473624 * t ** 4 + t ** 5 / 233174
+    } else if (year < 1920) {
+        t = y - 1900
+        D = -2.79 + 1.494119 * t - 0.0598939 * t ** 2 + 0.0061966 * t ** 3 - 0.000197 * t ** 4
+    } else if (year < 1941) {
+        t = y - 1920
+        D = 21.20 + 0.84493 * t - 0.076100 * t ** 2 + 0.0020936 * t ** 3
+    } else if (year < 1961) {
+        t = y - 1950
+        D = 29.07 + 0.407 * t - t ** 2 / 233 + t ** 3 / 2547
+    } else if (year < 1986) {
+        t = y - 1975
+        D = 45.45 + 1.067 * t - t ** 2 / 260 - t ** 3 / 718
+    } else if (year < 2005) {
+        t = y - 2000
+        D = 63.86 + 0.3345 * t - 0.060374 * t ** 2 + 0.0017275 * t ** 3 + 0.000651814 * t ** 4 + 0.00002373599 * t ** 5
+    } else if (year < 2050) {
+        t = y - 2000
+        D = 62.92 + 0.32217 * t + 0.005589 * t ** 2
+    } else if (year < 2150) {
+        D = -20 + 32 * ((y - 1820) / 100) ** 2 - 0.5628 * (2150 - y)
+    } else if (year < 3000) {
+        u = (y - 1820) / 100
+        D = -20 + 32 * u ** 2
+    } else return undefined
+    return D / 86400
+}
+
+// 廖育棟 [DeltaT](https://github.com/ytliu0/DeltaT) 的 Python 代碼，由 chatGPT 修改。
+export const TT2UT1A = y => {
+    const c1 = 1.007739546148514 // chosen to make DeltaT continuous at y = -720
+    const c2 = -150.3150351029286 // chosen to make DeltaT continuous at y = 2022
+    const integrated_lod = (y, C) => {
+        const t = 0.01 * (y - 1825)
+        return C + 31.4115 * t ** 2 + 284.8435805251424 * Math.cos(0.4487989505128276 * (t + 0.75))
+    }
+    const spline = y => {
+        const y0 = [-720, -100, 400, 1000, 1150, 1300, 1500, 1600, 1650, 1720, 1800,
+            1810, 1820, 1830, 1840, 1850, 1855, 1860, 1865, 1870, 1875, 1880,
+            1885, 1890, 1895, 1900, 1905, 1910, 1915, 1920, 1925, 1930, 1935,
+            1940, 1945, 1950, 1953, 1956, 1959, 1962, 1965, 1968, 1971, 1974,
+            1977, 1980, 1983, 1986, 1989, 1992, 1995, 1998, 2001, 2004, 2007,
+            2010, 2013, 2016, 2019]
+        const y1 = [-100, 400, 1000, 1150, 1300, 1500, 1600, 1650, 1720, 1800, 1810,
+            1820, 1830, 1840, 1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885,
+            1890, 1895, 1900, 1905, 1910, 1915, 1920, 1925, 1930, 1935, 1940,
+            1945, 1950, 1953, 1956, 1959, 1962, 1965, 1968, 1971, 1974, 1977,
+            1980, 1983, 1986, 1989, 1992, 1995, 1998, 2001, 2004, 2007, 2010,
+            2013, 2016, 2019, 2022]
+        const a0 = [20371.848, 11557.668, 6535.116, 1650.393, 1056.647, 681.149, 292.343,
+            109.127, 43.952, 12.068, 18.367, 15.678, 16.516, 10.804, 7.634,
+            9.338, 10.357, 9.04, 8.255,
+            2.371, -1.126, -3.21, -4.388, -3.884, -5.017, -1.977, 4.923, 11.142,
+            17.479, 21.617, 23.789, 24.418, 24.164, 24.426, 27.05, 28.932,
+            30.002, 30.76, 32.652, 33.621, 35.093, 37.956, 40.951, 44.244,
+            47.291, 50.361, 52.936, 54.984, 56.373, 58.453, 60.678, 62.898,
+            64.083, 64.553, 65.197, 66.061, 66.919, 68.128, 69.248]
+        const a1 = [-9999.586, -5822.27, -5671.519, -753.21, -459.628, -421.345,
+        -192.841, -78.697, -68.089, 2.507, -3.481, 0.021, -2.157, -6.018,
+        -0.416, 1.642, -0.486, -0.591, -3.456, -5.593, -2.314, -1.893, 0.101,
+        -0.531, 0.134, 5.715, 6.828, 6.33, 5.518, 3.02, 1.333, 0.052, -0.419,
+            1.645, 2.499, 1.127, 0.737, 1.409, 1.577, 0.868, 2.275, 3.035, 3.157,
+            3.199, 3.069, 2.878, 2.354, 1.577, 1.648, 2.235, 2.324, 1.804, 0.674,
+            0.466, 0.804, 0.839, 1.005, 1.341, 0.620]
+        const a2 = [776.247, 1303.151, -298.291, 184.811, 108.771, 61.953, -6.572,
+            10.505, 38.333, 41.731, -1.126, 4.629, -6.806, 2.944, 2.658, 0.261,
+            -2.389, 2.284, -5.148, 3.011, 0.269, 0.152, 1.842, -2.474, 3.138,
+            2.443, -1.329, 0.831, -1.643, -0.856, -0.831, -0.449, -0.022, 2.086,
+            -1.232, 0.22, -0.61, 1.282, -1.115, 0.406, 1.002, -0.242, 0.364,
+            -0.323, 0.193, -0.384, -0.14, -0.637, 0.708, -0.121, 0.21, -0.729,
+            -0.402, 0.194, 0.144, -0.109, 0.275, 0.061, -0.782]
+        const a3 = [409.16, -503.433, 1085.087, -25.346, -24.641, -29.414, 16.197, 3.018,
+            -2.127, -37.939, 1.918, -3.812, 3.25, -0.096, -0.539, -0.883, 1.558,
+            -2.477, 2.72, -0.914, -0.039, 0.563, -1.438, 1.871,
+            -0.232, -1.257, 0.72, -0.825, 0.262, 0.008, 0.127, 0.142, 0.702,
+            -1.106, 0.614, -0.277, 0.631, -0.799, 0.507, 0.199, -0.414, 0.202,
+            -0.229, 0.172, -0.192, 0.081, -0.165, 0.448, -0.276, 0.11, -0.313,
+            0.109, 0.199, -0.017, -0.084, 0.128, -0.071, -0.281, 0.193]
+        // 以下由GPT將這句話翻譯成JS  i = np.searchsorted(y0, y, 'right') - 1
+        let i = y0.findIndex((element) => y < element) - 1;
+        if (i === -2) i = -1; // if y is less than all elements in y0
+        else if (i === -1) i = y0.length - 1; // if y is greater than all elements in y0
+        else {
+            // This loop is necessary because findIndex does not include 'right' parameter
+            // It increments i until it points to the last index where the condition is met
+            while (i + 1 < y0.length && y0[i + 1] === y) i++;
+        }
+        const t = (y - y0[i]) / (y1[i] - y0[i])
+        return a0[i] + t * (a1[i] + t * (a2[i] + t * a3[i]))
+    }
+    let D = 0
+    if (y < -720) D = integrated_lod(y, c1);
+    else if (y > 2022) D = integrated_lod(y, c2);
+    else D = spline(y);
+    return D / 86400
+}
+// console.log(TT2UT1_Old(-499, 1))
+// console.log(TT2UT1(-499))
 
 export const BindSolarChange = year => {
     year = +year
@@ -103,8 +232,8 @@ export const BindSolarChange = year => {
     return Print
 }
 // console.log(BindSolarChange(2000))
-export const EquaEclpWest = (GongRaw, year) => { // 自變量：距冬至度數，此處暫未考慮太陽修正！
-    const { Sidereal, e } = ConstWest(year)
+export const EquaEclpWest = (GongRaw, Jd) => { // 自變量：距冬至度數，此處暫未考慮太陽修正！
+    const { Sidereal, e } = ConstWest(Jd)
     const Gong = (GongRaw * 360 / Sidereal) % 360
     const Eclp2Equa = GongHigh2Flat(e, Gong)
     const Equa2Eclp = GongFlat2High(e, Gong)
@@ -112,8 +241,8 @@ export const EquaEclpWest = (GongRaw, year) => { // 自變量：距冬至度數�
     const Equa2EclpDif = Equa2Eclp - Gong
     return { Eclp2Equa, Equa2Eclp, Equa2EclpDif, Eclp2EquaDif }
 }
-export const HighLon2FlatLatWest = (GongRaw, year) => { // 根據當年的黃赤交角
-    const { Sidereal, e } = ConstWest(year)
+export const HighLon2FlatLatWest = (GongRaw, Jd) => { // 根據當年的黃赤交角
+    const { Sidereal, e } = ConstWest(Jd)
     const Lon = (GongRaw * 360 / Sidereal + 270) % 360
     return HighLon2FlatLat(e, Lon)
 }
@@ -187,55 +316,30 @@ export const sunRise = (Sobliq, f, l) => {
 // console.log(sunRiseQing(23.44, 39, 1))
 // console.log(HighLon2FlatLatWest(182.625, 365.25, 2000).Lat)
 // h太陽高度角=90°-|緯度φ-赤緯δ|。张富、张丽娟、邱本志《一种计算太阳低仰角蒙气差的有理函数逼近方法》，《太陽能學報》2015(9) // 還可參考 李文、赵永超《地球椭球模型中太阳位置计算的改进》
-const refraction = h => (1819.08371242143 + 194.887513592849 * h + 1.46555397475109 * h ** 2 - .0419553783815395 * h ** 3) /
+const refraction_ARCHIVE = h => (1819.08371242143 + 194.887513592849 * h + 1.46555397475109 * h ** 2 - .0419553783815395 * h ** 3) /
     (1 + .409283439734292 * h + .0667313795916436 * h ** 2 + .0000846859707945254 * h ** 3) / 3600
-/** 下線，計算太陽的精確位置不太容易
- * 丁豔、袁隆基、趙培濤、仝軍令《太陽視日軌跡跟蹤算法研究》
- * @param {*} f 地理緯度
- * @param {*} h1 冬至時間 時
- * @param {*} m1 分
- * @param {*} s1 秒
- * @param {*} SdInt 距冬至日數
- * @param {*} h 此時時間 時
- * @param {*} m 分
- * @param {*} s 秒
- * @param {*} year 年份
- * @param {*} height 表高
+/**
+ * Sæmundsson’s formula: https://en.wikipedia.org/wiki/Atmospheric_refraction#cite_note-Saemundsson1986-24
+ * @param {*} a 高度
+ * @param {*} P 大氣壓kPa
+ * @param {*} T 溫度K
  * @returns 
  */
-export const Deciaml2Angle = (f, h1, m1, s1, SdInt, h, m, s, year, height) => {
-    SdInt = parseInt(SdInt) // 距年前冬至整數日數，冬至當日爲0
-    year = +year // 那一年
-    const Solar = ConstWest(year).Solar
-    const Deci1 = big(h1).div(24).add(big(m1).div(1440)).add(big(s1).div(86400)).toNumber() // 冬至
-    const Deci = big(h).div(24).add(big(m).div(1440)).add(big(s).div(86400)).toNumber() // 所求
-    SdInt += Deci - Deci1
-    const Lon = big(SdInt).add(SunAcrVWest(SdInt, year).SunDifAccum).mul(360).div(Solar) // 黃經
-    const Lat = d2r(big(HighLon2FlatLatWest(Lon, Solar, year).Lat).mul(360).div(Solar))
-    // 假設正午時角是0，向西爲正，向東爲負
-    const v = (Deci - .5) * 360 // 時角
-    const a = hourA2ElevatA(v, Lat, f) // 太陽高度角
-    let b = r2d(Lat.cos().mul(v.sin()).div(a.cos()).asin()) // 太陽方位角
-    let z0 = 90 - a // 眞天頂距
-    // 以下複製Lon2DialWest
-    const r = .52
-    const Refrac = refraction(a)
-    const Parallax = big.div(8.8, 3600).mul(z0.sin())
-    z0 = r2d(z0)
-    const z = big(z0).sub(Refrac).sub(r).add(Parallax)
-    const Angle = d2r(big(z))
-    const Dial = Angle.tan().mul(height)
-    b = b.toNumber()
-    return '太陽高度角 ' + a.toFixed(6) + `°\n太陽方位角 ` + b.toFixed(6) + `°\n晷長 ` + Dial.toFixed(6)
-}
+const refraction = (a, P, T) => 1.02 / 60 * (P / 101) * (283 / T) * cot(a + 10.3 / (a + 5.11))
 
-// dial length = h tan(zenith height)
-export const Lon2DialWest = (Sobliq, f, l) => { // 黃經，地理緯度，黃赤交角
+/**
+ * 
+ * @param {*} Sobliq 黃赤交角
+ * @param {*} f 地理緯度
+ * @param {*} l 黃經
+ * @returns dial length= h tan(zenith height)
+ */
+export const Lon2DialWest = (Sobliq, f, l) => {
     const d = HighLon2FlatLat(Sobliq, l) // 赤緯
     const h = 90 - Math.abs(f - d) // 正午太陽高度
     const z0 = f - d // 眞天頂距=緯度-赤緯
     const r = .52 // 日視直徑0.53度。角半径=atan(1/2 d/D)
-    const Refrac = refraction(h) // 蒙气差使太陽升高
+    const Refrac = refraction(h, 102, 290) // 蒙气差使太陽升高
     const Parallax = 8.8 / 3600 * sin(z0) // p0太陽地平視差8.8s。視差總是使視位置降低，地平線最大，天頂爲0
     const z = z0 - Refrac + r / 2 + Parallax
     const Dial = (8 * tan(z)).toFixed(8) // 修正
@@ -257,11 +361,11 @@ const Lat = () => { // 由《周髀算经》推算观测地 的纬度有三种�
 // console.log(Lat()) // 35.17369
 
 // ε黃赤交角 Φ 黃白交角
-const MoonLonWest_BACKUP = (EclpRaw, year) => { // 統一360度
+const MoonLonWest_BACKUP = (EclpRaw, Jd) => { // 統一360度
     const Eclp = EclpRaw //(EclpRaw + 90) % 360
     const v0 = d2r(Eclp) // 距冬至轉換成距離春分的黃經
     const I = d2r(5.1453) // 授時黃白大距6
-    const E = d2r(ConstWest(year).e) // 授時黃赤大距23.9
+    const E = d2r(ConstWest(Jd).e) // 授時黃赤大距23.9
     const cosE = big.cos(E) // .9
     const tank = big.tan(I).div(big.sin(E)) // tank .22
     // const k = tank.atan() // k正交極數 12.7
@@ -288,8 +392,8 @@ const MoonLonWest_BACKUP = (EclpRaw, year) => { // 統一360度
 // console.log(MoonLonWest(165, 365.2575, 1281).u)
 
 // 《數》頁348白赤差
-const MoonLonWest = (NodeEclpLon, MoonEclpLon, year) => {
-    const E = d2r(ConstWest(year).e)
+const MoonLonWest = (NodeEclpLon, MoonEclpLon, Jd) => {
+    const E = d2r(ConstWest(Jd).e)
     const I = d2r(5.1453)
     const v = d2r(NodeEclpLon) // 升交點黃經
     const b = d2r(MoonEclpLon - NodeEclpLon) // 月亮到升交點的黃道度
@@ -341,17 +445,17 @@ const MoonLatWest = (NodeAccum, NodeAvgV, Sidereal, year) => {
 // console.log(MoonLatWest(6, 0, 360, 1000))
 
 // 下面這個加上了日躔。藤豔輝《宋代朔閏與交食研究》頁90,106
-export const EcliWest = (NodeAccum, AnomaAccum, Deci, Sd, f, year) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
-    const ConstWestFunc = ConstWest(year)
+export const EcliWest = (NodeAccum, AnomaAccum, Deci, Sd, f, Jd) => { // 一日中的時刻，距冬至日及分，入轉日，地理緯度，公元年
+    const ConstWestFunc = ConstWest(Jd)
     const Solar = ConstWestFunc.Solar
     f = d2r(f)
-    const SunWestFunc = SunAcrVWest(Sd, year)
+    const SunWestFunc = SunAcrVWest(Sd, Jd)
     let Lon = (SunWestFunc.Lon) % Solar // 黃經
     let SunV = SunWestFunc.SunAcrV
-    let MoonV = MoonAcrVWest(AnomaAccum, year).MoonAcrVd
+    let MoonV = MoonAcrVWest(AnomaAccum, Jd).MoonAcrVd
     SunV *= 360 / Solar
     MoonV *= 360 / Solar
-    const d = HighLon2FlatLatWest(Lon, Solar, year).d // 赤緯radius
+    const d = HighLon2FlatLatWest(Lon, Solar, Jd).d // 赤緯radius
     const h = (Deci - .5) * 360 // 時角
     const a = hourA2ElevatA(h, d, f) // 太陽高度
     const e = d2r(ConstWestFunc.e) // 黃赤交角degree

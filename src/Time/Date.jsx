@@ -86,7 +86,7 @@ export default class a extends React.Component {
     }
     return (
       <div className="ans" style={{ whiteSpace: "pre-wrap" }}>
-        <p>{this.state.output}</p>
+        <p>儒略日 {this.state.output}</p>
       </div>
     );
   }

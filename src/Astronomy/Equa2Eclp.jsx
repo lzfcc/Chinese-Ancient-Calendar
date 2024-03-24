@@ -6,7 +6,7 @@ export default class Converter extends React.Component {
     super(props)
     this.state = {
       Days: 1,
-      Year: 1000,
+      Jd: 2176525,
     }
     this.handle = this.handle.bind(this)
   }
@@ -21,11 +21,11 @@ export default class Converter extends React.Component {
             this.setState({ Days: e.currentTarget.value });
           }}
         />
-        <span> 公元年</span>
+        <span> 儒略日</span>
         <input className='width2'
-          value={this.state.Year}
+          value={this.state.Jd}
           onChange={e => {
-            this.setState({ Year: e.currentTarget.value });
+            this.setState({ Jd: e.currentTarget.value });
           }}
         />
       </span>
@@ -34,7 +34,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Range, Print } = bindEquaEclp(this.state.Days, this.state.Year)
+      const { Range, Print } = bindEquaEclp(this.state.Days, this.state.Jd)
       this.setState({ outputEclp: Print, outputEclp1: Range })
     } catch (e) {
       alert(e.message)

@@ -2,6 +2,7 @@ import N1 from './newm_quar.mjs'
 import N2 from './newm.mjs'
 // import N3 from './newm_huihui.mjs'
 import { N4 } from './newm_shixian.mjs'
+import { N5 } from './newm_eph.mjs'
 import Para from './para_calendars.mjs'
 import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB, fix } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
@@ -13,6 +14,7 @@ export default (Name, YearStart, YearEnd) => {
         const type = Para[Name].Type
         if (type === 1) return N1
         else if (type === 13) return N4
+        else if (type === 14) return N5
         else return N2
     }
     const AutoNewm = Bind(Name)
@@ -49,10 +51,18 @@ export default (Name, YearStart, YearEnd) => {
             if (PrevYear.LeapNumTerm) {
                 LeapNumTerm = 0
                 // 可能出現去年不閏而閏，於是今年正月和去年十二月重疊
-                if ((PrevYear.NewmAvgSc[13]) === ThisYear.NewmAvgSc[1]) { // 會出現最末位差一點的情況
-                    NewmStart = 1
-                    NewmEnd = 1
-                    TermEnd = 0
+                if (Type === 14) {
+                    if ((PrevYear.NewmSc[13]) === ThisYear.NewmSc[1]) {
+                        NewmStart = 1
+                        NewmEnd = 1
+                        TermEnd = 0
+                    }
+                } else {
+                    if ((PrevYear.NewmAvgSc[13]) === ThisYear.NewmAvgSc[1]) { // 會出現最末位差一點的情況
+                        NewmStart = 1
+                        NewmEnd = 1
+                        TermEnd = 0
+                    }
                 }
             }
             TermStart = 0
@@ -67,8 +77,13 @@ export default (Name, YearStart, YearEnd) => {
         } else {
             for (let i = 1; i <= 13; i++) {
                 TermName[i] = TermList[(i + 2) % 12]
-                TermSc[i] = ThisYear.TermSc[i]
-                TermDeci[i] = ThisYear.TermDeci[i]
+                Term1Name[i] = Term1List[(i + 2) % 12]
+                if (ThisYear.TermSc) {
+                    TermSc[i] = ThisYear.TermSc[i]
+                    TermDeci[i] = ThisYear.TermDeci[i]
+                    Term1Sc[i] = ThisYear.Term1Sc[i]
+                    Term1Deci[i] = ThisYear.Term1Deci[i]
+                }
                 if (ThisYear.TermAcrSc) {
                     TermAcrSc[i] = ThisYear.TermAcrSc[i]
                     TermAcrDeci[i] = ThisYear.TermAcrDeci[i]
@@ -87,9 +102,6 @@ export default (Name, YearStart, YearEnd) => {
                     TermEclp[i] = ThisYear.TermEclp[i]
                     Term1Eclp[i] = ThisYear.Term1Eclp[i]
                 }
-                Term1Name[i] = Term1List[(i + 2) % 12]
-                Term1Sc[i] = ThisYear.Term1Sc[i]
-                Term1Deci[i] = ThisYear.Term1Deci[i]
             }
             if (LeapNumTerm) {
                 TermName[LeapNumTerm + 1] = '无中'
@@ -102,12 +114,14 @@ export default (Name, YearStart, YearEnd) => {
                 TermEclp[LeapNumTerm + 1] = ''
                 for (let i = LeapNumTerm + 2; i <= 13; i++) {
                     TermName[i] = Term1List[(i + 2) % 12]
-                    TermSc[i] = ThisYear.Term1Sc[i]
-                    TermDeci[i] = ThisYear.Term1Deci[i]
                     // 上下互換位置
                     Term1Name[i] = TermList[(i + 1) % 12]
-                    Term1Sc[i] = ThisYear.TermSc[i - 1]
-                    Term1Deci[i] = ThisYear.TermDeci[i - 1]
+                    if (ThisYear.TermSc) {
+                        TermSc[i] = ThisYear.Term1Sc[i]
+                        TermDeci[i] = ThisYear.Term1Deci[i]
+                        Term1Sc[i] = ThisYear.TermSc[i - 1]
+                        Term1Deci[i] = ThisYear.TermDeci[i - 1]
+                    }
                     if (ThisYear.Term1AcrSc) {
                         TermAcrSc[i] = ThisYear.Term1AcrSc[i]
                         TermAcrDeci[i] = ThisYear.Term1AcrDeci[i]
@@ -200,8 +214,8 @@ export default (Name, YearStart, YearEnd) => {
         ////////////下爲調整輸出////////////
         const NewmSdPrint = ThisYear.NewmSd ? NewmSlice(ThisYear.NewmSd) : []
         const NewmAcrSdPrint = ThisYear.NewmAcrSd ? NewmSlice(ThisYear.NewmAcrSd) : []
-        const NewmAvgScPrint = NewmSlice(ThisYear.NewmAvgSc)
-        const NewmAvgDeciPrint = NewmSlice(ThisYear.NewmAvgDeci)
+        const NewmAvgScPrint = ThisYear.NewmAvgSc ? NewmSlice(ThisYear.NewmAvgSc) : []
+        const NewmAvgDeciPrint = ThisYear.NewmAvgDeci ? NewmSlice(ThisYear.NewmAvgDeci) : []
         NewmInt = NewmInt.slice(1 + NewmStart)
         let ZhengGreatSur = 0, ZhengSmallSur = 0
         if (Type === 1) {
@@ -209,7 +223,7 @@ export default (Name, YearStart, YearEnd) => {
             ZhengSmallSur = parseFloat(((ThisYear.NewmAvgRaw[1 + NewmStart] - NewmInt[0]) * Denom).toPrecision(5))
         }
         const MonthPrint = MonthName.slice(1)
-        let NewmScPrint = [], NewmDeci3Print = [], NewmDeci2Print = [], NewmDeci1Print = [], NewmAcrDeciPrint = []
+        let NewmScPrint = [], NewmDeci3Print = [], NewmDeci2Print = [], NewmDeci1Print = [], NewmAcrDeciPrint = [], NewmDeciUT18Print = []
         if (Type >= 2) {
             NewmScPrint = NewmSlice(ThisYear.NewmSc)
             if (Type <= 10 && ThisYear.NewmDeci1) { // 線性內插
@@ -218,6 +232,8 @@ export default (Name, YearStart, YearEnd) => {
                 NewmDeci3Print = NewmSlice(ThisYear.NewmDeci3)
             } else if (Type === 13) { // 實朔實時
                 NewmAcrDeciPrint = NewmSlice(ThisYear.NewmDeci)
+            } else if (Type === 14) {
+                NewmDeciUT18Print = NewmSlice(ThisYear.NewmDeci)
             }
         }
         if (Type >= 5 && Type <= 10 && ThisYear.NewmDeci2) {
@@ -231,10 +247,12 @@ export default (Name, YearStart, YearEnd) => {
         const SyzygyNowlineDeciPrint = ThisYear.SyzygyNowlineDeci ? NewmSlice(ThisYear.SyzygyNowlineDeci) : undefined
         let NewmDeciPrint = [], TermNamePrint = [], TermScPrint = [], TermDeciPrint = [], TermAcrScPrint = [], TermAcrDeciPrint = [], TermNowDeciPrint = [], TermEquaPrint = [], TermEclpPrint = [], TermDuskstarPrint = [], Term1NamePrint = [], Term1ScPrint = [], Term1DeciPrint = [], Term1EquaPrint = [], Term1EclpPrint = [], Term1AcrDeciPrint = [], Term1NowDeciPrint = [], Term1AcrScPrint = []
         TermNamePrint = TermSlice(TermName)
-        TermScPrint = TermSlice(TermSc)
-        TermDeciPrint = TermSlice(TermDeci)
+        Term1NamePrint = Term1Name[2] ? TermSlice(Term1Name) : []
+        if (TermSc[2]) {
+            TermScPrint = TermSlice(TermSc)
+            TermDeciPrint = TermSlice(TermDeci)
+        }
         if (Term1Sc[2]) {
-            Term1NamePrint = TermSlice(Term1Name)
             Term1ScPrint = TermSlice(Term1Sc)
             Term1DeciPrint = TermSlice(Term1Deci)
         }
@@ -329,7 +347,7 @@ export default (Name, YearStart, YearEnd) => {
         let Era = year
         if (year > 0) Era = `公元 ${year} 年 ${YearSc}`
         else Era = `公元前 ${1 - year} 年 ${YearSc}`
-        let YearInfo = `<span class='cal-name'>${NameList[Name]}</span> 距曆元${year - (OriginAd || CloseOriginAd)}年 `
+        let YearInfo = (OriginAd || CloseOriginAd) ? `<span class='cal-name'>${NameList[Name]}</span> 距曆元${year - (OriginAd || CloseOriginAd)}年 ` : ``
         if (Type === 1) {
             const LeapSur = isTermLeap ? ThisYear.LeapSurAvgThis : ThisYear.LeapSurAvgFix
             if (Name === 'Taichu') {
@@ -389,15 +407,15 @@ export default (Name, YearStart, YearEnd) => {
         }
         return {
             Era, YearInfo, MonthPrint,
-            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmEclpPrint, NewmEquaPrint,
+            NewmAvgScPrint, NewmAvgDeciPrint, NewmScPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmDeciUT18Print, NewmEclpPrint, NewmEquaPrint,
             SyzygyScPrint, SyzygyNowlineDeciPrint, SyzygyDeciPrint,
             Term1NamePrint, Term1ScPrint, Term1DeciPrint, Term1AcrScPrint, Term1AcrDeciPrint, Term1NowDeciPrint, Term1EclpPrint, Term1EquaPrint,
             TermNamePrint, TermScPrint, TermDeciPrint, TermAcrScPrint, TermAcrDeciPrint, TermNowDeciPrint, TermEclpPrint, TermEquaPrint, TermDuskstarPrint,
             ////////////// 曆書
             LeapNumTerm, SolsAccum, Sols,
             NewmInt, // 結尾就不切了，因爲最後一個月還要看下個月的情況
-            NewmRaw: ((Type === 1 || Type === 13) ? [] : NewmSlice(ThisYear.NewmRaw)),
-            NewmAcrRaw: ((Type === 1 || Type === 13) ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
+            NewmRaw: ((Type === 1 || Type >= 13) ? [] : NewmSlice(ThisYear.NewmRaw)),
+            NewmAcrRaw: ((Type === 1 || Type >= 13) ? [] : NewmSlice(ThisYear.NewmAcrRaw)), // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
             // NewmAcrInt: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrInt)),
             // NewmNodeAccumPrint, // : (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmStart)), // 為什麼還要切一遍？？
             NewmNodeAccumMidnPrint,
@@ -411,7 +429,10 @@ export default (Name, YearStart, YearEnd) => {
             MoonRoot: Type === 13 ? ThisYear.MoonRoot : undefined,
             MapoRoot: Type === 13 ? ThisYear.MapoRoot : undefined,
             NodeRoot: Type === 13 ? ThisYear.NodeRoot : undefined,
-            NewmSmd: Type === 13 ? ThisYear.NewmSmd.slice(1 + NewmStart) : undefined
+            NewmSmd: Type === 13 ? ThisYear.NewmSmd.slice(1 + NewmStart) : undefined,
+            // 現代曆表曆書
+            NewmJd: Type === 14 ? ThisYear.NewmJd : undefined,
+            SolsJd: Type === 14 ? ThisYear.SolsJd : undefined,
         }
     }
     Memo[0] = AutoNewm(Name, YearStart - 1) // 去年
@@ -426,4 +447,4 @@ export default (Name, YearStart, YearEnd) => {
     }
     return result
 }
-// console.log(Index('Shoushi', -2500, -2500))
+// console.log(Index('Eph1', 2026, 2026))
