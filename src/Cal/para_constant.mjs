@@ -94,7 +94,7 @@ export const NameList = {
   Yisi: "乙巳(擬)",
   Linde: "麟德",
   LindeB: "麟德(進朔)",
-  // Jiuzhi: '九執(擬)', // 顯慶年間印度曆法
+  // Jiuzhi: '九執(擬)',
   Dayan: "大衍",
   TaiyiKaiyuan: "開元太乙",
   // Zhide: '至德(擬)',
