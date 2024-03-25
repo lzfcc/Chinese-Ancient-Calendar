@@ -309,12 +309,12 @@ export default (Name, YearStart, YearEnd) => {
                         const SunEcliStatus = SunEcliFunc.Status
                         let NewmMagni = 0
                         const NewmStartDeci = SunEcliFunc.StartDeci ? fix(SunEcliFunc.StartDeci) : 0
-                        const NewmTotalDeci = SunEcliFunc.TotalDeci ? fix(SunEcliFunc.TotalDeci) : 0
+                        const NewmGreatDeci = SunEcliFunc.GreatDeci ? fix(SunEcliFunc.GreatDeci) : 0
                         const NewmEndDeci = SunEcliFunc.EndDeci ? fix(SunEcliFunc.EndDeci) : 0
                         if (SunEcliStatus) {
                             NewmMagni = SunEcliFunc.Magni.toFixed(2)
                             SunEcli[i] = `<span class='eclipse'>S${NoleapMon}</span>`
-                            SunEcli[i] += '出' + Rise + ' 分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmTotalDeci ? '甚' + NewmTotalDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '') + ' 入' + Sunset
+                            SunEcli[i] += '出' + Rise + ' 分' + NewmMagni + (NewmStartDeci ? '虧' + NewmStartDeci : '') + (NewmGreatDeci ? '甚' + NewmGreatDeci : '') + (NewmEndDeci ? '復' + NewmEndDeci : '') + ' 入' + Sunset
                             NewmScPrint[i] += StatusList[SunEcliStatus]
                         }
                     }
@@ -323,12 +323,12 @@ export default (Name, YearStart, YearEnd) => {
                         const MoonEcliStatus = MoonEcliFunc.Status
                         let SyzygyMagni = 0
                         const SyzygyStartDeci = MoonEcliFunc.StartDeci ? fix(MoonEcliFunc.StartDeci) : 0
-                        const SyzygyTotalDeci = MoonEcliFunc.TotalDeci ? fix(MoonEcliFunc.TotalDeci) : 0
+                        const SyzygyGreatDeci = MoonEcliFunc.GreatDeci ? fix(MoonEcliFunc.GreatDeci) : 0
                         const SyzygyEndDeci = MoonEcliFunc.EndDeci ? fix(MoonEcliFunc.EndDeci) : 0
                         if (MoonEcliStatus) {
                             SyzygyMagni = MoonEcliFunc.Magni.toFixed(2)
                             MoonEcli[i] = `<span class='eclipse'>M${NoleapMon}</span>`
-                            MoonEcli[i] += '入' + Sunset + ' 分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyTotalDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '') + ' 出' + Rise
+                            MoonEcli[i] += '入' + Sunset + ' 分' + SyzygyMagni + (SyzygyStartDeci ? '虧' + SyzygyStartDeci + '甚' + SyzygyGreatDeci : '') + (SyzygyEndDeci ? '復' + SyzygyEndDeci : '') + ' 出' + Rise
                             SyzygyScPrint[i] += StatusList[MoonEcliStatus]
                         }
                     }

@@ -67,7 +67,7 @@ export const ConstWest = Jd => { // 儒略世紀：36525日。我下面索性將
  * @param {*} month 
  * @returns delta(day)
  */
-export const TT2UT1 = (year, month) => {
+const TT2UT1_Old = (year, month) => {
     month = month || 1
     const y = year + (month - .5) / 12 // This gives "y" for the middle of the month
     let u = 0, t = 0, D = 0
@@ -123,7 +123,7 @@ export const TT2UT1 = (year, month) => {
 }
 
 // 廖育棟 [DeltaT](https://github.com/ytliu0/DeltaT) 的 Python 代碼，由 chatGPT 修改。
-export const TT2UT1A = y => {
+export const TT2UT1 = y => {
     const c1 = 1.007739546148514 // chosen to make DeltaT continuous at y = -720
     const c2 = -150.3150351029286 // chosen to make DeltaT continuous at y = 2022
     const integrated_lod = (y, C) => {
@@ -191,8 +191,11 @@ export const TT2UT1A = y => {
     return D / 86400
 }
 // console.log(TT2UT1_Old(-499, 1))
-// console.log(TT2UT1(-499))
-
+// console.log(TT2UT1(2024)) // 69s
+// const gmst_IAU1984 = T => {
+//     return 6 + 41 / 60 + 50.54841 / 3600 + 8640184.812866 / 3600 * T + 0.093104 / 3600 * T ** 2 - 6.2e-6 / 3600 * T ** 3
+// }
+// // console.log(gmst(1))
 export const BindSolarChange = year => {
     year = +year
     const year1 = year - 1194 // 現代値歸算爲統天曆元

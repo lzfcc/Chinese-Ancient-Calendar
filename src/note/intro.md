@@ -26,7 +26,7 @@
 
 ### 年表
 
-- [廖育棟的網站](https://ytliu0.github.io/ChineseCalendar/index_chinese.html)年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等
+- [廖育棟的網站](https://ytliu0.github.io/ChineseCalendar/index_chinese.html) 年曆、氣朔時刻、中國歷史年表、儒略日干支轉換等——DE431
 - 中研院 [兩千年中西曆轉換](https://sinocal.sinica.edu.tw/)
 - [歷史車輪中西曆轉換器](https://www.lishichelun.com/calendar/switch)
 
@@ -38,13 +38,14 @@
 
 ### 現代天文學中曆
 
-- [日梭萬年曆](http://www.tianqihoubao.com/calendar/calendar.htm)，似乎是中科院背景
-- [壽星天文曆](http://www.nongli.net/sxwnl/)，許劍偉、鄭彥山
+- [日梭萬年曆](http://www.tianqihoubao.com/calendar/calendar.htm)
+- [壽星天文曆](http://www.nongli.net/sxwnl/)，許劍偉、鄭彥山——VSOP
 - [萬年天文夏曆](https://vert.neocities.org/cld/)，哂蟹齋
 
 ### 現代天文學朔閏、交食
 
-- [NASA Eclipse](https://eclipse.gsfc.nasa.gov/)
+- [日本國立天文臺在線曆表](https://eco.mtk.nao.ac.jp/koyomi/cande/index.html.en) 有 2009 年以來的七政位置、朔閏、節氣、交食、恆星時等等
+- [NASA Eclipse](https://eclipse.gsfc.nasa.gov/) VSOP、ELP-2000/82 算的，精度可能不太夠
 - [Astronomy and numerical software source codes](http://www.moshier.net/#Cephes)
 
 ### 博客

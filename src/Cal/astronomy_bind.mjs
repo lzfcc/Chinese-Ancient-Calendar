@@ -702,15 +702,15 @@ export const bindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci) 
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, Status
+            const { Magni, StartDeci, GreatDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 1, Name, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
-            let TotalDeciPrint = '-'
+            let GreatDeciPrint = '-'
             let EndDeciPrint = '-'
             const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
-            if (StartDeci && TotalDeci) {
+            if (StartDeci && GreatDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
-                TotalDeciPrint = (TotalDeci * 100).toFixed(3)
+                GreatDeciPrint = (GreatDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
             let StatusPrint = '不食'
@@ -723,7 +723,7 @@ export const bindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci) 
             }
             return {
                 title: NameList[Name],
-                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, GreatDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
@@ -732,15 +732,15 @@ export const bindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci) 
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, Status
+            const { Magni, StartDeci, GreatDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 1, Name, i + 1, 0, 0, SolsDeci)
             let StartDeciPrint = '-'
-            let TotalDeciPrint = '-'
+            let GreatDeciPrint = '-'
             let EndDeciPrint = '-'
             const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
-            if (StartDeci && TotalDeci) {
+            if (StartDeci && GreatDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
-                TotalDeciPrint = (TotalDeci * 100).toFixed(3)
+                GreatDeciPrint = (GreatDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
             let StatusPrint = '不食'
@@ -753,7 +753,7 @@ export const bindSunEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci) 
             }
             return {
                 title: NameList[Name],
-                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, GreatDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }
@@ -785,19 +785,19 @@ export const bindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci)
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, Status
+            const { Magni, StartDeci, GreatDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 0, Name, i + 1, 0, 0, SolsDeci)
-            let StartDeciPrint = '-', TotalDeciPrint = '-', EndDeciPrint = '-'
+            let StartDeciPrint = '-', GreatDeciPrint = '-', EndDeciPrint = '-'
             const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
-            if (StartDeci && TotalDeci) {
+            if (StartDeci && GreatDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
-                TotalDeciPrint = (TotalDeci * 100).toFixed(3)
+                GreatDeciPrint = (GreatDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
             const StatusPrint = StatusList[Status]
             return {
                 title: NameList[Name],
-                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, GreatDeciPrint, EndDeciPrint]
             }
         }))
     let Print2 = []
@@ -806,19 +806,19 @@ export const bindMoonEclipse = (NodeAccum, AnomaAccum, AvgDeci, AvgSd, SolsDeci)
             const { Tcorr1, Tcorr2 } = AutoTcorr(AnomaAccum, AvgSd, Name)
             const AcrDeci = (AvgDeci + (Tcorr2 || Tcorr1) + 1) % 1
             const AcrSd = AvgSd + (Tcorr2 || Tcorr1)
-            const { Magni, StartDeci, TotalDeci, EndDeci, Status
+            const { Magni, StartDeci, GreatDeci, EndDeci, Status
             } = AutoEclipse(NodeAccum, AnomaAccum, AcrDeci, AvgDeci, AcrSd, AvgSd, 0, Name, i + 1, 0, 0, SolsDeci)
-            let StartDeciPrint = '-', TotalDeciPrint = '-', EndDeciPrint = '-'
+            let StartDeciPrint = '-', GreatDeciPrint = '-', EndDeciPrint = '-'
             const AcrDeciPrint = (AcrDeci * 100).toFixed(3)
-            if (StartDeci && TotalDeci) {
+            if (StartDeci && GreatDeci) {
                 StartDeciPrint = (StartDeci * 100).toFixed(3)
-                TotalDeciPrint = (TotalDeci * 100).toFixed(3)
+                GreatDeciPrint = (GreatDeci * 100).toFixed(3)
                 EndDeciPrint = (EndDeci * 100).toFixed(3)
             }
             const StatusPrint = StatusList[Status]
             return {
                 title: NameList[Name],
-                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, TotalDeciPrint, EndDeciPrint]
+                data: [StatusPrint, Magni.toFixed(3), StartDeciPrint, AcrDeciPrint, GreatDeciPrint, EndDeciPrint]
             }
         }))
     return { Print1, Print2 }

@@ -246,8 +246,8 @@ const test5 = function () {
 // const b = a * EcliNumer * ShuoHeFen
 
 // 應天日食食分算法廢：
-// let tmp = (.75 - TotalDeci) * MoonAvgVd * 20
-// if (TotalDeci > .5) {
+// let tmp = (.75 - GreatDeci) * MoonAvgVd * 20
+// if (GreatDeci > .5) {
 //     tmp /= 4
 // const TheDif = Math.abs(Portion * (TheNodeDif - tmp))
 // if (TheNodeDif < SunLimitYang) { // 類同陽曆分

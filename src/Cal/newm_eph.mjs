@@ -154,23 +154,25 @@ const calPos = (Name, Jd) => {
     const Xreal = calX(Name, Jd) // 實際位置
     const Jdr = calLightAber(Jd, Xreal) // 推遲時
     const { X, V } = calXV(Name, Jdr) // 視位置
-    const { Lon: LonRaw } = x2LonLat(X) //  1024-3-15 2:37,VSOP的LonRaw是13°34′49″，DE441是12.48，一個黃道一個赤道
+    const X2000 = multiply(B, X)
+    const V2000 = multiply(B, V)
+    // const { Lon: LonRaw } = x2LonLat(X) //  1024-3-15 2:37,VSOP的LonRaw是13°34′49″，DE441是12.48，一個黃道一個赤道
     const { N, Obliq } = nutaMx(T)
     const P = precessionMx(T) // 歲差矩陣 P(t)
+    const NP = multiply(N, P)
     const R1Eps = r1(Obliq)
-    const EquaRaw = multiply(transpose(R1Eps), X) // ⚠️此處注意，分析曆表的座標是黃道，所以必須要先轉成赤道，與廖育棟文檔上的順序不太相同。排查了一個下午終於找到問題了
-    const NPB = chain(N).multiply(P).multiply(B).done()
-    const Equa = multiply(NPB, EquaRaw).toArray()
+    // ⚠️此處注意，分析曆表的座標是黃道，所以必須要先轉成赤道，與廖育棟文檔上的順序不太相同。排查了一個下午終於找到問題了
+    const Equa = multiply(NP, multiply(transpose(R1Eps), X2000)).toArray()
+    const Equa1 = multiply(NP, multiply(transpose(R1Eps), V2000)).toArray()
     const Eclp = multiply(R1Eps, Equa).toArray()
-    const Eclp1 = multiply(NPB, V).toArray()
+    const Eclp1 = multiply(R1Eps, Equa1).toArray()
     // X=[x, y, z]. Lon=atan2(y, x). derivativeLon =(xy'-yx')/(x^2+y^2). 欲求x', y', 求 X' ≈ R1(Ep t)N(t)P(t)B[v(tr)-vE(tr)]
     const Lon1 = (Eclp[0] * Eclp1[1] - Eclp[1] * Eclp1[0]) / (Eclp[0] ** 2 + Eclp[1] ** 2) // 經度的時間導數
     let { Lon: EquaLon, Lat: EquaLat } = x2LonLat(Equa)
     EquaLon = (EquaLon + pi2) % pi2
     let { Lon, Lat } = x2LonLat(Eclp)
     Lon = (Lon + pi2) % pi2
-    return { EquaLon, EquaLat, Lon, Lat, Lon1, LonRaw }
-    // return { Lon: r2dfix(Lon), LonRaw: r2dfix(LonRaw) }
+    return { EquaLon, EquaLat, Lon, Lat, Lon1 }
 }
 // console.log(calPos('Sun', 2095147.609028 - 0.333333)) // 1024-3-15 2:37 Lon: '1°8′34″', LonRaw: '13°34′49″
 // console.log(calPos('Sun', 2460389.9625 - 0.333333)) // 2024-3-20 11:06 Lon: '359°59′55″', LonRaw: '0°18′37″
@@ -318,35 +320,3 @@ export const N5 = (Name, Y) => {
     }
 }
 // console.log(N5('Eph1', -1124))
-// function callDE(inputArgs) {
-//     // 返回一个新的Promise
-//     return new Promise((resolve, reject) => {
-//         const argsString = inputArgs.join(' ');
-//         exec(`python3 ../Ephemeris-Py/de.py ${argsString}`, (error, stdout, stderr) => {
-//             if (error) {
-//                 reject(`exec error: ${error}`);
-//             } else if (stderr) {
-//                 reject(`stderr: ${stderr}`);
-//             } else {
-//                 resolve(stdout);
-//             }
-//         });
-//     });
-// }
-// // 假设这是你调用外部API的异步函数
-// function fetchData(inputArgs) {
-//     // 模拟异步API调用
-//     setTimeout(() => {
-//         const data = 'some data based on ' + inputArgs; // 假设的数据
-//         eventEmitter.emit('data-ready', data);
-//     }, 1000);
-// }
-
-// // 注册一个监听器来处理准备好的数据
-// eventEmitter.on('data-ready', (data) => {
-//     console.log('Data received:', data);
-//     // 你可以在这里执行进一步操作，比如更新UI、存储数据等
-// });
-
-// // 触发异步数据加载
-// fetchData('inputArgs');
