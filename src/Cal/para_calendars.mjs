@@ -3138,7 +3138,6 @@ export default {
     },
     DE441: {
         Type: 15,
-        ApplyYear: [[1914, 2499]],
         CloseOriginAd: 2000
     }
 }

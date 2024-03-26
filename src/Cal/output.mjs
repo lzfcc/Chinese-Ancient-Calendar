@@ -406,4 +406,4 @@ export const outputDayWeb = (year, Name) => {
         DayData: DayView(OtherResult)
     }
 }
-// console.log(outputDayWeb(1730, 'Datong'))
+// console.log(outputDayWeb(1730, 'Guimao'))

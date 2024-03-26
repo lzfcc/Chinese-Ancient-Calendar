@@ -170,22 +170,23 @@ export default class Newm extends React.Component {
       alert('Please choose a calendar');
       return;
     }
-    if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
-      alert('Please input year(s)');
-      return;
-    }
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
+    if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
+      const date = new Date();
+      const year = date.getFullYear()
+      YearStart = year
+      YearEnd = year
+      this.setState({ YearStart })
+      this.setState({ YearEnd })
+      return;
+    }
     if (isAuto) {
       if (YearStart < -721 || YearStart > 2499 || YearEnd < -721 || YearEnd > 2499) {
         alert('Year range of AutoChoose mode: -721 to 2499');
         return;
       }
     } else {
-      // if (this.state.calendars.indexOf('DE441') == -1 && (YearStart < -2499 || YearStart > 2499 || YearEnd < -2499 || YearEnd > 2499)) {
-      //   alert('Year range of DE440/1: -2499 to 2499');
-      //   return;
-      // } else
       if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
         alert('Year range: -3807 to 9999');
         return;
@@ -214,6 +215,8 @@ export default class Newm extends React.Component {
     }
     if (YearStart > YearEnd) {
       [YearStart, YearEnd] = [YearEnd, YearStart]
+      this.setState({ YearStart })
+      this.setState({ YearEnd })
     }
     const callWorker = eventName => {
       this.setState({ loading: true });

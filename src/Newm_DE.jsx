@@ -94,12 +94,17 @@ export default class Newm extends React.Component {
   }
 
   handleRetrieve() {
-    if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
-      alert('Please input year(s)');
-      return;
-    }
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
+    if (this.state.YearStart.length === 0 && this.state.YearEnd.length === 0) {
+      const date = new Date();
+      const year = date.getFullYear()
+      YearStart = year
+      YearEnd = year
+      this.setState({ YearStart })
+      this.setState({ YearEnd })
+      return;
+    }
     if (YearStart < -2499 || YearStart > 2499 || YearEnd < -2499 || YearEnd > 2499) {
       alert('Year range: -2499 to 2499');
       return;
@@ -127,6 +132,12 @@ export default class Newm extends React.Component {
     }
     if (YearStart > YearEnd) {
       [YearStart, YearEnd] = [YearEnd, YearStart]
+      this.setState({ YearStart })
+      this.setState({ YearEnd })
+    }
+    if (YearEnd - YearStart > 500) {
+      alert('內容過多，爲避免瀏覽器展示性能問題，請減少年數');
+      return
     }
     const callWorker = eventName => {
       this.setState({ loading: true });
