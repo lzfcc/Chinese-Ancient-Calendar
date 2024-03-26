@@ -7,6 +7,7 @@ export const generateTimeString = (h, m, s, ms) => {
     let hString = h.toString()
     let mString = m.toString()
     let sString = s.toString()
+    let msString = ''
     if (hString.length < 2) {
         hString = '0' + hString
     }
@@ -16,15 +17,18 @@ export const generateTimeString = (h, m, s, ms) => {
     if (sString.length < 2) {
         sString = '0' + sString
     }
-    let msString = ''
     if (ms) {
         msString = ms.toString()
         if (msString.length < 2) {
-            msString = '00' + msString
-        } else if (msString.length < 3) {
             msString = '0' + msString
         }
         msString = '.' + msString
+        //     msString = ms.toString()
+        //     if (msString.length < 2) {
+        //         msString = '00' + msString
+        //     } else if (msString.length < 3) {
+        //         msString = '0' + msString
+        //     }
     }
     return hString + ':' + mString + ':' + sString + msString
 }
@@ -55,12 +59,13 @@ export const Jd2Date = Jd => {
     const h = Math.floor(Hour);
     const m = Math.floor((Hour - h) * 60);
     const s = Math.floor((Hour - h - m / 60) * 3600);
-    const ms = Math.floor((((Hour - h - m / 60) * 3600) - Math.floor((Hour - h - m / 60) * 3600)) * 1000);
+    let ms = Math.floor((((Hour - h - m / 60) * 3600) - Math.floor((Hour - h - m / 60) * 3600)) * 100); // 本來毫秒應該*1000
     const ScOrder = Math.round((Math.round(Jd) % 60 + 110) % 60.1);
     return { year, mm, dd, h, m, s, ms, ScOrder } // 組成一個數組或者對象居然很耗費時間，用了0.6ms
 }
+// console.log(extractFirstTwoDigits('46262'))
 // const Start = performance.now()
-// console.log(Jd2Date(3460393))
+// console.log(Jd2Date(3460393.12264).ms)
 // const End = performance.now()
 // console.log(End - Start)
 export const Jd2DatePrint = Jd => {
@@ -77,7 +82,7 @@ export const Jd2DatePrint = Jd => {
 }
 export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
     yy = parseInt(yy), mm = parseInt(mm), dd = parseInt(dd), h = parseInt(h), m = parseInt(m), s = parseInt(s), ms = parseInt(ms)
-    h = h || 0, m = m || 0, s = s || 0, ms = ms || 0
+    mm = mm || 1, dd = dd || 1, h = h || 0, m = m || 0, s = s || 0, ms = ms || 0
     if (mm > 12 || dd > 31 || h > 23 || s > 59 || ms > 999) {
         throw (new Error('invalid value!'))
     } else if (mm <= 0 || dd <= 0 || h < 0 || s < 0 || ms < 0) {
@@ -96,8 +101,8 @@ export const Date2Jd = (yy, mm, dd, h, m, s, ms) => {
     // const Frac = h.div(24) + m.div(1440) + s.div(86400) + ms.div(86400000)
     // const Date = Frac.add(365 * yy - 679004 + b + Math.floor(30.6 * (mm + 1)) + dd + 2400001 + -.5) // Frac默認0，所以要減去半日
     const Frac = h / 24 + m / 1440 + s / 86400 + ms / 86400000
-    const Date = 365 * yy - 679004 + b + Math.floor(30.600001 * (mm + 1)) + dd + 2400001 + -.5 + Frac
-    return Date
+    const Jd = 365 * yy - 679004 + b + Math.floor(30.600001 * (mm + 1)) + dd + 2400001 + -.5 + Frac
+    return Jd
 }
 
 // https://ww2.mathworks.cn/matlabcentral/fileexchange/111820-nasa-jpl-development-ephemerides-de441

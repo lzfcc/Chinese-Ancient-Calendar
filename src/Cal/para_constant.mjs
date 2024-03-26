@@ -144,7 +144,8 @@ export const NameList = {
   Yongnian: "康熙永年表(待定)",
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
-  Eph1: '半解析曆表'
+  VSOP: '半解析曆表',
+  DE441: 'DE440/1曆表'
 };
 export const NameDayList = {
   // 可計算日書的曆法
@@ -374,13 +375,13 @@ export const TwelveListWuyin = [
 ];
 export const TwentyfourList =
   "子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥壬";
-export const TermList = [
+export const TermNameList = [
   "小雪中", "冬至中", "大寒中", "雨水中", "春分中", "穀雨中", "小滿中", "夏至中", "大暑中", "處暑中", "秋分中", "霜降中", "小雪中"
 ]; // 用於朔閏表顯示中氣名
-export const Term1List = [
+export const Term1NameList = [
   "立冬節", "大雪節", "小寒節", "立春節", "驚蟄節", "清明節", "立夏節", "芒種節", "小暑節", "立秋節", "白露節", "寒露節"
 ];
-export const HalfTermList = [
+export const HalfTermNameList = [
   "冬至", "小寒", "大寒", "立春", "雨水", "驚蟄", "春分", "清明", "穀雨", "立夏", "小滿", "芒種", "夏至", "小暑", "大暑", "立秋", "處暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪"
 ];
 export const HouListA = [

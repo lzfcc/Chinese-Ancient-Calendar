@@ -1,4 +1,4 @@
-import { r1, r3 } from '../newm_eph.mjs'
+import { r1, r3 } from '../newm_vsop.mjs'
 import { matrix, chain } from 'mathjs'
 const pi2 = 6.283185307179586476925287
 const S2R = 4.848136811095359935899141e-6

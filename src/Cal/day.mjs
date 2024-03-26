@@ -3,7 +3,7 @@ import {
     NameList, ScList, StemList, BranchList, StemList1, BranchList1, NayinList,
     WeekList, MansionNameList, MansionAnimalNameList,
     ManGodList, JianchuList, HuangheiList, YuanList,
-    HalfTermList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
+    HalfTermNameList, HouListA, HouListB, Hexagram64ListA, Hexagram64ListB, HexagramSymbolListA, HexagramSymbolListB, FiveList2,
     nzh, NumList, MonNumList1, deci
 } from './para_constant.mjs'
 import {
@@ -278,7 +278,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
                     if (HouAccum[j] >= SdMidn && HouAccum[j] < SdMidn + 1) {
                         HouOrder = j % 72
                         const TermOrder = HouOrder % 3 ? -1 : (Math.round(HouOrder / 3)) % 24
-                        HouName[i][k] = TermOrder >= 0 ? `<span class='term'>${HalfTermList[TermOrder]}</span>` : ''
+                        HouName[i][k] = TermOrder >= 0 ? `<span class='term'>${HalfTermNameList[TermOrder]}</span>` : ''
                         if (Type >= 3) {
                             HouName[i][k] += HouList[HouOrder] + deci(HouAccum[j] + SolsAccum).toFixed(4).slice(2, 6)
                         } else if (TermOrder >= 0) {

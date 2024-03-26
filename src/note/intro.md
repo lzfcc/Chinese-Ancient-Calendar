@@ -44,9 +44,9 @@
 
 ### 現代天文學朔閏、交食
 
+- Eight Millennia of Eclipses (4000 BCE – 4000 CE)](http://ytliu.epizy.com/eclipse/) 廖育棟的
+- [NASA Eclipse](https://eclipse.gsfc.nasa.gov/) 五千年，VSOP、ELP-2000/82 算的，太老了
 - [日本國立天文臺在線曆表](https://eco.mtk.nao.ac.jp/koyomi/cande/index.html.en) 有 2009 年以來的七政位置、朔閏、節氣、交食、恆星時等等
-- [NASA Eclipse](https://eclipse.gsfc.nasa.gov/) VSOP、ELP-2000/82 算的，精度可能不太夠
-- [Astronomy and numerical software source codes](http://www.moshier.net/#Cephes)
 
 ### 博客
 
@@ -604,7 +604,9 @@ a = [0, ...a]
 - 增加多項式擬合，放在招差模塊。
 - 改名：古曆`SolsDif –> Sd`，西曆 `Sd –> Smd`，古曆`Night –> Midn`。
 
-3-24 `2.10` 增加現代曆表！！
+3-24 `2.10` 增加VSOP和ELP2000曆表的朔閏！！
+
+3-26 `2.11` 增加DE440/1曆表朔閏。
 
 ### Todo list
 

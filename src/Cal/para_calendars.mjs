@@ -3132,7 +3132,13 @@ export default {
         ZhengNum: 2,
         OriginMonNum: 0,
     },
-    Eph1: {
-        Type: 14
+    VSOP: {
+        Type: 14,
+        CloseOriginAd: 2000
+    },
+    DE441: {
+        Type: 15,
+        ApplyYear: [[1914, 2499]],
+        CloseOriginAd: 2000
     }
 }

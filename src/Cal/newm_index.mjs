@@ -2,12 +2,14 @@ import N1 from './newm_quar.mjs'
 import N2 from './newm.mjs'
 // import N3 from './newm_huihui.mjs'
 import { N4 } from './newm_shixian.mjs'
-import { N5 } from './newm_eph.mjs'
+import { N5 } from './newm_vsop.mjs'
+import { N6 } from './newm_de.mjs'
 import Para from './para_calendars.mjs'
-import { TermList, Term1List, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB, fix } from './para_constant.mjs'
+import { TermNameList, Term1NameList, ScList, ThreeList, NameList, MonNumList1, MonNumListChuA, MonNumListChuB, fix } from './para_constant.mjs'
 import { AutoEclipse } from './astronomy_eclipse.mjs'
 import { autoRise } from './astronomy_bind.mjs'
 import { AutoRangeEcli } from './para_auto-constant.mjs'
+import { deltaT, deltaTErrorEstimate } from './astronomy_west.mjs'
 // const Index = (Name, YearStart, YearEnd) => {
 export default (Name, YearStart, YearEnd) => {
     const Bind = Name => {
@@ -15,16 +17,17 @@ export default (Name, YearStart, YearEnd) => {
         if (type === 1) return N1
         else if (type === 13) return N4
         else if (type === 14) return N5
+        else if (type === 15) return N6
         else return N2
     }
     const AutoNewm = Bind(Name)
     const { Type, OriginAd, CloseOriginAd, ZhangRange, ZhengNum, Denom, Node, OriginMonNum, isTermLeap, SolsOriginDif } = Para[Name]
     const Memo = []
-    const calculate = year => {
+    const calculate = Y => {
         const [PrevYear, ThisYear, NextYear] = Memo
         const ZhengSd = ZhengNum - OriginMonNum
         const SolsMon = (1 - ZhengNum + 12) % 12 // 冬至月
-        const { JiScOrder: JiScOrder, SolsAccum, Sols, NewmEqua, NewmEclp, AccumPrint, LeapLimit, SolsDeci } = ThisYear
+        const { JiScOrder, SolsAccum, Sols, NewmEqua, NewmEclp, AccumPrint, LeapLimit, SolsDeci } = ThisYear
         let { LeapNumTerm, NewmInt, NewmStart, NewmEnd, TermStart, TermEnd } = ThisYear
         NewmInt = NewmInt || []
         const TermAcrSc = [], TermAcrDeci = [], TermNowDeci = [], Term1Name = [], Term1Sc = [], Term1Deci = [], Term1Equa = [], Term1Eclp = [], Term1AcrSc = [], Term1AcrDeci = [], Term1NowDeci = []
@@ -51,7 +54,7 @@ export default (Name, YearStart, YearEnd) => {
             if (PrevYear.LeapNumTerm) {
                 LeapNumTerm = 0
                 // 可能出現去年不閏而閏，於是今年正月和去年十二月重疊
-                if (Type === 14) {
+                if (Type >= 14) {
                     if ((PrevYear.NewmSc[13]) === ThisYear.NewmSc[1]) {
                         NewmStart = 1
                         NewmEnd = 1
@@ -76,8 +79,8 @@ export default (Name, YearStart, YearEnd) => {
             TermDuskstar = ThisYear.TermDuskstar || []
         } else {
             for (let i = 1; i <= 13; i++) {
-                TermName[i] = TermList[(i + 2) % 12]
-                Term1Name[i] = Term1List[(i + 2) % 12]
+                TermName[i] = TermNameList[(i + 2) % 12]
+                Term1Name[i] = Term1NameList[(i + 2) % 12]
                 if (ThisYear.TermSc) {
                     TermSc[i] = ThisYear.TermSc[i]
                     TermDeci[i] = ThisYear.TermDeci[i]
@@ -113,9 +116,9 @@ export default (Name, YearStart, YearEnd) => {
                 TermEqua[LeapNumTerm + 1] = ''
                 TermEclp[LeapNumTerm + 1] = ''
                 for (let i = LeapNumTerm + 2; i <= 13; i++) {
-                    TermName[i] = Term1List[(i + 2) % 12]
+                    TermName[i] = Term1NameList[(i + 2) % 12]
                     // 上下互換位置
-                    Term1Name[i] = TermList[(i + 1) % 12]
+                    Term1Name[i] = TermNameList[(i + 1) % 12]
                     if (ThisYear.TermSc) {
                         TermSc[i] = ThisYear.Term1Sc[i]
                         TermDeci[i] = ThisYear.Term1Deci[i]
@@ -232,7 +235,7 @@ export default (Name, YearStart, YearEnd) => {
                 NewmDeci3Print = NewmSlice(ThisYear.NewmDeci3)
             } else if (Type === 13) { // 實朔實時
                 NewmAcrDeciPrint = NewmSlice(ThisYear.NewmDeci)
-            } else if (Type === 14) {
+            } else if (Type >= 14) {
                 NewmDeciUT18Print = NewmSlice(ThisYear.NewmDeci)
             }
         }
@@ -343,11 +346,12 @@ export default (Name, YearStart, YearEnd) => {
             SunEcli = ThisYear.SunEcli
             MoonEcli = ThisYear.MoonEcli
         }
-        const YearSc = ScList[((year - 3) % 60 + 60) % 60]
-        let Era = year
-        if (year > 0) Era = `公元 ${year} 年 ${YearSc}`
-        else Era = `公元前 ${1 - year} 年 ${YearSc}`
-        let YearInfo = (OriginAd || CloseOriginAd) ? `<span class='cal-name'>${NameList[Name]}</span> 距曆元${year - (OriginAd || CloseOriginAd)}年 ` : ``
+        const YearSc = ScList[((Y - 3) % 60 + 60) % 60]
+        let Era = Y
+        if (Y > 0) Era = `公元 ${Y} 年 ${YearSc}`
+        else Era = `公元前 ${1 - Y} 年 ${YearSc}`
+        let YearInfo = `<span class='cal-name'>${NameList[Name]}</span> 距曆元${Y - (OriginAd || CloseOriginAd)}年 `
+        if (Type >= 14) YearInfo += ' ΔT = ' + ~~(deltaT(ThisYear.NewmJd[5]) * 86400) + ' ± ' + deltaTErrorEstimate(Y)[0] + ' 秒'
         if (Type === 1) {
             const LeapSur = isTermLeap ? ThisYear.LeapSurAvgThis : ThisYear.LeapSurAvgFix
             if (Name === 'Taichu') {
@@ -431,20 +435,20 @@ export default (Name, YearStart, YearEnd) => {
             NodeRoot: Type === 13 ? ThisYear.NodeRoot : undefined,
             NewmSmd: Type === 13 ? ThisYear.NewmSmd.slice(1 + NewmStart) : undefined,
             // 現代曆表曆書
-            NewmJd: Type === 14 ? ThisYear.NewmJd : undefined,
-            SolsJd: Type === 14 ? ThisYear.SolsJd : undefined,
+            NewmJd: Type >= 14 ? ThisYear.NewmJd : undefined,
+            SolsJd: Type >= 14 ? ThisYear.SolsJd : undefined,
         }
     }
     Memo[0] = AutoNewm(Name, YearStart - 1) // 去年
     Memo[1] = AutoNewm(Name, YearStart) // 今年
     const result = []
     YearEnd = YearEnd === undefined ? YearStart : YearEnd
-    for (let year = YearStart; year <= YearEnd; year++) {
-        Memo[2] = AutoNewm(Name, year + 1) // 明年
-        result.push(calculate(year))
+    for (let Y = YearStart; Y <= YearEnd; Y++) {
+        Memo[2] = AutoNewm(Name, Y + 1) // 明年
+        result.push(calculate(Y))
         Memo[0] = Memo[1] // 数组滚动，避免重复运算
         Memo[1] = Memo[2]
     }
     return result
 }
-// console.log(Index('Eph1', 2026, 2026))
+// console.log(Index('DE441', 2020, 2020))

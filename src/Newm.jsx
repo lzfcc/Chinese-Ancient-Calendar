@@ -177,13 +177,19 @@ export default class Newm extends React.Component {
     let YearStart = parseInt(this.state.YearStart);
     let YearEnd = parseInt(this.state.YearEnd);
     if (isAuto) {
-      if (YearStart < -721 || YearStart > 1913 || YearEnd < -721 || YearEnd > 1913) {
-        alert('Year range of AutoChoose mode: -721 to 1913');
+      if (YearStart < -721 || YearStart > 2499 || YearEnd < -721 || YearEnd > 2499) {
+        alert('Year range of AutoChoose mode: -721 to 2499');
         return;
       }
-    } else if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
-      alert('Year range: -3807 to 9999');
-      return;
+    } else {
+      // if (this.state.calendars.indexOf('DE441') == -1 && (YearStart < -2499 || YearStart > 2499 || YearEnd < -2499 || YearEnd > 2499)) {
+      //   alert('Year range of DE440/1: -2499 to 2499');
+      //   return;
+      // } else
+      if (YearStart < -3807 || YearStart > 9999 || YearEnd < -3807 || YearEnd > 9999) { // -3808爲景初曆上元
+        alert('Year range: -3807 to 9999');
+        return;
+      }
     }
     if (Number.isNaN(YearStart) && Number.isNaN(YearEnd)) {
       alert('illegal input!');

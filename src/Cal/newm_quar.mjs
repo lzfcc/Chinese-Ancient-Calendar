@@ -1,4 +1,4 @@
-import { ScList, TermList, AutoDegAccumList, deci } from './para_constant.mjs'
+import { ScList, TermNameList, AutoDegAccumList, deci } from './para_constant.mjs'
 import Para from './para_calendars.mjs'
 import { mansion, midstar } from './astronomy_other.mjs'
 
@@ -113,7 +113,7 @@ export default (Name, Y) => {
             TermAvgRaw[i] = TermAvgBare[i] + BuScOrder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
             TermOrderMod[i] = ~~TermAvgMod[i]
-            TermName[i] = TermList[(i + ZhengNum + 12) % 12]
+            TermName[i] = TermNameList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
@@ -128,7 +128,7 @@ export default (Name, Y) => {
             TermAvgRaw[i] = TermAvgBare[i] + BuScOrder
             TermAvgMod[i] = parseFloat((((TermAvgRaw[i]) % 60 + 60) % 60).toPrecision(12))
             TermOrderMod[i] = ~~TermAvgMod[i]
-            TermName[i] = TermList[(i + ZhengNum + 12) % 12]
+            TermName[i] = TermNameList[(i + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = ((TermAvgMod[i] - TermOrderMod[i]).toFixed(4)).slice(2, 6)
             if (MansionRaw) {
@@ -156,7 +156,7 @@ export default (Name, Y) => {
             TermAvgRaw[i] = TermAvgBare[i] + BuScOrder
             TermAvgMod[i] = ((TermAvgRaw[i]) % 60 + 60) % 60
             TermOrderMod[i] = ~~TermAvgMod[i]
-            TermName[i] = TermList[(i - 1 + ZhengNum + 12) % 12]
+            TermName[i] = TermNameList[(i - 1 + ZhengNum + 12) % 12]
             TermSc[i] = ScList[TermOrderMod[i]]
             TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6)
             if (MansionRaw) {
