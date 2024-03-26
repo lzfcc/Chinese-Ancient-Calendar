@@ -25,7 +25,7 @@ export default class Converter extends React.Component {
       md: ''
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     fetch(md1)
       .then(res => res.text())
       .then(text => this.setState({ md: text }))

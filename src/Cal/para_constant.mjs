@@ -144,8 +144,6 @@ export const NameList = {
   Yongnian: "康熙永年表(待定)",
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
-  VSOP: '半解析曆表',
-  DE441: 'DE440/1曆表'
 };
 export const NameDayList = {
   // 可計算日書的曆法
@@ -196,7 +194,6 @@ export const NameDayList = {
   Jiazi: "曆象考成",
   Guimao: "曆象考成後編",
 };
-
 export const ScList = [
   "癸亥",
   "甲子",

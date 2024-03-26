@@ -1,4 +1,5 @@
 import CalNewm from './newm_index.mjs'
+import CalNewm_DE from './newm_de_index.mjs'
 import CalDay from './day_index.mjs'
 import Para from './para_calendars.mjs'
 
@@ -338,8 +339,25 @@ export const outputNewmWeb = (start, end, isAuto, listRaw) => {
     return data
 }
 // console.log(outputNewmWeb(982, 984, true, []))
+
+export const outputNewmWeb_DE = (start, end) => {
+    const data = []
+    start = ~~start
+    end = ~~end
+    let k = 0
+    for (let Year = start; Year <= end; Year++) {
+        const result = CalNewm_DE(Year)[0]
+        result.id = Year // 给每个item一个唯一id在前端正确缓存高度
+        result.Count = 1
+        data[k] = data[k] || []
+        data[k].push(result)
+        k++
+    }
+    return data
+}
+
 /**
- * 将 CalDay 输出转换成以月日维度的输出。寫了整整一個下午
+ * 将 CalDay 输出转换成以月日维度的输出。lzfcc 2021清明節寫了整整一個下午
  * CalDay：{
         Equa: [Array(31), Array(30),...] (length = 13)
         Duskstar: [Array(31), Array(30),...] (length = 13)

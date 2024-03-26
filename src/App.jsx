@@ -1,5 +1,6 @@
 import React from 'react'
 import Newm from './Newm'
+import Newm_DE from './Newm_DE'
 import Day from './Day'
 import Modulo from './Modulo'
 import Equation from './Equation'
@@ -12,9 +13,9 @@ import Intro from './Intro'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tabTitles = ['朔閏表', '曆書', '同餘', '招差', '天文', '時間', '琴律', '筮占', '簡介']
+    this.tabTitles = ['朔閏表', '現代曆表', '曆書', '同餘', '招差', '天文', '時間', '琴律', '筮占', '簡介']
     this.state = {
-      activeTab: 8,
+      activeTab: 9,
     };
   }
 
@@ -38,35 +39,39 @@ export default class App extends React.Component {
       return (
         <Newm />
       )
-    } else if (this.state.activeTab === 1) {
+    } if (this.state.activeTab === 1) {
       return (
-        <Day />
+        <Newm_DE />
       )
     } else if (this.state.activeTab === 2) {
       return (
-        <Modulo />
+        <Day />
       )
     } else if (this.state.activeTab === 3) {
       return (
-        <Equation />
+        <Modulo />
       )
     } else if (this.state.activeTab === 4) {
       return (
-        <Astronomy />
+        <Equation />
       )
     } else if (this.state.activeTab === 5) {
       return (
-        <Time />
+        <Astronomy />
       )
     } else if (this.state.activeTab === 6) {
       return (
-        <Guqin />
+        <Time />
       )
     } else if (this.state.activeTab === 7) {
       return (
-        <Hexo />
+        <Guqin />
       )
     } else if (this.state.activeTab === 8) {
+      return (
+        <Hexo />
+      )
+    } else if (this.state.activeTab === 9) {
       return (
         <Intro />
       )

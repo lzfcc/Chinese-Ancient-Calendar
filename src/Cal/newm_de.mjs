@@ -5,15 +5,6 @@ import NewmList from './eph/newm_de44_list.mjs'
 import SyzygyList from './eph/syzygy_de44_list.mjs'
 import TermList from './eph/term_de44_list.mjs'
 import Term1List from './eph/term1_de44_list.mjs'
-
-// console.log(LonHigh2Flat(23.4385828209, 330))
-// console.log(LonFlat2High(23.4916666666667,73.80638)) // 考成卷八葉37算例
-// const LowLon2LowLat = (e, X) => atan(tan(e) * sin(X)) // 求赤經高弧交角用到這個的變形
-// const LowLat2HighLon = (e, X) => // 已知太陽赤緯轉黃經
-// console.log(LonHigh2Flat(23.5,15))
-// console.log(HighLon2FlatLat(23 + 29 / 60,112.28487818))
-// console.log(LowLat2HighLon(23 + 29 / 60, 11.49258677))
-// OA=40, HAB= 37.00450206, AH=18.74723726, OH=36.00521466, OB=44.09531291,HB=8.09009825, AB=20.36057491. sinHAB=.3973413465. HAB=23.41207808
 function findClosest(a, list) {
     let closest = list[0], closestIndex = 0;
     let smallestDifference = Math.abs(a - closest);
@@ -27,7 +18,8 @@ function findClosest(a, list) {
     }
     return { closest, closestIndex };
 }
-export const N6 = (Name, Y) => {
+// 安排DE曆表的朔望節氣
+export const N6 = Y => {
     if (Y > 2499 || Y < -2499) throw (new Error('Year range of DE440/1: -2499 to 2499'))
     const EpoSolsJd = 2451534.749 // 取癸卯曆1999年12月22日平冬至時間儒略日
     const ChouConst = 15.68 // 採用癸卯曆首朔應，即十二月平朔距冬至的時間。與時憲曆用冬至次日夜半，我直接用冬至
@@ -108,4 +100,3 @@ export const N6 = (Name, Y) => {
     }
 }
 // console.log(N6('DE441', 2023))
-

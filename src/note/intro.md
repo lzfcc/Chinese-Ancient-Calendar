@@ -247,7 +247,7 @@ webpack
 - `output_`其他
   - `output` 输出准备
   - `output_print` 本地打印入口。`const printData = outputFile(2, 1255, 1255, 0` 第一个数字为模式，`1` 为朔闰表，`2` 为历书；第二三个数字为起始年、终止年；第四个数字为自动长历模式开关，目前暂不支持
-  - `output_frontend-worker` Web Worker，朔闰表、历书两个模块的前端调用入口
+  - `output_worker` Web Worker，朔闰表、历书两个模块的前端调用入口
 
 ### 3. 命名規範
 

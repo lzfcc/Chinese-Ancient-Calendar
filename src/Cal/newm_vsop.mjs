@@ -2,7 +2,7 @@
 // import { exec } from 'child_process'
 // import { EventEmitter } from 'events'
 // const eventEmitter = new EventEmitter()
-import { transpose, multiply, matrix, chain, add, subtract } from 'mathjs'
+import { transpose, multiply, matrix, subtract } from 'mathjs'
 import { ScList } from './para_constant.mjs'
 import { deltaT } from './astronomy_west.mjs'
 import { Jd2Date, generateTimeString } from './time_jd2date.mjs'
@@ -11,7 +11,6 @@ import { precessionMx } from './eph/precession.mjs'
 import { nutaMx } from './eph/nutation.mjs'
 import { vsop87X, vsop87XV } from './eph/vsop.mjs'
 import { elp2000 } from './eph/elp2000.mjs'
-// const { EclpNutaList1, EclpNutaList2, EclpNutaList3, EclpNutaList4, ObliqNutaList1, ObliqNutaList2, ObliqNutaList3, ObliqNutaList4 } = NutaList
 const abs = X => Math.abs(X)
 const pi = Math.PI
 const pi2 = 6.283185307179586476925287
@@ -19,45 +18,37 @@ const d2r = d => d * .0174532925199432957692369 // pi / 180
 const r2d = r => r * 57.2957795130823208767981548 // 180 / pi
 const sqr = X => Math.sqrt(X)
 const r2dfix = X => deg2Hms(r2d(X))
-// console.log(LonHigh2Flat(23.4385828209, 330))
-// console.log(LonFlat2High(23.4916666666667,73.80638)) // 考成卷八葉37算例
-// const LowLon2LowLat = (e, X) => atan(tan(e) * sin(X)) // 求赤經高弧交角用到這個的變形
-// const LowLat2HighLon = (e, X) => // 已知太陽赤緯轉黃經
-// console.log(LonHigh2Flat(23.5,15))
-// console.log(HighLon2FlatLat(23 + 29 / 60,112.28487818))
-// console.log(LowLat2HighLon(23 + 29 / 60, 11.49258677))
-// OA=40, HAB= 37.00450206, AH=18.74723726, OH=36.00521466, OB=44.09531291,HB=8.09009825, AB=20.36057491. sinHAB=.3973413465. HAB=23.41207808
 
 
 // 只計算位置。
-const calX = (Name, Jd) => {
+const calX = (Planet, Jd) => {
     let X = []
-    if (Name === 'Moon') X = elp2000(Jd)
-    else if (Name === 'Sun') { // 以地心作為標準
+    if (Planet === 'Moon') X = elp2000(Jd)
+    else if (Planet === 'Sun') { // 以地心作為標準
         X = multiply(vsop87X('Earth', Jd), -1)
-    } else if (Name === 'Earth') { // 以日心為標準
-        X = vsop87X(Name, Jd)
+    } else if (Planet === 'Earth') { // 以日心為標準
+        X = vsop87X(Planet, Jd)
     } else {
         const XEarth = vsop87X('Earth', Jd)
-        const XTarget = vsop87X(Name, Jd)
+        const XTarget = vsop87X(Planet, Jd)
         X = subtract(XTarget, XEarth)
     }
     return [[X[0]], [X[1]], [X[2]]]
 }
 // 計算位置、速度
-const calXV = (Name, Jd) => {
+const calXV = (Planet, Jd) => {
     let X = [], V = []
-    if (Name === 'Moon') {
+    if (Planet === 'Moon') {
         X = elp2000(Jd)
         V = multiply(subtract(X, elp2000(Jd - .000001157407407)), 864000) // 用0.1秒的路程來近似
-    } else if (Name === 'Sun') {
+    } else if (Planet === 'Sun') {
         const Func = vsop87XV('Earth', Jd)
         X = multiply(Func.X, -1)
         V = multiply(Func.V, -1)
-    } else if (Name === 'Earth') return
+    } else if (Planet === 'Earth') return
     else {
         const { X: XEarth, V: VEarth } = vsop87XV('Earth', Jd)
-        const { X: XTarget, V: VTarget } = vsop87XV(Name, Jd)
+        const { X: XTarget, V: VTarget } = vsop87XV(Planet, Jd)
         X = subtract(XTarget, XEarth)
         V = subtract(VTarget, VEarth)
     }
@@ -142,15 +133,15 @@ const calLightAber = (Jd, X) => Jd - vec2dist(X) / c / 86400
     // ])
     // const R1EpsN = multiply(r3(-DeltaPsi), r1(ObliqAvg))    
     // const tmp = chain(R1EpsN).multiply(P).multiply(B).done()
- * @param {*} Name 
+ * @param {*} Planet 
  * @param {*} Jd 
  * @returns 
  */
-const calPos = (Name, Jd) => {
+const calPos = (Planet, Jd) => {
     const T = (Jd - 2451545) / 36525 // 儒略世紀
-    const Xreal = calX(Name, Jd) // 實際位置
+    const Xreal = calX(Planet, Jd) // 實際位置
     const Jdr = calLightAber(Jd, Xreal) // 推遲時
-    const { X, V } = calXV(Name, Jdr) // 視位置
+    const { X, V } = calXV(Planet, Jdr) // 視位置
     const X2000 = multiply(B, X)
     const V2000 = multiply(B, V)
     // const { Lon: LonRaw } = x2LonLat(X) //  1024-3-15 2:37,VSOP的LonRaw是13°34′49″，DE441是12.48，一個黃道一個赤道
@@ -171,11 +162,11 @@ const calPos = (Name, Jd) => {
     Lon = (Lon + pi2) % pi2
     return { EquaLon, EquaLat, Lon, Lat, Lon1 }
 }
-const calPos_DE = (Name, Jd) => {
+const calPos_DE = (Planet, Jd) => {
     const T = (Jd - 2451545) / 36525 // 儒略世紀
-    const Xreal = calX(Name, Jd) // 實際位置
+    const Xreal = calX(Planet, Jd) // 實際位置
     const Jdr = calLightAber(Jd, Xreal) // 推遲時
-    const { X, V } = calXV(Name, Jdr) // 視位置
+    const { X, V } = calXV(Planet, Jdr) // 視位置
     const X2000 = multiply(B, X)
     const V2000 = multiply(B, V)
     // const { Lon: LonRaw } = x2LonLat(X) //  1024-3-15 2:37,VSOP的LonRaw是13°34′49″，DE441是12.48，一個黃道一個赤道
@@ -219,7 +210,7 @@ const calPos_DE = (Name, Jd) => {
 // console.log(LonHigh2Flat(23.5, 40))
 // console.log(HighLon2FlatLat(23.5, 40))
 
-export const N5 = (Name, Y) => {
+export const N5 = Y => {
     const EpoSolsJd = 2451534.749 // 取癸卯曆1999年12月22日平冬至時間儒略日
     // const EpoSolsJd = 2086292.4148
     const ChouConst = 15.68 // 採用癸卯曆首朔應，即十二月平朔距冬至的時間。與時憲曆用冬至次日夜半，我直接用冬至

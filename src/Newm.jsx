@@ -58,14 +58,14 @@ export default class Newm extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     fetch(md1)
       .then(res => res.text())
       .then(text => this.setState({ md: text }))
   }
 
   componentDidMount() {
-    this.worker = new Worker('main.js');
+    this.worker = new Worker('main_ancient.js');
     this.worker.addEventListener('message', ({ data }) => {
       if (data instanceof Blob) { // 约定：存为文件时 web worker 发送 Blob 对象
         this.setState({ output: [] });
