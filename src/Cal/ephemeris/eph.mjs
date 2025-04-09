@@ -353,7 +353,7 @@ export const D1 = (Name, YearStart, YearEnd) => {
       Luck[i] = [];
       for (let k = 1; k <= NewmInt[i] - NewmInt[i - 1]; k++) {
         // 每月日數
-        const SdMidn = ((NewmInt[i - 1] - SolsAccum + Solar) % Solar) + k - 1; // 每日夜半距冬至時長
+        const SdMidn = NewmInt[i - 1] - SolsAccum + k - 1; // 每日夜半距冬至時長
         const SdInt = ZhengSdInt + DayAccum; // 每日夜半距冬至夜半整日數。冬至當日爲0
         DayAccum++; // 這個位置不能變
         //////////天文曆///////////

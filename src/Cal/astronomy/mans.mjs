@@ -830,6 +830,7 @@ export const midstar = (Name, Y, EclpGong, Sd, SolsDeci) => {
   const Morningstar = deg2Mans(MorningstarDeg, EquaAccumList, 2).Print;
   return { Morningstar, Duskstar };
 };
+
 export const midstarQing = (Name, Y, LonTod, LonMor, Rise) => {
   const {
     StarVy,

@@ -3,6 +3,7 @@ import { AutoSolar, AutoSidereal } from "../parameter/auto_consts.mjs";
 import { Interpolate1, Interpolate2, Interpolate3 } from "../equation/sn.mjs";
 import { AutoDifAccum } from "./acrv.mjs";
 import { Hushigeyuan } from "../equation/geometry.mjs";
+import { fmod } from "Cal/parameter/functions.mjs";
 
 const termNum = (Sd, Name) => {
   const { Solar } = Para[Name];
@@ -212,7 +213,6 @@ export const latFormula = (XRaw, Name) => {
   const Solar = AutoSidereal(Name);
   const SolarQuar = Solar / 4;
   const SolarHalf = Solar / 2;
-  XRaw %= Solar;
   const LonHalf = XRaw % SolarHalf;
   let Lat = 0;
   let g = 0;
@@ -392,7 +392,7 @@ export const dialFormula = (DegRaw, Name, SolsDeci) => {
  * @returns 
  */
 export const autoLat = (Sd, Name, isBare) => {
-  const { Type } = Para[Name];
+  const { Type, SolarRaw, Solar } = Para[Name];
   let Corr = 0;
   let Lat = 0;
   if (isBare !== true) {
@@ -415,7 +415,7 @@ export const autoLat = (Sd, Name, isBare) => {
       Corr = AutoDifAccum(0, Sd, Name).SunDifAccum;
     }
   }
-  const X = Sd + Corr;
+  const X = fmod(Sd + Corr, Solar || SolarRaw);
   if (Type <= 4 || Name === "Huangji") Lat = latTable1(X, "Easthan");
   else if (["Linde", "Yisi", "LindeB", "Shenlong"].includes(Name)) {
     Lat = latRiseTable2(X, "Linde").Lat;
@@ -441,15 +441,14 @@ export const autoLat = (Sd, Name, isBare) => {
 export const autoRise = (Sd, SolsDeci, Name) => {
   const { Type } = Para[Name];
   let { Solar, SolarRaw } = Para[Name];
-  Solar = Solar || SolarRaw;
+  const S = Solar || SolarRaw;
   let Corr = 0;
   let Plus = 0;
   let Rise = 0;
-  let SdNoon = (Math.trunc(Sd + SolsDeci) - SolsDeci + Solar + 0.5) % Solar; // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
   if (Type <= 4)
     Plus = -1.5; // 非常詭異
   else if (Type === 11) Plus = -0.5; // 授時「置所求日晨前夜半黃道積度」
-  SdNoon += Plus;
+  let SdNoon = (Math.trunc(Sd + SolsDeci) - SolsDeci + S + 0.5 + Plus) % S; // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
   if (
     [
       "Linde",
@@ -468,7 +467,7 @@ export const autoRise = (Sd, SolsDeci, Name) => {
   ) {
     Corr = AutoDifAccum(0, SdNoon, Name).SunDifAccum;
   }
-  const X = SdNoon + Corr;
+  const X = fmod(SdNoon + Corr, S);
   if (["Daming", "Yukuo"].includes(Name)) {
     Rise = riseTable1(X, "Daming");
   } else if (["Daye", "Zhangmengbin", "Liuxiaosun"].includes(Name)) {
@@ -500,15 +499,14 @@ export const autoRise = (Sd, SolsDeci, Name) => {
 export const autoDial = (Sd, SolsDeci, Name) => {
   const { Type } = Para[Name];
   let { Solar, SolarRaw } = Para[Name];
-  Solar = Solar || SolarRaw;
+  const S = Solar || SolarRaw;
   let Corr = 0;
   let Plus = 0;
   let Dial = 0;
-  let SdNoon = (Math.trunc(Sd + SolsDeci) - SolsDeci + Solar + 0.5) % Solar; // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
   if (Type <= 4)
     Plus = -1.5; // 非常詭異
   else if (Type === 11) Plus = -0.5; // 授時「置所求日晨前夜半黃道積度」
-  SdNoon += Plus;
+  let SdNoon = (Math.trunc(Sd + SolsDeci) - SolsDeci + S + 0.5 + Plus) % S; // 所求日晨前夜半 // 這樣處理後算出來的緯度只是當日的情況，不能計算任意時刻
   if (
     [
       "Linde",
@@ -528,7 +526,7 @@ export const autoDial = (Sd, SolsDeci, Name) => {
   ) {
     Corr = AutoDifAccum(0, SdNoon, Name).SunDifAccum;
   }
-  const X = SdNoon - Corr; // 這要反著來
+  const X = fmod(SdNoon - Corr, S); // 這要反著來
   if (["Daming", "Yukuo"].includes(Name)) {
     Dial = dialTable1(X, "Daming");
   } else if (["Daye", "Zhangmengbin", "Liuxiaosun"].includes(Name)) {

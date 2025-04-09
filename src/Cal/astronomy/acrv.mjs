@@ -138,7 +138,7 @@ const SunTcorrTable = (Sd, Name) => {
         SunTcorrList[TermNum] +
         ((SunTcorrList[TermNum + 1] - SunTcorrList[TermNum]) *
           (Sd - AcrTermList[TermNum])) /
-        TermRange;
+          TermRange;
     } else {
       const D1 = SunTcorrList[TermNum + 1] - SunTcorrList[TermNum];
       const D2 = SunTcorrList[TermNum + 2] - SunTcorrList[TermNum + 1];
@@ -159,14 +159,13 @@ const SunTcorrTable = (Sd, Name) => {
 // console.log(SunTcorrTable(106, 'Chongtian'))
 
 const SunDifAccumFormula = (Sd, Name) => {
-  const { Type, Denom, SolarRaw } = Para[Name];
-  let { Solar } = Para[Name];
-  Solar = Solar || SolarRaw;
+  const { Type, Denom, SolarRaw, Solar } = Para[Name];
+  const S = Solar || SolarRaw;
   let SunDifAccum = 0;
   let sign = 1;
   let Quadrant = 0;
-  const SolarHalf = Solar / 2;
-  const SolarQuar = Solar / 4;
+  const SolarHalf = S / 2;
+  const SolarQuar = S / 4;
   const SdHalf = Sd % SolarHalf;
   const T = SolarQuar - Math.abs(SdHalf - SolarQuar);
   const { QuarA, QuarB } = AutoQuar(Name, Type);
@@ -243,13 +242,12 @@ const SunDifAccumFormula = (Sd, Name) => {
 
 const SunTcorrFormula = (Sd, Name) => {
   // 一定程度上適用於崇玄以後
-  const { SolarRaw, Denom, SunTcorrList } = Para[Name];
-  let { Solar } = Para[Name];
-  Solar = Solar || SolarRaw;
+  const { SolarRaw, Solar, Denom, SunTcorrList } = Para[Name];
+  const S = Solar || SolarRaw;
   let SunTcorr = 0;
   if (SunTcorrList) {
-    const SolarHalf = Solar / 2;
-    const SolarQuar = Solar / 4;
+    const SolarHalf = S / 2;
+    const SolarQuar = S / 4;
     const QuarA = SolarQuar;
     const QuarB = SolarQuar;
     const Delta = SunTcorrList[6] / Denom;
@@ -300,7 +298,7 @@ const MoonTcorrTable1 = (AnoAccum, Name) => {
   let MoonDifAccum1 =
     MoonDifAccumList[AnoAccumInt] +
     AnoAccumFract *
-    (MoonDifAccumList[AnoAccumInt + 1] - MoonDifAccumList[AnoAccumInt]); //* MoonAcrAvgDifList[AnoAccumInt]
+      (MoonDifAccumList[AnoAccumInt + 1] - MoonDifAccumList[AnoAccumInt]); //* MoonAcrAvgDifList[AnoAccumInt]
   const SunAvgV = ZhangRange;
   let MoonTcorr1 = 0;
   if (
@@ -339,7 +337,7 @@ const AnojourTable1 = (AnoAccum, Name) => {
   const Anojour =
     (AnojourList[AnoAccumInt] +
       AnoAccumFract *
-      (AnojourList[AnoAccumInt + 1] - AnojourList[AnoAccumInt])) /
+        (AnojourList[AnoAccumInt + 1] - AnojourList[AnoAccumInt])) /
     ZhangRange;
   return Anojour;
 };
@@ -713,11 +711,10 @@ export const ShoushiXianV = (AnoAccum) => {
 };
 // console.log(ShoushiXianV())
 export const AutoTcorr = (AnoAccum, Sd, Name, NodeAccum) => {
-  const { Type, SolarRaw, PartRange, Anoma, NodeDenom } = Para[Name];
-  let { Solar } = Para[Name];
-  Solar = Solar || SolarRaw;
+  const { Type, SolarRaw, Solar, PartRange, Anoma, NodeDenom } = Para[Name];
+  const S = Solar || SolarRaw;
   if (Sd) {
-    Sd = fmod(Sd, Solar);
+    Sd = fmod(Sd, S);
   }
   if (AnoAccum) {
     AnoAccum = fmod(AnoAccum, Anoma);
@@ -800,7 +797,7 @@ export const AutoTcorr = (AnoAccum, Sd, Name, NodeAccum) => {
       SunTcorr1 = SunTcorrTable(Sd, Name).SunTcorr1;
       MoonTcorr1 = MoonTcorrTable1(AnoAccum, Name).MoonTcorr1;
       Tcorr1 = SunTcorr1 + MoonTcorr1;
-      const HalfTermLeng = Solar / 24;
+      const HalfTermLeng = S / 24;
       const TermNum = Math.trunc(Sd / HalfTermLeng);
       if (Name === "Daye") {
         if (TermNum <= 4) {
@@ -917,14 +914,12 @@ export const AutoTcorr = (AnoAccum, Sd, Name, NodeAccum) => {
 // console.log(AutoTcorr(6, 9, 'Qintian').MoonTcorr)
 
 export const AutoDifAccum = (AnoAccum, Sd, Name) => {
-  const { Type, SolarRaw, Anoma } = Para[Name];
-  let { Solar } = Para[Name];
-  Solar = Solar || SolarRaw;
+  const { Type, Solar, SolarRaw, Anoma } = Para[Name];
   if (AnoAccum) {
     AnoAccum = fmod(AnoAccum, Anoma);
   }
   if (Sd) {
-    Sd = fmod(Sd, Solar);
+    Sd = fmod(Sd, Solar || SolarRaw);
   }
   let DifAccumFunc = {};
   let SunDifAccum = 0;
