@@ -2299,7 +2299,7 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
     OneDifZhun,
     OneDifHui,
     TuneName,
-  } = eval("Tuning" + TuningMode)(Freq, +n);
+  } = eval("Tuning" + TuningMode)(+Freq, +n);
   const DifZhun = [],
     NameZhun = [],
     DifHui = [],
@@ -2366,7 +2366,7 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
   }
   return { TuneName, Print };
 };
-// console.log(Tuning(9))
+// console.log(Tuning('9'))
 
 export const FretPitch = (TuningMode, TempMode, n) => {
   // 徽位音。弦法、律制、宮弦

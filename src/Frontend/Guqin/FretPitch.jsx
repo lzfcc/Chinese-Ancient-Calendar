@@ -1,12 +1,14 @@
 import React from 'react'
+import SingleSelectMenu from "../SingleSelectMenu";
+import { TuningOptions, GenList } from "Cal/parameter/constants.mjs";
 import { FretPitch } from '../../Cal/guqin/guqin.mjs'
 
 export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      b: '1',
-      Temp: '5',
+      mode: '',
+      temp: '',
       n: '0'
     }
     this.handle = this.handle.bind(this)
@@ -15,22 +17,24 @@ export default class Converter extends React.Component {
   input() {
     return (
       <span className='year-select'>
-        <span>弦法</span>
-        <input
-          className='width1'
-          value={this.state.b}
-          onChange={e => {
-            this.setState({ b: e.currentTarget.value });
-          }}
-        />
-        <span>律制</span>
-        <input
-          className='width1'
-          value={this.state.Temp}
-          onChange={e => {
-            this.setState({ Temp: e.currentTarget.value });
-          }}
-        />
+        <span>弦法
+          <SingleSelectMenu
+            Calendars={TuningOptions}
+            onSelect={(selected) => {
+              this.setState({ mode: selected });
+            }}
+            selected={this.state.mode}
+          />
+        </span>
+        <span>律制
+          <SingleSelectMenu
+            Calendars={GenList}
+            onSelect={(selected) => {
+              this.setState({ temp: selected });
+            }}
+            selected={this.state.temp}
+          />
+        </span>
         <span> 宮弦</span>
         <input
           className='width1'
@@ -45,7 +49,7 @@ export default class Converter extends React.Component {
 
   handle() {
     try {
-      const { Print1, Print2, Print3, Name1Print, Name2Print } = FretPitch(this.state.b, this.state.Temp, this.state.n)
+      const { Print1, Print2, Print3, Name1Print, Name2Print } = FretPitch(this.state.mode, this.state.temp, this.state.n)
       this.setState({ output1: Print1, output2: Name1Print, output3: Print2, output4: Name2Print, output5: Print3 })
     } catch (e) {
       alert(e.message)

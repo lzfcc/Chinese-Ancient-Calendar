@@ -48,7 +48,6 @@ export default (Name, Y) => {
     (BuYear - 1) * Solar + (SolsOriginDif || 0) + SolsConst + DayConst; // 冬至積日
   const SolsAccumMod = ((SolsAccumRaw % 60) + 60) % 60;
   const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0); // 曆元積日
-  const SolsDeci = deci(SolsAccumRaw);
   const LeapSurAvgThis = parseFloat(
     (
       (((deci(((BuYear - 1) * 7) / 19) + (SolsOriginMon || 0)) % 1) + 1) %

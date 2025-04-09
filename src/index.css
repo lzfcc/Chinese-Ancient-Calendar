@@ -755,6 +755,41 @@ input {
   font-size: .8em;
 }
 
+.hidden-input {
+  display: none;
+}
+
+.custom-checkbox {
+  display: inline-block;
+  font-size: .9em;
+  border: 1px solid var(--shallowgray);
+  border-radius: .4em;
+  padding: 0 .2em;
+  margin-left: 1em;
+  position: relative;
+  color: var(--gray);
+}
+
+.hidden-input:checked+.custom-checkbox {
+  background: var(--shallowgray);
+  border-color: var(--shallowgray);
+  color: var(--bg);
+}
+
+/* .hidden-input:checked+.custom-checkbox::after {
+  content: "簡潔";
+  color: var(--darkyellow);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+} */
+
+/* .active .label-text {
+  color: var(--yellow);
+  font-weight: bold;
+} */
+
 .modulo {
   margin: 5em auto;
   max-width: 1200px;
@@ -1216,7 +1251,7 @@ hr {
   background: var(--bg);
   font-weight: normal;
   color: var(--black);
-  border: 1px solid #ccc;
+  border: 1px solid var(--shallowgray);
   cursor: pointer;
 }
 

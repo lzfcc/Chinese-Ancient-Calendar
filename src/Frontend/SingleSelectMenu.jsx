@@ -4,11 +4,19 @@ class SingleSelectMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: null,
+            selected: props.selected || null, // 从 props 初始化
             dropDownVisible: false
         };
     }
 
+    componentDidUpdate(prevProps) {
+        // 当外部 selected 变化时更新内部状态
+        if (prevProps.selected !== this.props.selected) {
+            this.setState({ selected: this.props.selected });
+        }
+    }
+
+    // 保持其他方法不变
     handleOptionClick = (calKey) => {
         this.setState({ selected: calKey, dropDownVisible: false });
         if (this.props.onSelect) {
