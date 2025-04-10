@@ -562,37 +562,35 @@ export const bindLon2Lat = (Sd, SolsDeci) => {
   return Print;
 };
 // console.log(bindLon2Lat(0, 2)[14].data[3])
+
+// bindDeg2Mans和bindMans2Deg经过DeepSeek修改，避免了使用eval
 const bindDeg2Mans = (Deg) => {
-  const {
-    EquaAccumList: EquaAccumListTaichu,
-    EclpAccumList: EclpAccumListTaichu
-  } = degAccumList("Taichu", 300);
-  const EquaAccumListHuangji = [];
-  const EclpAccumListHuangji = degAccumList("Huangji", 500).EclpAccumList;
-  const EquaAccumListLinde = [];
-  const EclpAccumListLinde = degAccumList("Linde", 665).EclpAccumList; // 麟德
-  const {
-    EquaAccumList: EquaAccumListDayan,
-    EclpAccumList: EclpAccumListDayan
-  } = degAccumList("Dayan", 729);
-  const EquaAccumListYingtian = [];
-  const EclpAccumListYingtian = degAccumList("Yingtian", 964).EclpAccumList; // 應天
-  const EquaAccumListMingtian = degAccumList("Mingtian", 1065).EquaAccumList; // 明天
-  const EclpAccumListMingtian = degAccumList("Mingtian", 1065).EclpAccumList; // 明天
-  const {
-    EquaAccumList: EquaAccumListJiyuan,
-    EclpAccumList: EclpAccumListJiyuan
-  } = degAccumList("Jiyuan", 1106);
-  const EquaAccumListDaming3 = [];
-  const EclpAccumListDaming3 = degAccumList("Daming3", 1180).EclpAccumList;
-  const {
-    EquaAccumList: EquaAccumListShoushi,
-    EclpAccumList: EclpAccumListShoushi
-  } = degAccumList("Shoushi", 1281);
-  const {
-    EquaAccumList: EquaAccumListJiazi,
-    EclpAccumList: EclpAccumListJiazi
-  } = degAccumList("Jiazi", 1684); // 甲子元曆
+  // 所有累加器列表集中到对象中
+  const accumulators = {
+    Taichu: degAccumList("Taichu", 300),
+    Huangji: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Huangji", 500).EclpAccumList
+    },
+    Linde: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Linde", 665).EclpAccumList
+    },
+    Dayan: degAccumList("Dayan", 729),
+    Yingtian: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Yingtian", 964).EclpAccumList
+    },
+    Mingtian: degAccumList("Mingtian", 1065),
+    Jiyuan: degAccumList("Jiyuan", 1106),
+    Daming3: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Daming3", 1180).EclpAccumList
+    },
+    Shoushi: degAccumList("Shoushi", 1281),
+    Jiazi: degAccumList("Jiazi", 1684)
+  };
+
   const Print = [
     "Taichu",
     "Huangji",
@@ -605,50 +603,53 @@ const bindDeg2Mans = (Deg) => {
     "Shoushi",
     "Jiazi"
   ].map((Name) => {
-    const EclpList = eval(`EclpAccumList${Name}`);
-    const Eclp = deg2Mans(Deg, EclpList).Print;
-    const EquaList = eval(`EquaAccumList${Name}`);
-    const Equa = deg2Mans(Deg, EquaList).Print;
+    // 直接从对象中获取对应的累加器列表
+    const { EclpAccumList, EquaAccumList } = accumulators[Name];
+
+    // 处理可能存在的空 EquaAccumList
+    const EquaResult = EquaAccumList?.length
+      ? deg2Mans(Deg, EquaAccumList).Print
+      : ""; // 原逻辑中空数组返回空字符串
+
+    const EclpResult = deg2Mans(Deg, EclpAccumList).Print;
+
     return {
       title: NameList[Name],
-      data: [Equa, Eclp]
+      data: [EquaResult, EclpResult]
     };
   });
+
   return Print;
 };
 // console.log(bindDeg2Mans(23.1511, 'Jiazi'))
 
 const bindMans2Deg = (Mans) => {
-  const {
-    EquaAccumList: EquaAccumListTaichu,
-    EclpAccumList: EclpAccumListTaichu
-  } = degAccumList("Taichu", 300);
-  const EquaAccumListHuangji = [];
-  const EclpAccumListHuangji = degAccumList("Huangji", 500).EclpAccumList;
-  const EquaAccumListLinde = [];
-  const EclpAccumListLinde = degAccumList("Linde", 665).EclpAccumList; // 麟德
-  const {
-    EquaAccumList: EquaAccumListDayan,
-    EclpAccumList: EclpAccumListDayan
-  } = degAccumList("Dayan", 729);
-  const EquaAccumListYingtian = [];
-  const EclpAccumListYingtian = degAccumList("Yingtian", 964).EclpAccumList; // 應天
-  const EquaAccumListMingtian = degAccumList("Mingtian", 1065).EquaAccumList; // 明天
-  const EclpAccumListMingtian = degAccumList("Mingtian", 1065).EclpAccumList; // 明天
-  const {
-    EquaAccumList: EquaAccumListJiyuan,
-    EclpAccumList: EclpAccumListJiyuan
-  } = degAccumList("Jiyuan", 1106);
-  const EquaAccumListDaming3 = [];
-  const EclpAccumListDaming3 = degAccumList("Daming3", 1180).EclpAccumList;
-  const {
-    EquaAccumList: EquaAccumListShoushi,
-    EclpAccumList: EclpAccumListShoushi
-  } = degAccumList("Shoushi", 1281);
-  const {
-    EquaAccumList: EquaAccumListJiazi,
-    EclpAccumList: EclpAccumListJiazi
-  } = degAccumList("Jiazi", 1684);
+  // 将变量整合为一个对象
+  const accumulators = {
+    Taichu: degAccumList("Taichu", 300),
+    Huangji: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Huangji", 500).EclpAccumList
+    },
+    Linde: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Linde", 665).EclpAccumList
+    },
+    Dayan: degAccumList("Dayan", 729),
+    Yingtian: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Yingtian", 964).EclpAccumList
+    },
+    Mingtian: degAccumList("Mingtian", 1065),
+    Jiyuan: degAccumList("Jiyuan", 1106),
+    Daming3: {
+      EquaAccumList: [],
+      EclpAccumList: degAccumList("Daming3", 1180).EclpAccumList
+    },
+    Shoushi: degAccumList("Shoushi", 1281),
+    Jiazi: degAccumList("Jiazi", 1684)
+  };
+
   const Print = [
     "Taichu",
     "Huangji",
@@ -661,15 +662,15 @@ const bindMans2Deg = (Mans) => {
     "Shoushi",
     "Jiazi"
   ].map((Name) => {
-    const EclpList = eval(`EclpAccumList${Name}`);
-    const Eclp = +mans2Deg(Mans, EclpList).toFixed(3);
-    const EquaList = eval(`EquaAccumList${Name}`);
-    const Equa = +mans2Deg(Mans, EquaList).toFixed(3);
+    const { EclpAccumList, EquaAccumList } = accumulators[Name];
+    const Eclp = +mans2Deg(Mans, EclpAccumList).toFixed(3);
+    const Equa = +mans2Deg(Mans, EquaAccumList || []).toFixed(3); // 处理空数组
     return {
       title: NameList[Name],
       data: [Equa || "", Eclp]
     };
   });
+
   return Print;
 };
 // console.log(bindMans2Deg('氐1'))
