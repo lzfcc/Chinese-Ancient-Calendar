@@ -7,9 +7,8 @@ export default class Converter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      mode: '',
-      temp: '',
-      n: '0'
+      mode: '1',
+      temp: '5',
     }
     this.handle = this.handle.bind(this)
   }

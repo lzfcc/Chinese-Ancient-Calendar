@@ -16,14 +16,14 @@ class Interval {
     F: 4,
     G: 5,
     A: 6,
-    B: 7,
+    B: 7
   };
   static HalfMap = {
     1: "♯",
     2: "𝄪",
     0: "",
     "-1": "♭",
-    "-2": "𝄫",
+    "-2": "𝄫"
   };
   get name() {
     return Interval.NameMap[this.pitch];
@@ -53,25 +53,25 @@ class Interval {
 }
 
 export const TuningList = {
-  "1": "宮調",
-  "2": "商調",
-  "4": "徵調",
-  "5": "羽調",
-  "6": "蕤賓",
-  "7": "清商",
-  "8": "慢角",
-  "9": "慢宮",
-  "10": "楚商",
-  "11": "黃鐘",
-  "12": "无媒",
-  "13": "間弦一",
-  "14": "間弦二",
-  "15": "徽法日傳平調",
-  "16": "徽法側商",
-  "17": "徽法側羽",
-  "18": "徽法側蜀",
-  "19": "徽法側楚"
-}
+  1: "宮調",
+  2: "商調",
+  4: "徵調",
+  5: "羽調",
+  6: "蕤賓",
+  7: "清商",
+  8: "慢角",
+  9: "慢宮",
+  10: "楚商",
+  11: "黃鐘",
+  12: "无媒",
+  13: "間弦一",
+  14: "間弦二",
+  15: "徽法日傳平調",
+  16: "徽法側商",
+  17: "徽法側羽",
+  18: "徽法側蜀",
+  19: "徽法側楚"
+};
 // console.log(TuningList["商調"])
 // 0  1  2
 // 音名
@@ -134,7 +134,7 @@ const FushionListB = [
   new Interval(2, "C", -1, 2, "48/25"),
   new Interval(1, "D", -2, 0, "1048576/531441"),
   new Interval(2, "C", 0, -1, "480/243"),
-  new Interval(0, "C", 0, 0, "2"),
+  new Interval(0, "C", 0, 0, "2")
 ];
 const FushionList5 = [
   "1",
@@ -149,7 +149,7 @@ const FushionList5 = [
   "27/16",
   "16/9",
   "243/128",
-  "2",
+  "2"
 ];
 const FushionList1 = [
   "1",
@@ -164,7 +164,7 @@ const FushionList1 = [
   "5/3",
   "9/5",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList2 = [
   "1",
@@ -179,7 +179,7 @@ const FushionList2 = [
   "5/3",
   "9/5",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList3 = [
   "1",
@@ -194,7 +194,7 @@ const FushionList3 = [
   "27/16",
   "9/5",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList4 = [
   "1",
@@ -209,7 +209,7 @@ const FushionList4 = [
   "5/3",
   "9/5",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList6 = [
   "1",
@@ -224,7 +224,7 @@ const FushionList6 = [
   "3002/1785",
   "4679/2626",
   "2943/1559",
-  "2",
+  "2"
 ];
 const FushionList5S = [
   "1",
@@ -235,7 +235,7 @@ const FushionList5S = [
   "3/2",
   "27/16",
   "243/128",
-  "2",
+  "2"
 ];
 const FushionList1S = [
   "1",
@@ -246,7 +246,7 @@ const FushionList1S = [
   "3/2",
   "5/3",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList2S = [
   "1",
@@ -257,7 +257,7 @@ const FushionList2S = [
   "3/2",
   "5/3",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList3S = [
   "1",
@@ -268,7 +268,7 @@ const FushionList3S = [
   "3/2",
   "27/16",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList4S = [
   "1",
@@ -279,7 +279,7 @@ const FushionList4S = [
   "40/27",
   "5/3",
   "15/8",
-  "2",
+  "2"
 ];
 const FushionList6S = [
   "1",
@@ -291,7 +291,7 @@ const FushionList6S = [
   "3002/1785",
   "4679/2626",
   "2943/1559",
-  "2",
+  "2"
 ];
 
 const FushionList = {
@@ -301,40 +301,40 @@ const FushionList = {
     2,
     '<span class="upline1">C</span>',
     '<span class="upline1">1</span>',
-    "81/80",
+    "81/80"
   ],
   70.67: [
     2,
     '♯<span class="dnline2">C</span>',
     '♯<span class="dnline2">1</span>',
-    "25/24",
+    "25/24"
   ], // 小半音
   90.22: [1, "♭D", "♭2", "256/243"],
   92.18: [
     2,
     '♯<span class="dnline1">C</span>',
     '♯<span class="dnline1">1</span>',
-    "135/128",
+    "135/128"
   ],
   100: [3, "♯C", "♯1", "196/185"],
   111.73: [
     2,
     '♭<span class="upline1">D</span>',
     '♭<span class="upline1">2</span>',
-    "16/15",
+    "16/15"
   ],
   113.69: [1, "♯C", "♯1", "2187/2048"],
   133.24: [
     2,
     '♭<span class="upline2">D</span>',
     '♭<span class="upline2">2</span>',
-    "27/25",
+    "27/25"
   ],
   182.4: [
     2,
     '<span class="dnline1">D</span>',
     '<span class="dnline1">2</span>',
-    "10/9",
+    "10/9"
   ],
   200: [3, "D", "2", "1769/1576"],
   203.91: [0, "D", "2", "9/8"],
@@ -342,7 +342,7 @@ const FushionList = {
     2,
     '♯<span class="dnline2">D</span>',
     '♯<span class="dnline2">2</span>',
-    "75/64",
+    "75/64"
   ],
   294.13: [1, "♭E", "♭3", "32/27"],
   300: [3, "♭E", "♭3", "1785/1501"],
@@ -350,27 +350,27 @@ const FushionList = {
     2,
     '♭<span class="upline1">E</span>',
     '♭<span class="upline1">3</span>',
-    "6/5",
+    "6/5"
   ],
   317.6: [1, "♯D", "♯2", "19683/16384"],
   337.15: [
     2,
     '♭<span class="upline2">E</span>',
     '♭<span class="upline2">3</span>',
-    "243/200",
+    "243/200"
   ],
   364.81: [
     2,
     '<span class="dnline2">E</span>',
     '<span class="dnline2">3</span>',
-    "100/81",
+    "100/81"
   ],
   384.36: [1, "♭F", "♭4", "8192/6561"],
   386.31: [
     2,
     '<span class="dnline1">E</span>',
     '<span class="dnline1">3</span>',
-    "5/4",
+    "5/4"
   ],
   400: [3, "E", "3", "635/504"],
   407.82: [0, "E", "3", "81/64"],
@@ -378,13 +378,13 @@ const FushionList = {
     2,
     '♭<span class="upline2">F</span>',
     '♭<span class="upline2">4</span>',
-    "32/25",
+    "32/25"
   ],
   478.49: [
     2,
     '♯<span class="dnline2">E</span>',
     '♯<span class="dnline2">3</span>',
-    "675/512",
+    "675/512"
   ],
   498.04: [1, "F", "4", "4/3"],
   500: [3, "F", "4", "3544/2655"],
@@ -392,47 +392,47 @@ const FushionList = {
     2,
     '<span class="upline1">F</span>',
     '<span class="upline1">4</span>',
-    "27/20",
+    "27/20"
   ],
   521.51: [1, "♯E", "♯3", "177147/131072"],
   541.06: [
     2,
     '<span class="upline2">F</span>',
     '<span class="upline2">4</span>',
-    "2187/1600",
+    "2187/1600"
   ],
   568.72: [
     2,
     '♯<span class="dnline2">F</span>',
     '♯<span class="dnline2">4</span>',
-    "25/18",
+    "25/18"
   ],
   588.27: [1, "♭G", "♭5", "1024/729"],
   590.22: [
     2,
     '♯<span class="dnline1">F</span>',
     '♯<span class="dnline1">4</span>',
-    "45/32",
+    "45/32"
   ],
   600: [3, "♯F", "♯4", "3363/2378"],
   609.77: [
     2,
     '♭<span class="upline1">G</span>',
     '♭<span class="upline1">5</span>',
-    "64/45",
+    "64/45"
   ],
   611.73: [1, "♯F", "♯4", "729/512"],
   631.28: [
     2,
     '♭<span class="upline2">G</span>',
     '♭<span class="upline2">5</span>',
-    "36/25",
+    "36/25"
   ],
   680.45: [
     2,
     '<span class="dnline1">G</span>',
     '<span class="dnline1">5</span>',
-    "40/27",
+    "40/27"
   ],
   700: [3, "G", "5", "2655/1772"],
   701.96: [0, "G", "5", "3/2"],
@@ -440,46 +440,46 @@ const FushionList = {
     2,
     '<span class="upline1">G</span>',
     '<span class="upline1">5</span>',
-    "243/160",
+    "243/160"
   ],
   772.63: [
     2,
     '♯<span class="dnline2">G</span>',
     '♯<span class="dnline2">5</span>',
-    "25/16",
+    "25/16"
   ],
   792.18: [1, "♭A", "♭6", "128/81"],
   794.13: [
     2,
     '♯<span class="dnline1">G</span>',
     '♯<span class="dnline1">5</span>',
-    "405/256",
+    "405/256"
   ],
   800: [3, "♯G", "♯5", "4813/3032"],
   813.69: [
     2,
     '♭<span class="upline1">A</span>',
     '♭<span class="upline1">6</span>',
-    "8/5",
+    "8/5"
   ],
   815.64: [1, "♯G", "♯5", "6561/4096"],
   835.2: [
     2,
     '♭<span class="upline2">A</span>',
     '♭<span class="upline2">6</span>',
-    "81/50",
+    "81/50"
   ],
   862.85: [
     2,
     '<span class="dnline2">A</span>',
     '<span class="dnline2">6</span>',
-    "400/243",
+    "400/243"
   ],
   884.36: [
     2,
     '<span class="dnline1">A</span>',
     '<span class="dnline1">6</span>',
-    "5/3",
+    "5/3"
   ],
   900: [3, "A", "6", "3002/1785"],
   905.87: [1, "A", "6", "27/16"],
@@ -487,7 +487,7 @@ const FushionList = {
     2,
     '♯<span class="dnline2">A</span>',
     '♯<span class="dnline2">6</span>',
-    "225/128",
+    "225/128"
   ],
   996.09: [1, "♭B", "♭7", "16/9"],
   1000: [3, "♭B", "♭7", "4679/2626"],
@@ -495,49 +495,49 @@ const FushionList = {
     2,
     '♭<span class="upline1">B</span>',
     '♭<span class="upline1">7</span>',
-    "9/5",
+    "9/5"
   ],
   1019.55: [1, "♯A", "♯6", "59049/32768"],
   1039.1: [
     2,
     '♭<span class="upline2">B</span>',
     '♭<span class="upline2">7</span>',
-    "729/400",
+    "729/400"
   ],
   1066.76: [
     2,
     '<span class="dnline2">B</span>',
     '<span class="dnline2">7</span>',
-    "50/27",
+    "50/27"
   ],
   1086.31: [1, "·♭C", "·♭1", "4096/2187"],
   1088.27: [
     2,
     '<span class="dnline1">B</span>',
     '<span class="dnline1">7</span>',
-    "15/8",
+    "15/8"
   ],
   1100: [3, "B", "7", "2943/1559"],
   1107.82: [
     2,
     '·♭<span class="upline1">C</span>',
     '·♭<span class="upline1">1</span>',
-    "256/135",
+    "256/135"
   ],
   1109.78: [1, "B", "7", "243/128"],
   1129.33: [
     2,
     '·♭<span class="upline2">C</span>',
     '·♭<span class="upline2">1</span>',
-    "48/25",
+    "48/25"
   ],
   1178.49: [
     2,
     '·<span class="dnline1">C</span>',
     '·<span class="dnline1">1</span>',
-    "160/81",
+    "160/81"
   ],
-  1200: [0, "C", "1", "2"],
+  1200: [0, "C", "1", "2"]
 };
 
 const Prime = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]; // 质数
@@ -620,7 +620,7 @@ const FretListA = [
   "4/5",
   "5/6",
   "7/8",
-  1,
+  1
 ];
 const FretList = [
   "1/9",
@@ -639,7 +639,7 @@ const FretList = [
   "7/8",
   "8/9",
   "9/10",
-  1,
+  1
 ]; // 0, 14是徽外13.111(大全音)，15是外外13.2（小全音）。五度律的三個徽外：8/9（大全音204）, 243/256（90音分13.492）, 2048/2187（82音分13.594）
 
 export const Fret2LengPrint = (x) => {
@@ -774,15 +774,15 @@ export const Pythagorean = (x) => {
   const Print = [
     {
       title: "上生頻率",
-      data: upA,
+      data: upA
     },
     {
       title: "上生弦長",
-      data: upB,
+      data: upB
     },
     {
       title: "音分",
-      data: Cent1,
+      data: Cent1
     },
     {
       title: "",
@@ -799,21 +799,21 @@ export const Pythagorean = (x) => {
         `<strong>𝄫B</strong>`,
         `<strong>𝄫E</strong>`,
         `<strong>𝄫A</strong>`,
-        `<strong>𝄫D</strong>`,
-      ],
+        `<strong>𝄫D</strong>`
+      ]
     },
     {
       title: "下生頻率",
-      data: downA,
+      data: downA
     },
     {
       title: "下生弦長",
-      data: downB,
+      data: downB
     },
     {
       title: "音分",
-      data: Cent2,
-    },
+      data: Cent2
+    }
   ];
   return Print;
 };
@@ -850,16 +850,16 @@ export const Pythagorean60 = (x) => {
   const Print = [
     {
       title: "頻率",
-      data: upA,
+      data: upA
     },
     {
       title: "弦長",
-      data: upB,
+      data: upB
     },
     {
       title: "音分",
-      data: Cent1,
-    },
+      data: Cent1
+    }
   ];
   return Print;
 };
@@ -897,16 +897,16 @@ export const Hechengtian = (x) => {
   const Print = [
     {
       title: "上生頻率",
-      data: upA,
+      data: upA
     },
     {
       title: "上生弦長",
-      data: upB,
+      data: upB
     },
     {
       title: "音分",
-      data: Cent1,
-    },
+      data: Cent1
+    }
   ];
   return Print;
 };
@@ -963,24 +963,24 @@ export const Meantone = (x, mode) => {
   const Print1 = [
     {
       title: "上生",
-      data: Freq1,
+      data: Freq1
     },
     {
       title: "音分",
-      data: Cent1,
-    },
+      data: Cent1
+    }
   ];
   Freq2[0] = x;
   Cent2[0] = 0;
   const Print2 = [
     {
       title: "下生",
-      data: Freq2,
+      data: Freq2
     },
     {
       title: "音分",
-      data: Cent2,
-    },
+      data: Cent2
+    }
   ];
   return { Print1, Print2 };
 };
@@ -1055,12 +1055,12 @@ export const Justoni = (x) => {
   const Print = [
     {
       title: "頻率",
-      data: [...List1, ...List2, ...List3],
+      data: [...List1, ...List2, ...List3]
     },
     {
       title: "音分",
-      data: [...Cent1, ...Cent2, ...Cent3],
-    },
+      data: [...Cent1, ...Cent2, ...Cent3]
+    }
   ];
   return Print;
 };
@@ -1097,12 +1097,12 @@ export const EqualTemp = (CFreq, mode) => {
   const Print = [
     {
       title: "頻率",
-      data: List1,
+      data: List1
     },
     {
       title: "音分",
-      data: Cent,
-    },
+      data: Cent
+    }
   ];
   return { Print, List1 };
 };
@@ -1139,1154 +1139,1140 @@ const TuningSub3 = (PortionList, Unmoved, Unmoved2Five, Freq) => {
   }
   return FreqList;
 };
+const TuningFunctions = {
+  Tuning1: (Freq = 432, n = 3) => {
+    // 宮調. 五弦基準頻率，默認宮弦，自定宮弦
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 3;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    // 徽法一
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
+    Hui[4] = TuningSub1(Hui[6], 5, 4);
+    Hui[5] = TuningSub1(Hui[3], 6, 7);
+    Hui[7] = TuningSub1(Hui[5], 4, 5);
+    Hui[2] = TuningSub1(Hui[7], 7, 4);
+    // 徽二
+    Hui2[6] = TuningSub1(Hui2[3], 5, 7);
+    Hui2[1] = TuningSub1(Hui2[3], 5, 4);
+    Hui2[5] = TuningSub1(Hui2[3], 6, 7);
+    Hui2[7] = TuningSub1(Hui2[5], 4, 5);
+    Hui2[2] = TuningSub1(Hui2[7], 7, 4);
+    Hui2[4] = TuningSub1(Hui2[7], 7, 5);
+    // 徽三
+    Hui3[6] = TuningSub1(Hui3[3], 5, 7);
+    Hui3[1] = TuningSub1(Hui3[3], 5, 4);
+    Hui3[4] = TuningSub1(Hui3[6], 5, 4);
+    Hui3[5] = TuningSub1(Hui3[3], 6, 7);
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7);
+    Hui3[2] = TuningSub1(Hui3[7], 7, 4);
+    // 徽四
+    Hui4[5] = TuningSub1(Hui4[3], 6, 7);
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5);
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5);
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4);
+    Hui4[1] = TuningSub1(Hui4[4], 7, 5);
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = Freq;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Xin,
+      Hui2,
+      Hui3,
+      Hui4,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "宮調 5 6 1 2 3"
+    };
+  },
+  Tuning2: (Freq = 432, n = 1) => {
+    // 商調
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 3;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
 
-const Tuning1 = (Freq = 432, n = 3) => {
-  // 宮調. 五弦基準頻率，默認宮弦，自定宮弦
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 3;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
-  Zhun[4] = TuningSub1(Zhun[6], 5, 4);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[5] = TuningSub1(Zhun[7], 5, 4);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  // 徽法一
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-  Hui[4] = TuningSub1(Hui[6], 5, 4);
-  Hui[5] = TuningSub1(Hui[3], 6, 7);
-  Hui[7] = TuningSub1(Hui[5], 4, 5);
-  Hui[2] = TuningSub1(Hui[7], 7, 4);
-  // 徽二
-  Hui2[6] = TuningSub1(Hui2[3], 5, 7);
-  Hui2[1] = TuningSub1(Hui2[3], 5, 4);
-  Hui2[5] = TuningSub1(Hui2[3], 6, 7);
-  Hui2[7] = TuningSub1(Hui2[5], 4, 5);
-  Hui2[2] = TuningSub1(Hui2[7], 7, 4);
-  Hui2[4] = TuningSub1(Hui2[7], 7, 5);
-  // 徽三
-  Hui3[6] = TuningSub1(Hui3[3], 5, 7);
-  Hui3[1] = TuningSub1(Hui3[3], 5, 4);
-  Hui3[4] = TuningSub1(Hui3[6], 5, 4);
-  Hui3[5] = TuningSub1(Hui3[3], 6, 7);
-  Hui3[7] = TuningSub1(Hui3[4], 5, 7);
-  Hui3[2] = TuningSub1(Hui3[7], 7, 4);
-  // 徽四
-  Hui4[5] = TuningSub1(Hui4[3], 6, 7);
-  Hui4[7] = TuningSub1(Hui4[5], 4, 5);
-  Hui4[4] = TuningSub1(Hui4[7], 7, 5);
-  Hui4[2] = TuningSub1(Hui4[7], 7, 4);
-  Hui4[1] = TuningSub1(Hui4[4], 7, 5);
-  Hui4[6] = TuningSub1(Hui4[1], 4, 7);
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = Freq;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Xin,
-    Hui2,
-    Hui3,
-    Hui4,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "宮調 5 6 1 2 3",
-  };
-};
-// console.log(Tuning1(432, 1).Zhun)
+    Hui2[6] = TuningSub1(Hui2[3], 5, 7);
+    Hui2[1] = TuningSub1(Hui2[3], 5, 4);
+    Hui2[4] = TuningSub1(Hui2[6], 5, 4);
+    Hui2[5] = TuningSub1(Hui2[3], 6, 7);
+    Hui2[7] = TuningSub1(Hui2[5], 4, 5);
+    Hui2[2] = TuningSub1(Hui2[7], 7, 4);
 
-const Tuning2 = (Freq = 432, n = 1) => {
-  // 商調
-  n = n === 0 ? 1 : n;
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 3;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
-  Zhun[4] = TuningSub1(Zhun[6], 5, 4);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[5] = TuningSub1(Zhun[7], 5, 4);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    Hui4[6] = TuningSub1(Hui4[3], 5, 7);
+    Hui4[1] = TuningSub1(Hui4[3], 5, 4);
+    Hui4[5] = TuningSub1(Hui4[3], 6, 7);
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5);
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5);
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4);
 
-  Hui2[6] = TuningSub1(Hui2[3], 5, 7);
-  Hui2[1] = TuningSub1(Hui2[3], 5, 4);
-  Hui2[4] = TuningSub1(Hui2[6], 5, 4);
-  Hui2[5] = TuningSub1(Hui2[3], 6, 7);
-  Hui2[7] = TuningSub1(Hui2[5], 4, 5);
-  Hui2[2] = TuningSub1(Hui2[7], 7, 4);
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
+    Hui[4] = TuningSub1(Hui[6], 5, 4);
+    Hui[5] = TuningSub1(Hui[3], 6, 7);
+    Hui[7] = TuningSub1(Hui[4], 5, 7);
+    Hui[2] = TuningSub1(Hui[7], 7, 4);
+    // 徽三同準
+    Hui3[6] = TuningSub1(Hui3[3], 5, 7);
+    Hui3[1] = TuningSub1(Hui3[3], 5, 4);
+    Hui3[4] = TuningSub1(Hui3[6], 5, 4);
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7);
+    Hui3[5] = TuningSub1(Hui3[7], 5, 4);
+    Hui3[2] = TuningSub1(Hui3[7], 7, 4);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = Freq;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Xin,
+      Hui2,
+      Hui3,
+      Hui4,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "商調 1 2 4 5 6"
+    };
+  },
+  Tuning4: (Freq = 432, n = 4) => {
+    // 徵調
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 4;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui4[a] = "1";
 
-  Hui4[6] = TuningSub1(Hui4[3], 5, 7);
-  Hui4[1] = TuningSub1(Hui4[3], 5, 4);
-  Hui4[5] = TuningSub1(Hui4[3], 6, 7);
-  Hui4[7] = TuningSub1(Hui4[5], 4, 5);
-  Hui4[4] = TuningSub1(Hui4[7], 7, 5);
-  Hui4[2] = TuningSub1(Hui4[7], 7, 4);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    Zhun[6] = TuningSub1(Zhun[4], 4, 5);
+    Zhun[3] = TuningSub1(Zhun[6], 7, 5);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
 
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-  Hui[4] = TuningSub1(Hui[6], 5, 4);
-  Hui[5] = TuningSub1(Hui[3], 6, 7);
-  Hui[7] = TuningSub1(Hui[4], 5, 7);
-  Hui[2] = TuningSub1(Hui[7], 7, 4);
-  // 徽三同準
-  Hui3[6] = TuningSub1(Hui3[3], 5, 7);
-  Hui3[1] = TuningSub1(Hui3[3], 5, 4);
-  Hui3[4] = TuningSub1(Hui3[6], 5, 4);
-  Hui3[7] = TuningSub1(Hui3[4], 5, 7);
-  Hui3[5] = TuningSub1(Hui3[7], 5, 4);
-  Hui3[2] = TuningSub1(Hui3[7], 7, 4);
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = Freq;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Xin,
-    Hui2,
-    Hui3,
-    Hui4,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "商調 1 2 4 5 6",
-  };
-};
+    Hui[7] = TuningSub1(Hui[4], 5, 7);
+    Hui[5] = TuningSub1(Hui[7], 5, 4);
+    Hui[2] = TuningSub1(Hui[7], 7, 4);
+    Hui[1] = TuningSub1(Hui[4], 7, 5);
+    Hui[6] = TuningSub1(Hui[1], 4, 7);
+    Hui[3] = TuningSub1(Hui[2], 5, 6);
 
-const Tuning4 = (Freq = 432, n = 4) => {
-  // 徵調
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 4;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui4[a] = "1";
+    Hui2[1] = TuningSub1(Hui2[4], 7, 5);
+    Hui2[6] = TuningSub1(Hui2[1], 4, 7);
+    Hui2[7] = TuningSub1(Hui2[4], 5, 7);
+    Hui2[2] = TuningSub1(Hui2[7], 7, 4);
+    Hui2[3] = TuningSub1(Hui2[2], 5, 6);
+    Hui2[5] = TuningSub1(Hui2[6], 6, 5);
 
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[5] = TuningSub1(Zhun[7], 5, 4);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  Zhun[6] = TuningSub1(Zhun[4], 4, 5);
-  Zhun[3] = TuningSub1(Zhun[6], 7, 5);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    Hui4[1] = TuningSub1(Hui4[4], 7, 5);
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7);
+    Hui4[5] = TuningSub1(Hui4[6], 6, 5);
+    Hui4[3] = TuningSub1(Hui4[4], 9, 8);
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5);
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4);
 
-  Hui[7] = TuningSub1(Hui[4], 5, 7);
-  Hui[5] = TuningSub1(Hui[7], 5, 4);
-  Hui[2] = TuningSub1(Hui[7], 7, 4);
-  Hui[1] = TuningSub1(Hui[4], 7, 5);
-  Hui[6] = TuningSub1(Hui[1], 4, 7);
-  Hui[3] = TuningSub1(Hui[2], 5, 6);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = Freq;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Xin,
+      Hui2,
+      Hui4,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "徵調 4 5 ♭7 1 2"
+    };
+  },
+  Tuning5: (Freq = 432, n = 2) => {
+    // 羽調
+    let Zhun = [],
+      Hui = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 2;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[7] = TuningSub1(Zhun[2], 4, 7);
+    Zhun[4] = TuningSub1(Zhun[7], 7, 5);
+    Zhun[6] = TuningSub1(Zhun[4], 4, 5);
+    Zhun[3] = TuningSub1(Zhun[6], 7, 5);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4);
 
-  Hui2[1] = TuningSub1(Hui2[4], 7, 5);
-  Hui2[6] = TuningSub1(Hui2[1], 4, 7);
-  Hui2[7] = TuningSub1(Hui2[4], 5, 7);
-  Hui2[2] = TuningSub1(Hui2[7], 7, 4);
-  Hui2[3] = TuningSub1(Hui2[2], 5, 6);
-  Hui2[5] = TuningSub1(Hui2[6], 6, 5);
+    // 一二三同
+    Hui[7] = TuningSub1(Hui[2], 4, 7);
+    Hui[5] = TuningSub1(Hui[7], 5, 4);
+    Hui[3] = TuningSub1(Hui[5], 7, 6);
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
+    Hui[4] = TuningSub1(Hui[2], 4, 5);
 
-  Hui4[1] = TuningSub1(Hui4[4], 7, 5);
-  Hui4[6] = TuningSub1(Hui4[1], 4, 7);
-  Hui4[5] = TuningSub1(Hui4[6], 6, 5);
-  Hui4[3] = TuningSub1(Hui4[4], 9, 8);
-  Hui4[7] = TuningSub1(Hui4[5], 4, 5);
-  Hui4[2] = TuningSub1(Hui4[7], 7, 4);
+    Hui4[4] = TuningSub1(Hui4[2], 4, 5);
+    Hui4[5] = TuningSub1(Hui4[4], 8, 9);
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7);
+    Hui4[3] = TuningSub1(Hui4[7], 5, 3);
+    Hui4[6] = TuningSub1(Hui4[3], 5, 7);
+    Hui4[1] = TuningSub1(Hui4[3], 5, 4);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = Freq;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Xin,
-    Hui2,
-    Hui4,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "徵調 4 5 ♭7 1 2",
-  };
-};
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = Freq;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Xin,
+      Hui4,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "羽調 ♭7 1 ♭3 4 5"
+    };
+  },
+  Tuning6: (Freq = 432, n = 5) => {
+    // 蕤賓調緊五 2 3 5 6 1 2 3
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 5;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    Zhun[1] = TuningSub1(Zhun[6], 7, 4);
+    // 徽法律
+    Hui[3] = TuningSub1(Hui[5], 5, 4);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui[4] = TuningSub1(Hui[5], 6, 5);
+    Hui[7] = TuningSub1(Hui[5], 6, 7);
+    Hui[2] = TuningSub1(Hui[5], 6, 4);
 
-const Tuning5 = (Freq = 432, n = 2) => {
-  // 羽調
-  let Zhun = [],
-    Hui = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 2;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[7] = TuningSub1(Zhun[2], 4, 7);
-  Zhun[4] = TuningSub1(Zhun[7], 7, 5);
-  Zhun[6] = TuningSub1(Zhun[4], 4, 5);
-  Zhun[3] = TuningSub1(Zhun[6], 7, 5);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
-  Zhun[5] = TuningSub1(Zhun[7], 5, 4);
+    Hui2[3] = TuningSub1(Hui2[5], 5, 4);
+    Hui2[4] = TuningSub1(Hui2[5], 6, 5);
+    Hui2[7] = TuningSub1(Hui2[5], 6, 7);
+    Hui2[2] = TuningSub1(Hui2[5], 6, 4);
+    Hui2[1] = TuningSub1(Hui2[4], 7, 5);
+    Hui2[6] = TuningSub1(Hui2[1], 4, 7);
 
-  // 一二三同
-  Hui[7] = TuningSub1(Hui[2], 4, 7);
-  Hui[5] = TuningSub1(Hui[7], 5, 4);
-  Hui[3] = TuningSub1(Hui[5], 7, 6);
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-  Hui[4] = TuningSub1(Hui[2], 4, 5);
+    Hui3[3] = TuningSub1(Hui3[5], 5, 4);
+    Hui3[1] = TuningSub1(Hui3[3], 5, 4);
+    Hui3[6] = TuningSub1(Hui3[3], 5, 7);
+    Hui3[4] = TuningSub1(Hui3[6], 5, 4);
+    Hui3[7] = TuningSub1(Hui3[5], 6, 7);
+    Hui3[2] = TuningSub1(Hui3[5], 6, 4);
 
-  Hui4[4] = TuningSub1(Hui4[2], 4, 5);
-  Hui4[5] = TuningSub1(Hui4[4], 8, 9);
-  Hui4[7] = TuningSub1(Hui4[2], 4, 7);
-  Hui4[3] = TuningSub1(Hui4[7], 5, 3);
-  Hui4[6] = TuningSub1(Hui4[3], 5, 7);
-  Hui4[1] = TuningSub1(Hui4[3], 5, 4);
+    Hui4[4] = TuningSub1(Hui4[5], 6, 5);
+    Hui4[7] = TuningSub1(Hui4[5], 6, 7);
+    Hui4[2] = TuningSub1(Hui4[5], 6, 4);
+    Hui4[1] = TuningSub1(Hui4[4], 7, 5);
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7);
+    Hui4[3] = TuningSub1(Hui4[1], 4, 5);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = Freq;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Xin,
-    Hui4,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "羽調 ♭7 1 ♭3 4 5",
-  };
-};
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 3, "64/81", Freq);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[1];
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Xin,
+      Hui2,
+      Hui3,
+      Hui4,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "蕤賓調　緊五"
+    };
+  },
+  Tuning7: (Freq = 432, n = 2) => {
+    // 清商調緊二五七 6 1 2 3 5 6 7
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 2;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[5] = TuningSub1(Zhun[2], 5, 7);
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4);
+    Zhun[7] = TuningSub1(Zhun[2], 4, 7);
+    // 徽法律
+    Hui[4] = TuningSub1(Hui[2], 6, 7);
+    Hui[5] = TuningSub1(Hui[2], 5, 7);
+    Hui[3] = TuningSub1(Hui[5], 5, 4);
+    Hui[6] = TuningSub1(Hui[4], 4, 5);
+    Hui[1] = TuningSub1(Hui[6], 7, 4);
+    Hui[7] = TuningSub1(Hui[2], 4, 7);
 
-const Tuning6 = (Freq = 432, n = 5) => {
-  // 蕤賓調緊五 2 3 5 6 1 2 3
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 5;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[4] = TuningSub1(Zhun[6], 5, 4);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  Zhun[1] = TuningSub1(Zhun[6], 7, 4);
-  // 徽法律
-  Hui[3] = TuningSub1(Hui[5], 5, 4);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
-  Hui[4] = TuningSub1(Hui[5], 6, 5);
-  Hui[7] = TuningSub1(Hui[5], 6, 7);
-  Hui[2] = TuningSub1(Hui[5], 6, 4);
+    Hui2[4] = TuningSub1(Hui2[2], 6, 7);
+    Hui2[5] = TuningSub1(Hui2[2], 5, 7);
+    Hui2[6] = TuningSub1(Hui2[4], 4, 5);
+    Hui2[1] = TuningSub1(Hui2[6], 7, 4);
+    Hui2[3] = TuningSub1(Hui2[6], 7, 5);
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7);
 
-  Hui2[3] = TuningSub1(Hui2[5], 5, 4);
-  Hui2[4] = TuningSub1(Hui2[5], 6, 5);
-  Hui2[7] = TuningSub1(Hui2[5], 6, 7);
-  Hui2[2] = TuningSub1(Hui2[5], 6, 4);
-  Hui2[1] = TuningSub1(Hui2[4], 7, 5);
-  Hui2[6] = TuningSub1(Hui2[1], 4, 7);
+    Hui3[4] = TuningSub1(Hui3[2], 6, 7);
+    Hui3[5] = TuningSub1(Hui3[2], 5, 7);
+    Hui3[3] = TuningSub1(Hui3[5], 5, 4);
+    Hui3[6] = TuningSub1(Hui3[3], 5, 7);
+    Hui3[1] = TuningSub1(Hui3[6], 7, 4);
+    Hui3[7] = TuningSub1(Hui3[2], 4, 7);
 
-  Hui3[3] = TuningSub1(Hui3[5], 5, 4);
-  Hui3[1] = TuningSub1(Hui3[3], 5, 4);
-  Hui3[6] = TuningSub1(Hui3[3], 5, 7);
-  Hui3[4] = TuningSub1(Hui3[6], 5, 4);
-  Hui3[7] = TuningSub1(Hui3[5], 6, 7);
-  Hui3[2] = TuningSub1(Hui3[5], 6, 4);
+    Hui4[4] = TuningSub1(Hui4[2], 6, 7);
+    Hui4[6] = TuningSub1(Hui4[4], 4, 5);
+    Hui4[3] = TuningSub1(Hui4[6], 7, 5);
+    Hui4[5] = TuningSub1(Hui4[3], 4, 5);
+    Hui4[1] = TuningSub1(Hui4[6], 7, 4);
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7);
 
-  Hui4[4] = TuningSub1(Hui4[5], 6, 5);
-  Hui4[7] = TuningSub1(Hui4[5], 6, 7);
-  Hui4[2] = TuningSub1(Hui4[5], 6, 4);
-  Hui4[1] = TuningSub1(Hui4[4], 7, 5);
-  Hui4[6] = TuningSub1(Hui4[1], 4, 7);
-  Hui4[3] = TuningSub1(Hui4[1], 4, 5);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 3, "64/81", Freq);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[6] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[1];
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Xin,
+      Hui2,
+      Hui3,
+      Hui4,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "淸商調　緊二五七"
+    };
+  },
+  Tuning8: (Freq = 432, n = 1) => {
+    // 慢角調慢三 1 2 3 5 6 1 2
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 1;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[4] = TuningSub1(Zhun[1], 5, 7);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    Zhun[5] = TuningSub1(Zhun[2], 5, 7);
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[6] = TuningSub1(Zhun[1], 4, 7);
+    // 徽法律
+    Hui[4] = TuningSub1(Hui[1], 5, 7);
+    Hui[7] = TuningSub1(Hui[4], 5, 7);
+    Hui[2] = TuningSub1(Hui[4], 5, 4);
+    Hui[3] = TuningSub1(Hui[1], 6, 7);
+    Hui[5] = TuningSub1(Hui[3], 4, 5);
+    Hui[6] = TuningSub1(Hui[1], 4, 7);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 3, "64/81", Freq);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[1];
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Xin,
-    Hui2,
-    Hui3,
-    Hui4,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "蕤賓調　緊五",
-  };
-};
+    Hui2[4] = TuningSub1(Hui2[1], 5, 7);
+    Hui2[3] = TuningSub1(Hui2[1], 6, 7);
+    Hui2[5] = TuningSub1(Hui2[3], 4, 5);
+    Hui2[2] = TuningSub1(Hui2[5], 7, 5);
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7);
+    Hui2[6] = TuningSub1(Hui2[1], 4, 7);
 
-const Tuning7 = (Freq = 432, n = 2) => {
-  // 清商調緊二五七 6 1 2 3 5 6 7
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 2;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[5] = TuningSub1(Zhun[2], 5, 7);
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
-  Zhun[4] = TuningSub1(Zhun[6], 5, 4);
-  Zhun[7] = TuningSub1(Zhun[2], 4, 7);
-  // 徽法律
-  Hui[4] = TuningSub1(Hui[2], 6, 7);
-  Hui[5] = TuningSub1(Hui[2], 5, 7);
-  Hui[3] = TuningSub1(Hui[5], 5, 4);
-  Hui[6] = TuningSub1(Hui[4], 4, 5);
-  Hui[1] = TuningSub1(Hui[6], 7, 4);
-  Hui[7] = TuningSub1(Hui[2], 4, 7);
+    Hui3[4] = TuningSub1(Hui3[1], 5, 7);
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7);
+    Hui3[2] = TuningSub1(Hui3[4], 5, 4);
+    Hui3[3] = TuningSub1(Hui3[1], 6, 7);
+    Hui3[5] = TuningSub1(Hui3[2], 5, 7);
+    Hui3[6] = TuningSub1(Hui3[1], 4, 7);
 
-  Hui2[4] = TuningSub1(Hui2[2], 6, 7);
-  Hui2[5] = TuningSub1(Hui2[2], 5, 7);
-  Hui2[6] = TuningSub1(Hui2[4], 4, 5);
-  Hui2[1] = TuningSub1(Hui2[6], 7, 4);
-  Hui2[3] = TuningSub1(Hui2[6], 7, 5);
-  Hui2[7] = TuningSub1(Hui2[2], 4, 7);
+    Hui4[3] = TuningSub1(Hui4[1], 6, 7);
+    Hui4[5] = TuningSub1(Hui4[3], 4, 5);
+    Hui4[2] = TuningSub1(Hui4[5], 7, 5);
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7);
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5);
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7);
 
-  Hui3[4] = TuningSub1(Hui3[2], 6, 7);
-  Hui3[5] = TuningSub1(Hui3[2], 5, 7);
-  Hui3[3] = TuningSub1(Hui3[5], 5, 4);
-  Hui3[6] = TuningSub1(Hui3[3], 5, 7);
-  Hui3[1] = TuningSub1(Hui3[6], 7, 4);
-  Hui3[7] = TuningSub1(Hui3[2], 4, 7);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[12] / 2;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Hui2,
+      Hui3,
+      Hui4,
+      Xin,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "慢角調　慢三"
+    };
+  },
+  Tuning9: (Freq = 432, n = 4) => {
+    // 慢宮調慢一三六 3 5 6 1 2 3 5
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 4;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    Zhun[5] = TuningSub1(Zhun[7], 5, 4);
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[1] = TuningSub1(Zhun[6], 7, 4);
+    // 徽法律
+    Hui[3] = TuningSub1(Hui[4], 6, 5);
+    Hui[6] = TuningSub1(Hui[4], 6, 7);
+    Hui[1] = TuningSub1(Hui[6], 7, 4);
+    Hui[2] = TuningSub1(Hui[4], 5, 4);
+    Hui[7] = TuningSub1(Hui[4], 5, 7);
+    Hui[5] = TuningSub1(Hui[7], 5, 4);
 
-  Hui4[4] = TuningSub1(Hui4[2], 6, 7);
-  Hui4[6] = TuningSub1(Hui4[4], 4, 5);
-  Hui4[3] = TuningSub1(Hui4[6], 7, 5);
-  Hui4[5] = TuningSub1(Hui4[3], 4, 5);
-  Hui4[1] = TuningSub1(Hui4[6], 7, 4);
-  Hui4[7] = TuningSub1(Hui4[2], 4, 7);
+    Hui2[3] = TuningSub1(Hui2[4], 6, 5);
+    Hui2[6] = TuningSub1(Hui2[4], 6, 7);
+    Hui2[1] = TuningSub1(Hui2[6], 7, 4);
+    Hui2[2] = TuningSub1(Hui2[4], 5, 4);
+    Hui2[7] = TuningSub1(Hui2[4], 5, 7);
+    Hui2[5] = TuningSub1(Hui2[3], 4, 5);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 3, "64/81", Freq);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[6] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[1];
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Xin,
-    Hui2,
-    Hui3,
-    Hui4,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "淸商調　緊二五七",
-  };
-};
+    Hui3[6] = TuningSub1(Hui3[4], 6, 7);
+    Hui3[1] = TuningSub1(Hui3[6], 7, 4);
+    Hui3[2] = TuningSub1(Hui3[4], 5, 4);
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7);
+    Hui3[5] = TuningSub1(Hui3[7], 5, 4);
+    Hui3[3] = TuningSub1(Hui3[5], 5, 4);
 
-const Tuning8 = (Freq = 432, n = 1) => {
-  // 慢角調慢三 1 2 3 5 6 1 2
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 1;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[4] = TuningSub1(Zhun[1], 5, 7);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  Zhun[5] = TuningSub1(Zhun[2], 5, 7);
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[6] = TuningSub1(Zhun[1], 4, 7);
-  // 徽法律
-  Hui[4] = TuningSub1(Hui[1], 5, 7);
-  Hui[7] = TuningSub1(Hui[4], 5, 7);
-  Hui[2] = TuningSub1(Hui[4], 5, 4);
-  Hui[3] = TuningSub1(Hui[1], 6, 7);
-  Hui[5] = TuningSub1(Hui[3], 4, 5);
-  Hui[6] = TuningSub1(Hui[1], 4, 7);
+    Hui4[3] = TuningSub1(Hui4[4], 6, 5);
+    Hui4[6] = TuningSub1(Hui4[4], 6, 7);
+    Hui4[1] = TuningSub1(Hui4[6], 7, 4);
+    Hui4[5] = TuningSub1(Hui4[3], 4, 5);
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5);
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4);
 
-  Hui2[4] = TuningSub1(Hui2[1], 5, 7);
-  Hui2[3] = TuningSub1(Hui2[1], 6, 7);
-  Hui2[5] = TuningSub1(Hui2[3], 4, 5);
-  Hui2[2] = TuningSub1(Hui2[5], 7, 5);
-  Hui2[7] = TuningSub1(Hui2[2], 4, 7);
-  Hui2[6] = TuningSub1(Hui2[1], 4, 7);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[2] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[12] / 2;
+    Xin[6] = +List12[2];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Hui2,
+      Hui3,
+      Hui4,
+      Xin,
+      ZhunFreq,
+      HuiFreq,
+      OneDifZhun: "243/256",
+      OneDifHui: "15/16",
+      OneDifXin: 0.94387431268169,
+      TuneName: "慢宮調　慢一三六"
+    };
+  },
+  Tuning10: (Freq = 432, n = 1) => {
+    // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
+    let Hui = [],
+      Zhun = [],
+      Hui2 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 1;
+    Hui[a] = "1";
+    Zhun[a] = "1";
+    Hui2[a] = "1";
+    Hui4[a] = "1";
+    // 準法
+    Zhun[3] = TuningSub1(Zhun[1], 4, 5);
+    Zhun[2] = TuningSub1(Zhun[3], 10, 9);
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[5] = TuningSub1(Zhun[3], 4, 5);
+    // 徽法律
+    Hui2[6] = TuningSub1(Hui2[1], 4, 7);
+    Hui2[2] = TuningSub1(Hui2[6], 5, 3);
+    Hui2[3] = TuningSub1(Hui2[6], 7, 5);
+    Hui2[5] = TuningSub1(Hui2[2], 5, 7);
+    Hui2[4] = TuningSub1(Hui2[6], 5, 4);
+    Hui2[7] = TuningSub1(Hui2[3], 3, 5);
 
-  Hui3[4] = TuningSub1(Hui3[1], 5, 7);
-  Hui3[7] = TuningSub1(Hui3[4], 5, 7);
-  Hui3[2] = TuningSub1(Hui3[4], 5, 4);
-  Hui3[3] = TuningSub1(Hui3[1], 6, 7);
-  Hui3[5] = TuningSub1(Hui3[2], 5, 7);
-  Hui3[6] = TuningSub1(Hui3[1], 4, 7);
+    Hui[6] = TuningSub1(Hui[1], 4, 7);
+    Hui[3] = TuningSub1(Hui[6], 7, 5);
+    Hui[2] = TuningSub1(Hui[6], 5, 3);
+    Hui[5] = TuningSub1(Hui[2], 5, 7);
+    // Hui[5] = TuningSub1(Hui[6], 10, 9)
+    Hui[4] = TuningSub1(Hui[6], 5, 4);
+    Hui[7] = TuningSub1(Hui[4], 5, 7);
 
-  Hui4[3] = TuningSub1(Hui4[1], 6, 7);
-  Hui4[5] = TuningSub1(Hui4[3], 4, 5);
-  Hui4[2] = TuningSub1(Hui4[5], 7, 5);
-  Hui4[7] = TuningSub1(Hui4[2], 4, 7);
-  Hui4[4] = TuningSub1(Hui4[7], 7, 5);
-  Hui4[6] = TuningSub1(Hui4[1], 4, 7);
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7);
+    Hui4[2] = TuningSub1(Hui4[6], 5, 3);
+    Hui4[3] = TuningSub1(Hui4[6], 7, 5);
+    Hui4[5] = TuningSub1(Hui4[2], 5, 7);
+    Hui4[7] = TuningSub1(Hui4[3], 3, 5);
+    Hui4[4] = TuningSub1(Hui4[7], 7, 5);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[12] / 2;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Hui2,
-    Hui3,
-    Hui4,
-    Xin,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "慢角調　慢三",
-  };
-};
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    Zhun = TuningSub2(Zhun, a, n);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    const ZhunFreq = TuningSub3(Zhun, 3, "4/5", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[6] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[1];
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Hui2,
+      Hui4,
+      Xin,
+      HuiFreq,
+      ZhunFreq,
+      TuneName: "䠂商調　緊二五"
+    };
+  },
+  Tuning11: (Freq = 432, n = 1) => {
+    // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 1;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[5] = TuningSub1(Zhun[1], 4, 7);
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[4] = TuningSub1(Zhun[6], 5, 4);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    // 徽法律
+    Hui[2] = TuningSub1(Hui[1], 3, 4);
+    Hui[3] = TuningSub1(Hui[1], 5, 7);
+    Hui[4] = TuningSub1(Hui[1], 3, 5);
+    Hui[5] = TuningSub1(Hui[1], 4, 7);
+    Hui[7] = TuningSub1(Hui[2], 4, 7);
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
 
-const Tuning9 = (Freq = 432, n = 4) => {
-  // 慢宮調慢一三六 3 5 6 1 2 3 5
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 4;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  Zhun[5] = TuningSub1(Zhun[7], 5, 4);
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[1] = TuningSub1(Zhun[6], 7, 4);
-  // 徽法律
-  Hui[3] = TuningSub1(Hui[4], 6, 5);
-  Hui[6] = TuningSub1(Hui[4], 6, 7);
-  Hui[1] = TuningSub1(Hui[6], 7, 4);
-  Hui[2] = TuningSub1(Hui[4], 5, 4);
-  Hui[7] = TuningSub1(Hui[4], 5, 7);
-  Hui[5] = TuningSub1(Hui[7], 5, 4);
+    Hui2[2] = TuningSub1(Hui2[1], 3, 4);
+    Hui2[3] = TuningSub1(Hui2[1], 5, 7);
+    Hui2[4] = TuningSub1(Hui2[1], 3, 5);
+    Hui2[5] = TuningSub1(Hui2[1], 4, 7);
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7);
+    Hui2[6] = TuningSub1(Hui2[4], 4, 5);
 
-  Hui2[3] = TuningSub1(Hui2[4], 6, 5);
-  Hui2[6] = TuningSub1(Hui2[4], 6, 7);
-  Hui2[1] = TuningSub1(Hui2[6], 7, 4);
-  Hui2[2] = TuningSub1(Hui2[4], 5, 4);
-  Hui2[7] = TuningSub1(Hui2[4], 5, 7);
-  Hui2[5] = TuningSub1(Hui2[3], 4, 5);
+    Hui3[2] = TuningSub1(Hui3[1], 3, 4);
+    Hui3[3] = TuningSub1(Hui3[1], 5, 7);
+    Hui3[5] = TuningSub1(Hui3[1], 4, 7);
+    Hui3[7] = TuningSub1(Hui3[2], 4, 7);
+    Hui3[6] = TuningSub1(Hui3[3], 5, 7);
+    Hui3[4] = TuningSub1(Hui3[6], 5, 4);
 
-  Hui3[6] = TuningSub1(Hui3[4], 6, 7);
-  Hui3[1] = TuningSub1(Hui3[6], 7, 4);
-  Hui3[2] = TuningSub1(Hui3[4], 5, 4);
-  Hui3[7] = TuningSub1(Hui3[4], 5, 7);
-  Hui3[5] = TuningSub1(Hui3[7], 5, 4);
-  Hui3[3] = TuningSub1(Hui3[5], 5, 4);
+    Hui4[2] = TuningSub1(Hui4[1], 3, 4);
+    Hui4[4] = TuningSub1(Hui4[1], 3, 5);
+    Hui4[5] = TuningSub1(Hui4[1], 4, 7);
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7);
+    Hui4[6] = TuningSub1(Hui4[4], 4, 5);
+    Hui4[3] = TuningSub1(Hui4[6], 7, 5);
 
-  Hui4[3] = TuningSub1(Hui4[4], 6, 5);
-  Hui4[6] = TuningSub1(Hui4[4], 6, 7);
-  Hui4[1] = TuningSub1(Hui4[6], 7, 4);
-  Hui4[5] = TuningSub1(Hui4[3], 4, 5);
-  Hui4[7] = TuningSub1(Hui4[5], 4, 5);
-  Hui4[2] = TuningSub1(Hui4[7], 7, 4);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 3, "64/81", Freq);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[1] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[1];
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Hui2,
+      Hui3,
+      Hui4,
+      Xin,
+      ZhunFreq,
+      HuiFreq,
+      OneDifZhun: "8/9",
+      OneDifHui: "9/10",
+      OneDifXin: 0.8908987181403393,
+      TuneName: "黃鐘調　緊五慢一"
+    };
+  },
+  Tuning12: (Freq = 432, n = 1) => {
+    // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 1;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[4] = TuningSub1(Zhun[1], 5, 7);
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[7], 7, 4);
+    Zhun[5] = TuningSub1(Zhun[2], 5, 7);
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    // 徽法律
+    Hui[3] = TuningSub1(Hui[1], 3, 4);
+    Hui[4] = TuningSub1(Hui[3], 5, 6);
+    Hui[6] = TuningSub1(Hui[4], 6, 7);
+    Hui[5] = TuningSub1(Hui[1], 3, 5);
+    Hui[2] = TuningSub1(Hui[4], 5, 4);
+    Hui[7] = TuningSub1(Hui[2], 4, 7);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[2] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[12] / 2;
-  Xin[6] = +List12[2];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Hui2,
-    Hui3,
-    Hui4,
-    Xin,
-    ZhunFreq,
-    HuiFreq,
-    OneDifZhun: "243/256",
-    OneDifHui: "15/16",
-    OneDifXin: 0.94387431268169,
-    TuneName: "慢宮調　慢一三六",
-  };
-};
+    // 陳應時
+    // Hui[3] = TuningSub1(Hui[1], 4, 5)
+    // Hui[5] = TuningSub1(Hui[3], 6, 7)
+    // Hui[7] = TuningSub1(Hui[5], 4, 5)
+    // Hui[4] = TuningSub1(Hui[1], 5, 7)
+    // Hui[6] = TuningSub1(Hui[4], 6, 7)
+    // Hui[2] = TuningSub1(Hui[7], 7, 4)
+    // Hui[3] = TuningSub1(Hui[5], 5, 4)
+    // 我的不用最後一步
+    Hui2[3] = TuningSub1(Hui2[1], 3, 4);
+    Hui2[4] = TuningSub1(Hui2[3], 5, 6);
+    Hui2[6] = TuningSub1(Hui2[4], 6, 7);
+    Hui2[5] = TuningSub1(Hui2[1], 3, 5);
+    Hui2[2] = TuningSub1(Hui2[5], 7, 5);
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7);
 
-const Tuning10 = (Freq = 432, n = 1) => {
-  // 徽法律淒涼調緊二五 5 #6 1 2 4 5 6
-  let Hui = [],
-    Zhun = [],
-    Hui2 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 1;
-  Hui[a] = "1";
-  Zhun[a] = "1";
-  Hui2[a] = "1";
-  Hui4[a] = "1";
-  // 準法
-  Zhun[3] = TuningSub1(Zhun[1], 4, 5);
-  Zhun[2] = TuningSub1(Zhun[3], 10, 9);
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[4] = TuningSub1(Zhun[6], 5, 4);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[5] = TuningSub1(Zhun[3], 4, 5);
-  // 徽法律
-  Hui2[6] = TuningSub1(Hui2[1], 4, 7);
-  Hui2[2] = TuningSub1(Hui2[6], 5, 3);
-  Hui2[3] = TuningSub1(Hui2[6], 7, 5);
-  Hui2[5] = TuningSub1(Hui2[2], 5, 7);
-  Hui2[4] = TuningSub1(Hui2[6], 5, 4);
-  Hui2[7] = TuningSub1(Hui2[3], 3, 5);
+    Hui3[3] = TuningSub1(Hui3[1], 3, 4);
+    Hui3[4] = TuningSub1(Hui3[3], 5, 6);
+    Hui3[6] = TuningSub1(Hui3[4], 6, 7);
+    Hui3[7] = TuningSub1(Hui3[4], 5, 7);
+    Hui3[2] = TuningSub1(Hui3[7], 7, 4);
+    Hui3[5] = TuningSub1(Hui3[2], 5, 7);
 
-  Hui[6] = TuningSub1(Hui[1], 4, 7);
-  Hui[3] = TuningSub1(Hui[6], 7, 5);
-  Hui[2] = TuningSub1(Hui[6], 5, 3);
-  Hui[5] = TuningSub1(Hui[2], 5, 7);
-  // Hui[5] = TuningSub1(Hui[6], 10, 9)
-  Hui[4] = TuningSub1(Hui[6], 5, 4);
-  Hui[7] = TuningSub1(Hui[4], 5, 7);
+    Hui4[3] = TuningSub1(Hui4[1], 3, 4);
+    Hui4[5] = TuningSub1(Hui4[1], 3, 5);
+    Hui4[6] = TuningSub1(Hui4[3], 5, 7);
+    Hui4[2] = TuningSub1(Hui4[5], 7, 5);
+    Hui4[4] = TuningSub1(Hui4[2], 4, 5);
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7);
 
-  Hui4[6] = TuningSub1(Hui4[1], 4, 7);
-  Hui4[2] = TuningSub1(Hui4[6], 5, 3);
-  Hui4[3] = TuningSub1(Hui4[6], 7, 5);
-  Hui4[5] = TuningSub1(Hui4[2], 5, 7);
-  Hui4[7] = TuningSub1(Hui4[3], 3, 5);
-  Hui4[4] = TuningSub1(Hui4[7], 7, 5);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
+    const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[12] / 2;
+    Xin[6] = +List12[2];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Hui2,
+      Hui3,
+      Hui4,
+      Xin,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "无媒調　慢三六"
+    };
+  },
+  Tuning13: (Freq = 432, n = 4) => {
+    // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui3 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 4;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui3[a] = "1";
+    Hui4[a] = "1";
+    // 準法律
+    Zhun[7] = TuningSub1(Zhun[4], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[4], 5, 4);
+    Zhun[5] = TuningSub1(Zhun[2], 5, 7);
+    Zhun[6] = TuningSub1(Zhun[4], 4, 5);
+    Zhun[3] = TuningSub1(Zhun[5], 5, 4);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    // 徽法律
+    Hui[6] = TuningSub1(Hui[4], 4, 5);
+    Hui[2] = TuningSub1(Hui[4], 5, 4);
+    Hui[7] = TuningSub1(Hui[2], 4, 7);
+    Hui[5] = TuningSub1(Hui[7], 5, 4);
+    Hui[3] = TuningSub1(Hui[4], 6, 5);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
 
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  Zhun = TuningSub2(Zhun, a, n);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  const ZhunFreq = TuningSub3(Zhun, 3, "4/5", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[6] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[1];
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Hui2,
-    Hui4,
-    Xin,
-    HuiFreq,
-    ZhunFreq,
-    TuneName: "䠂商調　緊二五",
-  };
-};
+    Hui2[6] = TuningSub1(Hui2[4], 4, 5);
+    Hui2[5] = TuningSub1(Hui2[6], 6, 5);
+    Hui2[2] = TuningSub1(Hui2[4], 5, 4);
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7);
+    Hui2[3] = TuningSub1(Hui2[4], 6, 5);
+    Hui2[1] = TuningSub1(Hui2[3], 5, 4);
 
-const Tuning11 = (Freq = 432, n = 1) => {
-  // 黃鐘調緊五慢一 1 3 5 6 1 2 3 或 4 6 1 2 4 5 6
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 1;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[5] = TuningSub1(Zhun[1], 4, 7);
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[4] = TuningSub1(Zhun[6], 5, 4);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  // 徽法律
-  Hui[2] = TuningSub1(Hui[1], 3, 4);
-  Hui[3] = TuningSub1(Hui[1], 5, 7);
-  Hui[4] = TuningSub1(Hui[1], 3, 5);
-  Hui[5] = TuningSub1(Hui[1], 4, 7);
-  Hui[7] = TuningSub1(Hui[2], 4, 7);
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui3[6] = TuningSub1(Hui3[4], 4, 5);
+    Hui3[2] = TuningSub1(Hui3[4], 5, 4);
+    Hui3[7] = TuningSub1(Hui3[2], 4, 7);
+    Hui3[5] = TuningSub1(Hui3[7], 5, 4);
+    Hui3[3] = TuningSub1(Hui3[5], 5, 4);
+    Hui3[1] = TuningSub1(Hui3[2], 6, 5);
 
-  Hui2[2] = TuningSub1(Hui2[1], 3, 4);
-  Hui2[3] = TuningSub1(Hui2[1], 5, 7);
-  Hui2[4] = TuningSub1(Hui2[1], 3, 5);
-  Hui2[5] = TuningSub1(Hui2[1], 4, 7);
-  Hui2[7] = TuningSub1(Hui2[2], 4, 7);
-  Hui2[6] = TuningSub1(Hui2[4], 4, 5);
+    Hui4[6] = TuningSub1(Hui4[4], 4, 5);
+    Hui4[5] = TuningSub1(Hui4[6], 6, 5);
+    Hui4[7] = TuningSub1(Hui4[5], 4, 5);
+    Hui4[2] = TuningSub1(Hui4[7], 7, 4);
+    Hui4[3] = TuningSub1(Hui4[4], 6, 5);
+    Hui4[1] = TuningSub1(Hui4[3], 5, 4);
 
-  Hui3[2] = TuningSub1(Hui3[1], 3, 4);
-  Hui3[3] = TuningSub1(Hui3[1], 5, 7);
-  Hui3[5] = TuningSub1(Hui3[1], 4, 7);
-  Hui3[7] = TuningSub1(Hui3[2], 4, 7);
-  Hui3[6] = TuningSub1(Hui3[3], 5, 7);
-  Hui3[4] = TuningSub1(Hui3[6], 5, 4);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui3 = TuningSub2(Hui3, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 4, "8/9", Freq);
+    const HuiFreq = TuningSub3(Hui, 4, "9/10", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[2] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[12] / 2;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui,
+      Hui2,
+      Hui3,
+      Hui4,
+      Xin,
+      ZhunFreq,
+      HuiFreq,
+      OneDifZhun: "243/256",
+      OneDifHui: "243/256",
+      OneDifXin: 0.943874312681694,
+      TuneName: "間弦一　慢一三"
+    };
+  },
+  Tuning14: (Freq = 432, n = 1) => {
+    // 間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
+    let Zhun = [],
+      Hui = [],
+      Hui2 = [],
+      Hui4 = [],
+      Xin = [];
+    const a = 1;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    Hui2[a] = "1";
+    Hui4[a] = "1";
+    Zhun[4] = TuningSub1(Zhun[1], 5, 7);
+    Zhun[2] = TuningSub1(Zhun[4], 5, 4);
+    Zhun[3] = TuningSub1(Zhun[2], 9, 10);
+    Zhun[6] = TuningSub1(Zhun[1], 4, 7);
+    Zhun[5] = TuningSub1(Zhun[6], 10, 9);
+    Zhun[7] = TuningSub1(Zhun[2], 4, 7);
+    // 徽法律
+    Hui2[3] = TuningSub1(Hui2[1], 6, 7);
+    Hui2[4] = TuningSub1(Hui2[1], 5, 7);
+    Hui2[5] = TuningSub1(Hui2[4], 5, 6);
+    Hui2[2] = TuningSub1(Hui2[3], 10, 9);
+    Hui2[7] = TuningSub1(Hui2[2], 4, 7);
+    Hui2[6] = TuningSub1(Hui2[1], 4, 7);
 
-  Hui4[2] = TuningSub1(Hui4[1], 3, 4);
-  Hui4[4] = TuningSub1(Hui4[1], 3, 5);
-  Hui4[5] = TuningSub1(Hui4[1], 4, 7);
-  Hui4[7] = TuningSub1(Hui4[2], 4, 7);
-  Hui4[6] = TuningSub1(Hui4[4], 4, 5);
-  Hui4[3] = TuningSub1(Hui4[6], 7, 5);
+    Hui[3] = TuningSub1(Hui[1], 6, 7);
+    Hui[4] = TuningSub1(Hui[1], 5, 7);
+    Hui[5] = TuningSub1(Hui[4], 5, 6);
+    Hui[7] = TuningSub1(Hui[5], 6, 7);
+    Hui[2] = TuningSub1(Hui[7], 7, 4);
+    Hui[6] = TuningSub1(Hui[1], 4, 7);
 
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 3, "64/81", Freq);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[1] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[1];
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Hui2,
-    Hui3,
-    Hui4,
-    Xin,
-    ZhunFreq,
-    HuiFreq,
-    OneDifZhun: "8/9",
-    OneDifHui: "9/10",
-    OneDifXin: 0.8908987181403393,
-    TuneName: "黃鐘調　緊五慢一",
-  };
-};
+    Hui4[3] = TuningSub1(Hui4[1], 6, 7);
+    Hui4[2] = TuningSub1(Hui4[3], 10, 9);
+    Hui4[7] = TuningSub1(Hui4[2], 4, 7);
+    Hui4[6] = TuningSub1(Hui4[1], 4, 7);
+    Hui4[4] = TuningSub1(Hui4[2], 4, 5);
+    Hui4[5] = TuningSub1(Hui4[6], 9, 8);
 
-const Tuning12 = (Freq = 432, n = 1) => {
-  // 無媒調慢三六 1 2 3 5 6 7 2 或 4 5 6 1 2 3 5
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 1;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[4] = TuningSub1(Zhun[1], 5, 7);
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[7], 7, 4);
-  Zhun[5] = TuningSub1(Zhun[2], 5, 7);
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  // 徽法律
-  Hui[3] = TuningSub1(Hui[1], 3, 4);
-  Hui[4] = TuningSub1(Hui[3], 5, 6);
-  Hui[6] = TuningSub1(Hui[4], 6, 7);
-  Hui[5] = TuningSub1(Hui[1], 3, 5);
-  Hui[2] = TuningSub1(Hui[4], 5, 4);
-  Hui[7] = TuningSub1(Hui[2], 4, 7);
-
-  // 陳應時
-  // Hui[3] = TuningSub1(Hui[1], 4, 5)
-  // Hui[5] = TuningSub1(Hui[3], 6, 7)
-  // Hui[7] = TuningSub1(Hui[5], 4, 5)
-  // Hui[4] = TuningSub1(Hui[1], 5, 7)
-  // Hui[6] = TuningSub1(Hui[4], 6, 7)
-  // Hui[2] = TuningSub1(Hui[7], 7, 4)
-  // Hui[3] = TuningSub1(Hui[5], 5, 4)
-  // 我的不用最後一步
-  Hui2[3] = TuningSub1(Hui2[1], 3, 4);
-  Hui2[4] = TuningSub1(Hui2[3], 5, 6);
-  Hui2[6] = TuningSub1(Hui2[4], 6, 7);
-  Hui2[5] = TuningSub1(Hui2[1], 3, 5);
-  Hui2[2] = TuningSub1(Hui2[5], 7, 5);
-  Hui2[7] = TuningSub1(Hui2[2], 4, 7);
-
-  Hui3[3] = TuningSub1(Hui3[1], 3, 4);
-  Hui3[4] = TuningSub1(Hui3[3], 5, 6);
-  Hui3[6] = TuningSub1(Hui3[4], 6, 7);
-  Hui3[7] = TuningSub1(Hui3[4], 5, 7);
-  Hui3[2] = TuningSub1(Hui3[7], 7, 4);
-  Hui3[5] = TuningSub1(Hui3[2], 5, 7);
-
-  Hui4[3] = TuningSub1(Hui4[1], 3, 4);
-  Hui4[5] = TuningSub1(Hui4[1], 3, 5);
-  Hui4[6] = TuningSub1(Hui4[3], 5, 7);
-  Hui4[2] = TuningSub1(Hui4[5], 7, 5);
-  Hui4[4] = TuningSub1(Hui4[2], 4, 5);
-  Hui4[7] = TuningSub1(Hui4[2], 4, 7);
-
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  // const ZhunFreq = TuningSub3(Zhun, 2, '2/3', Freq)
-  const ZhunFreq = TuningSub3(Zhun, 5, "1", Freq);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[12] / 2;
-  Xin[6] = +List12[2];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Hui2,
-    Hui3,
-    Hui4,
-    Xin,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "无媒調　慢三六",
-  };
-};
-
-const Tuning13 = (Freq = 432, n = 4) => {
-  // 間弦一慢一三 7 2 3 5 6 1 2 或 3 5 6 1 2 4 5
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui3 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 4;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui3[a] = "1";
-  Hui4[a] = "1";
-  // 準法律
-  Zhun[7] = TuningSub1(Zhun[4], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[4], 5, 4);
-  Zhun[5] = TuningSub1(Zhun[2], 5, 7);
-  Zhun[6] = TuningSub1(Zhun[4], 4, 5);
-  Zhun[3] = TuningSub1(Zhun[5], 5, 4);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
-  // 徽法律
-  Hui[6] = TuningSub1(Hui[4], 4, 5);
-  Hui[2] = TuningSub1(Hui[4], 5, 4);
-  Hui[7] = TuningSub1(Hui[2], 4, 7);
-  Hui[5] = TuningSub1(Hui[7], 5, 4);
-  Hui[3] = TuningSub1(Hui[4], 6, 5);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-
-  Hui2[6] = TuningSub1(Hui2[4], 4, 5);
-  Hui2[5] = TuningSub1(Hui2[6], 6, 5);
-  Hui2[2] = TuningSub1(Hui2[4], 5, 4);
-  Hui2[7] = TuningSub1(Hui2[2], 4, 7);
-  Hui2[3] = TuningSub1(Hui2[4], 6, 5);
-  Hui2[1] = TuningSub1(Hui2[3], 5, 4);
-
-  Hui3[6] = TuningSub1(Hui3[4], 4, 5);
-  Hui3[2] = TuningSub1(Hui3[4], 5, 4);
-  Hui3[7] = TuningSub1(Hui3[2], 4, 7);
-  Hui3[5] = TuningSub1(Hui3[7], 5, 4);
-  Hui3[3] = TuningSub1(Hui3[5], 5, 4);
-  Hui3[1] = TuningSub1(Hui3[2], 6, 5);
-
-  Hui4[6] = TuningSub1(Hui4[4], 4, 5);
-  Hui4[5] = TuningSub1(Hui4[6], 6, 5);
-  Hui4[7] = TuningSub1(Hui4[5], 4, 5);
-  Hui4[2] = TuningSub1(Hui4[7], 7, 4);
-  Hui4[3] = TuningSub1(Hui4[4], 6, 5);
-  Hui4[1] = TuningSub1(Hui4[3], 5, 4);
-
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui3 = TuningSub2(Hui3, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 4, "8/9", Freq);
-  const HuiFreq = TuningSub3(Hui, 4, "9/10", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[2] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[12] / 2;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui,
-    Hui2,
-    Hui3,
-    Hui4,
-    Xin,
-    ZhunFreq,
-    HuiFreq,
-    OneDifZhun: "243/256",
-    OneDifHui: "243/256",
-    OneDifXin: 0.943874312681694,
-    TuneName: "間弦一　慢一三",
-  };
-};
-
-const Tuning14 = (Freq = 432, n = 1) => {
-  // 間弦二緊五慢三 1 2 3 5 #6 1 2 或 2 3 b5 6 1 2 3
-  let Zhun = [],
-    Hui = [],
-    Hui2 = [],
-    Hui4 = [],
-    Xin = [];
-  const a = 1;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  Hui2[a] = "1";
-  Hui4[a] = "1";
-  Zhun[4] = TuningSub1(Zhun[1], 5, 7);
-  Zhun[2] = TuningSub1(Zhun[4], 5, 4);
-  Zhun[3] = TuningSub1(Zhun[2], 9, 10);
-  Zhun[6] = TuningSub1(Zhun[1], 4, 7);
-  Zhun[5] = TuningSub1(Zhun[6], 10, 9);
-  Zhun[7] = TuningSub1(Zhun[2], 4, 7);
-  // 徽法律
-  Hui2[3] = TuningSub1(Hui2[1], 6, 7);
-  Hui2[4] = TuningSub1(Hui2[1], 5, 7);
-  Hui2[5] = TuningSub1(Hui2[4], 5, 6);
-  Hui2[2] = TuningSub1(Hui2[3], 10, 9);
-  Hui2[7] = TuningSub1(Hui2[2], 4, 7);
-  Hui2[6] = TuningSub1(Hui2[1], 4, 7);
-
-  Hui[3] = TuningSub1(Hui[1], 6, 7);
-  Hui[4] = TuningSub1(Hui[1], 5, 7);
-  Hui[5] = TuningSub1(Hui[4], 5, 6);
-  Hui[7] = TuningSub1(Hui[5], 6, 7);
-  Hui[2] = TuningSub1(Hui[7], 7, 4);
-  Hui[6] = TuningSub1(Hui[1], 4, 7);
-
-  Hui4[3] = TuningSub1(Hui4[1], 6, 7);
-  Hui4[2] = TuningSub1(Hui4[3], 10, 9);
-  Hui4[7] = TuningSub1(Hui4[2], 4, 7);
-  Hui4[6] = TuningSub1(Hui4[1], 4, 7);
-  Hui4[4] = TuningSub1(Hui4[2], 4, 5);
-  Hui4[5] = TuningSub1(Hui4[6], 9, 8);
-
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  Hui2 = TuningSub2(Hui2, a, n);
-  Hui4 = TuningSub2(Hui4, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 2, "2/3", Freq);
-  const HuiFreq = TuningSub3(Hui, 2, "2/3", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[1];
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return {
-    Zhun,
-    Hui2,
-    Hui,
-    Hui4,
-    Xin,
-    ZhunFreq,
-    HuiFreq,
-    TuneName: "間弦二　緊五慢三",
-  };
-};
-
-const Tuning15 = (Freq = 432, n = 3) => {
-  // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
-  let Hui = [],
-    Xin = [];
-  const a = 3;
-  Hui[a] = "1";
-  // 徽法律
-  Hui[5] = TuningSub1(Hui[3], 5, 6);
-  Hui[7] = TuningSub1(Hui[3], 4, 6);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-  Hui[4] = TuningSub1(Hui[1], 5, 7);
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
-  Hui[2] = TuningSub1(Hui[7], 7, 4);
-  Hui = TuningSub2(Hui, a, n);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[4] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[11] / 2;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[4];
-  return { Hui, Xin, HuiFreq, TuneName: "日傳平調　慢五七" };
-};
-
-const Tuning16 = (Freq = 432, n = 2) => {
-  // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
-  let Hui = [],
-    Xin = [];
-  const a = 2;
-  Hui[a] = "1";
-  // 徽法律
-  Hui[4] = TuningSub1(Hui[2], 6, 7);
-  Hui[6] = TuningSub1(Hui[4], 4, 5);
-  Hui[5] = TuningSub1(Hui[2], 5, 7);
-  Hui[7] = TuningSub1(Hui[2], 4, 7);
-  Hui[3] = TuningSub1(Hui[5], 5, 4);
-  Hui[1] = TuningSub1(Hui[5], 5, 3);
-  Hui = TuningSub2(Hui, a, n);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[9] / 2;
-  Xin[5] = +List12[12] / 2;
-  Xin[6] = +List12[2];
-  Xin[7] = +List12[5];
-  return { Hui, Xin, HuiFreq, TuneName: "側商調　慢三四六" };
-};
-
-const Tuning17 = (Freq = 432, n = 1) => {
-  // 徽法律側羽調緊七
-  let Hui = [],
-    Xin = [];
-  const a = 1;
-  Hui[a] = "1";
-  // 徽法律
-  Hui[6] = TuningSub1(Hui[1], 4, 7);
-  Hui[5] = TuningSub1(Hui[6], 6, 5);
-  Hui[4] = TuningSub1(Hui[6], 5, 4);
-  Hui[3] = TuningSub1(Hui[6], 7, 5);
-  Hui[2] = TuningSub1(Hui[3], 6, 5);
-  Hui[7] = TuningSub1(Hui[6], 5, 6);
-  Hui = TuningSub2(Hui, a, n);
-  const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[5] / 2;
-  Xin[3] = +List12[7] / 2;
-  Xin[4] = +List12[9] / 2;
-  Xin[5] = +List12[12] / 2;
-  Xin[6] = +List12[2];
-  Xin[7] = +List12[5];
-  return { Hui, Xin, HuiFreq, TuneName: "側羽調　緊七" };
-};
-
-const Tuning18 = (Freq = 432, n = 5) => {
-  // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
-  let Zhun = [],
-    Hui = [],
-    Xin = [];
-  const a = 3;
-  Zhun[a] = "1";
-  Hui[a] = "1";
-  // 按音調弦
-  Zhun[6] = TuningSub1(Zhun[3], 5, 7);
-  Zhun[1] = TuningSub1(Zhun[3], 5, 4);
-  Zhun[4] = TuningSub1(Zhun[6], 16, 10);
-  Zhun[2] = TuningSub1(Zhun[4], 16, "10 65/81");
-  Zhun[5] = TuningSub1(Zhun[2], "9 8/9", 16); // '9 8/9'五是純律，七是五度律。如果是10，五是五度律，七是純律。
-  Zhun[7] = TuningSub1(Zhun[5], "9 8/15", 16);
-  // 徽
-  Hui[6] = TuningSub1(Hui[3], 5, 7);
-  Hui[1] = TuningSub1(Hui[3], 5, 4);
-  Hui[2] = TuningSub1(Hui[1], 5, 6);
-  Hui[7] = TuningSub1(Hui[3], 3, 5);
-  Hui[4] = TuningSub1(Hui[7], 7, 5);
-  Hui[5] = TuningSub1(Hui[6], 4, 3);
-  Zhun = TuningSub2(Zhun, a, n);
-  Hui = TuningSub2(Hui, a, n);
-  const ZhunFreq = TuningSub3(Zhun, 3, "4/5", Freq);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[3] / 2;
-  Xin[2] = +List12[6] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[11] / 2;
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[5];
-  return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, TuneName: "側蜀調　緊二慢五" };
-};
-
-const Tuning19 = (Freq = 432, n = 1) => {
-  // 徽法律側楚調慢一二緊五七
-  let Hui = [],
-    Xin = [];
-  const a = 1;
-  Hui[a] = "1";
-  // 徽法律
-  Hui[2] = TuningSub1(Hui[1], 5, 6);
-  Hui[3] = TuningSub1(Hui[2], 6, 7);
-  Hui[5] = TuningSub1(Hui[1], 4, 7);
-  Hui[7] = TuningSub1(Hui[5], 4, 5);
-  Hui[6] = TuningSub1(Hui[7], 6, 5);
-  Hui[4] = TuningSub1(Hui[5], 6, 5);
-  Hui = TuningSub2(Hui, a, n);
-  const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
-  // 新法密率
-  const List12 = EqualTemp(Freq).List1;
-  Xin[1] = +List12[1] / 2;
-  Xin[2] = +List12[4] / 2;
-  Xin[3] = +List12[8] / 2;
-  Xin[4] = +List12[10] / 2;
-  Xin[5] = +List12[1];
-  Xin[6] = +List12[3];
-  Xin[7] = +List12[6];
-  return {
-    Hui,
-    Xin,
-    HuiFreq,
-    OneDifHui: "9/10",
-    OneDifXin: 0.890898718140339,
-    TuneName: "側楚調　慢一二緊五七",
-  };
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    Hui2 = TuningSub2(Hui2, a, n);
+    Hui4 = TuningSub2(Hui4, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 2, "2/3", Freq);
+    const HuiFreq = TuningSub3(Hui, 2, "2/3", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[1];
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return {
+      Zhun,
+      Hui2,
+      Hui,
+      Hui4,
+      Xin,
+      ZhunFreq,
+      HuiFreq,
+      TuneName: "間弦二　緊五慢三"
+    };
+  },
+  Tuning15: (Freq = 432, n = 3) => {
+    // 徽法律平調慢五七 5 b6 1 2 b3 5 b6 或 3 4 5 7 1 3 4
+    let Hui = [],
+      Xin = [];
+    const a = 3;
+    Hui[a] = "1";
+    // 徽法律
+    Hui[5] = TuningSub1(Hui[3], 5, 6);
+    Hui[7] = TuningSub1(Hui[3], 4, 6);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
+    Hui[4] = TuningSub1(Hui[1], 5, 7);
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui[2] = TuningSub1(Hui[7], 7, 4);
+    Hui = TuningSub2(Hui, a, n);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[4] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[11] / 2;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[4];
+    return { Hui, Xin, HuiFreq, TuneName: "日傳平調　慢五七" };
+  },
+  Tuning16: (Freq = 432, n = 2) => {
+    // 徽法律側商調慢三四六 #6 1 2 3 5 6 1 或 1 2 3 b5 6 b1 2
+    let Hui = [],
+      Xin = [];
+    const a = 2;
+    Hui[a] = "1";
+    // 徽法律
+    Hui[4] = TuningSub1(Hui[2], 6, 7);
+    Hui[6] = TuningSub1(Hui[4], 4, 5);
+    Hui[5] = TuningSub1(Hui[2], 5, 7);
+    Hui[7] = TuningSub1(Hui[2], 4, 7);
+    Hui[3] = TuningSub1(Hui[5], 5, 4);
+    Hui[1] = TuningSub1(Hui[5], 5, 3);
+    Hui = TuningSub2(Hui, a, n);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[9] / 2;
+    Xin[5] = +List12[12] / 2;
+    Xin[6] = +List12[2];
+    Xin[7] = +List12[5];
+    return { Hui, Xin, HuiFreq, TuneName: "側商調　慢三四六" };
+  },
+  Tuning17: (Freq = 432, n = 1) => {
+    // 徽法律側羽調緊七
+    let Hui = [],
+      Xin = [];
+    const a = 1;
+    Hui[a] = "1";
+    // 徽法律
+    Hui[6] = TuningSub1(Hui[1], 4, 7);
+    Hui[5] = TuningSub1(Hui[6], 6, 5);
+    Hui[4] = TuningSub1(Hui[6], 5, 4);
+    Hui[3] = TuningSub1(Hui[6], 7, 5);
+    Hui[2] = TuningSub1(Hui[3], 6, 5);
+    Hui[7] = TuningSub1(Hui[6], 5, 6);
+    Hui = TuningSub2(Hui, a, n);
+    const HuiFreq = TuningSub3(Hui, 5, "1", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[5] / 2;
+    Xin[3] = +List12[7] / 2;
+    Xin[4] = +List12[9] / 2;
+    Xin[5] = +List12[12] / 2;
+    Xin[6] = +List12[2];
+    Xin[7] = +List12[5];
+    return { Hui, Xin, HuiFreq, TuneName: "側羽調　緊七" };
+  },
+  Tuning18: (Freq = 432, n = 5) => {
+    // 徽法側蜀調緊二慢五 5 #6 1 2 b3 5 6
+    let Zhun = [],
+      Hui = [],
+      Xin = [];
+    const a = 3;
+    Zhun[a] = "1";
+    Hui[a] = "1";
+    // 按音調弦
+    Zhun[6] = TuningSub1(Zhun[3], 5, 7);
+    Zhun[1] = TuningSub1(Zhun[3], 5, 4);
+    Zhun[4] = TuningSub1(Zhun[6], 16, 10);
+    Zhun[2] = TuningSub1(Zhun[4], 16, "10 65/81");
+    Zhun[5] = TuningSub1(Zhun[2], "9 8/9", 16); // '9 8/9'五是純律，七是五度律。如果是10，五是五度律，七是純律。
+    Zhun[7] = TuningSub1(Zhun[5], "9 8/15", 16);
+    // 徽
+    Hui[6] = TuningSub1(Hui[3], 5, 7);
+    Hui[1] = TuningSub1(Hui[3], 5, 4);
+    Hui[2] = TuningSub1(Hui[1], 5, 6);
+    Hui[7] = TuningSub1(Hui[3], 3, 5);
+    Hui[4] = TuningSub1(Hui[7], 7, 5);
+    Hui[5] = TuningSub1(Hui[6], 4, 3);
+    Zhun = TuningSub2(Zhun, a, n);
+    Hui = TuningSub2(Hui, a, n);
+    const ZhunFreq = TuningSub3(Zhun, 3, "4/5", Freq);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[3] / 2;
+    Xin[2] = +List12[6] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[11] / 2;
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[5];
+    return { Zhun, Hui, Xin, ZhunFreq, HuiFreq, TuneName: "側蜀調　緊二慢五" };
+  },
+  Tuning19: (Freq = 432, n = 1) => {
+    // 徽法律側楚調慢一二緊五七
+    let Hui = [],
+      Xin = [];
+    const a = 1;
+    Hui[a] = "1";
+    // 徽法律
+    Hui[2] = TuningSub1(Hui[1], 5, 6);
+    Hui[3] = TuningSub1(Hui[2], 6, 7);
+    Hui[5] = TuningSub1(Hui[1], 4, 7);
+    Hui[7] = TuningSub1(Hui[5], 4, 5);
+    Hui[6] = TuningSub1(Hui[7], 6, 5);
+    Hui[4] = TuningSub1(Hui[5], 6, 5);
+    Hui = TuningSub2(Hui, a, n);
+    const HuiFreq = TuningSub3(Hui, 3, "4/5", Freq);
+    // 新法密率
+    const List12 = EqualTemp(Freq).List1;
+    Xin[1] = +List12[1] / 2;
+    Xin[2] = +List12[4] / 2;
+    Xin[3] = +List12[8] / 2;
+    Xin[4] = +List12[10] / 2;
+    Xin[5] = +List12[1];
+    Xin[6] = +List12[3];
+    Xin[7] = +List12[6];
+    return {
+      Hui,
+      Xin,
+      HuiFreq,
+      OneDifHui: "9/10",
+      OneDifXin: 0.890898718140339,
+      TuneName: "側楚調　慢一二緊五七"
+    };
+  }
 };
 
 const NumList = "〇一二三四五六七八九";
 
-export const Tuning = (TuningMode, Freq = 432, n = 0) => {
+// 品弦法
+export const Tuning = (TuningMode, Freq = 432, n) => {
+  // 动态调用
+  const funcName = `Tuning${TuningMode}`;
+  const tuningFunc = TuningFunctions[funcName];
   const {
     Zhun,
     Hui,
@@ -2298,8 +2284,8 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
     HuiFreq,
     OneDifZhun,
     OneDifHui,
-    TuneName,
-  } = eval("Tuning" + TuningMode)(+Freq, +n);
+    TuneName
+  } = tuningFunc(Freq, n);
   const DifZhun = [],
     NameZhun = [],
     DifHui = [],
@@ -2346,12 +2332,12 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
   for (let i = 1; i <= 7; i++) {
     const Tmp = Zhun
       ? [
-        Zhun[i],
-        PitchZhun[i],
-        NameZhun[i],
-        +ZhunFreq[i].toFixed(4),
-        DifZhun[i - 1],
-      ]
+          Zhun[i],
+          PitchZhun[i],
+          NameZhun[i],
+          +ZhunFreq[i].toFixed(4),
+          DifZhun[i - 1]
+        ]
       : ["", "", "", "", ""];
     const Tmp1 = Hui
       ? [Hui[i], PitchHui[i], NameHui[i], +HuiFreq[i].toFixed(4), DifHui[i - 1]]
@@ -2361,18 +2347,21 @@ export const Tuning = (TuningMode, Freq = 432, n = 0) => {
     const Tmp4 = Hui4 ? [Hui4[i], NameHui4[i]] : ["", ""];
     Print = Print.concat({
       title: NumList[i],
-      data: [...Tmp, ...Tmp1, ...Tmp2, ...Tmp3, ...Tmp4, Xin[i]],
+      data: [...Tmp, ...Tmp1, ...Tmp2, ...Tmp3, ...Tmp4, Xin[i]]
     });
   }
   return { TuneName, Print };
 };
 // console.log(Tuning('9'))
 
+// 徽位音。弦法、律制、宮弦
 export const FretPitch = (TuningMode, TempMode, n) => {
-  // 徽位音。弦法、律制、宮弦
-  let { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = eval(
-    "Tuning" + TuningMode
-  )(432, +n);
+  const funcName = `Tuning${TuningMode}`;
+  const tuningFunc = TuningFunctions[funcName];
+  const { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = tuningFunc(
+    432,
+    n
+  );
   let Print1 = [],
     Print2 = [],
     Name1AList = [],
@@ -2421,18 +2410,18 @@ export const FretPitch = (TuningMode, TempMode, n) => {
     Pitch = Pitch.reverse();
     Print1 = Print1.concat({
       title: NumList[i],
-      data: Pitch,
+      data: Pitch
     });
   }
   Name1AList = Unique(Name1AList);
   Name1BList = Unique(Name1BList);
   const Name1Print = [
     {
-      data: Name1BList,
+      data: Name1BList
     },
     {
-      data: Name1AList,
-    },
+      data: Name1AList
+    }
   ];
 
   for (let i = 1; i <= 7; i++) {
@@ -2454,18 +2443,18 @@ export const FretPitch = (TuningMode, TempMode, n) => {
     Pitch = Pitch.reverse();
     Print2 = Print2.concat({
       title: NumList[i],
-      data: Pitch,
+      data: Pitch
     });
   }
   Name2AList = Unique(Name2AList);
   Name2BList = Unique(Name2BList);
   const Name2Print = [
     {
-      data: Name2BList,
+      data: Name2BList
     },
     {
-      data: Name2AList,
-    },
+      data: Name2AList
+    }
   ];
 
   for (let i = 1; i <= 7; i++) {
@@ -2480,17 +2469,22 @@ export const FretPitch = (TuningMode, TempMode, n) => {
     Pitch = Pitch.reverse();
     Print3 = Print3.concat({
       title: NumList[i],
-      data: Pitch,
+      data: Pitch
     });
   }
   return { Print1, Print2, Print3, Name1Print, Name2Print };
 };
 // console.log(FretPitch(1, 1, 0))
 
+// 律内音
 export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
   isSimple = +isSimple;
-  let { Zhun, Hui, Hui2, Hui3, Hui4, Xin, OneDifHui, OneDifZhun, OneDifXin } =
-    eval("Tuning" + TuningMode)(432, +n);
+  const funcName = `Tuning${TuningMode}`;
+  const tuningFunc = TuningFunctions[funcName];
+  const { Zhun, Hui, Hui2, Hui3, Hui4, OneDifHui, OneDifZhun } = tuningFunc(
+    432,
+    n
+  );
   let Print = [],
     StringList = [],
     FushionList = [],
@@ -2557,7 +2551,7 @@ export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
   }
   Print = Print.concat({
     title: "徽",
-    data: Fret,
+    data: Fret
   });
   for (let i = 1; i <= 7; i++) {
     let String = [];
@@ -2574,7 +2568,7 @@ export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
     }
     Print = Print.concat({
       title: NumList[i],
-      data: String,
+      data: String
     });
   }
   return Print;
@@ -2599,6 +2593,8 @@ export const BetweenFret = (TuningMode, TempMode, n, isSimple) => {
 //     return frc(a).toFraction(false)
 // }
 // console.log(fa3(3))
+
+// 減字譜 ⇒ 唱名、頻率比、頻率
 // s散音，f泛音，a按音
 export const Position2Pitch = (
   Input,
@@ -2618,9 +2614,14 @@ export const Position2Pitch = (
   isStrict = +isStrict;
   GongString = +GongString;
   ZhiString = +ZhiString;
-  const { Zhun, Hui, Hui2, Hui3, Hui4, OneDifZhun, OneDifHui } = eval(
-    "Tuning" + TuningMode
-  )(BaseFreq, GongString);
+  const TheString = ZhiString || GongString;
+  const isZhi = ZhiString ? true : false;
+  const funcName = `Tuning${TuningMode}`;
+  const tuningFunc = TuningFunctions[funcName];
+  const { Zhun, Hui, Hui2, Hui3, Hui4, OneDifZhun, OneDifHui } = tuningFunc(
+    432,
+    TheString || 0
+  );
   let StringList = [],
     OneDif = "";
   if (TempMode === 1) {
@@ -2639,8 +2640,6 @@ export const Position2Pitch = (
     StringList = Zhun;
     OneDif = OneDifZhun;
   }
-  const TheString = ZhiString || GongString;
-  const isZhi = ZhiString ? true : false;
   Input = Input.replace(/\[(.+?)\]/g, function () {
     // @lzfcc [泛音]
     return arguments[1]
@@ -2797,7 +2796,7 @@ const Portion2Interval = (portion, one = 1, oneDif = 1) => {
   return got;
 };
 
-export const FretPitch1 = (TuningMode, n) => {
+const FretPitch1 = (TuningMode, n) => {
   // 徽位音。弦法、宮弦
   let { Zhun, Hui, OneDifHui, OneDifZhun } = eval("Tuning" + TuningMode)(
     432,
@@ -2844,7 +2843,7 @@ export const FretPitch1 = (TuningMode, n) => {
       ZhunNameBList = ZhunNameBList.concat(ZhunNameBTmp.filter(Boolean));
       ZhunPrint = ZhunPrint.concat({
         title: NumList[i],
-        data: ZhunPitch,
+        data: ZhunPitch
       });
     }
   }
@@ -2854,7 +2853,7 @@ export const FretPitch1 = (TuningMode, n) => {
   const data = {
     ZhunPrint,
     ZhunNameBList: ZhunNameList.map((obj) => obj.nameString(2)),
-    ZhunNameList: ZhunNameList.map((obj) => obj.nameString(1)),
+    ZhunNameList: ZhunNameList.map((obj) => obj.nameString(1))
   };
   return data;
 };
