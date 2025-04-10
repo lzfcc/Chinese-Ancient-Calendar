@@ -3,7 +3,7 @@ import { AutoSolar, AutoSidereal } from "../parameter/auto_consts.mjs";
 import { Interpolate1, Interpolate2, Interpolate3 } from "../equation/sn.mjs";
 import { AutoDifAccum } from "./acrv.mjs";
 import { Hushigeyuan } from "../equation/geometry.mjs";
-import { fmod } from "Cal/parameter/functions.mjs";
+import { fmod } from "../parameter/functions.mjs";
 
 const termNum = (Sd, Name) => {
   const { Solar } = Para[Name];

@@ -1,9 +1,10 @@
 import { ScList, TermNameList } from "../parameter/constants.mjs";
 import Para from "../parameter/calendars.mjs";
 import { mans } from "../astronomy/mans.mjs";
-import { deci } from "../parameter/functions.mjs";
+import { deci, fm60, fmod } from "../parameter/functions.mjs";
 
 export default (Name, Y) => {
+  // function a(Name, Y) {
   const {
     Lunar,
     Solar,
@@ -44,9 +45,11 @@ export default (Name, Y) => {
   const BuYear = (((OriginYear % YuanRange) % JiRange) % BuRange) + 1; // 入蔀（統）第幾年
   const BuOrder = Math.trunc(((OriginYear % YuanRange) % JiRange) / BuRange); // 入第幾蔀（統）
   const BuScOrder = (1 + BuOrder * BuSkip + (BuScConst || 0)) % 60; // 蔀（統）的干支序號
-  const SolsAccumRaw =
-    (BuYear - 1) * Solar + (SolsOriginDif || 0) + SolsConst + DayConst; // 冬至積日
-  const SolsAccumMod = ((SolsAccumRaw % 60) + 60) % 60;
+  const SolsAccumRaw = fmod(
+    (BuYear - 1) * Solar + (SolsOriginDif || 0) + SolsConst + DayConst,
+    27759
+  ); // 冬至積日
+  const SolsAccumMod = fm60(SolsAccumRaw);
   const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0); // 曆元積日
   const LeapSurAvgThis = parseFloat(
     (
@@ -148,9 +151,10 @@ export default (Name, Y) => {
         DayConst
       ).toPrecision(14)
     );
+    if (NewmAvgBare[i] < 0) NewmAvgBare[i] += 27759; // 和fmod(SolsAccumRaw)一樣，都是應對十月顓頊蔀首
     NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder;
     NewmInt[i] = Math.trunc(NewmAvgRaw[i]);
-    NewmAvgSc[i] = ScList[((NewmInt[i] % 60) + 60) % 60];
+    NewmAvgSc[i] = ScList[fm60(NewmInt[i])];
     NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6);
     NewmSd[i] = NewmAvgBare[i] - SolsAccumRaw;
     if (MansRaw) NewmEqua[i] = mans(Name, Y, NewmSd[i]).Equa;
@@ -166,7 +170,7 @@ export default (Name, Y) => {
           SolsConst
         ).toPrecision(14)
       ) + BuScOrder;
-    SyzygyAvgMod[i] = ((SyzygyAvgRaw[i] % 60) + 60) % 60;
+    SyzygyAvgMod[i] = fm60(SyzygyAvgRaw[i]);
     SyzygyOrderMod[i] = Math.trunc(SyzygyAvgMod[i]);
     SyzygySc[i] = ScList[SyzygyOrderMod[i]];
     SyzygyDeci[i] = (SyzygyAvgMod[i] - SyzygyOrderMod[i])
@@ -204,7 +208,7 @@ export default (Name, Y) => {
     for (let i = 1; i <= 13; i++) {
       TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng;
       TermAvgRaw[i] = TermAvgBare[i] + BuScOrder;
-      TermAvgMod[i] = ((TermAvgRaw[i] % 60) + 60) % 60;
+      TermAvgMod[i] = fm60(TermAvgRaw[i]);
       TermOrderMod[i] = Math.trunc(TermAvgMod[i]);
       TermName[i] = TermNameList[(i + ZhengNum + 12) % 12];
       TermSc[i] = ScList[TermOrderMod[i]];
@@ -218,9 +222,7 @@ export default (Name, Y) => {
     for (let i = 1; i <= 12; i++) {
       TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng;
       TermAvgRaw[i] = TermAvgBare[i] + BuScOrder;
-      TermAvgMod[i] = parseFloat(
-        (((TermAvgRaw[i] % 60) + 60) % 60).toPrecision(12)
-      );
+      TermAvgMod[i] = parseFloat(fm60(TermAvgRaw[i]).toPrecision(12));
       TermOrderMod[i] = Math.trunc(TermAvgMod[i]);
       TermName[i] = TermNameList[(i + ZhengNum + 12) % 12];
       TermSc[i] = ScList[TermOrderMod[i]];
@@ -254,7 +256,7 @@ export default (Name, Y) => {
     for (let i = LeapNumTerm + 2; i <= 13; i++) {
       TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 2) * TermLeng;
       TermAvgRaw[i] = TermAvgBare[i] + BuScOrder;
-      TermAvgMod[i] = ((TermAvgRaw[i] % 60) + 60) % 60;
+      TermAvgMod[i] = fm60(TermAvgRaw[i]);
       TermOrderMod[i] = Math.trunc(TermAvgMod[i]);
       TermName[i] = TermNameList[(i - 1 + ZhengNum + 12) % 12];
       TermSc[i] = ScList[TermOrderMod[i]];
@@ -322,3 +324,4 @@ export default (Name, Y) => {
     TermEqua
   };
 };
+// a("ZhuanxuB", -593);
