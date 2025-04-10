@@ -43,7 +43,6 @@ export default (Name, YearStart, YearEnd) => {
   const calculate = (Y) => {
     const [PrevYear, ThisYear, NextYear] = Memo;
     const ZhengSd = ZhengNum - OriginMonNum;
-    const SolsMon = (1 - ZhengNum + 12) % 12; // 冬至月
     const {
       JiScOrder,
       SolsAccum,
@@ -74,27 +73,7 @@ export default (Name, YearStart, YearEnd) => {
       TermEclp = [];
     let specialStart = 0,
       specialNewmSyzygyEnd = 0;
-    if (Type === 1) {
-      if (
-        (isTermLeap && NextYear.TermSc[1] === "") ||
-        (!isTermLeap && NextYear.TermSc[SolsMon] === "")
-      ) {
-        specialNewmSyzygyEnd = 1;
-        TermEnd = 1;
-        LeapNumTerm = 12;
-        if (SolsMon === 1) TermEnd = 0;
-      } else if (
-        (isTermLeap && ThisYear.TermSc[1] === "") ||
-        (!isTermLeap && ThisYear.TermSc[SolsMon] === "")
-      ) {
-        specialStart = 1;
-        LeapNumTerm--;
-      } // 以上解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況
-      NewmStart += specialStart;
-      NewmEnd += specialNewmSyzygyEnd;
-      TermStart += specialStart;
-      LeapNumTerm -= NewmStart;
-    } else {
+    if (Type > 1) {
       NewmStart = 0;
       NewmEnd = LeapNumTerm ? 1 : 0;
       TermEnd = NewmEnd;
@@ -718,4 +697,4 @@ export default (Name, YearStart, YearEnd) => {
   }
   return result;
 };
-// console.log(Index("Shoushi", -592));
+// console.log(Index("Xia", -393));
