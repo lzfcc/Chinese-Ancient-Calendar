@@ -1,4 +1,42 @@
 export default {
+  Xia: {
+    // 冬至曆元夏曆
+    Type: 1,
+    Denom: 940,
+    Lunar: 27759 / 940,
+    Solar: 365.25,
+    OriginAd: -2759875, // -1075
+    // JdOrigin: 1883590.5,
+    JdSols: 1721054.25,
+    OriginYearSc: 2,
+    ZhengNum: 2,
+    OriginMonNum: 2,
+    YuanRange: 4560,
+    JiRange: 1520,
+    BuRange: 76,
+    isTermLeap: 0, // 0:固定冬至，1:無中氣
+    EcliRange: 135 / 23,
+    EcliNumer: 513
+  },
+  XiaB: {
+    // 立春曆元夏曆
+    Type: 1,
+    Denom: 940,
+    Lunar: 27759 / 940,
+    Solar: 365.25,
+    OriginAd: -2760294, // -1494
+    OriginYearSc: 3,
+    BuScConst: 3, // 己巳蔀第一
+    SolsOriginDif: -1.5, // 立春爲曆元
+    ZhengNum: 2,
+    OriginMonNum: 2,
+    YuanRange: 4560,
+    JiRange: 1520,
+    BuRange: 76,
+    isTermLeap: 1, // 0:固定冬至，1:無中氣
+    EcliRange: 135 / 23,
+    EcliNumer: 513
+  },
   Yin: {
     Type: 1,
     Denom: 940, // 日法
@@ -52,7 +90,6 @@ export default {
     isTermLeap: 0,
     EcliRange: 135 / 23,
     EcliNumer: 513
-    // SolsConst: 1.25
   },
   Lu: {
     // 無加小餘
@@ -236,78 +273,57 @@ export default {
   //     EcliRange: 135 / 23,
   //     EcliNumer: 513,
   // },
-  Xia: {
-    // 冬至曆元夏曆
-    Type: 1,
-    Denom: 940,
-    Lunar: 27759 / 940,
-    Solar: 365.25,
-    OriginAd: -2759875, // -1075
-    // JdOrigin: 1883590.5,
-    JdSols: 1721054.25,
-    OriginYearSc: 2,
-    ZhengNum: 2,
-    OriginMonNum: 2,
-    YuanRange: 4560,
-    JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0, // 0:固定冬至，1:無中氣
-    EcliRange: 135 / 23,
-    EcliNumer: 513
-  },
-  Zhuanxu1: {
-    // 楚曆顓頊大正
-    Type: 1,
-    Denom: 940,
-    Lunar: 27759 / 940,
-    Solar: 365.25,
-    OriginAd: -2760366, // -1566
-    OriginYearSc: 51, // 甲寅元
-    ZhengNum: -1,
-    OriginMonNum: -1,
-    YuanRange: 4560,
-    JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0, // 0:固定冬至，1:無中氣
-    EcliRange: 135 / 23,
-    EcliNumer: 513
-  },
-  Zhuanxu2: {
-    Type: 1,
-    Denom: 940,
-    Lunar: 27759 / 940,
-    Solar: 365.25,
-    SolsOriginDif: -45.65625, // 立春爲曆元
-    SolsOriginMon: -(1 + 83 / 152),
-    OriginAd: -2760305, // -1505
-    // JdOrigin: 1726575.5,
-    JdSols: 1721051 + 3 / 32,
-    OriginYearSc: 52, // 曆元距甲子日數
-    BuScConst: 5,
-    ZhengNum: 2, // 十月爲年首
-    OriginMonNum: 2, // 建寅
-    YuanRange: 4560,
-    JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0,
-    DayConst: 4 / 24, // 寅正爲日始
-    EcliRange: 135 / 23,
-    EcliNumer: 513
-  },
+  // Zhuanxu1: {
+  //   // 楚曆顓頊大正
+  //   Type: 1,
+  //   Denom: 940,
+  //   Lunar: 27759 / 940,
+  //   Solar: 365.25,
+  //   OriginAd: -2760366, // -1566
+  //   OriginYearSc: 51, // 甲寅元
+  //   ZhengNum: -1,
+  //   OriginMonNum: -1,
+  //   YuanRange: 4560,
+  //   JiRange: 1520,
+  //   BuRange: 76,
+  //   isTermLeap: 0, // 0:固定冬至，1:無中氣
+  //   EcliRange: 135 / 23,
+  //   EcliNumer: 513
+  // },
+  // Zhuanxu2: {
+  //   Type: 1,
+  //   Denom: 940,
+  //   Lunar: 27759 / 940,
+  //   Solar: 365.25,
+  //   SolsOriginDif: -1.5, // 立春爲曆元
+  //   OriginAd: -2760305, // -1505
+  //   // JdOrigin: 1726575.5,
+  //   JdSols: 1721051 + 3 / 32,
+  //   OriginYearSc: 52, // 曆元距甲子日數
+  //   BuScConst: 5,
+  //   ZhengNum: 2,
+  //   OriginMonNum: 2, // 建寅
+  //   YuanRange: 4560,
+  //   JiRange: 1520,
+  //   BuRange: 76,
+  //   isTermLeap: 0,
+  //   DayConst: 4 / 24, // 寅正爲日始
+  //   EcliRange: 135 / 23,
+  //   EcliNumer: 513
+  // },
   ZhuanxuA: {
     Type: 1,
     ApplyYear: [[-365, -306]],
     Denom: 940,
     Lunar: 27759 / 940,
     Solar: 365.25,
-    SolsOriginDif: -45.65625, // 立春爲曆元
-    SolsOriginMon: -(1 + 83 / 152),
+    SolsOriginDif: -1.5, // 立春爲曆元
     OriginAd: -2760305, // -1505
     // JdOrigin: 1726575.5,
     JdSols: 1721051 + 3 / 32,
     OriginYearSc: 52, // 曆元距甲子日數
     BuScConst: 5, // 己巳蔀第一
-    ZhengNum: 2, // 十月爲年首
+    ZhengNum: 2,
     OriginMonNum: 2, // 建寅
     YuanRange: 4560,
     JiRange: 1520,
@@ -323,14 +339,13 @@ export default {
     Denom: 940,
     Lunar: 27759 / 940,
     Solar: 365.25,
-    SolsOriginDif: -45.65625, // 立春爲曆元
-    SolsOriginMon: -(1 + 83 / 152),
+    SolsOriginDif: -1.5, // 立春爲曆元
     OriginAd: -2760305,
     // JdOrigin: 1726575.5,
     JdSols: 1721051 + 3 / 32,
     OriginYearSc: 52,
     BuScConst: 5, // 己巳蔀第一
-    ZhengNum: -1,
+    ZhengNum: -1, // 十月爲年首
     OriginMonNum: 2, // 建寅
     YuanRange: 4560,
     JiRange: 1520,
@@ -346,8 +361,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsOriginDif: -45.65625, // 立春爲曆元
-  //   SolsOriginMon: -(1 + 83 / 152),
+  //   SolsOriginDif: -1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -370,8 +384,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsOriginDif: -45.65625, // 立春爲曆元
-  //   SolsOriginMon: -(1 + 83 / 152),
+  //   SolsOriginDif: -1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -394,8 +407,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsOriginDif: -45.65625, // 立春爲曆元
-  //   SolsOriginMon: -(1 + 83 / 152),
+  //   SolsOriginDif: -1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -417,8 +429,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsOriginDif: -45.65625, // 立春爲曆元
-  //   SolsOriginMon: -(1 + 83 / 152),
+  //   SolsOriginDif: -1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,

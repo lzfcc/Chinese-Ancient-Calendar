@@ -1,13 +1,13 @@
 export const NameList = {
   // 按照時間順序排列
   Huangdi: "黃帝",
-  // Yu: "虞",
   Xia: "夏",
+  XiaB: "夏(立春)",
   Yin: "殷",
   Zhou: "周",
   Lu: "魯",
-  Zhuanxu1: "楚顓頊(大正建亥)",
-  Zhuanxu2: "楚顓頊(小正建寅)",
+  // Zhuanxu1: "楚顓頊(大正建亥)",
+  // Zhuanxu2: "楚顓頊(小正建寅)",
   ZhuanxuA: "秦顓頊(建寅)",
   ZhuanxuB: "秦顓頊(十月首)",
   // ZhuanxuC: "秦顓頊(進餘3/4)",

@@ -1,3 +1,4 @@
+import { fm60 } from "Cal/parameter/functions.mjs";
 import {
   ScList,
   StemList,
@@ -8,7 +9,7 @@ import {
 
 export const EraConvert = (year) => {
   year = Number(year);
-  const YearScOrder = (((year - 3) % 60) + 60) % 60;
+  const YearScOrder = fm60(year - 3);
   const YearSc = ScList[YearScOrder];
   const YearStem = StemList.indexOf(YearSc[0]);
   const YearBranch = BranchList.indexOf(YearSc[1]);

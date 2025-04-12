@@ -9,7 +9,6 @@ export default (Name, Y) => {
     Lunar,
     Solar,
     SolsOriginDif,
-    SolsOriginMon,
     OriginAd,
     OriginYearSc,
     BuScConst,
@@ -46,28 +45,30 @@ export default (Name, Y) => {
   const BuOrder = Math.trunc(((OriginYear % YuanRange) % JiRange) / BuRange); // 入第幾蔀（統）
   const BuScOrder = (1 + BuOrder * BuSkip + (BuScConst || 0)) % 60; // 蔀（統）的干支序號
   const SolsAccumRaw = fmod(
-    (BuYear - 1) * Solar + (SolsOriginDif || 0) + SolsConst + DayConst,
+    (BuYear - 1) * Solar +
+      (SolsOriginDif || 0) * TermLeng +
+      SolsConst +
+      DayConst,
     27759
   ); // 冬至積日
   const SolsAccumMod = fm60(SolsAccumRaw);
-  const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0); // 曆元積日
+  const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0) * TermLeng; // 曆元積日
+  let SolsOriginMon = 0;
+  if (SolsOriginDif) SolsOriginMon = (SolsOriginDif * TermLeng) / Lunar;
   const LeapSurAvgThis = parseFloat(
     (
-      (((deci(((BuYear - 1) * 7) / 19) + (SolsOriginMon || 0)) % 1) + 1) %
+      (((deci(((BuYear - 1) * 7) / 19) + SolsOriginMon) % 1) + 1) %
       1
     ).toPrecision(11)
   ); // 今年閏餘
   const LeapSurAvgPrev = parseFloat(
     (
-      (((deci(((BuYear - 2) * 7) / 19) + (SolsOriginMon || 0)) % 1) + 1) %
+      (((deci(((BuYear - 2) * 7) / 19) + SolsOriginMon) % 1) + 1) %
       1
     ).toPrecision(11)
   ); // 上年閏餘
   const LeapSurAvgNext = parseFloat(
-    (
-      (((deci((BuYear * 7) / 19) + (SolsOriginMon || 0)) % 1) + 1) %
-      1
-    ).toPrecision(11)
+    ((((deci((BuYear * 7) / 19) + SolsOriginMon) % 1) + 1) % 1).toPrecision(11)
   );
   let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)); // 是否有閏月
   let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11));
@@ -142,11 +143,7 @@ export default (Name, Y) => {
     // 本來是1
     NewmAvgBare[i] = parseFloat(
       (
-        (Math.trunc(((BuYear - 1) * 235) / 19 + (SolsOriginMon || 0)) +
-          ZhengNum +
-          i -
-          1) *
-          Lunar +
+        (Math.trunc(((BuYear - 1) * 235) / 19) + ZhengNum + i - 1) * Lunar +
         SolsConst +
         DayConst
       ).toPrecision(14)
@@ -162,7 +159,7 @@ export default (Name, Y) => {
     SyzygyAvgRaw[i] =
       parseFloat(
         (
-          (Math.trunc(((BuYear - 1) * 235) / 19 + (SolsOriginMon || 0)) +
+          (Math.trunc(((BuYear - 1) * 235) / 19 + SolsOriginMon) +
             ZhengNum +
             i -
             0.5) *
@@ -324,4 +321,4 @@ export default (Name, Y) => {
     TermEqua
   };
 };
-// a("ZhuanxuB", -593);
+// console.log(a("ZhuanxuA", -9));
