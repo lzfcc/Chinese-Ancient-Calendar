@@ -88,9 +88,9 @@ export default (Name, YearStart, YearEnd) => {
     // 調整節氣
     for (let i = 1; i <= 13; i++) {
       TermDownName[i] = TermNameList[(i + ZhengNum) % 12];
-      TermUpName[i] = Term1NameList[(i + ZhengNum) % 12];
       TermDownSc[i] = ThisYear.TermSc[i];
       TermDownDeci[i] = ThisYear.TermDeci[i];
+      TermUpName[i] = Term1NameList[(i + ZhengNum) % 12];
       TermUpSc[i] = ThisYear.Term1Sc[i];
       TermUpDeci[i] = ThisYear.Term1Deci[i];
       if ((ThisYear.TermAcrDeci || []).length) {
@@ -110,7 +110,63 @@ export default (Name, YearStart, YearEnd) => {
         TermUpEclp[i] = ThisYear.Term1Eclp[i];
       }
     }
-    if (PrevYear.LeapNumTerm) {
+    if (LeapNumTerm) {
+      TermDownName[LeapNumTerm + 1] = "无中";
+      TermDownSc[LeapNumTerm + 1] = "";
+      TermDownDeci[LeapNumTerm + 1] = "";
+      if ((ThisYear.TermAcrSc || []).length)
+        TermDownAcrSc[LeapNumTerm + 1] = "";
+      if ((ThisYear.TermAcrDeci || []).length)
+        TermDownAcrDeci[LeapNumTerm + 1] = "";
+      if ((ThisYear.TermNowDeci || []).length)
+        TermDownNowDeci[LeapNumTerm + 1] = "";
+      if ((ThisYear.TermEqua || []).length) TermDownEqua[LeapNumTerm + 1] = "";
+      if ((ThisYear.TermEclp || []).length) TermDownEclp[LeapNumTerm + 1] = "";
+      for (let i = LeapNumTerm + 2; i <= 13; i++) {
+        // 上下互換位置
+        TermDownName[i] = Term1NameList[(i + ZhengNum) % 12];
+        TermDownSc[i] = ThisYear.Term1Sc[i];
+        TermDownDeci[i] = ThisYear.Term1Deci[i];
+        TermUpName[i] = TermNameList[(i + ZhengNum - 1) % 12];
+        TermUpSc[i] = ThisYear.TermSc[i - 1];
+        TermUpDeci[i] = ThisYear.TermDeci[i - 1];
+        if ((ThisYear.Term1AcrSc || []).length) {
+          TermDownAcrSc[i] = ThisYear.Term1AcrSc[i];
+          TermDownAcrDeci[i] = ThisYear.Term1AcrDeci[i];
+          TermUpAcrSc[i] = ThisYear.TermAcrSc[i - 1];
+          TermUpAcrDeci[i] = ThisYear.TermAcrDeci[i - 1];
+        }
+        if ((ThisYear.TermNowDeci || []).length) {
+          TermDownNowDeci[i] = ThisYear.Term1NowDeci[i];
+          TermUpNowDeci[i] = ThisYear.TermNowDeci[i - 1];
+        }
+        if ((ThisYear.TermEqua || []).length) {
+          TermDownEqua[i] = ThisYear.Term1Equa[i];
+          TermUpEqua[i] = ThisYear.TermEqua[i - 1];
+          TermDownEclp[i] = ThisYear.Term1Eclp[i];
+          TermUpEclp[i] = ThisYear.TermEclp[i - 1];
+        }
+      }
+    }
+    let NoJieMon = 0;
+    const Term1Sd =
+      ThisYear.Term1AcrSmd || ThisYear.Term1AvgSd || ThisYear.Term1Int;
+    const NewmSd =
+      ThisYear.NewmNowlineSmd ||
+      (isAcr ? ThisYear.NewmAcrSd : ThisYear.NewmSd) ||
+      NewmInt;
+    for (let i = 1; i <= 12; i++) {
+      if (
+        Math.trunc(Term1Sd[i] + (SolsDeci || 0)) <
+          Math.trunc(NewmSd[i] + (SolsDeci || 0)) &&
+        Math.trunc(Term1Sd[i + 1] + (SolsDeci || 0)) >=
+          Math.trunc(NewmSd[i + 1] + (SolsDeci || 0))
+      ) {
+        NoJieMon = i; // 閏Leap月，第Leap+1月爲閏月
+        break;
+      }
+    }
+    if (PrevYear.LeapNumTerm || (!PrevYear.LeapNumTerm && NoJieMon)) {
       // 若去年有閏，把所有節往前移一個
       for (let i = 1; i <= 13; i++) {
         TermUpName[i] = Term1NameList[(i + ZhengNum + 1) % 12];
@@ -161,29 +217,10 @@ export default (Name, YearStart, YearEnd) => {
       }
     }
     // 調整節。無節月有可能落在閏年的後年，比如13—15AD，
-    let NoJieMon = 0;
-    const Term1Sd =
-      ThisYear.Term1AcrSmd || ThisYear.Term1AvgSd || ThisYear.Term1Int;
-    const NewmSd =
-      ThisYear.NewmNowlineSmd ||
-      (isAcr ? ThisYear.NewmAcrSd : ThisYear.NewmSd) ||
-      NewmInt;
-    for (let i = 1; i <= 12; i++) {
-      if (
-        Math.trunc(Term1Sd[i] + (SolsDeci || 0)) <
-          Math.trunc(NewmSd[i] + (SolsDeci || 0)) &&
-        Math.trunc(Term1Sd[i + 1] + (SolsDeci || 0)) >=
-          Math.trunc(NewmSd[i + 1] + (SolsDeci || 0))
-      ) {
-        NoJieMon = i; // 閏Leap月，第Leap+1月爲閏月
-        break;
-      }
-    }
-    if (PrevYear.LeapNumTerm && NoJieMon) {
-    } else if (!PrevYear.LeapNumTerm && NoJieMon) {
-    }
-
-    if (NoJieMon) {
+    if (
+      (PrevYear.LeapNumTerm && NoJieMon) ||
+      (!PrevYear.LeapNumTerm && NoJieMon)
+    ) {
       TermUpName[NoJieMon] = "无節";
       TermUpSc[NoJieMon] = "";
       TermUpDeci[NoJieMon] = "";
@@ -192,67 +229,42 @@ export default (Name, YearStart, YearEnd) => {
       if ((ThisYear.Term1NowDeci || []).length) TermUpNowDeci[NoJieMon] = "";
       if ((ThisYear.Term1Equa || []).length) TermUpEqua[NoJieMon] = "";
       if ((ThisYear.Term1Eclp || []).length) TermUpEclp[NoJieMon] = "";
-      for (let i = 1; i < NoJieMon; i++) {
+      TermDownName[NoJieMon] = TermNameList[(NoJieMon + ZhengNum) % 12];
+      TermDownSc[NoJieMon] = ThisYear.TermSc[NoJieMon];
+      TermDownDeci[NoJieMon] = ThisYear.TermDeci[NoJieMon];
+      if ((ThisYear.Term1AcrSc || []).length)
+        TermDownAcrSc[NoJieMon] = ThisYear.TermAcrSc[NoJieMon];
+      if ((ThisYear.Term1AcrDeci || []).length)
+        TermDownAcrDeci[NoJieMon] = ThisYear.TermAcrDeci[NoJieMon];
+      if ((ThisYear.Term1NowDeci || []).length)
+        TermDownNowDeci[NoJieMon] = ThisYear.TermNowDeci[NoJieMon];
+      if ((ThisYear.Term1Equa || []).length)
+        TermDownEqua[NoJieMon] = ThisYear.TermEqua[NoJieMon];
+      if ((ThisYear.Term1Eclp || []).length)
+        TermDownEclp[NoJieMon] = ThisYear.TermEclp[NoJieMon];
+      for (let i = NoJieMon + 1; i <= 13; i++) {
         // 上下互換位置
-        TermUpName[i] = TermNameList[(i + 2) % 12];
-        TermDownName[i] = Term1NameList[(i + 2) % 12];
-        TermUpSc[i] = ThisYear.TermSc[i];
-        TermUpDeci[i] = ThisYear.TermDeci[i];
-        TermDownSc[i] = ThisYear.Term1Sc[i];
-        TermDownDeci[i] = ThisYear.Term1Deci[i];
+        TermUpName[i] = Term1NameList[(i + ZhengNum) % 12];
+        TermUpSc[i] = ThisYear.Term1Sc[i];
+        TermUpDeci[i] = ThisYear.Term1Deci[i];
+        TermDownName[i] = TermNameList[(i + ZhengNum) % 12];
+        TermDownSc[i] = ThisYear.TermSc[i];
+        TermDownDeci[i] = ThisYear.TermDeci[i];
         if ((ThisYear.TermAcrSc || []).length) {
-          TermUpAcrSc[i] = ThisYear.TermAcrSc[i];
-          TermUpAcrDeci[i] = ThisYear.TermAcrDeci[i];
-          TermDownAcrSc[i] = ThisYear.Term1AcrSc[i];
-          TermDownAcrDeci[i] = ThisYear.Term1AcrDeci[i];
+          TermUpAcrSc[i] = ThisYear.Term1AcrSc[i];
+          TermUpAcrDeci[i] = ThisYear.Term1AcrDeci[i];
+          TermDownAcrSc[i] = ThisYear.TermAcrSc[i];
+          TermDownAcrDeci[i] = ThisYear.TermAcrDeci[i];
         }
         if ((ThisYear.TermNowDeci || []).length) {
-          TermUpNowDeci[i] = ThisYear.TermNowDeci[i];
-          TermDownNowDeci[i] = ThisYear.Term1NowDeci[i];
+          TermUpNowDeci[i] = ThisYear.Term1NowDeci[i];
+          TermDownNowDeci[i] = ThisYear.TermNowDeci[i];
         }
         if ((ThisYear.TermEqua || []).length) {
-          TermUpEqua[i] = ThisYear.TermEqua[i];
-          TermDownEqua[i] = ThisYear.Term1Equa[i];
-          TermUpEclp[i] = ThisYear.TermEclp[i];
-          TermDownEclp[i] = ThisYear.Term1Eclp[i];
-        }
-      }
-    }
-    if (LeapNumTerm) {
-      TermDownName[LeapNumTerm + 1] = "无中";
-      TermDownSc[LeapNumTerm + 1] = "";
-      TermDownDeci[LeapNumTerm + 1] = "";
-      if ((ThisYear.TermAcrSc || []).length)
-        TermDownAcrSc[LeapNumTerm + 1] = "";
-      if ((ThisYear.TermAcrDeci || []).length)
-        TermDownAcrDeci[LeapNumTerm + 1] = "";
-      if ((ThisYear.TermNowDeci || []).length)
-        TermDownNowDeci[LeapNumTerm + 1] = "";
-      if ((ThisYear.TermEqua || []).length) TermDownEqua[LeapNumTerm + 1] = "";
-      if ((ThisYear.TermEclp || []).length) TermDownEclp[LeapNumTerm + 1] = "";
-      for (let i = LeapNumTerm + 2; i <= 13; i++) {
-        // 上下互換位置
-        TermDownName[i] = Term1NameList[(i + 2) % 12];
-        TermUpName[i] = TermNameList[(i + 1) % 12];
-        TermDownSc[i] = ThisYear.Term1Sc[i];
-        TermDownDeci[i] = ThisYear.Term1Deci[i];
-        TermUpSc[i] = ThisYear.TermSc[i - 1];
-        TermUpDeci[i] = ThisYear.TermDeci[i - 1];
-        if ((ThisYear.Term1AcrSc || []).length) {
-          TermDownAcrSc[i] = ThisYear.Term1AcrSc[i];
-          TermDownAcrDeci[i] = ThisYear.Term1AcrDeci[i];
-          TermUpAcrSc[i] = ThisYear.TermAcrSc[i - 1];
-          TermUpAcrDeci[i] = ThisYear.TermAcrDeci[i - 1];
-        }
-        if ((ThisYear.TermNowDeci || []).length) {
-          TermDownNowDeci[i] = ThisYear.Term1NowDeci[i];
-          TermUpNowDeci[i] = ThisYear.TermNowDeci[i - 1];
-        }
-        if ((ThisYear.TermEqua || []).length) {
-          TermDownEqua[i] = ThisYear.Term1Equa[i];
-          TermUpEqua[i] = ThisYear.TermEqua[i - 1];
-          TermDownEclp[i] = ThisYear.Term1Eclp[i];
-          TermUpEclp[i] = ThisYear.TermEclp[i - 1];
+          TermUpEqua[i] = ThisYear.Term1Equa[i];
+          TermUpEclp[i] = ThisYear.Term1Eclp[i];
+          TermDownEqua[i] = ThisYear.TermEqua[i];
+          TermDownEclp[i] = ThisYear.TermEclp[i];
         }
       }
     }
