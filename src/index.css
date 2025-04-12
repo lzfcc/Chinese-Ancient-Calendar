@@ -492,29 +492,29 @@ tr.MonthPrint {
 }
 
 tr.NewmScPrint,
-tr.TermNamePrint {
+tr.TermDownNamePrint {
   border-top: 1px solid var(--gray);
 }
 
-tr.TermNamePrint,
-tr.Term1NamePrint {
+tr.TermDownNamePrint,
+tr.TermUpNamePrint {
   color: var(--gray);
 }
 
 tr.NewmScPrint,
 tr.NewmAvgScPrint,
 tr.SyzygyScPrint,
-tr.TermScPrint,
-tr.TermAcrScPrint,
-tr.Term1ScPrint,
-tr.Term1AcrScPrint {
+tr.TermDownScPrint,
+tr.TermDownAcrScPrint,
+tr.TermUpScPrint,
+tr.TermUpAcrScPrint {
   font-weight: bold;
 }
 
-tr.Term1EclpPrint,
-tr.Term1EquaPrint,
-tr.TermEclpPrint,
-tr.TermEquaPrint {
+tr.TermUpEclpPrint,
+tr.TermUpEquaPrint,
+tr.TermDownEclpPrint,
+tr.TermDownEquaPrint {
   color: var(--gray);
   font-size: .8em;
 }
@@ -544,8 +544,8 @@ tr.NewmDeci3Print th,
 tr.NewmNowlineDeciPrint th,
 tr.NewmAcrDeciPrint th,
 tr.SyzygyNowlineDeciPrint th,
-tr.TermNowDeciPrint th,
-tr.Term1NowDeciPrint th {
+tr.TermDownNowDeciPrint th,
+tr.TermUpNowDeciPrint th {
   font-weight: normal;
 }
 
