@@ -1,4 +1,8 @@
-import { ScList, TermNameList } from "../parameter/constants.mjs";
+import {
+  ScList,
+  Term1NameList,
+  TermNameList
+} from "../parameter/constants.mjs";
 import Para from "../parameter/calendars.mjs";
 import { mans } from "../astronomy/mans.mjs";
 import { deci, fm60, fmod } from "../parameter/functions.mjs";
@@ -16,7 +20,6 @@ export default (Name, Y) => {
     OriginMonNum,
     YuanRange,
     TongRange,
-    isTermLeap,
     EcliRange,
     EcliNumer,
     MansRaw
@@ -55,73 +58,16 @@ export default (Name, Y) => {
   const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0) * TermLeng; // 曆元積日
   let SolsOriginMon = 0;
   if (SolsOriginDif) SolsOriginMon = (SolsOriginDif * TermLeng) / Lunar;
-  const LeapSurAvgThis = parseFloat(
+  const LeapSurAvg = parseFloat(
     (
       (((deci(((BuYear - 1) * 7) / 19) + SolsOriginMon) % 1) + 1) %
       1
     ).toPrecision(11)
   ); // 今年閏餘
-  const LeapSurAvgPrev = parseFloat(
-    (
-      (((deci(((BuYear - 2) * 7) / 19) + SolsOriginMon) % 1) + 1) %
-      1
-    ).toPrecision(11)
-  ); // 上年閏餘
-  const LeapSurAvgNext = parseFloat(
-    ((((deci((BuYear * 7) / 19) + SolsOriginMon) % 1) + 1) % 1).toPrecision(11)
-  );
-  let isLeapAvgThis = LeapSurAvgThis >= parseFloat((12 / 19).toPrecision(11)); // 是否有閏月
-  let isLeapAvgPrev = LeapSurAvgPrev >= parseFloat((12 / 19).toPrecision(11));
-  let isLeapAvgNext = LeapSurAvgNext >= parseFloat((12 / 19).toPrecision(11));
+  let isLeapAvgThis = LeapSurAvg >= parseFloat((12 / 19).toPrecision(11)); // 是否有閏月
   let LeapNumAvgThis = isLeapAvgThis
-    ? Math.trunc(parseFloat((((1 - LeapSurAvgThis) * 228) / 7).toPrecision(12)))
+    ? Math.trunc(parseFloat((((1 - LeapSurAvg) * 228) / 7).toPrecision(12)))
     : 0; // 閏餘法今年閏月
-  let LeapNumAvgPrev = isLeapAvgPrev
-    ? Math.trunc(parseFloat((((1 - LeapSurAvgPrev) * 228) / 7).toPrecision(12)))
-    : 0;
-  let LeapNumAvgNext = isLeapAvgNext
-    ? Math.trunc(parseFloat((((1 - LeapSurAvgNext) * 228) / 7).toPrecision(12)))
-    : 0;
-  // 固定冬至法
-  let LeapSurAvgFix = 0,
-    isLeapAvgFix = 0,
-    isAdvance = 0,
-    isPost = 0;
-  if (!isTermLeap) {
-    LeapSurAvgFix = ZhengNum > 0 ? LeapSurAvgNext : LeapSurAvgThis;
-    isLeapAvgFix = ZhengNum > 0 ? isLeapAvgNext : isLeapAvgThis;
-  }
-  // 上面的Fix將參數固定下來，接下來要修改這些參數了。考慮了建正之後的閏月數：
-  if (LeapNumAvgNext) {
-    LeapNumAvgNext -= ZhengNum;
-    if (LeapNumAvgNext <= 0) {
-      LeapNumAvgThis = LeapNumAvgNext + 12;
-      isLeapAvgThis = 1;
-      isLeapAvgNext = 0;
-      isAdvance = 1;
-    }
-  } else if (LeapNumAvgThis) {
-    LeapNumAvgThis -= ZhengNum;
-    if (LeapNumAvgThis <= 0) {
-      LeapNumAvgThis = 0;
-      isLeapAvgThis = 0;
-      isLeapAvgPrev = 1;
-      isAdvance = 1;
-    } else if (LeapNumAvgThis >= 13) {
-      LeapNumAvgThis = 0;
-      isLeapAvgThis = 0;
-      isLeapAvgNext = 1;
-      isPost = 1;
-    }
-  } else if (LeapNumAvgPrev) {
-    LeapNumAvgPrev -= ZhengNum;
-    if (LeapNumAvgPrev >= 13) {
-      LeapNumAvgThis = LeapNumAvgPrev + 12;
-      isLeapAvgThis = 1;
-      isLeapAvgPrev = 0;
-      isPost = 1;
-    }
-  }
   // 閏餘法閏月
   const LeapNumOriginLeapSur = LeapNumAvgThis
     ? Math.round((((LeapNumAvgThis + ZhengSd + 12) % 12) + 12) % 12.1)
@@ -186,105 +132,45 @@ export default (Name, Y) => {
   }
   // 中氣
   let LeapNumTerm = LeapNumAvgThis;
-  const TermAvgBare = [],
-    TermAvgRaw = [],
-    TermAvgMod = [],
-    TermOrderMod = [],
+  const TermInt = [],
     TermSc = [],
-    TermName = [],
     TermDeci = [],
-    TermEqua = [];
-  // const TermJd = []
-  if (
-    (isTermLeap && !LeapNumTerm) ||
-    (!isTermLeap &&
-      ((!isLeapAvgThis && !isLeapAvgNext) ||
-        (!isLeapAvgThis && !isAdvance) ||
-        (!isLeapAvgThis && isAdvance)))
-  ) {
-    for (let i = 1; i <= 13; i++) {
-      TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng;
-      TermAvgRaw[i] = TermAvgBare[i] + BuScOrder;
-      TermAvgMod[i] = fm60(TermAvgRaw[i]);
-      TermOrderMod[i] = Math.trunc(TermAvgMod[i]);
-      TermName[i] = TermNameList[(i + ZhengNum + 12) % 12];
-      TermSc[i] = ScList[TermOrderMod[i]];
-      TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6);
-      if (MansRaw) {
-        const TermSd = TermAvgBare[i] - SolsAccumRaw;
-        TermEqua[i] = mans(Name, Y, TermSd).Equa;
-      }
-    }
-  } else {
-    for (let i = 1; i <= 12; i++) {
-      TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng;
-      TermAvgRaw[i] = TermAvgBare[i] + BuScOrder;
-      TermAvgMod[i] = parseFloat(fm60(TermAvgRaw[i]).toPrecision(12));
-      TermOrderMod[i] = Math.trunc(TermAvgMod[i]);
-      TermName[i] = TermNameList[(i + ZhengNum + 12) % 12];
-      TermSc[i] = ScList[TermOrderMod[i]];
-      TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6);
-      if (MansRaw) {
-        const TermSd = TermAvgBare[i] - SolsAccumRaw;
-        TermEqua[i] = mans(Name, Y, TermSd).Equa;
-      }
-    }
-    while (
-      LeapNumTerm >= 1 &&
-      TermAvgRaw[LeapNumTerm] >= NewmInt[LeapNumTerm + 1] &&
-      TermAvgRaw[LeapNumTerm] < NewmInt[LeapNumTerm + 1] + 2
-    ) {
-      LeapNumTerm--;
-    }
-    while (
-      LeapNumTerm <= 11 &&
-      TermAvgRaw[LeapNumTerm + 1] < NewmInt[LeapNumTerm + 2] &&
-      TermAvgRaw[LeapNumTerm + 1] >= NewmInt[LeapNumTerm + 2] - 2
-    ) {
-      LeapNumTerm++;
-    }
-    TermName[LeapNumTerm + 1] = "无中";
-    TermSc[LeapNumTerm + 1] = "";
-    TermDeci[LeapNumTerm + 1] = "";
+    TermEqua = [],
+    TermEclp = [],
+    Term1Int = [],
+    Term1Sc = [],
+    Term1Deci = [],
+    Term1Equa = [],
+    Term1Eclp = [];
+  for (let i = 1; i <= 13; i++) {
+    const TermBare = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng;
+    const TermRaw = TermBare + BuScOrder;
+    TermInt[i] = Math.trunc(TermRaw);
+    const TermMod = fm60(TermRaw);
+    const TermOrderMod = Math.trunc(TermMod);
+    TermSc[i] = ScList[TermOrderMod];
+    TermDeci[i] = (TermMod - TermOrderMod).toFixed(4).slice(2, 6);
+    const Term1Bare = SolsAccumRaw + (i + ZhengNum - 1.5) * TermLeng;
+    const Term1Raw = Term1Bare + BuScOrder;
+    Term1Int[i] = Math.trunc(Term1Raw);
+    const Term1Mod = fm60(Term1Raw);
+    const Term1OrderMod = Math.trunc(Term1Mod);
+    Term1Sc[i] = ScList[Term1OrderMod];
+    Term1Deci[i] = (Term1Mod - Term1OrderMod).toFixed(4).slice(2, 6);
     if (MansRaw) {
-      TermEqua[LeapNumTerm + 1] = "";
-    }
-    // TermJd[LeapNumTerm + 1] = ''
-    for (let i = LeapNumTerm + 2; i <= 13; i++) {
-      TermAvgBare[i] = SolsAccumRaw + (i + ZhengNum - 2) * TermLeng;
-      TermAvgRaw[i] = TermAvgBare[i] + BuScOrder;
-      TermAvgMod[i] = fm60(TermAvgRaw[i]);
-      TermOrderMod[i] = Math.trunc(TermAvgMod[i]);
-      TermName[i] = TermNameList[(i - 1 + ZhengNum + 12) % 12];
-      TermSc[i] = ScList[TermOrderMod[i]];
-      TermDeci[i] = (TermAvgMod[i] - TermOrderMod[i]).toFixed(4).slice(2, 6);
-      if (MansRaw) {
-        const TermSd = TermAvgBare[i] - SolsAccumRaw;
-        TermEqua[i] = mans(Name, Y, TermSd).Equa;
-      }
+      const Func = mans(Name, Y, TermBare - SolsAccumRaw);
+      const Func1 = mans(Name, Y, Term1Bare - SolsAccumRaw); // 這裏省略了紀元等提到的今年次年黃赤道差之差
+      TermEqua[i] = Func.Equa;
+      TermEclp[i] = Func.Eclp;
+      Term1Equa[i] = Func1.Equa;
+      Term1Eclp[i] = Func1.Eclp;
     }
   }
-  // 最後是積月、月數
-  let NewmStart = 0,
-    NewmEnd = 0;
-  if (
-    (isAdvance && isLeapAvgPrev) ||
-    (!isTermLeap && ZhengNum > 0 && !isAdvance && isLeapAvgThis)
-  ) {
-    NewmStart = 1;
-  }
-  if ((isTermLeap && isLeapAvgThis) || isLeapAvgFix) {
-    NewmEnd = 1;
-  } else {
-    NewmEnd = NewmStart;
-  }
-  let TermStart = NewmStart;
-  let TermEnd = NewmEnd;
-  if (isAdvance && isLeapAvgPrev) {
-    TermStart = 0;
-  }
-  if (NewmStart && NewmStart && !TermStart) {
-    TermEnd = 0;
+  for (let i = 1; i <= 12; i++) {
+    if (TermInt[i] < NewmInt[i + 1] && TermInt[i + 1] >= NewmInt[i + 2]) {
+      LeapNumTerm = i; // 閏Leap月，第Leap+1月爲閏月
+      break;
+    }
   }
   return {
     OriginYear,
@@ -301,24 +187,20 @@ export default (Name, Y) => {
     NewmAvgDeci,
     SyzygySc,
     SyzygyDeci,
-    TermName,
     TermSc,
     TermDeci,
-    LeapSurAvgFix,
-    LeapSurAvgThis,
+    TermEqua,
+    TermEclp,
+    Term1Int,
+    Term1Sc,
+    Term1Deci,
+    Term1Equa,
+    Term1Eclp,
+    LeapSurAvg,
     LeapNumOriginLeapSur,
     LeapNumTerm,
-    isAdvance,
-    isPost,
-    isLeapAvgFix,
     isLeapAvgThis,
-    isLeapAvgNext,
-    NewmStart,
-    NewmEnd,
-    TermStart,
-    TermEnd,
-    NewmEqua,
-    TermEqua
+    NewmEqua
   };
 };
-// console.log(a("ZhuanxuA", -9));
+// console.log(a("Yin", -9));

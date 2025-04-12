@@ -617,7 +617,7 @@ export const degAccumList = (Name, Y) => {
   }
   return { EclpAccumList, EquaAccumList };
 };
-// console.log(degAccumList("Shoushi", -2155));
+// console.log(degAccumList("Taichu", -2155));
 
 export const mans2Deg = (Mans, AccumList) => {
   let Print = 0;

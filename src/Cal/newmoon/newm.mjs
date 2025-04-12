@@ -315,8 +315,8 @@ export default (Name, Y) => {
           Term1AcrDeci[i] = fix(deci(tmp3), 3);
         }
         if (MansRaw) {
-          const Func = mans(Name, Y, TermAvgSd[i], TermAvgSd[i]);
-          const Func1 = mans(Name, Y, Term1AvgSd[i], Term1AvgSd[i]); // 這裏省略了紀元等提到的今年次年黃赤道差之差
+          const Func = mans(Name, Y, TermAvgSd[i]);
+          const Func1 = mans(Name, Y, Term1AvgSd[i]); // 這裏省略了紀元等提到的今年次年黃赤道差之差
           TermEqua[i] = Func.Equa;
           TermEclp[i] = Func.Eclp;
           Term1Equa[i] = Func1.Equa;
