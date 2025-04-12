@@ -363,9 +363,9 @@ export default (Name, Y) => {
       for (let i = 1; i <= 12; i++) {
         if (
           Math.trunc(TermAvgSd[i] + SolsDeci) <
-          Math.trunc(NewmSd[i + 1] + SolsDeci) &&
+            Math.trunc(NewmSd[i + 1] + SolsDeci) &&
           Math.trunc(TermAvgSd[i + 1] + SolsDeci) >=
-          Math.trunc(NewmSd[i + 2] + SolsDeci)
+            Math.trunc(NewmSd[i + 2] + SolsDeci)
         ) {
           LeapNumTerm = i; // 閏Leap月，第Leap+1月爲閏月
           break;
@@ -389,6 +389,7 @@ export default (Name, Y) => {
       Equa,
       Eclp,
       Term1Sc,
+      Term1AvgSd,
       Term1Deci,
       Term1AcrSc,
       Term1AcrDeci,
@@ -427,6 +428,7 @@ export default (Name, Y) => {
     Equa: NewmEqua,
     Eclp: NewmEclp,
     Term1Sc,
+    Term1AvgSd,
     Term1Deci,
     Term1AcrSc,
     Term1AcrDeci,
@@ -458,7 +460,7 @@ export default (Name, Y) => {
   } = main(false);
   const LeapSurAcr = ZhangRange
     ? (LeapSurAvg - (NewmTcorr[1] * ZhangRange) / Lunar + ZhangRange) %
-    ZhangRange
+      ZhangRange
     : LeapSurAvg - NewmTcorr[1];
   return {
     LeapLimit,
@@ -479,6 +481,7 @@ export default (Name, Y) => {
     NewmDeci3,
     SyzygySc,
     Term1Sc,
+    Term1AvgSd,
     Term1Deci,
     Term1AcrSc,
     Term1AcrDeci,

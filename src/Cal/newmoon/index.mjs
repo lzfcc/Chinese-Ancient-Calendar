@@ -37,7 +37,8 @@ export default (Name, YearStart, YearEnd) => {
     Node,
     OriginMonNum,
     isTermLeap,
-    SolsOriginDif
+    SolsOriginDif,
+    isAcr
   } = Para[Name];
   const Memo = [];
   const calculate = (Y) => {
@@ -55,22 +56,22 @@ export default (Name, YearStart, YearEnd) => {
     let { LeapNumTerm, NewmInt, NewmStart, NewmEnd, TermStart, TermEnd } =
       ThisYear;
     NewmInt = NewmInt || [];
-    const TermAcrSc = [],
+    let TermAcrSc = [],
       TermAcrDeci = [],
       TermNowDeci = [],
-      Term1Name = [],
       Term1Sc = [],
       Term1Deci = [],
       Term1Equa = [],
       Term1Eclp = [],
       Term1AcrSc = [],
       Term1AcrDeci = [],
-      Term1NowDeci = [];
-    let TermName = [],
+      Term1NowDeci = [],
+      TermName = [],
       TermSc = [],
       TermDeci = [],
       TermEqua = [],
-      TermEclp = [];
+      TermEclp = [],
+      Term1Name = [];
     let specialStart = 0,
       specialNewmSyzygyEnd = 0;
     if (Type > 1) {
@@ -124,7 +125,63 @@ export default (Name, YearStart, YearEnd) => {
           Term1Eclp[i] = ThisYear.Term1Eclp[i];
         }
       }
-      if (LeapNumTerm) {
+      if (PrevYear.LeapNumTerm) {
+        // 調整節
+        let NoJieMon = 0;
+        const SolsDeci = ThisYear.SolsDeci || 0;
+        const Term1Sd = ThisYear.Term1AcrSmd || ThisYear.Term1AvgSd;
+        const NewmSd =
+          ThisYear.NewmNowlineSmd ||
+          (isAcr ? ThisYear.NewmAcrSd : ThisYear.NewmSd);
+        for (let i = 1; i <= 12; i++) {
+          if (
+            Math.trunc(Term1Sd[i] + SolsDeci) <
+              Math.trunc(NewmSd[i] + SolsDeci) &&
+            Math.trunc(Term1Sd[i + 1] + SolsDeci) >=
+              Math.trunc(NewmSd[i + 1] + SolsDeci)
+          ) {
+            NoJieMon = i; // 閏Leap月，第Leap+1月爲閏月
+            break;
+          }
+        }
+        Term1Name[NoJieMon] = "无節";
+        Term1Sc[NoJieMon] = "";
+        Term1Deci[NoJieMon] = "";
+        if ((ThisYear.Term1AcrSc || []).length) Term1AcrSc[NoJieMon] = "";
+        if ((ThisYear.Term1AcrDeci || []).length) Term1AcrDeci[NoJieMon] = "";
+        if ((ThisYear.Term1NowDeci || []).length) Term1NowDeci[NoJieMon] = "";
+        if ((ThisYear.Term1Equa || []).length) Term1Equa[NoJieMon] = "";
+        if ((ThisYear.Term1Eclp || []).length) Term1Eclp[NoJieMon] = "";
+        for (let i = 1; i < NoJieMon; i++) {
+          // 上下互換位置
+          Term1Name[i] = TermNameList[(i + 2) % 12];
+          TermName[i] = Term1NameList[(i + 3) % 12];
+          if ((ThisYear.TermSc || []).length) {
+            Term1Sc[i] = ThisYear.TermSc[i];
+            Term1Deci[i] = ThisYear.TermDeci[i];
+            TermSc[i] = ThisYear.Term1Sc[i + 1];
+            TermDeci[i] = ThisYear.Term1Deci[i + 1];
+          }
+          if ((ThisYear.TermAcrSc || []).length) {
+            Term1AcrSc[i] = ThisYear.TermAcrSc[i];
+            Term1AcrDeci[i] = ThisYear.TermAcrDeci[i];
+            TermAcrSc[i] = ThisYear.Term1AcrSc[i + 1];
+            TermAcrDeci[i] = ThisYear.Term1AcrDeci[i + 1];
+          }
+          if ((ThisYear.Term1NowDeci || []).length) {
+            Term1NowDeci[i] = ThisYear.TermNowDeci[i];
+            TermNowDeci[i] = ThisYear.Term1NowDeci[i + 1];
+          }
+          if ((ThisYear.Term1Equa || []).length) {
+            Term1Equa[i] = ThisYear.TermEqua[i];
+            TermEqua[i] = ThisYear.Term1Equa[i + 1];
+          }
+          if ((ThisYear.Term1Eclp || []).length) {
+            Term1Eclp[i] = ThisYear.TermEclp[i];
+            TermEclp[i] = ThisYear.Term1Eclp[i + 1];
+          }
+        }
+      } else if (LeapNumTerm) {
         TermName[LeapNumTerm + 1] = "无中";
         TermSc[LeapNumTerm + 1] = "";
         TermDeci[LeapNumTerm + 1] = "";
@@ -136,8 +193,8 @@ export default (Name, YearStart, YearEnd) => {
         if ((ThisYear.TermEqua || []).length) TermEqua[LeapNumTerm + 1] = "";
         if ((ThisYear.TermEclp || []).length) TermEclp[LeapNumTerm + 1] = "";
         for (let i = LeapNumTerm + 2; i <= 13; i++) {
-          TermName[i] = Term1NameList[(i + 2) % 12];
           // 上下互換位置
+          TermName[i] = Term1NameList[(i + 2) % 12];
           Term1Name[i] = TermNameList[(i + 1) % 12];
           if ((ThisYear.TermSc || []).length) {
             TermSc[i] = ThisYear.Term1Sc[i];
@@ -164,18 +221,6 @@ export default (Name, YearStart, YearEnd) => {
             Term1Eclp[i] = ThisYear.TermEclp[i - 1];
           }
         }
-      }
-      if (PrevYear.LeapNumTerm) {
-        Term1Name[1] = "无節";
-        Term1Sc[1] = "";
-        Term1Deci[1] = "";
-        if ((ThisYear.Term1AcrSc || []).length) {
-          Term1AcrSc[1] = "";
-          Term1AcrDeci[1] = "";
-        }
-        if ((ThisYear.Term1NowDeci || []).length) Term1NowDeci[1] = "";
-        if ((ThisYear.Term1Equa || []).length) Term1Equa[1] = "";
-        if ((ThisYear.Term1Eclp || []).length) Term1Eclp[1] = "";
       }
     }
     // 月序
@@ -697,4 +742,4 @@ export default (Name, YearStart, YearEnd) => {
   }
   return result;
 };
-// console.log(Index("Xia", -393));
+// console.log(Index("Shoushi", 12));

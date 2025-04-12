@@ -885,6 +885,7 @@ export const N4 = (Name, Y) => {
     const Term1Deci = [];
     const TermEqua = [];
     const TermEclp = [];
+    const Term1AcrSmd = [];
     const Term1AcrSc = [];
     const Term1AcrDeci = [];
     const Term1NowDeci = [];
@@ -1144,6 +1145,7 @@ export const N4 = (Name, Y) => {
         const Func1 = term(i, false);
         Term1Sc[i] = Func1.TermSc;
         Term1Deci[i] = Func1.TermDeci;
+        Term1AcrSmd[i] = Func1.TermAcrSmd;
         Term1AcrSc[i] = Func1.TermAcrSc;
         Term1AcrDeci[i] = Func1.TermAcrDeci;
         Term1NowDeci[i] = Func1.TermNowDeci;
@@ -1216,6 +1218,7 @@ export const N4 = (Name, Y) => {
       AvgSc,
       AvgDeci,
       NowSc,
+      NowlineSmd,
       NowlineDeci,
       NowDeci,
       NowSmd,
@@ -1230,6 +1233,7 @@ export const N4 = (Name, Y) => {
       TermEclp,
       Term1Sc,
       Term1Deci,
+      Term1AcrSmd,
       Term1AcrSc,
       Term1AcrDeci,
       Term1NowDeci,
@@ -1242,6 +1246,7 @@ export const N4 = (Name, Y) => {
   const {
     AvgSc: NewmAvgSc,
     AvgDeci: NewmAvgDeci,
+    NowlineSmd: NewmNowlineSmd,
     NowlineDeci: NewmNowlineDeci,
     NowSc: NewmSc,
     NowDeci: NewmDeci,
@@ -1258,6 +1263,7 @@ export const N4 = (Name, Y) => {
     TermEclp,
     Term1Sc,
     Term1Deci,
+    Term1AcrSmd,
     Term1AcrSc,
     Term1AcrDeci,
     Term1NowDeci,
@@ -1276,6 +1282,7 @@ export const N4 = (Name, Y) => {
     NewmAvgSc,
     NewmAvgDeci,
     NewmSc,
+    NewmNowlineSmd,
     NewmNowlineDeci,
     NewmDeci,
     NewmEqua,
@@ -1294,6 +1301,7 @@ export const N4 = (Name, Y) => {
     TermEclp,
     Term1Sc,
     Term1Deci,
+    Term1AcrSmd,
     Term1AcrSc,
     Term1AcrDeci,
     Term1NowDeci,
