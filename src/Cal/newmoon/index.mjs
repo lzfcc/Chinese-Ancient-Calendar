@@ -19,10 +19,9 @@ import { fix, fm360, fm60 } from "../parameter/functions.mjs";
 import { autoRise } from "../astronomy/lat_rise_dial.mjs";
 
 // 此函數grok3改寫
-function terms(ThisYear, PrevYear, Name) {
+function terms(ThisYear, PrevYear, LeapNumTerm, Name) {
   const { ZhengNum, isAcr } = Para[Name];
-  const { SolsDeci } = ThisYear;
-  let { LeapNumTerm, NewmInt } = ThisYear;
+  const { SolsDeci, NewmInt } = ThisYear;
   // Define optional properties and their sources for down and up terms
   const properties = [
     { key: "AcrSc", downSource: "TermAcrSc", upSource: "Term1AcrSc" },
@@ -135,14 +134,14 @@ function terms(ThisYear, PrevYear, Name) {
     (!PrevYear.LeapNumTerm && NoJieMon)
   ) {
     // Set up term at NoJieMon to "无節" with empty attributes
-    terms[NoJieMon].up = {
+    terms[NoJieMon].down = {
       Name: "无節",
       Sc: "",
       Deci: ""
     };
     properties.forEach((prop) => {
       if (ThisYear[prop.upSource]?.length) {
-        terms[NoJieMon].up[prop.key] = "";
+        terms[NoJieMon].down[prop.key] = "";
       }
     });
     // Reset terms after NoJieMon to initial-like state
@@ -258,7 +257,7 @@ export default (Name, YearStart, YearEnd) => {
       TermUpAcrDeci,
       TermUpNowDeci,
       TermUpAcrSc
-    } = transform(terms(ThisYear, PrevYear, Name));
+    } = transform(terms(ThisYear, PrevYear, LeapNumTerm, Name)); // 必須要傳上面修改過後的LeapNumTerm
     /////////////////// 月序
     const MonthName = [];
     let MonNumList = MonNumList1;
@@ -742,4 +741,4 @@ export default (Name, YearStart, YearEnd) => {
   }
   return result;
 };
-// console.log(Index("Shoushi", 12));
+// console.log(Index("Xia", 16));
