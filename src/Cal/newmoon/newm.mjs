@@ -19,7 +19,7 @@ export default (Name, Y) => {
     AcrTermList,
     OriginAd,
     CloseOriginAd,
-    ZhengNum,
+    EpochSolsDif,
     FirstNum,
     YuanRange,
     JiRange,
@@ -50,7 +50,8 @@ export default (Name, Y) => {
   const isExcl = Type >= 4 ? 1 : 0;
   const ZhangMon = Math.round(ZhangRange * (12 + ZhangLeap / ZhangRange));
   // const JiMon = JiRange * ZhangMon / ZhangRange
-  const FirstZhengDif = FirstNum - ZhengNum;
+  const EpochNum = EpochSolsDif ? Math.ceil(EpochSolsDif) : 0; // 立春历元历法固定以建寅月立春为历元
+  const FirstEpochDif = FirstNum - EpochNum;
   const OriginYear = Y - (OriginAd || CloseOriginAd); // 上元積年（算上）
   // const CloseSd = CloseOriginAd - OriginAd // 統天距算
   const CloseOriginYear = Y - CloseOriginAd; // 距差。授時以1280開始
@@ -222,20 +223,20 @@ export default (Name, Y) => {
     for (let i = 0; i <= 14; i++) {
       AvgRaw[i] = +(
         FirstAccum +
-        (FirstZhengDif + i - (isNewm ? 1 : 0.5)) * Lunar
+        (FirstEpochDif + i - (isNewm ? 1 : 0.5)) * Lunar
       ).toFixed(fixed);
       AvgInt[i] = Math.floor(AvgRaw[i]);
       AvgSc[i] = ScList[fm60(AvgInt[i] + 1 + ScConst)];
       AvgDeci[i] = deci(AvgRaw[i]);
       Sd[i] =
-        (FirstZhengDif + i - (isNewm ? 1 : 0.5)) * Lunar +
+        (FirstEpochDif + i - (isNewm ? 1 : 0.5)) * Lunar +
         FirstAccum -
         SolsAccum;
       let Tcorr1 = 0;
       if (Anoma) {
         AnoAccum[i] = +(
           (FirstAnoAccum +
-            (FirstZhengDif + i - 1) * SynodicAnomaDif +
+            (FirstEpochDif + i - 1) * SynodicAnomaDif +
             (isNewm ? 0 : Lunar / 2)) %
           Anoma
         ).toFixed(fixed); // 上元積年幾千萬年，精度只有那麼多了，再多的話誤差更大
@@ -284,19 +285,19 @@ export default (Name, Y) => {
           Equa[i] = Func.Equa; // 授時：定朔加時定積度=定朔加時中積（即定朔入曆）+盈縮差
           Eclp[i] = Func.Eclp;
         }
-        TermAvgSd[i] = (i + FirstZhengDif - 1) * TermLeng;
+        TermAvgSd[i] = (i + FirstEpochDif - 1) * TermLeng;
         TermAvgRaw[i] = SolsAccum + TermAvgSd[i];
         const tmp = fm60(TermAvgRaw[i] + isExcl + ScConst);
         TermSc[i] = ScList[Math.trunc(tmp)];
         TermDeci[i] = fix(deci(tmp));
-        Term1AvgSd[i] = (i + FirstZhengDif - 1.5) * TermLeng;
+        Term1AvgSd[i] = (i + FirstEpochDif - 1.5) * TermLeng;
         Term1AvgRaw[i] = SolsAccum + Term1AvgSd[i];
         const tmp1 = fm60(Term1AvgRaw[i] + isExcl + ScConst);
         Term1Sc[i] = ScList[Math.trunc(tmp1)];
         Term1Deci[i] = fix(deci(tmp1));
         if (Type >= 5 && AcrTermList) {
           // 定中氣
-          const TermNum3 = 2 * (i + FirstZhengDif - 1);
+          const TermNum3 = 2 * (i + FirstEpochDif - 1);
           let Plus = 0;
           if (TermNum3 >= 24) Plus = Solar;
           else if (TermNum3 < 0) Plus = -Solar;
@@ -306,7 +307,7 @@ export default (Name, Y) => {
           TermAcrSc[i] = ScList[Math.trunc(tmp2)];
           TermAcrDeci[i] = fix(deci(tmp2), 3);
           // 定節氣
-          const TermNum2 = 2 * (i + FirstZhengDif - 1) - 1;
+          const TermNum2 = 2 * (i + FirstEpochDif - 1) - 1;
           let Plus1 = 0;
           if (TermNum2 >= 24) Plus1 = Solar;
           else if (TermNum2 < 0) Plus1 = -Solar;
@@ -350,7 +351,7 @@ export default (Name, Y) => {
       if (Node) {
         NodeAccum[i] = +(
           (FirstNodeAccum +
-            (FirstZhengDif + i - 1) * Lunar +
+            (FirstEpochDif + i - 1) * Lunar +
             (isNewm ? 0 : SynodicNodeDif50)) %
           Node
         ).toFixed(fixed);

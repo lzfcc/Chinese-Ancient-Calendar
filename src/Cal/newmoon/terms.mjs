@@ -1,10 +1,24 @@
 import Para from "../parameter/calendars.mjs";
-import { TermNameList, Term1NameList } from "../parameter/constants.mjs";
+import {
+  TermNameList,
+  Term1NameList,
+  TermNameListB,
+  Term1NameListB
+} from "../parameter/constants.mjs";
 // 此函數grok3改寫
 export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
-  const { FirstNum, isAcr } = Para[Name];
+  const { FirstNum, isAcr, EpochSolsDif } = Para[Name];
   const { SolsDeci, NewmInt } = ThisYear;
   // Define optional properties and their sources for down and up terms
+  const isJieEpoch = EpochSolsDif
+    ? Math.floor(EpochSolsDif) !== EpochSolsDif
+    : false; // 是否以节（立春）为历元
+  let TermList = TermNameList;
+  let Term1List = Term1NameList;
+  if (isJieEpoch) {
+    TermList = TermNameListB;
+    Term1List = Term1NameListB;
+  }
   const properties = [
     { key: "Sc", downSource: "TermSc", upSource: "Term1Sc" },
     { key: "AcrSc", downSource: "TermAcrSc", upSource: "Term1AcrSc" },
@@ -20,10 +34,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
   // Step 1: Populate initial term data for indices 1 to 13
   for (let i = 1; i <= 13; i++) {
     terms[i].down = {
-      Name: TermNameList[(i + FirstNum) % 12]
+      Name: TermList[(i + FirstNum) % 12]
     };
     terms[i].up = {
-      Name: Term1NameList[(i + FirstNum) % 12]
+      Name: Term1List[(i + FirstNum) % 12]
     };
     // Assign optional properties if they exist
     properties.forEach((prop) => {
@@ -38,7 +52,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     const leapIndex = LeapNumTerm + 1;
     // Set down term at leapIndex to "无中" with empty attributes
     terms[leapIndex].down = {
-      Name: "无中"
+      Name: TermList.at(-1)
     };
     properties.forEach((prop) => {
       if (ThisYear[prop.downSource]?.length) {
@@ -48,10 +62,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     // Adjust subsequent terms by swapping sources and shifting up terms
     for (let i = leapIndex + 1; i <= 13; i++) {
       terms[i].down = {
-        Name: Term1NameList[(i + FirstNum) % 12]
+        Name: Term1List[(i + FirstNum) % 12]
       };
       terms[i].up = {
-        Name: TermNameList[(i + FirstNum - 1) % 12]
+        Name: TermList[(i + FirstNum - 1) % 12]
       };
       properties.forEach((prop) => {
         if (ThisYear[prop.downSource]?.length) {
@@ -90,7 +104,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     // Shift up terms forward
     for (let i = 1; i <= 13; i++) {
       terms[i].up = {
-        Name: Term1NameList[(i + FirstNum + 1) % 12]
+        Name: Term1List[(i + FirstNum + 1) % 12]
       };
       properties.forEach((prop) => {
         if (ThisYear[prop.upSource]?.length) {
@@ -112,7 +126,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
   ) {
     // Set up term at NoJieMon to "无節" with empty attributes
     terms[NoJieMon].down = {
-      Name: "无節"
+      Name: Term1List.at(-1)
     };
     properties.forEach((prop) => {
       if (ThisYear[prop.upSource]?.length) {
@@ -122,10 +136,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     // Reset terms after NoJieMon to initial-like state
     for (let i = NoJieMon + 1; i <= 13; i++) {
       terms[i].up = {
-        Name: Term1NameList[(i + FirstNum) % 12]
+        Name: Term1List[(i + FirstNum) % 12]
       };
       terms[i].down = {
-        Name: TermNameList[(i + FirstNum) % 12]
+        Name: TermList[(i + FirstNum) % 12]
       };
       properties.forEach((prop) => {
         if (ThisYear[prop.downSource]?.length) {
@@ -163,7 +177,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 // 原來的：
 // // 調整節氣
 // for (let i = 1; i <= 13; i++) {
-//   TermDownName[i] = TermNameList[(i + FirstNum) % 12];
+//   TermDownName[i] = TermList[(i + FirstNum) % 12];
 //   TermDownSc[i] = ThisYear.TermSc[i];
 //   TermDownDeci[i] = ThisYear.TermDeci[i];
 //   TermUpName[i] = Term1NameList[(i + FirstNum) % 12];
@@ -203,7 +217,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 //     TermDownName[i] = Term1NameList[(i + FirstNum) % 12];
 //     TermDownSc[i] = ThisYear.Term1Sc[i];
 //     TermDownDeci[i] = ThisYear.Term1Deci[i];
-//     TermUpName[i] = TermNameList[(i + FirstNum - 1) % 12];
+//     TermUpName[i] = TermList[(i + FirstNum - 1) % 12];
 //     TermUpSc[i] = ThisYear.TermSc[i - 1];
 //     TermUpDeci[i] = ThisYear.TermDeci[i - 1];
 //     if ((ThisYear.Term1AcrSc || []).length) {

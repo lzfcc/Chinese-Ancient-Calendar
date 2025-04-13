@@ -13,7 +13,7 @@ import {
 } from "../parameter/constants.mjs";
 import { AutoEclipse } from "../astronomy/eclipse.mjs";
 import { AutoRangeEcli } from "../parameter/auto_consts.mjs";
-import { fix, fm360, fm60 } from "../parameter/functions.mjs";
+import { fix, fm360, fm60, fmod } from "../parameter/functions.mjs";
 import { autoRise } from "../astronomy/lat_rise_dial.mjs";
 import terms from "./terms.mjs";
 // const Index = (Name, YearStart, YearEnd) => {
@@ -32,9 +32,10 @@ export default (Name, YearStart, YearEnd) => {
     ZhangRange,
     Denom,
     Node,
-    ZhengNum,
-    SolsEpochDif
+    FirstNum,
+    ZhengNum
   } = Para[Name];
+  const FirstZhengDif = FirstNum - ZhengNum; // 年首和正月的差，用于月名改正
   const Memo = [];
   const calculate = (Y) => {
     const [PrevYear, ThisYear, NextYear] = Memo;
@@ -89,16 +90,17 @@ export default (Name, YearStart, YearEnd) => {
     if (LeapNumTerm) {
       for (let i = 1; i <= 13; i++) {
         if (i <= LeapNumTerm) {
-          MonthName[i] = MonNumList[i];
+          MonthName[i] = MonNumList[fmod(i + FirstZhengDif, 12)];
         } else if (i === LeapNumTerm + 1) {
-          MonthName[i] = "閏" + MonNumList[LeapNumTerm];
+          MonthName[i] =
+            "閏" + MonNumList[fmod(LeapNumTerm + FirstZhengDif, 12)];
         } else {
-          MonthName[i] = MonNumList[i - 1];
+          MonthName[i] = MonNumList[fmod(i + FirstZhengDif - 1, 12)];
         }
       }
     } else {
       for (let i = 1; i <= 12; i++) {
-        MonthName[i] = MonNumList[i];
+        MonthName[i] = MonNumList[fmod(i + FirstZhengDif, 12)];
       }
     }
     const NewmSlice = (array) => array.slice(1 + NewmStart, 13 + NewmEnd);
@@ -378,11 +380,6 @@ export default (Name, YearStart, YearEnd) => {
       YearInfo.push({
         SolsSur: `大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat(ThisYear.SolsAccumMod.toPrecision(6)).toFixed(4)}`
       });
-      if (SolsEpochDif === -1.5) {
-        YearInfo.push({
-          SolsSur: `立春${parseFloat(fm60(SolsAccum).toPrecision(6)).toFixed(4)}`
-        });
-      }
       YearInfo.push({ LeapSur: `閏餘${LeapSur.toFixed(4)}` });
       if (ThisYear.LeapNumOriginLeapSur) {
         YearInfo.push({
@@ -396,11 +393,6 @@ export default (Name, YearStart, YearEnd) => {
     } else {
       if (JiScOrder)
         YearInfo.push({ BuYear: `${ScList[JiScOrder]}紀${ThisYear.JiYear}` });
-      if (Type <= 10) {
-        YearInfo.push({
-          SolsAccum: (ZhengNum === 2 ? "雨" : "冬") + fm60(SolsAccum).toFixed(4)
-        });
-      }
       if (Type === 2)
         YearInfo.push({
           LeapSur: `平閏餘${ThisYear.LeapSurAvg}定閏餘${ThisYear.LeapSurAcr.toFixed(2)}閏準${LeapLimit}`
@@ -557,4 +549,4 @@ export default (Name, YearStart, YearEnd) => {
   }
   return result;
 };
-// console.log(Index("Xia", 16));
+// console.log(Index("ZhuanxuA", -363));

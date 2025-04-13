@@ -612,3 +612,10 @@ a = [0, ...a]
 - 修復：古曆曆書十二月的JD、日躔錯誤（以前是從新的冬至起算），給相關函數補 `fmod(…, solar)`
 - 修復：十月首顓頊曆蔀首負數。接著刪掉為了解決顓頊曆15、16年，建子雨夏30、31年的極特殊情況的判斷邏輯，否則每蔀75、76年銜接有問題。
 - 調整：古六曆名字、目錄。(擬) –>  *
+
+4-13 `2.18`
+
+- 修復：index文件無節月的安置，移出爲terms函數。
+- 修復：立春曆元古六曆的算法。
+- 改名：ZhengNum -> FirstNum, OriginMonNum -> ZhengNum. ZhengSd = FirstNum - ZhengNum -> FirstZhengDif。`FirstEpochDif`用于每月计算，`FirstZhengDif ` 用于月名
+- 調整：刪去四分曆法的年終置閏法，刪掉大量繁冗代碼，和其他古曆統合起來。

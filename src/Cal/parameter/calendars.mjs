@@ -14,9 +14,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0, // 0:固定冬至，1:無中氣
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0 // 0:固定冬至，1:無中氣
   },
   XiaB: {
     // 立春曆元夏曆
@@ -27,15 +25,13 @@ export default {
     OriginAd: -2760294, // -1494
     OriginYearSc: 3,
     BuScConst: 3, // 己巳蔀第一
-    SolsEpochDif: -1.5, // 立春爲曆元
+    EpochSolsDif: 1.5, // 立春爲曆元
     FirstNum: 2,
     ZhengNum: 2,
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 1, // 0:固定冬至，1:無中氣
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 1 // 0:固定冬至，1:無中氣
   },
   Yin: {
     Type: 1,
@@ -46,14 +42,12 @@ export default {
     // JdOrigin: 1704250.5,
     JdSols: 1704250.5 + 46 * 365.25,
     OriginYearSc: 51, // 上元年干支甲寅
-    FirstNum: 0, // 年首子月。這兩個一定要記得一起調
+    FirstNum: 0, // 年首子月
     ZhengNum: 0, // 正月建子
     YuanRange: 4560, // 元
     JiRange: 1520, // 紀
     BuRange: 76, // 蔀
-    isTermLeap: 0, // 是否用無中氣置閏法
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0 // 是否用無中氣置閏法
   },
   Zhou: {
     Type: 1,
@@ -69,9 +63,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0
   },
   Huangdi: {
     Type: 1,
@@ -87,9 +79,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0
   },
   Lu: {
     // 無加小餘
@@ -108,9 +98,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0
   },
   // 以下7种为郜积意推排的 722、666、607、586、566、547、529、508
   // LuA: { // 隱元-721,宣元-607
@@ -130,8 +118,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 539 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuA1: { // 隱元-721,宣元-607
   //     Type: 1,
@@ -150,8 +136,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 539 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuB: { // 宣二-606，成四-586
   //     Type: 1,
@@ -170,8 +154,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 469 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuC: { // 成五-585，襄六-566
   //     Type: 1,
@@ -190,8 +172,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 403 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuD: { // 襄七-565，襄廿五-547
   //     Type: 1,
@@ -210,8 +190,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 348 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuE: { // 襄廿六-546，昭十二-529
   //     Type: 1,
@@ -230,8 +208,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 280 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuF: { // 昭十三-528，定元-508
   //     Type: 1,
@@ -250,8 +226,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 213 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // LuG: { // -507，-466
   //     Type: 1,
@@ -270,8 +244,6 @@ export default {
   //     BuRange: 76,
   //     isTermLeap: 0,
   //     SolsConst: 147 / 940,
-  //     EcliRange: 135 / 23,
-  //     EcliNumer: 513,
   // },
   // Zhuanxu1: {
   //   // 楚曆顓頊大正
@@ -287,15 +259,13 @@ export default {
   //   JiRange: 1520,
   //   BuRange: 76,
   //   isTermLeap: 0, // 0:固定冬至，1:無中氣
-  //   EcliRange: 135 / 23,
-  //   EcliNumer: 513
   // },
   // Zhuanxu2: {
   //   Type: 1,
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsEpochDif: -1.5, // 立春爲曆元
+  //   EpochSolsDif: 1.5, // 立春爲曆元
   //   OriginAd: -2760305, // -1505
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -308,8 +278,6 @@ export default {
   //   BuRange: 76,
   //   isTermLeap: 0,
   //   DayConst: 4 / 24, // 寅正爲日始
-  //   EcliRange: 135 / 23,
-  //   EcliNumer: 513
   // },
   ZhuanxuA: {
     Type: 1,
@@ -317,7 +285,7 @@ export default {
     Denom: 940,
     Lunar: 27759 / 940,
     Solar: 365.25,
-    SolsEpochDif: -1.5, // 立春曆元固定以建寅月为立春所在
+    EpochSolsDif: 1.5, // 立春曆元固定以建寅月为立春所在
     OriginAd: -2760305, // -1505
     // JdOrigin: 1726575.5,
     JdSols: 1721051 + 3 / 32,
@@ -328,9 +296,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0
   },
   ZhuanxuB: {
     // 朱桂昌《顓頊日曆表》：暫定秦昭王元年前306行十月爲歲首
@@ -339,7 +305,7 @@ export default {
     Denom: 940,
     Lunar: 27759 / 940,
     Solar: 365.25,
-    SolsEpochDif: -1.5, // 立春爲曆元
+    EpochSolsDif: 1.5, // 立春爲曆元
     OriginAd: -2760305,
     // JdOrigin: 1726575.5,
     JdSols: 1721051 + 3 / 32,
@@ -349,10 +315,7 @@ export default {
     ZhengNum: 2, // 建寅
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    BuRange: 76
   },
   // ZhuanxuC: {
   //   // 秦始皇元年前246朔餘增加3/4日。《顓頊日曆表》第545頁
@@ -361,7 +324,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsEpochDif: -1.5, // 立春爲曆元  //
+  //   EpochSolsDif: 1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -374,8 +337,6 @@ export default {
   //   BuRange: 76,
   //   isTermLeap: 0,
   //   SolsConst: 3 / 4,
-  //   EcliRange: 135 / 23,
-  //   EcliNumer: 513
   // },
   // ZhuanxuD: {
   //   // 高帝元年前206朔餘減少210分
@@ -384,7 +345,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsEpochDif: -1.5, // 立春爲曆元  //
+  //   EpochSolsDif: 1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -397,8 +358,6 @@ export default {
   //   BuRange: 76,
   //   isTermLeap: 0,
   //   SolsConst: 3 / 4 - 210 / 940,
-  //   EcliRange: 135 / 23,
-  //   EcliNumer: 513
   // },
   // ZhuanxuE: {
   //   // 前162年改變閏章（但我看他提供的資料，應該是前186-182之間變化），減朔餘25分。《顓頊日曆表》第544頁：出土資料的閏年：前251、208、205、202、199、197、191、186、180、164、153、151、134、129、110
@@ -407,7 +366,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsEpochDif: -1.5, // 立春爲曆元  //
+  //   EpochSolsDif: 1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -420,8 +379,6 @@ export default {
   //   BuRange: 76,
   //   isTermLeap: 1,
   //   SolsConst: 3 / 4 - 210 / 940,
-  //   EcliRange: 135 / 23,
-  //   EcliNumer: 513
   // },
   // ZhuanxuF: {
   //   Type: 1,
@@ -429,7 +386,7 @@ export default {
   //   Denom: 940,
   //   Lunar: 27759 / 940,
   //   Solar: 365.25,
-  //   SolsEpochDif: -1.5, // 立春爲曆元  //
+  //   EpochSolsDif: 1.5, // 立春爲曆元  //
   //   OriginAd: -2760305,
   //   // JdOrigin: 1726575.5,
   //   JdSols: 1721051 + 3 / 32,
@@ -442,8 +399,6 @@ export default {
   //   BuRange: 76,
   //   isTermLeap: 1,
   //   SolsConst: 3 / 4 - 235 / 940,
-  //   EcliRange: 135 / 23,
-  //   EcliNumer: 513
   // },
   TaiyiJiayin: {
     Type: 1,
@@ -468,8 +423,6 @@ export default {
     OriginAd: -1566, // 上元積年的公曆
     // JdOrigin: 1704249.75,
     JdSols: 1704249.75 + 46 * 365.25,
-    EcliRange: 135 / 23,
-    EcliNumer: 513,
     Node: 27.212729649262943,
     OriginYearSc: 0, // 上元年干支
     FirstNum: 2,
@@ -517,9 +470,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0
   },
   Yuanmingbao: {
     Type: 1,
@@ -533,9 +484,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 0,
-    EcliRange: 135 / 23,
-    EcliNumer: 513
+    isTermLeap: 0
   },
   Easthan: {
     Type: 1,
@@ -691,7 +640,7 @@ export default {
     CloseOriginAd: 206,
     // JdOrigin: 1796291.56961 - 7377 * (365 + 145 / 589), // -103年癸亥朔，並非甲子夜半朔旦冬至。定朔1683430.240082638
     OriginYearSc: 26, // 上元年干支
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 1178, // 元：乾法，內紀外紀
     JiRange: 589, // 紀法，每紀31章，31:通數
@@ -716,7 +665,7 @@ export default {
     // JdOrigin: 1801769.6790 - 31578 * (365 + 1204 / 4883), // 220-12-23癸未
     CloseOriginAd: 220,
     OriginYearSc: 19, // 上元壬午。
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 9766, // 元法。闕，假設是2倍
     JiRange: 4883, // 紀法
@@ -784,7 +733,7 @@ export default {
     CloseOriginAd: 237,
     // JdOrigin: 1807614.129951 - 4045 * (365 + 455 / 1843),
     OriginYearSc: 29, // 上元壬辰
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 11058, // 元法
     JiRange: 1843, // 紀法。紀月：22795。日數：673150。每年月行254/19週，每紀24638（月週）
@@ -811,7 +760,7 @@ export default {
     CloseOriginAd: 274,
     // JdOrigin: 1821128.2200 - (97411 + 1823) * (365 + 37 / 150),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 17100, // 元法闕，我算得171000
     JiRange: 2850, // 紀法。
@@ -837,7 +786,7 @@ export default {
     //+1205,+2533,-464這三個方案都不好
     // JdOrigin: 1849614.4156 - (97000 - 864) * (365 + 1205 / 4883),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 4883, // 元法闕，我算得等於紀法
     JiRange: 4883, // 紀法。
@@ -867,7 +816,7 @@ export default {
     CloseOriginAd: 384,
     // JdOrigin: 1861305.400041 - 83840 * (365 + 605 / 2451),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 7353, // 元法。元月90945
     JiRange: 2451, // 紀月30315，紀日895220
@@ -903,7 +852,7 @@ export default {
     CloseOriginAd: 412,
     // JdOrigin: 1871530.1447 - 61438 * (365 + 1759 / 7200),
     OriginYearSc: 51, // 上元甲寅
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     YuanRange: 432000, // 元法
     JiRange: 72000, // 紀日26297590，
@@ -943,7 +892,7 @@ export default {
     CloseOriginAd: 522,
     // JdOrigin: 1911706.1023 - 167750 * (365 + 1477 / 6060),
     OriginYearSc: 49, // 上元壬子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 363600, // 元法，6紀
     JiRange: 60600, // 1紀10蔀
@@ -983,7 +932,7 @@ export default {
     CloseOriginAd: 540,
     // JdOrigin: 1918280.6265 - 293996 * (365 + 4117 / 16860),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 1011600, // 元法，6紀
     JiRange: 168600, // 1紀10蔀
@@ -1025,7 +974,7 @@ export default {
     CloseOriginAd: 550,
     // JdOrigin: 1921934.0571 - 110526 * (365 + 5787 / 23660),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 1419600, // 元法，6紀
     JiRange: 236600, // 原文的數字是20036600
@@ -1048,7 +997,7 @@ export default {
     OriginAd: 576 - 1010382, // 武平四年癸巳 // 嚴敦傑573 - 123399
     CloseOriginAd: 576,
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 1340280, // 元法。闕，我假設是紀法的6倍
     JiRange: 223380, // 闕，我假設是蔀法的10倍
@@ -1077,7 +1026,7 @@ export default {
     CloseOriginAd: 566,
     // JdOrigin: 1927776.1075 - 875792 * (365 + 5731 / 23460),
     OriginYearSc: 51, // 上元甲寅
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 1407600, // 元法闕，我算得
     JiRange: 234600, // 闕
@@ -1107,7 +1056,7 @@ export default {
     // 會日173，會餘16619，冬至日在斗12度。
     // JdOrigin: 1932524.2832 - 41553 * (365 + 3167 / 12992),
     OriginYearSc: 3, // 上元丙寅
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 259840, // 闕，我算得。1 元 = 20 蔀，1 蔀 = 29 章
     JiRange: 129920, // 闕，我假設是蔀法的10倍。
@@ -1139,7 +1088,7 @@ export default {
     CloseOriginAd: 584,
     // JdOrigin: 1934350.8011 - 4129000 * (365 + 25063 / 102960),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     YuanRange: 6177600, // 元法
     JiRange: 1029600, // 紀法
@@ -1158,7 +1107,7 @@ export default {
     Lunar: 29 + 26 / 49,
     Denom: 49,
     OriginAd: 724 - 1937280,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2
   },
   Yuanjia: {
@@ -1237,8 +1186,9 @@ export default {
     CloseOriginAd: 443,
     // JdOrigin: 1882851.6157 - 5703 * (365 + 75 / 304) + 1.5, // 有點不對，修正一下
     OriginYearSc: 17, // 上元庚辰
-    ZhengNum: 2, // 雨水爲歲首
-    FirstNum: 2, // 建寅
+    EpochSolsDif: 2, // 雨水爲歲首
+    FirstNum: 2,
+    ZhengNum: 2, // 建寅
     YuanRange: 3648, // 元法
     JiRange: 608, // 紀法。紀月：7520.紀日：222070
     ZhangRange: 19,
@@ -1318,7 +1268,7 @@ export default {
     CloseOriginAd: 463,
     // JdOrigin: 1890157.0589 - 51939 * (365 + 9589 / 39491),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     MansRaw: [10, 0], // 上元虛初度。從上元到463年，大概退了35度，從虛初退，正好是斗12左右
     MansFracPosi: 9, // 虛前，入虛去度分
@@ -1363,7 +1313,7 @@ export default {
     CloseOriginAd: 535,
     // JdOrigin: 1916454.5956 - 1025691 * (365 + 9681 / 39616),
     OriginYearSc: 1,
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     MansRaw: [10, 0], // 假設是虛初
     MansFracPosi: 7
@@ -1392,7 +1342,7 @@ export default {
     OriginAd: 576 - 25952, // 武平四年癸巳// 嚴敦傑573 - 876569
     CloseOriginAd: 576,
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     MansRaw: [7, 11], // 「日月五星并從斗十一起」
     MansFracPosi: 7
@@ -1426,7 +1376,7 @@ export default {
     CloseOriginAd: 573,
     // JdOrigin: 1930334.1174 - 435089 * (365 + 1966 / 8047),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     MansRaw: [10, 7], // 先是9，後來改成7
     MansFracPosi: 10
@@ -1477,7 +1427,7 @@ export default {
     CloseOriginAd: 604,
     // JdOrigin: 1941656.5722 - 1427640 * (365 + 10363 / 42640),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     MansRaw: [10, 7], // 虛7度
     MansFracPosi: 7, // 經斗去其分
@@ -1543,7 +1493,7 @@ export default {
     CloseOriginAd: 626,
     // JdOrigin: 1949691.8546 - 164348 * (365 + 2315 / 9464),
     OriginYearSc: 15, // 上元戊寅
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     MansRaw: [10, 6], // 命以虛六
     MansFracPosi: 7, // 經斗去分
@@ -1611,7 +1561,7 @@ export default {
     CloseOriginAd: 626,
     // JdOrigin: 1949691.8546 - 164348 * (365 + 2315 / 9464),
     OriginYearSc: 15, // 上元戊寅
-    ZhengNum: 0, //
+    ZhengNum: 2, //
     FirstNum: 2, // 建寅
     MansRaw: [10, 6], // 命以虛六
     MansFracPosi: 7, // 經斗去分
@@ -1665,7 +1615,7 @@ export default {
     CloseOriginAd: 608,
     // JdOrigin: 1943117.0236 - 1008844 * (365 + 11406.5 / 46644), //
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: 2,
     MansDayConst: -12,
     FirstNum: 2, // 建寅
@@ -1801,7 +1751,7 @@ export default {
     OriginAd: 629 - 79244,
     CloseOriginAd: 629,
     OriginYearSc: 42, // 上元乙巳
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     // WeekConst: 1,
     // MansDayConst: -20,
@@ -1829,7 +1779,7 @@ export default {
     CloseOriginAd: 664,
     // JdOrigin: 1963570.6791 - 269880 * (365 + 328 / 1340),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     WeekConst: 1,
     MansDayConst: -20,
@@ -1938,7 +1888,7 @@ export default {
     CloseOriginAd: 664,
     // JdOrigin: 1963570.6791 - 269880 * (365 + 328 / 1340),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     WeekConst: 1,
     MansDayConst: -20,
@@ -1998,7 +1948,7 @@ export default {
     CloseOriginAd: 705, // 神龍元年乙巳
     // JdOrigin: 1978545.8280 - 414360 * 365.2448,
     OriginYearSc: 42, // 上元乙巳。從上元可以推斷是戊寅曆系統的
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2 // 建寅
   },
   Dayan: {
@@ -2027,7 +1977,7 @@ export default {
     CloseOriginAd: 724,
     // JdOrigin: 1985485.2434 - 96961740 * (365 + 743 / 3040),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     WeekConst: -1,
     MansDayConst: -8, // 這是二十八宿值日，跟宿度沒關係！
@@ -2145,7 +2095,7 @@ export default {
     OriginAd: 724 - 96961740,
     // JdOrigin: 1985485.2434 - 96961740 * (365 + 743 / 3040),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2, // 建寅
     TermConst: 2,
     WeekConst: -1,
@@ -2177,7 +2127,7 @@ export default {
     CloseOriginAd: 762,
     // JdOrigin: 1999364.6672 - 269978 * (365 + 328 / 1340), //
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: 1,
     MansDayConst: -20,
@@ -2264,7 +2214,7 @@ export default {
     CloseOriginAd: 784,
     // JdOrigin: 2007399.8151 - 402900 * (365 + 268 / 1095),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: -2,
     MansDayConst: -16,
@@ -2355,7 +2305,7 @@ export default {
     CloseOriginAd: 822,
     // JdOrigin: 2021279.2607 - 7070138 * (365 + 2055 / 8400),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: -1,
     MansDayConst: -8,
@@ -2464,7 +2414,7 @@ export default {
     CloseOriginAd: 892,
     // JdOrigin: 2046846.3302 - 53947308 * (365 + 3301 / 13500),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: -2,
     MansDayConst: -16,
@@ -2556,7 +2506,7 @@ export default {
     CloseOriginAd: 956,
     // JdOrigin: 2070222.0140 - 72698452 * (365 + 1760.40 / 7200),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: 2,
     MansDayConst: -12,
@@ -2704,7 +2654,8 @@ export default {
     CloseOriginAd: 660, // 660-2-16 Jd1962169 顯慶五年庚申正月壬寅雨水朔
     // JdOrigin: 1962169 - 39, // 雨水
     // JdOrigin:1962108.6259, // 冬至
-    ZhengNum: 2, // 雨水元
+    EpochSolsDif: 2, // 雨水元
+    ZhengNum: 2,
     FirstNum: 2,
     SolsConst: 39, // 經朔癸卯朔旦雨水
     FirstConst: -9.4694,
@@ -2740,7 +2691,7 @@ export default {
     CloseOriginAd: 962, // 建隆三年壬戌
     // JdOrigin: 2072413.5084 - 4825558 * (365 + 2445 / 10002),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4], // 命起赤道虛宿四度分
     MansFracPosi: 10, // 虛分
@@ -2879,7 +2830,7 @@ export default {
     CloseOriginAd: 981, // 太平興國六年辛巳
     // JdOrigin: 2079353.1327 - 30543977 * (365 + 72 / 294),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: -2, // 5
     MansDayConst: -16,
     FirstNum: 2,
@@ -2995,7 +2946,7 @@ export default {
     Node: 27 + 2247.0008 / 10590,
     MansRaw: [10, 5],
     MansFracPosi: 10,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     OriginAd: 995 - 16515091,
     CloseOriginAd: 995,
@@ -3047,7 +2998,7 @@ export default {
     ScConst: 30, // 甲午
     MansRaw: [10, 4],
     MansFracPosi: 10,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     OriginAd: 995 - 3981151,
     CloseOriginAd: 995,
@@ -3109,7 +3060,7 @@ export default {
     CloseOriginAd: 1001, // 咸平四年辛丑
     // JdOrigin: 2086658.0337 - 716497 * (365 + 2470 / 10100), //
     OriginYearSc: 1, // 上元土星甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 2], // 命起虛宿二度
     MansFracPosi: 10,
@@ -3154,7 +3105,7 @@ export default {
     Node: 27 + 1699.4999 / 8008,
     MansRaw: [10, 4],
     MansFracPosi: 10,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     OriginAd: 1021 - 30906657,
     CloseOriginAd: 1021,
@@ -3223,7 +3174,7 @@ export default {
     OriginYearSc: 1, // 上元甲子
     WeekConst: -3, // 4
     MansDayConst: 4,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 7], // 命以赤道虛宿七度外起算
     MansFracPosi: 10,
@@ -3273,7 +3224,7 @@ export default {
     Lunar: 29 + 5571.24 / 10500,
     Denom: 10500,
     OriginAd: 1034 - 10154950,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2
   },
   Mingtian: {
@@ -3315,7 +3266,7 @@ export default {
     OriginYearSc: 1, // 上元甲子
     WeekConst: 3,
     MansDayConst: -4,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 6], // 命起赤道虛宿六度去之
     MansFracPosi: 10,
@@ -3340,7 +3291,7 @@ export default {
     Node: 27 + 5029.5386 / 23700,
     OriginAd: 1074 - 83185070,
     CloseOriginAd: 1074, // 熙寧七年甲寅
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4],
     MansFracPosi: 10,
@@ -3407,7 +3358,7 @@ export default {
     MansDayConst: -8,
     // JdOrigin: 2119894.6929 - 5944808 * (365 + 293 / 1203),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4], //命起赤道虛宿四度外去之
     MansFracPosi: 10,
@@ -3456,7 +3407,7 @@ export default {
     CloseOriginAd: 1103, // 崇寧二年癸未
     WeekConst: 2,
     MansDayConst: 16,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4],
     MansFracPosi: 10,
@@ -3521,7 +3472,7 @@ export default {
     ScConst: 15, // 己卯算外
     OriginYearSc: 17, // 上元上章執徐庚辰
     MansDayConst: -21,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 7], //  命起赤道虛宿七度外去之
     MansFracPosi: 10,
@@ -3619,7 +3570,7 @@ export default {
     OriginYearSc: 1, // 上元甲子
     WeekConst: 3,
     MansDayConst: -4,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4], // 法同前曆，此不載
     MansFracPosi: 10,
@@ -3684,7 +3635,7 @@ export default {
     OriginYearSc: 1, // 上元甲子
     WeekConst: -1, // 6
     MansDayConst: -8,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4],
     MansFracPosi: 10,
@@ -3750,7 +3701,7 @@ export default {
     OriginYearSc: 1, // 上元甲子
     WeekConst: 2,
     MansDayConst: -12,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 8],
     MansFracPosi: 10,
@@ -3811,7 +3762,7 @@ export default {
     CloseOriginAd: 1191, // 紹熙二年辛亥
     // JdOrigin: 2156053.8293 - 25494767 * (365 + 9432 / 38700),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: 2,
     MansDayConst: -12,
     FirstNum: 2,
@@ -3882,7 +3833,7 @@ export default {
     MoonLimitNone: 11200,
     MoonLimitDenom: 730,
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: -2, // 5
     MansDayConst: -16,
     FirstNum: 2,
@@ -3949,7 +3900,7 @@ export default {
     CloseOriginAd: 1207, // 開禧三年丁卯
     // JdOrigin: 2161897.6754 - 7848183 * (365 + 4108 / 16900),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: -2, //5
     MansDayConst: -16,
     FirstNum: 2,
@@ -4009,7 +3960,7 @@ export default {
     OriginAd: 1250 - 120267646,
     CloseOriginAd: 1250, // 淳祐十年庚戌造，行二年，那就是1251開始
     WeekConst: 0,
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 8],
     MansFracPosi: 10,
@@ -4067,7 +4018,7 @@ export default {
     MoonLimitNone: 9200,
     OriginAd: 1250 - 11356126,
     CloseOriginAd: 1253, // 寶祐元年造
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: -2,
     MansDayConst: -16,
@@ -4135,7 +4086,7 @@ export default {
     CloseOriginAd: 1271, // 咸淳七年辛未
     // JdOrigin: 2185273.1478 - 71758147 * (365 + 1801 / 7420),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: -2, // 5
     MansDayConst: -16,
     FirstNum: 2,
@@ -4198,7 +4149,7 @@ export default {
     OriginAd: -73145880,
     CloseOriginAd: 1277,
     OriginYearSc: 1,
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: -2,
     MansDayConst: -16,
     FirstNum: 2,
@@ -4223,7 +4174,7 @@ export default {
     Node: 27 + 1109.9711 / 5230,
     OriginAd: 1180 - 383768556,
     CloseOriginAd: 1127, // 天會五年丁未
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     WeekConst: -3,
     MansDayConst: 4,
@@ -4284,7 +4235,7 @@ export default {
     CloseOriginAd: 1180, // 大定二十年庚子
     // JdOrigin: 2152036.1489 - 88639656 * (365 + 1274 / 5230),
     OriginYearSc: 1, // 上元甲子
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 7], // 命起赤道虛宿七度外去之
     MansFracPosi: 10,
@@ -4376,7 +4327,7 @@ export default {
     // JdOrigin: 2166645.9237 - 20275270 * (365 + 1274 / 5230),
     OriginYearSc: 7, // 上元庚午
     ScConst: 58, // 只是經朔少了1700。推上元庚午歲天正十一月壬戌朔
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: 2,
     MansDayConst: 2,
     FirstNum: 2,
@@ -4431,7 +4382,7 @@ export default {
     CloseOriginAd: 1180,
     WeekConst: 0,
     ScConst: 8, // 壬申日
-    ZhengNum: 0,
+    ZhengNum: 2,
     FirstNum: 2,
     MansRaw: [10, 4],
     MansFracPosi: 10,
@@ -4472,7 +4423,7 @@ export default {
       291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425
     ],
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: 2,
     MansDayConst: -12,
     MansConst: 315.1075,
@@ -4510,7 +4461,7 @@ export default {
       291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425
     ],
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: 2,
     MansDayConst: -12,
     MansConst: 315.1075,
@@ -4545,7 +4496,7 @@ export default {
       291.495353, 306.512012, 321.388501, 336.131374, 350.747189, 365.2425
     ],
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     WeekConst: 2,
     MansDayConst: -12,
     MansConst: 315.1075,
@@ -4594,7 +4545,7 @@ export default {
     WeekConst: 4,
     MansDayConst: -12,
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     MansConst: 313.5625, // 已據改：洪武甲子相距一百四年，歲差已退天一度五十四分五十秒，而周應仍用舊數，殆傳習之誤耳。
     MansRaw: [10, 6],
     MansFracPosi: 10
@@ -4628,7 +4579,7 @@ export default {
     WeekConst: 2,
     MansDayConst: -12,
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     MansConst: 313.5625, // 已據改：洪武甲子相距一百四年，歲差已退天一度五十四分五十秒，而周應仍用舊數，殆傳習之誤耳。
     MansRaw: [10, 6],
     MansFracPosi: 10
@@ -4662,7 +4613,7 @@ export default {
     WeekConst: 1,
     MansDayConst: -12,
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     MansConst: 308.4, // 我定的，徐發說是箕三度
     MansRaw: [10, 6],
     MansFracPosi: 10
@@ -4689,7 +4640,7 @@ export default {
     Venus: 583.9197207,
     Mercury: 115.8771744,
     FirstNum: 2,
-    ZhengNum: 0
+    ZhengNum: 2
   },
   ////////////////
   // 《曆象考成》和《曆象考成後編》的曆法平時就是北京平時，即UT1+ 7h45m44s(北京的經度取116°25'58"=116.4327)（在騰訊地圖上得到的倒是和這個接近，我用外國網站的）;《西洋新法曆書》的曆法平時取北京平時-7.584分=-1.896，《康熙永年曆法》的曆法平時取北京平時-7.634分=-1.908°。此二數取兩曆法的時差值在曆元附近與現代時差值的平均偏差。
@@ -4725,7 +4676,7 @@ export default {
     SunLimitYinAcr: 18.8333333333, // 18度50分
     SunLimitYangAcr: 6.6666666667, // 6度40分
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     SperiVy: 0.0125, // 最卑perihelion每歲平行 ((8+29/60+14/3600)-(5+59/60+59/3600))/199
     SperiVd: 0.00003422386687,
     SperiConst: 5.9998, // 根據日躔表最高衝5度59分59秒，交食表太陽經度15度21分21秒、引數9度21分22秒，兩者一樣
@@ -4764,7 +4715,7 @@ export default {
     SunLimitYinAcr: 18.8333333333,
     SunLimitYangAcr: 6.6666666667,
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     SperiVy: 0.01699066874, // 最卑perihelion每歲平行 ((17+59/60+34/3600)-(7+4/60+4/3600))/643
     SperiVd: 0.0000465189108,
     SperiConst: 6.21825, // 戊午年最高衝7度4分4秒。注意：考成卷四求兩心差葉45：永年表的最卑應似乎不對，「今以1717丁酉年逐日實測日躔度分，求得最高過夏至⋯⋯各7°44′36″48'''=7.74356。」最大盈縮差2度3分9秒40微 ——但將永年表和甲子的最卑應歸算一下，完全一樣，不知道考成為何說不對
@@ -4815,7 +4766,7 @@ export default {
     SunLimitYinAcr: 18.25, // 實朔食限
     SunLimitYangAcr: 6.2333333333,
     FirstNum: 2,
-    ZhengNum: 0,
+    ZhengNum: 2,
     ModernPo: [39.906, 116.428, 60]
   },
   Guimao: {
@@ -4855,18 +4806,18 @@ export default {
     MansConst: 70.5666666666667, // 同甲子元曆
     MansRaw: [10, 3.16666666666667],
     FirstNum: 2,
-    ZhengNum: 0
+    ZhengNum: 2
   },
   VSOP: {
     Type: 14,
     CloseOriginAd: 2000,
     FirstNum: 2,
-    ZhengNum: 0
+    ZhengNum: 2
   },
   DE441: {
     Type: 15,
     CloseOriginAd: 2000,
     FirstNum: 2,
-    ZhengNum: 0
+    ZhengNum: 2
   }
 };
