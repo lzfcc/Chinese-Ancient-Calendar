@@ -58,19 +58,20 @@ export const N6 = (Y, Longitude) => {
       Eclp = [],
       Equa = [],
       UT1Jd = [],
-      UT1TermJd = [],
+      TermUT1Jd = [],
       TermAcrSc = [],
       TermAcrMmdd = [],
       TermAcrDeci = [],
       TermEclp = [],
       TermEqua = [],
+      Term1UT1Jd = [],
       Term1AcrSc = [],
       Term1AcrMmdd = [],
       Term1AcrDeci = [],
       Term1Eclp = [],
       Term1Equa = [];
     for (let i = 0; i <= 14; i++) {
-      //////// 平朔望
+      //////// 朔望
       const AcrJd = isNewm
         ? NewmList[AcrChouJdIndex + i]
         : SyzygyList[AcrChouSyzygyJdIndex + i];
@@ -86,21 +87,21 @@ export const N6 = (Y, Longitude) => {
         Equa[i] = NewmFunc.Equa;
         // 中氣
         const AcrTermJd = TermList[AcrChouTermJdIndex + i - 1];
-        UT1TermJd[i] = AcrTermJd - deltaT(AcrTermJd) + Longitude / 360;
-        const UT1TermJdDate = jd2Date(UT1TermJd[i]);
-        TermAcrSc[i] = ScList[UT1TermJdDate.ScOrder];
-        TermAcrMmdd[i] = UT1TermJdDate.mm + "-" + UT1TermJdDate.dd;
-        TermAcrDeci[i] = Y < 1600 ? UT1TermJdDate.hms : UT1TermJdDate.hmsms;
+        TermUT1Jd[i] = AcrTermJd - deltaT(AcrTermJd) + Longitude / 360;
+        const TermUT1JdDate = jd2Date(TermUT1Jd[i]);
+        TermAcrSc[i] = ScList[TermUT1JdDate.ScOrder];
+        TermAcrMmdd[i] = TermUT1JdDate.mm + "-" + TermUT1JdDate.dd;
+        TermAcrDeci[i] = Y < 1600 ? TermUT1JdDate.hms : TermUT1JdDate.hmsms;
         const TermFunc = mansModern(AcrTermJd);
         TermEclp[i] = TermFunc.Eclp;
         TermEqua[i] = TermFunc.Equa;
         // 節氣
         const AcrTerm1Jd = Term1List[AcrChouTerm1JdIndex + i - 1];
-        const UT1Term1Jd = AcrTerm1Jd - deltaT(AcrTerm1Jd) + Longitude / 360;
-        const UT1Term1JdDate = jd2Date(UT1Term1Jd);
-        Term1AcrSc[i] = ScList[UT1Term1JdDate.ScOrder];
-        Term1AcrMmdd[i] = UT1Term1JdDate.mm + "-" + UT1Term1JdDate.dd;
-        Term1AcrDeci[i] = Y < 1600 ? UT1Term1JdDate.hms : UT1Term1JdDate.hmsms;
+        Term1UT1Jd[i] = AcrTerm1Jd - deltaT(AcrTerm1Jd) + Longitude / 360;
+        const Term1UT1JdDate = jd2Date(Term1UT1Jd[i]);
+        Term1AcrSc[i] = ScList[Term1UT1JdDate.ScOrder];
+        Term1AcrMmdd[i] = Term1UT1JdDate.mm + "-" + Term1UT1JdDate.dd;
+        Term1AcrDeci[i] = Y < 1600 ? Term1UT1JdDate.hms : Term1UT1JdDate.hmsms;
         const Term1Func = mansModern(AcrTerm1Jd);
         Term1Eclp[i] = Term1Func.Eclp;
         Term1Equa[i] = Term1Func.Equa;
@@ -111,8 +112,8 @@ export const N6 = (Y, Longitude) => {
     if (isNewm) {
       for (let i = 1; i <= 12; i++) {
         if (
-          Math.trunc(UT1TermJd[i]) < Math.trunc(UT1Jd[i + 1]) &&
-          Math.trunc(UT1TermJd[i + 1]) >= Math.trunc(UT1Jd[i + 2])
+          Math.trunc(TermUT1Jd[i]) < Math.trunc(UT1Jd[i + 1]) &&
+          Math.trunc(TermUT1Jd[i + 1]) >= Math.trunc(UT1Jd[i + 2])
         ) {
           LeapNumTerm = i; // 閏Leap月，第Leap+1月爲閏月
           break;
@@ -127,11 +128,13 @@ export const N6 = (Y, Longitude) => {
       Eclp,
       Equa,
       UT1Jd,
+      TermUT1Jd,
       TermAcrSc,
       TermAcrMmdd,
       TermAcrDeci,
       TermEclp,
       TermEqua,
+      Term1UT1Jd,
       Term1AcrSc,
       Term1AcrMmdd,
       Term1AcrDeci,
@@ -147,11 +150,13 @@ export const N6 = (Y, Longitude) => {
     Equa: NewmEqua,
     Eclp: NewmEclp,
     UT1Jd: NewmUT1Jd,
+    TermUT1Jd,
     TermAcrSc,
     TermAcrMmdd,
     TermAcrDeci,
     TermEclp,
     TermEqua,
+    Term1UT1Jd,
     Term1AcrSc,
     Term1AcrMmdd,
     Term1AcrDeci,
@@ -173,11 +178,13 @@ export const N6 = (Y, Longitude) => {
     SyzygySc,
     SyzygyMmdd,
     SyzygyDeci,
+    TermUT1Jd,
     TermAcrSc,
     TermAcrMmdd,
     TermAcrDeci,
     TermEclp,
     TermEqua,
+    Term1UT1Jd,
     Term1AcrSc,
     Term1AcrMmdd,
     Term1AcrDeci,

@@ -4,8 +4,6 @@ import N2 from "./newm.mjs";
 import { N4 } from "./newm_shixian.mjs";
 import Para from "../parameter/calendars.mjs";
 import {
-  TermNameList,
-  Term1NameList,
   ScList,
   ThreeList,
   NameList,
@@ -17,181 +15,7 @@ import { AutoEclipse } from "../astronomy/eclipse.mjs";
 import { AutoRangeEcli } from "../parameter/auto_consts.mjs";
 import { fix, fm360, fm60 } from "../parameter/functions.mjs";
 import { autoRise } from "../astronomy/lat_rise_dial.mjs";
-
-// 此函數grok3改寫
-function terms(ThisYear, PrevYear, LeapNumTerm, Name) {
-  const { ZhengNum, isAcr } = Para[Name];
-  const { SolsDeci, NewmInt } = ThisYear;
-  // Define optional properties and their sources for down and up terms
-  const properties = [
-    { key: "AcrSc", downSource: "TermAcrSc", upSource: "Term1AcrSc" },
-    { key: "AcrDeci", downSource: "TermAcrDeci", upSource: "Term1AcrDeci" },
-    { key: "NowDeci", downSource: "TermNowDeci", upSource: "Term1NowDeci" },
-    { key: "Equa", downSource: "TermEqua", upSource: "Term1Equa" },
-    { key: "Eclp", downSource: "TermEclp", upSource: "Term1Eclp" }
-  ];
-  // Initialize terms array (index 0 unused, 1-13 for terms)
-  const terms = Array.from({ length: 14 }, () => ({ down: {}, up: {} }));
-  // Step 1: Populate initial term data for indices 1 to 13
-  for (let i = 1; i <= 13; i++) {
-    terms[i].down = {
-      Name: TermNameList[(i + ZhengNum) % 12],
-      Sc: ThisYear.TermSc[i],
-      Deci: ThisYear.TermDeci[i]
-    };
-    terms[i].up = {
-      Name: Term1NameList[(i + ZhengNum) % 12],
-      Sc: ThisYear.Term1Sc[i],
-      Deci: ThisYear.Term1Deci[i]
-    };
-    // Assign optional properties if they exist
-    properties.forEach((prop) => {
-      if (ThisYear[prop.downSource]?.length) {
-        terms[i].down[prop.key] = ThisYear[prop.downSource][i];
-        terms[i].up[prop.key] = ThisYear[prop.upSource][i];
-      }
-    });
-  }
-  // Step 2: Handle leap term adjustment
-  if (LeapNumTerm) {
-    const leapIndex = LeapNumTerm + 1;
-    // Set down term at leapIndex to "无中" with empty attributes
-    terms[leapIndex].down = {
-      Name: "无中",
-      Sc: "",
-      Deci: ""
-    };
-    properties.forEach((prop) => {
-      if (ThisYear[prop.downSource]?.length) {
-        terms[leapIndex].down[prop.key] = "";
-      }
-    });
-    // Adjust subsequent terms by swapping sources and shifting up terms
-    for (let i = leapIndex + 1; i <= 13; i++) {
-      terms[i].down = {
-        Name: Term1NameList[(i + ZhengNum) % 12],
-        Sc: ThisYear.Term1Sc[i],
-        Deci: ThisYear.Term1Deci[i]
-      };
-      terms[i].up = {
-        Name: TermNameList[(i + ZhengNum - 1) % 12],
-        Sc: ThisYear.TermSc[i - 1],
-        Deci: ThisYear.TermDeci[i - 1]
-      };
-      properties.forEach((prop) => {
-        if (ThisYear[prop.downSource]?.length) {
-          terms[i].down[prop.key] = ThisYear[prop.upSource][i];
-          terms[i].up[prop.key] = ThisYear[prop.downSource][i - 1];
-        }
-      });
-    }
-  }
-  // Step 3: Calculate NoJieMon (month without a term)
-  let NoJieMon = 0;
-  const Term1Sd =
-    ThisYear.Term1AcrSmd || ThisYear.Term1AvgSd || ThisYear.Term1Int;
-  const NewmSd =
-    ThisYear.NewmNowlineSmd ||
-    (isAcr ? ThisYear.NewmAcrSd : ThisYear.NewmSd) ||
-    NewmInt;
-  for (let i = 1; i <= 12; i++) {
-    if (
-      Math.trunc(Term1Sd[i] + (SolsDeci || 0)) <
-        Math.trunc(NewmSd[i] + (SolsDeci || 0)) &&
-      Math.trunc(Term1Sd[i + 1] + (SolsDeci || 0)) >=
-        Math.trunc(NewmSd[i + 1] + (SolsDeci || 0))
-    ) {
-      NoJieMon = i;
-      break;
-    }
-  }
-
-  // Step 4: Adjust terms if previous year had a leap or current year has NoJieMon
-  if (PrevYear.LeapNumTerm || (!PrevYear.LeapNumTerm && NoJieMon)) {
-    // Shift up terms forward
-    for (let i = 1; i <= 13; i++) {
-      terms[i].up = {
-        Name: Term1NameList[(i + ZhengNum + 1) % 12],
-        Sc: ThisYear.Term1Sc[i + 1],
-        Deci: ThisYear.Term1Deci[i + 1]
-      };
-      properties.forEach((prop) => {
-        if (ThisYear[prop.upSource]?.length) {
-          terms[i].up[prop.key] = ThisYear[prop.upSource][i + 1];
-        }
-      });
-    }
-    // Swap down and up terms
-    for (let i = 1; i <= 13; i++) {
-      const temp = terms[i].down;
-      terms[i].down = terms[i].up;
-      terms[i].up = temp;
-    }
-  }
-  // Step 5: Adjust for NoJieMon specifically
-  if (
-    (PrevYear.LeapNumTerm && NoJieMon) ||
-    (!PrevYear.LeapNumTerm && NoJieMon)
-  ) {
-    // Set up term at NoJieMon to "无節" with empty attributes
-    terms[NoJieMon].down = {
-      Name: "无節",
-      Sc: "",
-      Deci: ""
-    };
-    properties.forEach((prop) => {
-      if (ThisYear[prop.upSource]?.length) {
-        terms[NoJieMon].down[prop.key] = "";
-      }
-    });
-    // Reset terms after NoJieMon to initial-like state
-    for (let i = NoJieMon + 1; i <= 13; i++) {
-      terms[i].up = {
-        Name: Term1NameList[(i + ZhengNum) % 12],
-        Sc: ThisYear.Term1Sc[i],
-        Deci: ThisYear.Term1Deci[i]
-      };
-      terms[i].down = {
-        Name: TermNameList[(i + ZhengNum) % 12],
-        Sc: ThisYear.TermSc[i],
-        Deci: ThisYear.TermDeci[i]
-      };
-      properties.forEach((prop) => {
-        if (ThisYear[prop.downSource]?.length) {
-          terms[i].down[prop.key] = ThisYear[prop.downSource][i];
-          terms[i].up[prop.key] = ThisYear[prop.upSource][i];
-        }
-      });
-    }
-  }
-  return terms;
-}
-// 此DeepSeek生成
-function transform(list) {
-  const result = {};
-  for (const item of list) {
-    // 处理up对象
-    const upKeys = Object.keys(item.up);
-    for (const key of upKeys) {
-      const resultKey = `TermUp${key}`;
-      if (!result[resultKey]) {
-        result[resultKey] = [];
-      }
-      result[resultKey].push(item.up[key]);
-    }
-    // 处理down对象
-    const downKeys = Object.keys(item.down);
-    for (const key of downKeys) {
-      const resultKey = `TermDown${key}`;
-      if (!result[resultKey]) {
-        result[resultKey] = [];
-      }
-      result[resultKey].push(item.down[key]);
-    }
-  }
-  return result;
-}
-
+import terms from "./terms.mjs";
 // const Index = (Name, YearStart, YearEnd) => {
 export default (Name, YearStart, YearEnd) => {
   const Bind = (Name) => {
@@ -257,7 +81,7 @@ export default (Name, YearStart, YearEnd) => {
       TermUpAcrDeci,
       TermUpNowDeci,
       TermUpAcrSc
-    } = transform(terms(ThisYear, PrevYear, LeapNumTerm, Name)); // 必須要傳上面修改過後的LeapNumTerm
+    } = terms(ThisYear, PrevYear, LeapNumTerm, Name); // 必須要傳上面修改過後的LeapNumTerm
     /////////////////// 月序
     const MonthName = [];
     let MonNumList = MonNumList1;
@@ -308,8 +132,7 @@ export default (Name, YearStart, YearEnd) => {
       NewmDeci3Print = [],
       NewmDeci2Print = [],
       NewmDeci1Print = [],
-      NewmAcrDeciPrint = [],
-      NewmDeciUT18Print = [];
+      NewmAcrDeciPrint = [];
     if (Type >= 2) {
       NewmScPrint = NewmSlice(ThisYear.NewmSc);
       if (Type <= 10 && ThisYear.NewmDeci1) {
@@ -678,7 +501,6 @@ export default (Name, YearStart, YearEnd) => {
       NewmDeci1Print,
       NewmNowlineDeciPrint,
       NewmAcrDeciPrint,
-      NewmDeciUT18Print,
       NewmEclpPrint,
       NewmEquaPrint,
       SyzygyScPrint,
