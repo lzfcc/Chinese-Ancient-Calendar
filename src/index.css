@@ -534,7 +534,8 @@ tr.SyzygyScPrint {
   border-top: 2px solid var(--gray);
 }
 
-tr.SyzygyDeciPrint {
+tr.SyzygyDeciPrint,
+tr.SyzygyUT1DeciPrint {
   border-bottom: 2px solid var(--gray);
 }
 

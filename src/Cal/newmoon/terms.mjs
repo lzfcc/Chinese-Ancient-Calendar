@@ -2,7 +2,7 @@ import Para from "../parameter/calendars.mjs";
 import { TermNameList, Term1NameList } from "../parameter/constants.mjs";
 // 此函數grok3改寫
 export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
-  const { ZhengNum, isAcr } = Para[Name];
+  const { FirstNum, isAcr } = Para[Name];
   const { SolsDeci, NewmInt } = ThisYear;
   // Define optional properties and their sources for down and up terms
   const properties = [
@@ -20,10 +20,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
   // Step 1: Populate initial term data for indices 1 to 13
   for (let i = 1; i <= 13; i++) {
     terms[i].down = {
-      Name: TermNameList[(i + ZhengNum) % 12]
+      Name: TermNameList[(i + FirstNum) % 12]
     };
     terms[i].up = {
-      Name: Term1NameList[(i + ZhengNum) % 12]
+      Name: Term1NameList[(i + FirstNum) % 12]
     };
     // Assign optional properties if they exist
     properties.forEach((prop) => {
@@ -48,10 +48,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     // Adjust subsequent terms by swapping sources and shifting up terms
     for (let i = leapIndex + 1; i <= 13; i++) {
       terms[i].down = {
-        Name: Term1NameList[(i + ZhengNum) % 12]
+        Name: Term1NameList[(i + FirstNum) % 12]
       };
       terms[i].up = {
-        Name: TermNameList[(i + ZhengNum - 1) % 12]
+        Name: TermNameList[(i + FirstNum - 1) % 12]
       };
       properties.forEach((prop) => {
         if (ThisYear[prop.downSource]?.length) {
@@ -90,7 +90,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     // Shift up terms forward
     for (let i = 1; i <= 13; i++) {
       terms[i].up = {
-        Name: Term1NameList[(i + ZhengNum + 1) % 12]
+        Name: Term1NameList[(i + FirstNum + 1) % 12]
       };
       properties.forEach((prop) => {
         if (ThisYear[prop.upSource]?.length) {
@@ -122,10 +122,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
     // Reset terms after NoJieMon to initial-like state
     for (let i = NoJieMon + 1; i <= 13; i++) {
       terms[i].up = {
-        Name: Term1NameList[(i + ZhengNum) % 12]
+        Name: Term1NameList[(i + FirstNum) % 12]
       };
       terms[i].down = {
-        Name: TermNameList[(i + ZhengNum) % 12]
+        Name: TermNameList[(i + FirstNum) % 12]
       };
       properties.forEach((prop) => {
         if (ThisYear[prop.downSource]?.length) {
@@ -163,10 +163,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 // 原來的：
 // // 調整節氣
 // for (let i = 1; i <= 13; i++) {
-//   TermDownName[i] = TermNameList[(i + ZhengNum) % 12];
+//   TermDownName[i] = TermNameList[(i + FirstNum) % 12];
 //   TermDownSc[i] = ThisYear.TermSc[i];
 //   TermDownDeci[i] = ThisYear.TermDeci[i];
-//   TermUpName[i] = Term1NameList[(i + ZhengNum) % 12];
+//   TermUpName[i] = Term1NameList[(i + FirstNum) % 12];
 //   TermUpSc[i] = ThisYear.Term1Sc[i];
 //   TermUpDeci[i] = ThisYear.Term1Deci[i];
 //   if ((ThisYear.TermAcrDeci || []).length) {
@@ -200,10 +200,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 //   if ((ThisYear.TermEclp || []).length) TermDownEclp[LeapNumTerm + 1] = "";
 //   for (let i = LeapNumTerm + 2; i <= 13; i++) {
 //     // 上下互換位置
-//     TermDownName[i] = Term1NameList[(i + ZhengNum) % 12];
+//     TermDownName[i] = Term1NameList[(i + FirstNum) % 12];
 //     TermDownSc[i] = ThisYear.Term1Sc[i];
 //     TermDownDeci[i] = ThisYear.Term1Deci[i];
-//     TermUpName[i] = TermNameList[(i + ZhengNum - 1) % 12];
+//     TermUpName[i] = TermNameList[(i + FirstNum - 1) % 12];
 //     TermUpSc[i] = ThisYear.TermSc[i - 1];
 //     TermUpDeci[i] = ThisYear.TermDeci[i - 1];
 //     if ((ThisYear.Term1AcrSc || []).length) {
@@ -245,7 +245,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 // if (PrevYear.LeapNumTerm || (!PrevYear.LeapNumTerm && NoJieMon)) {
 //   // 若去年有閏，把所有節往前移一個
 //   for (let i = 1; i <= 13; i++) {
-//     TermUpName[i] = Term1NameList[(i + ZhengNum + 1) % 12];
+//     TermUpName[i] = Term1NameList[(i + FirstNum + 1) % 12];
 //     TermUpSc[i] = ThisYear.Term1Sc[i + 1];
 //     TermUpDeci[i] = ThisYear.Term1Deci[i + 1];
 //     if ((ThisYear.TermAcrSc || []).length) {
@@ -305,7 +305,7 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 //   if ((ThisYear.Term1NowDeci || []).length) TermUpNowDeci[NoJieMon] = "";
 //   if ((ThisYear.Term1Equa || []).length) TermUpEqua[NoJieMon] = "";
 //   if ((ThisYear.Term1Eclp || []).length) TermUpEclp[NoJieMon] = "";
-//   TermDownName[NoJieMon] = TermNameList[(NoJieMon + ZhengNum) % 12];
+//   TermDownName[NoJieMon] = TermNameList[(NoJieMon + FirstNum) % 12];
 //   TermDownSc[NoJieMon] = ThisYear.TermSc[NoJieMon];
 //   TermDownDeci[NoJieMon] = ThisYear.TermDeci[NoJieMon];
 //   if ((ThisYear.Term1AcrSc || []).length)
@@ -320,10 +320,10 @@ export default (ThisYear, PrevYear, LeapNumTerm, Name) => {
 //     TermDownEclp[NoJieMon] = ThisYear.TermEclp[NoJieMon];
 //   for (let i = NoJieMon + 1; i <= 13; i++) {
 //     // 上下互換位置
-//     TermUpName[i] = Term1NameList[(i + ZhengNum) % 12];
+//     TermUpName[i] = Term1NameList[(i + FirstNum) % 12];
 //     TermUpSc[i] = ThisYear.Term1Sc[i];
 //     TermUpDeci[i] = ThisYear.Term1Deci[i];
-//     TermDownName[i] = TermNameList[(i + ZhengNum) % 12];
+//     TermDownName[i] = TermNameList[(i + FirstNum) % 12];
 //     TermDownSc[i] = ThisYear.TermSc[i];
 //     TermDownDeci[i] = ThisYear.TermDeci[i];
 //     if ((ThisYear.TermAcrSc || []).length) {

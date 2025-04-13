@@ -32,13 +32,12 @@ export default (Name, YearStart, YearEnd) => {
     ZhangRange,
     Denom,
     Node,
-    OriginMonNum,
-    SolsOriginDif
+    ZhengNum,
+    SolsEpochDif
   } = Para[Name];
   const Memo = [];
   const calculate = (Y) => {
     const [PrevYear, ThisYear, NextYear] = Memo;
-    // const ZhengSd = ZhengNum - OriginMonNum;
     const {
       JiScOrder,
       SolsAccum,
@@ -379,13 +378,9 @@ export default (Name, YearStart, YearEnd) => {
       YearInfo.push({
         SolsSur: `大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat(ThisYear.SolsAccumMod.toPrecision(6)).toFixed(4)}`
       });
-      if (SolsOriginDif === -45.65625) {
+      if (SolsEpochDif === -1.5) {
         YearInfo.push({
           SolsSur: `立春${parseFloat(fm60(SolsAccum).toPrecision(6)).toFixed(4)}`
-        });
-      } else if (SolsOriginDif === -60.875) {
-        YearInfo.push({
-          SolsSur: `雨水${parseFloat(fm60(SolsAccum).toPrecision(6)).toFixed(4)}`
         });
       }
       YearInfo.push({ LeapSur: `閏餘${LeapSur.toFixed(4)}` });
@@ -403,8 +398,7 @@ export default (Name, YearStart, YearEnd) => {
         YearInfo.push({ BuYear: `${ScList[JiScOrder]}紀${ThisYear.JiYear}` });
       if (Type <= 10) {
         YearInfo.push({
-          SolsAccum:
-            (OriginMonNum === 2 ? "雨" : "冬") + fm60(SolsAccum).toFixed(4)
+          SolsAccum: (ZhengNum === 2 ? "雨" : "冬") + fm60(SolsAccum).toFixed(4)
         });
       }
       if (Type === 2)

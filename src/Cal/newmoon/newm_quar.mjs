@@ -8,12 +8,12 @@ export default (Name, Y) => {
   const {
     Lunar,
     Solar,
-    SolsOriginDif,
+    SolsEpochDif,
     OriginAd,
     OriginYearSc,
     BuScConst,
+    FirstNum,
     ZhengNum,
-    OriginMonNum,
     YuanRange,
     TongRange,
     EcliRange,
@@ -27,11 +27,12 @@ export default (Name, Y) => {
   }
   SolsConst = SolsConst || 0;
   DayConst = DayConst || 0;
+  const EpochNum = SolsEpochDif ? Math.ceil(Math.abs(SolsEpochDif)) : undefined;
   const BuSkip = ["Qianzaodu", "Yuanmingbao"].includes(Name)
     ? (365.25 * BuRange) % 60
     : (Solar * BuRange) % 60;
   const TermLeng = Solar / 12; // 每個中氣相隔的日數
-  const ZhengSd = ZhengNum - OriginMonNum; // 年首和正月的差
+  const FirstZhengDif = FirstNum - ZhengNum; // 年首和正月的差
   let OriginYear = Y - OriginAd; // 上元積年（算上）
   const JupiterSc =
     Name === "Taichu"
@@ -45,15 +46,15 @@ export default (Name, Y) => {
   const BuScOrder = (1 + BuOrder * BuSkip + (BuScConst || 0)) % 60; // 蔀（統）的干支序號
   const SolsAccumRaw = fmod(
     (BuYear - 1) * Solar +
-      (SolsOriginDif || 0) * TermLeng +
+      (SolsEpochDif || 0) * TermLeng +
       SolsConst +
       DayConst,
     27759
   ); // 冬至積日
   const SolsAccumMod = fm60(SolsAccumRaw);
-  const SolsAccum = SolsAccumRaw - (SolsOriginDif || 0) * TermLeng; // 曆元積日
+  const SolsAccum = SolsAccumRaw - (SolsEpochDif || 0) * TermLeng; // 曆元積日
   let SolsOriginMon = 0;
-  if (SolsOriginDif) SolsOriginMon = (SolsOriginDif * TermLeng) / Lunar;
+  if (SolsEpochDif) SolsOriginMon = (SolsEpochDif * TermLeng) / Lunar;
   const LeapSurAvg = parseFloat(
     (
       (((deci(((BuYear - 1) * 7) / 19) + SolsOriginMon) % 1) + 1) %
@@ -66,7 +67,7 @@ export default (Name, Y) => {
     : 0; // 閏餘法今年閏月
   // 閏餘法閏月
   const LeapNumOriginLeapSur = LeapNumAvg
-    ? Math.round((((LeapNumAvg + ZhengSd + 12) % 12) + 12) % 12.1)
+    ? Math.round((((LeapNumAvg + FirstZhengDif + 12) % 12) + 12) % 12.1)
     : 0;
   // 朔望
   const NewmAvgBare = [],
@@ -85,7 +86,7 @@ export default (Name, Y) => {
     // 本來是1
     NewmAvgBare[i] = parseFloat(
       (
-        (Math.trunc(((BuYear - 1) * 235) / 19) + ZhengNum + i - 1) * Lunar +
+        (Math.trunc(((BuYear - 1) * 235) / 19) + FirstNum + i - 1) * Lunar +
         SolsConst +
         DayConst
       ).toPrecision(14)
@@ -97,12 +98,12 @@ export default (Name, Y) => {
     NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6);
     NewmSd[i] = NewmAvgBare[i] - SolsAccumRaw;
     if (MansRaw) NewmEqua[i] = mans(Name, Y, NewmSd[i]).Equa;
-    // NewmJd[i] = Math.round(parseFloat((JdOrigin + (Math.trunc((Math.round(parseFloat((JdSols + Y * Solar).toPrecision(14))) - JdOrigin) / Lunar) + ZhengNum + i - 1) * Lunar).toPrecision(14)))
+    // NewmJd[i] = Math.round(parseFloat((JdOrigin + (Math.trunc((Math.round(parseFloat((JdSols + Y * Solar).toPrecision(14))) - JdOrigin) / Lunar) + FirstNum + i - 1) * Lunar).toPrecision(14)))
     SyzygyAvgRaw[i] =
       parseFloat(
         (
           (Math.trunc(((BuYear - 1) * 235) / 19 + SolsOriginMon) +
-            ZhengNum +
+            FirstNum +
             i -
             0.5) *
             Lunar +
@@ -139,14 +140,14 @@ export default (Name, Y) => {
     Term1Equa = [],
     Term1Eclp = [];
   for (let i = 1; i <= 13; i++) {
-    const TermBare = SolsAccumRaw + (i + ZhengNum - 1) * TermLeng;
+    const TermBare = SolsAccumRaw + (i + FirstNum - 1) * TermLeng;
     const TermRaw = TermBare + BuScOrder;
     TermInt[i] = Math.trunc(TermRaw);
     const TermMod = fm60(TermRaw);
     const TermOrderMod = Math.trunc(TermMod);
     TermSc[i] = ScList[TermOrderMod];
     TermDeci[i] = (TermMod - TermOrderMod).toFixed(4).slice(2, 6);
-    const Term1Bare = SolsAccumRaw + (i + ZhengNum - 1.5) * TermLeng;
+    const Term1Bare = SolsAccumRaw + (i + FirstNum - 1.5) * TermLeng;
     const Term1Raw = Term1Bare + BuScOrder;
     Term1Int[i] = Math.trunc(Term1Raw);
     const Term1Mod = fm60(Term1Raw);
