@@ -1,8 +1,4 @@
-import {
-  ScList,
-  Term1NameList,
-  TermNameList
-} from "../parameter/constants.mjs";
+import { ScList } from "../parameter/constants.mjs";
 import Para from "../parameter/calendars.mjs";
 import { mans } from "../astronomy/mans.mjs";
 import { deci, fm60, fmod } from "../parameter/functions.mjs";
@@ -64,13 +60,13 @@ export default (Name, Y) => {
       1
     ).toPrecision(11)
   ); // 今年閏餘
-  let isLeapAvgThis = LeapSurAvg >= parseFloat((12 / 19).toPrecision(11)); // 是否有閏月
-  let LeapNumAvgThis = isLeapAvgThis
+  let isLeapAvg = LeapSurAvg >= parseFloat((12 / 19).toPrecision(11)); // 是否有閏月
+  let LeapNumAvg = isLeapAvg
     ? Math.trunc(parseFloat((((1 - LeapSurAvg) * 228) / 7).toPrecision(12)))
     : 0; // 閏餘法今年閏月
   // 閏餘法閏月
-  const LeapNumOriginLeapSur = LeapNumAvgThis
-    ? Math.round((((LeapNumAvgThis + ZhengSd + 12) % 12) + 12) % 12.1)
+  const LeapNumOriginLeapSur = LeapNumAvg
+    ? Math.round((((LeapNumAvg + ZhengSd + 12) % 12) + 12) % 12.1)
     : 0;
   // 朔望
   const NewmAvgBare = [],
@@ -131,7 +127,7 @@ export default (Name, Y) => {
     } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
   }
   // 中氣
-  let LeapNumTerm = LeapNumAvgThis;
+  let LeapNumTerm = LeapNumAvg;
   const TermInt = [],
     TermSc = [],
     TermDeci = [],
@@ -199,7 +195,6 @@ export default (Name, Y) => {
     LeapSurAvg,
     LeapNumOriginLeapSur,
     LeapNumTerm,
-    isLeapAvgThis,
     NewmEqua
   };
 };

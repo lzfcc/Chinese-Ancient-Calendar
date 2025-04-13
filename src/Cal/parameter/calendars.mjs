@@ -4859,10 +4859,14 @@ export default {
   },
   VSOP: {
     Type: 14,
-    CloseOriginAd: 2000
+    CloseOriginAd: 2000,
+    ZhengNum: 2,
+    OriginMonNum: 0
   },
   DE441: {
     Type: 15,
-    CloseOriginAd: 2000
+    CloseOriginAd: 2000,
+    ZhengNum: 2,
+    OriginMonNum: 0
   }
 };
