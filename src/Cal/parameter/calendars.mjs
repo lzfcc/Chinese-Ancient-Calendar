@@ -13,8 +13,8 @@ export default {
     ZhengNum: 2,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0 // 0:固定冬至，1:無中氣
+    BuRange: 76
+    // 0:固定冬至，1:無中氣
   },
   XiaB: {
     // 立春曆元夏曆
@@ -22,16 +22,15 @@ export default {
     Denom: 940,
     Lunar: 27759 / 940,
     Solar: 365.25,
-    OriginAd: -2760294, // -1494
-    OriginYearSc: 3,
-    BuScConst: 3, // 己巳蔀第一
+    OriginAd: -2759754, // -954
+    BuScConst: 18, // 壬午蔀首
+    OriginYearSc: 3, // 丙寅
     EpochSolsDif: 1.5, // 立春爲曆元
     FirstNum: 2,
     ZhengNum: 2,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 1 // 0:固定冬至，1:無中氣
+    BuRange: 76
   },
   Yin: {
     Type: 1,
@@ -46,8 +45,8 @@ export default {
     ZhengNum: 0, // 正月建子
     YuanRange: 4560, // 元
     JiRange: 1520, // 紀
-    BuRange: 76, // 蔀
-    isTermLeap: 0 // 是否用無中氣置閏法
+    BuRange: 76 // 蔀
+    // 是否用無中氣置閏法
   },
   Zhou: {
     Type: 1,
@@ -62,8 +61,22 @@ export default {
     ZhengNum: 0,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0
+    BuRange: 76
+  },
+  ZhouB: {
+    Type: 1,
+    Denom: 940,
+    Lunar: 27759 / 940,
+    Solar: 365.25,
+    OriginAd: -2760302, // -1502
+    BuScConst: 18, // 壬午蔀首
+    OriginYearSc: 55, // 戊午元
+    EpochSolsDif: 1.5, // 立春曆元
+    FirstNum: 2,
+    ZhengNum: 2,
+    YuanRange: 4560,
+    JiRange: 1520,
+    BuRange: 76
   },
   Huangdi: {
     Type: 1,
@@ -78,8 +91,7 @@ export default {
     ZhengNum: 0,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0
+    BuRange: 76
   },
   Lu: {
     // 無加小餘
@@ -97,8 +109,7 @@ export default {
     ZhengNum: 0,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0
+    BuRange: 76
   },
   // 以下7种为郜积意推排的 722、666、607、586、566、547、529、508
   // LuA: { // 隱元-721,宣元-607
@@ -116,7 +127,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 539 / 940,
   // },
   // LuA1: { // 隱元-721,宣元-607
@@ -134,7 +145,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 539 / 940,
   // },
   // LuB: { // 宣二-606，成四-586
@@ -152,7 +163,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 469 / 940,
   // },
   // LuC: { // 成五-585，襄六-566
@@ -170,7 +181,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 403 / 940,
   // },
   // LuD: { // 襄七-565，襄廿五-547
@@ -188,7 +199,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 348 / 940,
   // },
   // LuE: { // 襄廿六-546，昭十二-529
@@ -206,7 +217,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 280 / 940,
   // },
   // LuF: { // 昭十三-528，定元-508
@@ -224,7 +235,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 213 / 940,
   // },
   // LuG: { // -507，-466
@@ -242,7 +253,7 @@ export default {
   //     YuanRange: 4560,
   //     JiRange: 1520,
   //     BuRange: 76,
-  //     isTermLeap: 0,
+  //     ,
   //     SolsConst: 147 / 940,
   // },
   // Zhuanxu1: {
@@ -258,7 +269,7 @@ export default {
   //   YuanRange: 4560,
   //   JiRange: 1520,
   //   BuRange: 76,
-  //   isTermLeap: 0, // 0:固定冬至，1:無中氣
+  //   , // 0:固定冬至，1:無中氣
   // },
   // Zhuanxu2: {
   //   Type: 1,
@@ -276,10 +287,10 @@ export default {
   //   YuanRange: 4560,
   //   JiRange: 1520,
   //   BuRange: 76,
-  //   isTermLeap: 0,
+  //   ,
   //   DayConst: 4 / 24, // 寅正爲日始
   // },
-  ZhuanxuA: {
+  Zhuanxu: {
     Type: 1,
     ApplyYear: [[-365, -306]],
     Denom: 940,
@@ -289,16 +300,15 @@ export default {
     OriginAd: -2760305, // -1505
     // JdOrigin: 1726575.5,
     JdSols: 1721051 + 3 / 32,
-    OriginYearSc: 52, // 曆元距甲子日數
+    OriginYearSc: 52, // 乙卯元
     BuScConst: 5, // 己巳蔀第一
     FirstNum: 2,
     ZhengNum: 2, // 建寅
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0
+    BuRange: 76
   },
-  ZhuanxuB: {
+  Zhuanxu2: {
     // 朱桂昌《顓頊日曆表》：暫定秦昭王元年前306行十月爲歲首
     Type: 1,
     ApplyYear: [[-305, -246]],
@@ -335,7 +345,7 @@ export default {
   //   YuanRange: 4560,
   //   JiRange: 1520,
   //   BuRange: 76,
-  //   isTermLeap: 0,
+  //   ,
   //   SolsConst: 3 / 4,
   // },
   // ZhuanxuD: {
@@ -356,7 +366,7 @@ export default {
   //   YuanRange: 4560,
   //   JiRange: 1520,
   //   BuRange: 76,
-  //   isTermLeap: 0,
+  //   ,
   //   SolsConst: 3 / 4 - 210 / 940,
   // },
   // ZhuanxuE: {
@@ -377,7 +387,7 @@ export default {
   //   YuanRange: 4560,
   //   JiRange: 1520,
   //   BuRange: 76,
-  //   isTermLeap: 1,
+  //
   //   SolsConst: 3 / 4 - 210 / 940,
   // },
   // ZhuanxuF: {
@@ -397,7 +407,7 @@ export default {
   //   YuanRange: 4560,
   //   JiRange: 1520,
   //   BuRange: 76,
-  //   isTermLeap: 1,
+  //
   //   SolsConst: 3 / 4 - 235 / 940,
   // },
   TaiyiJiayin: {
@@ -430,7 +440,7 @@ export default {
     YuanRange: 4560, // 元
     JiRange: 1520, // 紀
     BuRange: 76, // 蔀
-    isTermLeap: 1, // 是否用無中氣置閏法
+    // 是否用無中氣置閏法
     SolsConst: -0.75 // 去掉零頭。太初曆藉半日法其實就已經是去掉零頭了的
   },
   Taichu: {
@@ -448,7 +458,7 @@ export default {
     ZhengNum: 2,
     YuanRange: 4617, // 元法
     TongRange: 1539, // 統法
-    isTermLeap: 1,
+
     // MansRaw: [7, 26], // 牽牛初度。
     MansRaw: [8, 0], // 這兩個結果都等於牛0
     MansFracPosi: 7,
@@ -469,8 +479,7 @@ export default {
     ZhengNum: 0,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0
+    BuRange: 76
   },
   Yuanmingbao: {
     Type: 1,
@@ -483,8 +492,7 @@ export default {
     ZhengNum: 0,
     YuanRange: 4560,
     JiRange: 1520,
-    BuRange: 76,
-    isTermLeap: 0
+    BuRange: 76
   },
   Easthan: {
     Type: 1,
@@ -502,7 +510,7 @@ export default {
     YuanRange: 4560,
     JiRange: 1520,
     BuRange: 76,
-    isTermLeap: 1,
+
     EcliRange: 135 / 23,
     EcliNumer: 513,
     Node: 27 + 5859 / 27542,

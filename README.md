@@ -616,6 +616,10 @@ a = [0, ...a]
 4-13 `2.18`
 
 - 修復：index文件無節月的安置，移出爲terms函數。
-- 修復：立春曆元古六曆的算法。
+- 修復：立春曆元古六曆的算法。仍遺留了十月首顓頊曆的問題。
 - 改名：ZhengNum -> FirstNum, OriginMonNum -> ZhengNum. ZhengSd = FirstNum - ZhengNum -> FirstZhengDif。`FirstEpochDif`用于每月计算，`FirstZhengDif ` 用于月名
 - 調整：刪去四分曆法的年終置閏法，刪掉大量繁冗代碼，和其他古曆統合起來。
+
+4-15 `2.19`
+
+- 新增：《夏》《周》又術。

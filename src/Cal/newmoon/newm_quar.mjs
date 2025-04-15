@@ -1,7 +1,7 @@
 import { ScList } from "../parameter/constants.mjs";
 import Para from "../parameter/calendars.mjs";
 import { mans } from "../astronomy/mans.mjs";
-import { deci, fm60, fmod } from "../parameter/functions.mjs";
+import { deci, fm60, fmod, fmod1 } from "../parameter/functions.mjs";
 
 export default (Name, Y) => {
   // function a(Name, Y) {
@@ -30,6 +30,9 @@ export default (Name, Y) => {
   const EpochNum = EpochSolsDif ? Math.ceil(EpochSolsDif) : 0; // 立春历元历法固定以建寅月立春为历元
   const FirstEpochDif = FirstNum - EpochNum; // 年首和历元的月份差，用于每月计算
   const FirstZhengDif = FirstNum - ZhengNum; // 年首和正月的月份差，用于月名改正
+  // const isJieEpoch = EpochSolsDif
+  //   ? Math.floor(EpochSolsDif) !== EpochSolsDif
+  //   : false; // 是否以节（立春）为历元
   const BuDays = ["Qianzaodu", "Yuanmingbao"].includes(Name)
     ? 365.25 * BuRange
     : Solar * BuRange;
@@ -61,9 +64,7 @@ export default (Name, Y) => {
     : 0; // 閏餘法今年閏月
   // 閏餘法閏月
   const LeapNumOriginLeapSur = LeapNumAvg
-    ? Math.round(
-        (((LeapNumAvg + FirstZhengDif - FirstEpochDif + 12) % 12) + 12) % 12.1
-      ) // 0->12
+    ? fmod1(LeapNumAvg + FirstZhengDif - FirstEpochDif, 12) // 0->12
     : 0;
   // 朔望
   const NewmAvgBare = [],
@@ -89,7 +90,6 @@ export default (Name, Y) => {
     Term1Equa = [],
     Term1Eclp = [];
   for (let i = 0; i <= 14; i++) {
-    // 本來是1
     NewmAvgBare[i] = parseFloat(
       (
         (Math.trunc(((BuYear - 1) * 235) / 19) + FirstEpochDif + i - 1) *
@@ -98,8 +98,8 @@ export default (Name, Y) => {
         DayConst
       ).toPrecision(14)
     );
-    if (NewmAvgBare[i] < 0) NewmAvgBare[i] += BuDays; // 和fmod(SolsAccumRaw)一樣，都是應對十月顓頊蔀首
     NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder;
+    if (NewmAvgRaw[i] < 0) NewmAvgRaw[i] += BuDays; // 和fmod(SolsAccumRaw)一樣，都是應對十月顓頊蔀首
     NewmInt[i] = Math.trunc(NewmAvgRaw[i]);
     NewmAvgSc[i] = ScList[fm60(NewmInt[i])];
     NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6);
@@ -155,8 +155,8 @@ export default (Name, Y) => {
     } // 四分要看具體時刻，如果在晝則望，在夜則望前一日
   }
   // 中氣
-  let LeapNumTerm = 0;
-  for (let i = 1; i <= 12; i++) {
+  let LeapNumTerm = undefined;
+  for (let i = 0; i <= 12; i++) {
     if (TermInt[i] < NewmInt[i + 1] && TermInt[i + 1] >= NewmInt[i + 2]) {
       LeapNumTerm = i; // 閏Leap月，第Leap+1月爲閏月
       break;
@@ -193,4 +193,4 @@ export default (Name, Y) => {
     NewmEqua
   };
 };
-// console.log(a("ZhuanxuB", -364));
+// console.log(a("ZhuanxuB", -666));

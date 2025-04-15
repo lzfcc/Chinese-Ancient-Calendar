@@ -33,6 +33,7 @@ export const abs = (X) => Math.abs(X);
 export const sqr = (X) => Math.sqrt(X);
 export const sign = (X) => Math.sign(X);
 export const fmod = (X, m) => X - Math.floor(X / m) * m; // (X % m + m) % m
+export const fmod1 = (X, m) => Math.round((((X + m) % m) + m) % (m + 0.01)); // 0-->12
 // console.log(fmod(-370, 360)) // 350
 export const fm60 = (X) => X - Math.floor(X / 60) * 60; //fmod(X, 60);
 export const sind = (X) => Math.sin(D2R * X); //.toFixed(8) // 數理精蘊附八線表用的是七位小數

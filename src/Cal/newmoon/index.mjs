@@ -13,7 +13,7 @@ import {
 } from "../parameter/constants.mjs";
 import { AutoEclipse } from "../astronomy/eclipse.mjs";
 import { AutoRangeEcli } from "../parameter/auto_consts.mjs";
-import { fix, fm360, fm60, fmod } from "../parameter/functions.mjs";
+import { fix, fm360, fm60, fmod1 } from "../parameter/functions.mjs";
 import { autoRise } from "../astronomy/lat_rise_dial.mjs";
 import terms from "./terms.mjs";
 // const Index = (Name, YearStart, YearEnd) => {
@@ -84,25 +84,32 @@ export default (Name, YearStart, YearEnd) => {
     } = terms(ThisYear, PrevYear, LeapNumTerm, Name); // 必須要傳上面修改過後的LeapNumTerm
     /////////////////// 月序
     const MonthName = [];
+    const MonthOrder = []; // 这个是为了检验古六历春秋日食
     let MonNumList = MonNumList1;
     if (Name === "Zhuanxu1") MonNumList = MonNumListChuA;
     else if (Name === "Zhuanxu2") MonNumList = MonNumListChuB;
     if (LeapNumTerm) {
       for (let i = 1; i <= 13; i++) {
         if (i <= LeapNumTerm) {
-          MonthName[i] = MonNumList[fmod(i + FirstZhengDif, 12)];
+          MonthOrder[i] = fmod1(i + FirstZhengDif, 12);
+          MonthName[i] = MonNumList[MonthOrder[i]];
         } else if (i === LeapNumTerm + 1) {
+          MonthOrder[i] = "l" + fmod1(LeapNumTerm + FirstZhengDif, 12);
           MonthName[i] =
-            "閏" + MonNumList[fmod(LeapNumTerm + FirstZhengDif, 12)];
+            "閏" + MonNumList[fmod1(LeapNumTerm + FirstZhengDif, 12)];
         } else {
-          MonthName[i] = MonNumList[fmod(i + FirstZhengDif - 1, 12)];
+          MonthOrder[i] = fmod1(i + FirstZhengDif - 1, 12);
+          MonthName[i] = MonNumList[MonthOrder[i]];
         }
       }
     } else {
       for (let i = 1; i <= 12; i++) {
-        MonthName[i] = MonNumList[fmod(i + FirstZhengDif, 12)];
+        MonthOrder[i] = fmod1(i + FirstZhengDif, 12);
+        MonthName[i] = MonNumList[MonthOrder[i]];
       }
     }
+    const MonthPrint = MonthName.slice(1);
+    const MonthOrderPrint = MonthOrder.slice(1);
     const NewmSlice = (array) => array.slice(1 + NewmStart, 13 + NewmEnd);
     const TermSlice = (array) => array.slice(0, 12 + TermEnd);
     ////////////下爲調整輸出////////////
@@ -128,7 +135,6 @@ export default (Name, YearStart, YearEnd) => {
         )
       );
     }
-    const MonthPrint = MonthName.slice(1);
     let NewmScPrint = [],
       NewmDeci3Print = [],
       NewmDeci2Print = [],
@@ -547,6 +553,7 @@ export default (Name, YearStart, YearEnd) => {
     Memo[0] = Memo[1]; // 数组滚动，避免重复运算
     Memo[1] = Memo[2];
   }
+
   return result;
 };
-// console.log(Index("ZhuanxuA", -363));
+// console.log(Index("Zhuanxu", -361));
