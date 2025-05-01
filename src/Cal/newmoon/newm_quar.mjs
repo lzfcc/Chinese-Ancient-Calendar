@@ -77,7 +77,8 @@ export default (Name, Y) => {
     SyzygyAvgRaw = [],
     SyzygyAvgMod = [],
     SyzygyOrderMod = [],
-    SyzygyDeci = [];
+    SyzygyDeci = [],
+    TermRaw = [];
   let SyzygySc = [];
   let TermInt = [],
     TermSc = [],
@@ -89,6 +90,8 @@ export default (Name, Y) => {
     Term1Deci = [],
     Term1Equa = [],
     Term1Eclp = [];
+  const chooseTrunc = (x) =>
+    Name === "Chenhouyao" ? Math.ceil(x) : Math.trunc(x);
   for (let i = 0; i <= 14; i++) {
     NewmAvgBare[i] = parseFloat(
       (
@@ -100,9 +103,15 @@ export default (Name, Y) => {
     );
     NewmAvgRaw[i] = NewmAvgBare[i] + BuScOrder;
     if (NewmAvgRaw[i] < 0) NewmAvgRaw[i] += BuDays; // 和fmod(SolsAccumRaw)一樣，都是應對十月顓頊蔀首
-    NewmInt[i] = Math.trunc(NewmAvgRaw[i]);
+    NewmInt[i] = chooseTrunc(NewmAvgRaw[i]);
     NewmAvgSc[i] = ScList[fm60(NewmInt[i])];
-    NewmAvgDeci[i] = (NewmAvgRaw[i] - NewmInt[i]).toFixed(4).slice(2, 6);
+    NewmAvgDeci[i] = (
+      NewmAvgRaw[i] -
+      NewmInt[i] +
+      (Name === "Chenhouyao" ? 1 : 0)
+    )
+      .toFixed(4)
+      .slice(2, 6);
     NewmSd[i] = NewmAvgBare[i] - SolsAccum; // 和历元的距离，而非和冬至（应对立春元的历法，虽然古六历也没有星度）
     if (MansRaw) NewmEqua[i] = mans(Name, Y, NewmSd[i]).Equa;
     SyzygyAvgRaw[i] =
@@ -115,26 +124,34 @@ export default (Name, Y) => {
         ).toPrecision(14)
       ) + BuScOrder;
     SyzygyAvgMod[i] = fm60(SyzygyAvgRaw[i]);
-    SyzygyOrderMod[i] = Math.trunc(SyzygyAvgMod[i]);
+    SyzygyOrderMod[i] = chooseTrunc(SyzygyAvgMod[i]);
     SyzygySc[i] = ScList[SyzygyOrderMod[i]];
-    SyzygyDeci[i] = (SyzygyAvgMod[i] - SyzygyOrderMod[i])
+    SyzygyDeci[i] = (
+      SyzygyAvgMod[i] -
+      SyzygyOrderMod[i] +
+      (Name === "Chenhouyao" ? 1 : 0)
+    )
       .toFixed(4)
       .slice(2, 6);
 
     const TermBare = SolsAccum + (i + FirstEpochDif - 1) * TermLeng;
-    const TermRaw = TermBare + BuScOrder;
-    TermInt[i] = Math.trunc(TermRaw);
-    const TermMod = fm60(TermRaw);
-    const TermOrderMod = Math.trunc(TermMod);
+    TermRaw[i] = TermBare + BuScOrder;
+    TermInt[i] = chooseTrunc(TermRaw[i]);
+    const TermMod = fm60(TermRaw[i]);
+    const TermOrderMod = chooseTrunc(TermMod);
     TermSc[i] = ScList[TermOrderMod];
-    TermDeci[i] = (TermMod - TermOrderMod).toFixed(4).slice(2, 6);
+    TermDeci[i] = (TermMod - TermOrderMod + (Name === "Chenhouyao" ? 1 : 0))
+      .toFixed(4)
+      .slice(2, 6);
     const Term1Bare = SolsAccum + (i + FirstEpochDif - 1.5) * TermLeng;
     const Term1Raw = Term1Bare + BuScOrder;
-    Term1Int[i] = Math.trunc(Term1Raw);
+    Term1Int[i] = chooseTrunc(Term1Raw);
     const Term1Mod = fm60(Term1Raw);
-    const Term1OrderMod = Math.trunc(Term1Mod);
+    const Term1OrderMod = chooseTrunc(Term1Mod);
     Term1Sc[i] = ScList[Term1OrderMod];
-    Term1Deci[i] = (Term1Mod - Term1OrderMod).toFixed(4).slice(2, 6);
+    Term1Deci[i] = (Term1Mod - Term1OrderMod + (Name === "Chenhouyao" ? 1 : 0))
+      .toFixed(4)
+      .slice(2, 6);
     if (MansRaw) {
       const Func = mans(Name, Y, TermBare - SolsAccum);
       const Func1 = mans(Name, Y, Term1Bare - SolsAccum); // 這裏省略了紀元等提到的今年次年黃赤道差之差
@@ -157,9 +174,19 @@ export default (Name, Y) => {
   // 中氣
   let LeapNumTerm = undefined;
   for (let i = 0; i <= 12; i++) {
-    if (TermInt[i] < NewmInt[i + 1] && TermInt[i + 1] >= NewmInt[i + 2]) {
-      LeapNumTerm = i; // 閏Leap月，第Leap+1月爲閏月
-      break;
+    if (Name === "Chenhouyao") {
+      if (
+        TermRaw[i] < NewmAvgRaw[i + 1] &&
+        TermRaw[i + 1] >= NewmAvgRaw[i + 2]
+      ) {
+        LeapNumTerm = i;
+        break;
+      }
+    } else {
+      if (TermInt[i] < NewmInt[i + 1] && TermInt[i + 1] >= NewmInt[i + 2]) {
+        LeapNumTerm = i; // 閏Leap月，第Leap+1月爲閏月
+        break;
+      }
     }
   }
   return {

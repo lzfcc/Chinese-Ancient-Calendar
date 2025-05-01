@@ -410,6 +410,20 @@ export default {
   //
   //   SolsConst: 3 / 4 - 235 / 940,
   // },
+  Chenhouyao: {
+    Type: 1,
+    Denom: 940, // 日法
+    Lunar: 27759 / 940, // 朔策
+    Solar: 365.25, // 歲實
+    OriginAd: -2759530, // 731BC
+    OriginYearSc: 47, // 庚戌
+    BuScConst: 8, // 壬申蔀首1454419
+    FirstNum: 0, // 年首子月
+    ZhengNum: 0, // 正月建子
+    YuanRange: 4560, // 元
+    JiRange: 1520, // 紀
+    BuRange: 76 // 蔀
+  },
   TaiyiJiayin: {
     Type: 1,
     Denom: 940, // 日法

@@ -15,6 +15,7 @@ export const NameList = {
   // ZhuanxuD: "秦顓頊(退餘210)",
   // ZhuanxuE: "秦顓頊(變閏章)",
   // ZhuanxuF: "秦顓頊(退餘25)",
+  Chenhouyao: "陳厚耀古曆",
   TaiyiJiayin: "甲寅太乙",
   Shiji: "*曆術甲子篇",
   Taichu: "太初(三統)",
