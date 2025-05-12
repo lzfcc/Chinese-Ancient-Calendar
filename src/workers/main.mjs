@@ -1,211 +1,300 @@
-import CalNewm from '../Cal/newmoon/index.mjs'
-import CalNewm_DE from '../Cal/newmoon/index_de.mjs'
-import CalEph from '../Cal/ephemeris/index.mjs'
-import CalEph_Modern from '../Cal/ephemeris/eph_modern.mjs'
-import Para from '../Cal/parameter/calendars.mjs'
+import CalNewm from "../Cal/newmoon/index.mjs";
+import CalNewm_DE from "../Cal/newmoon/index_de.mjs";
+import CalEph from "../Cal/ephemeris/index.mjs";
+import CalEph_Modern from "../Cal/ephemeris/eph_modern.mjs";
+import Para from "../Cal/parameter/calendars.mjs";
 
-const AutoCal = year => {
-    if (year < -721 || year > 1913) {
-        throw (new Error('自動選擇的年份範圍：-721到1913'))
+const AutoCal = (year) => {
+  if (year < -721 || year > 1913) {
+    throw new Error("自動選擇的年份範圍：-721到1913");
+  }
+  const Cals = [];
+  for (const [Cal, CalPara] of Object.entries(Para)) {
+    const ApplyRange = CalPara.ApplyYear || []; // 兼容 ApplyRange 为空
+    for (const [start, end] of ApplyRange) {
+      if (year >= start && year <= end) {
+        Cals.push(Cal);
+        break;
+      }
     }
-    const Cals = []
-    for (const [Cal, CalPara] of Object.entries(Para)) {
-        const ApplyRange = CalPara.ApplyYear || [] // 兼容 ApplyRange 为空
-        for (const [start, end] of ApplyRange) {
-            if (year >= start && year <= end) {
-                Cals.push(Cal)
-                break
-            }
-        }
-    }
-    return Cals
-}
+  }
+  return Cals;
+};
 // console.log (AutoCal(1150))
 
-const PrintNewm = result => {
-    const { YearInfo, MonthPrint,
-        NewmAvgScPrint, NewmScPrint, NewmAvgDeciPrint, NewmNowlineDeciPrint, NewmAcrDeciPrint, NewmDeci3Print, NewmDeci2Print, NewmDeci1Print, NewmEquaPrint, NewmEclpPrint, SyzygyScPrint, SyzygyDeciPrint, TermNamePrint, TermAcrScPrint, TermAcrDeciPrint, TermScPrint, TermDeciPrint, TermEquaPrint, TermEclpPrint, Term1AcrSc, Term1AcrDeci
-    } = result
-    let Print = YearInfo
-    Print += '\n**月** ' + MonthPrint.join(' ') + `\n`
-    if (NewmScPrint.length > 0) {
-        Print += '**定朔** ' + NewmScPrint.join(' ') + `\n`
-        NewmAcrDeciPrint
-        if (NewmAcrDeciPrint.length > 0) {
-            Print += '注曆 ' + NewmNowlineDeciPrint.join(' ') + `\n`
-            Print += '交食 ' + NewmAcrDeciPrint.join(' ') + `\n`
-        }
-        if (NewmDeci3Print.length > 0) {
-            Print += '三次 ' + NewmDeci3Print.join(' ') + `\n`
-        }
-        if (NewmDeci2Print.length > 0) {
-            Print += '二次 ' + NewmDeci2Print.join(' ') + `\n`
-        }
-        if (NewmDeci1Print.length > 0) {
-            Print += '線性 ' + NewmDeci1Print.join(' ') + `\n`
-        }
-        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDeciPrint.join(' ') + `\n`
-    } else {
-        Print += '**平朔** ' + NewmAvgScPrint.join(' ') + '\n**分** ' + NewmAvgDeciPrint.join(' ') + `\n`
-    }
-    if ((NewmEquaPrint || []).length > 0) {
-        Print += '**赤道** ' + NewmEquaPrint.join(' ') + `\n`
-    }
-    if ((NewmEclpPrint || []).length > 0) {
-        Print += '**黃道** ' + NewmEclpPrint.join(' ') + `\n`
-    }
-    Print += '**望** ' + SyzygyScPrint.join(' ') + '\n**分** ' + SyzygyDeciPrint.join(' ') + '\n**中氣** ' + TermNamePrint.join(' ') + `\n`
-    if ((Term1AcrSc || []).length > 0) {
-        Print += '**節氣** ' + Term1AcrSc.join(' ') + `\n`
-        Print += '**分** ' + Term1AcrDeci.join(' ') + `\n`
-    }
+const PrintNewm = (result) => {
+  const {
+    YearInfo,
+    MonthPrint,
+    NewmAvgScPrint,
+    NewmScPrint,
+    NewmAvgDeciPrint,
+    NewmNowlineDeciPrint,
+    NewmAcrDeciPrint,
+    NewmDeci3Print,
+    NewmDeci2Print,
+    NewmDeci1Print,
+    NewmEquaPrint,
+    NewmEclpPrint,
+    SyzygyScPrint,
+    SyzygyDeciPrint,
+    TermDownNamePrint,
+    TermDownAcrScPrint,
+    TermDownAcrDeciPrint,
+    TermDownScPrint,
+    TermDownDeciPrint,
+    TermDownEquaPrint,
+    TermDownEclpPrint,
+    TermUpAcrSc,
+    TermUpAcrDeci
+  } = result;
+  let Print = YearInfo;
+  Print += "\n**月** " + MonthPrint.join(" ") + "\n";
+  if (NewmScPrint.length > 0) {
+    Print += "**定朔** " + NewmScPrint.join(" ") + "\n";
+    NewmAcrDeciPrint;
     if (NewmAcrDeciPrint.length > 0) {
-        Print += '平氣 ' + TermScPrint.join(' ') + '\n**分** ' + TermDeciPrint.join(' ') + `\n`
-    } else {
-        Print += '**平氣** ' + TermScPrint.join(' ') + '\n**分** ' + TermDeciPrint.join(' ') + `\n`
+      Print += "注曆 " + NewmNowlineDeciPrint.join(" ") + "\n";
+      Print += "交食 " + NewmAcrDeciPrint.join(" ") + "\n";
     }
-    if (TermAcrScPrint.length > 0) {
-        Print += '**定氣** ' + TermAcrScPrint.join(' ') + '\n**分** ' + TermAcrDeciPrint.join(' ') + `\n`
+    if (NewmDeci3Print.length > 0) {
+      Print += "三次 " + NewmDeci3Print.join(" ") + "\n";
     }
-    if ((TermEquaPrint || []).length > 0) {
-        Print += '**赤道**' + TermEquaPrint.join(' ') + `\n`
+    if (NewmDeci2Print.length > 0) {
+      Print += "二次 " + NewmDeci2Print.join(" ") + "\n";
     }
-    if ((TermEclpPrint || []).length > 0) {
-        Print += '**黃道**' + TermEclpPrint.join(' ') + `\n`
+    if (NewmDeci1Print.length > 0) {
+      Print += "線性 " + NewmDeci1Print.join(" ") + "\n";
     }
-    return Print + `\n`
-}
+    Print +=
+      "**平朔** " +
+      NewmAvgScPrint.join(" ") +
+      "\n**分** " +
+      NewmAvgDeciPrint.join(" ") +
+      "\n";
+  } else {
+    Print +=
+      "**平朔** " +
+      NewmAvgScPrint.join(" ") +
+      "\n**分** " +
+      NewmAvgDeciPrint.join(" ") +
+      "\n";
+  }
+  if ((NewmEquaPrint || []).length > 0) {
+    Print += "**赤道** " + NewmEquaPrint.join(" ") + "\n";
+  }
+  if ((NewmEclpPrint || []).length > 0) {
+    Print += "**黃道** " + NewmEclpPrint.join(" ") + "\n";
+  }
+  Print +=
+    "**望** " +
+    SyzygyScPrint.join(" ") +
+    "\n**分** " +
+    SyzygyDeciPrint.join(" ") +
+    "\n**中氣** " +
+    TermDownNamePrint.join(" ") +
+    "\n";
+  if ((TermUpAcrSc || []).length > 0) {
+    Print += "**節氣** " + TermUpAcrSc.join(" ") + "\n";
+    Print += "**分** " + TermUpAcrDeci.join(" ") + "\n";
+  }
+  if (NewmAcrDeciPrint.length > 0) {
+    Print +=
+      "平氣 " +
+      TermDownScPrint.join(" ") +
+      "\n**分** " +
+      TermDownDeciPrint.join(" ") +
+      "\n";
+  } else {
+    Print +=
+      "**平氣** " +
+      TermDownScPrint.join(" ") +
+      "\n**分** " +
+      TermDownDeciPrint.join(" ") +
+      "\n";
+  }
+  if (TermDownAcrScPrint.length > 0) {
+    Print +=
+      "**定氣** " +
+      TermDownAcrScPrint.join(" ") +
+      "\n**分** " +
+      TermDownAcrDeciPrint.join(" ") +
+      "\n";
+  }
+  if ((TermDownEquaPrint || []).length > 0) {
+    Print += "**赤道**" + TermDownEquaPrint.join(" ") + "\n";
+  }
+  if ((TermDownEclpPrint || []).length > 0) {
+    Print += "**黃道**" + TermDownEclpPrint.join(" ") + "\n";
+  }
+  return Print + "\n";
+};
 
-const PrintEph = result => {
-    const { Era, YearGod, YearColor, MonInfo, MonColor, DayAccum, MonName, Sc, Jd, Nayin, Week, Equa, Eclp,
-        Lat, Rise, Duskstar, Dial, MoonEclp, MoonEclpLat, HouName, FiveName, HexagramName, ManGod, Luck,
-    } = result
-    let Print = Era + `\n` + DayAccum + `\n` + YearGod + `\n` + YearColor + `\n` + MonInfo + `\n` + MonColor + `\n`
-    Print += '\n**干支**\n'
-    for (let i = 1; i < Sc.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Sc[i].slice(1).join(' ')
-        Print += `\n`
+const PrintEph = (result) => {
+  const {
+    Era,
+    YearGod,
+    YearColor,
+    MonInfo,
+    MonColor,
+    DayAccum,
+    MonName,
+    Sc,
+    Jd,
+    Nayin,
+    Week,
+    Equa,
+    Eclp,
+    Lat,
+    Rise,
+    Duskstar,
+    Dial,
+    MoonEclp,
+    MoonEclpLat,
+    HouName,
+    FiveName,
+    HexagramName,
+    ManGod,
+    Luck
+  } = result;
+  let Print =
+    Era +
+    "\n" +
+    DayAccum +
+    "\n" +
+    YearGod +
+    "\n" +
+    YearColor +
+    "\n" +
+    MonInfo +
+    "\n" +
+    MonColor +
+    "\n";
+  Print += "\n**干支**\n";
+  for (let i = 1; i < Sc.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Sc[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  Print += "\n**儒略日**\n";
+  for (let i = 1; i < Jd.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Jd[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  Print += "\n**納音建除**\n";
+  for (let i = 1; i < Nayin.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Nayin[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  if ((Week || []).length > 0) {
+    Print += "\n**値日**\n";
+    for (let i = 1; i < Week.length; i++) {
+      Print += MonName[i] + "\n";
+      Print += Week[i].slice(1).join(" ");
+      Print += "\n";
     }
-    Print += '\n**儒略日**\n'
-    for (let i = 1; i < Jd.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Jd[i].slice(1).join(' ')
-        Print += `\n`
+  }
+  Print += "**日赤經**\n";
+  for (let i = 1; i < Equa.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Equa[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  // if ((Equa || []).length > 0) {
+  Print += "**日黃經**\n";
+  for (let i = 1; i < Equa.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Eclp[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  // }
+  // if ((Lat || []).length > 0) {
+  Print += "\n**日赤緯**\n";
+  for (let i = 1; i < Lat.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Lat[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  // }
+  Print += "\n**日出**\n";
+  for (let i = 1; i < Rise.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += Rise[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  if (Duskstar) {
+    Print += "\n**昏中星**\n";
+    for (let i = 1; i < Duskstar.length; i++) {
+      Print += MonName[i] + "\n";
+      Print += Duskstar[i].slice(1).join(" "); // 一定注意，這是兩個坑
+      Print += "\n";
     }
-    Print += '\n**納音建除**\n'
-    for (let i = 1; i < Nayin.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Nayin[i].slice(1).join(' ')
-        Print += `\n`
+  }
+  if ((Dial || []).length > 0) {
+    Print += "\n**晷長**\n";
+    for (let i = 1; i < Dial.length; i++) {
+      Print += MonName[i] + "\n";
+      Print += Dial[i].slice(1).join(" ");
+      Print += "\n";
     }
-    if ((Week || []).length > 0) {
-        Print += '\n**値日**\n'
-        for (let i = 1; i < Week.length; i++) {
-            Print += MonName[i] + `\n`
-            Print += Week[i].slice(1).join(' ')
-            Print += `\n`
-        }
-    }
-    Print += '**日赤經**\n'
-    for (let i = 1; i < Equa.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Equa[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    // if ((Equa || []).length > 0) {
-    Print += '**日黃經**\n'
-    for (let i = 1; i < Equa.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Eclp[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    // }
-    // if ((Lat || []).length > 0) {
-    Print += '\n**日赤緯**\n'
-    for (let i = 1; i < Lat.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Lat[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    // }
-    Print += '\n**日出**\n'
-    for (let i = 1; i < Rise.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += Rise[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    if (Duskstar) {
-        Print += '\n**昏中星**\n'
-        for (let i = 1; i < Duskstar.length; i++) {
-            Print += MonName[i] + `\n`
-            Print += Duskstar[i].slice(1).join(' ') // 一定注意，這是兩個坑
-            Print += `\n`
-        }
-    }
-    if ((Dial || []).length > 0) {
-        Print += '\n**晷長**\n'
-        for (let i = 1; i < Dial.length; i++) {
-            Print += MonName[i] + `\n`
-            Print += Dial[i].slice(1).join(' ')
-            Print += `\n`
-        }
-    }
+  }
 
-    if ((MoonEclp || []).length > 0) {
-        Print += '**月黃經**\n'
-        for (let i = 1; i < MoonEclp.length; i++) {
-            Print += MonName[i] + `\n`
-            Print += MoonEclp[i].slice(1).join(' ')
-            Print += `\n`
-        }
+  if ((MoonEclp || []).length > 0) {
+    Print += "**月黃經**\n";
+    for (let i = 1; i < MoonEclp.length; i++) {
+      Print += MonName[i] + "\n";
+      Print += MoonEclp[i].slice(1).join(" ");
+      Print += "\n";
     }
-    if ((MoonEclpLat || []).length > 0) {
-        Print += '**月黃緯**\n'
-        for (let i = 1; i < MoonEclpLat.length; i++) {
-            Print += MonName[i] + `\n`
-            Print += MoonEclpLat[i].slice(1).join(' ')
-            Print += `\n`
-        }
+  }
+  if ((MoonEclpLat || []).length > 0) {
+    Print += "**月黃緯**\n";
+    for (let i = 1; i < MoonEclpLat.length; i++) {
+      Print += MonName[i] + "\n";
+      Print += MoonEclpLat[i].slice(1).join(" ");
+      Print += "\n";
     }
-    // if ((HouName || []).length > 0) {
-    Print += '**候**\n'
-    for (let i = 1; i < HouName.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += HouName[i].slice(1).join(' ')
-        Print += `\n`
+  }
+  // if ((HouName || []).length > 0) {
+  Print += "**候**\n";
+  for (let i = 1; i < HouName.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += HouName[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  // }
+  // if ((HexagramName || []).length > 0) {
+  Print += "**卦**\n";
+  for (let i = 1; i < HexagramName.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += HexagramName[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  Print += "**土王用事**\n";
+  for (let i = 1; i < FiveName.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += FiveName[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  // }
+  Print += "**人神**\n";
+  for (let i = 1; i < ManGod.length; i++) {
+    Print += MonName[i] + "\n";
+    Print += ManGod[i].slice(1).join(" ");
+    Print += "\n";
+  }
+  if ((Luck || []).length > 0) {
+    Print += "**日神**\n";
+    for (let i = 1; i < Luck.length; i++) {
+      Print += MonName[i] + "\n";
+      Print += Luck[i].slice(1).join(" ");
+      Print += "\n";
     }
-    // }
-    // if ((HexagramName || []).length > 0) {
-    Print += '**卦**\n'
-    for (let i = 1; i < HexagramName.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += HexagramName[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    Print += '**土王用事**\n'
-    for (let i = 1; i < FiveName.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += FiveName[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    // }
-    Print += '**人神**\n'
-    for (let i = 1; i < ManGod.length; i++) {
-        Print += MonName[i] + `\n`
-        Print += ManGod[i].slice(1).join(' ')
-        Print += `\n`
-    }
-    if ((Luck || []).length > 0) {
-        Print += '**日神**\n'
-        for (let i = 1; i < Luck.length; i++) {
-            Print += MonName[i] + `\n`
-            Print += Luck[i].slice(1).join(' ')
-            Print += `\n`
-        }
-    }
-    return Print + `\n`
-}
+  }
+  return Print + "\n";
+};
 
 /**
  * 格式化字符串，用于输入文件
@@ -215,34 +304,35 @@ const PrintEph = result => {
  * @param {*} list
  */
 export const outputFile = (mode, start, end, isAuto, listRaw) => {
-    const printData = []
-    start = Math.trunc(start)
-    end = Math.trunc(end)
-    if (mode === 1) { // 朔望氣
-        let k = 0
-        for (let Year = start; Year <= end; Year++) {
-            const AutoCals = isAuto ? AutoCal(Year) : []
-            let list = listRaw.concat(AutoCals)
-            list = Array.from(new Set(list))
-            for (let i = 0; i < list.length; i++) {
-                const result = CalNewm(list[i], Year)
-                const Era = result[0].Era
-                printData[k] = printData[k] || [Era]
-                printData[k].push(PrintNewm(result[0]))
-                k++
-            }
-        }
-    } else {
-        listRaw.forEach(Name => {
-            CalEph(Name, start, end).forEach((result, k) => {
-                printData[k] = printData[k] || []
-                printData[k].push(PrintEph(result))
-            })
-        })
+  const printData = [];
+  start = Math.trunc(start);
+  end = Math.trunc(end);
+  if (mode === 1) {
+    // 朔望氣
+    let k = 0;
+    for (let Year = start; Year <= end; Year++) {
+      const AutoCals = isAuto ? AutoCal(Year) : [];
+      let list = listRaw.concat(AutoCals);
+      list = Array.from(new Set(list));
+      for (let i = 0; i < list.length; i++) {
+        const result = CalNewm(list[i], Year);
+        const Era = result[0].Era;
+        printData[k] = printData[k] || [Era];
+        printData[k].push(PrintNewm(result[0]));
+        k++;
+      }
     }
-    return printData
-}
-
+  } else {
+    listRaw.forEach((Name) => {
+      CalEph(Name, start, end).forEach((result, k) => {
+        printData[k] = printData[k] || [];
+        printData[k].push(PrintEph(result));
+      });
+    });
+  }
+  return printData;
+};
+// console.log(outputFile(1, -666, -666, false, ["Jiazi"]));
 /**
  * 格式化对象，用于前端解析
  * @param {*} start
@@ -252,44 +342,44 @@ export const outputFile = (mode, start, end, isAuto, listRaw) => {
  */
 
 export const outputNewmWeb = (start, end, isAuto, listRaw) => {
-    const data = []
-    start = Math.trunc(start)
-    end = Math.trunc(end)
-    listRaw = Array.isArray(listRaw) ? listRaw : [listRaw]
-    listRaw = listRaw.filter(i => i && i.trim()) // 去除空字符串
-    let k = 0
-    for (let Year = start; Year <= end; Year++) {
-        const AutoCals = isAuto ? AutoCal(Year) : []
-        let list = listRaw.concat(AutoCals)
-        list = Array.from(new Set(list)) // 合併重複內容        
-        for (let i = 0; i < list.length; i++) {
-            const result = CalNewm(list[i], Year)[0]
-            result.id = list[i] + Year // 给每个item一个唯一id在前端正确缓存高度
-            result.Count = list.length
-            data[k] = data[k] || []
-            data[k].push(result)
-            k++
-        }
+  const data = [];
+  start = Math.trunc(start);
+  end = Math.trunc(end);
+  listRaw = Array.isArray(listRaw) ? listRaw : [listRaw];
+  listRaw = listRaw.filter((i) => i && i.trim()); // 去除空字符串
+  let k = 0;
+  for (let Year = start; Year <= end; Year++) {
+    const AutoCals = isAuto ? AutoCal(Year) : [];
+    let list = listRaw.concat(AutoCals);
+    list = Array.from(new Set(list)); // 合併重複內容
+    for (let i = 0; i < list.length; i++) {
+      const result = CalNewm(list[i], Year)[0];
+      result.id = list[i] + Year; // 给每个item一个唯一id在前端正确缓存高度
+      result.Count = list.length;
+      data[k] = data[k] || [];
+      data[k].push(result);
+      k++;
     }
-    return data
-}
+  }
+  return data;
+};
 // console.log(outputNewmWeb(982, 984, true, []))
 
 export const outputNewmWeb_DE = (start, end, Longitude) => {
-    const data = []
-    start = Math.trunc(start)
-    end = Math.trunc(end)
-    let k = 0
-    for (let Year = start; Year <= end; Year++) {
-        const result = CalNewm_DE(Year, Year, Longitude)[0]
-        result.id = Year // 给每个item一个唯一id在前端正确缓存高度
-        result.Count = 1
-        data[k] = data[k] || []
-        data[k].push(result)
-        k++
-    }
-    return data
-}
+  const data = [];
+  start = Math.trunc(start);
+  end = Math.trunc(end);
+  let k = 0;
+  for (let Year = start; Year <= end; Year++) {
+    const result = CalNewm_DE(Year, Year, Longitude)[0];
+    result.id = Year; // 给每个item一个唯一id在前端正确缓存高度
+    result.Count = 1;
+    data[k] = data[k] || [];
+    data[k].push(result);
+    k++;
+  }
+  return data;
+};
 
 /**
  * 将 CalEph 输出转换成以月日维度的输出。lzfcc 2021清明節寫了整整一個下午
@@ -315,43 +405,92 @@ export const outputNewmWeb_DE = (start, end, Longitude) => {
  * @param {*} CalInfo 
  * @returns 
  */
-const ephView = CalInfo => {
-    const Day = []
-    Object.entries(CalInfo).forEach(([key, monthValue]) => {
-        for (let i = 1; i < CalInfo.Sc.length; i++) {
-            Day[i] = Day[i] || []
-            if (Array.isArray(monthValue) && Array.isArray(monthValue[i]) && monthValue[i].length) {
-                const MonthList = monthValue[i]
-                MonthList.forEach((dayValue, j) => {
-                    if (!dayValue) return
-                    Day[i][j] = Day[i][j] || {}
-                    Day[i][j][key] = dayValue
-                })
-            }
-        }
-    })
-    return Day
-}
+const ephView = (CalInfo) => {
+  const Day = [];
+  Object.entries(CalInfo).forEach(([key, monthValue]) => {
+    for (let i = 1; i < CalInfo.Sc.length; i++) {
+      Day[i] = Day[i] || [];
+      if (
+        Array.isArray(monthValue) &&
+        Array.isArray(monthValue[i]) &&
+        monthValue[i].length
+      ) {
+        const MonthList = monthValue[i];
+        MonthList.forEach((dayValue, j) => {
+          if (!dayValue) return;
+          Day[i][j] = Day[i][j] || {};
+          Day[i][j][key] = dayValue;
+        });
+      }
+    }
+  });
+  return Day;
+};
 export const outputEphWeb = (year, Name) => {
-    const [result] = CalEph(Name, year)
-    const { Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor, ...OtherResult
-    } = result
-    return {
-        Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
-        DayData: ephView(OtherResult)
-    }
-}
+  const [result] = CalEph(Name, year);
+  const {
+    Era,
+    Title,
+    YearColor,
+    DayAccum,
+    YearGod,
+    MonName,
+    MonInfo,
+    MonColor,
+    ...OtherResult
+  } = result;
+  return {
+    Era,
+    Title,
+    YearColor,
+    DayAccum,
+    YearGod,
+    MonName,
+    MonInfo,
+    MonColor,
+    DayData: ephView(OtherResult)
+  };
+};
 
-export const outputEphModernWeb = (year, Longitude, Latitude, h, MansSystem) => {
-    year = +year
-    Longitude = +Longitude
-    Latitude = +Latitude
-    h = +h
-    const [result] = CalEph_Modern(year, undefined, Longitude, Latitude, h, MansSystem)
-    const { Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor, ...OtherResult
-    } = result
-    return {
-        Era, Title, YearColor, DayAccum, YearGod, MonName, MonInfo, MonColor,
-        DayData: ephView(OtherResult)
-    }
-}
+export const outputEphModernWeb = (
+  year,
+  Longitude,
+  Latitude,
+  h,
+  MansSystem
+) => {
+  year = +year;
+  Longitude = +Longitude;
+  Latitude = +Latitude;
+  h = +h;
+  const [result] = CalEph_Modern(
+    year,
+    undefined,
+    Longitude,
+    Latitude,
+    h,
+    MansSystem
+  );
+  const {
+    Era,
+    Title,
+    YearColor,
+    DayAccum,
+    YearGod,
+    MonName,
+    MonInfo,
+    MonColor,
+    ...OtherResult
+  } = result;
+  return {
+    Era,
+    Title,
+    YearColor,
+    DayAccum,
+    YearGod,
+    MonName,
+    MonInfo,
+    MonColor,
+    DayData: ephView(OtherResult)
+  };
+};

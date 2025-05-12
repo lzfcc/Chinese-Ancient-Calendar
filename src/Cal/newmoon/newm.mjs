@@ -334,6 +334,8 @@ export default (Name, Y) => {
       Raw[i] += NewmPlus + SyzygySub;
       AcrInt[i] += NewmPlus + SyzygySub;
       AnoAccumMidn[i] += NewmPlus;
+      AcrSd[i] += NewmPlus;
+      Sd[i] += NewmPlus;
       if (isNewm) {
         if (Tcorr[i]) {
           Sc[i] =

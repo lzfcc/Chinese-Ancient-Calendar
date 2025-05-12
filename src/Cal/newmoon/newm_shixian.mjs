@@ -100,13 +100,7 @@ export const N4 = (Name, Y) => {
     Y >= CloseOriginAd
       ? OriginAccum + deci(SolsConst) - SolsDeci
       : OriginAccum - deci(SolsConst) + SolsDeci; // 積日（曆元冬至次日到所求天正冬至次日的日數，等於算式的曆元冬至當日到所求冬至當日日數）
-  const ChouAccum =
-    Y >= CloseOriginAd ? DayAccum - ChouConst : DayAccum + ChouConst; // 通朔
-  // const LunarAccum = Y >= CloseOriginAd ? Math.trunc(ChouAccum / Lunar) + 1 : Math.trunc(ChouAccum / Lunar) // 積朔。似乎+1是為了到十二月首朔
-  const ChouSmd =
-    Y >= CloseOriginAd
-      ? (Lunar - (ChouAccum % Lunar)) % Lunar
-      : ChouAccum % Lunar; // 首朔（十二月朔距冬至次日子正）：通朔以朔策除之，得數加一爲積朔，餘數與朔策相減爲首朔。上考則通朔以朔策除之爲積朔，餘數爲首朔。Smd：某時刻距離冬至次日子正的時間
+
   // const LunarAccumSun = LunarAccum * SunAvgVm // 積朔太陽平行
   // const ChouSun = fm360(Y >= CloseOriginAd ? ChouSunConst + LunarAccumSun : ChouSunConst - LunarAccumSun)
   // const LunarAccumWhitelongi = LunarAccum * MoonNodeVmSum // 積朔太陰交周
@@ -129,6 +123,19 @@ export const N4 = (Name, Y) => {
       : fm360(NodeConst + DayAccum * NodeVd); // 正交年根，所得爲白經
   // const Mans = (OriginAccumMans % 28 + 1 + 28) % 28 // 自初日角宿起算，得值宿。（考成：天正冬至乃冬至本日之干支，值宿乃冬至次日之宿，故外加一日。）
   const SperiRoot = SperiConst + SperiVy * CloseOriginYear; // 本年最卑行+最卑應=我命名的最卑年根
+  const ChouAccum =
+    Y >= CloseOriginAd ? DayAccum - ChouConst : DayAccum + ChouConst; // 通朔
+  // const LunarAccum = Y >= CloseOriginAd ? Math.trunc(ChouAccum / Lunar) + 1 : Math.trunc(ChouAccum / Lunar) // 積朔。似乎+1是為了到十二月首朔
+  let ChouSmd =
+    Y >= CloseOriginAd
+      ? (Lunar - (ChouAccum % Lunar)) % Lunar
+      : ChouAccum % Lunar; // 首朔（十二月朔距冬至次日子正）：通朔以朔策除之，得數加一爲積朔，餘數與朔策相減爲首朔。上考則通朔以朔策除之爲積朔，餘數爲首朔。Smd：某時刻距離冬至次日子正的時間
+  // 下面要考慮一種特殊情況，例如677BC年前平冬至庚申、定冬至戊午，丑月平朔庚申，這時ChouSmd是寅月的
+  const SolsAcrAvgDif = -sunCorrQing(Name, -SperiRoot).Corr / SunAvgVd; // 大約算一下定冬至距平冬至多久
+  // const AssumChouAvgSd = ChouSmd + (1 - SolsDeci); // 距平冬至
+  // const AssumChouAcrSd = AssumChouAvgSd - SolsAcrAvgDif;
+  if (SolsDeci + SolsAcrAvgDif < 0 && ChouSmd > 28) ChouSmd -= Lunar; // 感覺還不太完善，以後看到錯了再說
+
   const sunEcliJiazi = (
     NowSmd,
     AcrWhitelongi,
@@ -181,8 +188,8 @@ export const N4 = (Name, Y) => {
       const EclpmidGong =
         NoonEclpGong +
         (NoonEclpGong < 180 ? 1 : -1) *
-        (NoonEclpHigh > 90 ? -1 : 1) *
-        EclpmidSouDif; // 用時黃平象限宮度。算例167度3分52秒=167.06444444444
+          (NoonEclpHigh > 90 ? -1 : 1) *
+          EclpmidSouDif; // 用時黃平象限宮度。算例167度3分52秒=167.06444444444
       const SunEclpmidDif = abs(SunGong - EclpmidGong); // 用時太陽距黃平象限=月距限。算例壬子弧62度3分52秒=62.06444444444
       const SignEw = (SunGong - EclpmidGong + 360) % 360 < 180 ? 1 : -1; // 太陽黃經大於黃平象限宮度爲限東。大於0爲限東，小於0爲限西——我想了下應該這樣處理
       // const SignEw = Math.sign(SunEclpmidDif) // 限東為1，西-1
@@ -474,7 +481,7 @@ export const N4 = (Name, Y) => {
     } = distAppa(SmdAsm, DistrealAsm, AngArcAvgAsm); // 見符號4
     const AngHigharcAsm_DistappaAvg = abs(
       abs(AngWhiteHigharcAsm - AngWhiteHigharcAvg) +
-      (SunAvg.SunLon < 180 ? -1 : 1) * AngDistrealAvg
+        (SunAvg.SunLon < 180 ? -1 : 1) * AngDistrealAvg
     ); // 設時高弧交用時視距角
     let flag2 = 1;
     let flag4 = 1;
@@ -504,14 +511,14 @@ export const N4 = (Name, Y) => {
     } = distAppa(SmdAcr0, DistrealAcr0, AngArcAvgAcr0); // 真時對視距角法與設時同
     const AngHigharcAcr0_DistappaAsm = abs(
       abs(AngWhiteHigharcAcr0 - AngWhiteHigharcAsm) +
-      flag3(
-        AngWhiteHigharcAcr0,
-        FlagDistrealAsm,
-        FlagDistrealAcr0,
-        AngWhiteHigharcAsm,
-        AngDistrealAsm
-      ) *
-      AngDistrealAsm
+        flag3(
+          AngWhiteHigharcAcr0,
+          FlagDistrealAsm,
+          FlagDistrealAcr0,
+          AngWhiteHigharcAsm,
+          AngDistrealAsm
+        ) *
+          AngDistrealAsm
     ); // 真時高弧交設時視距角
     if (FlagDistrealAcr0 === FlagDistrealAsm) flag4 = -1;
     const AngDistMovingAcr1 = t2(
@@ -809,8 +816,8 @@ export const N4 = (Name, Y) => {
       step +
       (fm360(SunLonBef - MoonLonBef) /
         (fm360(MoonLonAft - MoonLonBef) - fm360(SunLonAft - SunLonBef))) *
-      step *
-      2; // 一小時月距日實行
+        step *
+        2; // 一小時月距日實行
     return Math.trunc(Smd) + Deci; // 實朔實時距冬至次日的時間
   };
   const term = (i, isMid) => {
@@ -1321,7 +1328,7 @@ export const N4 = (Name, Y) => {
   };
 };
 
-// console.log(N4("Guimao", 1760)) // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
+// console.log(N4("Jiazi", -676)); // 《後編》卷三《日食食甚真時及兩心視距》葉64算例：1730六月日食，見說明文檔
 // console.log(N4("Xinfa", -548)) // https://zhuanlan.zhihu.com/p/513322727 1949月食算例。1921月離算例https://zhuanlan.zhihu.com/p/512380296 。2009日食算例https://zhuanlan.zhihu.com/p/670820567
 // console.log(sunQing(Name,SunRoot, SperiRoot,313)) // 日躔與這個驗算無誤 https://zhuanlan.zhihu.com/p/526578717 算例：Smd=313，SunRoot=0+38/60+26.223/3600，SperiRoot=166*(1/60+2.9975/3600)
 // 月離與這個驗算無誤 https://zhuanlan.zhihu.com/p/527394104
