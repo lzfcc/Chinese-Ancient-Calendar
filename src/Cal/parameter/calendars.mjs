@@ -102,6 +102,26 @@ export default {
     Solar: 365.25,
     OriginAd: -2763680, // -320
     // OriginAd: -2763680 + 2880, // 經學與曆學的貫通p155錯誤積年
+    // OriginAd: -2763680 + 3060, // 《開元占經》錯誤積年
+    // JdOrigin: 1604170.5,
+    JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
+    OriginYearSc: 37, // 庚子
+    FirstNum: 0,
+    ZhengNum: 0,
+    YuanRange: 4560,
+    JiRange: 1520,
+    BuRange: 76
+  },
+  LuB: {
+    // 無加小餘
+    ApplyYear: [[-320, -255]],
+    Type: 1,
+    Denom: 940,
+    Lunar: 27759 / 940,
+    Solar: 365.25,
+    // OriginAd: -2763680, // -320
+    // OriginAd: -2763680 + 2880, // 經學與曆學的貫通p155錯誤積年
+    OriginAd: -2763680 + 3060, // 《開元占經》錯誤積年
     // JdOrigin: 1604170.5,
     JdSols: 1604170.5 + (29 + 499 / 940) / 19 + 320 * 365.25,
     OriginYearSc: 37, // 庚子
@@ -472,7 +492,6 @@ export default {
     ZhengNum: 2,
     YuanRange: 4617, // 元法
     TongRange: 1539, // 統法
-
     // MansRaw: [7, 26], // 牽牛初度。
     MansRaw: [8, 0], // 這兩個結果都等於牛0
     MansFracPosi: 7,
@@ -916,10 +935,10 @@ export default {
     OriginYearSc: 49, // 上元壬子
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 363600, // 元法，6紀
-    JiRange: 60600, // 1紀10蔀
-    TongRange: 121200, // 統法，1統2紀
-    BuRange: 6060, // 蔀法、度法。蔀日=月通
+    YuanRange: 363600, // 元法，6紀。一元多60日归零
+    TongRange: 121200, // 統法，1統2紀，
+    JiRange: 60600, // 1紀10蔀，一纪多10日
+    BuRange: 6060, // 蔀法、度法。蔀日=月通。一蔀多37日
     ZhangRange: 505, // 章法，1蔀12章
     ZhangLeap: 186, // 閏餘。每年月數：12+186/505
     MansRaw: [7, 15], // 斗15度
@@ -956,11 +975,11 @@ export default {
     OriginYearSc: 1, // 上元甲子
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 1011600, // 元法，6紀
-    JiRange: 168600, // 1紀10蔀
-    TongRange: 337200, // 統法，1統2紀
-    BuRange: 16860, // 蔀法、度法。蔀日=月通
-    ZhangRange: 562, // 章法，1蔀30章.章中：6744
+    YuanRange: 1011600, // 元法，6紀。日名、歲名歸零
+    TongRange: 337200, // 統法，1統2紀。日名向後20，歲名歸零
+    JiRange: 168600, // 1紀10蔀。日名向後10，歲名歸零
+    BuRange: 16860, // 蔀法、度法。蔀日=月通。日名向後37，歲名歸零
+    ZhangRange: 562, // 章法，蔀30章.章中：6744
     ZhangLeap: 207, // 閏餘。每年月數：12+186/505
     MansRaw: [7, 15], // 斗15度
     MansFracPosi: 7
@@ -998,9 +1017,10 @@ export default {
     OriginYearSc: 1, // 上元甲子
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 1419600, // 元法，6紀
-    JiRange: 236600, // 原文的數字是20036600
-    BuRange: 23660, // 蔀法、度法
+    YuanRange: 1419600, // 元法，6紀。日名歸零，歲名歸零
+    TongRange: 709800, // 【我補統法】日名向後30，歲名歸零
+    JiRange: 236600, // 原文20036600。日名向後10，歲名向後20
+    BuRange: 23660, // 蔀法、度法。日名向後7，歲名向後20
     ZhangRange: 676, // 章歲
     ZhangLeap: 249,
     MansRaw: [7, 15], // 「命起牛前十二度」斗15
@@ -1021,9 +1041,10 @@ export default {
     OriginYearSc: 1, // 上元甲子
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 1340280, // 元法。闕，我假設是紀法的6倍
-    JiRange: 223380, // 闕，我假設是蔀法的10倍
-    BuRange: 22338, // 蔀法、度法。蔀日8158831
+    YuanRange: 1340280, // 【我補元法】日名歸零，歲名歸零
+    TongRange: 446760, // 【我補統法】日名向後20，歲名歸零
+    JiRange: 223380, // 【我補紀法】蔀法的10倍。日名向後10，歲名歸零
+    BuRange: 22338, // 蔀法、度法。蔀日8158831。日名向後31，歲名向後8
     ZhangRange: 657, // 章歲。章月8126.蔀月276284
     ZhangLeap: 242,
     MansRaw: [7, 15], // 闕，酌情處理
@@ -1050,9 +1071,10 @@ export default {
     OriginYearSc: 51, // 上元甲寅
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 1407600, // 元法闕，我算得
-    JiRange: 234600, // 闕
-    BuRange: 23460, // 蔀法
+    YuanRange: 1407600, // 【我補元法】日名歸零，歲名歸零
+    TongRange: 469200, // 【我補統法】日名向後20，歲名歸零
+    JiRange: 234600, // 【我補紀法】日名向後10，歲名歸零
+    BuRange: 23460, // 蔀法。日名向後31，歲名歸零
     ZhangRange: 391, // 章歲
     ZhangLeap: 144, //
     MansRaw: [7, 15], // 斗15度
@@ -1080,16 +1102,17 @@ export default {
     OriginYearSc: 3, // 上元丙寅
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 259840, // 闕，我算得。1 元 = 20 蔀，1 蔀 = 29 章
-    JiRange: 129920, // 闕，我假設是蔀法的10倍。
-    BuRange: 12992, // 蔀法29章。蔀日4734247
+    YuanRange: 779520, // 【我補元法】日名歸零，歲名歸零
+    TongRange: 259840, // 【我補統法】日名歸零，歲名向後40
+    JiRange: 129920, // 【我補紀法】日名向後30，歲名向後20
+    BuRange: 12992, // 蔀法29章。蔀日4734247。日名向後27，歲名向後32
     ZhangRange: 448, // 章法
     ZhangLeap: 165,
     MansRaw: [7, 12], // 斗12度
     MansFracPosi: 7 // 闕，擬
   },
   Kaihuang: {
-    // 《隋志中》除了月離表都有了。《劉洪濤》618頁。以開皇曆交點月、月食週期比之，與我的換算公式完全相合！
+    // 《隋志中》只列了大要，除了月離表都有了。《劉洪濤》618頁。以開皇曆交點月、月食週期比之，與我的換算公式完全相合！
     Type: 3,
     ApplyYear: [[584, 596]],
     Solar: 365 + 25063 / 102960,
@@ -1112,9 +1135,10 @@ export default {
     OriginYearSc: 1, // 上元甲子
     ZhengNum: 2, //
     FirstNum: 2, // 建寅
-    YuanRange: 6177600, // 元法
-    JiRange: 1029600, // 紀法
-    BuRange: 102960, // 蔀法、度法
+    YuanRange: 6177600, // 【我補元法】日名歸零，歲名歸零
+    TongRange: 2059200, // 【我補統法】日名向後20，歲名歸零
+    JiRange: 1029600, // 【我補紀法】日名向後10，歲名歸零
+    BuRange: 102960, // 蔀法、度法。日名向後43，歲名歸零
     ZhangRange: 429, // 章歲
     ZhangLeap: 158, // 章閏
     MansRaw: [7, 12], // 闕，以大象補之
