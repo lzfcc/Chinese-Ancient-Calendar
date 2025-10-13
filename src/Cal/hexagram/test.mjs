@@ -204,8 +204,8 @@ const AllShele = (Type, b, gua, loop) => {
 // console.log(AllShele(2, [3, 5], 1, 10000000));
 // console.log(AllShele(3, [3, 3], 0, 10000000));
 
+// 某揲扐法在各分堆下限之下的概率。
 const Theory = (Type, all, bian, she, gua, isRandomGua, count, loop) => {
-  // 算法理论值
   let p = "";
   for (let j = count[0]; j <= count[1]; j++) {
     // for (let j = 0; j < 1; j++) {
@@ -235,7 +235,7 @@ const Theory = (Type, all, bian, she, gua, isRandomGua, count, loop) => {
   }
   return p;
 };
-// console.log(Theory(2, 49, 3, 4, 1, true, [25, 35], 100000000)); // 朱熹
+// console.log(Theory(2, 49, 3, 4, 1, true, [25, 35], 10000000)); // 朱熹
 // console.log(Theory(2, 39, 4, 3, 1, true, [8, 20], 100000000));
 // console.log(Theory(2, 40, 4, 3, 1, true, [8, 20], 100000000));
 // console.log(Theory(2, 51, 4, 4, 1, true, [8, 20], 100000000));
@@ -416,13 +416,13 @@ const BootH = (ListP, ListPSheleAll, loop) => {
     for (let l = 0; l < ListPSheleAll[m].length; l++) {
       const ListShele = ListPSheleAll[m][l].slice(-5);
       for (let i = 0; i < 5; i++) {
-        const length = ListP[5];
-        const N1 = Math.round((ListP[i] * length) / 100);
-        const sample = [...Array(N1).fill(1), ...Array(length - N1).fill(0)];
+        const length = ListP[5]; // 某分系总爻数
+        const N1 = Math.round((ListP[i] * length) / 100); // 各数字的数量
+        const sample = [...Array(N1).fill(1), ...Array(length - N1).fill(0)]; // 制作样本x1,x2,...,xn
         let z = [];
-        let cc = 0;
+        let cc = 0; // 計數器
         for (let k = 0; k < length; k++) {
-          z[k] = sample[k] * 100 - ListP[i] + ListShele[i]; // 平移变换形成新的样本
+          z[k] = sample[k] * 100 - ListP[i] + ListShele[i]; // 平移变换形成新的样本。减去一个样本的频率，加上一个假设揲扐法的概率
         }
         for (let j = 0; j < loop; j++) {
           let tmp = [];
@@ -431,7 +431,7 @@ const BootH = (ListP, ListPSheleAll, loop) => {
           }
           if (Mean(tmp) > ListP[i]) cc++; // loop个tmpMean的mean就是ListShele[i]
         }
-        const se = (Math.min(loop - cc, cc) * 2 * 100) / loop;
+        const se = (Math.min(loop - cc, cc) * 2 * 100) / loop; // mu0與mu的接近程度，若se>10%，則接受該假設
         if (i === 0) {
           se5.push(se);
         } else if (i === 1) {
@@ -469,7 +469,7 @@ const BootH = (ListP, ListPSheleAll, loop) => {
 //   BootH([4.6296, 38.8889, 37.963, 15.7407, 2.7778, 108], ListPSheleAll, 3000000) // 8種揲扐法100000次82s
 // );
 // console.log(
-//   BootH([7.7778, 36.6667, 47.7778, 7.7778, 0, 90], ListPSheleAll, 3000000) // 1YZ
+//   BootH([7.7778, 36.6667, 47.7778, 7.7778, 0, 90], ListPSheleAll, 100000) // 1YZ
 // );
 // console.log(
 //   BootH([11.67, 30.0, 46.67, 11.67, 0, 60], ListPSheleAll, 3000000) // 1YZS1

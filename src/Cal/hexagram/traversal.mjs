@@ -49,7 +49,8 @@ const TestTraversalSub3 = (all, bian, she, nums) => {
     }
   }
 };
-// 遍历每种可能性，得出理论概率。但是严格理论值并不如预期，只有朴素理论值可以。
+
+// 某揲扐法的实践理论值：遍历每种可能性。
 const TestTraversal = (Type, all, bian, she, gua) => {
   const nums = Array(12).fill(0);
   if (Type === 3) {

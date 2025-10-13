@@ -7,6 +7,7 @@ export const NameList = {
   Zhou: "真周",
   ZhouB: "*周(立春)",
   Lu: "魯",
+  LuB: "魯(占經誤)",
   // Zhuanxu1: "楚顓頊(大正建亥)",
   // Zhuanxu2: "楚顓頊(小正建寅)",
   Zhuanxu: "顓頊",

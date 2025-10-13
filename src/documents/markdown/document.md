@@ -1,6 +1,6 @@
 ## 簡介
 
-使用前請先閱讀已知問題及各部分可靠性驗證。v2.18.250413
+使用前請先閱讀已知問題及各部分可靠性驗證。v2.20.251013
 
 1. 本工具的使用對象是古代天文曆法研究者。對於一般文史研究者，更推薦使用下面的友情鏈接。
 2. 目前的古代朔閏査詢網站都是根據工具書、文獻材料手動調整的<n>參考中研院 [兩千年中西曆轉換說明書](https://sinocal.sinica.edu.tw/lusodoc.html)，廖育棟 [本網站的農曆編算](https://ytliu0.github.io/ChineseCalendar/computation_chinese.html)</n>。本工具可提供古代實行未實行的 60 餘部曆法的計算，完全遵照各曆算法進行全自動計算，無手動干預。主要有三大功能區：
@@ -37,7 +37,7 @@
 #### 實行曆法
 
 - 方中的 [历法计算软件](https://github.com/fztransit/CalendarCalculator/)。介绍见 [一毫秒后的一切](https://mp.weixin.qq.com/s/nTpi5v_aJ8DZ86m0ivHqHg)
-- 和暦 (わごよみ) & 中華暦（からごよみ）](<http://www.wagoyomi.info/>) 〔寶藏！〕
+- [和暦 (わごよみ) & 中華暦（からごよみ）](http://www.wagoyomi.info/) 〔寶藏！〕
 - 廖育棟的 [時憲曆計算](http://ytliu.epizy.com/Shixian/index_chinese.html)
 - [紀年轉換工具](https://kanasimi.github.io/CeJS/_test%20suite/era.htm)：世界各國曆法
 

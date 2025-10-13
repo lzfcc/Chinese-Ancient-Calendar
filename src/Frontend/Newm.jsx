@@ -316,7 +316,7 @@ export default class Newm extends React.Component {
       if (isDetail === true) {
         return (
           <table style={{ border: 'none', textAlign: 'right' }}>
-            <thead><tr><td></td><td>朔 距冬至</td><td>入轉</td><td>入交</td><td>望 距冬至</td><td>入轉</td><td>入交</td></tr></thead>
+            <thead><tr><td></td><td>經朔 距冬至</td><td>入轉</td><td>入交</td><td>經望 距冬至</td><td>入轉</td><td>入交</td></tr></thead>
             <tbody>
               {data.map((row, rowIndex) => (
                 <tr key={`row-${rowIndex}`}>

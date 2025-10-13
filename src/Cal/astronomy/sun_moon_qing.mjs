@@ -236,6 +236,7 @@ export const corrEllipseC = (OrbRaw, c) => {
     (Ae + (OrbRaw > 90 && OrbRaw < 270 ? -1 : 1) * Adif)
   ).toFixed(12);
 };
+
 export const corrEllipseD1 = (OrbRaw, c) => {
   // 見石雲里《历象考成后编中的中心差求法及其日月理论的总体精度》，卡西尼模型完整版，誤差比借積求積更小
   const a = 1;
@@ -318,6 +319,7 @@ export const sunCorrQing = (Name, Sorb) => {
   } else if (Name === "Guimao") Corr = corrEllipseC(Sorb, 0.0169);
   return { Corr, d };
 };
+// console.log(sunCorrQing("Guimao", 326.5298081019))
 export const sunQing = (Name, SunRoot, SperiRoot, Smd) => {
   const { SunAvgVd, SperiVd } = Para[Name];
   const AvgSun = SunRoot + Smd * SunAvgVd; // 平行：以年根與日數相加，得平行。// 求日數（考成：所求本日子正初刻距天正冬至次日子正初刻之平行經度。）：自天正冬至次日距所求本日共若干日，與太陽每日平行相乘，以宮度分收之，得日數。
@@ -421,7 +423,7 @@ const moonJiazi = (
   const Jichou = R4 * sin2d(t2(MSDif2)); // 次輪月距日倍度之通弦。120：0.0407827。135：0.0306884。320：0.0278970
   const AngJichoujia = abs(
     AcrMorbTmp + // 均輪心距最卑之度=引數與半周相減
-    (flag1 * f4(MSDif) * t1(MSDif2)) / 2
+      (flag1 * f4(MSDif) * t1(MSDif2)) / 2
   ); // 加減月距日距象限度爲夾角。距象限90度和我的算式等效。
   // 初均減者：月距日過一三象限，加；不過象限或過二象限，減。
   // 初均加者：相反。若初均與均輪心距最卑相加不足減月距日距象限度，則轉減。若相加過半周，則與全周相減。110、120用加：84度22分19秒=84.3719444444。135、230用減：8度53分6秒=8.885。320、300：74度14分51秒=74.2475
