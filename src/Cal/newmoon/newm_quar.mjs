@@ -55,11 +55,9 @@ export default (Name, Y) => {
     DayConst; // 冬至積日
   const SolsAccumMod = fm60(SolsAccumRaw);
   const SolsAccum = fmod(SolsAccumRaw + (EpochSolsDif || 0) * TermLeng, BuDays); // 曆元積日
-  const LeapSurAvg = parseFloat(
-    (((deci(((BuYear - 1) * 7) / 19) % 1) + 1) % 1).toPrecision(11)
-  ); // 今年閏餘
-  let isLeapAvg = LeapSurAvg >= 12 / 19 - 0.0000001; // 是否有閏月
-  let LeapNumAvg = isLeapAvg ? Math.round(((1 - LeapSurAvg) * 228) / 7) : 0; // 閏餘法今年閏月
+  const LeapSurAvg = ((BuYear - 1) * 235) % 19; // 今年閏餘
+  let isLeapAvg = LeapSurAvg >= 12; // 是否有閏月
+  let LeapNumAvg = isLeapAvg ? Math.trunc(((19 - LeapSurAvg) * 12) / 7) : 0; // 閏餘法今年閏月
   // 閏餘法閏月
   const LeapNumOriginLeapSur = LeapNumAvg
     ? fmod1(LeapNumAvg + FirstZhengDif - FirstEpochDif, 12) // 0->12

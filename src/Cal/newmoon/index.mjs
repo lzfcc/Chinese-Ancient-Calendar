@@ -386,7 +386,7 @@ export default (Name, YearStart, YearEnd) => {
       YearInfo.push({
         SolsSur: `大${ZhengGreatSur}小${ZhengSmallSur}冬至${parseFloat(ThisYear.SolsAccumMod.toPrecision(6)).toFixed(4)}`
       });
-      YearInfo.push({ LeapSur: `閏餘${LeapSur.toFixed(4)}` });
+      YearInfo.push({ LeapSur: `閏餘${LeapSur}` });
       if (ThisYear.LeapNumOriginLeapSur) {
         YearInfo.push({
           LeapMon: `閏${ThisYear.LeapNumOriginLeapSur - NewmStart}`
