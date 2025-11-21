@@ -884,7 +884,7 @@ const EcliTcorr3 = (
     TheGreatNoonDif = Math.abs(GreatDeci - 0.5); // 觀天紀元午前後分
   } else {
     // 包括授時。大統「但加不減」
-    TheGreatNoonDif = NewmNoonDifAbs + Math.abs(Tcorr); // 距午分，崇天午前後定分
+    TheGreatNoonDif = NewmNoonDifAbs + Math.abs(Tcorr); // 距午定分，崇天午前後定分
   }
   const dd = 1 - TheGreatNoonDif / RiseNoonDif; // 如果dd<0，卽TheGreatNoonDif在日出前日落後，符號相反，所以把原來的Math.abs(dd)直接改成dd
   return { Tcorr, GreatDeci, TheGreatNoonDif, dd, isSame };
@@ -986,17 +986,17 @@ const EcliMcorr3 = (
         ["Xuanming", "Yingtian", "Qianyuan", "Yitian"].includes(Name) ||
         Type === 10
       ) {
-        sign1 = isYin ? -1 : 1;
-      } else sign1 = isDescend ? 1 : -1;
-      sign1 *= isSunYin ? -1 : 1;
-      sign1 *= Math.abs(GreatDeci - 0.5) > Math.abs(RiseNoonDif) ? -1 : 1;
+        sign1 = isYin ? -1 : 1; // 2025：待確認？
+      } else sign1 = isDescend ? -1 : 1;
+      sign1 *= isSunYin ? -1 : 1; // 《交食通軌》南北差「縮初盈末者，食在正交爲加差，食在中交爲減差」
+      // sign1 *= Math.abs(GreatDeci - 0.5) > Math.abs(RiseNoonDif) ? -1 : 1; // 用不著，dd的計算已經包含正負
       if (
         ["Xuanming", "Yingtian", "Qianyuan", "Yitian"].includes(Name) ||
         Type === 10
       ) {
         sign2 = isYin ? -1 : 1;
       } else sign2 = isDescend ? 1 : -1;
-      sign2 *= GreatDeci >= 0.5 ? -1 : 1; // 定朔還是食甚都沒影響，因為時差加減方向是相合的
+      sign2 *= GreatDeci >= 0.5 ? 1 : -1; // 定朔還是食甚都沒影響，因為時差加減方向是相合的
       sign2 *= TheSd >= SolarHalf ? -1 : 1;
       if (GreatDeci > 0.5) sign3 = isYin ? -1 : 1;
       else sign3 = 0;
@@ -1192,7 +1192,7 @@ const EcliMcorr3 = (
       McorrClock =
         (106 / 3093) * (243.5 - Portion12 * TheRev) * Portion12 * TheRev; // 東西差
       McorrTerm = (508 - McorrClock) * tmp; // 南北差
-      McorrClock *= 1 - tmp;
+      McorrClock *= 1 - tmp; // 東西差
     } else if (Name === "Guantian") {
       const { QuarA, QuarB } = AutoQuar(Name, Type);
       if (TheSd < SolarHalf) {
@@ -1230,13 +1230,13 @@ const EcliMcorr3 = (
     }
     if (Type === 9) {
       // 紀元「置朔入交常日⋯⋯以氣刻差定數各加減之，交初加三千一百，交中減三千，爲朔入交定日」
-      const Mcorr0Descend = Math.round(Denom * (3100 / 7290));
-      const Mcorr0Ascend = Math.round(Denom * (3000 / 7290));
-      Mcorr0 = isDescend ? Mcorr0Descend : -Mcorr0Ascend; // 5.685度
+      const Mcorr0Ascend = Math.round(Denom * (3100 / 7290));
+      const Mcorr0Descend = Math.round(Denom * (3000 / 7290));
+      Mcorr0 = isDescend ? -Mcorr0Ascend : Mcorr0Descend; // 5.685度
     } else if (["Datong", "Datong2"].includes(Name)) {
-      Mcorr0 = isDescend ? 6.153419 : -6.1532905;
+      Mcorr0 = isDescend ? -6.153419 : 6.1532905;
     } else if (Type === 11) {
-      Mcorr0 = isDescend ? 6.1534 : -6.1533;
+      Mcorr0 = isDescend ? -6.1534 : 6.1533; // 授時曆：正交357.64，中交188.05。交終363.7934，交中181.8967
     }
     if (Name === "Mingtian") {
       Mcorr = (sign1b * McorrTerm + sign2b * McorrClock) / 100;
@@ -1298,7 +1298,7 @@ const EcliMcorr3 = (
   } else if (Type === 11) {
     TheNodeAccum =
       AvgNodeAccum * 13.36875 +
-      AutoDifAccum(0, AvgSd, Name).SunDifAccum +
+      AutoDifAccum(0, AvgSd, Name).SunDifAccum -
       Mcorr;
     TheNodeDif =
       NodeCycle25 - Math.abs((TheNodeAccum % NodeCycle50) - NodeCycle25); // 本來是AutoDifAccum(0, TheSd, Name).SunDifAccum
@@ -1781,7 +1781,7 @@ const Eclipse3 = (
   const AcrNewmNodeAccum = AvgNodeAccum + AvgTcorr; // 紀元定朔入交泛日
   const NewmNoonDif = AcrDeci - 0.5; // 應天乾元儀天崇天午前後分
   const NewmNoonDifAbs = Math.abs(NewmNoonDif);
-  const isDescend = AvgNodeAccum < 3 || AvgNodeAccum > 25; // 交中前後皆為交中
+  const isDescend = AvgNodeAccum < 3 || AvgNodeAccum > 25; // 是否爲正交
   let isYin = AcrNodeAccum > NodeHalf;
   let Tcorr0 = 0,
     AvgGreatDeci = 0,

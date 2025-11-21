@@ -37,7 +37,7 @@ export default (Name, Y) => {
     ? 365.25 * BuRange
     : Solar * BuRange;
   const TermLeng = Solar / 12; // 每個中氣相隔的日數
-  let OriginYear = Y - OriginAd; // 上元積年（算上）
+  let OriginYear = Y - OriginAd; // 上元積年
   const JupiterSc =
     Name === "Taichu"
       ? ScList[
