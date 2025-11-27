@@ -47,7 +47,6 @@ export default (Name, Y) => {
   NodeConst = NodeConst || 0;
   AnomaConst = Type === 11 ? AnomaConst : AnomaConst / Denom || 0;
   SolsConst = SolsConst || 0;
-  const isExcl = Type >= 4 ? 1 : 0;
   const ZhangMon = Math.round(ZhangRange * (12 + ZhangLeap / ZhangRange));
   // const JiMon = JiRange * ZhangMon / ZhangRange
   const EpochNum = EpochSolsDif ? Math.ceil(EpochSolsDif) : 0; // 立春历元历法固定以建寅月立春为历元
@@ -287,12 +286,12 @@ export default (Name, Y) => {
         }
         TermAvgSd[i] = (i + FirstEpochDif - 1) * TermLeng;
         TermAvgRaw[i] = SolsAccum + TermAvgSd[i];
-        const tmp = fm60(TermAvgRaw[i] + isExcl + ScConst);
+        const tmp = fm60(TermAvgRaw[i] + 1 + ScConst + 1e-7); // + 1e-7防止乾象-104冬至在夜半
         TermSc[i] = ScList[Math.trunc(tmp)];
         TermDeci[i] = fix(deci(tmp));
         Term1AvgSd[i] = (i + FirstEpochDif - 1.5) * TermLeng;
         Term1AvgRaw[i] = SolsAccum + Term1AvgSd[i];
-        const tmp1 = fm60(Term1AvgRaw[i] + isExcl + ScConst);
+        const tmp1 = fm60(Term1AvgRaw[i] + 1 + ScConst + 1e-7);
         Term1Sc[i] = ScList[Math.trunc(tmp1)];
         Term1Deci[i] = fix(deci(tmp1));
         if (Type >= 5 && AcrTermList) {
@@ -303,7 +302,7 @@ export default (Name, Y) => {
           else if (TermNum3 < 0) Plus = -Solar;
           TermAcrSd[i] = AcrTermList[(TermNum3 + 24) % 24] + Plus;
           TermAcrRaw[i] = SolsAccum + TermAcrSd[i]; // 定氣距冬至+中積
-          const tmp2 = fm60(TermAcrRaw[i] + isExcl + ScConst);
+          const tmp2 = fm60(TermAcrRaw[i] + 1 + ScConst);
           TermAcrSc[i] = ScList[Math.trunc(tmp2)];
           TermAcrDeci[i] = fix(deci(tmp2), 3);
           // 定節氣
@@ -313,7 +312,7 @@ export default (Name, Y) => {
           else if (TermNum2 < 0) Plus1 = -Solar;
           Term1AcrSd[i] = AcrTermList[(TermNum2 + 24) % 24] + Plus1;
           Term1AcrRaw[i] = SolsAccum + Term1AcrSd[i]; // 定氣距冬至+中積
-          const tmp3 = fm60(Term1AcrRaw[i] + isExcl + ScConst);
+          const tmp3 = fm60(Term1AcrRaw[i] + 1 + ScConst);
           Term1AcrSc[i] = ScList[Math.trunc(tmp3)];
           Term1AcrDeci[i] = fix(deci(tmp3), 3);
         }
@@ -520,4 +519,4 @@ export default (Name, Y) => {
     SyzygyAcrSd
   };
 };
-// console.log(cal("Shoushi", 1281));
+// console.log(cal("Qianxiang", -104));

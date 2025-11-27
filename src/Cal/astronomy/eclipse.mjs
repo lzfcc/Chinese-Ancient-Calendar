@@ -1299,7 +1299,7 @@ const EcliMcorr3 = (
     TheNodeAccum =
       AvgNodeAccum * 13.36875 +
       AutoDifAccum(0, AvgSd, Name).SunDifAccum -
-      Mcorr;
+      Mcorr; // 食差是加在正交中交限上的，所以要倒過來用減號
     TheNodeDif =
       NodeCycle25 - Math.abs((TheNodeAccum % NodeCycle50) - NodeCycle25); // 本來是AutoDifAccum(0, TheSd, Name).SunDifAccum
   } else if (!["Dayan", "Wuji", "Tsrengyuan", "Chongxuan"].includes(Name)) {
