@@ -1878,7 +1878,7 @@ const Eclipse3 = (
     AvgTcorr,
     SolsAccum
   );
-  isYin = TheNodeAccum > NodeHalf;
+  isYin = TheNodeAccum > NodeCycle50;
   /// /////////////////// 食分
   let { Magni, Status, Last, TheNotEcli, TheNodeDif } = EcliMagni3(
     Name,

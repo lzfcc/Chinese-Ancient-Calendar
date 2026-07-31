@@ -268,6 +268,7 @@ export default (Name, YearStart, YearEnd) => {
           if (isSunEcli) {
             // 這些數字根據大統，再放寬0.3
             SunEcliFunc = AutoEclipse(
+
               NewmNodeAccumPrint[i],
               NewmAnoAccumPrint[i],
               NewmDeciPrint[i],
@@ -556,4 +557,4 @@ export default (Name, YearStart, YearEnd) => {
 
   return result;
 };
-// console.log(Index("Zhuanxu", -361));
+// console.log(Index("Shoushi", -600));
