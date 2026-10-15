@@ -255,7 +255,7 @@ export default (Name, Y) => {
         } else if (Math.floor(AcrRaw[i]) < Math.floor(AvgRaw[i])) {
           AnoAccumMidn[i]--;
         }
-        AcrInt[i] = Math.floor(AcrRaw[i]);
+        AcrInt[i] = Math.floor(AcrRaw[i]); // 看了下所有的AcrInt，之後用在了曆書方面，沒有用於交食
         if (Type <= 4) {
           Deci[i] = deci(AcrRaw[i]);
           Deci1[i] = Deci[i];
@@ -273,7 +273,7 @@ export default (Name, Y) => {
         SyzygySub = 0;
       if (isNewm) {
         if (isAcr && isNewmPlus) {
-          NewmPlus = newmPlus(Deci1[i] || Deci[i], Sd[i], SolsDeci, Name); // 進朔
+          NewmPlus = newmPlus(Deci[i], Sd[i], SolsDeci, Name); // 進朔
         }
         if (MansRaw) {
           const Func = mans(
@@ -329,7 +329,9 @@ export default (Name, Y) => {
       }
       Int[i] = isAcr ? AcrInt[i] : AvgInt[i];
       Raw[i] = isAcr ? AcrRaw[i] : AvgRaw[i];
-      Int[i] += NewmPlus + SyzygySub; // 這裏int是二次內插的結果，但線性與二次分屬兩日的極端情況太少了，暫且不論
+      Int[i] += NewmPlus + SyzygySub;
+      // 這裏int是二次內插的結果，但線性與二次分屬兩日的極端情況太少了，暫且不論
+      // 20261014王昱發現了宣明曆的情況：1038CE 五月、1079CE 三月、998CE 三月、1089CE 九月、1039CE 六月
       Raw[i] += NewmPlus + SyzygySub;
       AcrInt[i] += NewmPlus + SyzygySub;
       AnoAccumMidn[i] += NewmPlus;
@@ -383,7 +385,6 @@ export default (Name, Y) => {
       Int,
       Raw,
       Sc,
-      AcrInt,
       AcrRaw,
       AvgRaw,
       Deci,
@@ -421,7 +422,6 @@ export default (Name, Y) => {
     AvgDeci: NewmAvgDeci,
     Int: NewmInt,
     Raw: NewmRaw,
-    AcrInt: NewmAcrInt,
     AcrRaw: NewmAcrRaw,
     AvgRaw: NewmAvgRaw,
     Sc: NewmSc,
@@ -479,7 +479,6 @@ export default (Name, Y) => {
     NewmRaw,
     NewmAcrRaw,
     NewmAvgRaw,
-    NewmAcrInt,
     NewmDeci1,
     NewmDeci2,
     NewmDeci3,
@@ -519,4 +518,4 @@ export default (Name, Y) => {
     SyzygyAcrSd
   };
 };
-// console.log(cal("Qianxiang", -104));
+// console.log(cal("Xuanming", 1038));

@@ -528,7 +528,6 @@ export default (Name, YearStart, YearEnd) => {
             : NewmSlice(ThisYear.NewmRaw),
       NewmAcrRaw: ThisYear.NewmAcrRaw ? NewmSlice(ThisYear.NewmAcrRaw) : [], // 這個是給南系月亮位置用的，平朔注曆，但是月亮位置是定朔
       NewmAvgRaw: ThisYear.NewmAvgRaw ? NewmSlice(ThisYear.NewmAvgRaw) : [],
-      // NewmAcrInt: (Type === 1 ? [] : NewmSlice(ThisYear.NewmAcrInt)),
       NewmNodeAccumPrint, // : (Type === 1 ? [] : NewmNodeAccumPrint.slice(NewmStart)), // 為什麼還要切一遍？？
       NewmNodeAccumMidnPrint,
       NewmAnoAccumPrint, //: (Type === 1 ? [] : NewmAnoAccumPrint.slice(NewmStart))

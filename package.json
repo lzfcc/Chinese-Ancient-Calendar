@@ -1,6 +1,6 @@
 {
   "name": "chinese_ancient_calendars_generator",
-  "version": "2.20.251121",
+  "version": "2.20.261015",
   "private": true,
   "homepage": "./",
   "license": "ISC",
@@ -10,6 +10,8 @@
     "fraction.js": "^4.2.0",
     "marked": "^12.0.1",
     "mathjs": "^12.4.1",
+    "node": "^25.9.0",
+    "npm": "^11.12.1",
     "nzh": "^1.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
